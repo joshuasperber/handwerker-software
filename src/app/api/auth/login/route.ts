@@ -33,7 +33,8 @@ export async function POST(request: NextRequest) {
 
     return apiSuccess({ user });
   } catch (err) {
-    const message = err instanceof Error ? err.message : "";
+    console.error("[auth/login]", err);
+    const message = err instanceof Error ? err.message : String(err);
     if (message.includes("DATABASE_URL is not set")) {
       return apiError(
         "Datenbank nicht konfiguriert. DATABASE_URL in Vercel setzen (Supabase Connection String).",
@@ -47,15 +48,32 @@ export async function POST(request: NextRequest) {
       );
     }
     if (
+      message.includes("password authentication failed") ||
+      message.includes("Authentication failed")
+    ) {
+      return apiError(
+        "Supabase-Datenbankpasswort in DATABASE_URL ist falsch.",
+        503
+      );
+    }
+    if (message.includes("prepared statement")) {
+      return apiError(
+        "DATABASE_URL: Transaction Pooler (Port 6543) mit ?pgbouncer=true verwenden.",
+        503
+      );
+    }
+    if (
       message.includes("connect") ||
       message.includes("ECONNREFUSED") ||
-      message.includes("Can't reach database")
+      message.includes("Can't reach database") ||
+      message.includes("ENOTFOUND") ||
+      message.includes("timeout")
     ) {
       return apiError(
         "Datenbank nicht erreichbar. DATABASE_URL prüfen (Supabase Pooler, Port 6543).",
         503
       );
     }
-    return apiError("Anmeldung fehlgeschlagen", 500);
+    return apiError(`Anmeldung fehlgeschlagen: ${message.slice(0, 120)}`, 500);
   }
 }
