@@ -34,13 +34,25 @@ export async function POST(request: NextRequest) {
     return apiSuccess({ user });
   } catch (err) {
     const message = err instanceof Error ? err.message : "";
+    if (message.includes("DATABASE_URL is not set")) {
+      return apiError(
+        "Datenbank nicht konfiguriert. DATABASE_URL in Vercel setzen (Supabase Connection String).",
+        503
+      );
+    }
+    if (message.includes("JWT_SECRET is not set")) {
+      return apiError(
+        "Auth nicht konfiguriert. JWT_SECRET in Vercel setzen.",
+        503
+      );
+    }
     if (
       message.includes("connect") ||
       message.includes("ECONNREFUSED") ||
       message.includes("Can't reach database")
     ) {
       return apiError(
-        "Datenbank nicht erreichbar. Bitte Docker starten und „npm run setup“ ausführen.",
+        "Datenbank nicht erreichbar. DATABASE_URL prüfen (Supabase Pooler, Port 6543).",
         503
       );
     }
