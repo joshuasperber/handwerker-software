@@ -1,0 +1,1454 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  ADMIN
+  MEISTER
+  BUERO
+  MONTEUR
+  KUNDE
+}
+
+enum OrderStatus {
+  NEUE_ANFRAGE
+  TERMIN_GEBUCHT
+  EINGEPLANT
+  UNTERWEGS
+  IN_ARBEIT
+  ABGESCHLOSSEN
+  ABRECHNUNGSBEREIT
+  ABGERECHNET
+  STORNIERT
+}
+
+enum OrderPriority {
+  NORMAL
+  DRINGEND
+  NOTFALL
+}
+
+enum AppointmentStatus {
+  GEPLANT
+  UNTERWEGS
+  ANGEKOMMEN
+  IN_ARBEIT
+  ABGESCHLOSSEN
+  STORNIERT
+}
+
+enum NotificationChannel {
+  EMAIL
+  SMS
+}
+
+enum NotificationType {
+  BUCHUNGSBESTAETIGUNG
+  TERMINERINNERUNG
+  VERSPAETUNG
+  ABSCHLUSS
+  STATUSAENDERUNG
+}
+
+enum FileCategory {
+  KUNDENFOTO
+  VORHER
+  NACHHER
+  DOKUMENT
+  ABSCHLUSS
+  PLAN
+  GRUNDRISS
+}
+
+enum QuestionType {
+  TEXT
+  TEXTAREA
+  SELECT
+  CHECKBOX
+  NUMBER
+}
+
+model Tenant {
+  id              String   @id @default(cuid())
+  slug            String   @unique
+  name            String
+  email           String
+  phone           String?
+  address         String?
+  city            String?
+  zipCode         String?
+  logoUrl         String?
+  primaryColor    String   @default("#2563eb")
+  privacyPolicyUrl String?
+  imprintUrl      String?
+  bufferMinutes   Int      @default(15)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  users              User[]
+  customers          Customer[]
+  properties         Property[]
+  services           Service[]
+  employees          Employee[]
+  orders             Order[]
+  appointments       Appointment[]
+  checklistTemplates ChecklistTemplate[]
+  messages           Message[]
+  auditLogs          AuditLog[]
+  serviceAreas       ServiceArea[]
+  workingHours       WorkingHours[]
+  notifications      NotificationLog[]
+  companySettings    CompanySettings?
+  monthlyFixedCosts  MonthlyFixedCost[]
+  overheadSettings   OverheadSettings?
+  machines           Machine[]
+  travelZones        TravelZone[]
+  calculations       Calculation[]
+  articles           Article[]
+  storageLocations   StorageLocation[]
+  purchaseOrders     PurchaseOrder[]
+  staffAssignmentRequests StaffAssignmentRequest[]
+  deliveries         Delivery[]
+  manualReorderSuggestions ManualReorderSuggestion[]
+  teams              Team[]
+  vehicles           Vehicle[]
+}
+
+model User {
+  id           String   @id @default(cuid())
+  tenantId     String
+  email        String
+  passwordHash String
+  firstName    String
+  lastName     String
+  phone        String?
+  role         UserRole
+  isActive     Boolean  @default(true)
+  lastLoginAt  DateTime?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  tenant       Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  employee     Employee?
+  customer     Customer?
+  auditLogs    AuditLog[]
+  sentMessages Message[] @relation("MessageSender")
+  staffRequestsSent StaffAssignmentRequest[] @relation("StaffRequestSender")
+
+  @@unique([tenantId, email])
+  @@index([tenantId, role])
+}
+
+model Customer {
+  id          String   @id @default(cuid())
+  tenantId    String
+  userId      String?  @unique
+  firstName   String
+  lastName    String
+  email       String
+  phone       String?
+  company     String?
+  notes       String?
+  gdprConsent Boolean  @default(false)
+  gdprConsentAt DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  tenant     Tenant     @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  user       User?      @relation(fields: [userId], references: [id])
+  properties Property[]
+  orders        Order[]
+  calculations  Calculation[]
+
+  @@unique([tenantId, email])
+  @@index([tenantId])
+}
+
+model Property {
+  id         String   @id @default(cuid())
+  tenantId   String
+  customerId String
+  label      String
+  street     String
+  zipCode    String
+  city       String
+  notes      String?
+  latitude   Float?
+  longitude  Float?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  tenant   Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  orders   Order[]
+
+  @@index([tenantId, zipCode])
+}
+
+model Service {
+  id              String   @id @default(cuid())
+  tenantId        String
+  name            String
+  description     String?
+  durationMinutes Int
+  bufferMinutes   Int      @default(0)
+  priceCents      Int?
+  isActive        Boolean  @default(true)
+  sortOrder       Int      @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  tenant              Tenant               @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  questions           ServiceQuestion[]
+  qualifications      ServiceQualification[]
+  orderServices       OrderService[]
+  checklistTemplates  ChecklistTemplate[]
+  materialTemplates   ServiceMaterialTemplate[]
+
+  @@index([tenantId, isActive])
+}
+
+model ServiceQuestion {
+  id         String       @id @default(cuid())
+  serviceId  String
+  question   String
+  type       QuestionType @default(TEXT)
+  options    Json?
+  isRequired Boolean      @default(false)
+  sortOrder  Int          @default(0)
+
+  service Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+}
+
+model ServiceQualification {
+  id        String @id @default(cuid())
+  serviceId String
+  name      String
+
+  service Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+}
+
+model Employee {
+  id                  String   @id @default(cuid())
+  tenantId            String
+  userId              String   @unique
+  color               String   @default("#3b82f6")
+  operationalStatus   EmployeeOperationalStatus @default(VERFUEGBAR)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  tenant          Tenant                @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  user            User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  qualifications  EmployeeQualification[]
+  workingHours    EmployeeWorkingHours[]
+  appointments    Appointment[]
+  timeEntries     TimeEntry[]
+  materialUsages  MaterialUsage[]
+  absences        EmployeeAbsence[]
+  teamMemberships TeamMember[]
+  staffRequests   StaffAssignmentRequest[]
+}
+
+model EmployeeQualification {
+  id         String @id @default(cuid())
+  employeeId String
+  name       String
+
+  employee Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+}
+
+model WorkingHours {
+  id        String  @id @default(cuid())
+  tenantId  String
+  dayOfWeek Int
+  startTime String
+  endTime   String
+  isActive  Boolean @default(true)
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, dayOfWeek])
+}
+
+model EmployeeWorkingHours {
+  id         String  @id @default(cuid())
+  employeeId String
+  dayOfWeek  Int
+  startTime  String
+  endTime    String
+  isActive   Boolean @default(true)
+
+  employee Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+
+  @@unique([employeeId, dayOfWeek])
+}
+
+model ServiceArea {
+  id        String @id @default(cuid())
+  tenantId  String
+  label     String
+  zipFrom   String
+  zipTo     String
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId])
+}
+
+model Order {
+  id              String      @id @default(cuid())
+  tenantId        String
+  customerId      String
+  propertyId      String
+  orderNumber     String
+  title           String?
+  orderType       OrderType   @default(REPARATUR)
+  status          OrderStatus   @default(NEUE_ANFRAGE)
+  priority        OrderPriority @default(NORMAL)
+  materialStatus  MaterialOrderStatus @default(NOT_CHECKED)
+  completionResult CompletionResult?
+  customerConfirmationStatus CustomerConfirmationStatus @default(OFFEN)
+  description     String?
+  internalNotes   String?
+  customerNotes   String?
+  questionAnswers Json?
+  scheduledStart  DateTime?
+  scheduledEnd    DateTime?
+  completedAt     DateTime?
+  invoicedAt      DateTime?
+  teamId          String?
+  vehicleId       String?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  tenant        Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  customer      Customer        @relation(fields: [customerId], references: [id])
+  property      Property        @relation(fields: [propertyId], references: [id])
+  services      OrderService[]
+  appointments  Appointment[]
+  files         FileUpload[]
+  checklists    OrderChecklist[]
+  messages      Message[]
+  timeEntries   TimeEntry[]
+  materialUsages MaterialUsage[]
+  calculations  Calculation[]
+  phases        OrderPhase[]
+  materialLines OrderMaterialLine[]
+  reservations  Reservation[]
+  stockMovements StockMovement[]
+  purchaseOrders PurchaseOrder[]
+  planMarkers   PlanMarker[]
+  team          Team?           @relation(fields: [teamId], references: [id])
+  vehicle       Vehicle?        @relation(fields: [vehicleId], references: [id])
+  staffRequests StaffAssignmentRequest[]
+
+  @@unique([tenantId, orderNumber])
+  @@index([tenantId, status])
+  @@index([tenantId, createdAt])
+  @@index([tenantId, materialStatus])
+}
+
+model OrderService {
+  id        String @id @default(cuid())
+  orderId   String
+  serviceId String
+  quantity  Int    @default(1)
+
+  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  service Service @relation(fields: [serviceId], references: [id])
+}
+
+model Appointment {
+  id          String            @id @default(cuid())
+  tenantId    String
+  orderId     String
+  employeeId  String?
+  startTime   DateTime
+  endTime     DateTime
+  status      AppointmentStatus @default(GEPLANT)
+  notes       String?
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  tenant   Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  order    Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  employee Employee? @relation(fields: [employeeId], references: [id])
+
+  @@index([tenantId, startTime])
+  @@index([employeeId, startTime])
+}
+
+model ChecklistTemplate {
+  id        String  @id @default(cuid())
+  tenantId  String
+  serviceId String?
+  name      String
+  isActive  Boolean @default(true)
+
+  tenant Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  service Service?       @relation(fields: [serviceId], references: [id])
+  items   ChecklistItem[]
+}
+
+model ChecklistItem {
+  id         String @id @default(cuid())
+  templateId String
+  label      String
+  sortOrder  Int    @default(0)
+  isRequired Boolean @default(false)
+
+  template ChecklistTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+}
+
+model OrderChecklist {
+  id         String   @id @default(cuid())
+  orderId    String
+  templateId String
+  label      String
+  isChecked  Boolean  @default(false)
+  checkedAt  DateTime?
+  checkedBy  String?
+  sortOrder  Int      @default(0)
+
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+}
+
+model FileUpload {
+  id           String       @id @default(cuid())
+  orderId      String
+  uploadedById String?
+  fileName     String
+  mimeType     String
+  sizeBytes    Int
+  storageKey   String
+  category     FileCategory @default(KUNDENFOTO)
+  createdAt    DateTime     @default(now())
+
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  planMarkers PlanMarker[]
+
+  @@index([orderId])
+}
+
+model TimeEntry {
+  id          String    @id @default(cuid())
+  orderId     String
+  employeeId  String
+  startTime   DateTime
+  endTime     DateTime?
+  breakMinutes Int      @default(0)
+  notes       String?
+  createdAt   DateTime  @default(now())
+
+  order    Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  employee Employee @relation(fields: [employeeId], references: [id])
+}
+
+model MaterialUsage {
+  id          String   @id @default(cuid())
+  orderId     String
+  employeeId  String
+  name        String
+  quantity    Float
+  unit        String   @default("Stk")
+  notes       String?
+  createdAt   DateTime @default(now())
+
+  order    Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  employee Employee @relation(fields: [employeeId], references: [id])
+}
+
+model Message {
+  id         String   @id @default(cuid())
+  tenantId   String
+  orderId    String?
+  senderId   String?
+  recipient  String?
+  subject    String?
+  body       String
+  category   String   @default("GENERAL")
+  status     String   @default("OPEN")
+  isInternal Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  order  Order? @relation(fields: [orderId], references: [id])
+  sender User?  @relation("MessageSender", fields: [senderId], references: [id])
+
+  @@index([tenantId, orderId])
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  tenantId   String
+  userId     String?
+  entityType String
+  entityId   String
+  action     String
+  oldValues  Json?
+  newValues  Json?
+  ipAddress  String?
+  createdAt  DateTime @default(now())
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  user   User?  @relation(fields: [userId], references: [id])
+
+  @@index([tenantId, entityType, entityId])
+  @@index([tenantId, createdAt])
+}
+
+model NotificationLog {
+  id        String              @id @default(cuid())
+  tenantId  String
+  type      NotificationType
+  channel   NotificationChannel
+  recipient String
+  subject   String?
+  body      String
+  sentAt    DateTime            @default(now())
+  metadata  Json?
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, sentAt])
+}
+
+// ─── Kalkulation / Angebote & Rechnungen ───────────────────────────────────
+
+enum FixedCostCategory {
+  MIETE
+  STROM
+  WASSER
+  HEIZUNG
+  INTERNET_TELEFON
+  BUEROSOFTWARE
+  HANDWERKERSOFTWARE
+  BUCHHALTUNG
+  STEUERBERATER
+  VERSICHERUNGEN
+  FAHRZEUGLEASING
+  FAHRZEUGVERSICHERUNG
+  FAHRZEUGWARTUNG
+  LAGERKOSTEN
+  WERBUNG
+  WEBSITE
+  ARBEITSKLEIDUNG
+  WERKZEUGE
+  MASCHINENRUECKLAGEN
+  WEITERBILDUNG
+  BEITRAEGE
+  BANKGEBUEHREN
+  SONSTIGE
+}
+
+enum OverheadCalculationMode {
+  PERCENTAGE
+  HOURLY_ALLOCATION
+  HYBRID
+}
+
+enum LaborType {
+  ONSITE_WORK
+  WORKSHOP_WORK
+  PREPARATION
+  DOCUMENTATION
+  PLANNING
+  CLEANUP
+  EMERGENCY_SERVICE
+  INSPECTION
+  MAINTENANCE
+  REPAIR
+  INSTALLATION
+}
+
+enum AdditionalCostCategory {
+  SUBCONTRACTOR
+  DISPOSAL
+  PERMIT
+  DELIVERY
+  RENTAL_EQUIPMENT
+  SPECIAL_TRANSPORT
+  PARKING
+  TOLL
+  EXPRESS_FEE
+  EMERGENCY_FEE
+  OTHER
+}
+
+enum RiskLevel {
+  LOW
+  NORMAL
+  HIGH
+  VERY_HIGH
+  CUSTOM
+}
+
+enum ProfitStrategy {
+  PERCENT
+  FIXED_AMOUNT
+  TARGET_MARGIN
+}
+
+enum IncomeTaxAllocationMode {
+  PER_HOUR
+  PER_ORDER
+  PROFIT_CHECK_ONLY
+}
+
+enum TravelCalculationMode {
+  ZONE_FLAT_FEE
+  FORMULA
+}
+
+enum CalculationStatus {
+  DRAFT
+  CALCULATED
+  OFFER_CREATED
+  INVOICE_CREATED
+  ARCHIVED
+}
+
+enum CalculationDocumentType {
+  OFFER
+  ORDER_CONFIRMATION
+  INVOICE
+}
+
+model CompanySettings {
+  id                           String   @id @default(cuid())
+  tenantId                     String   @unique
+  companyName                  String
+  street                       String?
+  houseNumber                  String?
+  postalCode                   String?
+  city                         String?
+  country                      String   @default("DE")
+  latitude                     Float?
+  longitude                    Float?
+  defaultVatRate               Float    @default(19)
+  defaultHourlyRate            Float    @default(68)
+  defaultWorkshopHourlyRate    Float    @default(55)
+  defaultMaterialMarkupPercent Float    @default(25)
+  defaultProcurementHourlyRate Float    @default(55)
+  defaultOverheadPercent       Float?
+  defaultRiskPercent           Float    @default(7)
+  defaultProfitPercent         Float    @default(12)
+  defaultIncomeTaxPercent      Float    @default(30)
+  defaultKilometerRate         Float    @default(0.45)
+  defaultTravelHourlyRate      Float    @default(45)
+  additionalOverheadPercent    Float    @default(0)
+  createdAt                    DateTime @default(now())
+  updatedAt                    DateTime @updatedAt
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+}
+
+model MonthlyFixedCost {
+  id         String            @id @default(cuid())
+  tenantId   String
+  name       String
+  category   FixedCostCategory
+  amountNet  Float
+  isActive   Boolean           @default(true)
+  notes      String?
+  createdAt  DateTime          @default(now())
+  updatedAt  DateTime          @updatedAt
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, isActive])
+}
+
+model OverheadSettings {
+  id                      String                  @id @default(cuid())
+  tenantId                String                  @unique
+  productiveHoursPerMonth Float                   @default(160)
+  overheadCalculationMode OverheadCalculationMode @default(HYBRID)
+  overheadPercent         Float?
+  createdAt               DateTime                @default(now())
+  updatedAt               DateTime                @updatedAt
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+}
+
+enum MachineCostMethod {
+  AMORTIZATION
+  FLAT_RATE
+}
+
+model Machine {
+  id                         String             @id @default(cuid())
+  tenantId                   String
+  name                       String
+  machineType                String?
+  costMethod                 MachineCostMethod  @default(AMORTIZATION)
+  flatRatePerHourNet         Float?
+  purchasePriceNet           Float              @default(0)
+  residualValueNet           Float              @default(0)
+  expectedLifetimeHours      Float              @default(1)
+  expectedRepairCostsNet     Float    @default(0)
+  expectedMaintenanceCostsNet Float    @default(0)
+  expectedConsumablePartsNet  Float    @default(0)
+  insuranceCostsNet          Float    @default(0)
+  energyCostsTotalNet        Float    @default(0)
+  breakageRiskPercent        Float    @default(15)
+  calculatedHourlyRateNet    Float    @default(0)
+  isActive                   Boolean  @default(true)
+  createdAt                  DateTime @default(now())
+  updatedAt                  DateTime @updatedAt
+
+  tenant      Tenant             @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  usageItems  MachineUsageItem[]
+
+  @@index([tenantId, isActive])
+}
+
+model TravelZone {
+  id          String   @id @default(cuid())
+  tenantId    String
+  name        String
+  minKm       Float
+  maxKm       Float?
+  flatFeeNet  Float    @default(0)
+  useFormula  Boolean  @default(false)
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId])
+}
+
+model Calculation {
+  id          String            @id @default(cuid())
+  tenantId    String
+  customerId  String?
+  orderId     String?
+  title       String?
+  status      CalculationStatus @default(DRAFT)
+  currentStep Int               @default(0)
+
+  laborTotal              Float @default(0)
+  materialTotal           Float @default(0)
+  machineTotal            Float @default(0)
+  procurementTotal        Float @default(0)
+  travelTotal             Float @default(0)
+  additionalTotal         Float @default(0)
+  directCosts             Float @default(0)
+  overheadAmount          Float @default(0)
+  incomeTaxOwnerAmount    Float @default(0)
+  subtotalBeforeRisk      Float @default(0)
+  riskAmount              Float @default(0)
+  subtotalAfterRisk       Float @default(0)
+  profitAmount            Float @default(0)
+  netSalesPrice           Float @default(0)
+  vatAmount               Float @default(0)
+  grossSalesPrice         Float @default(0)
+  contributionMargin      Float @default(0)
+  contributionMarginRate  Float @default(0)
+  marginPercent           Float @default(0)
+  minimumPrice            Float @default(0)
+  profitAfterTaxEstimate  Float @default(0)
+  totalBillableHours      Float @default(0)
+  profitabilityStatus     String @default("unknown")
+
+  snapshotJson Json?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  tenant           Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  customer         Customer?           @relation(fields: [customerId], references: [id])
+  order            Order?              @relation(fields: [orderId], references: [id])
+  laborItems       LaborItem[]
+  materialItems    MaterialItem[]
+  machineUsages    MachineUsageItem[]
+  procurementCosts ProcurementCost[]
+  travelCost       TravelCost?
+  additionalItems  AdditionalCostItem[]
+  riskSettings     RiskSettings?
+  profitSettings   ProfitSettings?
+  incomeTaxSettings IncomeTaxSettings?
+  vatSettings      VATSettings?
+  documents        CalculationDocument[]
+
+  @@index([tenantId, status])
+  @@index([tenantId, createdAt])
+}
+
+model LaborItem {
+  id                   String    @id @default(cuid())
+  calculationId        String
+  description          String
+  laborType            LaborType @default(ONSITE_WORK)
+  hours                Float
+  hourlyRateNet        Float
+  quantityWorkers      Int       @default(1)
+  totalNet             Float     @default(0)
+  isVisibleToCustomer  Boolean   @default(true)
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+
+  calculation Calculation @relation(fields: [calculationId], references: [id], onDelete: Cascade)
+}
+
+model MaterialItem {
+  id                   String   @id @default(cuid())
+  calculationId        String
+  name                 String
+  description          String?
+  quantity             Float
+  unit                 String   @default("Stk")
+  purchasePriceNet     Float
+  markupPercent        Float
+  wastePercent         Float    @default(0)
+  supplierName         String?
+  articleNumber        String?
+  totalPurchaseNet     Float    @default(0)
+  totalSalesNet        Float    @default(0)
+  isVisibleToCustomer  Boolean  @default(true)
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  calculation Calculation @relation(fields: [calculationId], references: [id], onDelete: Cascade)
+}
+
+model MachineUsageItem {
+  id                   String   @id @default(cuid())
+  calculationId        String
+  machineId            String?
+  description          String
+  usageHours           Float
+  hourlyRateNet        Float
+  breakageRiskPercent  Float    @default(0)
+  totalNet             Float    @default(0)
+  isVisibleToCustomer  Boolean  @default(false)
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  calculation Calculation @relation(fields: [calculationId], references: [id], onDelete: Cascade)
+  machine     Machine?    @relation(fields: [machineId], references: [id])
+}
+
+model ProcurementCost {
+  id                      String   @id @default(cuid())
+  calculationId           String
+  description             String?
+  purchasingTimeHours     Float    @default(0)
+  procurementHourlyRateNet Float
+  pickupDistanceKm        Float    @default(0)
+  pickupKilometerRateNet  Float
+  supplierFeesNet         Float    @default(0)
+  packagingHandlingNet    Float    @default(0)
+  otherCostsNet           Float    @default(0)
+  totalNet                Float    @default(0)
+  isVisibleToCustomer     Boolean  @default(false)
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+
+  calculation Calculation @relation(fields: [calculationId], references: [id], onDelete: Cascade)
+}
+
+model TravelCost {
+  id                     String                @id @default(cuid())
+  calculationId          String                @unique
+  startAddress           String
+  destinationAddress     String
+  distanceKm             Float
+  estimatedDriveTimeHours Float               @default(0)
+  selectedZoneId         String?
+  zoneName               String?
+  zoneFlatFeeNet         Float                 @default(0)
+  kilometerRateNet       Float
+  travelHourlyRateNet    Float
+  parkingFeesNet         Float                 @default(0)
+  tollFeesNet            Float                 @default(0)
+  otherTravelCostsNet    Float                 @default(0)
+  totalNet               Float                 @default(0)
+  calculationMode        TravelCalculationMode @default(ZONE_FLAT_FEE)
+  isVisibleToCustomer    Boolean               @default(true)
+  createdAt              DateTime              @default(now())
+  updatedAt              DateTime              @updatedAt
+
+  calculation Calculation @relation(fields: [calculationId], references: [id], onDelete: Cascade)
+}
+
+model AdditionalCostItem {
+  id                   String                 @id @default(cuid())
+  calculationId        String
+  category             AdditionalCostCategory
+  description          String
+  amountNet            Float
+  markupPercent        Float                  @default(0)
+  totalNet             Float                  @default(0)
+  isVisibleToCustomer  Boolean                @default(true)
+  createdAt            DateTime               @default(now())
+  updatedAt            DateTime               @updatedAt
+
+  calculation Calculation @relation(fields: [calculationId], references: [id], onDelete: Cascade)
+}
+
+model RiskSettings {
+  id            String    @id @default(cuid())
+  calculationId String    @unique
+  riskLevel     RiskLevel @default(NORMAL)
+  riskPercent   Float     @default(7)
+  riskReason    String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  calculation Calculation @relation(fields: [calculationId], references: [id], onDelete: Cascade)
+}
+
+model ProfitSettings {
+  id                    String         @id @default(cuid())
+  calculationId         String         @unique
+  profitPercent         Float          @default(12)
+  profitStrategy        ProfitStrategy @default(PERCENT)
+  targetProfitAmountNet Float?
+  targetMarginPercent   Float?
+  createdAt             DateTime       @default(now())
+  updatedAt             DateTime       @updatedAt
+
+  calculation Calculation @relation(fields: [calculationId], references: [id], onDelete: Cascade)
+}
+
+model IncomeTaxSettings {
+  id                                  String                  @id @default(cuid())
+  calculationId                       String                  @unique
+  includeIncomeTaxCalculation         Boolean                 @default(false)
+  estimatedIncomeTaxPercent           Float                   @default(30)
+  estimatedPrivateInsurancePercent    Float                   @default(5)
+  estimatedOtherPrivateObligationsPercent Float               @default(3)
+  desiredNetOwnerIncomeMonthly        Float                   @default(4000)
+  productiveHoursPerMonth             Float                   @default(160)
+  allocationMode                      IncomeTaxAllocationMode @default(PROFIT_CHECK_ONLY)
+  manualOwnerAmountPerOrder           Float?
+  createdAt                           DateTime                @default(now())
+  updatedAt                           DateTime                @updatedAt
+
+  calculation Calculation @relation(fields: [calculationId], references: [id], onDelete: Cascade)
+}
+
+model VATSettings {
+  id             String   @id @default(cuid())
+  calculationId  String   @unique
+  vatRatePercent Float    @default(19)
+  reverseCharge  Boolean  @default(false)
+  taxExempt      Boolean  @default(false)
+  vatNote        String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  calculation Calculation @relation(fields: [calculationId], references: [id], onDelete: Cascade)
+}
+
+model CalculationDocument {
+  id             String                  @id @default(cuid())
+  calculationId  String
+  documentType   CalculationDocumentType
+  documentNumber String
+  issueDate      DateTime                @default(now())
+  dueDate        DateTime?
+  customerNote   String?
+  internalNote   String?
+  pdfStorageKey  String?
+  sentAt         DateTime?
+  createdAt      DateTime                @default(now())
+  updatedAt      DateTime                @updatedAt
+
+  calculation Calculation @relation(fields: [calculationId], references: [id], onDelete: Cascade)
+
+  @@index([calculationId])
+}
+
+// ─── Betriebssystem: Inventar, Phasen, Materialbedarf ───
+
+enum OrderType {
+  RENOVIERUNG
+  INNENAUSBAU
+  REPARATUR
+  MONTAGE
+  ELEKTRO
+  BESICHTIGUNG
+  NACHARBEIT
+  NOTDIENST
+  SONSTIGES
+}
+
+enum MaterialOrderStatus {
+  NOT_CHECKED
+  COMPLETE
+  PARTLY_AVAILABLE
+  MISSING
+  ORDERED
+  DELIVERED
+  PACKED
+  CONSUMED
+}
+
+enum CompletionResult {
+  COMPLETED
+  PARTIALLY_COMPLETED
+  NOT_STARTED
+  NOT_POSSIBLE
+  REQUIRES_FOLLOW_UP
+  REQUIRES_MATERIAL_ORDER
+  CUSTOMER_NOT_AVAILABLE
+}
+
+enum CustomerConfirmationStatus {
+  OFFEN
+  BESTAETIGT
+  ABGESAGT
+  NICHT_ERREICHBAR
+}
+
+enum OrderPhaseType {
+  BESICHTIGUNG
+  PLANUNG
+  MATERIALBESTELLUNG
+  VORFERTIGUNG
+  AUSFUEHRUNG_1
+  AUSFUEHRUNG_2
+  ABNAHME
+  RECHNUNG
+  SONSTIGES
+}
+
+enum OrderPhaseStatus {
+  AUSSTEHEND
+  IN_ARBEIT
+  ABGESCHLOSSEN
+  STORNIERT
+}
+
+enum ArticleType {
+  VERBRAUCH
+  MATERIAL
+  WERKZEUG
+  MASCHINE
+  MIETE
+  FREMDLEISTUNG
+}
+
+enum StorageLocationType {
+  HAUPTLAGER
+  FAHRZEUG
+  MITARBEITER
+  BAUSTELLE
+  RESERVIERT
+  DEFEKTLAGER
+}
+
+enum ReservationStatus {
+  VORGESCHLAGEN
+  RESERVIERT
+  FREIGEGEBEN
+  VERBRAUCHT
+}
+
+enum StockMovementType {
+  ZUGANG
+  ABGANG
+  UMBUCHUNG
+  VERBRAUCH
+  RUECKGABE
+  KORREKTUR
+}
+
+enum ReorderStrategy {
+  MANUELL
+  MINDESTBESTAND_FIX
+  MINDESTBESTAND_ZIEL
+  AUFTRAGSBEZOGEN
+  KOMBINIERT
+}
+
+model Article {
+  id               String          @id @default(cuid())
+  tenantId         String
+  name             String
+  sku              String?
+  unit             String          @default("Stk")
+  category         String?
+  articleType      ArticleType     @default(MATERIAL)
+  minimumStock     Float           @default(0)
+  targetStock      Float           @default(0)
+  reorderQuantity  Float           @default(0)
+  packageSize      Float           @default(1)
+  reorderStrategy  ReorderStrategy @default(MANUELL)
+  supplierName     String?
+  purchasePriceNet Float?
+  isActive         Boolean         @default(true)
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+
+  tenant           Tenant                  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  stockBalances    StockBalance[]
+  movements        StockMovement[]
+  reservations     Reservation[]
+  serviceTemplates ServiceMaterialTemplate[]
+  orderMaterialLines OrderMaterialLine[]
+  purchaseOrderLines PurchaseOrderLine[]
+  planMarkers        PlanMarker[]
+  manualReorderSuggestions ManualReorderSuggestion[]
+
+  @@index([tenantId, isActive])
+  @@index([tenantId, category])
+}
+
+model StorageLocation {
+  id           String              @id @default(cuid())
+  tenantId     String
+  name         String
+  locationType StorageLocationType @default(HAUPTLAGER)
+  description  String?
+  isActive     Boolean             @default(true)
+  createdAt    DateTime            @default(now())
+  updatedAt    DateTime            @updatedAt
+
+  tenant        Tenant         @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  stockBalances StockBalance[]
+  movements     StockMovement[]
+  reservations  Reservation[]
+  vehicle       Vehicle?
+
+  @@index([tenantId, isActive])
+}
+
+model StockBalance {
+  id                String   @id @default(cuid())
+  articleId         String
+  storageLocationId String
+  onHandQuantity    Float    @default(0)
+  reservedQuantity  Float    @default(0)
+  orderedQuantity   Float    @default(0)
+  updatedAt         DateTime @updatedAt
+
+  article         Article         @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  storageLocation StorageLocation @relation(fields: [storageLocationId], references: [id], onDelete: Cascade)
+
+  @@unique([articleId, storageLocationId])
+}
+
+model StockMovement {
+  id                String            @id @default(cuid())
+  tenantId          String
+  articleId         String
+  storageLocationId String
+  orderId           String?
+  movementType      StockMovementType
+  quantity          Float
+  notes             String?
+  createdById       String?
+  createdAt         DateTime          @default(now())
+
+  article         Article         @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  storageLocation StorageLocation @relation(fields: [storageLocationId], references: [id], onDelete: Cascade)
+  order           Order?          @relation(fields: [orderId], references: [id])
+
+  @@index([tenantId, createdAt])
+  @@index([articleId])
+}
+
+model Reservation {
+  id                  String            @id @default(cuid())
+  tenantId            String
+  orderId             String
+  orderMaterialLineId String?
+  articleId           String
+  storageLocationId   String
+  quantity            Float
+  status              ReservationStatus @default(VORGESCHLAGEN)
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
+
+  order             Order              @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderMaterialLine OrderMaterialLine? @relation(fields: [orderMaterialLineId], references: [id])
+  article           Article            @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  storageLocation   StorageLocation    @relation(fields: [storageLocationId], references: [id], onDelete: Cascade)
+
+  @@index([orderId])
+  @@index([articleId])
+}
+
+model ServiceMaterialTemplate {
+  id              String  @id @default(cuid())
+  serviceId       String
+  articleId       String?
+  name            String
+  defaultQuantity Float   @default(1)
+  unit            String  @default("Stk")
+  isReservable    Boolean @default(true)
+  isTool          Boolean @default(false)
+  sortOrder       Int     @default(0)
+
+  service Service  @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  article Article? @relation(fields: [articleId], references: [id])
+
+  @@index([serviceId])
+}
+
+model OrderPhase {
+  id            String           @id @default(cuid())
+  orderId       String
+  name          String
+  phaseType     OrderPhaseType   @default(SONSTIGES)
+  status        OrderPhaseStatus @default(AUSSTEHEND)
+  sortOrder     Int              @default(0)
+  plannedStart  DateTime?
+  plannedEnd    DateTime?
+  notes         String?
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([orderId, sortOrder])
+}
+
+model OrderMaterialLine {
+  id                String              @id @default(cuid())
+  orderId           String
+  articleId         String?
+  sourceServiceId   String?
+  name              String
+  quantityRequired  Float
+  quantityConsumed  Float               @default(0)
+  unit              String              @default("Stk")
+  isTool            Boolean             @default(false)
+  isPacked          Boolean             @default(false)
+  lineStatus        MaterialOrderStatus @default(NOT_CHECKED)
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+
+  order        Order         @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  article      Article?      @relation(fields: [articleId], references: [id])
+  reservations Reservation[]
+
+  @@index([orderId])
+}
+
+// ─── Phase 3–5: Einkauf, Disposition, Pläne ───
+
+enum PurchaseOrderStatus {
+  DRAFT
+  ORDERED
+  CONFIRMED
+  PARTLY_DELIVERED
+  DELIVERED
+  DELAYED
+  CANCELLED
+  RETURNED
+}
+
+enum EmployeeOperationalStatus {
+  VERFUEGBAR
+  UNTERWEGS
+  BEIM_KUNDEN
+  PAUSE
+  KRANK
+  URLAUB
+  ABGESCHLOSSEN
+}
+
+enum AbsenceType {
+  URLAUB
+  KRANK
+  SONSTIGES
+}
+
+enum PlanMarkerType {
+  SCHALTER
+  STECKDOSE
+  LEUCHTE
+  TUER
+  RAUM
+  MATERIAL
+  SONSTIGES
+}
+
+model PurchaseOrder {
+  id            String              @id @default(cuid())
+  tenantId      String
+  orderId       String?
+  poNumber      String
+  supplierName  String
+  status        PurchaseOrderStatus @default(DRAFT)
+  notes         String?
+  orderedAt     DateTime?
+  expectedAt    DateTime?
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+
+  tenant     Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  order      Order?              @relation(fields: [orderId], references: [id])
+  lines      PurchaseOrderLine[]
+  deliveries Delivery[]
+
+  @@unique([tenantId, poNumber])
+  @@index([tenantId, status])
+}
+
+model PurchaseOrderLine {
+  id               String  @id @default(cuid())
+  purchaseOrderId  String
+  articleId        String
+  quantityOrdered  Float
+  quantityReceived Float   @default(0)
+  unitPriceNet     Float?
+
+  purchaseOrder PurchaseOrder @relation(fields: [purchaseOrderId], references: [id], onDelete: Cascade)
+  article       Article       @relation(fields: [articleId], references: [id])
+
+  @@index([purchaseOrderId])
+}
+
+model Delivery {
+  id              String              @id @default(cuid())
+  tenantId        String
+  purchaseOrderId String
+  status          PurchaseOrderStatus @default(ORDERED)
+  deliveredAt     DateTime?
+  notes           String?
+  createdAt       DateTime            @default(now())
+
+  tenant        Tenant        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  purchaseOrder PurchaseOrder @relation(fields: [purchaseOrderId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId])
+}
+
+model ManualReorderSuggestion {
+  id           String   @id @default(cuid())
+  tenantId     String
+  articleId    String
+  quantity     Float
+  supplierName String?
+  note         String?
+  createdById  String?
+  createdAt    DateTime @default(now())
+
+  tenant  Tenant  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  article Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId])
+}
+
+model Team {
+  id         String   @id @default(cuid())
+  tenantId   String
+  name       String
+  vehicleId  String?
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  tenant  Tenant       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  vehicle Vehicle?     @relation(fields: [vehicleId], references: [id])
+  members TeamMember[]
+  orders  Order[]
+
+  @@index([tenantId])
+}
+
+model TeamMember {
+  id         String  @id @default(cuid())
+  teamId     String
+  employeeId String
+  isForeman  Boolean @default(false)
+
+  team     Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  employee Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+
+  @@unique([teamId, employeeId])
+}
+
+model Vehicle {
+  id                String   @id @default(cuid())
+  tenantId          String
+  name              String
+  licensePlate      String?
+  storageLocationId String?  @unique
+  isActive          Boolean  @default(true)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  tenant          Tenant           @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  storageLocation StorageLocation? @relation(fields: [storageLocationId], references: [id])
+  teams           Team[]
+  orders          Order[]
+
+  @@index([tenantId])
+}
+
+model EmployeeAbsence {
+  id         String      @id @default(cuid())
+  employeeId String
+  type       AbsenceType @default(URLAUB)
+  startDate  DateTime
+  endDate    DateTime
+  notes      String?
+  createdAt  DateTime    @default(now())
+
+  employee Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+
+  @@index([employeeId, startDate])
+}
+
+model PlanMarker {
+  id         String         @id @default(cuid())
+  orderId    String
+  fileId     String
+  markerType PlanMarkerType @default(SONSTIGES)
+  label      String?
+  posX       Float
+  posY       Float
+  articleId  String?
+  quantity   Float          @default(1)
+  createdAt  DateTime       @default(now())
+
+  order   Order      @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  file    FileUpload @relation(fields: [fileId], references: [id], onDelete: Cascade)
+  article Article?   @relation(fields: [articleId], references: [id])
+
+  @@index([orderId])
+  @@index([fileId])
+}
+
+enum StaffRequestStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+  CANCELLED
+}
+
+model StaffAssignmentRequest {
+  id            String             @id @default(cuid())
+  tenantId      String
+  orderId       String
+  employeeId    String
+  requestedById String
+  status        StaffRequestStatus @default(PENDING)
+  message       String?
+  startTime     DateTime?
+  endTime       DateTime?
+  respondedAt   DateTime?
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  employee    Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  requestedBy User     @relation("StaffRequestSender", fields: [requestedById], references: [id])
+
+  @@index([employeeId, status])
+  @@index([orderId])
+  @@index([tenantId, status])
+}
