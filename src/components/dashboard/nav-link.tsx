@@ -8,10 +8,12 @@ export function DashboardNavLink({
   href,
   label,
   icon: Icon,
+  onClick,
 }: {
   href: string;
   label: string;
   icon: LucideIcon;
+  onClick?: () => void;
 }) {
   const pathname = usePathname();
   const active = href === "/dashboard" ? pathname === "/dashboard" : pathname.startsWith(href);
@@ -19,13 +21,14 @@ export function DashboardNavLink({
   return (
     <Link
       href={href}
-      className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+      onClick={onClick}
+      className={`flex min-h-12 items-center gap-4 rounded-lg px-5 py-3 text-sm font-medium transition-colors ${
         active
           ? "bg-slate-200 text-slate-900"
           : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
       }`}
     >
-      <Icon className="h-4 w-4" />
+      <Icon className="h-5 w-5 shrink-0" />
       {label}
     </Link>
   );

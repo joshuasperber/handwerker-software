@@ -34,14 +34,24 @@ const NAV_ICONS: Record<string, LucideIcon> = {
 
 export function DashboardSidebarNav({
   items,
+  onNavigate,
 }: {
   items: { href: string; label: string }[];
+  onNavigate?: () => void;
 }) {
   return (
     <>
       {items.map(({ href, label }) => {
         const Icon = NAV_ICONS[href] ?? LayoutDashboard;
-        return <DashboardNavLink key={href} href={href} label={label} icon={Icon} />;
+        return (
+          <DashboardNavLink
+            key={href}
+            href={href}
+            label={label}
+            icon={Icon}
+            onClick={onNavigate}
+          />
+        );
       })}
     </>
   );

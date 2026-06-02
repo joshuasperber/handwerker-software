@@ -1,19 +1,8 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Geist } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
-
-const geist = Geist({
-  subsets: ["latin"],
-  variable: "--font-sans",
-});
-
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
   title: "Handwerker App – SaaS für Handwerksbetriebe",
@@ -37,13 +26,7 @@ export default function RootLayout({
   return (
     <html
       lang="de"
-      className={cn(
-        "h-full",
-        "antialiased",
-        inter.variable,
-        geist.variable,
-        "font-sans"
-      )}
+      className={cn("h-full", "antialiased", "font-sans")}
     >
       <body className="min-h-full flex flex-col font-sans">
         <TooltipProvider>{children}</TooltipProvider>
