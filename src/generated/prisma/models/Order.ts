@@ -350,6 +350,7 @@ export type OrderWhereInput = {
   team?: Prisma.XOR<Prisma.TeamNullableScalarRelationFilter, Prisma.TeamWhereInput> | null
   vehicle?: Prisma.XOR<Prisma.VehicleNullableScalarRelationFilter, Prisma.VehicleWhereInput> | null
   staffRequests?: Prisma.StaffAssignmentRequestListRelationFilter
+  shares?: Prisma.OrderShareListRelationFilter
 }
 
 export type OrderOrderByWithRelationInput = {
@@ -397,6 +398,7 @@ export type OrderOrderByWithRelationInput = {
   team?: Prisma.TeamOrderByWithRelationInput
   vehicle?: Prisma.VehicleOrderByWithRelationInput
   staffRequests?: Prisma.StaffAssignmentRequestOrderByRelationAggregateInput
+  shares?: Prisma.OrderShareOrderByRelationAggregateInput
 }
 
 export type OrderWhereUniqueInput = Prisma.AtLeast<{
@@ -448,6 +450,7 @@ export type OrderWhereUniqueInput = Prisma.AtLeast<{
   team?: Prisma.XOR<Prisma.TeamNullableScalarRelationFilter, Prisma.TeamWhereInput> | null
   vehicle?: Prisma.XOR<Prisma.VehicleNullableScalarRelationFilter, Prisma.VehicleWhereInput> | null
   staffRequests?: Prisma.StaffAssignmentRequestListRelationFilter
+  shares?: Prisma.OrderShareListRelationFilter
 }, "id" | "tenantId_orderNumber">
 
 export type OrderOrderByWithAggregationInput = {
@@ -550,6 +553,7 @@ export type OrderCreateInput = {
   team?: Prisma.TeamCreateNestedOneWithoutOrdersInput
   vehicle?: Prisma.VehicleCreateNestedOneWithoutOrdersInput
   staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutOrderInput
+  shares?: Prisma.OrderShareCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateInput = {
@@ -592,6 +596,7 @@ export type OrderUncheckedCreateInput = {
   purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutOrderInput
   planMarkers?: Prisma.PlanMarkerUncheckedCreateNestedManyWithoutOrderInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutOrderInput
+  shares?: Prisma.OrderShareUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUpdateInput = {
@@ -634,6 +639,7 @@ export type OrderUpdateInput = {
   team?: Prisma.TeamUpdateOneWithoutOrdersNestedInput
   vehicle?: Prisma.VehicleUpdateOneWithoutOrdersNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutOrderNestedInput
+  shares?: Prisma.OrderShareUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateInput = {
@@ -676,6 +682,7 @@ export type OrderUncheckedUpdateInput = {
   purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutOrderNestedInput
   planMarkers?: Prisma.PlanMarkerUncheckedUpdateManyWithoutOrderNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutOrderNestedInput
+  shares?: Prisma.OrderShareUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateManyInput = {
@@ -1310,6 +1317,20 @@ export type OrderUpdateOneRequiredWithoutStaffRequestsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.OrderUpdateToOneWithWhereWithoutStaffRequestsInput, Prisma.OrderUpdateWithoutStaffRequestsInput>, Prisma.OrderUncheckedUpdateWithoutStaffRequestsInput>
 }
 
+export type OrderCreateNestedOneWithoutSharesInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutSharesInput, Prisma.OrderUncheckedCreateWithoutSharesInput>
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutSharesInput
+  connect?: Prisma.OrderWhereUniqueInput
+}
+
+export type OrderUpdateOneRequiredWithoutSharesNestedInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutSharesInput, Prisma.OrderUncheckedCreateWithoutSharesInput>
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutSharesInput
+  upsert?: Prisma.OrderUpsertWithoutSharesInput
+  connect?: Prisma.OrderWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OrderUpdateToOneWithWhereWithoutSharesInput, Prisma.OrderUpdateWithoutSharesInput>, Prisma.OrderUncheckedUpdateWithoutSharesInput>
+}
+
 export type OrderCreateWithoutTenantInput = {
   id?: string
   orderNumber: string
@@ -1349,6 +1370,7 @@ export type OrderCreateWithoutTenantInput = {
   team?: Prisma.TeamCreateNestedOneWithoutOrdersInput
   vehicle?: Prisma.VehicleCreateNestedOneWithoutOrdersInput
   staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutOrderInput
+  shares?: Prisma.OrderShareCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutTenantInput = {
@@ -1390,6 +1412,7 @@ export type OrderUncheckedCreateWithoutTenantInput = {
   purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutOrderInput
   planMarkers?: Prisma.PlanMarkerUncheckedCreateNestedManyWithoutOrderInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutOrderInput
+  shares?: Prisma.OrderShareUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutTenantInput = {
@@ -1487,6 +1510,7 @@ export type OrderCreateWithoutCustomerInput = {
   team?: Prisma.TeamCreateNestedOneWithoutOrdersInput
   vehicle?: Prisma.VehicleCreateNestedOneWithoutOrdersInput
   staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutOrderInput
+  shares?: Prisma.OrderShareCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutCustomerInput = {
@@ -1528,6 +1552,7 @@ export type OrderUncheckedCreateWithoutCustomerInput = {
   purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutOrderInput
   planMarkers?: Prisma.PlanMarkerUncheckedCreateNestedManyWithoutOrderInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutOrderInput
+  shares?: Prisma.OrderShareUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutCustomerInput = {
@@ -1595,6 +1620,7 @@ export type OrderCreateWithoutPropertyInput = {
   team?: Prisma.TeamCreateNestedOneWithoutOrdersInput
   vehicle?: Prisma.VehicleCreateNestedOneWithoutOrdersInput
   staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutOrderInput
+  shares?: Prisma.OrderShareCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutPropertyInput = {
@@ -1636,6 +1662,7 @@ export type OrderUncheckedCreateWithoutPropertyInput = {
   purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutOrderInput
   planMarkers?: Prisma.PlanMarkerUncheckedCreateNestedManyWithoutOrderInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutOrderInput
+  shares?: Prisma.OrderShareUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutPropertyInput = {
@@ -1703,6 +1730,7 @@ export type OrderCreateWithoutServicesInput = {
   team?: Prisma.TeamCreateNestedOneWithoutOrdersInput
   vehicle?: Prisma.VehicleCreateNestedOneWithoutOrdersInput
   staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutOrderInput
+  shares?: Prisma.OrderShareCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutServicesInput = {
@@ -1744,6 +1772,7 @@ export type OrderUncheckedCreateWithoutServicesInput = {
   purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutOrderInput
   planMarkers?: Prisma.PlanMarkerUncheckedCreateNestedManyWithoutOrderInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutOrderInput
+  shares?: Prisma.OrderShareUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutServicesInput = {
@@ -1801,6 +1830,7 @@ export type OrderUpdateWithoutServicesInput = {
   team?: Prisma.TeamUpdateOneWithoutOrdersNestedInput
   vehicle?: Prisma.VehicleUpdateOneWithoutOrdersNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutOrderNestedInput
+  shares?: Prisma.OrderShareUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutServicesInput = {
@@ -1842,6 +1872,7 @@ export type OrderUncheckedUpdateWithoutServicesInput = {
   purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutOrderNestedInput
   planMarkers?: Prisma.PlanMarkerUncheckedUpdateManyWithoutOrderNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutOrderNestedInput
+  shares?: Prisma.OrderShareUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutAppointmentsInput = {
@@ -1883,6 +1914,7 @@ export type OrderCreateWithoutAppointmentsInput = {
   team?: Prisma.TeamCreateNestedOneWithoutOrdersInput
   vehicle?: Prisma.VehicleCreateNestedOneWithoutOrdersInput
   staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutOrderInput
+  shares?: Prisma.OrderShareCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutAppointmentsInput = {
@@ -1924,6 +1956,7 @@ export type OrderUncheckedCreateWithoutAppointmentsInput = {
   purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutOrderInput
   planMarkers?: Prisma.PlanMarkerUncheckedCreateNestedManyWithoutOrderInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutOrderInput
+  shares?: Prisma.OrderShareUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutAppointmentsInput = {
@@ -1981,6 +2014,7 @@ export type OrderUpdateWithoutAppointmentsInput = {
   team?: Prisma.TeamUpdateOneWithoutOrdersNestedInput
   vehicle?: Prisma.VehicleUpdateOneWithoutOrdersNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutOrderNestedInput
+  shares?: Prisma.OrderShareUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutAppointmentsInput = {
@@ -2022,6 +2056,7 @@ export type OrderUncheckedUpdateWithoutAppointmentsInput = {
   purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutOrderNestedInput
   planMarkers?: Prisma.PlanMarkerUncheckedUpdateManyWithoutOrderNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutOrderNestedInput
+  shares?: Prisma.OrderShareUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutChecklistsInput = {
@@ -2063,6 +2098,7 @@ export type OrderCreateWithoutChecklistsInput = {
   team?: Prisma.TeamCreateNestedOneWithoutOrdersInput
   vehicle?: Prisma.VehicleCreateNestedOneWithoutOrdersInput
   staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutOrderInput
+  shares?: Prisma.OrderShareCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutChecklistsInput = {
@@ -2104,6 +2140,7 @@ export type OrderUncheckedCreateWithoutChecklistsInput = {
   purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutOrderInput
   planMarkers?: Prisma.PlanMarkerUncheckedCreateNestedManyWithoutOrderInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutOrderInput
+  shares?: Prisma.OrderShareUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutChecklistsInput = {
@@ -2161,6 +2198,7 @@ export type OrderUpdateWithoutChecklistsInput = {
   team?: Prisma.TeamUpdateOneWithoutOrdersNestedInput
   vehicle?: Prisma.VehicleUpdateOneWithoutOrdersNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutOrderNestedInput
+  shares?: Prisma.OrderShareUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutChecklistsInput = {
@@ -2202,6 +2240,7 @@ export type OrderUncheckedUpdateWithoutChecklistsInput = {
   purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutOrderNestedInput
   planMarkers?: Prisma.PlanMarkerUncheckedUpdateManyWithoutOrderNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutOrderNestedInput
+  shares?: Prisma.OrderShareUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutFilesInput = {
@@ -2243,6 +2282,7 @@ export type OrderCreateWithoutFilesInput = {
   team?: Prisma.TeamCreateNestedOneWithoutOrdersInput
   vehicle?: Prisma.VehicleCreateNestedOneWithoutOrdersInput
   staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutOrderInput
+  shares?: Prisma.OrderShareCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutFilesInput = {
@@ -2284,6 +2324,7 @@ export type OrderUncheckedCreateWithoutFilesInput = {
   purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutOrderInput
   planMarkers?: Prisma.PlanMarkerUncheckedCreateNestedManyWithoutOrderInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutOrderInput
+  shares?: Prisma.OrderShareUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutFilesInput = {
@@ -2341,6 +2382,7 @@ export type OrderUpdateWithoutFilesInput = {
   team?: Prisma.TeamUpdateOneWithoutOrdersNestedInput
   vehicle?: Prisma.VehicleUpdateOneWithoutOrdersNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutOrderNestedInput
+  shares?: Prisma.OrderShareUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutFilesInput = {
@@ -2382,6 +2424,7 @@ export type OrderUncheckedUpdateWithoutFilesInput = {
   purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutOrderNestedInput
   planMarkers?: Prisma.PlanMarkerUncheckedUpdateManyWithoutOrderNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutOrderNestedInput
+  shares?: Prisma.OrderShareUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutTimeEntriesInput = {
@@ -2423,6 +2466,7 @@ export type OrderCreateWithoutTimeEntriesInput = {
   team?: Prisma.TeamCreateNestedOneWithoutOrdersInput
   vehicle?: Prisma.VehicleCreateNestedOneWithoutOrdersInput
   staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutOrderInput
+  shares?: Prisma.OrderShareCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutTimeEntriesInput = {
@@ -2464,6 +2508,7 @@ export type OrderUncheckedCreateWithoutTimeEntriesInput = {
   purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutOrderInput
   planMarkers?: Prisma.PlanMarkerUncheckedCreateNestedManyWithoutOrderInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutOrderInput
+  shares?: Prisma.OrderShareUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutTimeEntriesInput = {
@@ -2521,6 +2566,7 @@ export type OrderUpdateWithoutTimeEntriesInput = {
   team?: Prisma.TeamUpdateOneWithoutOrdersNestedInput
   vehicle?: Prisma.VehicleUpdateOneWithoutOrdersNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutOrderNestedInput
+  shares?: Prisma.OrderShareUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutTimeEntriesInput = {
@@ -2562,6 +2608,7 @@ export type OrderUncheckedUpdateWithoutTimeEntriesInput = {
   purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutOrderNestedInput
   planMarkers?: Prisma.PlanMarkerUncheckedUpdateManyWithoutOrderNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutOrderNestedInput
+  shares?: Prisma.OrderShareUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutMaterialUsagesInput = {
@@ -2603,6 +2650,7 @@ export type OrderCreateWithoutMaterialUsagesInput = {
   team?: Prisma.TeamCreateNestedOneWithoutOrdersInput
   vehicle?: Prisma.VehicleCreateNestedOneWithoutOrdersInput
   staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutOrderInput
+  shares?: Prisma.OrderShareCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutMaterialUsagesInput = {
@@ -2644,6 +2692,7 @@ export type OrderUncheckedCreateWithoutMaterialUsagesInput = {
   purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutOrderInput
   planMarkers?: Prisma.PlanMarkerUncheckedCreateNestedManyWithoutOrderInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutOrderInput
+  shares?: Prisma.OrderShareUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutMaterialUsagesInput = {
@@ -2701,6 +2750,7 @@ export type OrderUpdateWithoutMaterialUsagesInput = {
   team?: Prisma.TeamUpdateOneWithoutOrdersNestedInput
   vehicle?: Prisma.VehicleUpdateOneWithoutOrdersNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutOrderNestedInput
+  shares?: Prisma.OrderShareUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutMaterialUsagesInput = {
@@ -2742,6 +2792,7 @@ export type OrderUncheckedUpdateWithoutMaterialUsagesInput = {
   purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutOrderNestedInput
   planMarkers?: Prisma.PlanMarkerUncheckedUpdateManyWithoutOrderNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutOrderNestedInput
+  shares?: Prisma.OrderShareUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutMessagesInput = {
@@ -2783,6 +2834,7 @@ export type OrderCreateWithoutMessagesInput = {
   team?: Prisma.TeamCreateNestedOneWithoutOrdersInput
   vehicle?: Prisma.VehicleCreateNestedOneWithoutOrdersInput
   staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutOrderInput
+  shares?: Prisma.OrderShareCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutMessagesInput = {
@@ -2824,6 +2876,7 @@ export type OrderUncheckedCreateWithoutMessagesInput = {
   purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutOrderInput
   planMarkers?: Prisma.PlanMarkerUncheckedCreateNestedManyWithoutOrderInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutOrderInput
+  shares?: Prisma.OrderShareUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutMessagesInput = {
@@ -2881,6 +2934,7 @@ export type OrderUpdateWithoutMessagesInput = {
   team?: Prisma.TeamUpdateOneWithoutOrdersNestedInput
   vehicle?: Prisma.VehicleUpdateOneWithoutOrdersNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutOrderNestedInput
+  shares?: Prisma.OrderShareUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutMessagesInput = {
@@ -2922,6 +2976,7 @@ export type OrderUncheckedUpdateWithoutMessagesInput = {
   purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutOrderNestedInput
   planMarkers?: Prisma.PlanMarkerUncheckedUpdateManyWithoutOrderNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutOrderNestedInput
+  shares?: Prisma.OrderShareUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutCalculationsInput = {
@@ -2963,6 +3018,7 @@ export type OrderCreateWithoutCalculationsInput = {
   team?: Prisma.TeamCreateNestedOneWithoutOrdersInput
   vehicle?: Prisma.VehicleCreateNestedOneWithoutOrdersInput
   staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutOrderInput
+  shares?: Prisma.OrderShareCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutCalculationsInput = {
@@ -3004,6 +3060,7 @@ export type OrderUncheckedCreateWithoutCalculationsInput = {
   purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutOrderInput
   planMarkers?: Prisma.PlanMarkerUncheckedCreateNestedManyWithoutOrderInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutOrderInput
+  shares?: Prisma.OrderShareUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutCalculationsInput = {
@@ -3061,6 +3118,7 @@ export type OrderUpdateWithoutCalculationsInput = {
   team?: Prisma.TeamUpdateOneWithoutOrdersNestedInput
   vehicle?: Prisma.VehicleUpdateOneWithoutOrdersNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutOrderNestedInput
+  shares?: Prisma.OrderShareUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutCalculationsInput = {
@@ -3102,6 +3160,7 @@ export type OrderUncheckedUpdateWithoutCalculationsInput = {
   purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutOrderNestedInput
   planMarkers?: Prisma.PlanMarkerUncheckedUpdateManyWithoutOrderNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutOrderNestedInput
+  shares?: Prisma.OrderShareUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutStockMovementsInput = {
@@ -3143,6 +3202,7 @@ export type OrderCreateWithoutStockMovementsInput = {
   team?: Prisma.TeamCreateNestedOneWithoutOrdersInput
   vehicle?: Prisma.VehicleCreateNestedOneWithoutOrdersInput
   staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutOrderInput
+  shares?: Prisma.OrderShareCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutStockMovementsInput = {
@@ -3184,6 +3244,7 @@ export type OrderUncheckedCreateWithoutStockMovementsInput = {
   purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutOrderInput
   planMarkers?: Prisma.PlanMarkerUncheckedCreateNestedManyWithoutOrderInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutOrderInput
+  shares?: Prisma.OrderShareUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutStockMovementsInput = {
@@ -3241,6 +3302,7 @@ export type OrderUpdateWithoutStockMovementsInput = {
   team?: Prisma.TeamUpdateOneWithoutOrdersNestedInput
   vehicle?: Prisma.VehicleUpdateOneWithoutOrdersNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutOrderNestedInput
+  shares?: Prisma.OrderShareUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutStockMovementsInput = {
@@ -3282,6 +3344,7 @@ export type OrderUncheckedUpdateWithoutStockMovementsInput = {
   purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutOrderNestedInput
   planMarkers?: Prisma.PlanMarkerUncheckedUpdateManyWithoutOrderNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutOrderNestedInput
+  shares?: Prisma.OrderShareUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutReservationsInput = {
@@ -3323,6 +3386,7 @@ export type OrderCreateWithoutReservationsInput = {
   team?: Prisma.TeamCreateNestedOneWithoutOrdersInput
   vehicle?: Prisma.VehicleCreateNestedOneWithoutOrdersInput
   staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutOrderInput
+  shares?: Prisma.OrderShareCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutReservationsInput = {
@@ -3364,6 +3428,7 @@ export type OrderUncheckedCreateWithoutReservationsInput = {
   purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutOrderInput
   planMarkers?: Prisma.PlanMarkerUncheckedCreateNestedManyWithoutOrderInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutOrderInput
+  shares?: Prisma.OrderShareUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutReservationsInput = {
@@ -3421,6 +3486,7 @@ export type OrderUpdateWithoutReservationsInput = {
   team?: Prisma.TeamUpdateOneWithoutOrdersNestedInput
   vehicle?: Prisma.VehicleUpdateOneWithoutOrdersNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutOrderNestedInput
+  shares?: Prisma.OrderShareUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutReservationsInput = {
@@ -3462,6 +3528,7 @@ export type OrderUncheckedUpdateWithoutReservationsInput = {
   purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutOrderNestedInput
   planMarkers?: Prisma.PlanMarkerUncheckedUpdateManyWithoutOrderNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutOrderNestedInput
+  shares?: Prisma.OrderShareUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutPhasesInput = {
@@ -3503,6 +3570,7 @@ export type OrderCreateWithoutPhasesInput = {
   team?: Prisma.TeamCreateNestedOneWithoutOrdersInput
   vehicle?: Prisma.VehicleCreateNestedOneWithoutOrdersInput
   staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutOrderInput
+  shares?: Prisma.OrderShareCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutPhasesInput = {
@@ -3544,6 +3612,7 @@ export type OrderUncheckedCreateWithoutPhasesInput = {
   purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutOrderInput
   planMarkers?: Prisma.PlanMarkerUncheckedCreateNestedManyWithoutOrderInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutOrderInput
+  shares?: Prisma.OrderShareUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutPhasesInput = {
@@ -3601,6 +3670,7 @@ export type OrderUpdateWithoutPhasesInput = {
   team?: Prisma.TeamUpdateOneWithoutOrdersNestedInput
   vehicle?: Prisma.VehicleUpdateOneWithoutOrdersNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutOrderNestedInput
+  shares?: Prisma.OrderShareUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutPhasesInput = {
@@ -3642,6 +3712,7 @@ export type OrderUncheckedUpdateWithoutPhasesInput = {
   purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutOrderNestedInput
   planMarkers?: Prisma.PlanMarkerUncheckedUpdateManyWithoutOrderNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutOrderNestedInput
+  shares?: Prisma.OrderShareUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutMaterialLinesInput = {
@@ -3683,6 +3754,7 @@ export type OrderCreateWithoutMaterialLinesInput = {
   team?: Prisma.TeamCreateNestedOneWithoutOrdersInput
   vehicle?: Prisma.VehicleCreateNestedOneWithoutOrdersInput
   staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutOrderInput
+  shares?: Prisma.OrderShareCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutMaterialLinesInput = {
@@ -3724,6 +3796,7 @@ export type OrderUncheckedCreateWithoutMaterialLinesInput = {
   purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutOrderInput
   planMarkers?: Prisma.PlanMarkerUncheckedCreateNestedManyWithoutOrderInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutOrderInput
+  shares?: Prisma.OrderShareUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutMaterialLinesInput = {
@@ -3781,6 +3854,7 @@ export type OrderUpdateWithoutMaterialLinesInput = {
   team?: Prisma.TeamUpdateOneWithoutOrdersNestedInput
   vehicle?: Prisma.VehicleUpdateOneWithoutOrdersNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutOrderNestedInput
+  shares?: Prisma.OrderShareUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutMaterialLinesInput = {
@@ -3822,6 +3896,7 @@ export type OrderUncheckedUpdateWithoutMaterialLinesInput = {
   purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutOrderNestedInput
   planMarkers?: Prisma.PlanMarkerUncheckedUpdateManyWithoutOrderNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutOrderNestedInput
+  shares?: Prisma.OrderShareUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutPurchaseOrdersInput = {
@@ -3863,6 +3938,7 @@ export type OrderCreateWithoutPurchaseOrdersInput = {
   team?: Prisma.TeamCreateNestedOneWithoutOrdersInput
   vehicle?: Prisma.VehicleCreateNestedOneWithoutOrdersInput
   staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutOrderInput
+  shares?: Prisma.OrderShareCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutPurchaseOrdersInput = {
@@ -3904,6 +3980,7 @@ export type OrderUncheckedCreateWithoutPurchaseOrdersInput = {
   stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutOrderInput
   planMarkers?: Prisma.PlanMarkerUncheckedCreateNestedManyWithoutOrderInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutOrderInput
+  shares?: Prisma.OrderShareUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutPurchaseOrdersInput = {
@@ -3961,6 +4038,7 @@ export type OrderUpdateWithoutPurchaseOrdersInput = {
   team?: Prisma.TeamUpdateOneWithoutOrdersNestedInput
   vehicle?: Prisma.VehicleUpdateOneWithoutOrdersNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutOrderNestedInput
+  shares?: Prisma.OrderShareUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutPurchaseOrdersInput = {
@@ -4002,6 +4080,7 @@ export type OrderUncheckedUpdateWithoutPurchaseOrdersInput = {
   stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutOrderNestedInput
   planMarkers?: Prisma.PlanMarkerUncheckedUpdateManyWithoutOrderNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutOrderNestedInput
+  shares?: Prisma.OrderShareUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutTeamInput = {
@@ -4043,6 +4122,7 @@ export type OrderCreateWithoutTeamInput = {
   planMarkers?: Prisma.PlanMarkerCreateNestedManyWithoutOrderInput
   vehicle?: Prisma.VehicleCreateNestedOneWithoutOrdersInput
   staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutOrderInput
+  shares?: Prisma.OrderShareCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutTeamInput = {
@@ -4084,6 +4164,7 @@ export type OrderUncheckedCreateWithoutTeamInput = {
   purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutOrderInput
   planMarkers?: Prisma.PlanMarkerUncheckedCreateNestedManyWithoutOrderInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutOrderInput
+  shares?: Prisma.OrderShareUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutTeamInput = {
@@ -4151,6 +4232,7 @@ export type OrderCreateWithoutVehicleInput = {
   planMarkers?: Prisma.PlanMarkerCreateNestedManyWithoutOrderInput
   team?: Prisma.TeamCreateNestedOneWithoutOrdersInput
   staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutOrderInput
+  shares?: Prisma.OrderShareCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutVehicleInput = {
@@ -4192,6 +4274,7 @@ export type OrderUncheckedCreateWithoutVehicleInput = {
   purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutOrderInput
   planMarkers?: Prisma.PlanMarkerUncheckedCreateNestedManyWithoutOrderInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutOrderInput
+  shares?: Prisma.OrderShareUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutVehicleInput = {
@@ -4259,6 +4342,7 @@ export type OrderCreateWithoutPlanMarkersInput = {
   team?: Prisma.TeamCreateNestedOneWithoutOrdersInput
   vehicle?: Prisma.VehicleCreateNestedOneWithoutOrdersInput
   staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutOrderInput
+  shares?: Prisma.OrderShareCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutPlanMarkersInput = {
@@ -4300,6 +4384,7 @@ export type OrderUncheckedCreateWithoutPlanMarkersInput = {
   stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutOrderInput
   purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutOrderInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutOrderInput
+  shares?: Prisma.OrderShareUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutPlanMarkersInput = {
@@ -4357,6 +4442,7 @@ export type OrderUpdateWithoutPlanMarkersInput = {
   team?: Prisma.TeamUpdateOneWithoutOrdersNestedInput
   vehicle?: Prisma.VehicleUpdateOneWithoutOrdersNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutOrderNestedInput
+  shares?: Prisma.OrderShareUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutPlanMarkersInput = {
@@ -4398,6 +4484,7 @@ export type OrderUncheckedUpdateWithoutPlanMarkersInput = {
   stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutOrderNestedInput
   purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutOrderNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutOrderNestedInput
+  shares?: Prisma.OrderShareUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutStaffRequestsInput = {
@@ -4439,6 +4526,7 @@ export type OrderCreateWithoutStaffRequestsInput = {
   planMarkers?: Prisma.PlanMarkerCreateNestedManyWithoutOrderInput
   team?: Prisma.TeamCreateNestedOneWithoutOrdersInput
   vehicle?: Prisma.VehicleCreateNestedOneWithoutOrdersInput
+  shares?: Prisma.OrderShareCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutStaffRequestsInput = {
@@ -4480,6 +4568,7 @@ export type OrderUncheckedCreateWithoutStaffRequestsInput = {
   stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutOrderInput
   purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutOrderInput
   planMarkers?: Prisma.PlanMarkerUncheckedCreateNestedManyWithoutOrderInput
+  shares?: Prisma.OrderShareUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutStaffRequestsInput = {
@@ -4537,6 +4626,7 @@ export type OrderUpdateWithoutStaffRequestsInput = {
   planMarkers?: Prisma.PlanMarkerUpdateManyWithoutOrderNestedInput
   team?: Prisma.TeamUpdateOneWithoutOrdersNestedInput
   vehicle?: Prisma.VehicleUpdateOneWithoutOrdersNestedInput
+  shares?: Prisma.OrderShareUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutStaffRequestsInput = {
@@ -4578,6 +4668,191 @@ export type OrderUncheckedUpdateWithoutStaffRequestsInput = {
   stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutOrderNestedInput
   purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutOrderNestedInput
   planMarkers?: Prisma.PlanMarkerUncheckedUpdateManyWithoutOrderNestedInput
+  shares?: Prisma.OrderShareUncheckedUpdateManyWithoutOrderNestedInput
+}
+
+export type OrderCreateWithoutSharesInput = {
+  id?: string
+  orderNumber: string
+  title?: string | null
+  orderType?: $Enums.OrderType
+  status?: $Enums.OrderStatus
+  priority?: $Enums.OrderPriority
+  materialStatus?: $Enums.MaterialOrderStatus
+  completionResult?: $Enums.CompletionResult | null
+  customerConfirmationStatus?: $Enums.CustomerConfirmationStatus
+  description?: string | null
+  internalNotes?: string | null
+  customerNotes?: string | null
+  questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  scheduledStart?: Date | string | null
+  scheduledEnd?: Date | string | null
+  completedAt?: Date | string | null
+  invoicedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tenant: Prisma.TenantCreateNestedOneWithoutOrdersInput
+  customer: Prisma.CustomerCreateNestedOneWithoutOrdersInput
+  property: Prisma.PropertyCreateNestedOneWithoutOrdersInput
+  services?: Prisma.OrderServiceCreateNestedManyWithoutOrderInput
+  appointments?: Prisma.AppointmentCreateNestedManyWithoutOrderInput
+  files?: Prisma.FileUploadCreateNestedManyWithoutOrderInput
+  checklists?: Prisma.OrderChecklistCreateNestedManyWithoutOrderInput
+  messages?: Prisma.MessageCreateNestedManyWithoutOrderInput
+  timeEntries?: Prisma.TimeEntryCreateNestedManyWithoutOrderInput
+  materialUsages?: Prisma.MaterialUsageCreateNestedManyWithoutOrderInput
+  calculations?: Prisma.CalculationCreateNestedManyWithoutOrderInput
+  phases?: Prisma.OrderPhaseCreateNestedManyWithoutOrderInput
+  materialLines?: Prisma.OrderMaterialLineCreateNestedManyWithoutOrderInput
+  reservations?: Prisma.ReservationCreateNestedManyWithoutOrderInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutOrderInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutOrderInput
+  planMarkers?: Prisma.PlanMarkerCreateNestedManyWithoutOrderInput
+  team?: Prisma.TeamCreateNestedOneWithoutOrdersInput
+  vehicle?: Prisma.VehicleCreateNestedOneWithoutOrdersInput
+  staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutOrderInput
+}
+
+export type OrderUncheckedCreateWithoutSharesInput = {
+  id?: string
+  tenantId: string
+  customerId: string
+  propertyId: string
+  orderNumber: string
+  title?: string | null
+  orderType?: $Enums.OrderType
+  status?: $Enums.OrderStatus
+  priority?: $Enums.OrderPriority
+  materialStatus?: $Enums.MaterialOrderStatus
+  completionResult?: $Enums.CompletionResult | null
+  customerConfirmationStatus?: $Enums.CustomerConfirmationStatus
+  description?: string | null
+  internalNotes?: string | null
+  customerNotes?: string | null
+  questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  scheduledStart?: Date | string | null
+  scheduledEnd?: Date | string | null
+  completedAt?: Date | string | null
+  invoicedAt?: Date | string | null
+  teamId?: string | null
+  vehicleId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  services?: Prisma.OrderServiceUncheckedCreateNestedManyWithoutOrderInput
+  appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutOrderInput
+  files?: Prisma.FileUploadUncheckedCreateNestedManyWithoutOrderInput
+  checklists?: Prisma.OrderChecklistUncheckedCreateNestedManyWithoutOrderInput
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutOrderInput
+  timeEntries?: Prisma.TimeEntryUncheckedCreateNestedManyWithoutOrderInput
+  materialUsages?: Prisma.MaterialUsageUncheckedCreateNestedManyWithoutOrderInput
+  calculations?: Prisma.CalculationUncheckedCreateNestedManyWithoutOrderInput
+  phases?: Prisma.OrderPhaseUncheckedCreateNestedManyWithoutOrderInput
+  materialLines?: Prisma.OrderMaterialLineUncheckedCreateNestedManyWithoutOrderInput
+  reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutOrderInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutOrderInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutOrderInput
+  planMarkers?: Prisma.PlanMarkerUncheckedCreateNestedManyWithoutOrderInput
+  staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutOrderInput
+}
+
+export type OrderCreateOrConnectWithoutSharesInput = {
+  where: Prisma.OrderWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrderCreateWithoutSharesInput, Prisma.OrderUncheckedCreateWithoutSharesInput>
+}
+
+export type OrderUpsertWithoutSharesInput = {
+  update: Prisma.XOR<Prisma.OrderUpdateWithoutSharesInput, Prisma.OrderUncheckedUpdateWithoutSharesInput>
+  create: Prisma.XOR<Prisma.OrderCreateWithoutSharesInput, Prisma.OrderUncheckedCreateWithoutSharesInput>
+  where?: Prisma.OrderWhereInput
+}
+
+export type OrderUpdateToOneWithWhereWithoutSharesInput = {
+  where?: Prisma.OrderWhereInput
+  data: Prisma.XOR<Prisma.OrderUpdateWithoutSharesInput, Prisma.OrderUncheckedUpdateWithoutSharesInput>
+}
+
+export type OrderUpdateWithoutSharesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+  priority?: Prisma.EnumOrderPriorityFieldUpdateOperationsInput | $Enums.OrderPriority
+  materialStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
+  completionResult?: Prisma.NullableEnumCompletionResultFieldUpdateOperationsInput | $Enums.CompletionResult | null
+  customerConfirmationStatus?: Prisma.EnumCustomerConfirmationStatusFieldUpdateOperationsInput | $Enums.CustomerConfirmationStatus
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  internalNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutOrdersNestedInput
+  customer?: Prisma.CustomerUpdateOneRequiredWithoutOrdersNestedInput
+  property?: Prisma.PropertyUpdateOneRequiredWithoutOrdersNestedInput
+  services?: Prisma.OrderServiceUpdateManyWithoutOrderNestedInput
+  appointments?: Prisma.AppointmentUpdateManyWithoutOrderNestedInput
+  files?: Prisma.FileUploadUpdateManyWithoutOrderNestedInput
+  checklists?: Prisma.OrderChecklistUpdateManyWithoutOrderNestedInput
+  messages?: Prisma.MessageUpdateManyWithoutOrderNestedInput
+  timeEntries?: Prisma.TimeEntryUpdateManyWithoutOrderNestedInput
+  materialUsages?: Prisma.MaterialUsageUpdateManyWithoutOrderNestedInput
+  calculations?: Prisma.CalculationUpdateManyWithoutOrderNestedInput
+  phases?: Prisma.OrderPhaseUpdateManyWithoutOrderNestedInput
+  materialLines?: Prisma.OrderMaterialLineUpdateManyWithoutOrderNestedInput
+  reservations?: Prisma.ReservationUpdateManyWithoutOrderNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutOrderNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutOrderNestedInput
+  planMarkers?: Prisma.PlanMarkerUpdateManyWithoutOrderNestedInput
+  team?: Prisma.TeamUpdateOneWithoutOrdersNestedInput
+  vehicle?: Prisma.VehicleUpdateOneWithoutOrdersNestedInput
+  staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutOrderNestedInput
+}
+
+export type OrderUncheckedUpdateWithoutSharesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.StringFieldUpdateOperationsInput | string
+  propertyId?: Prisma.StringFieldUpdateOperationsInput | string
+  orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+  priority?: Prisma.EnumOrderPriorityFieldUpdateOperationsInput | $Enums.OrderPriority
+  materialStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
+  completionResult?: Prisma.NullableEnumCompletionResultFieldUpdateOperationsInput | $Enums.CompletionResult | null
+  customerConfirmationStatus?: Prisma.EnumCustomerConfirmationStatusFieldUpdateOperationsInput | $Enums.CustomerConfirmationStatus
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  internalNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  services?: Prisma.OrderServiceUncheckedUpdateManyWithoutOrderNestedInput
+  appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutOrderNestedInput
+  files?: Prisma.FileUploadUncheckedUpdateManyWithoutOrderNestedInput
+  checklists?: Prisma.OrderChecklistUncheckedUpdateManyWithoutOrderNestedInput
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutOrderNestedInput
+  timeEntries?: Prisma.TimeEntryUncheckedUpdateManyWithoutOrderNestedInput
+  materialUsages?: Prisma.MaterialUsageUncheckedUpdateManyWithoutOrderNestedInput
+  calculations?: Prisma.CalculationUncheckedUpdateManyWithoutOrderNestedInput
+  phases?: Prisma.OrderPhaseUncheckedUpdateManyWithoutOrderNestedInput
+  materialLines?: Prisma.OrderMaterialLineUncheckedUpdateManyWithoutOrderNestedInput
+  reservations?: Prisma.ReservationUncheckedUpdateManyWithoutOrderNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutOrderNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutOrderNestedInput
+  planMarkers?: Prisma.PlanMarkerUncheckedUpdateManyWithoutOrderNestedInput
+  staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateManyTenantInput = {
@@ -4645,6 +4920,7 @@ export type OrderUpdateWithoutTenantInput = {
   team?: Prisma.TeamUpdateOneWithoutOrdersNestedInput
   vehicle?: Prisma.VehicleUpdateOneWithoutOrdersNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutOrderNestedInput
+  shares?: Prisma.OrderShareUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutTenantInput = {
@@ -4686,6 +4962,7 @@ export type OrderUncheckedUpdateWithoutTenantInput = {
   purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutOrderNestedInput
   planMarkers?: Prisma.PlanMarkerUncheckedUpdateManyWithoutOrderNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutOrderNestedInput
+  shares?: Prisma.OrderShareUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateManyWithoutTenantInput = {
@@ -4779,6 +5056,7 @@ export type OrderUpdateWithoutCustomerInput = {
   team?: Prisma.TeamUpdateOneWithoutOrdersNestedInput
   vehicle?: Prisma.VehicleUpdateOneWithoutOrdersNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutOrderNestedInput
+  shares?: Prisma.OrderShareUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutCustomerInput = {
@@ -4820,6 +5098,7 @@ export type OrderUncheckedUpdateWithoutCustomerInput = {
   purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutOrderNestedInput
   planMarkers?: Prisma.PlanMarkerUncheckedUpdateManyWithoutOrderNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutOrderNestedInput
+  shares?: Prisma.OrderShareUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateManyWithoutCustomerInput = {
@@ -4913,6 +5192,7 @@ export type OrderUpdateWithoutPropertyInput = {
   team?: Prisma.TeamUpdateOneWithoutOrdersNestedInput
   vehicle?: Prisma.VehicleUpdateOneWithoutOrdersNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutOrderNestedInput
+  shares?: Prisma.OrderShareUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutPropertyInput = {
@@ -4954,6 +5234,7 @@ export type OrderUncheckedUpdateWithoutPropertyInput = {
   purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutOrderNestedInput
   planMarkers?: Prisma.PlanMarkerUncheckedUpdateManyWithoutOrderNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutOrderNestedInput
+  shares?: Prisma.OrderShareUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateManyWithoutPropertyInput = {
@@ -5047,6 +5328,7 @@ export type OrderUpdateWithoutTeamInput = {
   planMarkers?: Prisma.PlanMarkerUpdateManyWithoutOrderNestedInput
   vehicle?: Prisma.VehicleUpdateOneWithoutOrdersNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutOrderNestedInput
+  shares?: Prisma.OrderShareUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutTeamInput = {
@@ -5088,6 +5370,7 @@ export type OrderUncheckedUpdateWithoutTeamInput = {
   purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutOrderNestedInput
   planMarkers?: Prisma.PlanMarkerUncheckedUpdateManyWithoutOrderNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutOrderNestedInput
+  shares?: Prisma.OrderShareUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateManyWithoutTeamInput = {
@@ -5181,6 +5464,7 @@ export type OrderUpdateWithoutVehicleInput = {
   planMarkers?: Prisma.PlanMarkerUpdateManyWithoutOrderNestedInput
   team?: Prisma.TeamUpdateOneWithoutOrdersNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutOrderNestedInput
+  shares?: Prisma.OrderShareUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutVehicleInput = {
@@ -5222,6 +5506,7 @@ export type OrderUncheckedUpdateWithoutVehicleInput = {
   purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutOrderNestedInput
   planMarkers?: Prisma.PlanMarkerUncheckedUpdateManyWithoutOrderNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutOrderNestedInput
+  shares?: Prisma.OrderShareUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateManyWithoutVehicleInput = {
@@ -5271,6 +5556,7 @@ export type OrderCountOutputType = {
   purchaseOrders: number
   planMarkers: number
   staffRequests: number
+  shares: number
 }
 
 export type OrderCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -5289,6 +5575,7 @@ export type OrderCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.
   purchaseOrders?: boolean | OrderCountOutputTypeCountPurchaseOrdersArgs
   planMarkers?: boolean | OrderCountOutputTypeCountPlanMarkersArgs
   staffRequests?: boolean | OrderCountOutputTypeCountStaffRequestsArgs
+  shares?: boolean | OrderCountOutputTypeCountSharesArgs
 }
 
 /**
@@ -5406,6 +5693,13 @@ export type OrderCountOutputTypeCountStaffRequestsArgs<ExtArgs extends runtime.T
   where?: Prisma.StaffAssignmentRequestWhereInput
 }
 
+/**
+ * OrderCountOutputType without action
+ */
+export type OrderCountOutputTypeCountSharesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.OrderShareWhereInput
+}
+
 
 export type OrderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -5452,6 +5746,7 @@ export type OrderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   team?: boolean | Prisma.Order$teamArgs<ExtArgs>
   vehicle?: boolean | Prisma.Order$vehicleArgs<ExtArgs>
   staffRequests?: boolean | Prisma.Order$staffRequestsArgs<ExtArgs>
+  shares?: boolean | Prisma.Order$sharesArgs<ExtArgs>
   _count?: boolean | Prisma.OrderCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["order"]>
 
@@ -5568,6 +5863,7 @@ export type OrderInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   team?: boolean | Prisma.Order$teamArgs<ExtArgs>
   vehicle?: boolean | Prisma.Order$vehicleArgs<ExtArgs>
   staffRequests?: boolean | Prisma.Order$staffRequestsArgs<ExtArgs>
+  shares?: boolean | Prisma.Order$sharesArgs<ExtArgs>
   _count?: boolean | Prisma.OrderCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type OrderIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -5608,6 +5904,7 @@ export type $OrderPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     team: Prisma.$TeamPayload<ExtArgs> | null
     vehicle: Prisma.$VehiclePayload<ExtArgs> | null
     staffRequests: Prisma.$StaffAssignmentRequestPayload<ExtArgs>[]
+    shares: Prisma.$OrderSharePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -6048,6 +6345,7 @@ export interface Prisma__OrderClient<T, Null = never, ExtArgs extends runtime.Ty
   team<T extends Prisma.Order$teamArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$teamArgs<ExtArgs>>): Prisma.Prisma__TeamClient<runtime.Types.Result.GetResult<Prisma.$TeamPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   vehicle<T extends Prisma.Order$vehicleArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$vehicleArgs<ExtArgs>>): Prisma.Prisma__VehicleClient<runtime.Types.Result.GetResult<Prisma.$VehiclePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   staffRequests<T extends Prisma.Order$staffRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$staffRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StaffAssignmentRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  shares<T extends Prisma.Order$sharesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$sharesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderSharePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6897,6 +7195,30 @@ export type Order$staffRequestsArgs<ExtArgs extends runtime.Types.Extensions.Int
   take?: number
   skip?: number
   distinct?: Prisma.StaffAssignmentRequestScalarFieldEnum | Prisma.StaffAssignmentRequestScalarFieldEnum[]
+}
+
+/**
+ * Order.shares
+ */
+export type Order$sharesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the OrderShare
+   */
+  select?: Prisma.OrderShareSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the OrderShare
+   */
+  omit?: Prisma.OrderShareOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OrderShareInclude<ExtArgs> | null
+  where?: Prisma.OrderShareWhereInput
+  orderBy?: Prisma.OrderShareOrderByWithRelationInput | Prisma.OrderShareOrderByWithRelationInput[]
+  cursor?: Prisma.OrderShareWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.OrderShareScalarFieldEnum | Prisma.OrderShareScalarFieldEnum[]
 }
 
 /**

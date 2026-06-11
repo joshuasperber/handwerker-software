@@ -5,12 +5,14 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { NumberInput } from "@/components/ui/number-input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
+import { InfoButton } from "@/components/ui/info-button";
 import { SummaryPanel } from "@/components/calculation/summary-panel";
 import { PriceCompositionPanel } from "@/components/calculation/price-composition";
 import { RISK_PERCENT_BY_LEVEL } from "@/lib/calculation/formulas";
-import { formatEuro, parseNumberInput } from "@/lib/utils";
+import { formatEuro } from "@/lib/utils";
 import { ChevronLeft, ChevronRight, Save, FileText } from "lucide-react";
 
 const STEPS = [
@@ -263,15 +265,15 @@ export default function KalkulationWizardPage() {
                       <option key={l} value={l}>{l}</option>
                     ))}
                   </select>
-                  <Input
+                  <NumberInput
                     label="Wagnis %"
-                    type="number"
+                    suffix="%"
                     className="mt-2"
                     value={calc.riskSettings?.riskPercent ?? 7}
-                    onChange={(e) =>
+                    onValueChange={(v) =>
                       setCalc({
                         ...calc,
-                        riskSettings: { ...calc.riskSettings, riskPercent: parseNumberInput(e.target.value, 7) },
+                        riskSettings: { ...calc.riskSettings, riskPercent: v ?? 7 },
                       })
                     }
                   />
@@ -280,14 +282,14 @@ export default function KalkulationWizardPage() {
                   </p>
                 </div>
                 <div>
-                  <Input
+                  <NumberInput
                     label="Gewinn %"
-                    type="number"
+                    suffix="%"
                     value={calc.profitSettings?.profitPercent ?? 12}
-                    onChange={(e) =>
+                    onValueChange={(v) =>
                       setCalc({
                         ...calc,
-                        profitSettings: { ...calc.profitSettings, profitPercent: parseNumberInput(e.target.value, 12), profitStrategy: "PERCENT" },
+                        profitSettings: { ...calc.profitSettings, profitPercent: v ?? 12, profitStrategy: "PERCENT" },
                       })
                     }
                   />
@@ -305,7 +307,14 @@ export default function KalkulationWizardPage() {
           )}
 
           {step === 9 && (
-            <Card title="Ergebnis & Einkommensteuer">
+            <Card
+              title="Ergebnis & Einkommensteuer"
+              action={
+                <InfoButton title="Einkommensteuer">
+                  <p>Die Einkommensteuer wird nicht als separate Rechnungsposition ausgewiesen. Sie dient nur der internen Kalkulation und ersetzt keine steuerliche Beratung.</p>
+                </InfoButton>
+              }
+            >
               <div className="rounded-lg bg-slate-50 p-4 space-y-2 text-sm">
                 <Row label="Direkte Kosten" value={calc.directCosts} />
                 <Row label="Gemeinkosten" value={calc.overheadAmount} />
@@ -318,9 +327,6 @@ export default function KalkulationWizardPage() {
                 <Row label="Deckungsbeitragsquote" value={`${calc.contributionMarginRate?.toFixed(1)} %`} />
                 <Row label="Mindestpreis" value={calc.minimumPrice} />
               </div>
-              <p className="text-xs text-amber-800 bg-amber-50 rounded-lg p-3 mt-4">
-                Die Einkommensteuer wird nicht als separate Rechnungsposition ausgewiesen. Sie dient nur der internen Kalkulation und ersetzt keine steuerliche Beratung.
-              </p>
             </Card>
           )}
 
@@ -461,14 +467,14 @@ function LaborEditor({
           <Input label="Beschreibung" value={item.description} onChange={(e) => {
             const n = [...list]; n[i] = { ...n[i], description: e.target.value }; onChange(n);
           }} />
-          <Input label="Stunden" type="number" value={item.hours} onChange={(e) => {
-            const n = [...list]; n[i] = { ...n[i], hours: parseNumberInput(e.target.value) }; onChange(n);
+          <NumberInput label="Stunden" min={0} value={item.hours} onValueChange={(v) => {
+            const n = [...list]; n[i] = { ...n[i], hours: v ?? 0 }; onChange(n);
           }} />
-          <Input label="Stundensatz netto" type="number" value={item.hourlyRateNet} onChange={(e) => {
-            const n = [...list]; n[i] = { ...n[i], hourlyRateNet: parseNumberInput(e.target.value) }; onChange(n);
+          <NumberInput label="Stundensatz netto" suffix="€" min={0} value={item.hourlyRateNet} onValueChange={(v) => {
+            const n = [...list]; n[i] = { ...n[i], hourlyRateNet: v ?? 0 }; onChange(n);
           }} />
-          <Input label="Mitarbeiter" type="number" value={item.quantityWorkers ?? 1} onChange={(e) => {
-            const n = [...list]; n[i] = { ...n[i], quantityWorkers: parseInt(e.target.value) }; onChange(n);
+          <NumberInput label="Mitarbeiter" allowDecimal={false} min={1} value={item.quantityWorkers ?? 1} onValueChange={(v) => {
+            const n = [...list]; n[i] = { ...n[i], quantityWorkers: v ?? 1 }; onChange(n);
           }} />
         </div>
       ))}
@@ -487,9 +493,9 @@ function MaterialEditor({ items, onChange }: { items: CalcData[]; onChange: (ite
       {list.map((item, i) => (
         <div key={i} className="grid grid-cols-2 gap-2 border-b pb-3">
           <Input label="Name" value={item.name} onChange={(e) => { const n = [...list]; n[i].name = e.target.value; onChange(n); }} />
-          <Input label="Menge" type="number" value={item.quantity} onChange={(e) => { const n = [...list]; n[i].quantity = parseNumberInput(e.target.value); onChange(n); }} />
-          <Input label="Einkauf netto" type="number" value={item.purchasePriceNet} onChange={(e) => { const n = [...list]; n[i].purchasePriceNet = parseNumberInput(e.target.value); onChange(n); }} />
-          <Input label="Aufschlag %" type="number" value={item.markupPercent} onChange={(e) => { const n = [...list]; n[i].markupPercent = parseNumberInput(e.target.value); onChange(n); }} />
+          <NumberInput label="Menge" min={0} value={item.quantity} onValueChange={(v) => { const n = [...list]; n[i].quantity = v ?? 0; onChange(n); }} />
+          <NumberInput label="Einkauf netto" suffix="€" min={0} value={item.purchasePriceNet} onValueChange={(v) => { const n = [...list]; n[i].purchasePriceNet = v ?? 0; onChange(n); }} />
+          <NumberInput label="Aufschlag %" suffix="%" value={item.markupPercent} onValueChange={(v) => { const n = [...list]; n[i].markupPercent = v ?? 0; onChange(n); }} />
         </div>
       ))}
       <Button variant="outline" size="sm" onClick={() => onChange([...list, { name: "Kleinmaterialpauschale", quantity: 1, unit: "Pausch.", purchasePriceNet: 15, markupPercent: 25 }])}>
@@ -539,13 +545,13 @@ function MachineStepEditor({
               ))}
             </select>
           </div>
-          <Input
+          <NumberInput
             label="Nutzungsstunden"
-            type="number"
+            min={0}
             value={item.usageHours}
-            onChange={(e) => {
+            onValueChange={(v) => {
               const n = [...list];
-              n[i] = { ...n[i], usageHours: parseNumberInput(e.target.value) };
+              n[i] = { ...n[i], usageHours: v ?? 0 };
               onChange(n);
             }}
           />
@@ -560,17 +566,18 @@ function ProcurementEditor({ items, onChange }: { items: CalcData[]; onChange: (
 
   return (
     <div className="grid grid-cols-2 gap-2">
-      <Input
+      <NumberInput
         label="Einkaufszeit (h)"
-        type="number"
+        min={0}
         value={list[0].purchasingTimeHours}
-        onChange={(e) => onChange([{ ...list[0], purchasingTimeHours: parseNumberInput(e.target.value) }])}
+        onValueChange={(v) => onChange([{ ...list[0], purchasingTimeHours: v ?? 0 }])}
       />
-      <Input
+      <NumberInput
         label="Bürostundensatz"
-        type="number"
+        suffix="€"
+        min={0}
         value={list[0].procurementHourlyRateNet}
-        onChange={(e) => onChange([{ ...list[0], procurementHourlyRateNet: parseNumberInput(e.target.value) }])}
+        onValueChange={(v) => onChange([{ ...list[0], procurementHourlyRateNet: v ?? 0 }])}
       />
     </div>
   );
@@ -587,8 +594,10 @@ function TravelEditor({
 }) {
   const [dest, setDest] = useState(travel?.destinationAddress ?? "Hauptstraße 42, 10115 Berlin");
   const [km, setKm] = useState(travel?.distanceKm ?? 46);
+  const [zoneError, setZoneError] = useState("");
 
   async function calcZone() {
+    setZoneError("");
     const distRes = await fetch("/api/travel/calculate-distance", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -602,32 +611,48 @@ function TravelEditor({
       body: JSON.stringify({
         distanceKm: distData.success ? distData.data.distanceKm : km,
         estimatedDriveTimeHours: distData.data?.estimatedDriveTimeHours ?? 0.5,
+        selectedZoneId: travel?.selectedZoneId ?? undefined,
       }),
     });
     const zoneData = await zoneRes.json();
-    if (zoneData.success) {
-      onChange({
-        startAddress: distData.data?.startAddress ?? "",
-        destinationAddress: dest,
-        distanceKm: distData.data?.distanceKm ?? km,
-        estimatedDriveTimeHours: distData.data?.estimatedDriveTimeHours ?? 0,
-        zoneName: zoneData.data.zoneName,
-        totalNet: zoneData.data.total,
-        kilometerRateNet: 0.45,
-        travelHourlyRateNet: 45,
-      });
-      setKm(distData.data?.distanceKm ?? km);
+    if (!zoneData.success) {
+      setZoneError(zoneData.error ?? "Zone konnte nicht berechnet werden.");
+      return;
     }
+    if (zoneData.data.noZone) {
+      setZoneError("Für diese Entfernung konnte keine Anfahrtszone bestimmt werden. Bitte dem Kundenstandort eine Zone zuordnen oder unter Kalkulation → Zonen eine passende Zone anlegen.");
+    }
+    onChange({
+      startAddress: distData.data?.startAddress ?? "",
+      destinationAddress: dest,
+      distanceKm: distData.data?.distanceKm ?? km,
+      estimatedDriveTimeHours: distData.data?.estimatedDriveTimeHours ?? 0,
+      zoneName: zoneData.data.zoneName,
+      totalNet: zoneData.data.total,
+      kilometerRateNet: 0.45,
+      travelHourlyRateNet: 45,
+    });
+    setKm(distData.data?.distanceKm ?? km);
   }
+
+  const noZone = travel?.zoneName === "Keine Zone";
 
   return (
     <div className="space-y-3">
       <Input label="Zieladresse" value={dest} onChange={(e) => setDest(e.target.value)} />
-      <Input label="Entfernung km (manuell korrigierbar)" type="number" value={km} onChange={(e) => setKm(parseNumberInput(e.target.value, km))} />
+      <NumberInput label="Entfernung km (manuell korrigierbar)" min={0} value={km} onValueChange={(v) => setKm(v ?? 0)} />
       <Button variant="outline" onClick={calcZone}>Entfernung & Zone berechnen</Button>
-      {travel?.zoneName && (
+      {zoneError && (
+        <div className="rounded-lg bg-amber-50 p-3 text-sm text-amber-800">{zoneError}</div>
+      )}
+      {travel?.zoneName && !noZone && (
         <div className="rounded-lg bg-green-50 p-3 text-sm text-green-800">
           Zone: <strong>{travel.zoneName}</strong> · {travel.calculationMode === "FORMULA" ? "Formel" : "Pauschale"} · {formatEuro(travel.totalNet ?? 0)}
+        </div>
+      )}
+      {noZone && (
+        <div className="rounded-lg bg-amber-50 p-3 text-sm text-amber-800">
+          Keine Anfahrtszone zugeordnet – Anfahrtskosten aktuell 0 €. Bitte dem Kundenstandort eine Zone zuweisen.
         </div>
       )}
     </div>

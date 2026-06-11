@@ -75,6 +75,8 @@ export const ModelName = {
   Message: 'Message',
   AuditLog: 'AuditLog',
   NotificationLog: 'NotificationLog',
+  Notification: 'Notification',
+  NotificationSettings: 'NotificationSettings',
   CompanySettings: 'CompanySettings',
   MonthlyFixedCost: 'MonthlyFixedCost',
   OverheadSettings: 'OverheadSettings',
@@ -92,6 +94,9 @@ export const ModelName = {
   IncomeTaxSettings: 'IncomeTaxSettings',
   VATSettings: 'VATSettings',
   CalculationDocument: 'CalculationDocument',
+  DocumentSequence: 'DocumentSequence',
+  Payment: 'Payment',
+  DunningNotice: 'DunningNotice',
   Article: 'Article',
   StorageLocation: 'StorageLocation',
   StockBalance: 'StockBalance',
@@ -109,7 +114,9 @@ export const ModelName = {
   Vehicle: 'Vehicle',
   EmployeeAbsence: 'EmployeeAbsence',
   PlanMarker: 'PlanMarker',
-  StaffAssignmentRequest: 'StaffAssignmentRequest'
+  StaffAssignmentRequest: 'StaffAssignmentRequest',
+  Invitation: 'Invitation',
+  OrderShare: 'OrderShare'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -157,8 +164,11 @@ export const UserScalarFieldEnum = {
   firstName: 'firstName',
   lastName: 'lastName',
   phone: 'phone',
+  address: 'address',
+  avatarUrl: 'avatarUrl',
   role: 'role',
   isActive: 'isActive',
+  mustChangePassword: 'mustChangePassword',
   lastLoginAt: 'lastLoginAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -197,6 +207,9 @@ export const PropertyScalarFieldEnum = {
   notes: 'notes',
   latitude: 'latitude',
   longitude: 'longitude',
+  isPrimary: 'isPrimary',
+  isActive: 'isActive',
+  travelZoneId: 'travelZoneId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -334,7 +347,11 @@ export const OrderServiceScalarFieldEnum = {
   id: 'id',
   orderId: 'orderId',
   serviceId: 'serviceId',
-  quantity: 'quantity'
+  quantity: 'quantity',
+  customName: 'customName',
+  description: 'description',
+  unitPriceCents: 'unitPriceCents',
+  notes: 'notes'
 } as const
 
 export type OrderServiceScalarFieldEnum = (typeof OrderServiceScalarFieldEnum)[keyof typeof OrderServiceScalarFieldEnum]
@@ -349,6 +366,7 @@ export const AppointmentScalarFieldEnum = {
   endTime: 'endTime',
   status: 'status',
   notes: 'notes',
+  reminderSentAt: 'reminderSentAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -395,12 +413,14 @@ export type OrderChecklistScalarFieldEnum = (typeof OrderChecklistScalarFieldEnu
 export const FileUploadScalarFieldEnum = {
   id: 'id',
   orderId: 'orderId',
+  orderPhaseId: 'orderPhaseId',
   uploadedById: 'uploadedById',
   fileName: 'fileName',
   mimeType: 'mimeType',
   sizeBytes: 'sizeBytes',
   storageKey: 'storageKey',
   category: 'category',
+  description: 'description',
   createdAt: 'createdAt'
 } as const
 
@@ -441,11 +461,13 @@ export const MessageScalarFieldEnum = {
   orderId: 'orderId',
   senderId: 'senderId',
   recipient: 'recipient',
+  recipientUserId: 'recipientUserId',
   subject: 'subject',
   body: 'body',
   category: 'category',
   status: 'status',
   isInternal: 'isInternal',
+  readAt: 'readAt',
   createdAt: 'createdAt'
 } as const
 
@@ -483,6 +505,44 @@ export const NotificationLogScalarFieldEnum = {
 export type NotificationLogScalarFieldEnum = (typeof NotificationLogScalarFieldEnum)[keyof typeof NotificationLogScalarFieldEnum]
 
 
+export const NotificationScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  userId: 'userId',
+  type: 'type',
+  title: 'title',
+  body: 'body',
+  link: 'link',
+  readAt: 'readAt',
+  createdAt: 'createdAt'
+} as const
+
+export type NotificationScalarFieldEnum = (typeof NotificationScalarFieldEnum)[keyof typeof NotificationScalarFieldEnum]
+
+
+export const NotificationSettingsScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  appointmentReminderEnabled: 'appointmentReminderEnabled',
+  appointmentReminderHoursBefore: 'appointmentReminderHoursBefore',
+  remindCustomer: 'remindCustomer',
+  remindEmployee: 'remindEmployee',
+  dunningAutoEnabled: 'dunningAutoEnabled',
+  dunningLevel1Days: 'dunningLevel1Days',
+  dunningLevel2Days: 'dunningLevel2Days',
+  dunningLevel3Days: 'dunningLevel3Days',
+  reorderCheckEnabled: 'reorderCheckEnabled',
+  defaultEmail: 'defaultEmail',
+  defaultSms: 'defaultSms',
+  reminderEmailTemplate: 'reminderEmailTemplate',
+  dunningEmailTemplate: 'dunningEmailTemplate',
+  updatedAt: 'updatedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type NotificationSettingsScalarFieldEnum = (typeof NotificationSettingsScalarFieldEnum)[keyof typeof NotificationSettingsScalarFieldEnum]
+
+
 export const CompanySettingsScalarFieldEnum = {
   id: 'id',
   tenantId: 'tenantId',
@@ -506,6 +566,19 @@ export const CompanySettingsScalarFieldEnum = {
   defaultKilometerRate: 'defaultKilometerRate',
   defaultTravelHourlyRate: 'defaultTravelHourlyRate',
   additionalOverheadPercent: 'additionalOverheadPercent',
+  phone: 'phone',
+  email: 'email',
+  website: 'website',
+  invoiceLogoUrl: 'invoiceLogoUrl',
+  bankName: 'bankName',
+  iban: 'iban',
+  bic: 'bic',
+  taxNumber: 'taxNumber',
+  vatId: 'vatId',
+  paymentTermsDays: 'paymentTermsDays',
+  invoiceIntroText: 'invoiceIntroText',
+  invoiceFooterText: 'invoiceFooterText',
+  invoiceNotes: 'invoiceNotes',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -570,10 +643,12 @@ export const TravelZoneScalarFieldEnum = {
   id: 'id',
   tenantId: 'tenantId',
   name: 'name',
+  description: 'description',
   minKm: 'minKm',
   maxKm: 'maxKm',
   flatFeeNet: 'flatFeeNet',
   useFormula: 'useFormula',
+  isActive: 'isActive',
   sortOrder: 'sortOrder',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -802,17 +877,72 @@ export const CalculationDocumentScalarFieldEnum = {
   calculationId: 'calculationId',
   documentType: 'documentType',
   documentNumber: 'documentNumber',
+  status: 'status',
   issueDate: 'issueDate',
   dueDate: 'dueDate',
   customerNote: 'customerNote',
   internalNote: 'internalNote',
   pdfStorageKey: 'pdfStorageKey',
   sentAt: 'sentAt',
+  netAmount: 'netAmount',
+  vatAmount: 'vatAmount',
+  grossAmount: 'grossAmount',
+  paidAmount: 'paidAmount',
+  paidAt: 'paidAt',
+  dataSnapshotJson: 'dataSnapshotJson',
+  canceledAt: 'canceledAt',
+  cancelReason: 'cancelReason',
+  cancelOfId: 'cancelOfId',
+  eInvoiceFormat: 'eInvoiceFormat',
+  eInvoiceStorageKey: 'eInvoiceStorageKey',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type CalculationDocumentScalarFieldEnum = (typeof CalculationDocumentScalarFieldEnum)[keyof typeof CalculationDocumentScalarFieldEnum]
+
+
+export const DocumentSequenceScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  year: 'year',
+  type: 'type',
+  lastNumber: 'lastNumber',
+  updatedAt: 'updatedAt'
+} as const
+
+export type DocumentSequenceScalarFieldEnum = (typeof DocumentSequenceScalarFieldEnum)[keyof typeof DocumentSequenceScalarFieldEnum]
+
+
+export const PaymentScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  documentId: 'documentId',
+  amount: 'amount',
+  paidAt: 'paidAt',
+  method: 'method',
+  note: 'note',
+  createdById: 'createdById',
+  createdAt: 'createdAt'
+} as const
+
+export type PaymentScalarFieldEnum = (typeof PaymentScalarFieldEnum)[keyof typeof PaymentScalarFieldEnum]
+
+
+export const DunningNoticeScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  documentId: 'documentId',
+  level: 'level',
+  feeAmount: 'feeAmount',
+  dueDate: 'dueDate',
+  sentAt: 'sentAt',
+  note: 'note',
+  createdById: 'createdById',
+  createdAt: 'createdAt'
+} as const
+
+export type DunningNoticeScalarFieldEnum = (typeof DunningNoticeScalarFieldEnum)[keyof typeof DunningNoticeScalarFieldEnum]
 
 
 export const ArticleScalarFieldEnum = {
@@ -918,10 +1048,14 @@ export const OrderPhaseScalarFieldEnum = {
   name: 'name',
   phaseType: 'phaseType',
   status: 'status',
+  isEnabled: 'isEnabled',
   sortOrder: 'sortOrder',
   plannedStart: 'plannedStart',
   plannedEnd: 'plannedEnd',
   notes: 'notes',
+  specialNotes: 'specialNotes',
+  assignedTeamId: 'assignedTeamId',
+  assignedEmployeeId: 'assignedEmployeeId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1032,6 +1166,10 @@ export const VehicleScalarFieldEnum = {
   tenantId: 'tenantId',
   name: 'name',
   licensePlate: 'licensePlate',
+  vehicleType: 'vehicleType',
+  status: 'status',
+  notes: 'notes',
+  assignedEmployeeId: 'assignedEmployeeId',
   storageLocationId: 'storageLocationId',
   isActive: 'isActive',
   createdAt: 'createdAt',
@@ -1086,6 +1224,38 @@ export const StaffAssignmentRequestScalarFieldEnum = {
 } as const
 
 export type StaffAssignmentRequestScalarFieldEnum = (typeof StaffAssignmentRequestScalarFieldEnum)[keyof typeof StaffAssignmentRequestScalarFieldEnum]
+
+
+export const InvitationScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  email: 'email',
+  role: 'role',
+  token: 'token',
+  status: 'status',
+  message: 'message',
+  invitedById: 'invitedById',
+  acceptedUserId: 'acceptedUserId',
+  expiresAt: 'expiresAt',
+  acceptedAt: 'acceptedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type InvitationScalarFieldEnum = (typeof InvitationScalarFieldEnum)[keyof typeof InvitationScalarFieldEnum]
+
+
+export const OrderShareScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  orderId: 'orderId',
+  sharedWithUserId: 'sharedWithUserId',
+  sharedById: 'sharedById',
+  note: 'note',
+  createdAt: 'createdAt'
+} as const
+
+export type OrderShareScalarFieldEnum = (typeof OrderShareScalarFieldEnum)[keyof typeof OrderShareScalarFieldEnum]
 
 
 export const SortOrder = {

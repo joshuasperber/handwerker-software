@@ -44,10 +44,12 @@ export type TravelZoneMinAggregateOutputType = {
   id: string | null
   tenantId: string | null
   name: string | null
+  description: string | null
   minKm: number | null
   maxKm: number | null
   flatFeeNet: number | null
   useFormula: boolean | null
+  isActive: boolean | null
   sortOrder: number | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -57,10 +59,12 @@ export type TravelZoneMaxAggregateOutputType = {
   id: string | null
   tenantId: string | null
   name: string | null
+  description: string | null
   minKm: number | null
   maxKm: number | null
   flatFeeNet: number | null
   useFormula: boolean | null
+  isActive: boolean | null
   sortOrder: number | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -70,10 +74,12 @@ export type TravelZoneCountAggregateOutputType = {
   id: number
   tenantId: number
   name: number
+  description: number
   minKm: number
   maxKm: number
   flatFeeNet: number
   useFormula: number
+  isActive: number
   sortOrder: number
   createdAt: number
   updatedAt: number
@@ -99,10 +105,12 @@ export type TravelZoneMinAggregateInputType = {
   id?: true
   tenantId?: true
   name?: true
+  description?: true
   minKm?: true
   maxKm?: true
   flatFeeNet?: true
   useFormula?: true
+  isActive?: true
   sortOrder?: true
   createdAt?: true
   updatedAt?: true
@@ -112,10 +120,12 @@ export type TravelZoneMaxAggregateInputType = {
   id?: true
   tenantId?: true
   name?: true
+  description?: true
   minKm?: true
   maxKm?: true
   flatFeeNet?: true
   useFormula?: true
+  isActive?: true
   sortOrder?: true
   createdAt?: true
   updatedAt?: true
@@ -125,10 +135,12 @@ export type TravelZoneCountAggregateInputType = {
   id?: true
   tenantId?: true
   name?: true
+  description?: true
   minKm?: true
   maxKm?: true
   flatFeeNet?: true
   useFormula?: true
+  isActive?: true
   sortOrder?: true
   createdAt?: true
   updatedAt?: true
@@ -225,10 +237,12 @@ export type TravelZoneGroupByOutputType = {
   id: string
   tenantId: string
   name: string
+  description: string | null
   minKm: number
   maxKm: number | null
   flatFeeNet: number
   useFormula: boolean
+  isActive: boolean
   sortOrder: number
   createdAt: Date
   updatedAt: Date
@@ -261,28 +275,34 @@ export type TravelZoneWhereInput = {
   id?: Prisma.StringFilter<"TravelZone"> | string
   tenantId?: Prisma.StringFilter<"TravelZone"> | string
   name?: Prisma.StringFilter<"TravelZone"> | string
+  description?: Prisma.StringNullableFilter<"TravelZone"> | string | null
   minKm?: Prisma.FloatFilter<"TravelZone"> | number
   maxKm?: Prisma.FloatNullableFilter<"TravelZone"> | number | null
   flatFeeNet?: Prisma.FloatFilter<"TravelZone"> | number
   useFormula?: Prisma.BoolFilter<"TravelZone"> | boolean
+  isActive?: Prisma.BoolFilter<"TravelZone"> | boolean
   sortOrder?: Prisma.IntFilter<"TravelZone"> | number
   createdAt?: Prisma.DateTimeFilter<"TravelZone"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"TravelZone"> | Date | string
   tenant?: Prisma.XOR<Prisma.TenantScalarRelationFilter, Prisma.TenantWhereInput>
+  properties?: Prisma.PropertyListRelationFilter
 }
 
 export type TravelZoneOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   tenantId?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  description?: Prisma.SortOrderInput | Prisma.SortOrder
   minKm?: Prisma.SortOrder
   maxKm?: Prisma.SortOrderInput | Prisma.SortOrder
   flatFeeNet?: Prisma.SortOrder
   useFormula?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   tenant?: Prisma.TenantOrderByWithRelationInput
+  properties?: Prisma.PropertyOrderByRelationAggregateInput
 }
 
 export type TravelZoneWhereUniqueInput = Prisma.AtLeast<{
@@ -292,24 +312,29 @@ export type TravelZoneWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.TravelZoneWhereInput | Prisma.TravelZoneWhereInput[]
   tenantId?: Prisma.StringFilter<"TravelZone"> | string
   name?: Prisma.StringFilter<"TravelZone"> | string
+  description?: Prisma.StringNullableFilter<"TravelZone"> | string | null
   minKm?: Prisma.FloatFilter<"TravelZone"> | number
   maxKm?: Prisma.FloatNullableFilter<"TravelZone"> | number | null
   flatFeeNet?: Prisma.FloatFilter<"TravelZone"> | number
   useFormula?: Prisma.BoolFilter<"TravelZone"> | boolean
+  isActive?: Prisma.BoolFilter<"TravelZone"> | boolean
   sortOrder?: Prisma.IntFilter<"TravelZone"> | number
   createdAt?: Prisma.DateTimeFilter<"TravelZone"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"TravelZone"> | Date | string
   tenant?: Prisma.XOR<Prisma.TenantScalarRelationFilter, Prisma.TenantWhereInput>
+  properties?: Prisma.PropertyListRelationFilter
 }, "id">
 
 export type TravelZoneOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   tenantId?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  description?: Prisma.SortOrderInput | Prisma.SortOrder
   minKm?: Prisma.SortOrder
   maxKm?: Prisma.SortOrderInput | Prisma.SortOrder
   flatFeeNet?: Prisma.SortOrder
   useFormula?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -327,10 +352,12 @@ export type TravelZoneScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"TravelZone"> | string
   tenantId?: Prisma.StringWithAggregatesFilter<"TravelZone"> | string
   name?: Prisma.StringWithAggregatesFilter<"TravelZone"> | string
+  description?: Prisma.StringNullableWithAggregatesFilter<"TravelZone"> | string | null
   minKm?: Prisma.FloatWithAggregatesFilter<"TravelZone"> | number
   maxKm?: Prisma.FloatNullableWithAggregatesFilter<"TravelZone"> | number | null
   flatFeeNet?: Prisma.FloatWithAggregatesFilter<"TravelZone"> | number
   useFormula?: Prisma.BoolWithAggregatesFilter<"TravelZone"> | boolean
+  isActive?: Prisma.BoolWithAggregatesFilter<"TravelZone"> | boolean
   sortOrder?: Prisma.IntWithAggregatesFilter<"TravelZone"> | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"TravelZone"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"TravelZone"> | Date | string
@@ -339,63 +366,77 @@ export type TravelZoneScalarWhereWithAggregatesInput = {
 export type TravelZoneCreateInput = {
   id?: string
   name: string
-  minKm: number
+  description?: string | null
+  minKm?: number
   maxKm?: number | null
   flatFeeNet?: number
   useFormula?: boolean
+  isActive?: boolean
   sortOrder?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutTravelZonesInput
+  properties?: Prisma.PropertyCreateNestedManyWithoutTravelZoneInput
 }
 
 export type TravelZoneUncheckedCreateInput = {
   id?: string
   tenantId: string
   name: string
-  minKm: number
+  description?: string | null
+  minKm?: number
   maxKm?: number | null
   flatFeeNet?: number
   useFormula?: boolean
+  isActive?: boolean
   sortOrder?: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutTravelZoneInput
 }
 
 export type TravelZoneUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   minKm?: Prisma.FloatFieldUpdateOperationsInput | number
   maxKm?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   flatFeeNet?: Prisma.FloatFieldUpdateOperationsInput | number
   useFormula?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutTravelZonesNestedInput
+  properties?: Prisma.PropertyUpdateManyWithoutTravelZoneNestedInput
 }
 
 export type TravelZoneUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   minKm?: Prisma.FloatFieldUpdateOperationsInput | number
   maxKm?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   flatFeeNet?: Prisma.FloatFieldUpdateOperationsInput | number
   useFormula?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  properties?: Prisma.PropertyUncheckedUpdateManyWithoutTravelZoneNestedInput
 }
 
 export type TravelZoneCreateManyInput = {
   id?: string
   tenantId: string
   name: string
-  minKm: number
+  description?: string | null
+  minKm?: number
   maxKm?: number | null
   flatFeeNet?: number
   useFormula?: boolean
+  isActive?: boolean
   sortOrder?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -404,10 +445,12 @@ export type TravelZoneCreateManyInput = {
 export type TravelZoneUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   minKm?: Prisma.FloatFieldUpdateOperationsInput | number
   maxKm?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   flatFeeNet?: Prisma.FloatFieldUpdateOperationsInput | number
   useFormula?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -417,10 +460,12 @@ export type TravelZoneUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   minKm?: Prisma.FloatFieldUpdateOperationsInput | number
   maxKm?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   flatFeeNet?: Prisma.FloatFieldUpdateOperationsInput | number
   useFormula?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -436,14 +481,21 @@ export type TravelZoneOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
+export type TravelZoneNullableScalarRelationFilter = {
+  is?: Prisma.TravelZoneWhereInput | null
+  isNot?: Prisma.TravelZoneWhereInput | null
+}
+
 export type TravelZoneCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   tenantId?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  description?: Prisma.SortOrder
   minKm?: Prisma.SortOrder
   maxKm?: Prisma.SortOrder
   flatFeeNet?: Prisma.SortOrder
   useFormula?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -460,10 +512,12 @@ export type TravelZoneMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   tenantId?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  description?: Prisma.SortOrder
   minKm?: Prisma.SortOrder
   maxKm?: Prisma.SortOrder
   flatFeeNet?: Prisma.SortOrder
   useFormula?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -473,10 +527,12 @@ export type TravelZoneMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   tenantId?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  description?: Prisma.SortOrder
   minKm?: Prisma.SortOrder
   maxKm?: Prisma.SortOrder
   flatFeeNet?: Prisma.SortOrder
   useFormula?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -531,28 +587,50 @@ export type TravelZoneUncheckedUpdateManyWithoutTenantNestedInput = {
   deleteMany?: Prisma.TravelZoneScalarWhereInput | Prisma.TravelZoneScalarWhereInput[]
 }
 
+export type TravelZoneCreateNestedOneWithoutPropertiesInput = {
+  create?: Prisma.XOR<Prisma.TravelZoneCreateWithoutPropertiesInput, Prisma.TravelZoneUncheckedCreateWithoutPropertiesInput>
+  connectOrCreate?: Prisma.TravelZoneCreateOrConnectWithoutPropertiesInput
+  connect?: Prisma.TravelZoneWhereUniqueInput
+}
+
+export type TravelZoneUpdateOneWithoutPropertiesNestedInput = {
+  create?: Prisma.XOR<Prisma.TravelZoneCreateWithoutPropertiesInput, Prisma.TravelZoneUncheckedCreateWithoutPropertiesInput>
+  connectOrCreate?: Prisma.TravelZoneCreateOrConnectWithoutPropertiesInput
+  upsert?: Prisma.TravelZoneUpsertWithoutPropertiesInput
+  disconnect?: Prisma.TravelZoneWhereInput | boolean
+  delete?: Prisma.TravelZoneWhereInput | boolean
+  connect?: Prisma.TravelZoneWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TravelZoneUpdateToOneWithWhereWithoutPropertiesInput, Prisma.TravelZoneUpdateWithoutPropertiesInput>, Prisma.TravelZoneUncheckedUpdateWithoutPropertiesInput>
+}
+
 export type TravelZoneCreateWithoutTenantInput = {
   id?: string
   name: string
-  minKm: number
+  description?: string | null
+  minKm?: number
   maxKm?: number | null
   flatFeeNet?: number
   useFormula?: boolean
+  isActive?: boolean
   sortOrder?: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  properties?: Prisma.PropertyCreateNestedManyWithoutTravelZoneInput
 }
 
 export type TravelZoneUncheckedCreateWithoutTenantInput = {
   id?: string
   name: string
-  minKm: number
+  description?: string | null
+  minKm?: number
   maxKm?: number | null
   flatFeeNet?: number
   useFormula?: boolean
+  isActive?: boolean
   sortOrder?: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutTravelZoneInput
 }
 
 export type TravelZoneCreateOrConnectWithoutTenantInput = {
@@ -588,22 +666,102 @@ export type TravelZoneScalarWhereInput = {
   id?: Prisma.StringFilter<"TravelZone"> | string
   tenantId?: Prisma.StringFilter<"TravelZone"> | string
   name?: Prisma.StringFilter<"TravelZone"> | string
+  description?: Prisma.StringNullableFilter<"TravelZone"> | string | null
   minKm?: Prisma.FloatFilter<"TravelZone"> | number
   maxKm?: Prisma.FloatNullableFilter<"TravelZone"> | number | null
   flatFeeNet?: Prisma.FloatFilter<"TravelZone"> | number
   useFormula?: Prisma.BoolFilter<"TravelZone"> | boolean
+  isActive?: Prisma.BoolFilter<"TravelZone"> | boolean
   sortOrder?: Prisma.IntFilter<"TravelZone"> | number
   createdAt?: Prisma.DateTimeFilter<"TravelZone"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"TravelZone"> | Date | string
 }
 
-export type TravelZoneCreateManyTenantInput = {
+export type TravelZoneCreateWithoutPropertiesInput = {
   id?: string
   name: string
-  minKm: number
+  description?: string | null
+  minKm?: number
   maxKm?: number | null
   flatFeeNet?: number
   useFormula?: boolean
+  isActive?: boolean
+  sortOrder?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tenant: Prisma.TenantCreateNestedOneWithoutTravelZonesInput
+}
+
+export type TravelZoneUncheckedCreateWithoutPropertiesInput = {
+  id?: string
+  tenantId: string
+  name: string
+  description?: string | null
+  minKm?: number
+  maxKm?: number | null
+  flatFeeNet?: number
+  useFormula?: boolean
+  isActive?: boolean
+  sortOrder?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type TravelZoneCreateOrConnectWithoutPropertiesInput = {
+  where: Prisma.TravelZoneWhereUniqueInput
+  create: Prisma.XOR<Prisma.TravelZoneCreateWithoutPropertiesInput, Prisma.TravelZoneUncheckedCreateWithoutPropertiesInput>
+}
+
+export type TravelZoneUpsertWithoutPropertiesInput = {
+  update: Prisma.XOR<Prisma.TravelZoneUpdateWithoutPropertiesInput, Prisma.TravelZoneUncheckedUpdateWithoutPropertiesInput>
+  create: Prisma.XOR<Prisma.TravelZoneCreateWithoutPropertiesInput, Prisma.TravelZoneUncheckedCreateWithoutPropertiesInput>
+  where?: Prisma.TravelZoneWhereInput
+}
+
+export type TravelZoneUpdateToOneWithWhereWithoutPropertiesInput = {
+  where?: Prisma.TravelZoneWhereInput
+  data: Prisma.XOR<Prisma.TravelZoneUpdateWithoutPropertiesInput, Prisma.TravelZoneUncheckedUpdateWithoutPropertiesInput>
+}
+
+export type TravelZoneUpdateWithoutPropertiesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  minKm?: Prisma.FloatFieldUpdateOperationsInput | number
+  maxKm?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  flatFeeNet?: Prisma.FloatFieldUpdateOperationsInput | number
+  useFormula?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutTravelZonesNestedInput
+}
+
+export type TravelZoneUncheckedUpdateWithoutPropertiesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  minKm?: Prisma.FloatFieldUpdateOperationsInput | number
+  maxKm?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  flatFeeNet?: Prisma.FloatFieldUpdateOperationsInput | number
+  useFormula?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type TravelZoneCreateManyTenantInput = {
+  id?: string
+  name: string
+  description?: string | null
+  minKm?: number
+  maxKm?: number | null
+  flatFeeNet?: number
+  useFormula?: boolean
+  isActive?: boolean
   sortOrder?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -612,63 +770,106 @@ export type TravelZoneCreateManyTenantInput = {
 export type TravelZoneUpdateWithoutTenantInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   minKm?: Prisma.FloatFieldUpdateOperationsInput | number
   maxKm?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   flatFeeNet?: Prisma.FloatFieldUpdateOperationsInput | number
   useFormula?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  properties?: Prisma.PropertyUpdateManyWithoutTravelZoneNestedInput
 }
 
 export type TravelZoneUncheckedUpdateWithoutTenantInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   minKm?: Prisma.FloatFieldUpdateOperationsInput | number
   maxKm?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   flatFeeNet?: Prisma.FloatFieldUpdateOperationsInput | number
   useFormula?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  properties?: Prisma.PropertyUncheckedUpdateManyWithoutTravelZoneNestedInput
 }
 
 export type TravelZoneUncheckedUpdateManyWithoutTenantInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   minKm?: Prisma.FloatFieldUpdateOperationsInput | number
   maxKm?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   flatFeeNet?: Prisma.FloatFieldUpdateOperationsInput | number
   useFormula?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+
+/**
+ * Count Type TravelZoneCountOutputType
+ */
+
+export type TravelZoneCountOutputType = {
+  properties: number
+}
+
+export type TravelZoneCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  properties?: boolean | TravelZoneCountOutputTypeCountPropertiesArgs
+}
+
+/**
+ * TravelZoneCountOutputType without action
+ */
+export type TravelZoneCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TravelZoneCountOutputType
+   */
+  select?: Prisma.TravelZoneCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * TravelZoneCountOutputType without action
+ */
+export type TravelZoneCountOutputTypeCountPropertiesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PropertyWhereInput
+}
 
 
 export type TravelZoneSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   tenantId?: boolean
   name?: boolean
+  description?: boolean
   minKm?: boolean
   maxKm?: boolean
   flatFeeNet?: boolean
   useFormula?: boolean
+  isActive?: boolean
   sortOrder?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
+  properties?: boolean | Prisma.TravelZone$propertiesArgs<ExtArgs>
+  _count?: boolean | Prisma.TravelZoneCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["travelZone"]>
 
 export type TravelZoneSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   tenantId?: boolean
   name?: boolean
+  description?: boolean
   minKm?: boolean
   maxKm?: boolean
   flatFeeNet?: boolean
   useFormula?: boolean
+  isActive?: boolean
   sortOrder?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -679,10 +880,12 @@ export type TravelZoneSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
   id?: boolean
   tenantId?: boolean
   name?: boolean
+  description?: boolean
   minKm?: boolean
   maxKm?: boolean
   flatFeeNet?: boolean
   useFormula?: boolean
+  isActive?: boolean
   sortOrder?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -693,18 +896,22 @@ export type TravelZoneSelectScalar = {
   id?: boolean
   tenantId?: boolean
   name?: boolean
+  description?: boolean
   minKm?: boolean
   maxKm?: boolean
   flatFeeNet?: boolean
   useFormula?: boolean
+  isActive?: boolean
   sortOrder?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type TravelZoneOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "name" | "minKm" | "maxKm" | "flatFeeNet" | "useFormula" | "sortOrder" | "createdAt" | "updatedAt", ExtArgs["result"]["travelZone"]>
+export type TravelZoneOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "name" | "description" | "minKm" | "maxKm" | "flatFeeNet" | "useFormula" | "isActive" | "sortOrder" | "createdAt" | "updatedAt", ExtArgs["result"]["travelZone"]>
 export type TravelZoneInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
+  properties?: boolean | Prisma.TravelZone$propertiesArgs<ExtArgs>
+  _count?: boolean | Prisma.TravelZoneCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type TravelZoneIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
@@ -717,15 +924,18 @@ export type $TravelZonePayload<ExtArgs extends runtime.Types.Extensions.Internal
   name: "TravelZone"
   objects: {
     tenant: Prisma.$TenantPayload<ExtArgs>
+    properties: Prisma.$PropertyPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     tenantId: string
     name: string
+    description: string | null
     minKm: number
     maxKm: number | null
     flatFeeNet: number
     useFormula: boolean
+    isActive: boolean
     sortOrder: number
     createdAt: Date
     updatedAt: Date
@@ -1124,6 +1334,7 @@ readonly fields: TravelZoneFieldRefs;
 export interface Prisma__TravelZoneClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   tenant<T extends Prisma.TenantDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TenantDefaultArgs<ExtArgs>>): Prisma.Prisma__TenantClient<runtime.Types.Result.GetResult<Prisma.$TenantPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  properties<T extends Prisma.TravelZone$propertiesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TravelZone$propertiesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PropertyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1156,10 +1367,12 @@ export interface TravelZoneFieldRefs {
   readonly id: Prisma.FieldRef<"TravelZone", 'String'>
   readonly tenantId: Prisma.FieldRef<"TravelZone", 'String'>
   readonly name: Prisma.FieldRef<"TravelZone", 'String'>
+  readonly description: Prisma.FieldRef<"TravelZone", 'String'>
   readonly minKm: Prisma.FieldRef<"TravelZone", 'Float'>
   readonly maxKm: Prisma.FieldRef<"TravelZone", 'Float'>
   readonly flatFeeNet: Prisma.FieldRef<"TravelZone", 'Float'>
   readonly useFormula: Prisma.FieldRef<"TravelZone", 'Boolean'>
+  readonly isActive: Prisma.FieldRef<"TravelZone", 'Boolean'>
   readonly sortOrder: Prisma.FieldRef<"TravelZone", 'Int'>
   readonly createdAt: Prisma.FieldRef<"TravelZone", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"TravelZone", 'DateTime'>
@@ -1561,6 +1774,30 @@ export type TravelZoneDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.In
    * Limit how many TravelZones to delete.
    */
   limit?: number
+}
+
+/**
+ * TravelZone.properties
+ */
+export type TravelZone$propertiesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Property
+   */
+  select?: Prisma.PropertySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Property
+   */
+  omit?: Prisma.PropertyOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PropertyInclude<ExtArgs> | null
+  where?: Prisma.PropertyWhereInput
+  orderBy?: Prisma.PropertyOrderByWithRelationInput | Prisma.PropertyOrderByWithRelationInput[]
+  cursor?: Prisma.PropertyWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PropertyScalarFieldEnum | Prisma.PropertyScalarFieldEnum[]
 }
 
 /**

@@ -4,6 +4,7 @@ import { requireAuth, apiSuccess, apiError, getClientIp } from "@/lib/api";
 import { auditOrderStatusChange, auditEntityChange } from "@/lib/audit";
 import { notifyStatusChange } from "@/lib/notifications";
 import { syncTeamAppointmentsForOrder } from "@/lib/team-appointments";
+import { ensureOrderPhases } from "@/lib/orders/phases";
 
 export async function GET(
   _request: NextRequest,
@@ -13,6 +14,15 @@ export async function GET(
   if (auth instanceof Response) return auth;
 
   const { id } = await params;
+
+  const existing = await prisma.order.findFirst({
+    where: { id, tenantId: auth.tenantId },
+    select: { id: true },
+  });
+  if (!existing) return apiError("Auftrag nicht gefunden", 404);
+
+  // Bestehende Aufträge ohne Phasen automatisch mit Standardphasen versorgen.
+  await ensureOrderPhases(id);
 
   const order = await prisma.order.findFirst({
     where: { id, tenantId: auth.tenantId },
@@ -26,7 +36,14 @@ export async function GET(
       messages: { orderBy: { createdAt: "desc" }, include: { sender: true } },
       timeEntries: { include: { employee: { include: { user: true } } } },
       materialUsages: { include: { employee: { include: { user: true } } } },
-      phases: { orderBy: { sortOrder: "asc" } },
+      phases: {
+        orderBy: { sortOrder: "asc" },
+        include: {
+          assignedTeam: { select: { id: true, name: true } },
+          assignedEmployee: { include: { user: { select: { firstName: true, lastName: true } } } },
+          files: { orderBy: { createdAt: "desc" } },
+        },
+      },
       materialLines: { include: { article: true, reservations: true } },
       team: { include: { members: { include: { employee: { include: { user: true } } } } } },
       vehicle: true,

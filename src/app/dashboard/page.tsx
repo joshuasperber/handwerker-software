@@ -1,6 +1,5 @@
 import { Suspense } from "react";
-import Link from "next/link";
-import { Plus } from "lucide-react";
+import { AddButton } from "@/components/ui/add-button";
 import { getSession } from "@/lib/auth";
 import { hasPermission } from "@/lib/permissions";
 import { getDashboardAnalytics } from "@/lib/dashboard/analytics";
@@ -36,13 +35,9 @@ export default async function DashboardPage() {
           </p>
         </div>
         {canCreateOrder && (
-          <Link
-            href="/dashboard/auftraege/neu"
-            className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-[#e87722] px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#d06818] sm:w-auto"
-          >
-            <Plus className="h-4 w-4" />
+          <AddButton href="/dashboard/auftraege/neu" className="w-full sm:w-auto">
             Neuer Auftrag
-          </Link>
+          </AddButton>
         )}
       </div>
 

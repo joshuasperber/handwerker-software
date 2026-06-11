@@ -38,6 +38,8 @@ export function runCalculation(input: CalculationInput): CalculationBreakdown {
   let travelTotal = 0;
   let travelZoneName: string | undefined;
   let travelCalculationMode: "ZONE_FLAT_FEE" | "FORMULA" | undefined;
+  let travelZoneId: string | undefined;
+  let travelNoZone = false;
 
   if (input.travel) {
     const travel = calcTravelTotal({
@@ -49,10 +51,13 @@ export function runCalculation(input: CalculationInput): CalculationBreakdown {
       parkingFeesNet: input.travel.parkingFeesNet ?? 0,
       tollFeesNet: input.travel.tollFeesNet ?? 0,
       otherTravelCostsNet: input.travel.otherTravelCostsNet ?? 0,
+      selectedZoneId: input.travel.selectedZoneId,
     });
     travelTotal = travel.total;
     travelZoneName = travel.zoneName;
     travelCalculationMode = travel.mode;
+    travelZoneId = travel.zoneId;
+    travelNoZone = travel.noZone;
   }
 
   const additionalTotal = calcAdditionalTotal(input.additionalItems);
@@ -167,5 +172,7 @@ export function runCalculation(input: CalculationInput): CalculationBreakdown {
     profitabilityStatus,
     travelZoneName,
     travelCalculationMode,
+    travelZoneId,
+    travelNoZone,
   };
 }

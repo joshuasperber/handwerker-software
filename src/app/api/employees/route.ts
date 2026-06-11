@@ -7,8 +7,8 @@ import { pickDistinctEmployeeColor } from "@/lib/employee-colors";
 
 const ALLOWED_ROLES: UserRole[] = ["ADMIN", "MEISTER", "BUERO", "MONTEUR"];
 
-/** Standard-Passwort, mit dem sich jeder neu angelegte Mitarbeiter anmelden kann. */
-const DEFAULT_EMPLOYEE_PASSWORD = "demo1234";
+/** Initialpasswort, mit dem sich jeder neu angelegte Mitarbeiter anmelden kann. */
+const DEFAULT_EMPLOYEE_PASSWORD = "admin1234";
 
 export async function GET() {
   const auth = await requireAuth("employees.read");
@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
   if (auth instanceof Response) return auth;
 
   const body = await request.json();
-  const { email, password, firstName, lastName, role, phone, color, qualifications } = body;
+  const { email, password, firstName, lastName, role, phone, address, color, qualifications } = body;
 
   if (!email || !firstName || !lastName || !role) {
     return apiError("E-Mail, Vorname, Nachname und Rolle sind Pflicht", 400);
@@ -45,7 +45,8 @@ export async function POST(request: NextRequest) {
   });
   if (existing) return apiError("E-Mail bereits vergeben", 400);
 
-  // Ohne explizites Passwort kann sich der Mitarbeiter mit dem Standard-Passwort anmelden.
+  // Ohne explizites Passwort wird das Initialpasswort (admin1234) gesetzt.
+  // Der Mitarbeiter wird beim ersten Login aufgefordert, es zu ändern.
   const passwordHash = await hashPassword(password || DEFAULT_EMPLOYEE_PASSWORD);
   const employeeColor = color ?? (await pickDistinctEmployeeColor(auth.tenantId));
 
@@ -56,8 +57,10 @@ export async function POST(request: NextRequest) {
       passwordHash,
       firstName,
       lastName,
-      phone,
+      phone: phone || null,
+      address: address || null,
       role,
+      mustChangePassword: true,
     },
   });
 

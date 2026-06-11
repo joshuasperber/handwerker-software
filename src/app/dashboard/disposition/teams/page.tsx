@@ -6,11 +6,15 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { CanAccess } from "@/components/auth/can-access";
-import { ChevronLeft, Plus, Trash2, Users } from "lucide-react";
+import { AddButton } from "@/components/ui/add-button";
+import { saveJson } from "@/lib/save-toast";
+import { ChevronLeft, Trash2, Users, Pencil, RotateCcw, X, Truck } from "lucide-react";
+import { toast } from "sonner";
 
 interface Team {
   id: string;
   name: string;
+  isActive: boolean;
   vehicle: { id: string; name: string } | null;
   members: { employee: { id: string; user: { firstName: string; lastName: string } }; isForeman: boolean }[];
 }
@@ -25,16 +29,19 @@ interface Vehicle {
   name: string;
 }
 
+const EMPTY_FORM = { name: "", vehicleId: "", memberIds: [] as string[] };
+
 export default function TeamsPage() {
   const [teams, setTeams] = useState<Team[]>([]);
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [showForm, setShowForm] = useState(false);
-  const [form, setForm] = useState({ name: "", vehicleId: "", memberIds: [] as string[] });
+  const [editId, setEditId] = useState<string | null>(null);
+  const [form, setForm] = useState({ ...EMPTY_FORM });
 
   function load() {
     Promise.all([
-      fetch("/api/teams").then((r) => r.json()),
+      fetch("/api/teams?includeInactive=1").then((r) => r.json()),
       fetch("/api/employees").then((r) => r.json()),
       fetch("/api/vehicles").then((r) => r.json()),
     ]).then(([t, e, v]) => {
@@ -46,22 +53,55 @@ export default function TeamsPage() {
 
   useEffect(() => { load(); }, []);
 
-  async function createTeam(e: React.FormEvent) {
+  function openCreate() {
+    setEditId(null);
+    setForm({ ...EMPTY_FORM });
+    setShowForm(true);
+  }
+
+  function openEdit(team: Team) {
+    setEditId(team.id);
+    setForm({
+      name: team.name,
+      vehicleId: team.vehicle?.id ?? "",
+      // Vorarbeiter (erster) zuerst, damit die Reihenfolge erhalten bleibt.
+      memberIds: [...team.members].sort((a, b) => Number(b.isForeman) - Number(a.isForeman)).map((m) => m.employee.id),
+    });
+    setShowForm(true);
+  }
+
+  function closeForm() {
+    setShowForm(false);
+    setEditId(null);
+    setForm({ ...EMPTY_FORM });
+  }
+
+  async function submit(e: React.FormEvent) {
     e.preventDefault();
-    await fetch("/api/teams", {
-      method: "POST",
+    const url = editId ? `/api/teams/${editId}` : "/api/teams";
+    const res = await saveJson(url, {
+      method: editId ? "PATCH" : "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(form),
     });
-    setShowForm(false);
-    setForm({ name: "", vehicleId: "", memberIds: [] });
+    if (!res.success) return;
+    closeForm();
     load();
   }
 
-  async function removeTeam(id: string) {
+  async function deactivate(id: string) {
     if (!confirm("Team deaktivieren?")) return;
-    await fetch(`/api/teams/${id}`, { method: "DELETE" });
-    load();
+    const res = await fetch(`/api/teams/${id}`, { method: "DELETE" });
+    if (res.ok) { toast.success("Team deaktiviert"); load(); }
+  }
+
+  async function reactivate(id: string) {
+    const res = await saveJson(`/api/teams/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ isActive: true }),
+    });
+    if (res.success) load();
   }
 
   function toggleMember(employeeId: string) {
@@ -79,34 +119,40 @@ export default function TeamsPage() {
         <ChevronLeft className="h-4 w-4" /> Zurück zur Disposition
       </Link>
 
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
         <div>
           <h1 className="text-2xl font-bold">Teams & Kolonnen</h1>
           <p className="text-sm text-slate-500 mt-1">Feste Arbeitsgruppen für die Einsatzplanung</p>
         </div>
         <CanAccess permission="orders.assign">
-          <Button size="lg" variant="action" onClick={() => setShowForm(!showForm)}>
-            <Plus className="h-5 w-5" /> Team anlegen
-          </Button>
+          <AddButton onClick={openCreate}>Team anlegen</AddButton>
         </CanAccess>
       </div>
 
       <Card className="mb-6 !p-4 bg-slate-50">
         <p className="text-sm text-slate-600">
           <strong>Was sind Teams?</strong> Teams sind feste Kolonnen (z. B. „Team Alpha“ mit Tom + Lisa + Transporter 1).
-          In der Disposition sehen Sie, wer zusammen arbeitet. Beim Auftrag können Sie ein Team zuweisen.
-          „Team Alpha“ im Demo stammt aus dem Seed – hier legen Sie eigene Teams an.
+          In der Disposition sehen Sie, wer zusammen arbeitet. Beim Auftrag und im Kalender können Sie ein Team zuweisen.
+          Der erste ausgewählte Mitarbeiter wird automatisch Vorarbeiter.
         </p>
       </Card>
 
       <CanAccess permission="orders.assign">
       {showForm && (
-        <Card title="Neues Team" className="mb-6">
-          <form onSubmit={createTeam} className="space-y-4">
+        <Card
+          title={editId ? "Team bearbeiten" : "Neues Team"}
+          action={
+            <button type="button" onClick={closeForm} className="text-slate-400 hover:text-slate-600">
+              <X className="h-5 w-5" />
+            </button>
+          }
+          className="mb-6"
+        >
+          <form onSubmit={submit} className="space-y-4">
             <Input label="Teamname *" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required placeholder="z. B. Kolonne Nord" />
             <div>
               <label className="text-sm font-medium">Fahrzeug (optional)</label>
-              <select className="w-full h-10 rounded-lg border mt-1 px-3 text-sm" value={form.vehicleId} onChange={(e) => setForm({ ...form, vehicleId: e.target.value })}>
+              <select className="w-full h-8 rounded-lg border border-input mt-1.5 px-2.5 text-sm" value={form.vehicleId} onChange={(e) => setForm({ ...form, vehicleId: e.target.value })}>
                 <option value="">— Kein Fahrzeug —</option>
                 {vehicles.map((v) => (
                   <option key={v.id} value={v.id}>{v.name}</option>
@@ -114,17 +160,24 @@ export default function TeamsPage() {
               </select>
             </div>
             <div>
-              <p className="text-sm font-medium mb-2">Mitglieder</p>
+              <p className="text-sm font-medium mb-2">Mitglieder <span className="text-xs text-slate-400">(erster = Vorarbeiter)</span></p>
               <div className="flex flex-wrap gap-2">
-                {employees.map((emp) => (
-                  <label key={emp.id} className={`flex items-center gap-2 px-3 py-2 rounded-lg border cursor-pointer text-sm ${form.memberIds.includes(emp.id) ? "border-[#0d5c63] bg-[#0d5c63]/5" : "border-slate-200"}`}>
-                    <input type="checkbox" checked={form.memberIds.includes(emp.id)} onChange={() => toggleMember(emp.id)} />
-                    {emp.user.firstName} {emp.user.lastName}
-                  </label>
-                ))}
+                {employees.map((emp) => {
+                  const idx = form.memberIds.indexOf(emp.id);
+                  return (
+                    <label key={emp.id} className={`flex items-center gap-2 px-3 py-2 rounded-lg border cursor-pointer text-sm ${idx >= 0 ? "border-[#0d5c63] bg-[#0d5c63]/5" : "border-slate-200"}`}>
+                      <input type="checkbox" checked={idx >= 0} onChange={() => toggleMember(emp.id)} />
+                      {emp.user.firstName} {emp.user.lastName}
+                      {idx === 0 && <span className="text-[10px] font-semibold text-[#0d5c63]">Vorarbeiter</span>}
+                    </label>
+                  );
+                })}
               </div>
             </div>
-            <Button type="submit" variant="action">Team speichern</Button>
+            <div className="flex gap-2">
+              <Button type="submit" variant="action">{editId ? "Änderungen speichern" : "Team speichern"}</Button>
+              <Button type="button" variant="outline" onClick={closeForm}>Abbrechen</Button>
+            </div>
           </form>
         </Card>
       )}
@@ -132,19 +185,19 @@ export default function TeamsPage() {
 
       <div className="grid gap-4 sm:grid-cols-2">
         {teams.map((team) => (
-          <Card key={team.id}>
+          <Card key={team.id} className={team.isActive ? "" : "opacity-60"}>
             <div className="flex items-start justify-between">
               <div className="flex items-center gap-2">
                 <Users className="h-5 w-5 text-[#0d5c63]" />
                 <h3 className="font-semibold text-lg">{team.name}</h3>
+                {!team.isActive && <span className="text-[10px] uppercase tracking-wide text-slate-400">inaktiv</span>}
               </div>
-              <CanAccess permission="orders.assign">
-                <button type="button" onClick={() => removeTeam(team.id)} className="text-red-500">
-                  <Trash2 className="h-4 w-4" />
-                </button>
-              </CanAccess>
             </div>
-            {team.vehicle && <p className="text-sm text-slate-500 mt-1">Fahrzeug: {team.vehicle.name}</p>}
+            {team.vehicle && (
+              <p className="text-sm text-slate-500 mt-1 flex items-center gap-1">
+                <Truck className="h-3.5 w-3.5" /> {team.vehicle.name}
+              </p>
+            )}
             <ul className="mt-3 text-sm space-y-1">
               {team.members.map((m) => (
                 <li key={m.employee.id}>
@@ -152,7 +205,24 @@ export default function TeamsPage() {
                   {m.isForeman && " (Vorarbeiter)"}
                 </li>
               ))}
+              {team.members.length === 0 && <li className="text-slate-400">Keine Mitglieder</li>}
             </ul>
+            <CanAccess permission="orders.assign">
+              <div className="mt-4 flex flex-wrap gap-2 border-t border-slate-100 pt-3">
+                <Button size="sm" variant="outline" onClick={() => openEdit(team)}>
+                  <Pencil className="h-3.5 w-3.5 mr-1" /> Bearbeiten
+                </Button>
+                {team.isActive ? (
+                  <Button size="sm" variant="ghost" className="text-amber-600" onClick={() => deactivate(team.id)}>
+                    <Trash2 className="h-3.5 w-3.5 mr-1" /> Deaktivieren
+                  </Button>
+                ) : (
+                  <Button size="sm" variant="ghost" className="text-green-600" onClick={() => reactivate(team.id)}>
+                    <RotateCcw className="h-3.5 w-3.5 mr-1" /> Reaktivieren
+                  </Button>
+                )}
+              </div>
+            </CanAccess>
           </Card>
         ))}
       </div>

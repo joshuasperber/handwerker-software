@@ -5,6 +5,7 @@ export type TravelMode = "ZONE_FLAT_FEE" | "FORMULA";
 export type ProfitabilityStatus = "profitable" | "tight" | "loss" | "unknown";
 
 export interface TravelZoneInput {
+  id?: string;
   name: string;
   minKm: number;
   maxKm: number | null;
@@ -62,6 +63,8 @@ export interface TravelInput {
   parkingFeesNet?: number;
   tollFeesNet?: number;
   otherTravelCostsNet?: number;
+  /** Fest zugeordnete Zone (Kundenstandort), hat Vorrang vor Entfernungsauswahl. */
+  selectedZoneId?: string | null;
 }
 
 export interface AdditionalCostInput {
@@ -147,5 +150,8 @@ export interface CalculationBreakdown {
   profitabilityStatus: ProfitabilityStatus;
   travelZoneName?: string;
   travelCalculationMode?: TravelMode;
+  travelZoneId?: string;
+  /** true = es konnte keine Zone bestimmt werden (Anfahrtskosten 0, Hinweis erforderlich) */
+  travelNoZone?: boolean;
   machineHourlyRates?: number[];
 }

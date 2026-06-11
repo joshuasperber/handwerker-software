@@ -12,9 +12,16 @@ export async function POST(request: Request) {
   if (distanceKm < 0) return apiError("Entfernung darf nicht negativ sein", 400);
 
   const zones = await prisma.travelZone.findMany({
-    where: { tenantId: auth.tenantId },
+    where: { tenantId: auth.tenantId, isActive: true },
     orderBy: { sortOrder: "asc" },
   });
+
+  if (zones.length === 0) {
+    return apiError(
+      "Es sind keine Anfahrtszonen hinterlegt. Bitte zuerst unter Kalkulation → Zonen eine Zone mit Preis anlegen.",
+      400
+    );
+  }
 
   const company = await prisma.companySettings.findUnique({
     where: { tenantId: auth.tenantId },
@@ -24,6 +31,7 @@ export async function POST(request: Request) {
     distanceKm,
     estimatedDriveTimeHours: Number(body.estimatedDriveTimeHours ?? 0),
     zones: zones.map((z) => ({
+      id: z.id,
       name: z.name,
       minKm: z.minKm,
       maxKm: z.maxKm,
@@ -35,9 +43,8 @@ export async function POST(request: Request) {
     parkingFeesNet: Number(body.parkingFeesNet ?? 0),
     tollFeesNet: Number(body.tollFeesNet ?? 0),
     otherTravelCostsNet: Number(body.otherTravelCostsNet ?? 0),
+    selectedZoneId: body.selectedZoneId ?? null,
   });
 
-  const zone = zones.find((z) => z.name === result.zoneName);
-
-  return apiSuccess({ ...result, selectedZoneId: zone?.id });
+  return apiSuccess({ ...result, selectedZoneId: result.zoneId });
 }

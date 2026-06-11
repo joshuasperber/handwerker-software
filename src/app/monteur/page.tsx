@@ -6,13 +6,14 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { APPOINTMENT_STATUS_LABELS, formatDateTime } from "@/lib/utils";
+import { APPOINTMENT_STATUS_LABELS, PHASE_STATUS_LABELS, PHASE_STATUS_BADGE, formatDateTime } from "@/lib/utils";
+import { getCurrentPhase, phaseAssigneeLabel, type PhaseSummary } from "@/lib/phase-status";
 import { MonteurWeekCalendar } from "@/components/monteur/week-calendar";
 import { MonteurMaterialView } from "@/components/monteur/material-view";
 import { calcPickupWithReserve } from "@/lib/monteur/pickup-list";
 import {
-  MapPin, Phone, Navigation, CheckCircle, Clock, Camera, Package,
-  Car, MapPinned, Play, Pause,
+  MapPin, Phone, Navigation, CheckCircle, Camera, Package,
+  Car, MapPinned, Play, Pause, Layers, Users,
 } from "lucide-react";
 import { format, startOfWeek } from "date-fns";
 import { de } from "date-fns/locale";
@@ -39,9 +40,12 @@ interface Appointment {
     materialStatus?: string;
     customer: { firstName: string; lastName: string; phone: string | null };
     property: { street: string; zipCode: string; city: string };
-    services: { service: { name: string } }[];
+    services: { service: { name: string } | null; customName?: string | null }[];
     checklists: { id: string; label: string; isChecked: boolean }[];
     materialLines?: MaterialLine[];
+    phases?: PhaseSummary[];
+    team?: { id: string; name: string } | null;
+    vehicle?: { id: string; name: string; licensePlate: string | null } | null;
   };
 }
 
@@ -66,6 +70,8 @@ function MonteurPageContent() {
   const [pickupData, setPickupData] = useState<{ byOrder: unknown[]; aggregated: unknown[] } | null>(null);
   const [pickupLoading, setPickupLoading] = useState(false);
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [teamFilter, setTeamFilter] = useState<string>("all");
+  const [vehicleFilter, setVehicleFilter] = useState<string>("all");
   const [activeTab, setActiveTab] = useState<Record<string, string>>({});
   const [completionNotes, setCompletionNotes] = useState<Record<string, string>>({});
   const [completionMsg, setCompletionMsg] = useState<Record<string, string>>({});
@@ -102,7 +108,11 @@ function MonteurPageContent() {
 
   useEffect(() => { if (view === "day") loadSchedule(); }, [loadSchedule, view]);
   useEffect(() => { if (view === "week") loadWeek(); }, [loadWeek, view]);
-  useEffect(() => { if (view === "material") loadPickup(); }, [loadPickup, view]);
+  useEffect(() => {
+    // loadPickup setzt bewusst einen Lade-Indikator; Daten folgen asynchron.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (view === "material") loadPickup();
+  }, [loadPickup, view]);
 
   const loadRequests = useCallback(() => {
     fetch(`/api/staff-requests?mine=1&date=${selectedDate}`)
@@ -114,6 +124,22 @@ function MonteurPageContent() {
 
   const nextAppointment = appointments.find(
     (a) => !["ABGESCHLOSSEN", "STORNIERT"].includes(a.status)
+  );
+
+  const teamOptions = Array.from(
+    new Map(
+      appointments.filter((a) => a.order.team).map((a) => [a.order.team!.id, a.order.team!.name])
+    ).entries()
+  );
+  const vehicleOptions = Array.from(
+    new Map(
+      appointments.filter((a) => a.order.vehicle).map((a) => [a.order.vehicle!.id, a.order.vehicle!.name])
+    ).entries()
+  );
+  const filteredAppointments = appointments.filter(
+    (a) =>
+      (teamFilter === "all" || a.order.team?.id === teamFilter) &&
+      (vehicleFilter === "all" || a.order.vehicle?.id === vehicleFilter)
   );
 
   async function updateStatus(appointmentId: string, status: string) {
@@ -279,6 +305,50 @@ function MonteurPageContent() {
         />
       </div>
 
+      {(teamOptions.length > 0 || vehicleOptions.length > 0) && (
+        <div className="flex flex-wrap gap-2">
+          {teamOptions.length > 0 && (
+            <div className="relative flex items-center">
+              <Users className="absolute left-2.5 h-4 w-4 text-slate-400 pointer-events-none" />
+              <select
+                value={teamFilter}
+                onChange={(e) => setTeamFilter(e.target.value)}
+                className="min-h-[40px] rounded-lg border border-slate-300 bg-white pl-8 pr-3 text-sm"
+              >
+                <option value="all">Alle Teams</option>
+                {teamOptions.map(([id, name]) => (
+                  <option key={id} value={id}>{name}</option>
+                ))}
+              </select>
+            </div>
+          )}
+          {vehicleOptions.length > 0 && (
+            <div className="relative flex items-center">
+              <Car className="absolute left-2.5 h-4 w-4 text-slate-400 pointer-events-none" />
+              <select
+                value={vehicleFilter}
+                onChange={(e) => setVehicleFilter(e.target.value)}
+                className="min-h-[40px] rounded-lg border border-slate-300 bg-white pl-8 pr-3 text-sm"
+              >
+                <option value="all">Alle Fahrzeuge</option>
+                {vehicleOptions.map(([id, name]) => (
+                  <option key={id} value={id}>{name}</option>
+                ))}
+              </select>
+            </div>
+          )}
+          {(teamFilter !== "all" || vehicleFilter !== "all") && (
+            <button
+              type="button"
+              onClick={() => { setTeamFilter("all"); setVehicleFilter("all"); }}
+              className="min-h-[40px] rounded-lg px-3 text-sm text-[#0d5c63] hover:underline"
+            >
+              Filter zurücksetzen
+            </button>
+          )}
+        </div>
+      )}
+
       {staffRequests.length > 0 && (
         <Card className="!p-4 border-2 border-[#e87722]/40 bg-orange-50">
           <p className="text-sm font-semibold text-[#e87722] mb-3">Verstärkungsanfragen ({staffRequests.length})</p>
@@ -309,6 +379,21 @@ function MonteurPageContent() {
             <MapPin className="h-3.5 w-3.5" />
             {nextAppointment.order.property.street}, {nextAppointment.order.property.city}
           </p>
+          {(nextAppointment.order.team || nextAppointment.order.vehicle) && (
+            <div className="flex flex-wrap gap-1.5 mt-2">
+              {nextAppointment.order.team && (
+                <span className="inline-flex items-center gap-1 rounded-full bg-white px-2 py-0.5 text-[11px] font-medium text-[#0d5c63] border border-[#0d5c63]/20">
+                  <Users className="h-3 w-3" /> {nextAppointment.order.team.name}
+                </span>
+              )}
+              {nextAppointment.order.vehicle && (
+                <span className="inline-flex items-center gap-1 rounded-full bg-white px-2 py-0.5 text-[11px] font-medium text-slate-600 border border-slate-200">
+                  <Car className="h-3 w-3" /> {nextAppointment.order.vehicle.name}
+                  {nextAppointment.order.vehicle.licensePlate ? ` · ${nextAppointment.order.vehicle.licensePlate}` : ""}
+                </span>
+              )}
+            </div>
+          )}
           <div className="flex flex-wrap gap-2 mt-4">
             {nextAppointment.order.customer.phone && (
               <a href={`tel:${nextAppointment.order.customer.phone}`}>
@@ -326,23 +411,59 @@ function MonteurPageContent() {
         </Card>
       )}
 
-      {appointments.length === 0 ? (
-        <Card><p className="text-center text-slate-500 py-8">Keine Termine an diesem Tag.</p></Card>
+      {filteredAppointments.length === 0 ? (
+        <Card><p className="text-center text-slate-500 py-8">
+          {appointments.length === 0 ? "Keine Termine an diesem Tag." : "Keine Termine für die gewählten Filter."}
+        </p></Card>
       ) : (
-        appointments.map((apt) => (
+        filteredAppointments.map((apt) => (
           <Card key={apt.id} className="!p-0 overflow-hidden">
             <button
               type="button"
               className="w-full p-4 text-left"
               onClick={() => setExpandedId(expandedId === apt.id ? null : apt.id)}
             >
-              <div className="flex items-start justify-between">
-                <div>
+              <div className="flex items-start justify-between gap-2">
+                <div className="min-w-0">
                   <p className="font-semibold">{formatDateTime(apt.startTime)}</p>
                   <p className="text-sm text-slate-600">{apt.order.customer.firstName} {apt.order.customer.lastName}</p>
-                  <p className="text-xs text-slate-400">{apt.order.services.map((s) => s.service.name).join(", ")}</p>
+                  <p className="text-xs text-slate-400">{apt.order.services.map((s) => s.service?.name ?? s.customName ?? "Sonstige Leistung").join(", ")}</p>
+                  {(apt.order.team || apt.order.vehicle) && (
+                    <div className="flex flex-wrap gap-1.5 mt-1.5">
+                      {apt.order.team && (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-[#0d5c63]/10 px-2 py-0.5 text-[11px] font-medium text-[#0d5c63]">
+                          <Users className="h-3 w-3" /> {apt.order.team.name}
+                        </span>
+                      )}
+                      {apt.order.vehicle && (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2 py-0.5 text-[11px] font-medium text-slate-600">
+                          <Car className="h-3 w-3" /> {apt.order.vehicle.name}
+                          {apt.order.vehicle.licensePlate ? ` · ${apt.order.vehicle.licensePlate}` : ""}
+                        </span>
+                      )}
+                    </div>
+                  )}
+                  {(() => {
+                    const cp = getCurrentPhase(apt.order.phases);
+                    return cp ? (
+                      <p className="text-xs text-slate-500 flex items-center gap-1 mt-0.5">
+                        <Layers className="h-3 w-3 shrink-0" /> Phase: {cp.name}
+                      </p>
+                    ) : null;
+                  })()}
                 </div>
-                <Badge status={apt.status} label={APPOINTMENT_STATUS_LABELS[apt.status] ?? apt.status} />
+                <div className="flex flex-col items-end gap-1 shrink-0">
+                  <Badge status={apt.status} label={APPOINTMENT_STATUS_LABELS[apt.status] ?? apt.status} />
+                  {(() => {
+                    const cp = getCurrentPhase(apt.order.phases);
+                    return cp ? (
+                      <Badge
+                        status={PHASE_STATUS_BADGE[cp.status] ?? "DRAFT"}
+                        label={PHASE_STATUS_LABELS[cp.status] ?? cp.status}
+                      />
+                    ) : null;
+                  })()}
+                </div>
               </div>
             </button>
 
@@ -401,6 +522,38 @@ function MonteurPageContent() {
                         >
                           <CheckCircle className="h-4 w-4 mr-1" /> Weiter zum Abschluss
                         </Button>
+                      )}
+
+                      {(apt.order.phases ?? []).filter((p) => p.isEnabled).length > 0 && (
+                        <div className="pt-2">
+                          <p className="text-xs font-medium uppercase tracking-wide text-slate-400 mb-2 flex items-center gap-1">
+                            <Layers className="h-3.5 w-3.5" /> Phasen
+                          </p>
+                          <div className="space-y-2">
+                            {(apt.order.phases ?? [])
+                              .filter((p) => p.isEnabled)
+                              .map((p) => {
+                                const assignee = phaseAssigneeLabel(p);
+                                return (
+                                  <div key={p.id} className="rounded-lg border border-slate-100 p-2.5">
+                                    <div className="flex items-center justify-between gap-2">
+                                      <span className="text-sm font-medium text-slate-700">{p.name}</span>
+                                      <Badge
+                                        status={PHASE_STATUS_BADGE[p.status] ?? "DRAFT"}
+                                        label={PHASE_STATUS_LABELS[p.status] ?? p.status}
+                                      />
+                                    </div>
+                                    {assignee && (
+                                      <p className="text-xs text-slate-500 mt-1">Zuständig: {assignee}</p>
+                                    )}
+                                    {p.specialNotes && (
+                                      <p className="text-xs text-amber-700 mt-1">Besonderheit: {p.specialNotes}</p>
+                                    )}
+                                  </div>
+                                );
+                              })}
+                          </div>
+                        </div>
                       )}
                     </>
                   )}

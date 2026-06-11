@@ -5,10 +5,19 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { NumberInput } from "@/components/ui/number-input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
-import { ORDER_TYPE_LABELS, MATERIAL_STATUS_LABELS } from "@/lib/inventory/formulas";
-import { ChevronLeft, ChevronRight, Check } from "lucide-react";
+import { ORDER_TYPE_LABELS } from "@/lib/inventory/formulas";
+import { ChevronLeft, ChevronRight, Check, Plus, Trash2 } from "lucide-react";
+
+interface CustomService {
+  name: string;
+  description: string;
+  quantity: number;
+  price: number | null;
+  notes: string;
+}
 
 const STEPS = ["Typ", "Kunde", "Leistung", "Material", "Termin", "Freigabe"];
 
@@ -16,7 +25,16 @@ interface Customer {
   id: string;
   firstName: string;
   lastName: string;
-  properties: { id: string; label: string; street: string; city: string; zipCode: string }[];
+  properties: {
+    id: string;
+    label: string;
+    street: string;
+    city: string;
+    zipCode: string;
+    isActive: boolean;
+    isPrimary: boolean;
+    travelZone: { id: string; name: string } | null;
+  }[];
 }
 
 interface Service {
@@ -47,6 +65,7 @@ export default function NeuerAuftragPage() {
     customerId: "",
     propertyId: "",
     serviceIds: [] as string[],
+    customServices: [] as CustomService[],
     employeeId: "",
     scheduledStart: "",
     scheduledEnd: "",
@@ -129,6 +148,15 @@ export default function NeuerAuftragPage() {
         orderType: form.orderType,
         description: form.description,
         serviceIds: form.serviceIds,
+        customServices: form.customServices
+          .filter((c) => c.name.trim())
+          .map((c) => ({
+            name: c.name,
+            description: c.description || undefined,
+            quantity: c.quantity,
+            unitPriceCents: c.price != null ? Math.round(c.price * 100) : undefined,
+            notes: c.notes || undefined,
+          })),
         employeeId: form.employeeId || undefined,
         scheduledStart: form.scheduledStart || undefined,
         scheduledEnd: form.scheduledEnd || undefined,
@@ -151,6 +179,25 @@ export default function NeuerAuftragPage() {
     }));
   }
 
+  function addCustomService() {
+    setForm((f) => ({
+      ...f,
+      customServices: [...f.customServices, { name: "", description: "", quantity: 1, price: null, notes: "" }],
+    }));
+  }
+
+  function updateCustomService(index: number, patch: Partial<CustomService>) {
+    setForm((f) => ({
+      ...f,
+      customServices: f.customServices.map((c, i) => (i === index ? { ...c, ...patch } : c)),
+    }));
+  }
+
+  function removeCustomService(index: number) {
+    setForm((f) => ({ ...f, customServices: f.customServices.filter((_, i) => i !== index) }));
+  }
+
+  const hasCustomService = form.customServices.some((c) => c.name.trim());
   const selectedCustomer = customers.find((c) => c.id === form.customerId);
 
   return (
@@ -229,16 +276,32 @@ export default function NeuerAuftragPage() {
                 ))}
               </select>
               {selectedCustomer && (
-                <select
-                  className="w-full h-10 rounded-lg border px-3 text-sm"
-                  value={form.propertyId}
-                  onChange={(e) => setForm({ ...form, propertyId: e.target.value })}
-                >
-                  <option value="">Einsatzort wählen...</option>
-                  {selectedCustomer.properties.map((p) => (
-                    <option key={p.id} value={p.id}>{p.label}: {p.street}, {p.city}</option>
-                  ))}
-                </select>
+                <>
+                  <select
+                    className="w-full h-10 rounded-lg border px-3 text-sm"
+                    value={form.propertyId}
+                    onChange={(e) => setForm({ ...form, propertyId: e.target.value })}
+                  >
+                    <option value="">Standort / Einsatzort wählen...</option>
+                    {selectedCustomer.properties.filter((p) => p.isActive).map((p) => (
+                      <option key={p.id} value={p.id}>
+                        {p.label}: {p.street}, {p.city}
+                        {p.travelZone ? ` · Zone: ${p.travelZone.name}` : " · keine Zone"}
+                      </option>
+                    ))}
+                  </select>
+                  {form.propertyId && (() => {
+                    const sel = selectedCustomer.properties.find((p) => p.id === form.propertyId);
+                    if (sel && !sel.travelZone) {
+                      return (
+                        <p className="mt-2 text-xs text-amber-700 bg-amber-50 rounded-lg px-3 py-2">
+                          Diesem Standort ist keine Anfahrtszone zugeordnet. Die Anfahrtskosten können dann nicht automatisch berechnet werden – bitte zuerst beim Kunden eine Zone zuweisen.
+                        </p>
+                      );
+                    }
+                    return null;
+                  })()}
+                </>
               )}
             </>
           )}
@@ -258,6 +321,67 @@ export default function NeuerAuftragPage() {
                 </div>
               </label>
             ))}
+            {!services.length && (
+              <p className="text-sm text-slate-400">Noch keine Leistungen im Verzeichnis – nutzen Sie unten „Sonstige Leistung“.</p>
+            )}
+          </div>
+
+          <div className="mt-6 border-t border-slate-100 pt-4">
+            <div className="flex items-center justify-between mb-2">
+              <div>
+                <p className="font-medium text-sm">Sonstige Leistung</p>
+                <p className="text-xs text-slate-500">Nicht im Verzeichnis? Hier frei erfassen – wird in Angebot/Rechnung übernommen.</p>
+              </div>
+              <Button type="button" variant="outline" size="sm" onClick={addCustomService}>
+                <Plus className="h-4 w-4 mr-1" /> Hinzufügen
+              </Button>
+            </div>
+
+            <div className="space-y-3">
+              {form.customServices.map((c, i) => (
+                <div key={i} className="rounded-xl border border-slate-200 p-3 space-y-3">
+                  <div className="flex items-start gap-2">
+                    <Input
+                      label="Bezeichnung *"
+                      className="flex-1"
+                      value={c.name}
+                      onChange={(e) => updateCustomService(i, { name: e.target.value })}
+                      placeholder="z. B. Sonderanfertigung Blende"
+                    />
+                    <button type="button" onClick={() => removeCustomService(i)} className="text-red-500 mt-7 shrink-0">
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  </div>
+                  <Textarea
+                    label="Beschreibung (optional)"
+                    value={c.description}
+                    onChange={(e) => updateCustomService(i, { description: e.target.value })}
+                    rows={2}
+                  />
+                  <div className="grid grid-cols-2 gap-3">
+                    <NumberInput
+                      label="Menge"
+                      allowDecimal={false}
+                      min={1}
+                      value={c.quantity}
+                      onValueChange={(v) => updateCustomService(i, { quantity: v ?? 1 })}
+                    />
+                    <NumberInput
+                      label="Preis (netto, optional)"
+                      suffix="€"
+                      value={c.price}
+                      onValueChange={(v) => updateCustomService(i, { price: v })}
+                      placeholder="z. B. 120"
+                    />
+                  </div>
+                  <Input
+                    label="Interne Notiz (optional)"
+                    value={c.notes}
+                    onChange={(e) => updateCustomService(i, { notes: e.target.value })}
+                  />
+                </div>
+              ))}
+            </div>
           </div>
         </Card>
       )}
@@ -303,7 +427,7 @@ export default function NeuerAuftragPage() {
           <ul className="text-sm space-y-2 mb-4">
             <li className="flex gap-2"><Check className="h-4 w-4 text-green-600" /> {ORDER_TYPE_LABELS[form.orderType]}</li>
             <li className="flex gap-2"><Check className="h-4 w-4 text-green-600" /> {form.title || "—"}</li>
-            <li className="flex gap-2"><Check className="h-4 w-4 text-green-600" /> {form.serviceIds.length} Leistung(en)</li>
+            <li className="flex gap-2"><Check className="h-4 w-4 text-green-600" /> {form.serviceIds.length + form.customServices.filter((c) => c.name.trim()).length} Leistung(en){hasCustomService ? ` (inkl. ${form.customServices.filter((c) => c.name.trim()).length} sonstige)` : ""}</li>
             <li className="flex gap-2"><Check className="h-4 w-4 text-green-600" /> Phasen werden automatisch erzeugt</li>
           </ul>
           <label className="flex items-start gap-2 text-sm">
@@ -326,7 +450,7 @@ export default function NeuerAuftragPage() {
             onClick={() => {
               setError("");
               if (step === 0 && !form.title) { setError("Bitte Auftragstitel eingeben."); return; }
-              if (step === 2 && !form.serviceIds.length) { setError("Bitte mindestens eine Leistung wählen."); return; }
+              if (step === 2 && !form.serviceIds.length && !hasCustomService) { setError("Bitte mindestens eine Leistung wählen oder eine sonstige Leistung erfassen."); return; }
               setStep((s) => s + 1);
             }}
           >

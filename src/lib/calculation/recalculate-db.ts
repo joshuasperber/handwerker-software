@@ -8,7 +8,6 @@ import {
   calcMachineUsageTotal,
   calcProcurementTotal,
   calcTravelTotal,
-  roundMoney,
 } from "./formulas";
 import type { OverheadMode } from "./types";
 
@@ -26,6 +25,7 @@ export async function recalculateCalculationRecord(calculationId: string, tenant
       profitSettings: true,
       incomeTaxSettings: true,
       vatSettings: true,
+      order: { include: { property: true } },
     },
   });
 
@@ -108,13 +108,29 @@ export async function recalculateCalculationRecord(calculationId: string, tenant
   }
 
   if (calc.travelCost) {
-    const zones = travelZones.map((z) => ({
-      name: z.name,
-      minKm: z.minKm,
-      maxKm: z.maxKm,
-      flatFeeNet: z.flatFeeNet,
-      useFormula: z.useFormula,
-    }));
+    const zones = travelZones
+      .filter((z) => z.isActive)
+      .map((z) => ({
+        id: z.id,
+        name: z.name,
+        minKm: z.minKm,
+        maxKm: z.maxKm,
+        flatFeeNet: z.flatFeeNet,
+        useFormula: z.useFormula,
+      }));
+
+    // Datenstruktur: Kunde → Standort (Property) → Zone → Anfahrtskosten.
+    // Eine explizit am Standort hinterlegte Zone hat Vorrang vor der Entfernungsauswahl.
+    const propertyZoneId = calc.order?.property?.travelZoneId ?? null;
+    const effectiveZoneId =
+      (calc.travelCost.selectedZoneId &&
+      zones.some((z) => z.id === calc.travelCost!.selectedZoneId)
+        ? calc.travelCost.selectedZoneId
+        : null) ??
+      (propertyZoneId && zones.some((z) => z.id === propertyZoneId)
+        ? propertyZoneId
+        : null);
+
     const travel = calcTravelTotal({
       distanceKm: calc.travelCost.distanceKm,
       estimatedDriveTimeHours: calc.travelCost.estimatedDriveTimeHours,
@@ -124,19 +140,21 @@ export async function recalculateCalculationRecord(calculationId: string, tenant
       parkingFeesNet: calc.travelCost.parkingFeesNet,
       tollFeesNet: calc.travelCost.tollFeesNet,
       otherTravelCostsNet: calc.travelCost.otherTravelCostsNet,
+      selectedZoneId: effectiveZoneId,
     });
-    const zone = travelZones.find((z) => z.name === travel.zoneName);
     await prisma.travelCost.update({
       where: { id: calc.travelCost.id },
       data: {
         totalNet: travel.total,
         zoneName: travel.zoneName,
         calculationMode: travel.mode,
-        selectedZoneId: zone?.id,
+        selectedZoneId: travel.zoneId ?? null,
         zoneFlatFeeNet: travel.flatFee,
       },
     });
     calc.travelCost.totalNet = travel.total;
+    // Sicherstellen, dass die Engine dieselbe Zone verwendet wie oben.
+    calc.travelCost.selectedZoneId = travel.zoneId ?? null;
   }
 
   const input = buildCalculationInputFromRecord(
@@ -148,13 +166,16 @@ export async function recalculateCalculationRecord(calculationId: string, tenant
       overheadPercent: overheadSettings?.overheadPercent ?? company?.defaultOverheadPercent,
       additionalOverheadPercent: company?.additionalOverheadPercent ?? 0,
     },
-    travelZones.map((z) => ({
-      name: z.name,
-      minKm: z.minKm,
-      maxKm: z.maxKm,
-      flatFeeNet: z.flatFeeNet,
-      useFormula: z.useFormula,
-    }))
+    travelZones
+      .filter((z) => z.isActive)
+      .map((z) => ({
+        id: z.id,
+        name: z.name,
+        minKm: z.minKm,
+        maxKm: z.maxKm,
+        flatFeeNet: z.flatFeeNet,
+        useFormula: z.useFormula,
+      }))
   );
 
   const result = runCalculation(input);

@@ -3,9 +3,9 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { CanAccess } from "@/components/auth/can-access";
-import { MapPin, Mail, Phone, Plus } from "lucide-react";
+import { AddButton } from "@/components/ui/add-button";
+import { MapPin, Mail, Phone } from "lucide-react";
 
 interface Customer {
   id: string;
@@ -29,12 +29,10 @@ export default function KundenPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
         <h1 className="text-2xl font-bold text-slate-900">Kunden</h1>
         <CanAccess permission="customers.write">
-          <Link href="/dashboard/kunden/neu">
-            <Button size="lg" variant="action"><Plus className="h-5 w-5" /> Neuer Kunde</Button>
-          </Link>
+          <AddButton href="/dashboard/kunden/neu">Neuer Kunde</AddButton>
         </CanAccess>
       </div>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

@@ -13,7 +13,10 @@ export async function GET(
   const customer = await prisma.customer.findFirst({
     where: { id, tenantId: auth.tenantId },
     include: {
-      properties: true,
+      properties: {
+        include: { travelZone: true },
+        orderBy: [{ isPrimary: "desc" }, { createdAt: "asc" }],
+      },
       orders: { orderBy: { createdAt: "desc" }, take: 20 },
     },
   });

@@ -2,12 +2,14 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { formatEuro, formatDateTime } from "@/lib/utils";
 import { CanAccess } from "@/components/auth/can-access";
-import { Calculator, Plus } from "lucide-react";
+import { AddButton } from "@/components/ui/add-button";
+import { InfoButton } from "@/components/ui/info-button";
+import { saveJson } from "@/lib/save-toast";
+import { Calculator } from "lucide-react";
 
 interface CalcRow {
   id: string;
@@ -33,30 +35,39 @@ export default function KalkulationListPage() {
   }, []);
 
   async function createNew() {
-    const res = await fetch("/api/calculations", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title: "Neue Kalkulation" }),
-    });
-    const data = await res.json();
-    if (data.success) window.location.href = `/dashboard/kalkulation/${data.data.id}`;
+    const data = await saveJson<{ id: string }>(
+      "/api/calculations",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title: "Neue Kalkulation" }),
+      },
+      { loading: "Kalkulation wird angelegt …", success: "Kalkulation angelegt" }
+    );
+    if (data.success && data.data) {
+      window.location.href = `/dashboard/kalkulation/${data.data.id}`;
+    }
   }
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
         <div>
           <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
             <Calculator className="h-7 w-7 text-[#0d5c63]" />
-            Angebots- & Rechnungskalkulation
+            Angebots- &amp; Rechnungskalkulation
+            <InfoButton title="Wie funktioniert die Kalkulation?">
+              <p>
+                Die Kalkulation berechnet sich aus Materialkosten, Arbeitszeit, Zuschlägen und
+                sonstigen Leistungen. Prüfen Sie die Werte sorgfältig, bevor ein Angebot erstellt
+                wird.
+              </p>
+              <p>Leere Entwürfe ohne Positionen erscheinen nicht in der Liste.</p>
+            </InfoButton>
           </h1>
-          <p className="text-slate-500 mt-1">Betriebswirtschaftliche Kalkulation mit automatischer Preisfindung</p>
-          <p className="text-xs text-slate-400 mt-1">Leere Entwürfe ohne Positionen erscheinen nicht in der Liste.</p>
         </div>
         <CanAccess permission="calculations.write">
-          <Button size="lg" variant="action" onClick={createNew}>
-            <Plus className="h-5 w-5" /> Neue Kalkulation
-          </Button>
+          <AddButton onClick={createNew}>Neue Kalkulation</AddButton>
         </CanAccess>
       </div>
 

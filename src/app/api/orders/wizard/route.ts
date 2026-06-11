@@ -1,5 +1,4 @@
 import { NextRequest } from "next/server";
-import { prisma } from "@/lib/prisma";
 import { requireAuth, apiSuccess, apiError } from "@/lib/api";
 import { createOrderWithWizardData } from "@/lib/inventory/orders";
 import type { OrderType } from "@/generated/prisma/client";
@@ -17,6 +16,7 @@ export async function POST(request: NextRequest) {
     description,
     internalNotes,
     serviceIds,
+    customServices,
     employeeId,
     scheduledStart,
     scheduledEnd,
@@ -24,7 +24,12 @@ export async function POST(request: NextRequest) {
     confirmMaterial,
   } = body;
 
-  if (!customerId || !propertyId || !title || !serviceIds?.length) {
+  const hasCatalog = Array.isArray(serviceIds) && serviceIds.length > 0;
+  const hasCustom =
+    Array.isArray(customServices) &&
+    customServices.some((c: { name?: string }) => c?.name?.trim());
+
+  if (!customerId || !propertyId || !title || (!hasCatalog && !hasCustom)) {
     return apiError("Kunde, Objekt, Titel und mindestens eine Leistung sind Pflicht", 400);
   }
 
@@ -35,7 +40,8 @@ export async function POST(request: NextRequest) {
     orderType: (orderType ?? "REPARATUR") as OrderType,
     description,
     internalNotes,
-    serviceIds,
+    serviceIds: serviceIds ?? [],
+    customServices,
     employeeId,
     scheduledStart,
     scheduledEnd,

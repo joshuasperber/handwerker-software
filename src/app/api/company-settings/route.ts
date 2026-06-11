@@ -59,6 +59,24 @@ export async function PUT(request: Request) {
         company.additionalOverheadPercent != null
           ? Number(company.additionalOverheadPercent)
           : undefined,
+      // Kontaktdaten für Dokumente
+      phone: company.phone !== undefined ? (company.phone || null) : undefined,
+      email: company.email !== undefined ? (company.email || null) : undefined,
+      website: company.website !== undefined ? (company.website || null) : undefined,
+      // Rechnungs-Personalisierung
+      invoiceLogoUrl: company.invoiceLogoUrl !== undefined ? (company.invoiceLogoUrl || null) : undefined,
+      bankName: company.bankName !== undefined ? (company.bankName || null) : undefined,
+      iban: company.iban !== undefined ? (company.iban || null) : undefined,
+      bic: company.bic !== undefined ? (company.bic || null) : undefined,
+      taxNumber: company.taxNumber !== undefined ? (company.taxNumber || null) : undefined,
+      vatId: company.vatId !== undefined ? (company.vatId || null) : undefined,
+      paymentTermsDays:
+        company.paymentTermsDays != null ? Number(company.paymentTermsDays) : undefined,
+      invoiceIntroText:
+        company.invoiceIntroText !== undefined ? (company.invoiceIntroText || null) : undefined,
+      invoiceFooterText:
+        company.invoiceFooterText !== undefined ? (company.invoiceFooterText || null) : undefined,
+      invoiceNotes: company.invoiceNotes !== undefined ? (company.invoiceNotes || null) : undefined,
     };
 
     companyRecord = companyRecord

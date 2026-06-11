@@ -12,6 +12,7 @@ export default async function DashboardLayout({
 }) {
   const session = await getSession();
   if (!session) redirect("/login");
+  if (session.role === "GAST") redirect("/portal");
   if (!canAccessDashboard(session.role)) redirect("/monteur");
 
   const navItems = getDashboardNavItems(session.role);

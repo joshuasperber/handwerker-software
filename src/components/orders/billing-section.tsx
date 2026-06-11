@@ -6,7 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { PriceCompositionPanel } from "@/components/calculation/price-composition";
 import { formatEuro } from "@/lib/utils";
-import { FileText, Calculator, CheckCircle, Pencil } from "lucide-react";
+import { FileText, Calculator, CheckCircle, Pencil, Download } from "lucide-react";
 import { toast } from "sonner";
 
 interface OrderBillingSectionProps {
@@ -27,17 +27,24 @@ export function OrderBillingSection({
   const [calc, setCalc] = useState<Record<string, unknown> | null>(null);
   const [msg, setMsg] = useState("");
   const [loading, setLoading] = useState(false);
+  const [lastDocId, setLastDocId] = useState<string | null>(null);
 
   const showBilling = ["ABRECHNUNGSBEREIT", "ABGERECHNET"].includes(orderStatus);
 
   useEffect(() => {
-    if (!calculationId || !showBilling) {
-      setCalc(null);
-      return;
-    }
-    fetch(`/api/calculations/${calculationId}`)
-      .then((r) => r.json())
-      .then((d) => { if (d.success) setCalc(d.data); });
+    let active = true;
+    (async () => {
+      if (!calculationId || !showBilling) {
+        if (active) setCalc(null);
+        return;
+      }
+      const r = await fetch(`/api/calculations/${calculationId}`);
+      const d = await r.json();
+      if (active && d.success) setCalc(d.data);
+    })();
+    return () => {
+      active = false;
+    };
   }, [calculationId, showBilling]);
 
   function openHtml(html: string) {
@@ -89,6 +96,7 @@ export function OrderBillingSection({
         { description: "Die Rechnung wurde in einem neuen Tab geöffnet." }
       );
       setMsg(`Rechnung ${d.data.document.documentNumber} erstellt`);
+      setLastDocId(d.data.document.id ?? null);
       if (d.data.html) openHtml(d.data.html);
       onInvoiceCreated();
     } else {
@@ -184,6 +192,22 @@ export function OrderBillingSection({
         )}
 
         {msg && <p className="text-sm text-green-700">{msg}</p>}
+
+        {lastDocId && (
+          <div className="flex flex-wrap items-center gap-3 text-sm">
+            <a
+              href={`/api/documents/${lastDocId}/pdf`}
+              target="_blank"
+              rel="noreferrer"
+              className="text-[#0d5c63] hover:underline inline-flex items-center gap-1"
+            >
+              <Download className="h-4 w-4" /> PDF herunterladen
+            </a>
+            <Link href="/dashboard/rechnungen" className="text-[#0d5c63] hover:underline">
+              Zur Rechnungsübersicht →
+            </Link>
+          </div>
+        )}
       </div>
     </Card>
   );

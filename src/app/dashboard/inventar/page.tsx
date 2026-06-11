@@ -4,8 +4,11 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { NumberInput } from "@/components/ui/number-input";
 import { Card } from "@/components/ui/card";
 import { CanAccess } from "@/components/auth/can-access";
+import { AddButton } from "@/components/ui/add-button";
+import { saveJson } from "@/lib/save-toast";
 import { Package, Plus, AlertTriangle, ArrowRightLeft, History, GripVertical } from "lucide-react";
 
 interface ArticleRow {
@@ -91,14 +94,14 @@ export default function InventarPage() {
   const [locations, setLocations] = useState<StorageLocation[]>([]);
   const [selectedLocationId, setSelectedLocationId] = useState<string | null>(null);
   const [locationDetail, setLocationDetail] = useState<LocationStock | null>(null);
-  const [stockForm, setStockForm] = useState({ articleId: "", quantity: "" });
+  const [stockForm, setStockForm] = useState({ articleId: "", quantity: null as number | null });
   const [stockMsg, setStockMsg] = useState("");
   const [tab, setTab] = useState<"artikel" | "lagerorte" | "bewegungen">("artikel");
   const [showForm, setShowForm] = useState(false);
   const [showLocationForm, setShowLocationForm] = useState(false);
   const [locationForm, setLocationForm] = useState({ name: "", locationType: "BAUSTELLE", description: "" });
   const [locationMsg, setLocationMsg] = useState("");
-  const [transferForm, setTransferForm] = useState({ articleId: "", fromLocationId: "", toLocationId: "", quantity: "" });
+  const [transferForm, setTransferForm] = useState({ articleId: "", fromLocationId: "", toLocationId: "", quantity: null as number | null });
   const [transferMsg, setTransferMsg] = useState("");
   const [dragItem, setDragItem] = useState<{
     articleId: string;
@@ -119,7 +122,7 @@ export default function InventarPage() {
     toLocationId: string;
     toName: string;
   } | null>(null);
-  const [dndQty, setDndQty] = useState("");
+  const [dndQty, setDndQty] = useState<number | null>(null);
   const [dndMsg, setDndMsg] = useState("");
   const [movements, setMovements] = useState<MovementRow[]>([]);
   const [form, setForm] = useState({
@@ -131,7 +134,7 @@ export default function InventarPage() {
     targetStock: 50,
     initialStock: 0,
     initialLocationId: "",
-    purchasePriceNet: "",
+    purchasePriceNet: null as number | null,
   });
   const [loading, setLoading] = useState(true);
 
@@ -143,21 +146,24 @@ export default function InventarPage() {
     ]).then(([a, s, l]) => {
       if (a.success) setArticles(a.data);
       if (s.success) setSummary(s.data);
-      if (l.success) setLocations(l.data);
+      if (l.success && l.data?.length) {
+        setLocations(l.data);
+        // Standard-Lagerort für das Formular vorbelegen (Hauptlager bevorzugt).
+        setForm((f) => {
+          if (f.initialLocationId) return f;
+          const haupt = l.data.find(
+            (loc: { locationType: string }) => loc.locationType === "HAUPTLAGER"
+          );
+          return { ...f, initialLocationId: haupt?.id ?? l.data[0].id };
+        });
+      } else if (l.success) {
+        setLocations(l.data);
+      }
       setLoading(false);
     });
   }
 
   useEffect(() => { load(); }, []);
-
-  useEffect(() => {
-    if (!locations.length) return;
-    setForm((f) => {
-      if (f.initialLocationId) return f;
-      const haupt = locations.find((l) => l.locationType === "HAUPTLAGER");
-      return { ...f, initialLocationId: haupt?.id ?? locations[0].id };
-    });
-  }, [locations]);
 
   useEffect(() => {
     if (tab !== "bewegungen") return;
@@ -167,29 +173,33 @@ export default function InventarPage() {
   }, [tab, stockMsg, transferMsg]);
 
   useEffect(() => {
-    if (!selectedLocationId) {
-      setLocationDetail(null);
-      return;
-    }
-    fetch(`/api/storage-locations/${selectedLocationId}`)
-      .then((r) => r.json())
-      .then((d) => {
-        if (d.success) {
-          setLocationDetail({
-            id: d.data.id,
-            name: d.data.name,
-            locationType: d.data.locationType,
-            stock: d.data.stock,
-            totalOnHand: d.data.totalOnHand,
-            totalReserved: d.data.totalReserved,
-          });
-        }
-      });
+    let active = true;
+    (async () => {
+      if (!selectedLocationId) {
+        if (active) setLocationDetail(null);
+        return;
+      }
+      const r = await fetch(`/api/storage-locations/${selectedLocationId}`);
+      const d = await r.json();
+      if (active && d.success) {
+        setLocationDetail({
+          id: d.data.id,
+          name: d.data.name,
+          locationType: d.data.locationType,
+          stock: d.data.stock,
+          totalOnHand: d.data.totalOnHand,
+          totalReserved: d.data.totalReserved,
+        });
+      }
+    })();
+    return () => {
+      active = false;
+    };
   }, [selectedLocationId]);
 
   async function assignStockToLocation(e: React.FormEvent) {
     e.preventDefault();
-    if (!selectedLocationId || !stockForm.articleId || !stockForm.quantity) return;
+    if (!selectedLocationId || !stockForm.articleId || stockForm.quantity == null) return;
     setStockMsg("");
     const res = await fetch("/api/stock/movement", {
       method: "POST",
@@ -198,13 +208,13 @@ export default function InventarPage() {
         articleId: stockForm.articleId,
         storageLocationId: selectedLocationId,
         movementType: "ZUGANG",
-        quantity: parseFloat(stockForm.quantity),
+        quantity: stockForm.quantity ?? 0,
         notes: "Manuelle Zuordnung",
       }),
     });
     const data = await res.json();
     if (data.success) {
-      setStockForm({ articleId: "", quantity: "" });
+      setStockForm({ articleId: "", quantity: null });
       setStockMsg("Bestand aktualisiert");
       load();
       setSelectedLocationId(selectedLocationId);
@@ -245,12 +255,12 @@ export default function InventarPage() {
         articleId: transferForm.articleId,
         fromLocationId: transferForm.fromLocationId,
         toLocationId: transferForm.toLocationId,
-        quantity: parseFloat(transferForm.quantity),
+        quantity: transferForm.quantity ?? 0,
       }),
     });
     const data = await res.json();
     if (data.success) {
-      setTransferForm({ articleId: "", fromLocationId: "", toLocationId: "", quantity: "" });
+      setTransferForm({ articleId: "", fromLocationId: "", toLocationId: "", quantity: null });
       setTransferMsg(`Verschoben: ${data.data.from} → ${data.data.to}`);
       load();
       if (selectedLocationId) setSelectedLocationId(selectedLocationId);
@@ -266,7 +276,7 @@ export default function InventarPage() {
       return;
     }
     setDndModal({ ...dragItem, toLocationId, toName });
-    setDndQty(String(dragItem.available));
+    setDndQty(dragItem.available);
     setDndMsg("");
     setDragItem(null);
     setDragOverId(null);
@@ -274,7 +284,7 @@ export default function InventarPage() {
 
   async function confirmDndTransfer() {
     if (!dndModal) return;
-    const qty = parseFloat(dndQty);
+    const qty = dndQty ?? 0;
     if (!qty || qty <= 0) {
       setDndMsg("Bitte eine gültige Menge eingeben.");
       return;
@@ -307,15 +317,15 @@ export default function InventarPage() {
 
   async function createArticle(e: React.FormEvent) {
     e.preventDefault();
-    const res = await fetch("/api/articles", {
+    const res = await saveJson("/api/articles", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         ...form,
-        purchasePriceNet: form.purchasePriceNet ? parseFloat(form.purchasePriceNet) : undefined,
+        purchasePriceNet: form.purchasePriceNet != null ? form.purchasePriceNet : undefined,
       }),
     });
-    if ((await res.json()).success) {
+    if (res.success) {
       setShowForm(false);
       setForm((f) => ({
         name: "",
@@ -326,7 +336,7 @@ export default function InventarPage() {
         targetStock: 50,
         initialStock: 0,
         initialLocationId: f.initialLocationId,
-        purchasePriceNet: "",
+        purchasePriceNet: null as number | null,
       }));
       load();
     }
@@ -343,9 +353,7 @@ export default function InventarPage() {
           <p className="text-slate-500 mt-1 text-sm">Artikel, Bestände, Reservierungen und Lagerwarnungen</p>
         </div>
         <CanAccess permission="inventory.write">
-          <Button onClick={() => setShowForm(!showForm)}>
-            <Plus className="h-4 w-4 mr-1" /> Artikel anlegen
-          </Button>
+          <AddButton onClick={() => setShowForm(!showForm)}>Artikel anlegen</AddButton>
         </CanAccess>
       </div>
 
@@ -405,7 +413,7 @@ export default function InventarPage() {
             <Input label="Artikelname *" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
             <Input label="Kategorie" value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} />
             <Input label="Einheit (z. B. Stk, m, kg, l)" value={form.unit} onChange={(e) => setForm({ ...form, unit: e.target.value })} />
-            <Input label={`Verpackungseinheit (${form.unit || "Stk"} pro Gebinde)`} type="number" value={form.packageSize} onChange={(e) => setForm({ ...form, packageSize: parseFloat(e.target.value) || 1 })} />
+            <NumberInput label={`Verpackungseinheit (${form.unit || "Stk"} pro Gebinde)`} min={1} value={form.packageSize} onValueChange={(v) => setForm({ ...form, packageSize: v ?? 1 })} />
             <div className="flex flex-col gap-1.5 sm:col-span-2">
               <label className="text-sm font-medium text-foreground">Ziellager für Anfangsbestand</label>
               <select
@@ -423,10 +431,10 @@ export default function InventarPage() {
                 Der Anfangsbestand wird direkt in dieses Lager gebucht.
               </p>
             </div>
-            <Input label="Anfangsbestand" type="number" value={form.initialStock} onChange={(e) => setForm({ ...form, initialStock: parseFloat(e.target.value) || 0 })} />
-            <Input label="Mindestbestand" type="number" value={form.minimumStock} onChange={(e) => setForm({ ...form, minimumStock: parseFloat(e.target.value) || 0 })} />
-            <Input label="Zielbestand" type="number" value={form.targetStock} onChange={(e) => setForm({ ...form, targetStock: parseFloat(e.target.value) || 0 })} />
-            <Input label="Einkaufspreis netto (€)" type="number" value={form.purchasePriceNet} onChange={(e) => setForm({ ...form, purchasePriceNet: e.target.value })} />
+            <NumberInput label="Anfangsbestand" min={0} value={form.initialStock} onValueChange={(v) => setForm({ ...form, initialStock: v ?? 0 })} />
+            <NumberInput label="Mindestbestand" min={0} value={form.minimumStock} onValueChange={(v) => setForm({ ...form, minimumStock: v ?? 0 })} />
+            <NumberInput label="Zielbestand" min={0} value={form.targetStock} onValueChange={(v) => setForm({ ...form, targetStock: v ?? 0 })} />
+            <NumberInput label="Einkaufspreis netto" suffix="€" value={form.purchasePriceNet} onValueChange={(v) => setForm({ ...form, purchasePriceNet: v })} />
             <div className="sm:col-span-2 flex gap-2">
               <Button type="submit" variant="action">Speichern</Button>
               <Button type="button" variant="outline" onClick={() => setShowForm(false)}>Abbrechen</Button>
@@ -619,13 +627,12 @@ export default function InventarPage() {
                         <option key={a.id} value={a.id}>{a.name}</option>
                       ))}
                     </select>
-                    <Input
-                      type="number"
-                      step="0.001"
+                    <NumberInput
                       placeholder="Menge"
-                      value={stockForm.quantity}
-                      onChange={(e) => setStockForm({ ...stockForm, quantity: e.target.value })}
                       required
+                      min={0}
+                      value={stockForm.quantity}
+                      onValueChange={(v) => setStockForm({ ...stockForm, quantity: v })}
                     />
                     <Button type="submit" size="sm" variant="action">Bestand buchen</Button>
                     {stockMsg && <p className="text-sm text-green-700">{stockMsg}</p>}
@@ -667,13 +674,12 @@ export default function InventarPage() {
                         <option key={l.id} value={l.id}>{l.name}</option>
                       ))}
                     </select>
-                    <Input
-                      type="number"
-                      step="0.001"
+                    <NumberInput
                       placeholder="Menge"
-                      value={transferForm.quantity}
-                      onChange={(e) => setTransferForm({ ...transferForm, quantity: e.target.value })}
                       required
+                      min={0}
+                      value={transferForm.quantity}
+                      onValueChange={(v) => setTransferForm({ ...transferForm, quantity: v })}
                     />
                     <Button type="submit" size="sm" variant="outline">Verschieben</Button>
                     {transferMsg && <p className="text-sm text-green-700">{transferMsg}</p>}
@@ -762,12 +768,12 @@ export default function InventarPage() {
               <span className="font-medium">{dndModal.fromName}</span> nach{" "}
               <span className="font-medium">{dndModal.toName}</span> verschieben.
             </p>
-            <Input
-              type="number"
-              step="0.001"
+            <NumberInput
               label={`Menge (max. ${dndModal.available} ${dndModal.unit})`}
+              min={0}
+              max={dndModal.available}
               value={dndQty}
-              onChange={(e) => setDndQty(e.target.value)}
+              onValueChange={setDndQty}
               autoFocus
             />
             {dndMsg && <p className="text-sm text-red-600">{dndMsg}</p>}

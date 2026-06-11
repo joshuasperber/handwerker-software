@@ -26,6 +26,7 @@ export function buildCalculationInputFromRecord(
     additionalOverheadPercent?: number;
   },
   travelZones: {
+    id?: string;
     name: string;
     minKm: number;
     maxKm: number | null;
@@ -73,6 +74,7 @@ export function buildCalculationInputFromRecord(
           parkingFeesNet: calc.travelCost.parkingFeesNet,
           tollFeesNet: calc.travelCost.tollFeesNet,
           otherTravelCostsNet: calc.travelCost.otherTravelCostsNet,
+          selectedZoneId: calc.travelCost.selectedZoneId,
         }
       : null,
     additionalItems: calc.additionalItems.map((a) => ({

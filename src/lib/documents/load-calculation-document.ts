@@ -53,6 +53,19 @@ export async function loadCalculationForDocument(tenantId: string, calculationId
     postalCode: companySettings?.postalCode,
     city: companySettings?.city,
     logoUrl: tenant?.logoUrl,
+    phone: companySettings?.phone ?? tenant?.phone,
+    email: companySettings?.email ?? tenant?.email,
+    website: companySettings?.website,
+    invoiceLogoUrl: companySettings?.invoiceLogoUrl,
+    bankName: companySettings?.bankName,
+    iban: companySettings?.iban,
+    bic: companySettings?.bic,
+    taxNumber: companySettings?.taxNumber,
+    vatId: companySettings?.vatId,
+    paymentTermsDays: companySettings?.paymentTermsDays,
+    invoiceIntroText: companySettings?.invoiceIntroText,
+    invoiceFooterText: companySettings?.invoiceFooterText,
+    invoiceNotes: companySettings?.invoiceNotes,
   };
 
   return { calc: docCalc, company, orderId: calc.orderId, raw: calc };

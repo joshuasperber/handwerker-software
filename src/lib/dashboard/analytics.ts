@@ -96,7 +96,7 @@ export async function getDashboardAnalytics(
 
   const [
     invoiceDocsForRevenue,
-    openInvoiceAgg,
+    openInvoiceDocs,
     invoiceStatusGroups,
     openOrdersCount,
     ordersStatusGroups,
@@ -114,13 +114,16 @@ export async function getDashboardAnalytics(
       },
       select: {
         issueDate: true,
-        calculation: { select: { grossSalesPrice: true } },
+        grossAmount: true,
       },
     }),
-    prisma.calculation.aggregate({
-      where: { tenantId, status: "INVOICE_CREATED" },
-      _count: { _all: true },
-      _sum: { grossSalesPrice: true },
+    prisma.calculationDocument.findMany({
+      where: {
+        documentType: "INVOICE",
+        status: { in: ["OFFEN", "TEILBEZAHLT"] },
+        calculation: { tenantId },
+      },
+      select: { grossAmount: true, paidAmount: true },
     }),
     prisma.calculation.groupBy({
       by: ["status"],
@@ -175,8 +178,9 @@ export async function getDashboardAnalytics(
     prisma.calculationDocument.findMany({
       where: {
         documentType: "INVOICE",
+        status: { in: ["OFFEN", "TEILBEZAHLT"] },
         dueDate: { lt: now },
-        calculation: { tenantId, status: "INVOICE_CREATED" },
+        calculation: { tenantId },
       },
       include: { calculation: { include: { customer: true } } },
       orderBy: { dueDate: "asc" },
@@ -184,10 +188,15 @@ export async function getDashboardAnalytics(
     }),
   ]);
 
+  const openInvoicesSum = openInvoiceDocs.reduce(
+    (sum, d) => sum + Math.max(0, d.grossAmount - d.paidAmount),
+    0
+  );
+
   const monthBuckets = buildMonthBuckets(now);
   let revenueThisMonth = 0;
   for (const doc of invoiceDocsForRevenue) {
-    const amount = doc.calculation?.grossSalesPrice ?? 0;
+    const amount = doc.grossAmount ?? 0;
     const key = monthKey(doc.issueDate);
     const bucket = monthBuckets.find((m) => m.key === key);
     if (bucket) bucket.umsatz += amount;
@@ -224,8 +233,8 @@ export async function getDashboardAnalytics(
       revenueThisMonth,
       openOrders: openOrdersCount,
       appointmentsToday,
-      openInvoicesCount: openInvoiceAgg._count._all,
-      openInvoicesSum: openInvoiceAgg._sum.grossSalesPrice ?? 0,
+      openInvoicesCount: openInvoiceDocs.length,
+      openInvoicesSum,
     },
     revenuePerMonth: monthBuckets.map(({ label, umsatz }) => ({
       label,
@@ -265,7 +274,7 @@ export async function getDashboardAnalytics(
       id: doc.id,
       documentNumber: doc.documentNumber,
       dueDate: (doc.dueDate ?? doc.issueDate).toISOString(),
-      amount: doc.calculation?.grossSalesPrice ?? 0,
+      amount: Math.max(0, doc.grossAmount - doc.paidAmount),
       customer: doc.calculation?.customer
         ? `${doc.calculation.customer.firstName} ${doc.calculation.customer.lastName}`
         : "—",

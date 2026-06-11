@@ -1,13 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { NumberInput } from "@/components/ui/number-input";
 import { Textarea } from "@/components/ui/textarea";
 import { ChevronLeft, Package, CheckCircle } from "lucide-react";
+import { OrderPhases, type OrderPhaseData } from "@/components/orders/order-phases";
+import { PhotoGallery } from "@/components/orders/photo-gallery";
 import { toast } from "sonner";
 
 interface MaterialLine {
@@ -28,13 +30,14 @@ export default function MonteurAuftragPage() {
     materialLines: MaterialLine[];
     materialUsages: { name: string; quantity: number; unit: string }[];
     timeEntries: { startTime: string; endTime: string | null }[];
+    phases?: OrderPhaseData[];
   } | null>(null);
   const [consumption, setConsumption] = useState<Record<string, number>>({});
   const [completionNotes, setCompletionNotes] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
-  function load() {
+  const load = useCallback(() => {
     fetch(`/api/orders/${id}`).then((r) => r.json()).then((d) => {
       if (d.success) {
         setOrder(d.data);
@@ -45,9 +48,9 @@ export default function MonteurAuftragPage() {
         setConsumption(init);
       }
     });
-  }
+  }, [id]);
 
-  useEffect(() => { load(); }, [id]);
+  useEffect(() => { load(); }, [load]);
 
   async function bookConsumption() {
     setError("");
@@ -108,6 +111,33 @@ export default function MonteurAuftragPage() {
       <h1 className="text-xl font-bold mb-4">{order.orderNumber}</h1>
       {order.description && <p className="text-sm text-slate-600 mb-4">{order.description}</p>}
 
+      <div className="mb-4">
+        <OrderPhases
+          orderId={id as string}
+          phases={order.phases ?? []}
+          teams={[]}
+          employees={[]}
+          canEdit={false}
+          onChanged={load}
+          filesBaseUrl={`/api/monteur/orders/${id}/files`}
+          canManageFiles
+        />
+      </div>
+
+      <Card title="Fotos & Dokumentation" className="mb-4">
+        <p className="text-xs text-slate-500 -mt-1 mb-1">
+          Aufmaß, Baustelle, Schäden, Montage … – direkt mit der Kamera aufnehmen oder aus der Galerie hochladen.
+        </p>
+        <PhotoGallery
+          baseUrl={`/api/monteur/orders/${id}/files`}
+          canUpload
+          canDelete
+          phases={(order.phases ?? []).map((p) => ({ id: p.id, name: p.name }))}
+          compact
+          onChanged={load}
+        />
+      </Card>
+
       {packLines.length > 0 && (
         <Card title="Packliste & Verbrauch" className="mb-4">
           <div className="space-y-3">
@@ -118,11 +148,11 @@ export default function MonteurAuftragPage() {
                   <span>{line.name}</span>
                   <span className="text-slate-400">({line.quantityRequired} {line.unit})</span>
                 </div>
-                <Input
-                  type="number"
+                <NumberInput
                   className="!w-20"
+                  min={0}
                   value={consumption[line.id] ?? 0}
-                  onChange={(e) => setConsumption({ ...consumption, [line.id]: parseFloat(e.target.value) || 0 })}
+                  onValueChange={(v) => setConsumption({ ...consumption, [line.id]: v ?? 0 })}
                 />
               </div>
             ))}

@@ -18,10 +18,16 @@ export type Permission =
   | "checklists.write"
   | "messages.read"
   | "messages.write"
+  | "invitations.manage"
+  | "shared.read"
   | "audit.read"
   | "calculations.read"
   | "calculations.write"
   | "calculations.settings"
+  | "invoices.read"
+  | "invoices.write"
+  | "invoices.payments"
+  | "notifications.manage"
   | "inventory.read"
   | "inventory.write"
   | "inventory.reserve"
@@ -47,10 +53,15 @@ const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
     "checklists.write",
     "messages.read",
     "messages.write",
+    "invitations.manage",
     "audit.read",
     "calculations.read",
     "calculations.write",
     "calculations.settings",
+    "invoices.read",
+    "invoices.write",
+    "invoices.payments",
+    "notifications.manage",
     "inventory.read",
     "inventory.write",
     "inventory.reserve",
@@ -71,10 +82,15 @@ const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
     "checklists.write",
     "messages.read",
     "messages.write",
+    "invitations.manage",
     "audit.read",
     "calculations.read",
     "calculations.write",
     "calculations.settings",
+    "invoices.read",
+    "invoices.write",
+    "invoices.payments",
+    "notifications.manage",
     "inventory.read",
     "inventory.write",
     "inventory.reserve",
@@ -95,9 +111,14 @@ const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
     "checklists.write",
     "messages.read",
     "messages.write",
+    "invitations.manage",
     "calculations.read",
     "calculations.write",
     "calculations.settings",
+    "invoices.read",
+    "invoices.write",
+    "invoices.payments",
+    "notifications.manage",
     "inventory.read",
     "inventory.write",
     "inventory.reserve",
@@ -115,6 +136,7 @@ const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
     "inventory.reserve",
   ],
   KUNDE: ["customer.own"],
+  GAST: ["shared.read", "messages.read", "messages.write"],
 };
 
 export function hasPermission(role: UserRole, permission: Permission): boolean {
@@ -122,11 +144,16 @@ export function hasPermission(role: UserRole, permission: Permission): boolean {
 }
 
 export function canAccessDashboard(role: UserRole): boolean {
-  return role !== "KUNDE";
+  return role !== "KUNDE" && role !== "GAST";
 }
 
 export function canAccessMonteurApp(role: UserRole): boolean {
   return role === "MONTEUR" || role === "MEISTER" || role === "ADMIN";
+}
+
+/** Eingeladene Gäste nutzen ein eigenes, schlankes Portal. */
+export function canAccessGuestPortal(role: UserRole): boolean {
+  return role === "GAST";
 }
 
 export function canManageOrders(role: UserRole): boolean {
@@ -146,12 +173,16 @@ export const DASHBOARD_NAV_CONFIG: {
   { href: "/dashboard/einkauf", label: "Einkauf", permission: "inventory.read" },
   { href: "/dashboard/disposition", label: "Disposition", permission: "appointments.read" },
   { href: "/dashboard/kalkulation", label: "Kalkulation", permission: "calculations.read" },
+  { href: "/dashboard/rechnungen", label: "Rechnungen", permission: "invoices.read" },
   { href: "/dashboard/kunden", label: "Kunden", permission: "customers.read" },
   { href: "/dashboard/mitarbeiter", label: "Mitarbeiter", permission: "employees.read" },
   { href: "/dashboard/leistungen", label: "Leistungen", permission: "services.read" },
   { href: "/dashboard/maschinen", label: "Maschinen", permission: "calculations.settings" },
+  { href: "/dashboard/einstellungen/rechnung", label: "Rechnungseinstellungen", permission: "calculations.settings" },
+  { href: "/dashboard/einstellungen/benachrichtigungen", label: "Benachrichtigungen", permission: "notifications.manage" },
   { href: "/dashboard/nachrichten", label: "Nachrichten", permission: "messages.read" },
   { href: "/dashboard/stundenzettel", label: "Stundenzettel", permission: "monteur.own" },
+  { href: "/dashboard/profil", label: "Profil", permission: null },
 ];
 
 /** Monteur: gleiche Dashboard-Ansicht wie Admin, ohne diese Bereiche */

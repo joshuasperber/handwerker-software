@@ -208,6 +208,8 @@ export type EmployeeWhereInput = {
   absences?: Prisma.EmployeeAbsenceListRelationFilter
   teamMemberships?: Prisma.TeamMemberListRelationFilter
   staffRequests?: Prisma.StaffAssignmentRequestListRelationFilter
+  orderPhases?: Prisma.OrderPhaseListRelationFilter
+  assignedVehicles?: Prisma.VehicleListRelationFilter
 }
 
 export type EmployeeOrderByWithRelationInput = {
@@ -228,6 +230,8 @@ export type EmployeeOrderByWithRelationInput = {
   absences?: Prisma.EmployeeAbsenceOrderByRelationAggregateInput
   teamMemberships?: Prisma.TeamMemberOrderByRelationAggregateInput
   staffRequests?: Prisma.StaffAssignmentRequestOrderByRelationAggregateInput
+  orderPhases?: Prisma.OrderPhaseOrderByRelationAggregateInput
+  assignedVehicles?: Prisma.VehicleOrderByRelationAggregateInput
 }
 
 export type EmployeeWhereUniqueInput = Prisma.AtLeast<{
@@ -251,6 +255,8 @@ export type EmployeeWhereUniqueInput = Prisma.AtLeast<{
   absences?: Prisma.EmployeeAbsenceListRelationFilter
   teamMemberships?: Prisma.TeamMemberListRelationFilter
   staffRequests?: Prisma.StaffAssignmentRequestListRelationFilter
+  orderPhases?: Prisma.OrderPhaseListRelationFilter
+  assignedVehicles?: Prisma.VehicleListRelationFilter
 }, "id" | "userId">
 
 export type EmployeeOrderByWithAggregationInput = {
@@ -295,6 +301,8 @@ export type EmployeeCreateInput = {
   absences?: Prisma.EmployeeAbsenceCreateNestedManyWithoutEmployeeInput
   teamMemberships?: Prisma.TeamMemberCreateNestedManyWithoutEmployeeInput
   staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutEmployeeInput
+  orderPhases?: Prisma.OrderPhaseCreateNestedManyWithoutAssignedEmployeeInput
+  assignedVehicles?: Prisma.VehicleCreateNestedManyWithoutAssignedEmployeeInput
 }
 
 export type EmployeeUncheckedCreateInput = {
@@ -313,6 +321,8 @@ export type EmployeeUncheckedCreateInput = {
   absences?: Prisma.EmployeeAbsenceUncheckedCreateNestedManyWithoutEmployeeInput
   teamMemberships?: Prisma.TeamMemberUncheckedCreateNestedManyWithoutEmployeeInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutEmployeeInput
+  orderPhases?: Prisma.OrderPhaseUncheckedCreateNestedManyWithoutAssignedEmployeeInput
+  assignedVehicles?: Prisma.VehicleUncheckedCreateNestedManyWithoutAssignedEmployeeInput
 }
 
 export type EmployeeUpdateInput = {
@@ -331,6 +341,8 @@ export type EmployeeUpdateInput = {
   absences?: Prisma.EmployeeAbsenceUpdateManyWithoutEmployeeNestedInput
   teamMemberships?: Prisma.TeamMemberUpdateManyWithoutEmployeeNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutEmployeeNestedInput
+  orderPhases?: Prisma.OrderPhaseUpdateManyWithoutAssignedEmployeeNestedInput
+  assignedVehicles?: Prisma.VehicleUpdateManyWithoutAssignedEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateInput = {
@@ -349,6 +361,8 @@ export type EmployeeUncheckedUpdateInput = {
   absences?: Prisma.EmployeeAbsenceUncheckedUpdateManyWithoutEmployeeNestedInput
   teamMemberships?: Prisma.TeamMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutEmployeeNestedInput
+  orderPhases?: Prisma.OrderPhaseUncheckedUpdateManyWithoutAssignedEmployeeNestedInput
+  assignedVehicles?: Prisma.VehicleUncheckedUpdateManyWithoutAssignedEmployeeNestedInput
 }
 
 export type EmployeeCreateManyInput = {
@@ -579,6 +593,22 @@ export type EmployeeUpdateOneRequiredWithoutMaterialUsagesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.EmployeeUpdateToOneWithWhereWithoutMaterialUsagesInput, Prisma.EmployeeUpdateWithoutMaterialUsagesInput>, Prisma.EmployeeUncheckedUpdateWithoutMaterialUsagesInput>
 }
 
+export type EmployeeCreateNestedOneWithoutOrderPhasesInput = {
+  create?: Prisma.XOR<Prisma.EmployeeCreateWithoutOrderPhasesInput, Prisma.EmployeeUncheckedCreateWithoutOrderPhasesInput>
+  connectOrCreate?: Prisma.EmployeeCreateOrConnectWithoutOrderPhasesInput
+  connect?: Prisma.EmployeeWhereUniqueInput
+}
+
+export type EmployeeUpdateOneWithoutOrderPhasesNestedInput = {
+  create?: Prisma.XOR<Prisma.EmployeeCreateWithoutOrderPhasesInput, Prisma.EmployeeUncheckedCreateWithoutOrderPhasesInput>
+  connectOrCreate?: Prisma.EmployeeCreateOrConnectWithoutOrderPhasesInput
+  upsert?: Prisma.EmployeeUpsertWithoutOrderPhasesInput
+  disconnect?: Prisma.EmployeeWhereInput | boolean
+  delete?: Prisma.EmployeeWhereInput | boolean
+  connect?: Prisma.EmployeeWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.EmployeeUpdateToOneWithWhereWithoutOrderPhasesInput, Prisma.EmployeeUpdateWithoutOrderPhasesInput>, Prisma.EmployeeUncheckedUpdateWithoutOrderPhasesInput>
+}
+
 export type EmployeeCreateNestedOneWithoutTeamMembershipsInput = {
   create?: Prisma.XOR<Prisma.EmployeeCreateWithoutTeamMembershipsInput, Prisma.EmployeeUncheckedCreateWithoutTeamMembershipsInput>
   connectOrCreate?: Prisma.EmployeeCreateOrConnectWithoutTeamMembershipsInput
@@ -591,6 +621,22 @@ export type EmployeeUpdateOneRequiredWithoutTeamMembershipsNestedInput = {
   upsert?: Prisma.EmployeeUpsertWithoutTeamMembershipsInput
   connect?: Prisma.EmployeeWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.EmployeeUpdateToOneWithWhereWithoutTeamMembershipsInput, Prisma.EmployeeUpdateWithoutTeamMembershipsInput>, Prisma.EmployeeUncheckedUpdateWithoutTeamMembershipsInput>
+}
+
+export type EmployeeCreateNestedOneWithoutAssignedVehiclesInput = {
+  create?: Prisma.XOR<Prisma.EmployeeCreateWithoutAssignedVehiclesInput, Prisma.EmployeeUncheckedCreateWithoutAssignedVehiclesInput>
+  connectOrCreate?: Prisma.EmployeeCreateOrConnectWithoutAssignedVehiclesInput
+  connect?: Prisma.EmployeeWhereUniqueInput
+}
+
+export type EmployeeUpdateOneWithoutAssignedVehiclesNestedInput = {
+  create?: Prisma.XOR<Prisma.EmployeeCreateWithoutAssignedVehiclesInput, Prisma.EmployeeUncheckedCreateWithoutAssignedVehiclesInput>
+  connectOrCreate?: Prisma.EmployeeCreateOrConnectWithoutAssignedVehiclesInput
+  upsert?: Prisma.EmployeeUpsertWithoutAssignedVehiclesInput
+  disconnect?: Prisma.EmployeeWhereInput | boolean
+  delete?: Prisma.EmployeeWhereInput | boolean
+  connect?: Prisma.EmployeeWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.EmployeeUpdateToOneWithWhereWithoutAssignedVehiclesInput, Prisma.EmployeeUpdateWithoutAssignedVehiclesInput>, Prisma.EmployeeUncheckedUpdateWithoutAssignedVehiclesInput>
 }
 
 export type EmployeeCreateNestedOneWithoutAbsencesInput = {
@@ -636,6 +682,8 @@ export type EmployeeCreateWithoutTenantInput = {
   absences?: Prisma.EmployeeAbsenceCreateNestedManyWithoutEmployeeInput
   teamMemberships?: Prisma.TeamMemberCreateNestedManyWithoutEmployeeInput
   staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutEmployeeInput
+  orderPhases?: Prisma.OrderPhaseCreateNestedManyWithoutAssignedEmployeeInput
+  assignedVehicles?: Prisma.VehicleCreateNestedManyWithoutAssignedEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutTenantInput = {
@@ -653,6 +701,8 @@ export type EmployeeUncheckedCreateWithoutTenantInput = {
   absences?: Prisma.EmployeeAbsenceUncheckedCreateNestedManyWithoutEmployeeInput
   teamMemberships?: Prisma.TeamMemberUncheckedCreateNestedManyWithoutEmployeeInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutEmployeeInput
+  orderPhases?: Prisma.OrderPhaseUncheckedCreateNestedManyWithoutAssignedEmployeeInput
+  assignedVehicles?: Prisma.VehicleUncheckedCreateNestedManyWithoutAssignedEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutTenantInput = {
@@ -709,6 +759,8 @@ export type EmployeeCreateWithoutUserInput = {
   absences?: Prisma.EmployeeAbsenceCreateNestedManyWithoutEmployeeInput
   teamMemberships?: Prisma.TeamMemberCreateNestedManyWithoutEmployeeInput
   staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutEmployeeInput
+  orderPhases?: Prisma.OrderPhaseCreateNestedManyWithoutAssignedEmployeeInput
+  assignedVehicles?: Prisma.VehicleCreateNestedManyWithoutAssignedEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutUserInput = {
@@ -726,6 +778,8 @@ export type EmployeeUncheckedCreateWithoutUserInput = {
   absences?: Prisma.EmployeeAbsenceUncheckedCreateNestedManyWithoutEmployeeInput
   teamMemberships?: Prisma.TeamMemberUncheckedCreateNestedManyWithoutEmployeeInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutEmployeeInput
+  orderPhases?: Prisma.OrderPhaseUncheckedCreateNestedManyWithoutAssignedEmployeeInput
+  assignedVehicles?: Prisma.VehicleUncheckedCreateNestedManyWithoutAssignedEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutUserInput = {
@@ -759,6 +813,8 @@ export type EmployeeUpdateWithoutUserInput = {
   absences?: Prisma.EmployeeAbsenceUpdateManyWithoutEmployeeNestedInput
   teamMemberships?: Prisma.TeamMemberUpdateManyWithoutEmployeeNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutEmployeeNestedInput
+  orderPhases?: Prisma.OrderPhaseUpdateManyWithoutAssignedEmployeeNestedInput
+  assignedVehicles?: Prisma.VehicleUpdateManyWithoutAssignedEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutUserInput = {
@@ -776,6 +832,8 @@ export type EmployeeUncheckedUpdateWithoutUserInput = {
   absences?: Prisma.EmployeeAbsenceUncheckedUpdateManyWithoutEmployeeNestedInput
   teamMemberships?: Prisma.TeamMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutEmployeeNestedInput
+  orderPhases?: Prisma.OrderPhaseUncheckedUpdateManyWithoutAssignedEmployeeNestedInput
+  assignedVehicles?: Prisma.VehicleUncheckedUpdateManyWithoutAssignedEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutQualificationsInput = {
@@ -793,6 +851,8 @@ export type EmployeeCreateWithoutQualificationsInput = {
   absences?: Prisma.EmployeeAbsenceCreateNestedManyWithoutEmployeeInput
   teamMemberships?: Prisma.TeamMemberCreateNestedManyWithoutEmployeeInput
   staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutEmployeeInput
+  orderPhases?: Prisma.OrderPhaseCreateNestedManyWithoutAssignedEmployeeInput
+  assignedVehicles?: Prisma.VehicleCreateNestedManyWithoutAssignedEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutQualificationsInput = {
@@ -810,6 +870,8 @@ export type EmployeeUncheckedCreateWithoutQualificationsInput = {
   absences?: Prisma.EmployeeAbsenceUncheckedCreateNestedManyWithoutEmployeeInput
   teamMemberships?: Prisma.TeamMemberUncheckedCreateNestedManyWithoutEmployeeInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutEmployeeInput
+  orderPhases?: Prisma.OrderPhaseUncheckedCreateNestedManyWithoutAssignedEmployeeInput
+  assignedVehicles?: Prisma.VehicleUncheckedCreateNestedManyWithoutAssignedEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutQualificationsInput = {
@@ -843,6 +905,8 @@ export type EmployeeUpdateWithoutQualificationsInput = {
   absences?: Prisma.EmployeeAbsenceUpdateManyWithoutEmployeeNestedInput
   teamMemberships?: Prisma.TeamMemberUpdateManyWithoutEmployeeNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutEmployeeNestedInput
+  orderPhases?: Prisma.OrderPhaseUpdateManyWithoutAssignedEmployeeNestedInput
+  assignedVehicles?: Prisma.VehicleUpdateManyWithoutAssignedEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutQualificationsInput = {
@@ -860,6 +924,8 @@ export type EmployeeUncheckedUpdateWithoutQualificationsInput = {
   absences?: Prisma.EmployeeAbsenceUncheckedUpdateManyWithoutEmployeeNestedInput
   teamMemberships?: Prisma.TeamMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutEmployeeNestedInput
+  orderPhases?: Prisma.OrderPhaseUncheckedUpdateManyWithoutAssignedEmployeeNestedInput
+  assignedVehicles?: Prisma.VehicleUncheckedUpdateManyWithoutAssignedEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutWorkingHoursInput = {
@@ -877,6 +943,8 @@ export type EmployeeCreateWithoutWorkingHoursInput = {
   absences?: Prisma.EmployeeAbsenceCreateNestedManyWithoutEmployeeInput
   teamMemberships?: Prisma.TeamMemberCreateNestedManyWithoutEmployeeInput
   staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutEmployeeInput
+  orderPhases?: Prisma.OrderPhaseCreateNestedManyWithoutAssignedEmployeeInput
+  assignedVehicles?: Prisma.VehicleCreateNestedManyWithoutAssignedEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutWorkingHoursInput = {
@@ -894,6 +962,8 @@ export type EmployeeUncheckedCreateWithoutWorkingHoursInput = {
   absences?: Prisma.EmployeeAbsenceUncheckedCreateNestedManyWithoutEmployeeInput
   teamMemberships?: Prisma.TeamMemberUncheckedCreateNestedManyWithoutEmployeeInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutEmployeeInput
+  orderPhases?: Prisma.OrderPhaseUncheckedCreateNestedManyWithoutAssignedEmployeeInput
+  assignedVehicles?: Prisma.VehicleUncheckedCreateNestedManyWithoutAssignedEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutWorkingHoursInput = {
@@ -927,6 +997,8 @@ export type EmployeeUpdateWithoutWorkingHoursInput = {
   absences?: Prisma.EmployeeAbsenceUpdateManyWithoutEmployeeNestedInput
   teamMemberships?: Prisma.TeamMemberUpdateManyWithoutEmployeeNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutEmployeeNestedInput
+  orderPhases?: Prisma.OrderPhaseUpdateManyWithoutAssignedEmployeeNestedInput
+  assignedVehicles?: Prisma.VehicleUpdateManyWithoutAssignedEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutWorkingHoursInput = {
@@ -944,6 +1016,8 @@ export type EmployeeUncheckedUpdateWithoutWorkingHoursInput = {
   absences?: Prisma.EmployeeAbsenceUncheckedUpdateManyWithoutEmployeeNestedInput
   teamMemberships?: Prisma.TeamMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutEmployeeNestedInput
+  orderPhases?: Prisma.OrderPhaseUncheckedUpdateManyWithoutAssignedEmployeeNestedInput
+  assignedVehicles?: Prisma.VehicleUncheckedUpdateManyWithoutAssignedEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutAppointmentsInput = {
@@ -961,6 +1035,8 @@ export type EmployeeCreateWithoutAppointmentsInput = {
   absences?: Prisma.EmployeeAbsenceCreateNestedManyWithoutEmployeeInput
   teamMemberships?: Prisma.TeamMemberCreateNestedManyWithoutEmployeeInput
   staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutEmployeeInput
+  orderPhases?: Prisma.OrderPhaseCreateNestedManyWithoutAssignedEmployeeInput
+  assignedVehicles?: Prisma.VehicleCreateNestedManyWithoutAssignedEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutAppointmentsInput = {
@@ -978,6 +1054,8 @@ export type EmployeeUncheckedCreateWithoutAppointmentsInput = {
   absences?: Prisma.EmployeeAbsenceUncheckedCreateNestedManyWithoutEmployeeInput
   teamMemberships?: Prisma.TeamMemberUncheckedCreateNestedManyWithoutEmployeeInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutEmployeeInput
+  orderPhases?: Prisma.OrderPhaseUncheckedCreateNestedManyWithoutAssignedEmployeeInput
+  assignedVehicles?: Prisma.VehicleUncheckedCreateNestedManyWithoutAssignedEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutAppointmentsInput = {
@@ -1011,6 +1089,8 @@ export type EmployeeUpdateWithoutAppointmentsInput = {
   absences?: Prisma.EmployeeAbsenceUpdateManyWithoutEmployeeNestedInput
   teamMemberships?: Prisma.TeamMemberUpdateManyWithoutEmployeeNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutEmployeeNestedInput
+  orderPhases?: Prisma.OrderPhaseUpdateManyWithoutAssignedEmployeeNestedInput
+  assignedVehicles?: Prisma.VehicleUpdateManyWithoutAssignedEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutAppointmentsInput = {
@@ -1028,6 +1108,8 @@ export type EmployeeUncheckedUpdateWithoutAppointmentsInput = {
   absences?: Prisma.EmployeeAbsenceUncheckedUpdateManyWithoutEmployeeNestedInput
   teamMemberships?: Prisma.TeamMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutEmployeeNestedInput
+  orderPhases?: Prisma.OrderPhaseUncheckedUpdateManyWithoutAssignedEmployeeNestedInput
+  assignedVehicles?: Prisma.VehicleUncheckedUpdateManyWithoutAssignedEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutTimeEntriesInput = {
@@ -1045,6 +1127,8 @@ export type EmployeeCreateWithoutTimeEntriesInput = {
   absences?: Prisma.EmployeeAbsenceCreateNestedManyWithoutEmployeeInput
   teamMemberships?: Prisma.TeamMemberCreateNestedManyWithoutEmployeeInput
   staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutEmployeeInput
+  orderPhases?: Prisma.OrderPhaseCreateNestedManyWithoutAssignedEmployeeInput
+  assignedVehicles?: Prisma.VehicleCreateNestedManyWithoutAssignedEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutTimeEntriesInput = {
@@ -1062,6 +1146,8 @@ export type EmployeeUncheckedCreateWithoutTimeEntriesInput = {
   absences?: Prisma.EmployeeAbsenceUncheckedCreateNestedManyWithoutEmployeeInput
   teamMemberships?: Prisma.TeamMemberUncheckedCreateNestedManyWithoutEmployeeInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutEmployeeInput
+  orderPhases?: Prisma.OrderPhaseUncheckedCreateNestedManyWithoutAssignedEmployeeInput
+  assignedVehicles?: Prisma.VehicleUncheckedCreateNestedManyWithoutAssignedEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutTimeEntriesInput = {
@@ -1095,6 +1181,8 @@ export type EmployeeUpdateWithoutTimeEntriesInput = {
   absences?: Prisma.EmployeeAbsenceUpdateManyWithoutEmployeeNestedInput
   teamMemberships?: Prisma.TeamMemberUpdateManyWithoutEmployeeNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutEmployeeNestedInput
+  orderPhases?: Prisma.OrderPhaseUpdateManyWithoutAssignedEmployeeNestedInput
+  assignedVehicles?: Prisma.VehicleUpdateManyWithoutAssignedEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutTimeEntriesInput = {
@@ -1112,6 +1200,8 @@ export type EmployeeUncheckedUpdateWithoutTimeEntriesInput = {
   absences?: Prisma.EmployeeAbsenceUncheckedUpdateManyWithoutEmployeeNestedInput
   teamMemberships?: Prisma.TeamMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutEmployeeNestedInput
+  orderPhases?: Prisma.OrderPhaseUncheckedUpdateManyWithoutAssignedEmployeeNestedInput
+  assignedVehicles?: Prisma.VehicleUncheckedUpdateManyWithoutAssignedEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutMaterialUsagesInput = {
@@ -1129,6 +1219,8 @@ export type EmployeeCreateWithoutMaterialUsagesInput = {
   absences?: Prisma.EmployeeAbsenceCreateNestedManyWithoutEmployeeInput
   teamMemberships?: Prisma.TeamMemberCreateNestedManyWithoutEmployeeInput
   staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutEmployeeInput
+  orderPhases?: Prisma.OrderPhaseCreateNestedManyWithoutAssignedEmployeeInput
+  assignedVehicles?: Prisma.VehicleCreateNestedManyWithoutAssignedEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutMaterialUsagesInput = {
@@ -1146,6 +1238,8 @@ export type EmployeeUncheckedCreateWithoutMaterialUsagesInput = {
   absences?: Prisma.EmployeeAbsenceUncheckedCreateNestedManyWithoutEmployeeInput
   teamMemberships?: Prisma.TeamMemberUncheckedCreateNestedManyWithoutEmployeeInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutEmployeeInput
+  orderPhases?: Prisma.OrderPhaseUncheckedCreateNestedManyWithoutAssignedEmployeeInput
+  assignedVehicles?: Prisma.VehicleUncheckedCreateNestedManyWithoutAssignedEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutMaterialUsagesInput = {
@@ -1179,6 +1273,8 @@ export type EmployeeUpdateWithoutMaterialUsagesInput = {
   absences?: Prisma.EmployeeAbsenceUpdateManyWithoutEmployeeNestedInput
   teamMemberships?: Prisma.TeamMemberUpdateManyWithoutEmployeeNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutEmployeeNestedInput
+  orderPhases?: Prisma.OrderPhaseUpdateManyWithoutAssignedEmployeeNestedInput
+  assignedVehicles?: Prisma.VehicleUpdateManyWithoutAssignedEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutMaterialUsagesInput = {
@@ -1196,6 +1292,100 @@ export type EmployeeUncheckedUpdateWithoutMaterialUsagesInput = {
   absences?: Prisma.EmployeeAbsenceUncheckedUpdateManyWithoutEmployeeNestedInput
   teamMemberships?: Prisma.TeamMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutEmployeeNestedInput
+  orderPhases?: Prisma.OrderPhaseUncheckedUpdateManyWithoutAssignedEmployeeNestedInput
+  assignedVehicles?: Prisma.VehicleUncheckedUpdateManyWithoutAssignedEmployeeNestedInput
+}
+
+export type EmployeeCreateWithoutOrderPhasesInput = {
+  id?: string
+  color?: string
+  operationalStatus?: $Enums.EmployeeOperationalStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tenant: Prisma.TenantCreateNestedOneWithoutEmployeesInput
+  user: Prisma.UserCreateNestedOneWithoutEmployeeInput
+  qualifications?: Prisma.EmployeeQualificationCreateNestedManyWithoutEmployeeInput
+  workingHours?: Prisma.EmployeeWorkingHoursCreateNestedManyWithoutEmployeeInput
+  appointments?: Prisma.AppointmentCreateNestedManyWithoutEmployeeInput
+  timeEntries?: Prisma.TimeEntryCreateNestedManyWithoutEmployeeInput
+  materialUsages?: Prisma.MaterialUsageCreateNestedManyWithoutEmployeeInput
+  absences?: Prisma.EmployeeAbsenceCreateNestedManyWithoutEmployeeInput
+  teamMemberships?: Prisma.TeamMemberCreateNestedManyWithoutEmployeeInput
+  staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutEmployeeInput
+  assignedVehicles?: Prisma.VehicleCreateNestedManyWithoutAssignedEmployeeInput
+}
+
+export type EmployeeUncheckedCreateWithoutOrderPhasesInput = {
+  id?: string
+  tenantId: string
+  userId: string
+  color?: string
+  operationalStatus?: $Enums.EmployeeOperationalStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  qualifications?: Prisma.EmployeeQualificationUncheckedCreateNestedManyWithoutEmployeeInput
+  workingHours?: Prisma.EmployeeWorkingHoursUncheckedCreateNestedManyWithoutEmployeeInput
+  appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutEmployeeInput
+  timeEntries?: Prisma.TimeEntryUncheckedCreateNestedManyWithoutEmployeeInput
+  materialUsages?: Prisma.MaterialUsageUncheckedCreateNestedManyWithoutEmployeeInput
+  absences?: Prisma.EmployeeAbsenceUncheckedCreateNestedManyWithoutEmployeeInput
+  teamMemberships?: Prisma.TeamMemberUncheckedCreateNestedManyWithoutEmployeeInput
+  staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutEmployeeInput
+  assignedVehicles?: Prisma.VehicleUncheckedCreateNestedManyWithoutAssignedEmployeeInput
+}
+
+export type EmployeeCreateOrConnectWithoutOrderPhasesInput = {
+  where: Prisma.EmployeeWhereUniqueInput
+  create: Prisma.XOR<Prisma.EmployeeCreateWithoutOrderPhasesInput, Prisma.EmployeeUncheckedCreateWithoutOrderPhasesInput>
+}
+
+export type EmployeeUpsertWithoutOrderPhasesInput = {
+  update: Prisma.XOR<Prisma.EmployeeUpdateWithoutOrderPhasesInput, Prisma.EmployeeUncheckedUpdateWithoutOrderPhasesInput>
+  create: Prisma.XOR<Prisma.EmployeeCreateWithoutOrderPhasesInput, Prisma.EmployeeUncheckedCreateWithoutOrderPhasesInput>
+  where?: Prisma.EmployeeWhereInput
+}
+
+export type EmployeeUpdateToOneWithWhereWithoutOrderPhasesInput = {
+  where?: Prisma.EmployeeWhereInput
+  data: Prisma.XOR<Prisma.EmployeeUpdateWithoutOrderPhasesInput, Prisma.EmployeeUncheckedUpdateWithoutOrderPhasesInput>
+}
+
+export type EmployeeUpdateWithoutOrderPhasesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.StringFieldUpdateOperationsInput | string
+  operationalStatus?: Prisma.EnumEmployeeOperationalStatusFieldUpdateOperationsInput | $Enums.EmployeeOperationalStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutEmployeesNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutEmployeeNestedInput
+  qualifications?: Prisma.EmployeeQualificationUpdateManyWithoutEmployeeNestedInput
+  workingHours?: Prisma.EmployeeWorkingHoursUpdateManyWithoutEmployeeNestedInput
+  appointments?: Prisma.AppointmentUpdateManyWithoutEmployeeNestedInput
+  timeEntries?: Prisma.TimeEntryUpdateManyWithoutEmployeeNestedInput
+  materialUsages?: Prisma.MaterialUsageUpdateManyWithoutEmployeeNestedInput
+  absences?: Prisma.EmployeeAbsenceUpdateManyWithoutEmployeeNestedInput
+  teamMemberships?: Prisma.TeamMemberUpdateManyWithoutEmployeeNestedInput
+  staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutEmployeeNestedInput
+  assignedVehicles?: Prisma.VehicleUpdateManyWithoutAssignedEmployeeNestedInput
+}
+
+export type EmployeeUncheckedUpdateWithoutOrderPhasesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.StringFieldUpdateOperationsInput | string
+  operationalStatus?: Prisma.EnumEmployeeOperationalStatusFieldUpdateOperationsInput | $Enums.EmployeeOperationalStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  qualifications?: Prisma.EmployeeQualificationUncheckedUpdateManyWithoutEmployeeNestedInput
+  workingHours?: Prisma.EmployeeWorkingHoursUncheckedUpdateManyWithoutEmployeeNestedInput
+  appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutEmployeeNestedInput
+  timeEntries?: Prisma.TimeEntryUncheckedUpdateManyWithoutEmployeeNestedInput
+  materialUsages?: Prisma.MaterialUsageUncheckedUpdateManyWithoutEmployeeNestedInput
+  absences?: Prisma.EmployeeAbsenceUncheckedUpdateManyWithoutEmployeeNestedInput
+  teamMemberships?: Prisma.TeamMemberUncheckedUpdateManyWithoutEmployeeNestedInput
+  staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutEmployeeNestedInput
+  assignedVehicles?: Prisma.VehicleUncheckedUpdateManyWithoutAssignedEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutTeamMembershipsInput = {
@@ -1213,6 +1403,8 @@ export type EmployeeCreateWithoutTeamMembershipsInput = {
   materialUsages?: Prisma.MaterialUsageCreateNestedManyWithoutEmployeeInput
   absences?: Prisma.EmployeeAbsenceCreateNestedManyWithoutEmployeeInput
   staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutEmployeeInput
+  orderPhases?: Prisma.OrderPhaseCreateNestedManyWithoutAssignedEmployeeInput
+  assignedVehicles?: Prisma.VehicleCreateNestedManyWithoutAssignedEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutTeamMembershipsInput = {
@@ -1230,6 +1422,8 @@ export type EmployeeUncheckedCreateWithoutTeamMembershipsInput = {
   materialUsages?: Prisma.MaterialUsageUncheckedCreateNestedManyWithoutEmployeeInput
   absences?: Prisma.EmployeeAbsenceUncheckedCreateNestedManyWithoutEmployeeInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutEmployeeInput
+  orderPhases?: Prisma.OrderPhaseUncheckedCreateNestedManyWithoutAssignedEmployeeInput
+  assignedVehicles?: Prisma.VehicleUncheckedCreateNestedManyWithoutAssignedEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutTeamMembershipsInput = {
@@ -1263,6 +1457,8 @@ export type EmployeeUpdateWithoutTeamMembershipsInput = {
   materialUsages?: Prisma.MaterialUsageUpdateManyWithoutEmployeeNestedInput
   absences?: Prisma.EmployeeAbsenceUpdateManyWithoutEmployeeNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutEmployeeNestedInput
+  orderPhases?: Prisma.OrderPhaseUpdateManyWithoutAssignedEmployeeNestedInput
+  assignedVehicles?: Prisma.VehicleUpdateManyWithoutAssignedEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutTeamMembershipsInput = {
@@ -1280,6 +1476,100 @@ export type EmployeeUncheckedUpdateWithoutTeamMembershipsInput = {
   materialUsages?: Prisma.MaterialUsageUncheckedUpdateManyWithoutEmployeeNestedInput
   absences?: Prisma.EmployeeAbsenceUncheckedUpdateManyWithoutEmployeeNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutEmployeeNestedInput
+  orderPhases?: Prisma.OrderPhaseUncheckedUpdateManyWithoutAssignedEmployeeNestedInput
+  assignedVehicles?: Prisma.VehicleUncheckedUpdateManyWithoutAssignedEmployeeNestedInput
+}
+
+export type EmployeeCreateWithoutAssignedVehiclesInput = {
+  id?: string
+  color?: string
+  operationalStatus?: $Enums.EmployeeOperationalStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tenant: Prisma.TenantCreateNestedOneWithoutEmployeesInput
+  user: Prisma.UserCreateNestedOneWithoutEmployeeInput
+  qualifications?: Prisma.EmployeeQualificationCreateNestedManyWithoutEmployeeInput
+  workingHours?: Prisma.EmployeeWorkingHoursCreateNestedManyWithoutEmployeeInput
+  appointments?: Prisma.AppointmentCreateNestedManyWithoutEmployeeInput
+  timeEntries?: Prisma.TimeEntryCreateNestedManyWithoutEmployeeInput
+  materialUsages?: Prisma.MaterialUsageCreateNestedManyWithoutEmployeeInput
+  absences?: Prisma.EmployeeAbsenceCreateNestedManyWithoutEmployeeInput
+  teamMemberships?: Prisma.TeamMemberCreateNestedManyWithoutEmployeeInput
+  staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutEmployeeInput
+  orderPhases?: Prisma.OrderPhaseCreateNestedManyWithoutAssignedEmployeeInput
+}
+
+export type EmployeeUncheckedCreateWithoutAssignedVehiclesInput = {
+  id?: string
+  tenantId: string
+  userId: string
+  color?: string
+  operationalStatus?: $Enums.EmployeeOperationalStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  qualifications?: Prisma.EmployeeQualificationUncheckedCreateNestedManyWithoutEmployeeInput
+  workingHours?: Prisma.EmployeeWorkingHoursUncheckedCreateNestedManyWithoutEmployeeInput
+  appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutEmployeeInput
+  timeEntries?: Prisma.TimeEntryUncheckedCreateNestedManyWithoutEmployeeInput
+  materialUsages?: Prisma.MaterialUsageUncheckedCreateNestedManyWithoutEmployeeInput
+  absences?: Prisma.EmployeeAbsenceUncheckedCreateNestedManyWithoutEmployeeInput
+  teamMemberships?: Prisma.TeamMemberUncheckedCreateNestedManyWithoutEmployeeInput
+  staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutEmployeeInput
+  orderPhases?: Prisma.OrderPhaseUncheckedCreateNestedManyWithoutAssignedEmployeeInput
+}
+
+export type EmployeeCreateOrConnectWithoutAssignedVehiclesInput = {
+  where: Prisma.EmployeeWhereUniqueInput
+  create: Prisma.XOR<Prisma.EmployeeCreateWithoutAssignedVehiclesInput, Prisma.EmployeeUncheckedCreateWithoutAssignedVehiclesInput>
+}
+
+export type EmployeeUpsertWithoutAssignedVehiclesInput = {
+  update: Prisma.XOR<Prisma.EmployeeUpdateWithoutAssignedVehiclesInput, Prisma.EmployeeUncheckedUpdateWithoutAssignedVehiclesInput>
+  create: Prisma.XOR<Prisma.EmployeeCreateWithoutAssignedVehiclesInput, Prisma.EmployeeUncheckedCreateWithoutAssignedVehiclesInput>
+  where?: Prisma.EmployeeWhereInput
+}
+
+export type EmployeeUpdateToOneWithWhereWithoutAssignedVehiclesInput = {
+  where?: Prisma.EmployeeWhereInput
+  data: Prisma.XOR<Prisma.EmployeeUpdateWithoutAssignedVehiclesInput, Prisma.EmployeeUncheckedUpdateWithoutAssignedVehiclesInput>
+}
+
+export type EmployeeUpdateWithoutAssignedVehiclesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.StringFieldUpdateOperationsInput | string
+  operationalStatus?: Prisma.EnumEmployeeOperationalStatusFieldUpdateOperationsInput | $Enums.EmployeeOperationalStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutEmployeesNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutEmployeeNestedInput
+  qualifications?: Prisma.EmployeeQualificationUpdateManyWithoutEmployeeNestedInput
+  workingHours?: Prisma.EmployeeWorkingHoursUpdateManyWithoutEmployeeNestedInput
+  appointments?: Prisma.AppointmentUpdateManyWithoutEmployeeNestedInput
+  timeEntries?: Prisma.TimeEntryUpdateManyWithoutEmployeeNestedInput
+  materialUsages?: Prisma.MaterialUsageUpdateManyWithoutEmployeeNestedInput
+  absences?: Prisma.EmployeeAbsenceUpdateManyWithoutEmployeeNestedInput
+  teamMemberships?: Prisma.TeamMemberUpdateManyWithoutEmployeeNestedInput
+  staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutEmployeeNestedInput
+  orderPhases?: Prisma.OrderPhaseUpdateManyWithoutAssignedEmployeeNestedInput
+}
+
+export type EmployeeUncheckedUpdateWithoutAssignedVehiclesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.StringFieldUpdateOperationsInput | string
+  operationalStatus?: Prisma.EnumEmployeeOperationalStatusFieldUpdateOperationsInput | $Enums.EmployeeOperationalStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  qualifications?: Prisma.EmployeeQualificationUncheckedUpdateManyWithoutEmployeeNestedInput
+  workingHours?: Prisma.EmployeeWorkingHoursUncheckedUpdateManyWithoutEmployeeNestedInput
+  appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutEmployeeNestedInput
+  timeEntries?: Prisma.TimeEntryUncheckedUpdateManyWithoutEmployeeNestedInput
+  materialUsages?: Prisma.MaterialUsageUncheckedUpdateManyWithoutEmployeeNestedInput
+  absences?: Prisma.EmployeeAbsenceUncheckedUpdateManyWithoutEmployeeNestedInput
+  teamMemberships?: Prisma.TeamMemberUncheckedUpdateManyWithoutEmployeeNestedInput
+  staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutEmployeeNestedInput
+  orderPhases?: Prisma.OrderPhaseUncheckedUpdateManyWithoutAssignedEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutAbsencesInput = {
@@ -1297,6 +1587,8 @@ export type EmployeeCreateWithoutAbsencesInput = {
   materialUsages?: Prisma.MaterialUsageCreateNestedManyWithoutEmployeeInput
   teamMemberships?: Prisma.TeamMemberCreateNestedManyWithoutEmployeeInput
   staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutEmployeeInput
+  orderPhases?: Prisma.OrderPhaseCreateNestedManyWithoutAssignedEmployeeInput
+  assignedVehicles?: Prisma.VehicleCreateNestedManyWithoutAssignedEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutAbsencesInput = {
@@ -1314,6 +1606,8 @@ export type EmployeeUncheckedCreateWithoutAbsencesInput = {
   materialUsages?: Prisma.MaterialUsageUncheckedCreateNestedManyWithoutEmployeeInput
   teamMemberships?: Prisma.TeamMemberUncheckedCreateNestedManyWithoutEmployeeInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutEmployeeInput
+  orderPhases?: Prisma.OrderPhaseUncheckedCreateNestedManyWithoutAssignedEmployeeInput
+  assignedVehicles?: Prisma.VehicleUncheckedCreateNestedManyWithoutAssignedEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutAbsencesInput = {
@@ -1347,6 +1641,8 @@ export type EmployeeUpdateWithoutAbsencesInput = {
   materialUsages?: Prisma.MaterialUsageUpdateManyWithoutEmployeeNestedInput
   teamMemberships?: Prisma.TeamMemberUpdateManyWithoutEmployeeNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutEmployeeNestedInput
+  orderPhases?: Prisma.OrderPhaseUpdateManyWithoutAssignedEmployeeNestedInput
+  assignedVehicles?: Prisma.VehicleUpdateManyWithoutAssignedEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutAbsencesInput = {
@@ -1364,6 +1660,8 @@ export type EmployeeUncheckedUpdateWithoutAbsencesInput = {
   materialUsages?: Prisma.MaterialUsageUncheckedUpdateManyWithoutEmployeeNestedInput
   teamMemberships?: Prisma.TeamMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutEmployeeNestedInput
+  orderPhases?: Prisma.OrderPhaseUncheckedUpdateManyWithoutAssignedEmployeeNestedInput
+  assignedVehicles?: Prisma.VehicleUncheckedUpdateManyWithoutAssignedEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutStaffRequestsInput = {
@@ -1381,6 +1679,8 @@ export type EmployeeCreateWithoutStaffRequestsInput = {
   materialUsages?: Prisma.MaterialUsageCreateNestedManyWithoutEmployeeInput
   absences?: Prisma.EmployeeAbsenceCreateNestedManyWithoutEmployeeInput
   teamMemberships?: Prisma.TeamMemberCreateNestedManyWithoutEmployeeInput
+  orderPhases?: Prisma.OrderPhaseCreateNestedManyWithoutAssignedEmployeeInput
+  assignedVehicles?: Prisma.VehicleCreateNestedManyWithoutAssignedEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutStaffRequestsInput = {
@@ -1398,6 +1698,8 @@ export type EmployeeUncheckedCreateWithoutStaffRequestsInput = {
   materialUsages?: Prisma.MaterialUsageUncheckedCreateNestedManyWithoutEmployeeInput
   absences?: Prisma.EmployeeAbsenceUncheckedCreateNestedManyWithoutEmployeeInput
   teamMemberships?: Prisma.TeamMemberUncheckedCreateNestedManyWithoutEmployeeInput
+  orderPhases?: Prisma.OrderPhaseUncheckedCreateNestedManyWithoutAssignedEmployeeInput
+  assignedVehicles?: Prisma.VehicleUncheckedCreateNestedManyWithoutAssignedEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutStaffRequestsInput = {
@@ -1431,6 +1733,8 @@ export type EmployeeUpdateWithoutStaffRequestsInput = {
   materialUsages?: Prisma.MaterialUsageUpdateManyWithoutEmployeeNestedInput
   absences?: Prisma.EmployeeAbsenceUpdateManyWithoutEmployeeNestedInput
   teamMemberships?: Prisma.TeamMemberUpdateManyWithoutEmployeeNestedInput
+  orderPhases?: Prisma.OrderPhaseUpdateManyWithoutAssignedEmployeeNestedInput
+  assignedVehicles?: Prisma.VehicleUpdateManyWithoutAssignedEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutStaffRequestsInput = {
@@ -1448,6 +1752,8 @@ export type EmployeeUncheckedUpdateWithoutStaffRequestsInput = {
   materialUsages?: Prisma.MaterialUsageUncheckedUpdateManyWithoutEmployeeNestedInput
   absences?: Prisma.EmployeeAbsenceUncheckedUpdateManyWithoutEmployeeNestedInput
   teamMemberships?: Prisma.TeamMemberUncheckedUpdateManyWithoutEmployeeNestedInput
+  orderPhases?: Prisma.OrderPhaseUncheckedUpdateManyWithoutAssignedEmployeeNestedInput
+  assignedVehicles?: Prisma.VehicleUncheckedUpdateManyWithoutAssignedEmployeeNestedInput
 }
 
 export type EmployeeCreateManyTenantInput = {
@@ -1474,6 +1780,8 @@ export type EmployeeUpdateWithoutTenantInput = {
   absences?: Prisma.EmployeeAbsenceUpdateManyWithoutEmployeeNestedInput
   teamMemberships?: Prisma.TeamMemberUpdateManyWithoutEmployeeNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutEmployeeNestedInput
+  orderPhases?: Prisma.OrderPhaseUpdateManyWithoutAssignedEmployeeNestedInput
+  assignedVehicles?: Prisma.VehicleUpdateManyWithoutAssignedEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutTenantInput = {
@@ -1491,6 +1799,8 @@ export type EmployeeUncheckedUpdateWithoutTenantInput = {
   absences?: Prisma.EmployeeAbsenceUncheckedUpdateManyWithoutEmployeeNestedInput
   teamMemberships?: Prisma.TeamMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutEmployeeNestedInput
+  orderPhases?: Prisma.OrderPhaseUncheckedUpdateManyWithoutAssignedEmployeeNestedInput
+  assignedVehicles?: Prisma.VehicleUncheckedUpdateManyWithoutAssignedEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateManyWithoutTenantInput = {
@@ -1516,6 +1826,8 @@ export type EmployeeCountOutputType = {
   absences: number
   teamMemberships: number
   staffRequests: number
+  orderPhases: number
+  assignedVehicles: number
 }
 
 export type EmployeeCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1527,6 +1839,8 @@ export type EmployeeCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensio
   absences?: boolean | EmployeeCountOutputTypeCountAbsencesArgs
   teamMemberships?: boolean | EmployeeCountOutputTypeCountTeamMembershipsArgs
   staffRequests?: boolean | EmployeeCountOutputTypeCountStaffRequestsArgs
+  orderPhases?: boolean | EmployeeCountOutputTypeCountOrderPhasesArgs
+  assignedVehicles?: boolean | EmployeeCountOutputTypeCountAssignedVehiclesArgs
 }
 
 /**
@@ -1595,6 +1909,20 @@ export type EmployeeCountOutputTypeCountStaffRequestsArgs<ExtArgs extends runtim
   where?: Prisma.StaffAssignmentRequestWhereInput
 }
 
+/**
+ * EmployeeCountOutputType without action
+ */
+export type EmployeeCountOutputTypeCountOrderPhasesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.OrderPhaseWhereInput
+}
+
+/**
+ * EmployeeCountOutputType without action
+ */
+export type EmployeeCountOutputTypeCountAssignedVehiclesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.VehicleWhereInput
+}
+
 
 export type EmployeeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1614,6 +1942,8 @@ export type EmployeeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   absences?: boolean | Prisma.Employee$absencesArgs<ExtArgs>
   teamMemberships?: boolean | Prisma.Employee$teamMembershipsArgs<ExtArgs>
   staffRequests?: boolean | Prisma.Employee$staffRequestsArgs<ExtArgs>
+  orderPhases?: boolean | Prisma.Employee$orderPhasesArgs<ExtArgs>
+  assignedVehicles?: boolean | Prisma.Employee$assignedVehiclesArgs<ExtArgs>
   _count?: boolean | Prisma.EmployeeCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["employee"]>
 
@@ -1663,6 +1993,8 @@ export type EmployeeInclude<ExtArgs extends runtime.Types.Extensions.InternalArg
   absences?: boolean | Prisma.Employee$absencesArgs<ExtArgs>
   teamMemberships?: boolean | Prisma.Employee$teamMembershipsArgs<ExtArgs>
   staffRequests?: boolean | Prisma.Employee$staffRequestsArgs<ExtArgs>
+  orderPhases?: boolean | Prisma.Employee$orderPhasesArgs<ExtArgs>
+  assignedVehicles?: boolean | Prisma.Employee$assignedVehiclesArgs<ExtArgs>
   _count?: boolean | Prisma.EmployeeCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type EmployeeIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1687,6 +2019,8 @@ export type $EmployeePayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     absences: Prisma.$EmployeeAbsencePayload<ExtArgs>[]
     teamMemberships: Prisma.$TeamMemberPayload<ExtArgs>[]
     staffRequests: Prisma.$StaffAssignmentRequestPayload<ExtArgs>[]
+    orderPhases: Prisma.$OrderPhasePayload<ExtArgs>[]
+    assignedVehicles: Prisma.$VehiclePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2100,6 +2434,8 @@ export interface Prisma__EmployeeClient<T, Null = never, ExtArgs extends runtime
   absences<T extends Prisma.Employee$absencesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Employee$absencesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmployeeAbsencePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   teamMemberships<T extends Prisma.Employee$teamMembershipsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Employee$teamMembershipsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TeamMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   staffRequests<T extends Prisma.Employee$staffRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Employee$staffRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StaffAssignmentRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  orderPhases<T extends Prisma.Employee$orderPhasesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Employee$orderPhasesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderPhasePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  assignedVehicles<T extends Prisma.Employee$assignedVehiclesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Employee$assignedVehiclesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$VehiclePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2726,6 +3062,54 @@ export type Employee$staffRequestsArgs<ExtArgs extends runtime.Types.Extensions.
   take?: number
   skip?: number
   distinct?: Prisma.StaffAssignmentRequestScalarFieldEnum | Prisma.StaffAssignmentRequestScalarFieldEnum[]
+}
+
+/**
+ * Employee.orderPhases
+ */
+export type Employee$orderPhasesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the OrderPhase
+   */
+  select?: Prisma.OrderPhaseSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the OrderPhase
+   */
+  omit?: Prisma.OrderPhaseOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OrderPhaseInclude<ExtArgs> | null
+  where?: Prisma.OrderPhaseWhereInput
+  orderBy?: Prisma.OrderPhaseOrderByWithRelationInput | Prisma.OrderPhaseOrderByWithRelationInput[]
+  cursor?: Prisma.OrderPhaseWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.OrderPhaseScalarFieldEnum | Prisma.OrderPhaseScalarFieldEnum[]
+}
+
+/**
+ * Employee.assignedVehicles
+ */
+export type Employee$assignedVehiclesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Vehicle
+   */
+  select?: Prisma.VehicleSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Vehicle
+   */
+  omit?: Prisma.VehicleOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.VehicleInclude<ExtArgs> | null
+  where?: Prisma.VehicleWhereInput
+  orderBy?: Prisma.VehicleOrderByWithRelationInput | Prisma.VehicleOrderByWithRelationInput[]
+  cursor?: Prisma.VehicleWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.VehicleScalarFieldEnum | Prisma.VehicleScalarFieldEnum[]
 }
 
 /**

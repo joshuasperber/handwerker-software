@@ -1,10 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { NumberInput } from "@/components/ui/number-input";
+import { InfoButton } from "@/components/ui/info-button";
 import { Badge } from "@/components/ui/badge";
 import { CanAccess } from "@/components/auth/can-access";
 import { fetchJson } from "@/lib/fetch-json";
@@ -62,46 +64,45 @@ export default function EinkaufPage() {
   const [articles, setArticles] = useState<ArticleOption[]>([]);
   const [locations, setLocations] = useState<StorageLocation[]>([]);
   const [loading, setLoading] = useState(true);
-  const [manualForm, setManualForm] = useState({ articleId: "", quantity: "", supplierName: "", note: "" });
+  const [manualForm, setManualForm] = useState({ articleId: "", quantity: null as number | null, supplierName: "", note: "" });
   const [manualMsg, setManualMsg] = useState("");
   const [receivePo, setReceivePo] = useState<PurchaseOrder | null>(null);
   const [receiveLocationId, setReceiveLocationId] = useState("");
   const [loadError, setLoadError] = useState("");
 
-  async function load() {
-    setLoadError("");
-    const [s, p, a, l] = await Promise.all([
+  const load = useCallback(() => {
+    Promise.all([
       fetchJson<{ suggestions: Suggestion[] }>("/api/reorder-suggestions"),
       fetchJson<PurchaseOrder[]>("/api/purchase-orders"),
       fetchJson<ArticleOption[]>("/api/articles"),
       fetchJson<StorageLocation[]>("/api/storage-locations"),
-    ]);
+    ]).then(([s, p, a, l]) => {
+      const errors = [s, p, a, l].filter((r) => !r.success).map((r) => r.error ?? "Unbekannter Fehler");
+      setLoadError(errors.length ? errors.join(" · ") : "");
 
-    const errors = [s, p, a, l].filter((r) => !r.success).map((r) => r.error ?? "Unbekannter Fehler");
-    if (errors.length) setLoadError(errors.join(" · "));
+      if (s.success && s.data) setSuggestions(s.data.suggestions ?? []);
+      if (p.success && p.data) setOrders(p.data);
+      if (a.success && a.data) {
+        setArticles(
+          a.data.map((x) => ({
+            id: x.id,
+            name: x.name,
+            unit: x.unit,
+            packageSize: x.packageSize ?? 1,
+          }))
+        );
+      }
+      if (l.success && l.data) {
+        setLocations(l.data);
+        const haupt = l.data.find((loc) => loc.locationType === "HAUPTLAGER");
+        if (haupt) setReceiveLocationId(haupt.id);
+        else if (l.data[0]) setReceiveLocationId(l.data[0].id);
+      }
+      setLoading(false);
+    });
+  }, []);
 
-    if (s.success && s.data) setSuggestions(s.data.suggestions ?? []);
-    if (p.success && p.data) setOrders(p.data);
-    if (a.success && a.data) {
-      setArticles(
-        a.data.map((x) => ({
-          id: x.id,
-          name: x.name,
-          unit: x.unit,
-          packageSize: x.packageSize ?? 1,
-        }))
-      );
-    }
-    if (l.success && l.data) {
-      setLocations(l.data);
-      const haupt = l.data.find((loc) => loc.locationType === "HAUPTLAGER");
-      if (haupt) setReceiveLocationId(haupt.id);
-      else if (l.data[0]) setReceiveLocationId(l.data[0].id);
-    }
-    setLoading(false);
-  }
-
-  useEffect(() => { load(); }, []);
+  useEffect(() => { load(); }, [load]);
 
   async function createPoFromSuggestions() {
     if (!suggestions.length) return;
@@ -129,13 +130,13 @@ export default function EinkaufPage() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         articleId: manualForm.articleId,
-        quantity: parseFloat(manualForm.quantity),
+        quantity: manualForm.quantity ?? 0,
         supplierName: manualForm.supplierName || undefined,
         note: manualForm.note || undefined,
       }),
     });
     if (data.success) {
-      setManualForm({ articleId: "", quantity: "", supplierName: "", note: "" });
+      setManualForm({ articleId: "", quantity: null, supplierName: "", note: "" });
       setManualMsg("Bestellvorschlag angelegt");
       load();
     } else {
@@ -177,13 +178,11 @@ export default function EinkaufPage() {
           <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
             <ShoppingCart className="h-7 w-7 text-[#0d5c63]" />
             Einkauf
+            <InfoButton title="So funktioniert der Einkauf">
+              <p>Nachbestellungen vorschlagen, Bestellungen beim Lieferanten auslösen und den Wareneingang ins gewünschte Lager buchen.</p>
+              <p>Mengen werden in der Artikel-Einheit erfasst (z. B. Stück, Meter, Liter); bei Gebinden zeigen wir die passende Anzahl an Verpackungseinheiten an.</p>
+            </InfoButton>
           </h1>
-          <p className="text-slate-500 mt-1 text-sm max-w-xl">
-            Nachbestellungen vorschlagen, Bestellungen beim Lieferanten auslösen und
-            den Wareneingang ins gewünschte Lager buchen. Mengen werden in der
-            Artikel-Einheit erfasst (z. B. Stück, Meter, Liter); bei Gebinden zeigen
-            wir die passende Anzahl an Verpackungseinheiten an.
-          </p>
         </div>
         <CanAccess permission="inventory.write">
           {suggestions.length > 0 && (
@@ -219,13 +218,12 @@ export default function EinkaufPage() {
                   </option>
                 ))}
               </select>
-              <Input
-                type="number"
-                step="0.001"
+              <NumberInput
                 label={`Menge${selectedManualArticle ? ` (in ${selectedManualArticle.unit})` : ""}`}
-                value={manualForm.quantity}
-                onChange={(e) => setManualForm({ ...manualForm, quantity: e.target.value })}
                 required
+                min={0}
+                value={manualForm.quantity}
+                onValueChange={(v) => setManualForm({ ...manualForm, quantity: v })}
               />
               {selectedManualArticle && (
                 <p className="text-xs text-slate-500">
@@ -234,12 +232,11 @@ export default function EinkaufPage() {
                     <>
                       {" "}· 1 Gebinde = {selectedManualArticle.packageSize}{" "}
                       {selectedManualArticle.unit}
-                      {manualForm.quantity && Number(manualForm.quantity) > 0 && (
+                      {manualForm.quantity != null && manualForm.quantity > 0 && (
                         <>
                           {" "}→ ca.{" "}
                           {Math.ceil(
-                            Number(manualForm.quantity) /
-                              selectedManualArticle.packageSize
+                            manualForm.quantity / selectedManualArticle.packageSize
                           )}{" "}
                           Gebinde
                         </>

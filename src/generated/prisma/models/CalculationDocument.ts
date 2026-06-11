@@ -20,8 +20,24 @@ export type CalculationDocumentModel = runtime.Types.Result.DefaultSelection<Pri
 
 export type AggregateCalculationDocument = {
   _count: CalculationDocumentCountAggregateOutputType | null
+  _avg: CalculationDocumentAvgAggregateOutputType | null
+  _sum: CalculationDocumentSumAggregateOutputType | null
   _min: CalculationDocumentMinAggregateOutputType | null
   _max: CalculationDocumentMaxAggregateOutputType | null
+}
+
+export type CalculationDocumentAvgAggregateOutputType = {
+  netAmount: number | null
+  vatAmount: number | null
+  grossAmount: number | null
+  paidAmount: number | null
+}
+
+export type CalculationDocumentSumAggregateOutputType = {
+  netAmount: number | null
+  vatAmount: number | null
+  grossAmount: number | null
+  paidAmount: number | null
 }
 
 export type CalculationDocumentMinAggregateOutputType = {
@@ -29,12 +45,23 @@ export type CalculationDocumentMinAggregateOutputType = {
   calculationId: string | null
   documentType: $Enums.CalculationDocumentType | null
   documentNumber: string | null
+  status: $Enums.DocumentStatus | null
   issueDate: Date | null
   dueDate: Date | null
   customerNote: string | null
   internalNote: string | null
   pdfStorageKey: string | null
   sentAt: Date | null
+  netAmount: number | null
+  vatAmount: number | null
+  grossAmount: number | null
+  paidAmount: number | null
+  paidAt: Date | null
+  canceledAt: Date | null
+  cancelReason: string | null
+  cancelOfId: string | null
+  eInvoiceFormat: string | null
+  eInvoiceStorageKey: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -44,12 +71,23 @@ export type CalculationDocumentMaxAggregateOutputType = {
   calculationId: string | null
   documentType: $Enums.CalculationDocumentType | null
   documentNumber: string | null
+  status: $Enums.DocumentStatus | null
   issueDate: Date | null
   dueDate: Date | null
   customerNote: string | null
   internalNote: string | null
   pdfStorageKey: string | null
   sentAt: Date | null
+  netAmount: number | null
+  vatAmount: number | null
+  grossAmount: number | null
+  paidAmount: number | null
+  paidAt: Date | null
+  canceledAt: Date | null
+  cancelReason: string | null
+  cancelOfId: string | null
+  eInvoiceFormat: string | null
+  eInvoiceStorageKey: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -59,29 +97,66 @@ export type CalculationDocumentCountAggregateOutputType = {
   calculationId: number
   documentType: number
   documentNumber: number
+  status: number
   issueDate: number
   dueDate: number
   customerNote: number
   internalNote: number
   pdfStorageKey: number
   sentAt: number
+  netAmount: number
+  vatAmount: number
+  grossAmount: number
+  paidAmount: number
+  paidAt: number
+  dataSnapshotJson: number
+  canceledAt: number
+  cancelReason: number
+  cancelOfId: number
+  eInvoiceFormat: number
+  eInvoiceStorageKey: number
   createdAt: number
   updatedAt: number
   _all: number
 }
 
 
+export type CalculationDocumentAvgAggregateInputType = {
+  netAmount?: true
+  vatAmount?: true
+  grossAmount?: true
+  paidAmount?: true
+}
+
+export type CalculationDocumentSumAggregateInputType = {
+  netAmount?: true
+  vatAmount?: true
+  grossAmount?: true
+  paidAmount?: true
+}
+
 export type CalculationDocumentMinAggregateInputType = {
   id?: true
   calculationId?: true
   documentType?: true
   documentNumber?: true
+  status?: true
   issueDate?: true
   dueDate?: true
   customerNote?: true
   internalNote?: true
   pdfStorageKey?: true
   sentAt?: true
+  netAmount?: true
+  vatAmount?: true
+  grossAmount?: true
+  paidAmount?: true
+  paidAt?: true
+  canceledAt?: true
+  cancelReason?: true
+  cancelOfId?: true
+  eInvoiceFormat?: true
+  eInvoiceStorageKey?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -91,12 +166,23 @@ export type CalculationDocumentMaxAggregateInputType = {
   calculationId?: true
   documentType?: true
   documentNumber?: true
+  status?: true
   issueDate?: true
   dueDate?: true
   customerNote?: true
   internalNote?: true
   pdfStorageKey?: true
   sentAt?: true
+  netAmount?: true
+  vatAmount?: true
+  grossAmount?: true
+  paidAmount?: true
+  paidAt?: true
+  canceledAt?: true
+  cancelReason?: true
+  cancelOfId?: true
+  eInvoiceFormat?: true
+  eInvoiceStorageKey?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -106,12 +192,24 @@ export type CalculationDocumentCountAggregateInputType = {
   calculationId?: true
   documentType?: true
   documentNumber?: true
+  status?: true
   issueDate?: true
   dueDate?: true
   customerNote?: true
   internalNote?: true
   pdfStorageKey?: true
   sentAt?: true
+  netAmount?: true
+  vatAmount?: true
+  grossAmount?: true
+  paidAmount?: true
+  paidAt?: true
+  dataSnapshotJson?: true
+  canceledAt?: true
+  cancelReason?: true
+  cancelOfId?: true
+  eInvoiceFormat?: true
+  eInvoiceStorageKey?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -155,6 +253,18 @@ export type CalculationDocumentAggregateArgs<ExtArgs extends runtime.Types.Exten
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: CalculationDocumentAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: CalculationDocumentSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: CalculationDocumentMinAggregateInputType
@@ -185,6 +295,8 @@ export type CalculationDocumentGroupByArgs<ExtArgs extends runtime.Types.Extensi
   take?: number
   skip?: number
   _count?: CalculationDocumentCountAggregateInputType | true
+  _avg?: CalculationDocumentAvgAggregateInputType
+  _sum?: CalculationDocumentSumAggregateInputType
   _min?: CalculationDocumentMinAggregateInputType
   _max?: CalculationDocumentMaxAggregateInputType
 }
@@ -194,15 +306,29 @@ export type CalculationDocumentGroupByOutputType = {
   calculationId: string
   documentType: $Enums.CalculationDocumentType
   documentNumber: string
+  status: $Enums.DocumentStatus
   issueDate: Date
   dueDate: Date | null
   customerNote: string | null
   internalNote: string | null
   pdfStorageKey: string | null
   sentAt: Date | null
+  netAmount: number
+  vatAmount: number
+  grossAmount: number
+  paidAmount: number
+  paidAt: Date | null
+  dataSnapshotJson: runtime.JsonValue | null
+  canceledAt: Date | null
+  cancelReason: string | null
+  cancelOfId: string | null
+  eInvoiceFormat: string | null
+  eInvoiceStorageKey: string | null
   createdAt: Date
   updatedAt: Date
   _count: CalculationDocumentCountAggregateOutputType | null
+  _avg: CalculationDocumentAvgAggregateOutputType | null
+  _sum: CalculationDocumentSumAggregateOutputType | null
   _min: CalculationDocumentMinAggregateOutputType | null
   _max: CalculationDocumentMaxAggregateOutputType | null
 }
@@ -230,15 +356,31 @@ export type CalculationDocumentWhereInput = {
   calculationId?: Prisma.StringFilter<"CalculationDocument"> | string
   documentType?: Prisma.EnumCalculationDocumentTypeFilter<"CalculationDocument"> | $Enums.CalculationDocumentType
   documentNumber?: Prisma.StringFilter<"CalculationDocument"> | string
+  status?: Prisma.EnumDocumentStatusFilter<"CalculationDocument"> | $Enums.DocumentStatus
   issueDate?: Prisma.DateTimeFilter<"CalculationDocument"> | Date | string
   dueDate?: Prisma.DateTimeNullableFilter<"CalculationDocument"> | Date | string | null
   customerNote?: Prisma.StringNullableFilter<"CalculationDocument"> | string | null
   internalNote?: Prisma.StringNullableFilter<"CalculationDocument"> | string | null
   pdfStorageKey?: Prisma.StringNullableFilter<"CalculationDocument"> | string | null
   sentAt?: Prisma.DateTimeNullableFilter<"CalculationDocument"> | Date | string | null
+  netAmount?: Prisma.FloatFilter<"CalculationDocument"> | number
+  vatAmount?: Prisma.FloatFilter<"CalculationDocument"> | number
+  grossAmount?: Prisma.FloatFilter<"CalculationDocument"> | number
+  paidAmount?: Prisma.FloatFilter<"CalculationDocument"> | number
+  paidAt?: Prisma.DateTimeNullableFilter<"CalculationDocument"> | Date | string | null
+  dataSnapshotJson?: Prisma.JsonNullableFilter<"CalculationDocument">
+  canceledAt?: Prisma.DateTimeNullableFilter<"CalculationDocument"> | Date | string | null
+  cancelReason?: Prisma.StringNullableFilter<"CalculationDocument"> | string | null
+  cancelOfId?: Prisma.StringNullableFilter<"CalculationDocument"> | string | null
+  eInvoiceFormat?: Prisma.StringNullableFilter<"CalculationDocument"> | string | null
+  eInvoiceStorageKey?: Prisma.StringNullableFilter<"CalculationDocument"> | string | null
   createdAt?: Prisma.DateTimeFilter<"CalculationDocument"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CalculationDocument"> | Date | string
   calculation?: Prisma.XOR<Prisma.CalculationScalarRelationFilter, Prisma.CalculationWhereInput>
+  cancelOf?: Prisma.XOR<Prisma.CalculationDocumentNullableScalarRelationFilter, Prisma.CalculationDocumentWhereInput> | null
+  cancellations?: Prisma.CalculationDocumentListRelationFilter
+  payments?: Prisma.PaymentListRelationFilter
+  dunningNotices?: Prisma.DunningNoticeListRelationFilter
 }
 
 export type CalculationDocumentOrderByWithRelationInput = {
@@ -246,15 +388,31 @@ export type CalculationDocumentOrderByWithRelationInput = {
   calculationId?: Prisma.SortOrder
   documentType?: Prisma.SortOrder
   documentNumber?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   issueDate?: Prisma.SortOrder
   dueDate?: Prisma.SortOrderInput | Prisma.SortOrder
   customerNote?: Prisma.SortOrderInput | Prisma.SortOrder
   internalNote?: Prisma.SortOrderInput | Prisma.SortOrder
   pdfStorageKey?: Prisma.SortOrderInput | Prisma.SortOrder
   sentAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  netAmount?: Prisma.SortOrder
+  vatAmount?: Prisma.SortOrder
+  grossAmount?: Prisma.SortOrder
+  paidAmount?: Prisma.SortOrder
+  paidAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  dataSnapshotJson?: Prisma.SortOrderInput | Prisma.SortOrder
+  canceledAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  cancelReason?: Prisma.SortOrderInput | Prisma.SortOrder
+  cancelOfId?: Prisma.SortOrderInput | Prisma.SortOrder
+  eInvoiceFormat?: Prisma.SortOrderInput | Prisma.SortOrder
+  eInvoiceStorageKey?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   calculation?: Prisma.CalculationOrderByWithRelationInput
+  cancelOf?: Prisma.CalculationDocumentOrderByWithRelationInput
+  cancellations?: Prisma.CalculationDocumentOrderByRelationAggregateInput
+  payments?: Prisma.PaymentOrderByRelationAggregateInput
+  dunningNotices?: Prisma.DunningNoticeOrderByRelationAggregateInput
 }
 
 export type CalculationDocumentWhereUniqueInput = Prisma.AtLeast<{
@@ -265,15 +423,31 @@ export type CalculationDocumentWhereUniqueInput = Prisma.AtLeast<{
   calculationId?: Prisma.StringFilter<"CalculationDocument"> | string
   documentType?: Prisma.EnumCalculationDocumentTypeFilter<"CalculationDocument"> | $Enums.CalculationDocumentType
   documentNumber?: Prisma.StringFilter<"CalculationDocument"> | string
+  status?: Prisma.EnumDocumentStatusFilter<"CalculationDocument"> | $Enums.DocumentStatus
   issueDate?: Prisma.DateTimeFilter<"CalculationDocument"> | Date | string
   dueDate?: Prisma.DateTimeNullableFilter<"CalculationDocument"> | Date | string | null
   customerNote?: Prisma.StringNullableFilter<"CalculationDocument"> | string | null
   internalNote?: Prisma.StringNullableFilter<"CalculationDocument"> | string | null
   pdfStorageKey?: Prisma.StringNullableFilter<"CalculationDocument"> | string | null
   sentAt?: Prisma.DateTimeNullableFilter<"CalculationDocument"> | Date | string | null
+  netAmount?: Prisma.FloatFilter<"CalculationDocument"> | number
+  vatAmount?: Prisma.FloatFilter<"CalculationDocument"> | number
+  grossAmount?: Prisma.FloatFilter<"CalculationDocument"> | number
+  paidAmount?: Prisma.FloatFilter<"CalculationDocument"> | number
+  paidAt?: Prisma.DateTimeNullableFilter<"CalculationDocument"> | Date | string | null
+  dataSnapshotJson?: Prisma.JsonNullableFilter<"CalculationDocument">
+  canceledAt?: Prisma.DateTimeNullableFilter<"CalculationDocument"> | Date | string | null
+  cancelReason?: Prisma.StringNullableFilter<"CalculationDocument"> | string | null
+  cancelOfId?: Prisma.StringNullableFilter<"CalculationDocument"> | string | null
+  eInvoiceFormat?: Prisma.StringNullableFilter<"CalculationDocument"> | string | null
+  eInvoiceStorageKey?: Prisma.StringNullableFilter<"CalculationDocument"> | string | null
   createdAt?: Prisma.DateTimeFilter<"CalculationDocument"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CalculationDocument"> | Date | string
   calculation?: Prisma.XOR<Prisma.CalculationScalarRelationFilter, Prisma.CalculationWhereInput>
+  cancelOf?: Prisma.XOR<Prisma.CalculationDocumentNullableScalarRelationFilter, Prisma.CalculationDocumentWhereInput> | null
+  cancellations?: Prisma.CalculationDocumentListRelationFilter
+  payments?: Prisma.PaymentListRelationFilter
+  dunningNotices?: Prisma.DunningNoticeListRelationFilter
 }, "id">
 
 export type CalculationDocumentOrderByWithAggregationInput = {
@@ -281,17 +455,31 @@ export type CalculationDocumentOrderByWithAggregationInput = {
   calculationId?: Prisma.SortOrder
   documentType?: Prisma.SortOrder
   documentNumber?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   issueDate?: Prisma.SortOrder
   dueDate?: Prisma.SortOrderInput | Prisma.SortOrder
   customerNote?: Prisma.SortOrderInput | Prisma.SortOrder
   internalNote?: Prisma.SortOrderInput | Prisma.SortOrder
   pdfStorageKey?: Prisma.SortOrderInput | Prisma.SortOrder
   sentAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  netAmount?: Prisma.SortOrder
+  vatAmount?: Prisma.SortOrder
+  grossAmount?: Prisma.SortOrder
+  paidAmount?: Prisma.SortOrder
+  paidAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  dataSnapshotJson?: Prisma.SortOrderInput | Prisma.SortOrder
+  canceledAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  cancelReason?: Prisma.SortOrderInput | Prisma.SortOrder
+  cancelOfId?: Prisma.SortOrderInput | Prisma.SortOrder
+  eInvoiceFormat?: Prisma.SortOrderInput | Prisma.SortOrder
+  eInvoiceStorageKey?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.CalculationDocumentCountOrderByAggregateInput
+  _avg?: Prisma.CalculationDocumentAvgOrderByAggregateInput
   _max?: Prisma.CalculationDocumentMaxOrderByAggregateInput
   _min?: Prisma.CalculationDocumentMinOrderByAggregateInput
+  _sum?: Prisma.CalculationDocumentSumOrderByAggregateInput
 }
 
 export type CalculationDocumentScalarWhereWithAggregatesInput = {
@@ -302,12 +490,24 @@ export type CalculationDocumentScalarWhereWithAggregatesInput = {
   calculationId?: Prisma.StringWithAggregatesFilter<"CalculationDocument"> | string
   documentType?: Prisma.EnumCalculationDocumentTypeWithAggregatesFilter<"CalculationDocument"> | $Enums.CalculationDocumentType
   documentNumber?: Prisma.StringWithAggregatesFilter<"CalculationDocument"> | string
+  status?: Prisma.EnumDocumentStatusWithAggregatesFilter<"CalculationDocument"> | $Enums.DocumentStatus
   issueDate?: Prisma.DateTimeWithAggregatesFilter<"CalculationDocument"> | Date | string
   dueDate?: Prisma.DateTimeNullableWithAggregatesFilter<"CalculationDocument"> | Date | string | null
   customerNote?: Prisma.StringNullableWithAggregatesFilter<"CalculationDocument"> | string | null
   internalNote?: Prisma.StringNullableWithAggregatesFilter<"CalculationDocument"> | string | null
   pdfStorageKey?: Prisma.StringNullableWithAggregatesFilter<"CalculationDocument"> | string | null
   sentAt?: Prisma.DateTimeNullableWithAggregatesFilter<"CalculationDocument"> | Date | string | null
+  netAmount?: Prisma.FloatWithAggregatesFilter<"CalculationDocument"> | number
+  vatAmount?: Prisma.FloatWithAggregatesFilter<"CalculationDocument"> | number
+  grossAmount?: Prisma.FloatWithAggregatesFilter<"CalculationDocument"> | number
+  paidAmount?: Prisma.FloatWithAggregatesFilter<"CalculationDocument"> | number
+  paidAt?: Prisma.DateTimeNullableWithAggregatesFilter<"CalculationDocument"> | Date | string | null
+  dataSnapshotJson?: Prisma.JsonNullableWithAggregatesFilter<"CalculationDocument">
+  canceledAt?: Prisma.DateTimeNullableWithAggregatesFilter<"CalculationDocument"> | Date | string | null
+  cancelReason?: Prisma.StringNullableWithAggregatesFilter<"CalculationDocument"> | string | null
+  cancelOfId?: Prisma.StringNullableWithAggregatesFilter<"CalculationDocument"> | string | null
+  eInvoiceFormat?: Prisma.StringNullableWithAggregatesFilter<"CalculationDocument"> | string | null
+  eInvoiceStorageKey?: Prisma.StringNullableWithAggregatesFilter<"CalculationDocument"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"CalculationDocument"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"CalculationDocument"> | Date | string
 }
@@ -316,15 +516,30 @@ export type CalculationDocumentCreateInput = {
   id?: string
   documentType: $Enums.CalculationDocumentType
   documentNumber: string
+  status?: $Enums.DocumentStatus
   issueDate?: Date | string
   dueDate?: Date | string | null
   customerNote?: string | null
   internalNote?: string | null
   pdfStorageKey?: string | null
   sentAt?: Date | string | null
+  netAmount?: number
+  vatAmount?: number
+  grossAmount?: number
+  paidAmount?: number
+  paidAt?: Date | string | null
+  dataSnapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  canceledAt?: Date | string | null
+  cancelReason?: string | null
+  eInvoiceFormat?: string | null
+  eInvoiceStorageKey?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   calculation: Prisma.CalculationCreateNestedOneWithoutDocumentsInput
+  cancelOf?: Prisma.CalculationDocumentCreateNestedOneWithoutCancellationsInput
+  cancellations?: Prisma.CalculationDocumentCreateNestedManyWithoutCancelOfInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutDocumentInput
+  dunningNotices?: Prisma.DunningNoticeCreateNestedManyWithoutDocumentInput
 }
 
 export type CalculationDocumentUncheckedCreateInput = {
@@ -332,29 +547,59 @@ export type CalculationDocumentUncheckedCreateInput = {
   calculationId: string
   documentType: $Enums.CalculationDocumentType
   documentNumber: string
+  status?: $Enums.DocumentStatus
   issueDate?: Date | string
   dueDate?: Date | string | null
   customerNote?: string | null
   internalNote?: string | null
   pdfStorageKey?: string | null
   sentAt?: Date | string | null
+  netAmount?: number
+  vatAmount?: number
+  grossAmount?: number
+  paidAmount?: number
+  paidAt?: Date | string | null
+  dataSnapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  canceledAt?: Date | string | null
+  cancelReason?: string | null
+  cancelOfId?: string | null
+  eInvoiceFormat?: string | null
+  eInvoiceStorageKey?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  cancellations?: Prisma.CalculationDocumentUncheckedCreateNestedManyWithoutCancelOfInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutDocumentInput
+  dunningNotices?: Prisma.DunningNoticeUncheckedCreateNestedManyWithoutDocumentInput
 }
 
 export type CalculationDocumentUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   documentType?: Prisma.EnumCalculationDocumentTypeFieldUpdateOperationsInput | $Enums.CalculationDocumentType
   documentNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumDocumentStatusFieldUpdateOperationsInput | $Enums.DocumentStatus
   issueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   customerNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   internalNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pdfStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  netAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  vatAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  grossAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  paidAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  dataSnapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  canceledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eInvoiceFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eInvoiceStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   calculation?: Prisma.CalculationUpdateOneRequiredWithoutDocumentsNestedInput
+  cancelOf?: Prisma.CalculationDocumentUpdateOneWithoutCancellationsNestedInput
+  cancellations?: Prisma.CalculationDocumentUpdateManyWithoutCancelOfNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutDocumentNestedInput
+  dunningNotices?: Prisma.DunningNoticeUpdateManyWithoutDocumentNestedInput
 }
 
 export type CalculationDocumentUncheckedUpdateInput = {
@@ -362,14 +607,29 @@ export type CalculationDocumentUncheckedUpdateInput = {
   calculationId?: Prisma.StringFieldUpdateOperationsInput | string
   documentType?: Prisma.EnumCalculationDocumentTypeFieldUpdateOperationsInput | $Enums.CalculationDocumentType
   documentNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumDocumentStatusFieldUpdateOperationsInput | $Enums.DocumentStatus
   issueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   customerNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   internalNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pdfStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  netAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  vatAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  grossAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  paidAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  dataSnapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  canceledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cancelOfId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eInvoiceFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eInvoiceStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  cancellations?: Prisma.CalculationDocumentUncheckedUpdateManyWithoutCancelOfNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutDocumentNestedInput
+  dunningNotices?: Prisma.DunningNoticeUncheckedUpdateManyWithoutDocumentNestedInput
 }
 
 export type CalculationDocumentCreateManyInput = {
@@ -377,12 +637,24 @@ export type CalculationDocumentCreateManyInput = {
   calculationId: string
   documentType: $Enums.CalculationDocumentType
   documentNumber: string
+  status?: $Enums.DocumentStatus
   issueDate?: Date | string
   dueDate?: Date | string | null
   customerNote?: string | null
   internalNote?: string | null
   pdfStorageKey?: string | null
   sentAt?: Date | string | null
+  netAmount?: number
+  vatAmount?: number
+  grossAmount?: number
+  paidAmount?: number
+  paidAt?: Date | string | null
+  dataSnapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  canceledAt?: Date | string | null
+  cancelReason?: string | null
+  cancelOfId?: string | null
+  eInvoiceFormat?: string | null
+  eInvoiceStorageKey?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -391,12 +663,23 @@ export type CalculationDocumentUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   documentType?: Prisma.EnumCalculationDocumentTypeFieldUpdateOperationsInput | $Enums.CalculationDocumentType
   documentNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumDocumentStatusFieldUpdateOperationsInput | $Enums.DocumentStatus
   issueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   customerNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   internalNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pdfStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  netAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  vatAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  grossAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  paidAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  dataSnapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  canceledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eInvoiceFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eInvoiceStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -406,12 +689,24 @@ export type CalculationDocumentUncheckedUpdateManyInput = {
   calculationId?: Prisma.StringFieldUpdateOperationsInput | string
   documentType?: Prisma.EnumCalculationDocumentTypeFieldUpdateOperationsInput | $Enums.CalculationDocumentType
   documentNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumDocumentStatusFieldUpdateOperationsInput | $Enums.DocumentStatus
   issueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   customerNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   internalNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pdfStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  netAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  vatAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  grossAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  paidAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  dataSnapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  canceledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cancelOfId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eInvoiceFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eInvoiceStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -426,19 +721,43 @@ export type CalculationDocumentOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
+export type CalculationDocumentNullableScalarRelationFilter = {
+  is?: Prisma.CalculationDocumentWhereInput | null
+  isNot?: Prisma.CalculationDocumentWhereInput | null
+}
+
 export type CalculationDocumentCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   calculationId?: Prisma.SortOrder
   documentType?: Prisma.SortOrder
   documentNumber?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   issueDate?: Prisma.SortOrder
   dueDate?: Prisma.SortOrder
   customerNote?: Prisma.SortOrder
   internalNote?: Prisma.SortOrder
   pdfStorageKey?: Prisma.SortOrder
   sentAt?: Prisma.SortOrder
+  netAmount?: Prisma.SortOrder
+  vatAmount?: Prisma.SortOrder
+  grossAmount?: Prisma.SortOrder
+  paidAmount?: Prisma.SortOrder
+  paidAt?: Prisma.SortOrder
+  dataSnapshotJson?: Prisma.SortOrder
+  canceledAt?: Prisma.SortOrder
+  cancelReason?: Prisma.SortOrder
+  cancelOfId?: Prisma.SortOrder
+  eInvoiceFormat?: Prisma.SortOrder
+  eInvoiceStorageKey?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type CalculationDocumentAvgOrderByAggregateInput = {
+  netAmount?: Prisma.SortOrder
+  vatAmount?: Prisma.SortOrder
+  grossAmount?: Prisma.SortOrder
+  paidAmount?: Prisma.SortOrder
 }
 
 export type CalculationDocumentMaxOrderByAggregateInput = {
@@ -446,12 +765,23 @@ export type CalculationDocumentMaxOrderByAggregateInput = {
   calculationId?: Prisma.SortOrder
   documentType?: Prisma.SortOrder
   documentNumber?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   issueDate?: Prisma.SortOrder
   dueDate?: Prisma.SortOrder
   customerNote?: Prisma.SortOrder
   internalNote?: Prisma.SortOrder
   pdfStorageKey?: Prisma.SortOrder
   sentAt?: Prisma.SortOrder
+  netAmount?: Prisma.SortOrder
+  vatAmount?: Prisma.SortOrder
+  grossAmount?: Prisma.SortOrder
+  paidAmount?: Prisma.SortOrder
+  paidAt?: Prisma.SortOrder
+  canceledAt?: Prisma.SortOrder
+  cancelReason?: Prisma.SortOrder
+  cancelOfId?: Prisma.SortOrder
+  eInvoiceFormat?: Prisma.SortOrder
+  eInvoiceStorageKey?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -461,14 +791,37 @@ export type CalculationDocumentMinOrderByAggregateInput = {
   calculationId?: Prisma.SortOrder
   documentType?: Prisma.SortOrder
   documentNumber?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   issueDate?: Prisma.SortOrder
   dueDate?: Prisma.SortOrder
   customerNote?: Prisma.SortOrder
   internalNote?: Prisma.SortOrder
   pdfStorageKey?: Prisma.SortOrder
   sentAt?: Prisma.SortOrder
+  netAmount?: Prisma.SortOrder
+  vatAmount?: Prisma.SortOrder
+  grossAmount?: Prisma.SortOrder
+  paidAmount?: Prisma.SortOrder
+  paidAt?: Prisma.SortOrder
+  canceledAt?: Prisma.SortOrder
+  cancelReason?: Prisma.SortOrder
+  cancelOfId?: Prisma.SortOrder
+  eInvoiceFormat?: Prisma.SortOrder
+  eInvoiceStorageKey?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type CalculationDocumentSumOrderByAggregateInput = {
+  netAmount?: Prisma.SortOrder
+  vatAmount?: Prisma.SortOrder
+  grossAmount?: Prisma.SortOrder
+  paidAmount?: Prisma.SortOrder
+}
+
+export type CalculationDocumentScalarRelationFilter = {
+  is?: Prisma.CalculationDocumentWhereInput
+  isNot?: Prisma.CalculationDocumentWhereInput
 }
 
 export type CalculationDocumentCreateNestedManyWithoutCalculationInput = {
@@ -513,36 +866,156 @@ export type CalculationDocumentUncheckedUpdateManyWithoutCalculationNestedInput 
   deleteMany?: Prisma.CalculationDocumentScalarWhereInput | Prisma.CalculationDocumentScalarWhereInput[]
 }
 
+export type CalculationDocumentCreateNestedOneWithoutCancellationsInput = {
+  create?: Prisma.XOR<Prisma.CalculationDocumentCreateWithoutCancellationsInput, Prisma.CalculationDocumentUncheckedCreateWithoutCancellationsInput>
+  connectOrCreate?: Prisma.CalculationDocumentCreateOrConnectWithoutCancellationsInput
+  connect?: Prisma.CalculationDocumentWhereUniqueInput
+}
+
+export type CalculationDocumentCreateNestedManyWithoutCancelOfInput = {
+  create?: Prisma.XOR<Prisma.CalculationDocumentCreateWithoutCancelOfInput, Prisma.CalculationDocumentUncheckedCreateWithoutCancelOfInput> | Prisma.CalculationDocumentCreateWithoutCancelOfInput[] | Prisma.CalculationDocumentUncheckedCreateWithoutCancelOfInput[]
+  connectOrCreate?: Prisma.CalculationDocumentCreateOrConnectWithoutCancelOfInput | Prisma.CalculationDocumentCreateOrConnectWithoutCancelOfInput[]
+  createMany?: Prisma.CalculationDocumentCreateManyCancelOfInputEnvelope
+  connect?: Prisma.CalculationDocumentWhereUniqueInput | Prisma.CalculationDocumentWhereUniqueInput[]
+}
+
+export type CalculationDocumentUncheckedCreateNestedManyWithoutCancelOfInput = {
+  create?: Prisma.XOR<Prisma.CalculationDocumentCreateWithoutCancelOfInput, Prisma.CalculationDocumentUncheckedCreateWithoutCancelOfInput> | Prisma.CalculationDocumentCreateWithoutCancelOfInput[] | Prisma.CalculationDocumentUncheckedCreateWithoutCancelOfInput[]
+  connectOrCreate?: Prisma.CalculationDocumentCreateOrConnectWithoutCancelOfInput | Prisma.CalculationDocumentCreateOrConnectWithoutCancelOfInput[]
+  createMany?: Prisma.CalculationDocumentCreateManyCancelOfInputEnvelope
+  connect?: Prisma.CalculationDocumentWhereUniqueInput | Prisma.CalculationDocumentWhereUniqueInput[]
+}
+
 export type EnumCalculationDocumentTypeFieldUpdateOperationsInput = {
   set?: $Enums.CalculationDocumentType
+}
+
+export type EnumDocumentStatusFieldUpdateOperationsInput = {
+  set?: $Enums.DocumentStatus
+}
+
+export type CalculationDocumentUpdateOneWithoutCancellationsNestedInput = {
+  create?: Prisma.XOR<Prisma.CalculationDocumentCreateWithoutCancellationsInput, Prisma.CalculationDocumentUncheckedCreateWithoutCancellationsInput>
+  connectOrCreate?: Prisma.CalculationDocumentCreateOrConnectWithoutCancellationsInput
+  upsert?: Prisma.CalculationDocumentUpsertWithoutCancellationsInput
+  disconnect?: Prisma.CalculationDocumentWhereInput | boolean
+  delete?: Prisma.CalculationDocumentWhereInput | boolean
+  connect?: Prisma.CalculationDocumentWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CalculationDocumentUpdateToOneWithWhereWithoutCancellationsInput, Prisma.CalculationDocumentUpdateWithoutCancellationsInput>, Prisma.CalculationDocumentUncheckedUpdateWithoutCancellationsInput>
+}
+
+export type CalculationDocumentUpdateManyWithoutCancelOfNestedInput = {
+  create?: Prisma.XOR<Prisma.CalculationDocumentCreateWithoutCancelOfInput, Prisma.CalculationDocumentUncheckedCreateWithoutCancelOfInput> | Prisma.CalculationDocumentCreateWithoutCancelOfInput[] | Prisma.CalculationDocumentUncheckedCreateWithoutCancelOfInput[]
+  connectOrCreate?: Prisma.CalculationDocumentCreateOrConnectWithoutCancelOfInput | Prisma.CalculationDocumentCreateOrConnectWithoutCancelOfInput[]
+  upsert?: Prisma.CalculationDocumentUpsertWithWhereUniqueWithoutCancelOfInput | Prisma.CalculationDocumentUpsertWithWhereUniqueWithoutCancelOfInput[]
+  createMany?: Prisma.CalculationDocumentCreateManyCancelOfInputEnvelope
+  set?: Prisma.CalculationDocumentWhereUniqueInput | Prisma.CalculationDocumentWhereUniqueInput[]
+  disconnect?: Prisma.CalculationDocumentWhereUniqueInput | Prisma.CalculationDocumentWhereUniqueInput[]
+  delete?: Prisma.CalculationDocumentWhereUniqueInput | Prisma.CalculationDocumentWhereUniqueInput[]
+  connect?: Prisma.CalculationDocumentWhereUniqueInput | Prisma.CalculationDocumentWhereUniqueInput[]
+  update?: Prisma.CalculationDocumentUpdateWithWhereUniqueWithoutCancelOfInput | Prisma.CalculationDocumentUpdateWithWhereUniqueWithoutCancelOfInput[]
+  updateMany?: Prisma.CalculationDocumentUpdateManyWithWhereWithoutCancelOfInput | Prisma.CalculationDocumentUpdateManyWithWhereWithoutCancelOfInput[]
+  deleteMany?: Prisma.CalculationDocumentScalarWhereInput | Prisma.CalculationDocumentScalarWhereInput[]
+}
+
+export type CalculationDocumentUncheckedUpdateManyWithoutCancelOfNestedInput = {
+  create?: Prisma.XOR<Prisma.CalculationDocumentCreateWithoutCancelOfInput, Prisma.CalculationDocumentUncheckedCreateWithoutCancelOfInput> | Prisma.CalculationDocumentCreateWithoutCancelOfInput[] | Prisma.CalculationDocumentUncheckedCreateWithoutCancelOfInput[]
+  connectOrCreate?: Prisma.CalculationDocumentCreateOrConnectWithoutCancelOfInput | Prisma.CalculationDocumentCreateOrConnectWithoutCancelOfInput[]
+  upsert?: Prisma.CalculationDocumentUpsertWithWhereUniqueWithoutCancelOfInput | Prisma.CalculationDocumentUpsertWithWhereUniqueWithoutCancelOfInput[]
+  createMany?: Prisma.CalculationDocumentCreateManyCancelOfInputEnvelope
+  set?: Prisma.CalculationDocumentWhereUniqueInput | Prisma.CalculationDocumentWhereUniqueInput[]
+  disconnect?: Prisma.CalculationDocumentWhereUniqueInput | Prisma.CalculationDocumentWhereUniqueInput[]
+  delete?: Prisma.CalculationDocumentWhereUniqueInput | Prisma.CalculationDocumentWhereUniqueInput[]
+  connect?: Prisma.CalculationDocumentWhereUniqueInput | Prisma.CalculationDocumentWhereUniqueInput[]
+  update?: Prisma.CalculationDocumentUpdateWithWhereUniqueWithoutCancelOfInput | Prisma.CalculationDocumentUpdateWithWhereUniqueWithoutCancelOfInput[]
+  updateMany?: Prisma.CalculationDocumentUpdateManyWithWhereWithoutCancelOfInput | Prisma.CalculationDocumentUpdateManyWithWhereWithoutCancelOfInput[]
+  deleteMany?: Prisma.CalculationDocumentScalarWhereInput | Prisma.CalculationDocumentScalarWhereInput[]
+}
+
+export type CalculationDocumentCreateNestedOneWithoutPaymentsInput = {
+  create?: Prisma.XOR<Prisma.CalculationDocumentCreateWithoutPaymentsInput, Prisma.CalculationDocumentUncheckedCreateWithoutPaymentsInput>
+  connectOrCreate?: Prisma.CalculationDocumentCreateOrConnectWithoutPaymentsInput
+  connect?: Prisma.CalculationDocumentWhereUniqueInput
+}
+
+export type CalculationDocumentUpdateOneRequiredWithoutPaymentsNestedInput = {
+  create?: Prisma.XOR<Prisma.CalculationDocumentCreateWithoutPaymentsInput, Prisma.CalculationDocumentUncheckedCreateWithoutPaymentsInput>
+  connectOrCreate?: Prisma.CalculationDocumentCreateOrConnectWithoutPaymentsInput
+  upsert?: Prisma.CalculationDocumentUpsertWithoutPaymentsInput
+  connect?: Prisma.CalculationDocumentWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CalculationDocumentUpdateToOneWithWhereWithoutPaymentsInput, Prisma.CalculationDocumentUpdateWithoutPaymentsInput>, Prisma.CalculationDocumentUncheckedUpdateWithoutPaymentsInput>
+}
+
+export type CalculationDocumentCreateNestedOneWithoutDunningNoticesInput = {
+  create?: Prisma.XOR<Prisma.CalculationDocumentCreateWithoutDunningNoticesInput, Prisma.CalculationDocumentUncheckedCreateWithoutDunningNoticesInput>
+  connectOrCreate?: Prisma.CalculationDocumentCreateOrConnectWithoutDunningNoticesInput
+  connect?: Prisma.CalculationDocumentWhereUniqueInput
+}
+
+export type CalculationDocumentUpdateOneRequiredWithoutDunningNoticesNestedInput = {
+  create?: Prisma.XOR<Prisma.CalculationDocumentCreateWithoutDunningNoticesInput, Prisma.CalculationDocumentUncheckedCreateWithoutDunningNoticesInput>
+  connectOrCreate?: Prisma.CalculationDocumentCreateOrConnectWithoutDunningNoticesInput
+  upsert?: Prisma.CalculationDocumentUpsertWithoutDunningNoticesInput
+  connect?: Prisma.CalculationDocumentWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CalculationDocumentUpdateToOneWithWhereWithoutDunningNoticesInput, Prisma.CalculationDocumentUpdateWithoutDunningNoticesInput>, Prisma.CalculationDocumentUncheckedUpdateWithoutDunningNoticesInput>
 }
 
 export type CalculationDocumentCreateWithoutCalculationInput = {
   id?: string
   documentType: $Enums.CalculationDocumentType
   documentNumber: string
+  status?: $Enums.DocumentStatus
   issueDate?: Date | string
   dueDate?: Date | string | null
   customerNote?: string | null
   internalNote?: string | null
   pdfStorageKey?: string | null
   sentAt?: Date | string | null
+  netAmount?: number
+  vatAmount?: number
+  grossAmount?: number
+  paidAmount?: number
+  paidAt?: Date | string | null
+  dataSnapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  canceledAt?: Date | string | null
+  cancelReason?: string | null
+  eInvoiceFormat?: string | null
+  eInvoiceStorageKey?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  cancelOf?: Prisma.CalculationDocumentCreateNestedOneWithoutCancellationsInput
+  cancellations?: Prisma.CalculationDocumentCreateNestedManyWithoutCancelOfInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutDocumentInput
+  dunningNotices?: Prisma.DunningNoticeCreateNestedManyWithoutDocumentInput
 }
 
 export type CalculationDocumentUncheckedCreateWithoutCalculationInput = {
   id?: string
   documentType: $Enums.CalculationDocumentType
   documentNumber: string
+  status?: $Enums.DocumentStatus
   issueDate?: Date | string
   dueDate?: Date | string | null
   customerNote?: string | null
   internalNote?: string | null
   pdfStorageKey?: string | null
   sentAt?: Date | string | null
+  netAmount?: number
+  vatAmount?: number
+  grossAmount?: number
+  paidAmount?: number
+  paidAt?: Date | string | null
+  dataSnapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  canceledAt?: Date | string | null
+  cancelReason?: string | null
+  cancelOfId?: string | null
+  eInvoiceFormat?: string | null
+  eInvoiceStorageKey?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  cancellations?: Prisma.CalculationDocumentUncheckedCreateNestedManyWithoutCancelOfInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutDocumentInput
+  dunningNotices?: Prisma.DunningNoticeUncheckedCreateNestedManyWithoutDocumentInput
 }
 
 export type CalculationDocumentCreateOrConnectWithoutCalculationInput = {
@@ -579,26 +1052,530 @@ export type CalculationDocumentScalarWhereInput = {
   calculationId?: Prisma.StringFilter<"CalculationDocument"> | string
   documentType?: Prisma.EnumCalculationDocumentTypeFilter<"CalculationDocument"> | $Enums.CalculationDocumentType
   documentNumber?: Prisma.StringFilter<"CalculationDocument"> | string
+  status?: Prisma.EnumDocumentStatusFilter<"CalculationDocument"> | $Enums.DocumentStatus
   issueDate?: Prisma.DateTimeFilter<"CalculationDocument"> | Date | string
   dueDate?: Prisma.DateTimeNullableFilter<"CalculationDocument"> | Date | string | null
   customerNote?: Prisma.StringNullableFilter<"CalculationDocument"> | string | null
   internalNote?: Prisma.StringNullableFilter<"CalculationDocument"> | string | null
   pdfStorageKey?: Prisma.StringNullableFilter<"CalculationDocument"> | string | null
   sentAt?: Prisma.DateTimeNullableFilter<"CalculationDocument"> | Date | string | null
+  netAmount?: Prisma.FloatFilter<"CalculationDocument"> | number
+  vatAmount?: Prisma.FloatFilter<"CalculationDocument"> | number
+  grossAmount?: Prisma.FloatFilter<"CalculationDocument"> | number
+  paidAmount?: Prisma.FloatFilter<"CalculationDocument"> | number
+  paidAt?: Prisma.DateTimeNullableFilter<"CalculationDocument"> | Date | string | null
+  dataSnapshotJson?: Prisma.JsonNullableFilter<"CalculationDocument">
+  canceledAt?: Prisma.DateTimeNullableFilter<"CalculationDocument"> | Date | string | null
+  cancelReason?: Prisma.StringNullableFilter<"CalculationDocument"> | string | null
+  cancelOfId?: Prisma.StringNullableFilter<"CalculationDocument"> | string | null
+  eInvoiceFormat?: Prisma.StringNullableFilter<"CalculationDocument"> | string | null
+  eInvoiceStorageKey?: Prisma.StringNullableFilter<"CalculationDocument"> | string | null
   createdAt?: Prisma.DateTimeFilter<"CalculationDocument"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CalculationDocument"> | Date | string
 }
 
-export type CalculationDocumentCreateManyCalculationInput = {
+export type CalculationDocumentCreateWithoutCancellationsInput = {
   id?: string
   documentType: $Enums.CalculationDocumentType
   documentNumber: string
+  status?: $Enums.DocumentStatus
   issueDate?: Date | string
   dueDate?: Date | string | null
   customerNote?: string | null
   internalNote?: string | null
   pdfStorageKey?: string | null
   sentAt?: Date | string | null
+  netAmount?: number
+  vatAmount?: number
+  grossAmount?: number
+  paidAmount?: number
+  paidAt?: Date | string | null
+  dataSnapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  canceledAt?: Date | string | null
+  cancelReason?: string | null
+  eInvoiceFormat?: string | null
+  eInvoiceStorageKey?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  calculation: Prisma.CalculationCreateNestedOneWithoutDocumentsInput
+  cancelOf?: Prisma.CalculationDocumentCreateNestedOneWithoutCancellationsInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutDocumentInput
+  dunningNotices?: Prisma.DunningNoticeCreateNestedManyWithoutDocumentInput
+}
+
+export type CalculationDocumentUncheckedCreateWithoutCancellationsInput = {
+  id?: string
+  calculationId: string
+  documentType: $Enums.CalculationDocumentType
+  documentNumber: string
+  status?: $Enums.DocumentStatus
+  issueDate?: Date | string
+  dueDate?: Date | string | null
+  customerNote?: string | null
+  internalNote?: string | null
+  pdfStorageKey?: string | null
+  sentAt?: Date | string | null
+  netAmount?: number
+  vatAmount?: number
+  grossAmount?: number
+  paidAmount?: number
+  paidAt?: Date | string | null
+  dataSnapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  canceledAt?: Date | string | null
+  cancelReason?: string | null
+  cancelOfId?: string | null
+  eInvoiceFormat?: string | null
+  eInvoiceStorageKey?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutDocumentInput
+  dunningNotices?: Prisma.DunningNoticeUncheckedCreateNestedManyWithoutDocumentInput
+}
+
+export type CalculationDocumentCreateOrConnectWithoutCancellationsInput = {
+  where: Prisma.CalculationDocumentWhereUniqueInput
+  create: Prisma.XOR<Prisma.CalculationDocumentCreateWithoutCancellationsInput, Prisma.CalculationDocumentUncheckedCreateWithoutCancellationsInput>
+}
+
+export type CalculationDocumentCreateWithoutCancelOfInput = {
+  id?: string
+  documentType: $Enums.CalculationDocumentType
+  documentNumber: string
+  status?: $Enums.DocumentStatus
+  issueDate?: Date | string
+  dueDate?: Date | string | null
+  customerNote?: string | null
+  internalNote?: string | null
+  pdfStorageKey?: string | null
+  sentAt?: Date | string | null
+  netAmount?: number
+  vatAmount?: number
+  grossAmount?: number
+  paidAmount?: number
+  paidAt?: Date | string | null
+  dataSnapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  canceledAt?: Date | string | null
+  cancelReason?: string | null
+  eInvoiceFormat?: string | null
+  eInvoiceStorageKey?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  calculation: Prisma.CalculationCreateNestedOneWithoutDocumentsInput
+  cancellations?: Prisma.CalculationDocumentCreateNestedManyWithoutCancelOfInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutDocumentInput
+  dunningNotices?: Prisma.DunningNoticeCreateNestedManyWithoutDocumentInput
+}
+
+export type CalculationDocumentUncheckedCreateWithoutCancelOfInput = {
+  id?: string
+  calculationId: string
+  documentType: $Enums.CalculationDocumentType
+  documentNumber: string
+  status?: $Enums.DocumentStatus
+  issueDate?: Date | string
+  dueDate?: Date | string | null
+  customerNote?: string | null
+  internalNote?: string | null
+  pdfStorageKey?: string | null
+  sentAt?: Date | string | null
+  netAmount?: number
+  vatAmount?: number
+  grossAmount?: number
+  paidAmount?: number
+  paidAt?: Date | string | null
+  dataSnapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  canceledAt?: Date | string | null
+  cancelReason?: string | null
+  eInvoiceFormat?: string | null
+  eInvoiceStorageKey?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  cancellations?: Prisma.CalculationDocumentUncheckedCreateNestedManyWithoutCancelOfInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutDocumentInput
+  dunningNotices?: Prisma.DunningNoticeUncheckedCreateNestedManyWithoutDocumentInput
+}
+
+export type CalculationDocumentCreateOrConnectWithoutCancelOfInput = {
+  where: Prisma.CalculationDocumentWhereUniqueInput
+  create: Prisma.XOR<Prisma.CalculationDocumentCreateWithoutCancelOfInput, Prisma.CalculationDocumentUncheckedCreateWithoutCancelOfInput>
+}
+
+export type CalculationDocumentCreateManyCancelOfInputEnvelope = {
+  data: Prisma.CalculationDocumentCreateManyCancelOfInput | Prisma.CalculationDocumentCreateManyCancelOfInput[]
+  skipDuplicates?: boolean
+}
+
+export type CalculationDocumentUpsertWithoutCancellationsInput = {
+  update: Prisma.XOR<Prisma.CalculationDocumentUpdateWithoutCancellationsInput, Prisma.CalculationDocumentUncheckedUpdateWithoutCancellationsInput>
+  create: Prisma.XOR<Prisma.CalculationDocumentCreateWithoutCancellationsInput, Prisma.CalculationDocumentUncheckedCreateWithoutCancellationsInput>
+  where?: Prisma.CalculationDocumentWhereInput
+}
+
+export type CalculationDocumentUpdateToOneWithWhereWithoutCancellationsInput = {
+  where?: Prisma.CalculationDocumentWhereInput
+  data: Prisma.XOR<Prisma.CalculationDocumentUpdateWithoutCancellationsInput, Prisma.CalculationDocumentUncheckedUpdateWithoutCancellationsInput>
+}
+
+export type CalculationDocumentUpdateWithoutCancellationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  documentType?: Prisma.EnumCalculationDocumentTypeFieldUpdateOperationsInput | $Enums.CalculationDocumentType
+  documentNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumDocumentStatusFieldUpdateOperationsInput | $Enums.DocumentStatus
+  issueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  customerNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  internalNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pdfStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  netAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  vatAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  grossAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  paidAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  dataSnapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  canceledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eInvoiceFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eInvoiceStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  calculation?: Prisma.CalculationUpdateOneRequiredWithoutDocumentsNestedInput
+  cancelOf?: Prisma.CalculationDocumentUpdateOneWithoutCancellationsNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutDocumentNestedInput
+  dunningNotices?: Prisma.DunningNoticeUpdateManyWithoutDocumentNestedInput
+}
+
+export type CalculationDocumentUncheckedUpdateWithoutCancellationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  calculationId?: Prisma.StringFieldUpdateOperationsInput | string
+  documentType?: Prisma.EnumCalculationDocumentTypeFieldUpdateOperationsInput | $Enums.CalculationDocumentType
+  documentNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumDocumentStatusFieldUpdateOperationsInput | $Enums.DocumentStatus
+  issueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  customerNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  internalNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pdfStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  netAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  vatAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  grossAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  paidAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  dataSnapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  canceledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cancelOfId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eInvoiceFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eInvoiceStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutDocumentNestedInput
+  dunningNotices?: Prisma.DunningNoticeUncheckedUpdateManyWithoutDocumentNestedInput
+}
+
+export type CalculationDocumentUpsertWithWhereUniqueWithoutCancelOfInput = {
+  where: Prisma.CalculationDocumentWhereUniqueInput
+  update: Prisma.XOR<Prisma.CalculationDocumentUpdateWithoutCancelOfInput, Prisma.CalculationDocumentUncheckedUpdateWithoutCancelOfInput>
+  create: Prisma.XOR<Prisma.CalculationDocumentCreateWithoutCancelOfInput, Prisma.CalculationDocumentUncheckedCreateWithoutCancelOfInput>
+}
+
+export type CalculationDocumentUpdateWithWhereUniqueWithoutCancelOfInput = {
+  where: Prisma.CalculationDocumentWhereUniqueInput
+  data: Prisma.XOR<Prisma.CalculationDocumentUpdateWithoutCancelOfInput, Prisma.CalculationDocumentUncheckedUpdateWithoutCancelOfInput>
+}
+
+export type CalculationDocumentUpdateManyWithWhereWithoutCancelOfInput = {
+  where: Prisma.CalculationDocumentScalarWhereInput
+  data: Prisma.XOR<Prisma.CalculationDocumentUpdateManyMutationInput, Prisma.CalculationDocumentUncheckedUpdateManyWithoutCancelOfInput>
+}
+
+export type CalculationDocumentCreateWithoutPaymentsInput = {
+  id?: string
+  documentType: $Enums.CalculationDocumentType
+  documentNumber: string
+  status?: $Enums.DocumentStatus
+  issueDate?: Date | string
+  dueDate?: Date | string | null
+  customerNote?: string | null
+  internalNote?: string | null
+  pdfStorageKey?: string | null
+  sentAt?: Date | string | null
+  netAmount?: number
+  vatAmount?: number
+  grossAmount?: number
+  paidAmount?: number
+  paidAt?: Date | string | null
+  dataSnapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  canceledAt?: Date | string | null
+  cancelReason?: string | null
+  eInvoiceFormat?: string | null
+  eInvoiceStorageKey?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  calculation: Prisma.CalculationCreateNestedOneWithoutDocumentsInput
+  cancelOf?: Prisma.CalculationDocumentCreateNestedOneWithoutCancellationsInput
+  cancellations?: Prisma.CalculationDocumentCreateNestedManyWithoutCancelOfInput
+  dunningNotices?: Prisma.DunningNoticeCreateNestedManyWithoutDocumentInput
+}
+
+export type CalculationDocumentUncheckedCreateWithoutPaymentsInput = {
+  id?: string
+  calculationId: string
+  documentType: $Enums.CalculationDocumentType
+  documentNumber: string
+  status?: $Enums.DocumentStatus
+  issueDate?: Date | string
+  dueDate?: Date | string | null
+  customerNote?: string | null
+  internalNote?: string | null
+  pdfStorageKey?: string | null
+  sentAt?: Date | string | null
+  netAmount?: number
+  vatAmount?: number
+  grossAmount?: number
+  paidAmount?: number
+  paidAt?: Date | string | null
+  dataSnapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  canceledAt?: Date | string | null
+  cancelReason?: string | null
+  cancelOfId?: string | null
+  eInvoiceFormat?: string | null
+  eInvoiceStorageKey?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  cancellations?: Prisma.CalculationDocumentUncheckedCreateNestedManyWithoutCancelOfInput
+  dunningNotices?: Prisma.DunningNoticeUncheckedCreateNestedManyWithoutDocumentInput
+}
+
+export type CalculationDocumentCreateOrConnectWithoutPaymentsInput = {
+  where: Prisma.CalculationDocumentWhereUniqueInput
+  create: Prisma.XOR<Prisma.CalculationDocumentCreateWithoutPaymentsInput, Prisma.CalculationDocumentUncheckedCreateWithoutPaymentsInput>
+}
+
+export type CalculationDocumentUpsertWithoutPaymentsInput = {
+  update: Prisma.XOR<Prisma.CalculationDocumentUpdateWithoutPaymentsInput, Prisma.CalculationDocumentUncheckedUpdateWithoutPaymentsInput>
+  create: Prisma.XOR<Prisma.CalculationDocumentCreateWithoutPaymentsInput, Prisma.CalculationDocumentUncheckedCreateWithoutPaymentsInput>
+  where?: Prisma.CalculationDocumentWhereInput
+}
+
+export type CalculationDocumentUpdateToOneWithWhereWithoutPaymentsInput = {
+  where?: Prisma.CalculationDocumentWhereInput
+  data: Prisma.XOR<Prisma.CalculationDocumentUpdateWithoutPaymentsInput, Prisma.CalculationDocumentUncheckedUpdateWithoutPaymentsInput>
+}
+
+export type CalculationDocumentUpdateWithoutPaymentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  documentType?: Prisma.EnumCalculationDocumentTypeFieldUpdateOperationsInput | $Enums.CalculationDocumentType
+  documentNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumDocumentStatusFieldUpdateOperationsInput | $Enums.DocumentStatus
+  issueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  customerNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  internalNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pdfStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  netAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  vatAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  grossAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  paidAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  dataSnapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  canceledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eInvoiceFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eInvoiceStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  calculation?: Prisma.CalculationUpdateOneRequiredWithoutDocumentsNestedInput
+  cancelOf?: Prisma.CalculationDocumentUpdateOneWithoutCancellationsNestedInput
+  cancellations?: Prisma.CalculationDocumentUpdateManyWithoutCancelOfNestedInput
+  dunningNotices?: Prisma.DunningNoticeUpdateManyWithoutDocumentNestedInput
+}
+
+export type CalculationDocumentUncheckedUpdateWithoutPaymentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  calculationId?: Prisma.StringFieldUpdateOperationsInput | string
+  documentType?: Prisma.EnumCalculationDocumentTypeFieldUpdateOperationsInput | $Enums.CalculationDocumentType
+  documentNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumDocumentStatusFieldUpdateOperationsInput | $Enums.DocumentStatus
+  issueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  customerNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  internalNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pdfStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  netAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  vatAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  grossAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  paidAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  dataSnapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  canceledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cancelOfId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eInvoiceFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eInvoiceStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  cancellations?: Prisma.CalculationDocumentUncheckedUpdateManyWithoutCancelOfNestedInput
+  dunningNotices?: Prisma.DunningNoticeUncheckedUpdateManyWithoutDocumentNestedInput
+}
+
+export type CalculationDocumentCreateWithoutDunningNoticesInput = {
+  id?: string
+  documentType: $Enums.CalculationDocumentType
+  documentNumber: string
+  status?: $Enums.DocumentStatus
+  issueDate?: Date | string
+  dueDate?: Date | string | null
+  customerNote?: string | null
+  internalNote?: string | null
+  pdfStorageKey?: string | null
+  sentAt?: Date | string | null
+  netAmount?: number
+  vatAmount?: number
+  grossAmount?: number
+  paidAmount?: number
+  paidAt?: Date | string | null
+  dataSnapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  canceledAt?: Date | string | null
+  cancelReason?: string | null
+  eInvoiceFormat?: string | null
+  eInvoiceStorageKey?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  calculation: Prisma.CalculationCreateNestedOneWithoutDocumentsInput
+  cancelOf?: Prisma.CalculationDocumentCreateNestedOneWithoutCancellationsInput
+  cancellations?: Prisma.CalculationDocumentCreateNestedManyWithoutCancelOfInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutDocumentInput
+}
+
+export type CalculationDocumentUncheckedCreateWithoutDunningNoticesInput = {
+  id?: string
+  calculationId: string
+  documentType: $Enums.CalculationDocumentType
+  documentNumber: string
+  status?: $Enums.DocumentStatus
+  issueDate?: Date | string
+  dueDate?: Date | string | null
+  customerNote?: string | null
+  internalNote?: string | null
+  pdfStorageKey?: string | null
+  sentAt?: Date | string | null
+  netAmount?: number
+  vatAmount?: number
+  grossAmount?: number
+  paidAmount?: number
+  paidAt?: Date | string | null
+  dataSnapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  canceledAt?: Date | string | null
+  cancelReason?: string | null
+  cancelOfId?: string | null
+  eInvoiceFormat?: string | null
+  eInvoiceStorageKey?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  cancellations?: Prisma.CalculationDocumentUncheckedCreateNestedManyWithoutCancelOfInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutDocumentInput
+}
+
+export type CalculationDocumentCreateOrConnectWithoutDunningNoticesInput = {
+  where: Prisma.CalculationDocumentWhereUniqueInput
+  create: Prisma.XOR<Prisma.CalculationDocumentCreateWithoutDunningNoticesInput, Prisma.CalculationDocumentUncheckedCreateWithoutDunningNoticesInput>
+}
+
+export type CalculationDocumentUpsertWithoutDunningNoticesInput = {
+  update: Prisma.XOR<Prisma.CalculationDocumentUpdateWithoutDunningNoticesInput, Prisma.CalculationDocumentUncheckedUpdateWithoutDunningNoticesInput>
+  create: Prisma.XOR<Prisma.CalculationDocumentCreateWithoutDunningNoticesInput, Prisma.CalculationDocumentUncheckedCreateWithoutDunningNoticesInput>
+  where?: Prisma.CalculationDocumentWhereInput
+}
+
+export type CalculationDocumentUpdateToOneWithWhereWithoutDunningNoticesInput = {
+  where?: Prisma.CalculationDocumentWhereInput
+  data: Prisma.XOR<Prisma.CalculationDocumentUpdateWithoutDunningNoticesInput, Prisma.CalculationDocumentUncheckedUpdateWithoutDunningNoticesInput>
+}
+
+export type CalculationDocumentUpdateWithoutDunningNoticesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  documentType?: Prisma.EnumCalculationDocumentTypeFieldUpdateOperationsInput | $Enums.CalculationDocumentType
+  documentNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumDocumentStatusFieldUpdateOperationsInput | $Enums.DocumentStatus
+  issueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  customerNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  internalNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pdfStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  netAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  vatAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  grossAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  paidAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  dataSnapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  canceledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eInvoiceFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eInvoiceStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  calculation?: Prisma.CalculationUpdateOneRequiredWithoutDocumentsNestedInput
+  cancelOf?: Prisma.CalculationDocumentUpdateOneWithoutCancellationsNestedInput
+  cancellations?: Prisma.CalculationDocumentUpdateManyWithoutCancelOfNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutDocumentNestedInput
+}
+
+export type CalculationDocumentUncheckedUpdateWithoutDunningNoticesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  calculationId?: Prisma.StringFieldUpdateOperationsInput | string
+  documentType?: Prisma.EnumCalculationDocumentTypeFieldUpdateOperationsInput | $Enums.CalculationDocumentType
+  documentNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumDocumentStatusFieldUpdateOperationsInput | $Enums.DocumentStatus
+  issueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  customerNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  internalNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pdfStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  netAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  vatAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  grossAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  paidAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  dataSnapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  canceledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cancelOfId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eInvoiceFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eInvoiceStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  cancellations?: Prisma.CalculationDocumentUncheckedUpdateManyWithoutCancelOfNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutDocumentNestedInput
+}
+
+export type CalculationDocumentCreateManyCalculationInput = {
+  id?: string
+  documentType: $Enums.CalculationDocumentType
+  documentNumber: string
+  status?: $Enums.DocumentStatus
+  issueDate?: Date | string
+  dueDate?: Date | string | null
+  customerNote?: string | null
+  internalNote?: string | null
+  pdfStorageKey?: string | null
+  sentAt?: Date | string | null
+  netAmount?: number
+  vatAmount?: number
+  grossAmount?: number
+  paidAmount?: number
+  paidAt?: Date | string | null
+  dataSnapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  canceledAt?: Date | string | null
+  cancelReason?: string | null
+  cancelOfId?: string | null
+  eInvoiceFormat?: string | null
+  eInvoiceStorageKey?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -607,44 +1584,243 @@ export type CalculationDocumentUpdateWithoutCalculationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   documentType?: Prisma.EnumCalculationDocumentTypeFieldUpdateOperationsInput | $Enums.CalculationDocumentType
   documentNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumDocumentStatusFieldUpdateOperationsInput | $Enums.DocumentStatus
   issueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   customerNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   internalNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pdfStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  netAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  vatAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  grossAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  paidAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  dataSnapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  canceledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eInvoiceFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eInvoiceStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  cancelOf?: Prisma.CalculationDocumentUpdateOneWithoutCancellationsNestedInput
+  cancellations?: Prisma.CalculationDocumentUpdateManyWithoutCancelOfNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutDocumentNestedInput
+  dunningNotices?: Prisma.DunningNoticeUpdateManyWithoutDocumentNestedInput
 }
 
 export type CalculationDocumentUncheckedUpdateWithoutCalculationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   documentType?: Prisma.EnumCalculationDocumentTypeFieldUpdateOperationsInput | $Enums.CalculationDocumentType
   documentNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumDocumentStatusFieldUpdateOperationsInput | $Enums.DocumentStatus
   issueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   customerNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   internalNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pdfStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  netAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  vatAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  grossAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  paidAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  dataSnapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  canceledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cancelOfId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eInvoiceFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eInvoiceStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  cancellations?: Prisma.CalculationDocumentUncheckedUpdateManyWithoutCancelOfNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutDocumentNestedInput
+  dunningNotices?: Prisma.DunningNoticeUncheckedUpdateManyWithoutDocumentNestedInput
 }
 
 export type CalculationDocumentUncheckedUpdateManyWithoutCalculationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   documentType?: Prisma.EnumCalculationDocumentTypeFieldUpdateOperationsInput | $Enums.CalculationDocumentType
   documentNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumDocumentStatusFieldUpdateOperationsInput | $Enums.DocumentStatus
   issueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   customerNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   internalNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pdfStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  netAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  vatAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  grossAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  paidAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  dataSnapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  canceledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cancelOfId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eInvoiceFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eInvoiceStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+export type CalculationDocumentCreateManyCancelOfInput = {
+  id?: string
+  calculationId: string
+  documentType: $Enums.CalculationDocumentType
+  documentNumber: string
+  status?: $Enums.DocumentStatus
+  issueDate?: Date | string
+  dueDate?: Date | string | null
+  customerNote?: string | null
+  internalNote?: string | null
+  pdfStorageKey?: string | null
+  sentAt?: Date | string | null
+  netAmount?: number
+  vatAmount?: number
+  grossAmount?: number
+  paidAmount?: number
+  paidAt?: Date | string | null
+  dataSnapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  canceledAt?: Date | string | null
+  cancelReason?: string | null
+  eInvoiceFormat?: string | null
+  eInvoiceStorageKey?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type CalculationDocumentUpdateWithoutCancelOfInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  documentType?: Prisma.EnumCalculationDocumentTypeFieldUpdateOperationsInput | $Enums.CalculationDocumentType
+  documentNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumDocumentStatusFieldUpdateOperationsInput | $Enums.DocumentStatus
+  issueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  customerNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  internalNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pdfStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  netAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  vatAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  grossAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  paidAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  dataSnapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  canceledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eInvoiceFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eInvoiceStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  calculation?: Prisma.CalculationUpdateOneRequiredWithoutDocumentsNestedInput
+  cancellations?: Prisma.CalculationDocumentUpdateManyWithoutCancelOfNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutDocumentNestedInput
+  dunningNotices?: Prisma.DunningNoticeUpdateManyWithoutDocumentNestedInput
+}
+
+export type CalculationDocumentUncheckedUpdateWithoutCancelOfInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  calculationId?: Prisma.StringFieldUpdateOperationsInput | string
+  documentType?: Prisma.EnumCalculationDocumentTypeFieldUpdateOperationsInput | $Enums.CalculationDocumentType
+  documentNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumDocumentStatusFieldUpdateOperationsInput | $Enums.DocumentStatus
+  issueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  customerNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  internalNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pdfStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  netAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  vatAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  grossAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  paidAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  dataSnapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  canceledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eInvoiceFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eInvoiceStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  cancellations?: Prisma.CalculationDocumentUncheckedUpdateManyWithoutCancelOfNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutDocumentNestedInput
+  dunningNotices?: Prisma.DunningNoticeUncheckedUpdateManyWithoutDocumentNestedInput
+}
+
+export type CalculationDocumentUncheckedUpdateManyWithoutCancelOfInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  calculationId?: Prisma.StringFieldUpdateOperationsInput | string
+  documentType?: Prisma.EnumCalculationDocumentTypeFieldUpdateOperationsInput | $Enums.CalculationDocumentType
+  documentNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumDocumentStatusFieldUpdateOperationsInput | $Enums.DocumentStatus
+  issueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  customerNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  internalNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pdfStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  netAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  vatAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  grossAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  paidAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  dataSnapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  canceledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eInvoiceFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eInvoiceStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+
+/**
+ * Count Type CalculationDocumentCountOutputType
+ */
+
+export type CalculationDocumentCountOutputType = {
+  cancellations: number
+  payments: number
+  dunningNotices: number
+}
+
+export type CalculationDocumentCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  cancellations?: boolean | CalculationDocumentCountOutputTypeCountCancellationsArgs
+  payments?: boolean | CalculationDocumentCountOutputTypeCountPaymentsArgs
+  dunningNotices?: boolean | CalculationDocumentCountOutputTypeCountDunningNoticesArgs
+}
+
+/**
+ * CalculationDocumentCountOutputType without action
+ */
+export type CalculationDocumentCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CalculationDocumentCountOutputType
+   */
+  select?: Prisma.CalculationDocumentCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * CalculationDocumentCountOutputType without action
+ */
+export type CalculationDocumentCountOutputTypeCountCancellationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CalculationDocumentWhereInput
+}
+
+/**
+ * CalculationDocumentCountOutputType without action
+ */
+export type CalculationDocumentCountOutputTypeCountPaymentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PaymentWhereInput
+}
+
+/**
+ * CalculationDocumentCountOutputType without action
+ */
+export type CalculationDocumentCountOutputTypeCountDunningNoticesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DunningNoticeWhereInput
+}
 
 
 export type CalculationDocumentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -652,15 +1828,32 @@ export type CalculationDocumentSelect<ExtArgs extends runtime.Types.Extensions.I
   calculationId?: boolean
   documentType?: boolean
   documentNumber?: boolean
+  status?: boolean
   issueDate?: boolean
   dueDate?: boolean
   customerNote?: boolean
   internalNote?: boolean
   pdfStorageKey?: boolean
   sentAt?: boolean
+  netAmount?: boolean
+  vatAmount?: boolean
+  grossAmount?: boolean
+  paidAmount?: boolean
+  paidAt?: boolean
+  dataSnapshotJson?: boolean
+  canceledAt?: boolean
+  cancelReason?: boolean
+  cancelOfId?: boolean
+  eInvoiceFormat?: boolean
+  eInvoiceStorageKey?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   calculation?: boolean | Prisma.CalculationDefaultArgs<ExtArgs>
+  cancelOf?: boolean | Prisma.CalculationDocument$cancelOfArgs<ExtArgs>
+  cancellations?: boolean | Prisma.CalculationDocument$cancellationsArgs<ExtArgs>
+  payments?: boolean | Prisma.CalculationDocument$paymentsArgs<ExtArgs>
+  dunningNotices?: boolean | Prisma.CalculationDocument$dunningNoticesArgs<ExtArgs>
+  _count?: boolean | Prisma.CalculationDocumentCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["calculationDocument"]>
 
 export type CalculationDocumentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -668,15 +1861,28 @@ export type CalculationDocumentSelectCreateManyAndReturn<ExtArgs extends runtime
   calculationId?: boolean
   documentType?: boolean
   documentNumber?: boolean
+  status?: boolean
   issueDate?: boolean
   dueDate?: boolean
   customerNote?: boolean
   internalNote?: boolean
   pdfStorageKey?: boolean
   sentAt?: boolean
+  netAmount?: boolean
+  vatAmount?: boolean
+  grossAmount?: boolean
+  paidAmount?: boolean
+  paidAt?: boolean
+  dataSnapshotJson?: boolean
+  canceledAt?: boolean
+  cancelReason?: boolean
+  cancelOfId?: boolean
+  eInvoiceFormat?: boolean
+  eInvoiceStorageKey?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   calculation?: boolean | Prisma.CalculationDefaultArgs<ExtArgs>
+  cancelOf?: boolean | Prisma.CalculationDocument$cancelOfArgs<ExtArgs>
 }, ExtArgs["result"]["calculationDocument"]>
 
 export type CalculationDocumentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -684,15 +1890,28 @@ export type CalculationDocumentSelectUpdateManyAndReturn<ExtArgs extends runtime
   calculationId?: boolean
   documentType?: boolean
   documentNumber?: boolean
+  status?: boolean
   issueDate?: boolean
   dueDate?: boolean
   customerNote?: boolean
   internalNote?: boolean
   pdfStorageKey?: boolean
   sentAt?: boolean
+  netAmount?: boolean
+  vatAmount?: boolean
+  grossAmount?: boolean
+  paidAmount?: boolean
+  paidAt?: boolean
+  dataSnapshotJson?: boolean
+  canceledAt?: boolean
+  cancelReason?: boolean
+  cancelOfId?: boolean
+  eInvoiceFormat?: boolean
+  eInvoiceStorageKey?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   calculation?: boolean | Prisma.CalculationDefaultArgs<ExtArgs>
+  cancelOf?: boolean | Prisma.CalculationDocument$cancelOfArgs<ExtArgs>
 }, ExtArgs["result"]["calculationDocument"]>
 
 export type CalculationDocumentSelectScalar = {
@@ -700,43 +1919,78 @@ export type CalculationDocumentSelectScalar = {
   calculationId?: boolean
   documentType?: boolean
   documentNumber?: boolean
+  status?: boolean
   issueDate?: boolean
   dueDate?: boolean
   customerNote?: boolean
   internalNote?: boolean
   pdfStorageKey?: boolean
   sentAt?: boolean
+  netAmount?: boolean
+  vatAmount?: boolean
+  grossAmount?: boolean
+  paidAmount?: boolean
+  paidAt?: boolean
+  dataSnapshotJson?: boolean
+  canceledAt?: boolean
+  cancelReason?: boolean
+  cancelOfId?: boolean
+  eInvoiceFormat?: boolean
+  eInvoiceStorageKey?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type CalculationDocumentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "calculationId" | "documentType" | "documentNumber" | "issueDate" | "dueDate" | "customerNote" | "internalNote" | "pdfStorageKey" | "sentAt" | "createdAt" | "updatedAt", ExtArgs["result"]["calculationDocument"]>
+export type CalculationDocumentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "calculationId" | "documentType" | "documentNumber" | "status" | "issueDate" | "dueDate" | "customerNote" | "internalNote" | "pdfStorageKey" | "sentAt" | "netAmount" | "vatAmount" | "grossAmount" | "paidAmount" | "paidAt" | "dataSnapshotJson" | "canceledAt" | "cancelReason" | "cancelOfId" | "eInvoiceFormat" | "eInvoiceStorageKey" | "createdAt" | "updatedAt", ExtArgs["result"]["calculationDocument"]>
 export type CalculationDocumentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   calculation?: boolean | Prisma.CalculationDefaultArgs<ExtArgs>
+  cancelOf?: boolean | Prisma.CalculationDocument$cancelOfArgs<ExtArgs>
+  cancellations?: boolean | Prisma.CalculationDocument$cancellationsArgs<ExtArgs>
+  payments?: boolean | Prisma.CalculationDocument$paymentsArgs<ExtArgs>
+  dunningNotices?: boolean | Prisma.CalculationDocument$dunningNoticesArgs<ExtArgs>
+  _count?: boolean | Prisma.CalculationDocumentCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type CalculationDocumentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   calculation?: boolean | Prisma.CalculationDefaultArgs<ExtArgs>
+  cancelOf?: boolean | Prisma.CalculationDocument$cancelOfArgs<ExtArgs>
 }
 export type CalculationDocumentIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   calculation?: boolean | Prisma.CalculationDefaultArgs<ExtArgs>
+  cancelOf?: boolean | Prisma.CalculationDocument$cancelOfArgs<ExtArgs>
 }
 
 export type $CalculationDocumentPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "CalculationDocument"
   objects: {
     calculation: Prisma.$CalculationPayload<ExtArgs>
+    cancelOf: Prisma.$CalculationDocumentPayload<ExtArgs> | null
+    cancellations: Prisma.$CalculationDocumentPayload<ExtArgs>[]
+    payments: Prisma.$PaymentPayload<ExtArgs>[]
+    dunningNotices: Prisma.$DunningNoticePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     calculationId: string
     documentType: $Enums.CalculationDocumentType
     documentNumber: string
+    status: $Enums.DocumentStatus
     issueDate: Date
     dueDate: Date | null
     customerNote: string | null
     internalNote: string | null
     pdfStorageKey: string | null
     sentAt: Date | null
+    netAmount: number
+    vatAmount: number
+    grossAmount: number
+    paidAmount: number
+    paidAt: Date | null
+    dataSnapshotJson: runtime.JsonValue | null
+    canceledAt: Date | null
+    cancelReason: string | null
+    cancelOfId: string | null
+    eInvoiceFormat: string | null
+    eInvoiceStorageKey: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["calculationDocument"]>
@@ -1134,6 +2388,10 @@ readonly fields: CalculationDocumentFieldRefs;
 export interface Prisma__CalculationDocumentClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   calculation<T extends Prisma.CalculationDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CalculationDefaultArgs<ExtArgs>>): Prisma.Prisma__CalculationClient<runtime.Types.Result.GetResult<Prisma.$CalculationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  cancelOf<T extends Prisma.CalculationDocument$cancelOfArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CalculationDocument$cancelOfArgs<ExtArgs>>): Prisma.Prisma__CalculationDocumentClient<runtime.Types.Result.GetResult<Prisma.$CalculationDocumentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  cancellations<T extends Prisma.CalculationDocument$cancellationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CalculationDocument$cancellationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CalculationDocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  payments<T extends Prisma.CalculationDocument$paymentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CalculationDocument$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  dunningNotices<T extends Prisma.CalculationDocument$dunningNoticesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CalculationDocument$dunningNoticesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DunningNoticePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1167,12 +2425,24 @@ export interface CalculationDocumentFieldRefs {
   readonly calculationId: Prisma.FieldRef<"CalculationDocument", 'String'>
   readonly documentType: Prisma.FieldRef<"CalculationDocument", 'CalculationDocumentType'>
   readonly documentNumber: Prisma.FieldRef<"CalculationDocument", 'String'>
+  readonly status: Prisma.FieldRef<"CalculationDocument", 'DocumentStatus'>
   readonly issueDate: Prisma.FieldRef<"CalculationDocument", 'DateTime'>
   readonly dueDate: Prisma.FieldRef<"CalculationDocument", 'DateTime'>
   readonly customerNote: Prisma.FieldRef<"CalculationDocument", 'String'>
   readonly internalNote: Prisma.FieldRef<"CalculationDocument", 'String'>
   readonly pdfStorageKey: Prisma.FieldRef<"CalculationDocument", 'String'>
   readonly sentAt: Prisma.FieldRef<"CalculationDocument", 'DateTime'>
+  readonly netAmount: Prisma.FieldRef<"CalculationDocument", 'Float'>
+  readonly vatAmount: Prisma.FieldRef<"CalculationDocument", 'Float'>
+  readonly grossAmount: Prisma.FieldRef<"CalculationDocument", 'Float'>
+  readonly paidAmount: Prisma.FieldRef<"CalculationDocument", 'Float'>
+  readonly paidAt: Prisma.FieldRef<"CalculationDocument", 'DateTime'>
+  readonly dataSnapshotJson: Prisma.FieldRef<"CalculationDocument", 'Json'>
+  readonly canceledAt: Prisma.FieldRef<"CalculationDocument", 'DateTime'>
+  readonly cancelReason: Prisma.FieldRef<"CalculationDocument", 'String'>
+  readonly cancelOfId: Prisma.FieldRef<"CalculationDocument", 'String'>
+  readonly eInvoiceFormat: Prisma.FieldRef<"CalculationDocument", 'String'>
+  readonly eInvoiceStorageKey: Prisma.FieldRef<"CalculationDocument", 'String'>
   readonly createdAt: Prisma.FieldRef<"CalculationDocument", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"CalculationDocument", 'DateTime'>
 }
@@ -1573,6 +2843,97 @@ export type CalculationDocumentDeleteManyArgs<ExtArgs extends runtime.Types.Exte
    * Limit how many CalculationDocuments to delete.
    */
   limit?: number
+}
+
+/**
+ * CalculationDocument.cancelOf
+ */
+export type CalculationDocument$cancelOfArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CalculationDocument
+   */
+  select?: Prisma.CalculationDocumentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CalculationDocument
+   */
+  omit?: Prisma.CalculationDocumentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CalculationDocumentInclude<ExtArgs> | null
+  where?: Prisma.CalculationDocumentWhereInput
+}
+
+/**
+ * CalculationDocument.cancellations
+ */
+export type CalculationDocument$cancellationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CalculationDocument
+   */
+  select?: Prisma.CalculationDocumentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CalculationDocument
+   */
+  omit?: Prisma.CalculationDocumentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CalculationDocumentInclude<ExtArgs> | null
+  where?: Prisma.CalculationDocumentWhereInput
+  orderBy?: Prisma.CalculationDocumentOrderByWithRelationInput | Prisma.CalculationDocumentOrderByWithRelationInput[]
+  cursor?: Prisma.CalculationDocumentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CalculationDocumentScalarFieldEnum | Prisma.CalculationDocumentScalarFieldEnum[]
+}
+
+/**
+ * CalculationDocument.payments
+ */
+export type CalculationDocument$paymentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Payment
+   */
+  select?: Prisma.PaymentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Payment
+   */
+  omit?: Prisma.PaymentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PaymentInclude<ExtArgs> | null
+  where?: Prisma.PaymentWhereInput
+  orderBy?: Prisma.PaymentOrderByWithRelationInput | Prisma.PaymentOrderByWithRelationInput[]
+  cursor?: Prisma.PaymentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PaymentScalarFieldEnum | Prisma.PaymentScalarFieldEnum[]
+}
+
+/**
+ * CalculationDocument.dunningNotices
+ */
+export type CalculationDocument$dunningNoticesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DunningNotice
+   */
+  select?: Prisma.DunningNoticeSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the DunningNotice
+   */
+  omit?: Prisma.DunningNoticeOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DunningNoticeInclude<ExtArgs> | null
+  where?: Prisma.DunningNoticeWhereInput
+  orderBy?: Prisma.DunningNoticeOrderByWithRelationInput | Prisma.DunningNoticeOrderByWithRelationInput[]
+  cursor?: Prisma.DunningNoticeWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DunningNoticeScalarFieldEnum | Prisma.DunningNoticeScalarFieldEnum[]
 }
 
 /**

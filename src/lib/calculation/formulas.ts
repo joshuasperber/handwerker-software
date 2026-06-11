@@ -217,10 +217,19 @@ export function calcProcurementTotal(params: {
   );
 }
 
+export interface TravelZoneLike {
+  id?: string;
+  minKm: number;
+  maxKm: number | null;
+  name: string;
+  flatFeeNet: number;
+  useFormula: boolean;
+}
+
 export function selectTravelZone(
   distanceKm: number,
-  zones: { minKm: number; maxKm: number | null; name: string; flatFeeNet: number; useFormula: boolean }[]
-): (typeof zones)[0] | null {
+  zones: TravelZoneLike[]
+): TravelZoneLike | null {
   const sorted = [...zones].sort((a, b) => a.minKm - b.minKm);
   for (const zone of sorted) {
     if (distanceKm >= zone.minKm) {
@@ -232,26 +241,29 @@ export function selectTravelZone(
   return sorted[sorted.length - 1] ?? null;
 }
 
-export function calcTravelTotal(params: {
-  distanceKm: number;
-  estimatedDriveTimeHours: number;
-  zones: { minKm: number; maxKm: number | null; name: string; flatFeeNet: number; useFormula: boolean }[];
-  kilometerRateNet: number;
-  travelHourlyRateNet: number;
-  parkingFeesNet: number;
-  tollFeesNet: number;
-  otherTravelCostsNet: number;
-}): {
+export type TravelTotalResult = {
   total: number;
   zoneName: string;
+  zoneId?: string;
   mode: "ZONE_FLAT_FEE" | "FORMULA";
   flatFee: number;
-} {
-  const zone = selectTravelZone(params.distanceKm, params.zones);
-  if (!zone) {
-    return { total: 0, zoneName: "Keine Zone", mode: "ZONE_FLAT_FEE", flatFee: 0 };
-  }
+  /** true, wenn keine Zone bestimmt werden konnte (Kosten 0, Hinweis erforderlich) */
+  noZone: boolean;
+};
 
+/** Berechnet die Kosten einer konkreten (zugeordneten) Zone. */
+export function calcTravelTotalForZone(
+  zone: TravelZoneLike,
+  params: {
+    distanceKm: number;
+    estimatedDriveTimeHours: number;
+    kilometerRateNet: number;
+    travelHourlyRateNet: number;
+    parkingFeesNet: number;
+    tollFeesNet: number;
+    otherTravelCostsNet: number;
+  }
+): TravelTotalResult {
   if (zone.useFormula) {
     const total = roundMoney(
       params.distanceKm * params.kilometerRateNet +
@@ -260,15 +272,45 @@ export function calcTravelTotal(params: {
         params.tollFeesNet +
         params.otherTravelCostsNet
     );
-    return { total, zoneName: zone.name, mode: "FORMULA", flatFee: 0 };
+    return { total, zoneName: zone.name, zoneId: zone.id, mode: "FORMULA", flatFee: 0, noZone: false };
   }
 
   return {
     total: roundMoney(zone.flatFeeNet),
     zoneName: zone.name,
+    zoneId: zone.id,
     mode: "ZONE_FLAT_FEE",
     flatFee: zone.flatFeeNet,
+    noZone: false,
   };
+}
+
+export function calcTravelTotal(params: {
+  distanceKm: number;
+  estimatedDriveTimeHours: number;
+  zones: TravelZoneLike[];
+  kilometerRateNet: number;
+  travelHourlyRateNet: number;
+  parkingFeesNet: number;
+  tollFeesNet: number;
+  otherTravelCostsNet: number;
+  /** Wenn gesetzt, wird diese Zone fest verwendet (Standort-Zuordnung) statt Auswahl nach Entfernung. */
+  selectedZoneId?: string | null;
+}): TravelTotalResult {
+  // 1) Fest zugeordnete Zone (Kunde → Standort → Zone) hat Vorrang.
+  const forced =
+    params.selectedZoneId != null
+      ? params.zones.find((z) => z.id === params.selectedZoneId)
+      : undefined;
+
+  // 2) Sonst Auswahl nach Entfernung (Rückwärtskompatibilität).
+  const zone = forced ?? selectTravelZone(params.distanceKm, params.zones);
+
+  if (!zone) {
+    return { total: 0, zoneName: "Keine Zone", mode: "ZONE_FLAT_FEE", flatFee: 0, noZone: true };
+  }
+
+  return calcTravelTotalForZone(zone, params);
 }
 
 export function calcAdditionalTotal(

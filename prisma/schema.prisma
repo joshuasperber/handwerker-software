@@ -13,6 +13,14 @@ enum UserRole {
   BUERO
   MONTEUR
   KUNDE
+  GAST
+}
+
+enum InvitationStatus {
+  PENDING
+  ACCEPTED
+  EXPIRED
+  REVOKED
 }
 
 enum OrderStatus {
@@ -45,6 +53,7 @@ enum AppointmentStatus {
 enum NotificationChannel {
   EMAIL
   SMS
+  IN_APP
 }
 
 enum NotificationType {
@@ -53,6 +62,13 @@ enum NotificationType {
   VERSPAETUNG
   ABSCHLUSS
   STATUSAENDERUNG
+  EINLADUNG
+  NACHRICHT
+  FREIGABE
+  RECHNUNG
+  MAHNUNG
+  BESTELLVORSCHLAG
+  SYSTEM
 }
 
 enum FileCategory {
@@ -63,6 +79,13 @@ enum FileCategory {
   ABSCHLUSS
   PLAN
   GRUNDRISS
+  AUFMASS
+  BAUSTELLE
+  WOHNUNG
+  BESONDERHEITEN
+  SCHAEDEN
+  MONTAGE
+  BESONDERE_SITUATION
 }
 
 enum QuestionType {
@@ -117,6 +140,13 @@ model Tenant {
   manualReorderSuggestions ManualReorderSuggestion[]
   teams              Team[]
   vehicles           Vehicle[]
+  invitations        Invitation[]
+  orderShares        OrderShare[]
+  documentSequences  DocumentSequence[]
+  payments           Payment[]
+  dunningNotices     DunningNotice[]
+  inAppNotifications    Notification[]
+  notificationSettings NotificationSettings?
 }
 
 model User {
@@ -127,8 +157,11 @@ model User {
   firstName    String
   lastName     String
   phone        String?
+  address      String?
+  avatarUrl    String?
   role         UserRole
   isActive     Boolean  @default(true)
+  mustChangePassword Boolean @default(false)
   lastLoginAt  DateTime?
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
@@ -138,7 +171,14 @@ model User {
   customer     Customer?
   auditLogs    AuditLog[]
   sentMessages Message[] @relation("MessageSender")
+  receivedMessages Message[] @relation("MessageRecipient")
   staffRequestsSent StaffAssignmentRequest[] @relation("StaffRequestSender")
+  fileUploads  FileUpload[]
+  invitationsSent     Invitation[] @relation("InvitationInviter")
+  invitationsAccepted Invitation[] @relation("InvitationAccepted")
+  orderSharesReceived OrderShare[] @relation("ShareRecipient")
+  orderSharesCreated  OrderShare[] @relation("ShareCreator")
+  notifications       Notification[]
 
   @@unique([tenantId, email])
   @@index([tenantId, role])
@@ -170,24 +210,30 @@ model Customer {
 }
 
 model Property {
-  id         String   @id @default(cuid())
-  tenantId   String
-  customerId String
-  label      String
-  street     String
-  zipCode    String
-  city       String
-  notes      String?
-  latitude   Float?
-  longitude  Float?
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id           String   @id @default(cuid())
+  tenantId     String
+  customerId   String
+  label        String
+  street       String
+  zipCode      String
+  city         String
+  notes        String?
+  latitude     Float?
+  longitude    Float?
+  isPrimary    Boolean  @default(false)
+  isActive     Boolean  @default(true)
+  travelZoneId String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
-  tenant   Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
-  orders   Order[]
+  tenant     Tenant      @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  customer   Customer    @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  travelZone TravelZone? @relation(fields: [travelZoneId], references: [id], onDelete: SetNull)
+  orders     Order[]
 
   @@index([tenantId, zipCode])
+  @@index([customerId])
+  @@index([travelZoneId])
 }
 
 model Service {
@@ -252,6 +298,8 @@ model Employee {
   absences        EmployeeAbsence[]
   teamMemberships TeamMember[]
   staffRequests   StaffAssignmentRequest[]
+  orderPhases     OrderPhase[]
+  assignedVehicles Vehicle[]              @relation("EmployeeVehicle")
 }
 
 model EmployeeQualification {
@@ -346,6 +394,7 @@ model Order {
   team          Team?           @relation(fields: [teamId], references: [id])
   vehicle       Vehicle?        @relation(fields: [vehicleId], references: [id])
   staffRequests StaffAssignmentRequest[]
+  shares        OrderShare[]
 
   @@unique([tenantId, orderNumber])
   @@index([tenantId, status])
@@ -354,13 +403,18 @@ model Order {
 }
 
 model OrderService {
-  id        String @id @default(cuid())
-  orderId   String
-  serviceId String
-  quantity  Int    @default(1)
+  id          String  @id @default(cuid())
+  orderId     String
+  serviceId   String?
+  quantity    Int     @default(1)
+  // Freie „Sonstige Leistung“: erfasst, wenn keine Katalog-Leistung gewählt wurde.
+  customName  String?
+  description String?
+  unitPriceCents Int?
+  notes       String?
 
-  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  service Service @relation(fields: [serviceId], references: [id])
+  order   Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  service Service? @relation(fields: [serviceId], references: [id])
 }
 
 model Appointment {
@@ -372,6 +426,7 @@ model Appointment {
   endTime     DateTime
   status      AppointmentStatus @default(GEPLANT)
   notes       String?
+  reminderSentAt DateTime?
   createdAt   DateTime          @default(now())
   updatedAt   DateTime          @updatedAt
 
@@ -421,18 +476,23 @@ model OrderChecklist {
 model FileUpload {
   id           String       @id @default(cuid())
   orderId      String
+  orderPhaseId String?
   uploadedById String?
   fileName     String
   mimeType     String
   sizeBytes    Int
   storageKey   String
   category     FileCategory @default(KUNDENFOTO)
+  description  String?
   createdAt    DateTime     @default(now())
 
   order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderPhase OrderPhase? @relation(fields: [orderPhaseId], references: [id], onDelete: SetNull)
+  uploadedBy User? @relation(fields: [uploadedById], references: [id], onDelete: SetNull)
   planMarkers PlanMarker[]
 
   @@index([orderId])
+  @@index([orderPhaseId])
 }
 
 model TimeEntry {
@@ -464,23 +524,27 @@ model MaterialUsage {
 }
 
 model Message {
-  id         String   @id @default(cuid())
-  tenantId   String
-  orderId    String?
-  senderId   String?
-  recipient  String?
-  subject    String?
-  body       String
-  category   String   @default("GENERAL")
-  status     String   @default("OPEN")
-  isInternal Boolean  @default(false)
-  createdAt  DateTime @default(now())
+  id              String   @id @default(cuid())
+  tenantId        String
+  orderId         String?
+  senderId        String?
+  recipient       String?
+  recipientUserId String?
+  subject         String?
+  body            String
+  category        String   @default("GENERAL")
+  status          String   @default("OPEN")
+  isInternal      Boolean  @default(false)
+  readAt          DateTime?
+  createdAt       DateTime @default(now())
 
-  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  order  Order? @relation(fields: [orderId], references: [id])
-  sender User?  @relation("MessageSender", fields: [senderId], references: [id])
+  tenant        Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  order         Order? @relation(fields: [orderId], references: [id])
+  sender        User?  @relation("MessageSender", fields: [senderId], references: [id])
+  recipientUser User?  @relation("MessageRecipient", fields: [recipientUserId], references: [id])
 
   @@index([tenantId, orderId])
+  @@index([recipientUserId, readAt])
 }
 
 model AuditLog {
@@ -516,6 +580,55 @@ model NotificationLog {
   tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 
   @@index([tenantId, sentAt])
+}
+
+/** In-App-Benachrichtigung fuer einen konkreten Nutzer (Glocke / Benachrichtigungs-Center). */
+model Notification {
+  id        String           @id @default(cuid())
+  tenantId  String
+  userId    String
+  type      NotificationType
+  title     String
+  body      String
+  link      String?
+  readAt    DateTime?
+  createdAt DateTime         @default(now())
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, readAt])
+  @@index([tenantId, createdAt])
+}
+
+/** Pro-Tenant-Steuerung fuer automatische Benachrichtigungen/Jobs. */
+model NotificationSettings {
+  id       String @id @default(cuid())
+  tenantId String @unique
+
+  appointmentReminderEnabled    Boolean @default(true)
+  appointmentReminderHoursBefore Int    @default(24)
+  remindCustomer                Boolean @default(true)
+  remindEmployee                Boolean @default(true)
+
+  dunningAutoEnabled Boolean @default(false)
+  dunningLevel1Days  Int     @default(7)
+  dunningLevel2Days  Int     @default(14)
+  dunningLevel3Days  Int     @default(21)
+
+  reorderCheckEnabled Boolean @default(true)
+
+  defaultEmail Boolean @default(true)
+  defaultSms   Boolean @default(false)
+
+  // Optionale Vorlagen-Texte mit {{platzhaltern}}
+  reminderEmailTemplate String?
+  dunningEmailTemplate  String?
+
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 }
 
 // ─── Kalkulation / Angebote & Rechnungen ───────────────────────────────────
@@ -619,6 +732,23 @@ enum CalculationDocumentType {
   INVOICE
 }
 
+enum DocumentStatus {
+  ENTWURF
+  OFFEN
+  TEILBEZAHLT
+  BEZAHLT
+  STORNIERT
+}
+
+enum PaymentMethod {
+  UEBERWEISUNG
+  BAR
+  KARTE
+  LASTSCHRIFT
+  PAYPAL
+  SONSTIGES
+}
+
 model CompanySettings {
   id                           String   @id @default(cuid())
   tenantId                     String   @unique
@@ -642,6 +772,24 @@ model CompanySettings {
   defaultKilometerRate         Float    @default(0.45)
   defaultTravelHourlyRate      Float    @default(45)
   additionalOverheadPercent    Float    @default(0)
+
+  // Kontaktdaten für Dokumente (Angebot/Rechnung)
+  phone            String?
+  email            String?
+  website          String?
+
+  // Rechnungs-Personalisierung (Vorlagen für Angebot/Rechnung)
+  invoiceLogoUrl   String?
+  bankName         String?
+  iban             String?
+  bic              String?
+  taxNumber        String?
+  vatId            String?
+  paymentTermsDays Int     @default(14)
+  invoiceIntroText String?
+  invoiceFooterText String?
+  invoiceNotes     String?
+
   createdAt                    DateTime @default(now())
   updatedAt                    DateTime @updatedAt
 
@@ -712,15 +860,18 @@ model TravelZone {
   id          String   @id @default(cuid())
   tenantId    String
   name        String
-  minKm       Float
+  description String?
+  minKm       Float    @default(0)
   maxKm       Float?
   flatFeeNet  Float    @default(0)
   useFormula  Boolean  @default(false)
+  isActive    Boolean  @default(true)
   sortOrder   Int      @default(0)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  tenant     Tenant     @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  properties Property[]
 
   @@index([tenantId])
 }
@@ -953,18 +1104,94 @@ model CalculationDocument {
   calculationId  String
   documentType   CalculationDocumentType
   documentNumber String
+  status         DocumentStatus          @default(OFFEN)
   issueDate      DateTime                @default(now())
   dueDate        DateTime?
   customerNote   String?
   internalNote   String?
   pdfStorageKey  String?
   sentAt         DateTime?
+
+  // Betr\u00e4ge (aus Snapshot, f\u00fcr schnelle Listen/Offene-Posten)
+  netAmount      Float                   @default(0)
+  vatAmount      Float                   @default(0)
+  grossAmount    Float                   @default(0)
+  paidAmount     Float                   @default(0)
+  paidAt         DateTime?
+
+  // Unver\u00e4nderlichkeit: vollst\u00e4ndiger Datenstand zum Erstellzeitpunkt
+  dataSnapshotJson Json?
+
+  // Storno / Korrektur
+  canceledAt   DateTime?
+  cancelReason String?
+  cancelOfId   String?
+
+  // E-Rechnung
+  eInvoiceFormat     String?
+  eInvoiceStorageKey String?
+
   createdAt      DateTime                @default(now())
   updatedAt      DateTime                @updatedAt
 
-  calculation Calculation @relation(fields: [calculationId], references: [id], onDelete: Cascade)
+  calculation    Calculation           @relation(fields: [calculationId], references: [id], onDelete: Cascade)
+  cancelOf       CalculationDocument?  @relation("DocumentCancellation", fields: [cancelOfId], references: [id])
+  cancellations  CalculationDocument[] @relation("DocumentCancellation")
+  payments       Payment[]
+  dunningNotices DunningNotice[]
 
   @@index([calculationId])
+  @@index([documentType, status])
+}
+
+model DocumentSequence {
+  id         String                  @id @default(cuid())
+  tenantId   String
+  year       Int
+  type       CalculationDocumentType
+  lastNumber Int                     @default(0)
+  updatedAt  DateTime                @updatedAt
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, year, type])
+}
+
+model Payment {
+  id          String        @id @default(cuid())
+  tenantId    String
+  documentId  String
+  amount      Float
+  paidAt      DateTime      @default(now())
+  method      PaymentMethod @default(UEBERWEISUNG)
+  note        String?
+  createdById String?
+  createdAt   DateTime      @default(now())
+
+  tenant   Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  document CalculationDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId])
+  @@index([documentId])
+}
+
+model DunningNotice {
+  id          String    @id @default(cuid())
+  tenantId    String
+  documentId  String
+  level       Int       @default(1)
+  feeAmount   Float     @default(0)
+  dueDate     DateTime?
+  sentAt      DateTime?
+  note        String?
+  createdById String?
+  createdAt   DateTime  @default(now())
+
+  tenant   Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  document CalculationDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId])
+  @@index([documentId])
 }
 
 // ─── Betriebssystem: Inventar, Phasen, Materialbedarf ───
@@ -1025,6 +1252,7 @@ enum OrderPhaseStatus {
   AUSSTEHEND
   IN_ARBEIT
   ABGESCHLOSSEN
+  UEBERSPRUNGEN
   STORNIERT
 }
 
@@ -1196,21 +1424,30 @@ model ServiceMaterialTemplate {
 }
 
 model OrderPhase {
-  id            String           @id @default(cuid())
-  orderId       String
-  name          String
-  phaseType     OrderPhaseType   @default(SONSTIGES)
-  status        OrderPhaseStatus @default(AUSSTEHEND)
-  sortOrder     Int              @default(0)
-  plannedStart  DateTime?
-  plannedEnd    DateTime?
-  notes         String?
-  createdAt     DateTime         @default(now())
-  updatedAt     DateTime         @updatedAt
+  id                 String           @id @default(cuid())
+  orderId            String
+  name               String
+  phaseType          OrderPhaseType   @default(SONSTIGES)
+  status             OrderPhaseStatus @default(AUSSTEHEND)
+  isEnabled          Boolean          @default(true)
+  sortOrder          Int              @default(0)
+  plannedStart       DateTime?
+  plannedEnd         DateTime?
+  notes              String?
+  specialNotes       String?
+  assignedTeamId     String?
+  assignedEmployeeId String?
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
 
-  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  order            Order        @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  assignedTeam     Team?        @relation(fields: [assignedTeamId], references: [id], onDelete: SetNull)
+  assignedEmployee Employee?    @relation(fields: [assignedEmployeeId], references: [id], onDelete: SetNull)
+  files            FileUpload[]
 
   @@index([orderId, sortOrder])
+  @@index([assignedEmployeeId])
+  @@index([assignedTeamId])
 }
 
 model OrderMaterialLine {
@@ -1354,6 +1591,7 @@ model Team {
   vehicle Vehicle?     @relation(fields: [vehicleId], references: [id])
   members TeamMember[]
   orders  Order[]
+  orderPhases OrderPhase[]
 
   @@index([tenantId])
 }
@@ -1370,22 +1608,35 @@ model TeamMember {
   @@unique([teamId, employeeId])
 }
 
-model Vehicle {
-  id                String   @id @default(cuid())
-  tenantId          String
-  name              String
-  licensePlate      String?
-  storageLocationId String?  @unique
-  isActive          Boolean  @default(true)
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+enum VehicleStatus {
+  VERFUEGBAR
+  IM_EINSATZ
+  WERKSTATT
+  INAKTIV
+}
 
-  tenant          Tenant           @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  storageLocation StorageLocation? @relation(fields: [storageLocationId], references: [id])
-  teams           Team[]
-  orders          Order[]
+model Vehicle {
+  id                 String        @id @default(cuid())
+  tenantId           String
+  name               String
+  licensePlate       String?
+  vehicleType        String?
+  status             VehicleStatus @default(VERFUEGBAR)
+  notes              String?
+  assignedEmployeeId String?
+  storageLocationId  String?       @unique
+  isActive           Boolean       @default(true)
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+
+  tenant           Tenant           @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  storageLocation  StorageLocation? @relation(fields: [storageLocationId], references: [id])
+  assignedEmployee Employee?        @relation("EmployeeVehicle", fields: [assignedEmployeeId], references: [id], onDelete: SetNull)
+  teams            Team[]
+  orders           Order[]
 
   @@index([tenantId])
+  @@index([assignedEmployeeId])
 }
 
 model EmployeeAbsence {
@@ -1451,4 +1702,48 @@ model StaffAssignmentRequest {
   @@index([employeeId, status])
   @@index([orderId])
   @@index([tenantId, status])
+}
+
+// ─── Einladungen & Freigaben ───
+
+model Invitation {
+  id             String           @id @default(cuid())
+  tenantId       String
+  email          String
+  role           UserRole         @default(GAST)
+  token          String           @unique
+  status         InvitationStatus @default(PENDING)
+  message        String?
+  invitedById    String?
+  acceptedUserId String?
+  expiresAt      DateTime
+  acceptedAt     DateTime?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+
+  tenant       Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  invitedBy    User?  @relation("InvitationInviter", fields: [invitedById], references: [id], onDelete: SetNull)
+  acceptedUser User?  @relation("InvitationAccepted", fields: [acceptedUserId], references: [id], onDelete: SetNull)
+
+  @@index([tenantId, status])
+  @@index([email])
+}
+
+model OrderShare {
+  id               String   @id @default(cuid())
+  tenantId         String
+  orderId          String
+  sharedWithUserId String
+  sharedById       String?
+  note             String?
+  createdAt        DateTime @default(now())
+
+  tenant     Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  order      Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  sharedWith User   @relation("ShareRecipient", fields: [sharedWithUserId], references: [id], onDelete: Cascade)
+  sharedBy   User?  @relation("ShareCreator", fields: [sharedById], references: [id], onDelete: SetNull)
+
+  @@unique([orderId, sharedWithUserId])
+  @@index([sharedWithUserId])
+  @@index([tenantId])
 }

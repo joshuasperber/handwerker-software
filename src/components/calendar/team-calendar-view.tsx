@@ -6,15 +6,20 @@ import { ScheduleCalendar, type CalendarAppointment } from "@/components/calenda
 import { addDays, startOfMonth, endOfMonth, startOfWeek, endOfWeek } from "date-fns";
 import { formatDateTime } from "@/lib/utils";
 import { ChevronDown, ChevronUp } from "lucide-react";
-import { usePermission } from "@/components/auth/can-access";
+import { usePermission, useSession } from "@/components/auth/can-access";
 
 export function TeamCalendarView({ title = "Terminplanung" }: { title?: string }) {
   const canEdit = usePermission("appointments.write");
+  const session = useSession();
   const [anchorDate, setAnchorDate] = useState(new Date());
   const [view, setView] = useState<"week" | "month">("week");
   const [appointments, setAppointments] = useState<CalendarAppointment[]>([]);
-  const [employees, setEmployees] = useState<{ id: string; user: { firstName: string; lastName: string }; color: string }[]>([]);
+  const [employees, setEmployees] = useState<{ id: string; user: { id?: string; firstName: string; lastName: string }; color: string }[]>([]);
   const [selectedEmployeeIds, setSelectedEmployeeIds] = useState<string[]>([]);
+  const [teams, setTeams] = useState<{ id: string; name: string }[]>([]);
+  const [vehicles, setVehicles] = useState<{ id: string; name: string }[]>([]);
+  const [selectedTeamIds, setSelectedTeamIds] = useState<string[]>([]);
+  const [selectedVehicleIds, setSelectedVehicleIds] = useState<string[]>([]);
   const [showList, setShowList] = useState(false);
 
   const loadAppointments = useCallback(() => {
@@ -34,12 +39,23 @@ export function TeamCalendarView({ title = "Terminplanung" }: { title?: string }
 
   useEffect(() => {
     fetch("/api/employees").then((r) => r.json()).then((d) => {
-      if (d.success) {
-        setEmployees(d.data);
-        setSelectedEmployeeIds((prev) => (prev.length ? prev : d.data.map((e: { id: string }) => e.id)));
-      }
+      if (!d.success) return;
+      setEmployees(d.data);
+      setSelectedEmployeeIds((prev) => {
+        if (prev.length) return prev;
+        // Zuerst nur den eigenen Kalender anzeigen, falls ein eigener
+        // Mitarbeiter-Datensatz existiert – sonst alle.
+        const own = d.data.find((e: { user: { id?: string } }) => e.user?.id === session.id);
+        return own ? [own.id] : d.data.map((e: { id: string }) => e.id);
+      });
     });
-  }, []);
+    fetch("/api/teams").then((r) => r.json()).then((d) => {
+      if (d.success) setTeams(d.data.map((t: { id: string; name: string }) => ({ id: t.id, name: t.name })));
+    });
+    fetch("/api/vehicles").then((r) => r.json()).then((d) => {
+      if (d.success) setVehicles(d.data.map((v: { id: string; name: string }) => ({ id: v.id, name: v.name })));
+    });
+  }, [session.id]);
 
   useEffect(() => { loadAppointments(); }, [loadAppointments]);
 
@@ -62,9 +78,14 @@ export function TeamCalendarView({ title = "Terminplanung" }: { title?: string }
     loadAppointments();
   }
 
-  const filtered = appointments.filter(
-    (a) => !a.employeeId || selectedEmployeeIds.includes(a.employeeId)
-  );
+  const teamFilterActive = selectedTeamIds.length > 0;
+  const vehicleFilterActive = selectedVehicleIds.length > 0;
+  const filtered = appointments.filter((a) => {
+    if (a.employeeId && !selectedEmployeeIds.includes(a.employeeId)) return false;
+    if (teamFilterActive && !(a.order.team && selectedTeamIds.includes(a.order.team.id))) return false;
+    if (vehicleFilterActive && !(a.order.vehicle && selectedVehicleIds.includes(a.order.vehicle.id))) return false;
+    return true;
+  });
 
   return (
     <div className="flex flex-col h-[calc(100vh-7rem)] min-h-0 -mx-2 sm:-mx-0">
@@ -87,6 +108,12 @@ export function TeamCalendarView({ title = "Terminplanung" }: { title?: string }
           onViewChange={setView}
           onAppointmentReschedule={reschedule}
           readOnly={!canEdit}
+          teams={teams}
+          selectedTeamIds={selectedTeamIds}
+          onSelectedTeamIdsChange={setSelectedTeamIds}
+          vehicles={vehicles}
+          selectedVehicleIds={selectedVehicleIds}
+          onSelectedVehicleIdsChange={setSelectedVehicleIds}
         />
       </div>
 

@@ -7,12 +7,17 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { ORDER_STATUS_FLOW, ORDER_STATUS_LABELS, PRIORITY_LABELS, PRIORITY_COLORS, formatDateTime, PHASE_STATUS_LABELS, isOverdue } from "@/lib/utils";
+import { ORDER_STATUS_FLOW, ORDER_STATUS_LABELS, PRIORITY_LABELS, PRIORITY_COLORS, formatDateTime, isOverdue } from "@/lib/utils";
 import { MATERIAL_STATUS_LABELS } from "@/lib/inventory/formulas";
 import { MapPin, Phone, Mail, Clock, CheckSquare, Upload, Calculator, Users, CheckCircle, History, ExternalLink } from "lucide-react";
 import { PlanViewer } from "@/components/orders/plan-viewer";
+import { PhotoGallery } from "@/components/orders/photo-gallery";
 import { OrderBillingSection } from "@/components/orders/billing-section";
+import { OrderPhases, type OrderPhaseData } from "@/components/orders/order-phases";
+import { OrderSharePanel } from "@/components/orders/order-share-panel";
+import { usePermission } from "@/components/auth/can-access";
 import { fetchJson } from "@/lib/fetch-json";
+import { saveJson } from "@/lib/save-toast";
 import { CanAccess } from "@/components/auth/can-access";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { toast } from "sonner";
@@ -30,7 +35,13 @@ interface OrderDetail {
   scheduledEnd: string | null;
   customer: { firstName: string; lastName: string; email: string; phone: string | null };
   property: { street: string; zipCode: string; city: string };
-  services: { service: { name: string; durationMinutes: number } }[];
+  services: {
+    service: { name: string; durationMinutes: number } | null;
+    customName?: string | null;
+    description?: string | null;
+    quantity?: number;
+    unitPriceCents?: number | null;
+  }[];
   appointments: {
     id: string;
     startTime: string;
@@ -43,7 +54,7 @@ interface OrderDetail {
   materialUsages: { name: string; quantity: number; unit: string }[];
   title?: string | null;
   materialStatus?: string;
-  phases?: { id: string; name: string; status: string }[];
+  phases?: OrderPhaseData[];
   materialLines?: {
     id: string;
     name: string;
@@ -60,6 +71,7 @@ interface OrderDetail {
 export default function AuftragDetailPage() {
   const { id } = useParams();
   const router = useRouter();
+  const canEditPhases = usePermission("orders.write");
   const [order, setOrder] = useState<OrderDetail | null>(null);
   const [notes, setNotes] = useState("");
   const [teams, setTeams] = useState<{ id: string; name: string }[]>([]);
@@ -92,6 +104,12 @@ export default function AuftragDetailPage() {
       if (data.success && data.data) {
         setOrder(data.data);
         setNotes(data.data.internalNotes ?? "");
+        if (data.data.scheduledStart) {
+          setAssignStart((prev) => prev || data.data!.scheduledStart!.slice(0, 16));
+        }
+        if (data.data.scheduledEnd) {
+          setAssignEnd((prev) => prev || data.data!.scheduledEnd!.slice(0, 16));
+        }
       }
     });
 
@@ -120,11 +138,11 @@ export default function AuftragDetailPage() {
   }, [loadOrder, id]);
 
   useEffect(() => {
-    if (!assignEmployeeId || !assignStart || !assignEnd || !id) {
-      setAvailabilityWarning("");
-      return;
-    }
     const timer = setTimeout(() => {
+      if (!assignEmployeeId || !assignStart || !assignEnd || !id) {
+        setAvailabilityWarning("");
+        return;
+      }
       const params = new URLSearchParams({
         employeeId: assignEmployeeId,
         startTime: new Date(assignStart).toISOString(),
@@ -140,66 +158,56 @@ export default function AuftragDetailPage() {
     return () => clearTimeout(timer);
   }, [assignEmployeeId, assignStart, assignEnd, id]);
 
-  useEffect(() => {
-    if (!order) return;
-    if (order.scheduledStart) {
-      setAssignStart((prev) => prev || order.scheduledStart!.slice(0, 16));
-    }
-    if (order.scheduledEnd) {
-      setAssignEnd((prev) => prev || order.scheduledEnd!.slice(0, 16));
-    }
-  }, [order]);
-
   async function updatePriority(priority: string) {
-    await fetch(`/api/orders/${id}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ priority }),
-    });
+    await saveJson(
+      `/api/orders/${id}`,
+      { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ priority }) },
+      { success: "Priorität aktualisiert" }
+    );
     loadOrder();
   }
 
   async function updateStatus(status: string) {
-    await fetch(`/api/orders/${id}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ status }),
-    });
+    await saveJson(
+      `/api/orders/${id}`,
+      { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ status }) },
+      { success: "Status aktualisiert" }
+    );
     loadOrder();
   }
 
   async function saveNotes() {
-    await fetch(`/api/orders/${id}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ internalNotes: notes }),
-    });
+    await saveJson(
+      `/api/orders/${id}`,
+      { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ internalNotes: notes }) },
+      { success: "Notiz gespeichert" }
+    );
   }
 
   async function reserveMaterial() {
-    await fetch("/api/reservations", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ orderId: id }),
-    });
+    await saveJson(
+      "/api/reservations",
+      { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ orderId: id }) },
+      { success: "Material reserviert" }
+    );
     loadOrder();
   }
 
   async function assignTeam(teamId: string) {
-    await fetch(`/api/orders/${id}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ teamId: teamId || null }),
-    });
+    await saveJson(
+      `/api/orders/${id}`,
+      { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ teamId: teamId || null }) },
+      { success: "Team zugewiesen" }
+    );
     loadOrder();
   }
 
   async function assignVehicle(vehicleId: string) {
-    await fetch(`/api/orders/${id}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ vehicleId: vehicleId || null }),
-    });
+    await saveJson(
+      `/api/orders/${id}`,
+      { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ vehicleId: vehicleId || null }) },
+      { success: "Fahrzeug zugewiesen" }
+    );
     loadOrder();
   }
 
@@ -267,15 +275,6 @@ export default function AuftragDetailPage() {
     } else {
       setAssignError(data.error ?? "Termin konnte nicht angelegt werden");
     }
-  }
-
-  async function updatePhaseStatus(phaseId: string, status: string) {
-    await fetch(`/api/orders/${id}/phases/${phaseId}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ status }),
-    });
-    loadOrder();
   }
 
   async function createCalculation() {
@@ -463,8 +462,14 @@ export default function AuftragDetailPage() {
           <Card title="Leistungen">
             {order.services.map((s, i) => (
               <div key={i} className="flex justify-between py-2 border-b border-slate-50 last:border-0">
-                <span>{s.service.name}</span>
-                <span className="text-slate-400">{s.service.durationMinutes} Min.</span>
+                <span>
+                  {s.service?.name ?? s.customName ?? "Sonstige Leistung"}
+                  {!s.service && <span className="ml-2 text-[10px] uppercase tracking-wide text-amber-600">sonstige</span>}
+                  {s.description && <span className="block text-xs text-slate-400">{s.description}</span>}
+                </span>
+                <span className="text-slate-400">
+                  {s.service ? `${s.service.durationMinutes} Min.` : s.unitPriceCents != null ? `${(s.unitPriceCents / 100).toLocaleString("de-DE", { style: "currency", currency: "EUR" })}` : `${s.quantity ?? 1}×`}
+                </span>
               </div>
             ))}
             {order.description && (
@@ -472,34 +477,27 @@ export default function AuftragDetailPage() {
             )}
           </Card>
 
-          {order.phases && order.phases.length > 0 && (
-            <Card title="Phasen">
-              <p className="text-xs text-slate-500 mb-3">
-                Voranmeldung / Besichtigung → Angebot &amp; Kalkulation → Materialbestellung →
-                Ausführung → Abnahme → Rechnung. Die Voranmeldung dient dazu, Preis, Ort und
-                mögliche Aufpreise zu prüfen, bevor die Ausführung startet.
-              </p>
-              <div className="space-y-2">
-                {order.phases.map((p, idx) => (
-                  <div key={p.id} className="flex items-center gap-3 py-2 border-b border-slate-50 last:border-0">
-                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-slate-100 text-xs font-semibold text-slate-500">
-                      {idx + 1}
-                    </span>
-                    <span className="flex-1 text-sm font-medium">{p.name}</span>
-                    <select
-                      value={p.status}
-                      onChange={(e) => updatePhaseStatus(p.id, e.target.value)}
-                      className="h-8 rounded-lg border border-slate-200 px-2 text-xs"
-                    >
-                      {Object.entries(PHASE_STATUS_LABELS).map(([k, v]) => (
-                        <option key={k} value={k}>{v}</option>
-                      ))}
-                    </select>
-                  </div>
-                ))}
-              </div>
-            </Card>
-          )}
+          <OrderPhases
+            orderId={order.id}
+            phases={order.phases ?? []}
+            teams={teams}
+            employees={allEmployees}
+            canEdit={canEditPhases}
+            onChanged={loadOrder}
+          />
+
+          <Card title="Fotos & Dokumentation">
+            <p className="text-xs text-slate-500 -mt-1 mb-1">
+              Fotos von Aufmaß, Baustelle, Wohnung, Schäden, Montage etc. – optional einer Phase zugeordnet.
+            </p>
+            <PhotoGallery
+              baseUrl={`/api/orders/${order.id}/files`}
+              canUpload={canEditPhases}
+              canDelete={canEditPhases}
+              phases={(order.phases ?? []).map((p) => ({ id: p.id, name: p.name }))}
+              onChanged={loadOrder}
+            />
+          </Card>
 
           {order.materialLines && order.materialLines.length > 0 && (
             <Card title="Packliste / Material">
@@ -728,6 +726,10 @@ export default function AuftragDetailPage() {
           </Card>
           </CanAccess>
 
+          <CanAccess permission="orders.write">
+            <OrderSharePanel orderId={order.id} />
+          </CanAccess>
+
           <Card title="Termine">
             {order.appointments.map((apt) => (
               <div key={apt.id} className="py-2 border-b border-slate-50 last:border-0">
@@ -746,14 +748,6 @@ export default function AuftragDetailPage() {
               <p className="text-sm text-slate-500">Kein Termin geplant</p>
             )}
           </Card>
-
-          {order.files.length > 0 && (
-            <Card title="Dateien">
-              {order.files.map((f) => (
-                <p key={f.id} className="text-sm py-1 text-slate-600">{f.fileName}</p>
-              ))}
-            </Card>
-          )}
 
           {order.timeEntries.length > 0 && (
             <Card title="Arbeitszeit">

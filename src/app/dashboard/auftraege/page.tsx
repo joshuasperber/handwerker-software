@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
@@ -13,7 +12,9 @@ import {
   isToday,
   isOverdue,
 } from "@/lib/utils";
+import { getCurrentPhase } from "@/lib/phase-status";
 import { CanAccess } from "@/components/auth/can-access";
+import { AddButton } from "@/components/ui/add-button";
 import { Search } from "lucide-react";
 
 interface Order {
@@ -25,6 +26,7 @@ interface Order {
   customer: { firstName: string; lastName: string; email: string };
   property: { street: string; city: string; zipCode: string };
   services: { service: { name: string } }[];
+  phases?: { id: string; name: string; status: string; isEnabled: boolean; sortOrder: number }[];
 }
 
 export default function AuftraegePage() {
@@ -38,12 +40,15 @@ export default function AuftraegePage() {
   );
 
   useEffect(() => {
+    // Filterzustand bewusst mit den URL-Parametern synchronisieren.
     const urlStatus = searchParams.get("status");
     if (urlStatus && urlStatus !== statusFilter) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setStatusFilter(urlStatus);
     }
     const urlTab = searchParams.get("tab");
     if (urlTab === "erledigt" || urlTab === "aktiv") {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setTab(urlTab);
     }
   }, [searchParams, statusFilter]);
@@ -66,15 +71,10 @@ export default function AuftraegePage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
         <h1 className="text-2xl font-bold text-slate-900">Aufträge</h1>
         <CanAccess permission="orders.write">
-          <Link
-            href="/dashboard/auftraege/neu"
-            className="rounded-lg bg-[#e87722] px-5 py-2.5 text-sm font-medium text-white hover:bg-[#d06818]"
-          >
-            + Neuer Auftrag
-          </Link>
+          <AddButton href="/dashboard/auftraege/neu">Neuer Auftrag</AddButton>
         </CanAccess>
       </div>
 
@@ -135,6 +135,7 @@ export default function AuftraegePage() {
                 <th className="pb-3 pr-4 font-medium">Kunde</th>
                 <th className="pb-3 pr-4 font-medium">Leistung</th>
                 <th className="pb-3 pr-4 font-medium">Ort</th>
+                <th className="pb-3 pr-4 font-medium hidden md:table-cell">Phase</th>
                 <th className="pb-3 pr-4 font-medium">Termin</th>
                 <th className="pb-3 pr-3 font-medium">Status</th>
               </tr>
@@ -143,6 +144,7 @@ export default function AuftraegePage() {
               {visibleOrders.map((order) => {
                 const overdue = isOverdue(order.scheduledStart, order.status);
                 const today = !overdue && !isOrderDone(order.status) && isToday(order.scheduledStart);
+                const currentPhase = getCurrentPhase(order.phases);
                 return (
                   <tr
                     key={order.id}
@@ -157,6 +159,24 @@ export default function AuftraegePage() {
                       {order.services.map((s) => s.service.name).join(", ")}
                     </td>
                     <td className="py-3 pr-4 text-slate-500">{order.property.city}</td>
+                    <td className="py-3 pr-4 hidden md:table-cell">
+                      {currentPhase ? (
+                        <span className="inline-flex items-center gap-1.5 text-slate-600">
+                          <span
+                            className={`h-2 w-2 rounded-full ${
+                              currentPhase.status === "IN_ARBEIT"
+                                ? "bg-amber-500"
+                                : currentPhase.status === "ABGESCHLOSSEN"
+                                ? "bg-green-500"
+                                : "bg-slate-300"
+                            }`}
+                          />
+                          {currentPhase.name}
+                        </span>
+                      ) : (
+                        <span className="text-slate-400">–</span>
+                      )}
+                    </td>
                     <td className="py-3 pr-4 text-slate-500">
                       {order.scheduledStart ? formatDateTime(order.scheduledStart) : "–"}
                     </td>

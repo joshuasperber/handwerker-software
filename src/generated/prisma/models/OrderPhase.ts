@@ -40,10 +40,14 @@ export type OrderPhaseMinAggregateOutputType = {
   name: string | null
   phaseType: $Enums.OrderPhaseType | null
   status: $Enums.OrderPhaseStatus | null
+  isEnabled: boolean | null
   sortOrder: number | null
   plannedStart: Date | null
   plannedEnd: Date | null
   notes: string | null
+  specialNotes: string | null
+  assignedTeamId: string | null
+  assignedEmployeeId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -54,10 +58,14 @@ export type OrderPhaseMaxAggregateOutputType = {
   name: string | null
   phaseType: $Enums.OrderPhaseType | null
   status: $Enums.OrderPhaseStatus | null
+  isEnabled: boolean | null
   sortOrder: number | null
   plannedStart: Date | null
   plannedEnd: Date | null
   notes: string | null
+  specialNotes: string | null
+  assignedTeamId: string | null
+  assignedEmployeeId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -68,10 +76,14 @@ export type OrderPhaseCountAggregateOutputType = {
   name: number
   phaseType: number
   status: number
+  isEnabled: number
   sortOrder: number
   plannedStart: number
   plannedEnd: number
   notes: number
+  specialNotes: number
+  assignedTeamId: number
+  assignedEmployeeId: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -92,10 +104,14 @@ export type OrderPhaseMinAggregateInputType = {
   name?: true
   phaseType?: true
   status?: true
+  isEnabled?: true
   sortOrder?: true
   plannedStart?: true
   plannedEnd?: true
   notes?: true
+  specialNotes?: true
+  assignedTeamId?: true
+  assignedEmployeeId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -106,10 +122,14 @@ export type OrderPhaseMaxAggregateInputType = {
   name?: true
   phaseType?: true
   status?: true
+  isEnabled?: true
   sortOrder?: true
   plannedStart?: true
   plannedEnd?: true
   notes?: true
+  specialNotes?: true
+  assignedTeamId?: true
+  assignedEmployeeId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -120,10 +140,14 @@ export type OrderPhaseCountAggregateInputType = {
   name?: true
   phaseType?: true
   status?: true
+  isEnabled?: true
   sortOrder?: true
   plannedStart?: true
   plannedEnd?: true
   notes?: true
+  specialNotes?: true
+  assignedTeamId?: true
+  assignedEmployeeId?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -221,10 +245,14 @@ export type OrderPhaseGroupByOutputType = {
   name: string
   phaseType: $Enums.OrderPhaseType
   status: $Enums.OrderPhaseStatus
+  isEnabled: boolean
   sortOrder: number
   plannedStart: Date | null
   plannedEnd: Date | null
   notes: string | null
+  specialNotes: string | null
+  assignedTeamId: string | null
+  assignedEmployeeId: string | null
   createdAt: Date
   updatedAt: Date
   _count: OrderPhaseCountAggregateOutputType | null
@@ -258,13 +286,20 @@ export type OrderPhaseWhereInput = {
   name?: Prisma.StringFilter<"OrderPhase"> | string
   phaseType?: Prisma.EnumOrderPhaseTypeFilter<"OrderPhase"> | $Enums.OrderPhaseType
   status?: Prisma.EnumOrderPhaseStatusFilter<"OrderPhase"> | $Enums.OrderPhaseStatus
+  isEnabled?: Prisma.BoolFilter<"OrderPhase"> | boolean
   sortOrder?: Prisma.IntFilter<"OrderPhase"> | number
   plannedStart?: Prisma.DateTimeNullableFilter<"OrderPhase"> | Date | string | null
   plannedEnd?: Prisma.DateTimeNullableFilter<"OrderPhase"> | Date | string | null
   notes?: Prisma.StringNullableFilter<"OrderPhase"> | string | null
+  specialNotes?: Prisma.StringNullableFilter<"OrderPhase"> | string | null
+  assignedTeamId?: Prisma.StringNullableFilter<"OrderPhase"> | string | null
+  assignedEmployeeId?: Prisma.StringNullableFilter<"OrderPhase"> | string | null
   createdAt?: Prisma.DateTimeFilter<"OrderPhase"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"OrderPhase"> | Date | string
   order?: Prisma.XOR<Prisma.OrderScalarRelationFilter, Prisma.OrderWhereInput>
+  assignedTeam?: Prisma.XOR<Prisma.TeamNullableScalarRelationFilter, Prisma.TeamWhereInput> | null
+  assignedEmployee?: Prisma.XOR<Prisma.EmployeeNullableScalarRelationFilter, Prisma.EmployeeWhereInput> | null
+  files?: Prisma.FileUploadListRelationFilter
 }
 
 export type OrderPhaseOrderByWithRelationInput = {
@@ -273,13 +308,20 @@ export type OrderPhaseOrderByWithRelationInput = {
   name?: Prisma.SortOrder
   phaseType?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  isEnabled?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   plannedStart?: Prisma.SortOrderInput | Prisma.SortOrder
   plannedEnd?: Prisma.SortOrderInput | Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
+  specialNotes?: Prisma.SortOrderInput | Prisma.SortOrder
+  assignedTeamId?: Prisma.SortOrderInput | Prisma.SortOrder
+  assignedEmployeeId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   order?: Prisma.OrderOrderByWithRelationInput
+  assignedTeam?: Prisma.TeamOrderByWithRelationInput
+  assignedEmployee?: Prisma.EmployeeOrderByWithRelationInput
+  files?: Prisma.FileUploadOrderByRelationAggregateInput
 }
 
 export type OrderPhaseWhereUniqueInput = Prisma.AtLeast<{
@@ -291,13 +333,20 @@ export type OrderPhaseWhereUniqueInput = Prisma.AtLeast<{
   name?: Prisma.StringFilter<"OrderPhase"> | string
   phaseType?: Prisma.EnumOrderPhaseTypeFilter<"OrderPhase"> | $Enums.OrderPhaseType
   status?: Prisma.EnumOrderPhaseStatusFilter<"OrderPhase"> | $Enums.OrderPhaseStatus
+  isEnabled?: Prisma.BoolFilter<"OrderPhase"> | boolean
   sortOrder?: Prisma.IntFilter<"OrderPhase"> | number
   plannedStart?: Prisma.DateTimeNullableFilter<"OrderPhase"> | Date | string | null
   plannedEnd?: Prisma.DateTimeNullableFilter<"OrderPhase"> | Date | string | null
   notes?: Prisma.StringNullableFilter<"OrderPhase"> | string | null
+  specialNotes?: Prisma.StringNullableFilter<"OrderPhase"> | string | null
+  assignedTeamId?: Prisma.StringNullableFilter<"OrderPhase"> | string | null
+  assignedEmployeeId?: Prisma.StringNullableFilter<"OrderPhase"> | string | null
   createdAt?: Prisma.DateTimeFilter<"OrderPhase"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"OrderPhase"> | Date | string
   order?: Prisma.XOR<Prisma.OrderScalarRelationFilter, Prisma.OrderWhereInput>
+  assignedTeam?: Prisma.XOR<Prisma.TeamNullableScalarRelationFilter, Prisma.TeamWhereInput> | null
+  assignedEmployee?: Prisma.XOR<Prisma.EmployeeNullableScalarRelationFilter, Prisma.EmployeeWhereInput> | null
+  files?: Prisma.FileUploadListRelationFilter
 }, "id">
 
 export type OrderPhaseOrderByWithAggregationInput = {
@@ -306,10 +355,14 @@ export type OrderPhaseOrderByWithAggregationInput = {
   name?: Prisma.SortOrder
   phaseType?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  isEnabled?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   plannedStart?: Prisma.SortOrderInput | Prisma.SortOrder
   plannedEnd?: Prisma.SortOrderInput | Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
+  specialNotes?: Prisma.SortOrderInput | Prisma.SortOrder
+  assignedTeamId?: Prisma.SortOrderInput | Prisma.SortOrder
+  assignedEmployeeId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.OrderPhaseCountOrderByAggregateInput
@@ -328,10 +381,14 @@ export type OrderPhaseScalarWhereWithAggregatesInput = {
   name?: Prisma.StringWithAggregatesFilter<"OrderPhase"> | string
   phaseType?: Prisma.EnumOrderPhaseTypeWithAggregatesFilter<"OrderPhase"> | $Enums.OrderPhaseType
   status?: Prisma.EnumOrderPhaseStatusWithAggregatesFilter<"OrderPhase"> | $Enums.OrderPhaseStatus
+  isEnabled?: Prisma.BoolWithAggregatesFilter<"OrderPhase"> | boolean
   sortOrder?: Prisma.IntWithAggregatesFilter<"OrderPhase"> | number
   plannedStart?: Prisma.DateTimeNullableWithAggregatesFilter<"OrderPhase"> | Date | string | null
   plannedEnd?: Prisma.DateTimeNullableWithAggregatesFilter<"OrderPhase"> | Date | string | null
   notes?: Prisma.StringNullableWithAggregatesFilter<"OrderPhase"> | string | null
+  specialNotes?: Prisma.StringNullableWithAggregatesFilter<"OrderPhase"> | string | null
+  assignedTeamId?: Prisma.StringNullableWithAggregatesFilter<"OrderPhase"> | string | null
+  assignedEmployeeId?: Prisma.StringNullableWithAggregatesFilter<"OrderPhase"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"OrderPhase"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"OrderPhase"> | Date | string
 }
@@ -341,13 +398,18 @@ export type OrderPhaseCreateInput = {
   name: string
   phaseType?: $Enums.OrderPhaseType
   status?: $Enums.OrderPhaseStatus
+  isEnabled?: boolean
   sortOrder?: number
   plannedStart?: Date | string | null
   plannedEnd?: Date | string | null
   notes?: string | null
+  specialNotes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   order: Prisma.OrderCreateNestedOneWithoutPhasesInput
+  assignedTeam?: Prisma.TeamCreateNestedOneWithoutOrderPhasesInput
+  assignedEmployee?: Prisma.EmployeeCreateNestedOneWithoutOrderPhasesInput
+  files?: Prisma.FileUploadCreateNestedManyWithoutOrderPhaseInput
 }
 
 export type OrderPhaseUncheckedCreateInput = {
@@ -356,12 +418,17 @@ export type OrderPhaseUncheckedCreateInput = {
   name: string
   phaseType?: $Enums.OrderPhaseType
   status?: $Enums.OrderPhaseStatus
+  isEnabled?: boolean
   sortOrder?: number
   plannedStart?: Date | string | null
   plannedEnd?: Date | string | null
   notes?: string | null
+  specialNotes?: string | null
+  assignedTeamId?: string | null
+  assignedEmployeeId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  files?: Prisma.FileUploadUncheckedCreateNestedManyWithoutOrderPhaseInput
 }
 
 export type OrderPhaseUpdateInput = {
@@ -369,13 +436,18 @@ export type OrderPhaseUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   phaseType?: Prisma.EnumOrderPhaseTypeFieldUpdateOperationsInput | $Enums.OrderPhaseType
   status?: Prisma.EnumOrderPhaseStatusFieldUpdateOperationsInput | $Enums.OrderPhaseStatus
+  isEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   plannedStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   plannedEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  specialNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   order?: Prisma.OrderUpdateOneRequiredWithoutPhasesNestedInput
+  assignedTeam?: Prisma.TeamUpdateOneWithoutOrderPhasesNestedInput
+  assignedEmployee?: Prisma.EmployeeUpdateOneWithoutOrderPhasesNestedInput
+  files?: Prisma.FileUploadUpdateManyWithoutOrderPhaseNestedInput
 }
 
 export type OrderPhaseUncheckedUpdateInput = {
@@ -384,12 +456,17 @@ export type OrderPhaseUncheckedUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   phaseType?: Prisma.EnumOrderPhaseTypeFieldUpdateOperationsInput | $Enums.OrderPhaseType
   status?: Prisma.EnumOrderPhaseStatusFieldUpdateOperationsInput | $Enums.OrderPhaseStatus
+  isEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   plannedStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   plannedEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  specialNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedTeamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedEmployeeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  files?: Prisma.FileUploadUncheckedUpdateManyWithoutOrderPhaseNestedInput
 }
 
 export type OrderPhaseCreateManyInput = {
@@ -398,10 +475,14 @@ export type OrderPhaseCreateManyInput = {
   name: string
   phaseType?: $Enums.OrderPhaseType
   status?: $Enums.OrderPhaseStatus
+  isEnabled?: boolean
   sortOrder?: number
   plannedStart?: Date | string | null
   plannedEnd?: Date | string | null
   notes?: string | null
+  specialNotes?: string | null
+  assignedTeamId?: string | null
+  assignedEmployeeId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -411,10 +492,12 @@ export type OrderPhaseUpdateManyMutationInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   phaseType?: Prisma.EnumOrderPhaseTypeFieldUpdateOperationsInput | $Enums.OrderPhaseType
   status?: Prisma.EnumOrderPhaseStatusFieldUpdateOperationsInput | $Enums.OrderPhaseStatus
+  isEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   plannedStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   plannedEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  specialNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -425,10 +508,14 @@ export type OrderPhaseUncheckedUpdateManyInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   phaseType?: Prisma.EnumOrderPhaseTypeFieldUpdateOperationsInput | $Enums.OrderPhaseType
   status?: Prisma.EnumOrderPhaseStatusFieldUpdateOperationsInput | $Enums.OrderPhaseStatus
+  isEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   plannedStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   plannedEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  specialNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedTeamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedEmployeeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -443,16 +530,25 @@ export type OrderPhaseOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
+export type OrderPhaseNullableScalarRelationFilter = {
+  is?: Prisma.OrderPhaseWhereInput | null
+  isNot?: Prisma.OrderPhaseWhereInput | null
+}
+
 export type OrderPhaseCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   orderId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   phaseType?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  isEnabled?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   plannedStart?: Prisma.SortOrder
   plannedEnd?: Prisma.SortOrder
   notes?: Prisma.SortOrder
+  specialNotes?: Prisma.SortOrder
+  assignedTeamId?: Prisma.SortOrder
+  assignedEmployeeId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -467,10 +563,14 @@ export type OrderPhaseMaxOrderByAggregateInput = {
   name?: Prisma.SortOrder
   phaseType?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  isEnabled?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   plannedStart?: Prisma.SortOrder
   plannedEnd?: Prisma.SortOrder
   notes?: Prisma.SortOrder
+  specialNotes?: Prisma.SortOrder
+  assignedTeamId?: Prisma.SortOrder
+  assignedEmployeeId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -481,16 +581,62 @@ export type OrderPhaseMinOrderByAggregateInput = {
   name?: Prisma.SortOrder
   phaseType?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  isEnabled?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   plannedStart?: Prisma.SortOrder
   plannedEnd?: Prisma.SortOrder
   notes?: Prisma.SortOrder
+  specialNotes?: Prisma.SortOrder
+  assignedTeamId?: Prisma.SortOrder
+  assignedEmployeeId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
 export type OrderPhaseSumOrderByAggregateInput = {
   sortOrder?: Prisma.SortOrder
+}
+
+export type OrderPhaseCreateNestedManyWithoutAssignedEmployeeInput = {
+  create?: Prisma.XOR<Prisma.OrderPhaseCreateWithoutAssignedEmployeeInput, Prisma.OrderPhaseUncheckedCreateWithoutAssignedEmployeeInput> | Prisma.OrderPhaseCreateWithoutAssignedEmployeeInput[] | Prisma.OrderPhaseUncheckedCreateWithoutAssignedEmployeeInput[]
+  connectOrCreate?: Prisma.OrderPhaseCreateOrConnectWithoutAssignedEmployeeInput | Prisma.OrderPhaseCreateOrConnectWithoutAssignedEmployeeInput[]
+  createMany?: Prisma.OrderPhaseCreateManyAssignedEmployeeInputEnvelope
+  connect?: Prisma.OrderPhaseWhereUniqueInput | Prisma.OrderPhaseWhereUniqueInput[]
+}
+
+export type OrderPhaseUncheckedCreateNestedManyWithoutAssignedEmployeeInput = {
+  create?: Prisma.XOR<Prisma.OrderPhaseCreateWithoutAssignedEmployeeInput, Prisma.OrderPhaseUncheckedCreateWithoutAssignedEmployeeInput> | Prisma.OrderPhaseCreateWithoutAssignedEmployeeInput[] | Prisma.OrderPhaseUncheckedCreateWithoutAssignedEmployeeInput[]
+  connectOrCreate?: Prisma.OrderPhaseCreateOrConnectWithoutAssignedEmployeeInput | Prisma.OrderPhaseCreateOrConnectWithoutAssignedEmployeeInput[]
+  createMany?: Prisma.OrderPhaseCreateManyAssignedEmployeeInputEnvelope
+  connect?: Prisma.OrderPhaseWhereUniqueInput | Prisma.OrderPhaseWhereUniqueInput[]
+}
+
+export type OrderPhaseUpdateManyWithoutAssignedEmployeeNestedInput = {
+  create?: Prisma.XOR<Prisma.OrderPhaseCreateWithoutAssignedEmployeeInput, Prisma.OrderPhaseUncheckedCreateWithoutAssignedEmployeeInput> | Prisma.OrderPhaseCreateWithoutAssignedEmployeeInput[] | Prisma.OrderPhaseUncheckedCreateWithoutAssignedEmployeeInput[]
+  connectOrCreate?: Prisma.OrderPhaseCreateOrConnectWithoutAssignedEmployeeInput | Prisma.OrderPhaseCreateOrConnectWithoutAssignedEmployeeInput[]
+  upsert?: Prisma.OrderPhaseUpsertWithWhereUniqueWithoutAssignedEmployeeInput | Prisma.OrderPhaseUpsertWithWhereUniqueWithoutAssignedEmployeeInput[]
+  createMany?: Prisma.OrderPhaseCreateManyAssignedEmployeeInputEnvelope
+  set?: Prisma.OrderPhaseWhereUniqueInput | Prisma.OrderPhaseWhereUniqueInput[]
+  disconnect?: Prisma.OrderPhaseWhereUniqueInput | Prisma.OrderPhaseWhereUniqueInput[]
+  delete?: Prisma.OrderPhaseWhereUniqueInput | Prisma.OrderPhaseWhereUniqueInput[]
+  connect?: Prisma.OrderPhaseWhereUniqueInput | Prisma.OrderPhaseWhereUniqueInput[]
+  update?: Prisma.OrderPhaseUpdateWithWhereUniqueWithoutAssignedEmployeeInput | Prisma.OrderPhaseUpdateWithWhereUniqueWithoutAssignedEmployeeInput[]
+  updateMany?: Prisma.OrderPhaseUpdateManyWithWhereWithoutAssignedEmployeeInput | Prisma.OrderPhaseUpdateManyWithWhereWithoutAssignedEmployeeInput[]
+  deleteMany?: Prisma.OrderPhaseScalarWhereInput | Prisma.OrderPhaseScalarWhereInput[]
+}
+
+export type OrderPhaseUncheckedUpdateManyWithoutAssignedEmployeeNestedInput = {
+  create?: Prisma.XOR<Prisma.OrderPhaseCreateWithoutAssignedEmployeeInput, Prisma.OrderPhaseUncheckedCreateWithoutAssignedEmployeeInput> | Prisma.OrderPhaseCreateWithoutAssignedEmployeeInput[] | Prisma.OrderPhaseUncheckedCreateWithoutAssignedEmployeeInput[]
+  connectOrCreate?: Prisma.OrderPhaseCreateOrConnectWithoutAssignedEmployeeInput | Prisma.OrderPhaseCreateOrConnectWithoutAssignedEmployeeInput[]
+  upsert?: Prisma.OrderPhaseUpsertWithWhereUniqueWithoutAssignedEmployeeInput | Prisma.OrderPhaseUpsertWithWhereUniqueWithoutAssignedEmployeeInput[]
+  createMany?: Prisma.OrderPhaseCreateManyAssignedEmployeeInputEnvelope
+  set?: Prisma.OrderPhaseWhereUniqueInput | Prisma.OrderPhaseWhereUniqueInput[]
+  disconnect?: Prisma.OrderPhaseWhereUniqueInput | Prisma.OrderPhaseWhereUniqueInput[]
+  delete?: Prisma.OrderPhaseWhereUniqueInput | Prisma.OrderPhaseWhereUniqueInput[]
+  connect?: Prisma.OrderPhaseWhereUniqueInput | Prisma.OrderPhaseWhereUniqueInput[]
+  update?: Prisma.OrderPhaseUpdateWithWhereUniqueWithoutAssignedEmployeeInput | Prisma.OrderPhaseUpdateWithWhereUniqueWithoutAssignedEmployeeInput[]
+  updateMany?: Prisma.OrderPhaseUpdateManyWithWhereWithoutAssignedEmployeeInput | Prisma.OrderPhaseUpdateManyWithWhereWithoutAssignedEmployeeInput[]
+  deleteMany?: Prisma.OrderPhaseScalarWhereInput | Prisma.OrderPhaseScalarWhereInput[]
 }
 
 export type OrderPhaseCreateNestedManyWithoutOrderInput = {
@@ -535,6 +681,22 @@ export type OrderPhaseUncheckedUpdateManyWithoutOrderNestedInput = {
   deleteMany?: Prisma.OrderPhaseScalarWhereInput | Prisma.OrderPhaseScalarWhereInput[]
 }
 
+export type OrderPhaseCreateNestedOneWithoutFilesInput = {
+  create?: Prisma.XOR<Prisma.OrderPhaseCreateWithoutFilesInput, Prisma.OrderPhaseUncheckedCreateWithoutFilesInput>
+  connectOrCreate?: Prisma.OrderPhaseCreateOrConnectWithoutFilesInput
+  connect?: Prisma.OrderPhaseWhereUniqueInput
+}
+
+export type OrderPhaseUpdateOneWithoutFilesNestedInput = {
+  create?: Prisma.XOR<Prisma.OrderPhaseCreateWithoutFilesInput, Prisma.OrderPhaseUncheckedCreateWithoutFilesInput>
+  connectOrCreate?: Prisma.OrderPhaseCreateOrConnectWithoutFilesInput
+  upsert?: Prisma.OrderPhaseUpsertWithoutFilesInput
+  disconnect?: Prisma.OrderPhaseWhereInput | boolean
+  delete?: Prisma.OrderPhaseWhereInput | boolean
+  connect?: Prisma.OrderPhaseWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OrderPhaseUpdateToOneWithWhereWithoutFilesInput, Prisma.OrderPhaseUpdateWithoutFilesInput>, Prisma.OrderPhaseUncheckedUpdateWithoutFilesInput>
+}
+
 export type EnumOrderPhaseTypeFieldUpdateOperationsInput = {
   set?: $Enums.OrderPhaseType
 }
@@ -543,17 +705,147 @@ export type EnumOrderPhaseStatusFieldUpdateOperationsInput = {
   set?: $Enums.OrderPhaseStatus
 }
 
+export type OrderPhaseCreateNestedManyWithoutAssignedTeamInput = {
+  create?: Prisma.XOR<Prisma.OrderPhaseCreateWithoutAssignedTeamInput, Prisma.OrderPhaseUncheckedCreateWithoutAssignedTeamInput> | Prisma.OrderPhaseCreateWithoutAssignedTeamInput[] | Prisma.OrderPhaseUncheckedCreateWithoutAssignedTeamInput[]
+  connectOrCreate?: Prisma.OrderPhaseCreateOrConnectWithoutAssignedTeamInput | Prisma.OrderPhaseCreateOrConnectWithoutAssignedTeamInput[]
+  createMany?: Prisma.OrderPhaseCreateManyAssignedTeamInputEnvelope
+  connect?: Prisma.OrderPhaseWhereUniqueInput | Prisma.OrderPhaseWhereUniqueInput[]
+}
+
+export type OrderPhaseUncheckedCreateNestedManyWithoutAssignedTeamInput = {
+  create?: Prisma.XOR<Prisma.OrderPhaseCreateWithoutAssignedTeamInput, Prisma.OrderPhaseUncheckedCreateWithoutAssignedTeamInput> | Prisma.OrderPhaseCreateWithoutAssignedTeamInput[] | Prisma.OrderPhaseUncheckedCreateWithoutAssignedTeamInput[]
+  connectOrCreate?: Prisma.OrderPhaseCreateOrConnectWithoutAssignedTeamInput | Prisma.OrderPhaseCreateOrConnectWithoutAssignedTeamInput[]
+  createMany?: Prisma.OrderPhaseCreateManyAssignedTeamInputEnvelope
+  connect?: Prisma.OrderPhaseWhereUniqueInput | Prisma.OrderPhaseWhereUniqueInput[]
+}
+
+export type OrderPhaseUpdateManyWithoutAssignedTeamNestedInput = {
+  create?: Prisma.XOR<Prisma.OrderPhaseCreateWithoutAssignedTeamInput, Prisma.OrderPhaseUncheckedCreateWithoutAssignedTeamInput> | Prisma.OrderPhaseCreateWithoutAssignedTeamInput[] | Prisma.OrderPhaseUncheckedCreateWithoutAssignedTeamInput[]
+  connectOrCreate?: Prisma.OrderPhaseCreateOrConnectWithoutAssignedTeamInput | Prisma.OrderPhaseCreateOrConnectWithoutAssignedTeamInput[]
+  upsert?: Prisma.OrderPhaseUpsertWithWhereUniqueWithoutAssignedTeamInput | Prisma.OrderPhaseUpsertWithWhereUniqueWithoutAssignedTeamInput[]
+  createMany?: Prisma.OrderPhaseCreateManyAssignedTeamInputEnvelope
+  set?: Prisma.OrderPhaseWhereUniqueInput | Prisma.OrderPhaseWhereUniqueInput[]
+  disconnect?: Prisma.OrderPhaseWhereUniqueInput | Prisma.OrderPhaseWhereUniqueInput[]
+  delete?: Prisma.OrderPhaseWhereUniqueInput | Prisma.OrderPhaseWhereUniqueInput[]
+  connect?: Prisma.OrderPhaseWhereUniqueInput | Prisma.OrderPhaseWhereUniqueInput[]
+  update?: Prisma.OrderPhaseUpdateWithWhereUniqueWithoutAssignedTeamInput | Prisma.OrderPhaseUpdateWithWhereUniqueWithoutAssignedTeamInput[]
+  updateMany?: Prisma.OrderPhaseUpdateManyWithWhereWithoutAssignedTeamInput | Prisma.OrderPhaseUpdateManyWithWhereWithoutAssignedTeamInput[]
+  deleteMany?: Prisma.OrderPhaseScalarWhereInput | Prisma.OrderPhaseScalarWhereInput[]
+}
+
+export type OrderPhaseUncheckedUpdateManyWithoutAssignedTeamNestedInput = {
+  create?: Prisma.XOR<Prisma.OrderPhaseCreateWithoutAssignedTeamInput, Prisma.OrderPhaseUncheckedCreateWithoutAssignedTeamInput> | Prisma.OrderPhaseCreateWithoutAssignedTeamInput[] | Prisma.OrderPhaseUncheckedCreateWithoutAssignedTeamInput[]
+  connectOrCreate?: Prisma.OrderPhaseCreateOrConnectWithoutAssignedTeamInput | Prisma.OrderPhaseCreateOrConnectWithoutAssignedTeamInput[]
+  upsert?: Prisma.OrderPhaseUpsertWithWhereUniqueWithoutAssignedTeamInput | Prisma.OrderPhaseUpsertWithWhereUniqueWithoutAssignedTeamInput[]
+  createMany?: Prisma.OrderPhaseCreateManyAssignedTeamInputEnvelope
+  set?: Prisma.OrderPhaseWhereUniqueInput | Prisma.OrderPhaseWhereUniqueInput[]
+  disconnect?: Prisma.OrderPhaseWhereUniqueInput | Prisma.OrderPhaseWhereUniqueInput[]
+  delete?: Prisma.OrderPhaseWhereUniqueInput | Prisma.OrderPhaseWhereUniqueInput[]
+  connect?: Prisma.OrderPhaseWhereUniqueInput | Prisma.OrderPhaseWhereUniqueInput[]
+  update?: Prisma.OrderPhaseUpdateWithWhereUniqueWithoutAssignedTeamInput | Prisma.OrderPhaseUpdateWithWhereUniqueWithoutAssignedTeamInput[]
+  updateMany?: Prisma.OrderPhaseUpdateManyWithWhereWithoutAssignedTeamInput | Prisma.OrderPhaseUpdateManyWithWhereWithoutAssignedTeamInput[]
+  deleteMany?: Prisma.OrderPhaseScalarWhereInput | Prisma.OrderPhaseScalarWhereInput[]
+}
+
+export type OrderPhaseCreateWithoutAssignedEmployeeInput = {
+  id?: string
+  name: string
+  phaseType?: $Enums.OrderPhaseType
+  status?: $Enums.OrderPhaseStatus
+  isEnabled?: boolean
+  sortOrder?: number
+  plannedStart?: Date | string | null
+  plannedEnd?: Date | string | null
+  notes?: string | null
+  specialNotes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  order: Prisma.OrderCreateNestedOneWithoutPhasesInput
+  assignedTeam?: Prisma.TeamCreateNestedOneWithoutOrderPhasesInput
+  files?: Prisma.FileUploadCreateNestedManyWithoutOrderPhaseInput
+}
+
+export type OrderPhaseUncheckedCreateWithoutAssignedEmployeeInput = {
+  id?: string
+  orderId: string
+  name: string
+  phaseType?: $Enums.OrderPhaseType
+  status?: $Enums.OrderPhaseStatus
+  isEnabled?: boolean
+  sortOrder?: number
+  plannedStart?: Date | string | null
+  plannedEnd?: Date | string | null
+  notes?: string | null
+  specialNotes?: string | null
+  assignedTeamId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  files?: Prisma.FileUploadUncheckedCreateNestedManyWithoutOrderPhaseInput
+}
+
+export type OrderPhaseCreateOrConnectWithoutAssignedEmployeeInput = {
+  where: Prisma.OrderPhaseWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrderPhaseCreateWithoutAssignedEmployeeInput, Prisma.OrderPhaseUncheckedCreateWithoutAssignedEmployeeInput>
+}
+
+export type OrderPhaseCreateManyAssignedEmployeeInputEnvelope = {
+  data: Prisma.OrderPhaseCreateManyAssignedEmployeeInput | Prisma.OrderPhaseCreateManyAssignedEmployeeInput[]
+  skipDuplicates?: boolean
+}
+
+export type OrderPhaseUpsertWithWhereUniqueWithoutAssignedEmployeeInput = {
+  where: Prisma.OrderPhaseWhereUniqueInput
+  update: Prisma.XOR<Prisma.OrderPhaseUpdateWithoutAssignedEmployeeInput, Prisma.OrderPhaseUncheckedUpdateWithoutAssignedEmployeeInput>
+  create: Prisma.XOR<Prisma.OrderPhaseCreateWithoutAssignedEmployeeInput, Prisma.OrderPhaseUncheckedCreateWithoutAssignedEmployeeInput>
+}
+
+export type OrderPhaseUpdateWithWhereUniqueWithoutAssignedEmployeeInput = {
+  where: Prisma.OrderPhaseWhereUniqueInput
+  data: Prisma.XOR<Prisma.OrderPhaseUpdateWithoutAssignedEmployeeInput, Prisma.OrderPhaseUncheckedUpdateWithoutAssignedEmployeeInput>
+}
+
+export type OrderPhaseUpdateManyWithWhereWithoutAssignedEmployeeInput = {
+  where: Prisma.OrderPhaseScalarWhereInput
+  data: Prisma.XOR<Prisma.OrderPhaseUpdateManyMutationInput, Prisma.OrderPhaseUncheckedUpdateManyWithoutAssignedEmployeeInput>
+}
+
+export type OrderPhaseScalarWhereInput = {
+  AND?: Prisma.OrderPhaseScalarWhereInput | Prisma.OrderPhaseScalarWhereInput[]
+  OR?: Prisma.OrderPhaseScalarWhereInput[]
+  NOT?: Prisma.OrderPhaseScalarWhereInput | Prisma.OrderPhaseScalarWhereInput[]
+  id?: Prisma.StringFilter<"OrderPhase"> | string
+  orderId?: Prisma.StringFilter<"OrderPhase"> | string
+  name?: Prisma.StringFilter<"OrderPhase"> | string
+  phaseType?: Prisma.EnumOrderPhaseTypeFilter<"OrderPhase"> | $Enums.OrderPhaseType
+  status?: Prisma.EnumOrderPhaseStatusFilter<"OrderPhase"> | $Enums.OrderPhaseStatus
+  isEnabled?: Prisma.BoolFilter<"OrderPhase"> | boolean
+  sortOrder?: Prisma.IntFilter<"OrderPhase"> | number
+  plannedStart?: Prisma.DateTimeNullableFilter<"OrderPhase"> | Date | string | null
+  plannedEnd?: Prisma.DateTimeNullableFilter<"OrderPhase"> | Date | string | null
+  notes?: Prisma.StringNullableFilter<"OrderPhase"> | string | null
+  specialNotes?: Prisma.StringNullableFilter<"OrderPhase"> | string | null
+  assignedTeamId?: Prisma.StringNullableFilter<"OrderPhase"> | string | null
+  assignedEmployeeId?: Prisma.StringNullableFilter<"OrderPhase"> | string | null
+  createdAt?: Prisma.DateTimeFilter<"OrderPhase"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"OrderPhase"> | Date | string
+}
+
 export type OrderPhaseCreateWithoutOrderInput = {
   id?: string
   name: string
   phaseType?: $Enums.OrderPhaseType
   status?: $Enums.OrderPhaseStatus
+  isEnabled?: boolean
   sortOrder?: number
   plannedStart?: Date | string | null
   plannedEnd?: Date | string | null
   notes?: string | null
+  specialNotes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  assignedTeam?: Prisma.TeamCreateNestedOneWithoutOrderPhasesInput
+  assignedEmployee?: Prisma.EmployeeCreateNestedOneWithoutOrderPhasesInput
+  files?: Prisma.FileUploadCreateNestedManyWithoutOrderPhaseInput
 }
 
 export type OrderPhaseUncheckedCreateWithoutOrderInput = {
@@ -561,12 +853,17 @@ export type OrderPhaseUncheckedCreateWithoutOrderInput = {
   name: string
   phaseType?: $Enums.OrderPhaseType
   status?: $Enums.OrderPhaseStatus
+  isEnabled?: boolean
   sortOrder?: number
   plannedStart?: Date | string | null
   plannedEnd?: Date | string | null
   notes?: string | null
+  specialNotes?: string | null
+  assignedTeamId?: string | null
+  assignedEmployeeId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  files?: Prisma.FileUploadUncheckedCreateNestedManyWithoutOrderPhaseInput
 }
 
 export type OrderPhaseCreateOrConnectWithoutOrderInput = {
@@ -595,21 +892,224 @@ export type OrderPhaseUpdateManyWithWhereWithoutOrderInput = {
   data: Prisma.XOR<Prisma.OrderPhaseUpdateManyMutationInput, Prisma.OrderPhaseUncheckedUpdateManyWithoutOrderInput>
 }
 
-export type OrderPhaseScalarWhereInput = {
-  AND?: Prisma.OrderPhaseScalarWhereInput | Prisma.OrderPhaseScalarWhereInput[]
-  OR?: Prisma.OrderPhaseScalarWhereInput[]
-  NOT?: Prisma.OrderPhaseScalarWhereInput | Prisma.OrderPhaseScalarWhereInput[]
-  id?: Prisma.StringFilter<"OrderPhase"> | string
-  orderId?: Prisma.StringFilter<"OrderPhase"> | string
-  name?: Prisma.StringFilter<"OrderPhase"> | string
-  phaseType?: Prisma.EnumOrderPhaseTypeFilter<"OrderPhase"> | $Enums.OrderPhaseType
-  status?: Prisma.EnumOrderPhaseStatusFilter<"OrderPhase"> | $Enums.OrderPhaseStatus
-  sortOrder?: Prisma.IntFilter<"OrderPhase"> | number
-  plannedStart?: Prisma.DateTimeNullableFilter<"OrderPhase"> | Date | string | null
-  plannedEnd?: Prisma.DateTimeNullableFilter<"OrderPhase"> | Date | string | null
-  notes?: Prisma.StringNullableFilter<"OrderPhase"> | string | null
-  createdAt?: Prisma.DateTimeFilter<"OrderPhase"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"OrderPhase"> | Date | string
+export type OrderPhaseCreateWithoutFilesInput = {
+  id?: string
+  name: string
+  phaseType?: $Enums.OrderPhaseType
+  status?: $Enums.OrderPhaseStatus
+  isEnabled?: boolean
+  sortOrder?: number
+  plannedStart?: Date | string | null
+  plannedEnd?: Date | string | null
+  notes?: string | null
+  specialNotes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  order: Prisma.OrderCreateNestedOneWithoutPhasesInput
+  assignedTeam?: Prisma.TeamCreateNestedOneWithoutOrderPhasesInput
+  assignedEmployee?: Prisma.EmployeeCreateNestedOneWithoutOrderPhasesInput
+}
+
+export type OrderPhaseUncheckedCreateWithoutFilesInput = {
+  id?: string
+  orderId: string
+  name: string
+  phaseType?: $Enums.OrderPhaseType
+  status?: $Enums.OrderPhaseStatus
+  isEnabled?: boolean
+  sortOrder?: number
+  plannedStart?: Date | string | null
+  plannedEnd?: Date | string | null
+  notes?: string | null
+  specialNotes?: string | null
+  assignedTeamId?: string | null
+  assignedEmployeeId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type OrderPhaseCreateOrConnectWithoutFilesInput = {
+  where: Prisma.OrderPhaseWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrderPhaseCreateWithoutFilesInput, Prisma.OrderPhaseUncheckedCreateWithoutFilesInput>
+}
+
+export type OrderPhaseUpsertWithoutFilesInput = {
+  update: Prisma.XOR<Prisma.OrderPhaseUpdateWithoutFilesInput, Prisma.OrderPhaseUncheckedUpdateWithoutFilesInput>
+  create: Prisma.XOR<Prisma.OrderPhaseCreateWithoutFilesInput, Prisma.OrderPhaseUncheckedCreateWithoutFilesInput>
+  where?: Prisma.OrderPhaseWhereInput
+}
+
+export type OrderPhaseUpdateToOneWithWhereWithoutFilesInput = {
+  where?: Prisma.OrderPhaseWhereInput
+  data: Prisma.XOR<Prisma.OrderPhaseUpdateWithoutFilesInput, Prisma.OrderPhaseUncheckedUpdateWithoutFilesInput>
+}
+
+export type OrderPhaseUpdateWithoutFilesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  phaseType?: Prisma.EnumOrderPhaseTypeFieldUpdateOperationsInput | $Enums.OrderPhaseType
+  status?: Prisma.EnumOrderPhaseStatusFieldUpdateOperationsInput | $Enums.OrderPhaseStatus
+  isEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  plannedStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  plannedEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  specialNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  order?: Prisma.OrderUpdateOneRequiredWithoutPhasesNestedInput
+  assignedTeam?: Prisma.TeamUpdateOneWithoutOrderPhasesNestedInput
+  assignedEmployee?: Prisma.EmployeeUpdateOneWithoutOrderPhasesNestedInput
+}
+
+export type OrderPhaseUncheckedUpdateWithoutFilesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  orderId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  phaseType?: Prisma.EnumOrderPhaseTypeFieldUpdateOperationsInput | $Enums.OrderPhaseType
+  status?: Prisma.EnumOrderPhaseStatusFieldUpdateOperationsInput | $Enums.OrderPhaseStatus
+  isEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  plannedStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  plannedEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  specialNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedTeamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedEmployeeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type OrderPhaseCreateWithoutAssignedTeamInput = {
+  id?: string
+  name: string
+  phaseType?: $Enums.OrderPhaseType
+  status?: $Enums.OrderPhaseStatus
+  isEnabled?: boolean
+  sortOrder?: number
+  plannedStart?: Date | string | null
+  plannedEnd?: Date | string | null
+  notes?: string | null
+  specialNotes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  order: Prisma.OrderCreateNestedOneWithoutPhasesInput
+  assignedEmployee?: Prisma.EmployeeCreateNestedOneWithoutOrderPhasesInput
+  files?: Prisma.FileUploadCreateNestedManyWithoutOrderPhaseInput
+}
+
+export type OrderPhaseUncheckedCreateWithoutAssignedTeamInput = {
+  id?: string
+  orderId: string
+  name: string
+  phaseType?: $Enums.OrderPhaseType
+  status?: $Enums.OrderPhaseStatus
+  isEnabled?: boolean
+  sortOrder?: number
+  plannedStart?: Date | string | null
+  plannedEnd?: Date | string | null
+  notes?: string | null
+  specialNotes?: string | null
+  assignedEmployeeId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  files?: Prisma.FileUploadUncheckedCreateNestedManyWithoutOrderPhaseInput
+}
+
+export type OrderPhaseCreateOrConnectWithoutAssignedTeamInput = {
+  where: Prisma.OrderPhaseWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrderPhaseCreateWithoutAssignedTeamInput, Prisma.OrderPhaseUncheckedCreateWithoutAssignedTeamInput>
+}
+
+export type OrderPhaseCreateManyAssignedTeamInputEnvelope = {
+  data: Prisma.OrderPhaseCreateManyAssignedTeamInput | Prisma.OrderPhaseCreateManyAssignedTeamInput[]
+  skipDuplicates?: boolean
+}
+
+export type OrderPhaseUpsertWithWhereUniqueWithoutAssignedTeamInput = {
+  where: Prisma.OrderPhaseWhereUniqueInput
+  update: Prisma.XOR<Prisma.OrderPhaseUpdateWithoutAssignedTeamInput, Prisma.OrderPhaseUncheckedUpdateWithoutAssignedTeamInput>
+  create: Prisma.XOR<Prisma.OrderPhaseCreateWithoutAssignedTeamInput, Prisma.OrderPhaseUncheckedCreateWithoutAssignedTeamInput>
+}
+
+export type OrderPhaseUpdateWithWhereUniqueWithoutAssignedTeamInput = {
+  where: Prisma.OrderPhaseWhereUniqueInput
+  data: Prisma.XOR<Prisma.OrderPhaseUpdateWithoutAssignedTeamInput, Prisma.OrderPhaseUncheckedUpdateWithoutAssignedTeamInput>
+}
+
+export type OrderPhaseUpdateManyWithWhereWithoutAssignedTeamInput = {
+  where: Prisma.OrderPhaseScalarWhereInput
+  data: Prisma.XOR<Prisma.OrderPhaseUpdateManyMutationInput, Prisma.OrderPhaseUncheckedUpdateManyWithoutAssignedTeamInput>
+}
+
+export type OrderPhaseCreateManyAssignedEmployeeInput = {
+  id?: string
+  orderId: string
+  name: string
+  phaseType?: $Enums.OrderPhaseType
+  status?: $Enums.OrderPhaseStatus
+  isEnabled?: boolean
+  sortOrder?: number
+  plannedStart?: Date | string | null
+  plannedEnd?: Date | string | null
+  notes?: string | null
+  specialNotes?: string | null
+  assignedTeamId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type OrderPhaseUpdateWithoutAssignedEmployeeInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  phaseType?: Prisma.EnumOrderPhaseTypeFieldUpdateOperationsInput | $Enums.OrderPhaseType
+  status?: Prisma.EnumOrderPhaseStatusFieldUpdateOperationsInput | $Enums.OrderPhaseStatus
+  isEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  plannedStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  plannedEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  specialNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  order?: Prisma.OrderUpdateOneRequiredWithoutPhasesNestedInput
+  assignedTeam?: Prisma.TeamUpdateOneWithoutOrderPhasesNestedInput
+  files?: Prisma.FileUploadUpdateManyWithoutOrderPhaseNestedInput
+}
+
+export type OrderPhaseUncheckedUpdateWithoutAssignedEmployeeInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  orderId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  phaseType?: Prisma.EnumOrderPhaseTypeFieldUpdateOperationsInput | $Enums.OrderPhaseType
+  status?: Prisma.EnumOrderPhaseStatusFieldUpdateOperationsInput | $Enums.OrderPhaseStatus
+  isEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  plannedStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  plannedEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  specialNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedTeamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  files?: Prisma.FileUploadUncheckedUpdateManyWithoutOrderPhaseNestedInput
+}
+
+export type OrderPhaseUncheckedUpdateManyWithoutAssignedEmployeeInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  orderId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  phaseType?: Prisma.EnumOrderPhaseTypeFieldUpdateOperationsInput | $Enums.OrderPhaseType
+  status?: Prisma.EnumOrderPhaseStatusFieldUpdateOperationsInput | $Enums.OrderPhaseStatus
+  isEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  plannedStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  plannedEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  specialNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedTeamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type OrderPhaseCreateManyOrderInput = {
@@ -617,10 +1117,14 @@ export type OrderPhaseCreateManyOrderInput = {
   name: string
   phaseType?: $Enums.OrderPhaseType
   status?: $Enums.OrderPhaseStatus
+  isEnabled?: boolean
   sortOrder?: number
   plannedStart?: Date | string | null
   plannedEnd?: Date | string | null
   notes?: string | null
+  specialNotes?: string | null
+  assignedTeamId?: string | null
+  assignedEmployeeId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -630,12 +1134,17 @@ export type OrderPhaseUpdateWithoutOrderInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   phaseType?: Prisma.EnumOrderPhaseTypeFieldUpdateOperationsInput | $Enums.OrderPhaseType
   status?: Prisma.EnumOrderPhaseStatusFieldUpdateOperationsInput | $Enums.OrderPhaseStatus
+  isEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   plannedStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   plannedEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  specialNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  assignedTeam?: Prisma.TeamUpdateOneWithoutOrderPhasesNestedInput
+  assignedEmployee?: Prisma.EmployeeUpdateOneWithoutOrderPhasesNestedInput
+  files?: Prisma.FileUploadUpdateManyWithoutOrderPhaseNestedInput
 }
 
 export type OrderPhaseUncheckedUpdateWithoutOrderInput = {
@@ -643,12 +1152,17 @@ export type OrderPhaseUncheckedUpdateWithoutOrderInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   phaseType?: Prisma.EnumOrderPhaseTypeFieldUpdateOperationsInput | $Enums.OrderPhaseType
   status?: Prisma.EnumOrderPhaseStatusFieldUpdateOperationsInput | $Enums.OrderPhaseStatus
+  isEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   plannedStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   plannedEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  specialNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedTeamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedEmployeeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  files?: Prisma.FileUploadUncheckedUpdateManyWithoutOrderPhaseNestedInput
 }
 
 export type OrderPhaseUncheckedUpdateManyWithoutOrderInput = {
@@ -656,14 +1170,117 @@ export type OrderPhaseUncheckedUpdateManyWithoutOrderInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   phaseType?: Prisma.EnumOrderPhaseTypeFieldUpdateOperationsInput | $Enums.OrderPhaseType
   status?: Prisma.EnumOrderPhaseStatusFieldUpdateOperationsInput | $Enums.OrderPhaseStatus
+  isEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   plannedStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   plannedEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  specialNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedTeamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedEmployeeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+export type OrderPhaseCreateManyAssignedTeamInput = {
+  id?: string
+  orderId: string
+  name: string
+  phaseType?: $Enums.OrderPhaseType
+  status?: $Enums.OrderPhaseStatus
+  isEnabled?: boolean
+  sortOrder?: number
+  plannedStart?: Date | string | null
+  plannedEnd?: Date | string | null
+  notes?: string | null
+  specialNotes?: string | null
+  assignedEmployeeId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type OrderPhaseUpdateWithoutAssignedTeamInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  phaseType?: Prisma.EnumOrderPhaseTypeFieldUpdateOperationsInput | $Enums.OrderPhaseType
+  status?: Prisma.EnumOrderPhaseStatusFieldUpdateOperationsInput | $Enums.OrderPhaseStatus
+  isEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  plannedStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  plannedEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  specialNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  order?: Prisma.OrderUpdateOneRequiredWithoutPhasesNestedInput
+  assignedEmployee?: Prisma.EmployeeUpdateOneWithoutOrderPhasesNestedInput
+  files?: Prisma.FileUploadUpdateManyWithoutOrderPhaseNestedInput
+}
+
+export type OrderPhaseUncheckedUpdateWithoutAssignedTeamInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  orderId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  phaseType?: Prisma.EnumOrderPhaseTypeFieldUpdateOperationsInput | $Enums.OrderPhaseType
+  status?: Prisma.EnumOrderPhaseStatusFieldUpdateOperationsInput | $Enums.OrderPhaseStatus
+  isEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  plannedStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  plannedEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  specialNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedEmployeeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  files?: Prisma.FileUploadUncheckedUpdateManyWithoutOrderPhaseNestedInput
+}
+
+export type OrderPhaseUncheckedUpdateManyWithoutAssignedTeamInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  orderId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  phaseType?: Prisma.EnumOrderPhaseTypeFieldUpdateOperationsInput | $Enums.OrderPhaseType
+  status?: Prisma.EnumOrderPhaseStatusFieldUpdateOperationsInput | $Enums.OrderPhaseStatus
+  isEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  plannedStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  plannedEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  specialNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedEmployeeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+
+/**
+ * Count Type OrderPhaseCountOutputType
+ */
+
+export type OrderPhaseCountOutputType = {
+  files: number
+}
+
+export type OrderPhaseCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  files?: boolean | OrderPhaseCountOutputTypeCountFilesArgs
+}
+
+/**
+ * OrderPhaseCountOutputType without action
+ */
+export type OrderPhaseCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the OrderPhaseCountOutputType
+   */
+  select?: Prisma.OrderPhaseCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * OrderPhaseCountOutputType without action
+ */
+export type OrderPhaseCountOutputTypeCountFilesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.FileUploadWhereInput
+}
 
 
 export type OrderPhaseSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -672,13 +1289,21 @@ export type OrderPhaseSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   name?: boolean
   phaseType?: boolean
   status?: boolean
+  isEnabled?: boolean
   sortOrder?: boolean
   plannedStart?: boolean
   plannedEnd?: boolean
   notes?: boolean
+  specialNotes?: boolean
+  assignedTeamId?: boolean
+  assignedEmployeeId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
+  assignedTeam?: boolean | Prisma.OrderPhase$assignedTeamArgs<ExtArgs>
+  assignedEmployee?: boolean | Prisma.OrderPhase$assignedEmployeeArgs<ExtArgs>
+  files?: boolean | Prisma.OrderPhase$filesArgs<ExtArgs>
+  _count?: boolean | Prisma.OrderPhaseCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["orderPhase"]>
 
 export type OrderPhaseSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -687,13 +1312,19 @@ export type OrderPhaseSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
   name?: boolean
   phaseType?: boolean
   status?: boolean
+  isEnabled?: boolean
   sortOrder?: boolean
   plannedStart?: boolean
   plannedEnd?: boolean
   notes?: boolean
+  specialNotes?: boolean
+  assignedTeamId?: boolean
+  assignedEmployeeId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
+  assignedTeam?: boolean | Prisma.OrderPhase$assignedTeamArgs<ExtArgs>
+  assignedEmployee?: boolean | Prisma.OrderPhase$assignedEmployeeArgs<ExtArgs>
 }, ExtArgs["result"]["orderPhase"]>
 
 export type OrderPhaseSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -702,13 +1333,19 @@ export type OrderPhaseSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
   name?: boolean
   phaseType?: boolean
   status?: boolean
+  isEnabled?: boolean
   sortOrder?: boolean
   plannedStart?: boolean
   plannedEnd?: boolean
   notes?: boolean
+  specialNotes?: boolean
+  assignedTeamId?: boolean
+  assignedEmployeeId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
+  assignedTeam?: boolean | Prisma.OrderPhase$assignedTeamArgs<ExtArgs>
+  assignedEmployee?: boolean | Prisma.OrderPhase$assignedEmployeeArgs<ExtArgs>
 }, ExtArgs["result"]["orderPhase"]>
 
 export type OrderPhaseSelectScalar = {
@@ -717,29 +1354,44 @@ export type OrderPhaseSelectScalar = {
   name?: boolean
   phaseType?: boolean
   status?: boolean
+  isEnabled?: boolean
   sortOrder?: boolean
   plannedStart?: boolean
   plannedEnd?: boolean
   notes?: boolean
+  specialNotes?: boolean
+  assignedTeamId?: boolean
+  assignedEmployeeId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type OrderPhaseOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "orderId" | "name" | "phaseType" | "status" | "sortOrder" | "plannedStart" | "plannedEnd" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["orderPhase"]>
+export type OrderPhaseOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "orderId" | "name" | "phaseType" | "status" | "isEnabled" | "sortOrder" | "plannedStart" | "plannedEnd" | "notes" | "specialNotes" | "assignedTeamId" | "assignedEmployeeId" | "createdAt" | "updatedAt", ExtArgs["result"]["orderPhase"]>
 export type OrderPhaseInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
+  assignedTeam?: boolean | Prisma.OrderPhase$assignedTeamArgs<ExtArgs>
+  assignedEmployee?: boolean | Prisma.OrderPhase$assignedEmployeeArgs<ExtArgs>
+  files?: boolean | Prisma.OrderPhase$filesArgs<ExtArgs>
+  _count?: boolean | Prisma.OrderPhaseCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type OrderPhaseIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
+  assignedTeam?: boolean | Prisma.OrderPhase$assignedTeamArgs<ExtArgs>
+  assignedEmployee?: boolean | Prisma.OrderPhase$assignedEmployeeArgs<ExtArgs>
 }
 export type OrderPhaseIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
+  assignedTeam?: boolean | Prisma.OrderPhase$assignedTeamArgs<ExtArgs>
+  assignedEmployee?: boolean | Prisma.OrderPhase$assignedEmployeeArgs<ExtArgs>
 }
 
 export type $OrderPhasePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "OrderPhase"
   objects: {
     order: Prisma.$OrderPayload<ExtArgs>
+    assignedTeam: Prisma.$TeamPayload<ExtArgs> | null
+    assignedEmployee: Prisma.$EmployeePayload<ExtArgs> | null
+    files: Prisma.$FileUploadPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -747,10 +1399,14 @@ export type $OrderPhasePayload<ExtArgs extends runtime.Types.Extensions.Internal
     name: string
     phaseType: $Enums.OrderPhaseType
     status: $Enums.OrderPhaseStatus
+    isEnabled: boolean
     sortOrder: number
     plannedStart: Date | null
     plannedEnd: Date | null
     notes: string | null
+    specialNotes: string | null
+    assignedTeamId: string | null
+    assignedEmployeeId: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["orderPhase"]>
@@ -1148,6 +1804,9 @@ readonly fields: OrderPhaseFieldRefs;
 export interface Prisma__OrderPhaseClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   order<T extends Prisma.OrderDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OrderDefaultArgs<ExtArgs>>): Prisma.Prisma__OrderClient<runtime.Types.Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  assignedTeam<T extends Prisma.OrderPhase$assignedTeamArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OrderPhase$assignedTeamArgs<ExtArgs>>): Prisma.Prisma__TeamClient<runtime.Types.Result.GetResult<Prisma.$TeamPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  assignedEmployee<T extends Prisma.OrderPhase$assignedEmployeeArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OrderPhase$assignedEmployeeArgs<ExtArgs>>): Prisma.Prisma__EmployeeClient<runtime.Types.Result.GetResult<Prisma.$EmployeePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  files<T extends Prisma.OrderPhase$filesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OrderPhase$filesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FileUploadPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1182,10 +1841,14 @@ export interface OrderPhaseFieldRefs {
   readonly name: Prisma.FieldRef<"OrderPhase", 'String'>
   readonly phaseType: Prisma.FieldRef<"OrderPhase", 'OrderPhaseType'>
   readonly status: Prisma.FieldRef<"OrderPhase", 'OrderPhaseStatus'>
+  readonly isEnabled: Prisma.FieldRef<"OrderPhase", 'Boolean'>
   readonly sortOrder: Prisma.FieldRef<"OrderPhase", 'Int'>
   readonly plannedStart: Prisma.FieldRef<"OrderPhase", 'DateTime'>
   readonly plannedEnd: Prisma.FieldRef<"OrderPhase", 'DateTime'>
   readonly notes: Prisma.FieldRef<"OrderPhase", 'String'>
+  readonly specialNotes: Prisma.FieldRef<"OrderPhase", 'String'>
+  readonly assignedTeamId: Prisma.FieldRef<"OrderPhase", 'String'>
+  readonly assignedEmployeeId: Prisma.FieldRef<"OrderPhase", 'String'>
   readonly createdAt: Prisma.FieldRef<"OrderPhase", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"OrderPhase", 'DateTime'>
 }
@@ -1586,6 +2249,68 @@ export type OrderPhaseDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.In
    * Limit how many OrderPhases to delete.
    */
   limit?: number
+}
+
+/**
+ * OrderPhase.assignedTeam
+ */
+export type OrderPhase$assignedTeamArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Team
+   */
+  select?: Prisma.TeamSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Team
+   */
+  omit?: Prisma.TeamOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TeamInclude<ExtArgs> | null
+  where?: Prisma.TeamWhereInput
+}
+
+/**
+ * OrderPhase.assignedEmployee
+ */
+export type OrderPhase$assignedEmployeeArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Employee
+   */
+  select?: Prisma.EmployeeSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Employee
+   */
+  omit?: Prisma.EmployeeOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EmployeeInclude<ExtArgs> | null
+  where?: Prisma.EmployeeWhereInput
+}
+
+/**
+ * OrderPhase.files
+ */
+export type OrderPhase$filesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the FileUpload
+   */
+  select?: Prisma.FileUploadSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the FileUpload
+   */
+  omit?: Prisma.FileUploadOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FileUploadInclude<ExtArgs> | null
+  where?: Prisma.FileUploadWhereInput
+  orderBy?: Prisma.FileUploadOrderByWithRelationInput | Prisma.FileUploadOrderByWithRelationInput[]
+  cursor?: Prisma.FileUploadWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.FileUploadScalarFieldEnum | Prisma.FileUploadScalarFieldEnum[]
 }
 
 /**

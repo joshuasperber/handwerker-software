@@ -202,6 +202,7 @@ export type TeamWhereInput = {
   vehicle?: Prisma.XOR<Prisma.VehicleNullableScalarRelationFilter, Prisma.VehicleWhereInput> | null
   members?: Prisma.TeamMemberListRelationFilter
   orders?: Prisma.OrderListRelationFilter
+  orderPhases?: Prisma.OrderPhaseListRelationFilter
 }
 
 export type TeamOrderByWithRelationInput = {
@@ -216,6 +217,7 @@ export type TeamOrderByWithRelationInput = {
   vehicle?: Prisma.VehicleOrderByWithRelationInput
   members?: Prisma.TeamMemberOrderByRelationAggregateInput
   orders?: Prisma.OrderOrderByRelationAggregateInput
+  orderPhases?: Prisma.OrderPhaseOrderByRelationAggregateInput
 }
 
 export type TeamWhereUniqueInput = Prisma.AtLeast<{
@@ -233,6 +235,7 @@ export type TeamWhereUniqueInput = Prisma.AtLeast<{
   vehicle?: Prisma.XOR<Prisma.VehicleNullableScalarRelationFilter, Prisma.VehicleWhereInput> | null
   members?: Prisma.TeamMemberListRelationFilter
   orders?: Prisma.OrderListRelationFilter
+  orderPhases?: Prisma.OrderPhaseListRelationFilter
 }, "id">
 
 export type TeamOrderByWithAggregationInput = {
@@ -271,6 +274,7 @@ export type TeamCreateInput = {
   vehicle?: Prisma.VehicleCreateNestedOneWithoutTeamsInput
   members?: Prisma.TeamMemberCreateNestedManyWithoutTeamInput
   orders?: Prisma.OrderCreateNestedManyWithoutTeamInput
+  orderPhases?: Prisma.OrderPhaseCreateNestedManyWithoutAssignedTeamInput
 }
 
 export type TeamUncheckedCreateInput = {
@@ -283,6 +287,7 @@ export type TeamUncheckedCreateInput = {
   updatedAt?: Date | string
   members?: Prisma.TeamMemberUncheckedCreateNestedManyWithoutTeamInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutTeamInput
+  orderPhases?: Prisma.OrderPhaseUncheckedCreateNestedManyWithoutAssignedTeamInput
 }
 
 export type TeamUpdateInput = {
@@ -295,6 +300,7 @@ export type TeamUpdateInput = {
   vehicle?: Prisma.VehicleUpdateOneWithoutTeamsNestedInput
   members?: Prisma.TeamMemberUpdateManyWithoutTeamNestedInput
   orders?: Prisma.OrderUpdateManyWithoutTeamNestedInput
+  orderPhases?: Prisma.OrderPhaseUpdateManyWithoutAssignedTeamNestedInput
 }
 
 export type TeamUncheckedUpdateInput = {
@@ -307,6 +313,7 @@ export type TeamUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.TeamMemberUncheckedUpdateManyWithoutTeamNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutTeamNestedInput
+  orderPhases?: Prisma.OrderPhaseUncheckedUpdateManyWithoutAssignedTeamNestedInput
 }
 
 export type TeamCreateManyInput = {
@@ -445,6 +452,22 @@ export type TeamUpdateOneWithoutOrdersNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.TeamUpdateToOneWithWhereWithoutOrdersInput, Prisma.TeamUpdateWithoutOrdersInput>, Prisma.TeamUncheckedUpdateWithoutOrdersInput>
 }
 
+export type TeamCreateNestedOneWithoutOrderPhasesInput = {
+  create?: Prisma.XOR<Prisma.TeamCreateWithoutOrderPhasesInput, Prisma.TeamUncheckedCreateWithoutOrderPhasesInput>
+  connectOrCreate?: Prisma.TeamCreateOrConnectWithoutOrderPhasesInput
+  connect?: Prisma.TeamWhereUniqueInput
+}
+
+export type TeamUpdateOneWithoutOrderPhasesNestedInput = {
+  create?: Prisma.XOR<Prisma.TeamCreateWithoutOrderPhasesInput, Prisma.TeamUncheckedCreateWithoutOrderPhasesInput>
+  connectOrCreate?: Prisma.TeamCreateOrConnectWithoutOrderPhasesInput
+  upsert?: Prisma.TeamUpsertWithoutOrderPhasesInput
+  disconnect?: Prisma.TeamWhereInput | boolean
+  delete?: Prisma.TeamWhereInput | boolean
+  connect?: Prisma.TeamWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TeamUpdateToOneWithWhereWithoutOrderPhasesInput, Prisma.TeamUpdateWithoutOrderPhasesInput>, Prisma.TeamUncheckedUpdateWithoutOrderPhasesInput>
+}
+
 export type TeamCreateNestedOneWithoutMembersInput = {
   create?: Prisma.XOR<Prisma.TeamCreateWithoutMembersInput, Prisma.TeamUncheckedCreateWithoutMembersInput>
   connectOrCreate?: Prisma.TeamCreateOrConnectWithoutMembersInput
@@ -510,6 +533,7 @@ export type TeamCreateWithoutTenantInput = {
   vehicle?: Prisma.VehicleCreateNestedOneWithoutTeamsInput
   members?: Prisma.TeamMemberCreateNestedManyWithoutTeamInput
   orders?: Prisma.OrderCreateNestedManyWithoutTeamInput
+  orderPhases?: Prisma.OrderPhaseCreateNestedManyWithoutAssignedTeamInput
 }
 
 export type TeamUncheckedCreateWithoutTenantInput = {
@@ -521,6 +545,7 @@ export type TeamUncheckedCreateWithoutTenantInput = {
   updatedAt?: Date | string
   members?: Prisma.TeamMemberUncheckedCreateNestedManyWithoutTeamInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutTeamInput
+  orderPhases?: Prisma.OrderPhaseUncheckedCreateNestedManyWithoutAssignedTeamInput
 }
 
 export type TeamCreateOrConnectWithoutTenantInput = {
@@ -571,6 +596,7 @@ export type TeamCreateWithoutOrdersInput = {
   tenant: Prisma.TenantCreateNestedOneWithoutTeamsInput
   vehicle?: Prisma.VehicleCreateNestedOneWithoutTeamsInput
   members?: Prisma.TeamMemberCreateNestedManyWithoutTeamInput
+  orderPhases?: Prisma.OrderPhaseCreateNestedManyWithoutAssignedTeamInput
 }
 
 export type TeamUncheckedCreateWithoutOrdersInput = {
@@ -582,6 +608,7 @@ export type TeamUncheckedCreateWithoutOrdersInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   members?: Prisma.TeamMemberUncheckedCreateNestedManyWithoutTeamInput
+  orderPhases?: Prisma.OrderPhaseUncheckedCreateNestedManyWithoutAssignedTeamInput
 }
 
 export type TeamCreateOrConnectWithoutOrdersInput = {
@@ -609,6 +636,7 @@ export type TeamUpdateWithoutOrdersInput = {
   tenant?: Prisma.TenantUpdateOneRequiredWithoutTeamsNestedInput
   vehicle?: Prisma.VehicleUpdateOneWithoutTeamsNestedInput
   members?: Prisma.TeamMemberUpdateManyWithoutTeamNestedInput
+  orderPhases?: Prisma.OrderPhaseUpdateManyWithoutAssignedTeamNestedInput
 }
 
 export type TeamUncheckedUpdateWithoutOrdersInput = {
@@ -620,6 +648,71 @@ export type TeamUncheckedUpdateWithoutOrdersInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.TeamMemberUncheckedUpdateManyWithoutTeamNestedInput
+  orderPhases?: Prisma.OrderPhaseUncheckedUpdateManyWithoutAssignedTeamNestedInput
+}
+
+export type TeamCreateWithoutOrderPhasesInput = {
+  id?: string
+  name: string
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tenant: Prisma.TenantCreateNestedOneWithoutTeamsInput
+  vehicle?: Prisma.VehicleCreateNestedOneWithoutTeamsInput
+  members?: Prisma.TeamMemberCreateNestedManyWithoutTeamInput
+  orders?: Prisma.OrderCreateNestedManyWithoutTeamInput
+}
+
+export type TeamUncheckedCreateWithoutOrderPhasesInput = {
+  id?: string
+  tenantId: string
+  name: string
+  vehicleId?: string | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  members?: Prisma.TeamMemberUncheckedCreateNestedManyWithoutTeamInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutTeamInput
+}
+
+export type TeamCreateOrConnectWithoutOrderPhasesInput = {
+  where: Prisma.TeamWhereUniqueInput
+  create: Prisma.XOR<Prisma.TeamCreateWithoutOrderPhasesInput, Prisma.TeamUncheckedCreateWithoutOrderPhasesInput>
+}
+
+export type TeamUpsertWithoutOrderPhasesInput = {
+  update: Prisma.XOR<Prisma.TeamUpdateWithoutOrderPhasesInput, Prisma.TeamUncheckedUpdateWithoutOrderPhasesInput>
+  create: Prisma.XOR<Prisma.TeamCreateWithoutOrderPhasesInput, Prisma.TeamUncheckedCreateWithoutOrderPhasesInput>
+  where?: Prisma.TeamWhereInput
+}
+
+export type TeamUpdateToOneWithWhereWithoutOrderPhasesInput = {
+  where?: Prisma.TeamWhereInput
+  data: Prisma.XOR<Prisma.TeamUpdateWithoutOrderPhasesInput, Prisma.TeamUncheckedUpdateWithoutOrderPhasesInput>
+}
+
+export type TeamUpdateWithoutOrderPhasesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutTeamsNestedInput
+  vehicle?: Prisma.VehicleUpdateOneWithoutTeamsNestedInput
+  members?: Prisma.TeamMemberUpdateManyWithoutTeamNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutTeamNestedInput
+}
+
+export type TeamUncheckedUpdateWithoutOrderPhasesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  members?: Prisma.TeamMemberUncheckedUpdateManyWithoutTeamNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutTeamNestedInput
 }
 
 export type TeamCreateWithoutMembersInput = {
@@ -631,6 +724,7 @@ export type TeamCreateWithoutMembersInput = {
   tenant: Prisma.TenantCreateNestedOneWithoutTeamsInput
   vehicle?: Prisma.VehicleCreateNestedOneWithoutTeamsInput
   orders?: Prisma.OrderCreateNestedManyWithoutTeamInput
+  orderPhases?: Prisma.OrderPhaseCreateNestedManyWithoutAssignedTeamInput
 }
 
 export type TeamUncheckedCreateWithoutMembersInput = {
@@ -642,6 +736,7 @@ export type TeamUncheckedCreateWithoutMembersInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutTeamInput
+  orderPhases?: Prisma.OrderPhaseUncheckedCreateNestedManyWithoutAssignedTeamInput
 }
 
 export type TeamCreateOrConnectWithoutMembersInput = {
@@ -669,6 +764,7 @@ export type TeamUpdateWithoutMembersInput = {
   tenant?: Prisma.TenantUpdateOneRequiredWithoutTeamsNestedInput
   vehicle?: Prisma.VehicleUpdateOneWithoutTeamsNestedInput
   orders?: Prisma.OrderUpdateManyWithoutTeamNestedInput
+  orderPhases?: Prisma.OrderPhaseUpdateManyWithoutAssignedTeamNestedInput
 }
 
 export type TeamUncheckedUpdateWithoutMembersInput = {
@@ -680,6 +776,7 @@ export type TeamUncheckedUpdateWithoutMembersInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   orders?: Prisma.OrderUncheckedUpdateManyWithoutTeamNestedInput
+  orderPhases?: Prisma.OrderPhaseUncheckedUpdateManyWithoutAssignedTeamNestedInput
 }
 
 export type TeamCreateWithoutVehicleInput = {
@@ -691,6 +788,7 @@ export type TeamCreateWithoutVehicleInput = {
   tenant: Prisma.TenantCreateNestedOneWithoutTeamsInput
   members?: Prisma.TeamMemberCreateNestedManyWithoutTeamInput
   orders?: Prisma.OrderCreateNestedManyWithoutTeamInput
+  orderPhases?: Prisma.OrderPhaseCreateNestedManyWithoutAssignedTeamInput
 }
 
 export type TeamUncheckedCreateWithoutVehicleInput = {
@@ -702,6 +800,7 @@ export type TeamUncheckedCreateWithoutVehicleInput = {
   updatedAt?: Date | string
   members?: Prisma.TeamMemberUncheckedCreateNestedManyWithoutTeamInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutTeamInput
+  orderPhases?: Prisma.OrderPhaseUncheckedCreateNestedManyWithoutAssignedTeamInput
 }
 
 export type TeamCreateOrConnectWithoutVehicleInput = {
@@ -748,6 +847,7 @@ export type TeamUpdateWithoutTenantInput = {
   vehicle?: Prisma.VehicleUpdateOneWithoutTeamsNestedInput
   members?: Prisma.TeamMemberUpdateManyWithoutTeamNestedInput
   orders?: Prisma.OrderUpdateManyWithoutTeamNestedInput
+  orderPhases?: Prisma.OrderPhaseUpdateManyWithoutAssignedTeamNestedInput
 }
 
 export type TeamUncheckedUpdateWithoutTenantInput = {
@@ -759,6 +859,7 @@ export type TeamUncheckedUpdateWithoutTenantInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.TeamMemberUncheckedUpdateManyWithoutTeamNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutTeamNestedInput
+  orderPhases?: Prisma.OrderPhaseUncheckedUpdateManyWithoutAssignedTeamNestedInput
 }
 
 export type TeamUncheckedUpdateManyWithoutTenantInput = {
@@ -788,6 +889,7 @@ export type TeamUpdateWithoutVehicleInput = {
   tenant?: Prisma.TenantUpdateOneRequiredWithoutTeamsNestedInput
   members?: Prisma.TeamMemberUpdateManyWithoutTeamNestedInput
   orders?: Prisma.OrderUpdateManyWithoutTeamNestedInput
+  orderPhases?: Prisma.OrderPhaseUpdateManyWithoutAssignedTeamNestedInput
 }
 
 export type TeamUncheckedUpdateWithoutVehicleInput = {
@@ -799,6 +901,7 @@ export type TeamUncheckedUpdateWithoutVehicleInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.TeamMemberUncheckedUpdateManyWithoutTeamNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutTeamNestedInput
+  orderPhases?: Prisma.OrderPhaseUncheckedUpdateManyWithoutAssignedTeamNestedInput
 }
 
 export type TeamUncheckedUpdateManyWithoutVehicleInput = {
@@ -818,11 +921,13 @@ export type TeamUncheckedUpdateManyWithoutVehicleInput = {
 export type TeamCountOutputType = {
   members: number
   orders: number
+  orderPhases: number
 }
 
 export type TeamCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   members?: boolean | TeamCountOutputTypeCountMembersArgs
   orders?: boolean | TeamCountOutputTypeCountOrdersArgs
+  orderPhases?: boolean | TeamCountOutputTypeCountOrderPhasesArgs
 }
 
 /**
@@ -849,6 +954,13 @@ export type TeamCountOutputTypeCountOrdersArgs<ExtArgs extends runtime.Types.Ext
   where?: Prisma.OrderWhereInput
 }
 
+/**
+ * TeamCountOutputType without action
+ */
+export type TeamCountOutputTypeCountOrderPhasesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.OrderPhaseWhereInput
+}
+
 
 export type TeamSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -862,6 +974,7 @@ export type TeamSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   vehicle?: boolean | Prisma.Team$vehicleArgs<ExtArgs>
   members?: boolean | Prisma.Team$membersArgs<ExtArgs>
   orders?: boolean | Prisma.Team$ordersArgs<ExtArgs>
+  orderPhases?: boolean | Prisma.Team$orderPhasesArgs<ExtArgs>
   _count?: boolean | Prisma.TeamCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["team"]>
 
@@ -905,6 +1018,7 @@ export type TeamInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   vehicle?: boolean | Prisma.Team$vehicleArgs<ExtArgs>
   members?: boolean | Prisma.Team$membersArgs<ExtArgs>
   orders?: boolean | Prisma.Team$ordersArgs<ExtArgs>
+  orderPhases?: boolean | Prisma.Team$orderPhasesArgs<ExtArgs>
   _count?: boolean | Prisma.TeamCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type TeamIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -923,6 +1037,7 @@ export type $TeamPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     vehicle: Prisma.$VehiclePayload<ExtArgs> | null
     members: Prisma.$TeamMemberPayload<ExtArgs>[]
     orders: Prisma.$OrderPayload<ExtArgs>[]
+    orderPhases: Prisma.$OrderPhasePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1330,6 +1445,7 @@ export interface Prisma__TeamClient<T, Null = never, ExtArgs extends runtime.Typ
   vehicle<T extends Prisma.Team$vehicleArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Team$vehicleArgs<ExtArgs>>): Prisma.Prisma__VehicleClient<runtime.Types.Result.GetResult<Prisma.$VehiclePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   members<T extends Prisma.Team$membersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Team$membersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TeamMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   orders<T extends Prisma.Team$ordersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Team$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  orderPhases<T extends Prisma.Team$orderPhasesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Team$orderPhasesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderPhasePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1831,6 +1947,30 @@ export type Team$ordersArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
   take?: number
   skip?: number
   distinct?: Prisma.OrderScalarFieldEnum | Prisma.OrderScalarFieldEnum[]
+}
+
+/**
+ * Team.orderPhases
+ */
+export type Team$orderPhasesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the OrderPhase
+   */
+  select?: Prisma.OrderPhaseSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the OrderPhase
+   */
+  omit?: Prisma.OrderPhaseOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OrderPhaseInclude<ExtArgs> | null
+  where?: Prisma.OrderPhaseWhereInput
+  orderBy?: Prisma.OrderPhaseOrderByWithRelationInput | Prisma.OrderPhaseOrderByWithRelationInput[]
+  cursor?: Prisma.OrderPhaseWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.OrderPhaseScalarFieldEnum | Prisma.OrderPhaseScalarFieldEnum[]
 }
 
 /**

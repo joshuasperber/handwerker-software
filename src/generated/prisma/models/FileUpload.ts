@@ -37,36 +37,42 @@ export type FileUploadSumAggregateOutputType = {
 export type FileUploadMinAggregateOutputType = {
   id: string | null
   orderId: string | null
+  orderPhaseId: string | null
   uploadedById: string | null
   fileName: string | null
   mimeType: string | null
   sizeBytes: number | null
   storageKey: string | null
   category: $Enums.FileCategory | null
+  description: string | null
   createdAt: Date | null
 }
 
 export type FileUploadMaxAggregateOutputType = {
   id: string | null
   orderId: string | null
+  orderPhaseId: string | null
   uploadedById: string | null
   fileName: string | null
   mimeType: string | null
   sizeBytes: number | null
   storageKey: string | null
   category: $Enums.FileCategory | null
+  description: string | null
   createdAt: Date | null
 }
 
 export type FileUploadCountAggregateOutputType = {
   id: number
   orderId: number
+  orderPhaseId: number
   uploadedById: number
   fileName: number
   mimeType: number
   sizeBytes: number
   storageKey: number
   category: number
+  description: number
   createdAt: number
   _all: number
 }
@@ -83,36 +89,42 @@ export type FileUploadSumAggregateInputType = {
 export type FileUploadMinAggregateInputType = {
   id?: true
   orderId?: true
+  orderPhaseId?: true
   uploadedById?: true
   fileName?: true
   mimeType?: true
   sizeBytes?: true
   storageKey?: true
   category?: true
+  description?: true
   createdAt?: true
 }
 
 export type FileUploadMaxAggregateInputType = {
   id?: true
   orderId?: true
+  orderPhaseId?: true
   uploadedById?: true
   fileName?: true
   mimeType?: true
   sizeBytes?: true
   storageKey?: true
   category?: true
+  description?: true
   createdAt?: true
 }
 
 export type FileUploadCountAggregateInputType = {
   id?: true
   orderId?: true
+  orderPhaseId?: true
   uploadedById?: true
   fileName?: true
   mimeType?: true
   sizeBytes?: true
   storageKey?: true
   category?: true
+  description?: true
   createdAt?: true
   _all?: true
 }
@@ -206,12 +218,14 @@ export type FileUploadGroupByArgs<ExtArgs extends runtime.Types.Extensions.Inter
 export type FileUploadGroupByOutputType = {
   id: string
   orderId: string
+  orderPhaseId: string | null
   uploadedById: string | null
   fileName: string
   mimeType: string
   sizeBytes: number
   storageKey: string
   category: $Enums.FileCategory
+  description: string | null
   createdAt: Date
   _count: FileUploadCountAggregateOutputType | null
   _avg: FileUploadAvgAggregateOutputType | null
@@ -241,28 +255,36 @@ export type FileUploadWhereInput = {
   NOT?: Prisma.FileUploadWhereInput | Prisma.FileUploadWhereInput[]
   id?: Prisma.StringFilter<"FileUpload"> | string
   orderId?: Prisma.StringFilter<"FileUpload"> | string
+  orderPhaseId?: Prisma.StringNullableFilter<"FileUpload"> | string | null
   uploadedById?: Prisma.StringNullableFilter<"FileUpload"> | string | null
   fileName?: Prisma.StringFilter<"FileUpload"> | string
   mimeType?: Prisma.StringFilter<"FileUpload"> | string
   sizeBytes?: Prisma.IntFilter<"FileUpload"> | number
   storageKey?: Prisma.StringFilter<"FileUpload"> | string
   category?: Prisma.EnumFileCategoryFilter<"FileUpload"> | $Enums.FileCategory
+  description?: Prisma.StringNullableFilter<"FileUpload"> | string | null
   createdAt?: Prisma.DateTimeFilter<"FileUpload"> | Date | string
   order?: Prisma.XOR<Prisma.OrderScalarRelationFilter, Prisma.OrderWhereInput>
+  orderPhase?: Prisma.XOR<Prisma.OrderPhaseNullableScalarRelationFilter, Prisma.OrderPhaseWhereInput> | null
+  uploadedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   planMarkers?: Prisma.PlanMarkerListRelationFilter
 }
 
 export type FileUploadOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   orderId?: Prisma.SortOrder
+  orderPhaseId?: Prisma.SortOrderInput | Prisma.SortOrder
   uploadedById?: Prisma.SortOrderInput | Prisma.SortOrder
   fileName?: Prisma.SortOrder
   mimeType?: Prisma.SortOrder
   sizeBytes?: Prisma.SortOrder
   storageKey?: Prisma.SortOrder
   category?: Prisma.SortOrder
+  description?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   order?: Prisma.OrderOrderByWithRelationInput
+  orderPhase?: Prisma.OrderPhaseOrderByWithRelationInput
+  uploadedBy?: Prisma.UserOrderByWithRelationInput
   planMarkers?: Prisma.PlanMarkerOrderByRelationAggregateInput
 }
 
@@ -272,26 +294,32 @@ export type FileUploadWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.FileUploadWhereInput[]
   NOT?: Prisma.FileUploadWhereInput | Prisma.FileUploadWhereInput[]
   orderId?: Prisma.StringFilter<"FileUpload"> | string
+  orderPhaseId?: Prisma.StringNullableFilter<"FileUpload"> | string | null
   uploadedById?: Prisma.StringNullableFilter<"FileUpload"> | string | null
   fileName?: Prisma.StringFilter<"FileUpload"> | string
   mimeType?: Prisma.StringFilter<"FileUpload"> | string
   sizeBytes?: Prisma.IntFilter<"FileUpload"> | number
   storageKey?: Prisma.StringFilter<"FileUpload"> | string
   category?: Prisma.EnumFileCategoryFilter<"FileUpload"> | $Enums.FileCategory
+  description?: Prisma.StringNullableFilter<"FileUpload"> | string | null
   createdAt?: Prisma.DateTimeFilter<"FileUpload"> | Date | string
   order?: Prisma.XOR<Prisma.OrderScalarRelationFilter, Prisma.OrderWhereInput>
+  orderPhase?: Prisma.XOR<Prisma.OrderPhaseNullableScalarRelationFilter, Prisma.OrderPhaseWhereInput> | null
+  uploadedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   planMarkers?: Prisma.PlanMarkerListRelationFilter
 }, "id">
 
 export type FileUploadOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   orderId?: Prisma.SortOrder
+  orderPhaseId?: Prisma.SortOrderInput | Prisma.SortOrder
   uploadedById?: Prisma.SortOrderInput | Prisma.SortOrder
   fileName?: Prisma.SortOrder
   mimeType?: Prisma.SortOrder
   sizeBytes?: Prisma.SortOrder
   storageKey?: Prisma.SortOrder
   category?: Prisma.SortOrder
+  description?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.FileUploadCountOrderByAggregateInput
   _avg?: Prisma.FileUploadAvgOrderByAggregateInput
@@ -306,63 +334,73 @@ export type FileUploadScalarWhereWithAggregatesInput = {
   NOT?: Prisma.FileUploadScalarWhereWithAggregatesInput | Prisma.FileUploadScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"FileUpload"> | string
   orderId?: Prisma.StringWithAggregatesFilter<"FileUpload"> | string
+  orderPhaseId?: Prisma.StringNullableWithAggregatesFilter<"FileUpload"> | string | null
   uploadedById?: Prisma.StringNullableWithAggregatesFilter<"FileUpload"> | string | null
   fileName?: Prisma.StringWithAggregatesFilter<"FileUpload"> | string
   mimeType?: Prisma.StringWithAggregatesFilter<"FileUpload"> | string
   sizeBytes?: Prisma.IntWithAggregatesFilter<"FileUpload"> | number
   storageKey?: Prisma.StringWithAggregatesFilter<"FileUpload"> | string
   category?: Prisma.EnumFileCategoryWithAggregatesFilter<"FileUpload"> | $Enums.FileCategory
+  description?: Prisma.StringNullableWithAggregatesFilter<"FileUpload"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"FileUpload"> | Date | string
 }
 
 export type FileUploadCreateInput = {
   id?: string
-  uploadedById?: string | null
   fileName: string
   mimeType: string
   sizeBytes: number
   storageKey: string
   category?: $Enums.FileCategory
+  description?: string | null
   createdAt?: Date | string
   order: Prisma.OrderCreateNestedOneWithoutFilesInput
+  orderPhase?: Prisma.OrderPhaseCreateNestedOneWithoutFilesInput
+  uploadedBy?: Prisma.UserCreateNestedOneWithoutFileUploadsInput
   planMarkers?: Prisma.PlanMarkerCreateNestedManyWithoutFileInput
 }
 
 export type FileUploadUncheckedCreateInput = {
   id?: string
   orderId: string
+  orderPhaseId?: string | null
   uploadedById?: string | null
   fileName: string
   mimeType: string
   sizeBytes: number
   storageKey: string
   category?: $Enums.FileCategory
+  description?: string | null
   createdAt?: Date | string
   planMarkers?: Prisma.PlanMarkerUncheckedCreateNestedManyWithoutFileInput
 }
 
 export type FileUploadUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  uploadedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileName?: Prisma.StringFieldUpdateOperationsInput | string
   mimeType?: Prisma.StringFieldUpdateOperationsInput | string
   sizeBytes?: Prisma.IntFieldUpdateOperationsInput | number
   storageKey?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumFileCategoryFieldUpdateOperationsInput | $Enums.FileCategory
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   order?: Prisma.OrderUpdateOneRequiredWithoutFilesNestedInput
+  orderPhase?: Prisma.OrderPhaseUpdateOneWithoutFilesNestedInput
+  uploadedBy?: Prisma.UserUpdateOneWithoutFileUploadsNestedInput
   planMarkers?: Prisma.PlanMarkerUpdateManyWithoutFileNestedInput
 }
 
 export type FileUploadUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   orderId?: Prisma.StringFieldUpdateOperationsInput | string
+  orderPhaseId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   uploadedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileName?: Prisma.StringFieldUpdateOperationsInput | string
   mimeType?: Prisma.StringFieldUpdateOperationsInput | string
   sizeBytes?: Prisma.IntFieldUpdateOperationsInput | number
   storageKey?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumFileCategoryFieldUpdateOperationsInput | $Enums.FileCategory
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   planMarkers?: Prisma.PlanMarkerUncheckedUpdateManyWithoutFileNestedInput
 }
@@ -370,35 +408,39 @@ export type FileUploadUncheckedUpdateInput = {
 export type FileUploadCreateManyInput = {
   id?: string
   orderId: string
+  orderPhaseId?: string | null
   uploadedById?: string | null
   fileName: string
   mimeType: string
   sizeBytes: number
   storageKey: string
   category?: $Enums.FileCategory
+  description?: string | null
   createdAt?: Date | string
 }
 
 export type FileUploadUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  uploadedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileName?: Prisma.StringFieldUpdateOperationsInput | string
   mimeType?: Prisma.StringFieldUpdateOperationsInput | string
   sizeBytes?: Prisma.IntFieldUpdateOperationsInput | number
   storageKey?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumFileCategoryFieldUpdateOperationsInput | $Enums.FileCategory
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type FileUploadUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   orderId?: Prisma.StringFieldUpdateOperationsInput | string
+  orderPhaseId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   uploadedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileName?: Prisma.StringFieldUpdateOperationsInput | string
   mimeType?: Prisma.StringFieldUpdateOperationsInput | string
   sizeBytes?: Prisma.IntFieldUpdateOperationsInput | number
   storageKey?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumFileCategoryFieldUpdateOperationsInput | $Enums.FileCategory
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -415,12 +457,14 @@ export type FileUploadOrderByRelationAggregateInput = {
 export type FileUploadCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   orderId?: Prisma.SortOrder
+  orderPhaseId?: Prisma.SortOrder
   uploadedById?: Prisma.SortOrder
   fileName?: Prisma.SortOrder
   mimeType?: Prisma.SortOrder
   sizeBytes?: Prisma.SortOrder
   storageKey?: Prisma.SortOrder
   category?: Prisma.SortOrder
+  description?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -431,24 +475,28 @@ export type FileUploadAvgOrderByAggregateInput = {
 export type FileUploadMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   orderId?: Prisma.SortOrder
+  orderPhaseId?: Prisma.SortOrder
   uploadedById?: Prisma.SortOrder
   fileName?: Prisma.SortOrder
   mimeType?: Prisma.SortOrder
   sizeBytes?: Prisma.SortOrder
   storageKey?: Prisma.SortOrder
   category?: Prisma.SortOrder
+  description?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
 export type FileUploadMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   orderId?: Prisma.SortOrder
+  orderPhaseId?: Prisma.SortOrder
   uploadedById?: Prisma.SortOrder
   fileName?: Prisma.SortOrder
   mimeType?: Prisma.SortOrder
   sizeBytes?: Prisma.SortOrder
   storageKey?: Prisma.SortOrder
   category?: Prisma.SortOrder
+  description?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -459,6 +507,48 @@ export type FileUploadSumOrderByAggregateInput = {
 export type FileUploadScalarRelationFilter = {
   is?: Prisma.FileUploadWhereInput
   isNot?: Prisma.FileUploadWhereInput
+}
+
+export type FileUploadCreateNestedManyWithoutUploadedByInput = {
+  create?: Prisma.XOR<Prisma.FileUploadCreateWithoutUploadedByInput, Prisma.FileUploadUncheckedCreateWithoutUploadedByInput> | Prisma.FileUploadCreateWithoutUploadedByInput[] | Prisma.FileUploadUncheckedCreateWithoutUploadedByInput[]
+  connectOrCreate?: Prisma.FileUploadCreateOrConnectWithoutUploadedByInput | Prisma.FileUploadCreateOrConnectWithoutUploadedByInput[]
+  createMany?: Prisma.FileUploadCreateManyUploadedByInputEnvelope
+  connect?: Prisma.FileUploadWhereUniqueInput | Prisma.FileUploadWhereUniqueInput[]
+}
+
+export type FileUploadUncheckedCreateNestedManyWithoutUploadedByInput = {
+  create?: Prisma.XOR<Prisma.FileUploadCreateWithoutUploadedByInput, Prisma.FileUploadUncheckedCreateWithoutUploadedByInput> | Prisma.FileUploadCreateWithoutUploadedByInput[] | Prisma.FileUploadUncheckedCreateWithoutUploadedByInput[]
+  connectOrCreate?: Prisma.FileUploadCreateOrConnectWithoutUploadedByInput | Prisma.FileUploadCreateOrConnectWithoutUploadedByInput[]
+  createMany?: Prisma.FileUploadCreateManyUploadedByInputEnvelope
+  connect?: Prisma.FileUploadWhereUniqueInput | Prisma.FileUploadWhereUniqueInput[]
+}
+
+export type FileUploadUpdateManyWithoutUploadedByNestedInput = {
+  create?: Prisma.XOR<Prisma.FileUploadCreateWithoutUploadedByInput, Prisma.FileUploadUncheckedCreateWithoutUploadedByInput> | Prisma.FileUploadCreateWithoutUploadedByInput[] | Prisma.FileUploadUncheckedCreateWithoutUploadedByInput[]
+  connectOrCreate?: Prisma.FileUploadCreateOrConnectWithoutUploadedByInput | Prisma.FileUploadCreateOrConnectWithoutUploadedByInput[]
+  upsert?: Prisma.FileUploadUpsertWithWhereUniqueWithoutUploadedByInput | Prisma.FileUploadUpsertWithWhereUniqueWithoutUploadedByInput[]
+  createMany?: Prisma.FileUploadCreateManyUploadedByInputEnvelope
+  set?: Prisma.FileUploadWhereUniqueInput | Prisma.FileUploadWhereUniqueInput[]
+  disconnect?: Prisma.FileUploadWhereUniqueInput | Prisma.FileUploadWhereUniqueInput[]
+  delete?: Prisma.FileUploadWhereUniqueInput | Prisma.FileUploadWhereUniqueInput[]
+  connect?: Prisma.FileUploadWhereUniqueInput | Prisma.FileUploadWhereUniqueInput[]
+  update?: Prisma.FileUploadUpdateWithWhereUniqueWithoutUploadedByInput | Prisma.FileUploadUpdateWithWhereUniqueWithoutUploadedByInput[]
+  updateMany?: Prisma.FileUploadUpdateManyWithWhereWithoutUploadedByInput | Prisma.FileUploadUpdateManyWithWhereWithoutUploadedByInput[]
+  deleteMany?: Prisma.FileUploadScalarWhereInput | Prisma.FileUploadScalarWhereInput[]
+}
+
+export type FileUploadUncheckedUpdateManyWithoutUploadedByNestedInput = {
+  create?: Prisma.XOR<Prisma.FileUploadCreateWithoutUploadedByInput, Prisma.FileUploadUncheckedCreateWithoutUploadedByInput> | Prisma.FileUploadCreateWithoutUploadedByInput[] | Prisma.FileUploadUncheckedCreateWithoutUploadedByInput[]
+  connectOrCreate?: Prisma.FileUploadCreateOrConnectWithoutUploadedByInput | Prisma.FileUploadCreateOrConnectWithoutUploadedByInput[]
+  upsert?: Prisma.FileUploadUpsertWithWhereUniqueWithoutUploadedByInput | Prisma.FileUploadUpsertWithWhereUniqueWithoutUploadedByInput[]
+  createMany?: Prisma.FileUploadCreateManyUploadedByInputEnvelope
+  set?: Prisma.FileUploadWhereUniqueInput | Prisma.FileUploadWhereUniqueInput[]
+  disconnect?: Prisma.FileUploadWhereUniqueInput | Prisma.FileUploadWhereUniqueInput[]
+  delete?: Prisma.FileUploadWhereUniqueInput | Prisma.FileUploadWhereUniqueInput[]
+  connect?: Prisma.FileUploadWhereUniqueInput | Prisma.FileUploadWhereUniqueInput[]
+  update?: Prisma.FileUploadUpdateWithWhereUniqueWithoutUploadedByInput | Prisma.FileUploadUpdateWithWhereUniqueWithoutUploadedByInput[]
+  updateMany?: Prisma.FileUploadUpdateManyWithWhereWithoutUploadedByInput | Prisma.FileUploadUpdateManyWithWhereWithoutUploadedByInput[]
+  deleteMany?: Prisma.FileUploadScalarWhereInput | Prisma.FileUploadScalarWhereInput[]
 }
 
 export type FileUploadCreateNestedManyWithoutOrderInput = {
@@ -507,6 +597,48 @@ export type EnumFileCategoryFieldUpdateOperationsInput = {
   set?: $Enums.FileCategory
 }
 
+export type FileUploadCreateNestedManyWithoutOrderPhaseInput = {
+  create?: Prisma.XOR<Prisma.FileUploadCreateWithoutOrderPhaseInput, Prisma.FileUploadUncheckedCreateWithoutOrderPhaseInput> | Prisma.FileUploadCreateWithoutOrderPhaseInput[] | Prisma.FileUploadUncheckedCreateWithoutOrderPhaseInput[]
+  connectOrCreate?: Prisma.FileUploadCreateOrConnectWithoutOrderPhaseInput | Prisma.FileUploadCreateOrConnectWithoutOrderPhaseInput[]
+  createMany?: Prisma.FileUploadCreateManyOrderPhaseInputEnvelope
+  connect?: Prisma.FileUploadWhereUniqueInput | Prisma.FileUploadWhereUniqueInput[]
+}
+
+export type FileUploadUncheckedCreateNestedManyWithoutOrderPhaseInput = {
+  create?: Prisma.XOR<Prisma.FileUploadCreateWithoutOrderPhaseInput, Prisma.FileUploadUncheckedCreateWithoutOrderPhaseInput> | Prisma.FileUploadCreateWithoutOrderPhaseInput[] | Prisma.FileUploadUncheckedCreateWithoutOrderPhaseInput[]
+  connectOrCreate?: Prisma.FileUploadCreateOrConnectWithoutOrderPhaseInput | Prisma.FileUploadCreateOrConnectWithoutOrderPhaseInput[]
+  createMany?: Prisma.FileUploadCreateManyOrderPhaseInputEnvelope
+  connect?: Prisma.FileUploadWhereUniqueInput | Prisma.FileUploadWhereUniqueInput[]
+}
+
+export type FileUploadUpdateManyWithoutOrderPhaseNestedInput = {
+  create?: Prisma.XOR<Prisma.FileUploadCreateWithoutOrderPhaseInput, Prisma.FileUploadUncheckedCreateWithoutOrderPhaseInput> | Prisma.FileUploadCreateWithoutOrderPhaseInput[] | Prisma.FileUploadUncheckedCreateWithoutOrderPhaseInput[]
+  connectOrCreate?: Prisma.FileUploadCreateOrConnectWithoutOrderPhaseInput | Prisma.FileUploadCreateOrConnectWithoutOrderPhaseInput[]
+  upsert?: Prisma.FileUploadUpsertWithWhereUniqueWithoutOrderPhaseInput | Prisma.FileUploadUpsertWithWhereUniqueWithoutOrderPhaseInput[]
+  createMany?: Prisma.FileUploadCreateManyOrderPhaseInputEnvelope
+  set?: Prisma.FileUploadWhereUniqueInput | Prisma.FileUploadWhereUniqueInput[]
+  disconnect?: Prisma.FileUploadWhereUniqueInput | Prisma.FileUploadWhereUniqueInput[]
+  delete?: Prisma.FileUploadWhereUniqueInput | Prisma.FileUploadWhereUniqueInput[]
+  connect?: Prisma.FileUploadWhereUniqueInput | Prisma.FileUploadWhereUniqueInput[]
+  update?: Prisma.FileUploadUpdateWithWhereUniqueWithoutOrderPhaseInput | Prisma.FileUploadUpdateWithWhereUniqueWithoutOrderPhaseInput[]
+  updateMany?: Prisma.FileUploadUpdateManyWithWhereWithoutOrderPhaseInput | Prisma.FileUploadUpdateManyWithWhereWithoutOrderPhaseInput[]
+  deleteMany?: Prisma.FileUploadScalarWhereInput | Prisma.FileUploadScalarWhereInput[]
+}
+
+export type FileUploadUncheckedUpdateManyWithoutOrderPhaseNestedInput = {
+  create?: Prisma.XOR<Prisma.FileUploadCreateWithoutOrderPhaseInput, Prisma.FileUploadUncheckedCreateWithoutOrderPhaseInput> | Prisma.FileUploadCreateWithoutOrderPhaseInput[] | Prisma.FileUploadUncheckedCreateWithoutOrderPhaseInput[]
+  connectOrCreate?: Prisma.FileUploadCreateOrConnectWithoutOrderPhaseInput | Prisma.FileUploadCreateOrConnectWithoutOrderPhaseInput[]
+  upsert?: Prisma.FileUploadUpsertWithWhereUniqueWithoutOrderPhaseInput | Prisma.FileUploadUpsertWithWhereUniqueWithoutOrderPhaseInput[]
+  createMany?: Prisma.FileUploadCreateManyOrderPhaseInputEnvelope
+  set?: Prisma.FileUploadWhereUniqueInput | Prisma.FileUploadWhereUniqueInput[]
+  disconnect?: Prisma.FileUploadWhereUniqueInput | Prisma.FileUploadWhereUniqueInput[]
+  delete?: Prisma.FileUploadWhereUniqueInput | Prisma.FileUploadWhereUniqueInput[]
+  connect?: Prisma.FileUploadWhereUniqueInput | Prisma.FileUploadWhereUniqueInput[]
+  update?: Prisma.FileUploadUpdateWithWhereUniqueWithoutOrderPhaseInput | Prisma.FileUploadUpdateWithWhereUniqueWithoutOrderPhaseInput[]
+  updateMany?: Prisma.FileUploadUpdateManyWithWhereWithoutOrderPhaseInput | Prisma.FileUploadUpdateManyWithWhereWithoutOrderPhaseInput[]
+  deleteMany?: Prisma.FileUploadScalarWhereInput | Prisma.FileUploadScalarWhereInput[]
+}
+
 export type FileUploadCreateNestedOneWithoutPlanMarkersInput = {
   create?: Prisma.XOR<Prisma.FileUploadCreateWithoutPlanMarkersInput, Prisma.FileUploadUncheckedCreateWithoutPlanMarkersInput>
   connectOrCreate?: Prisma.FileUploadCreateOrConnectWithoutPlanMarkersInput
@@ -521,26 +653,101 @@ export type FileUploadUpdateOneRequiredWithoutPlanMarkersNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.FileUploadUpdateToOneWithWhereWithoutPlanMarkersInput, Prisma.FileUploadUpdateWithoutPlanMarkersInput>, Prisma.FileUploadUncheckedUpdateWithoutPlanMarkersInput>
 }
 
-export type FileUploadCreateWithoutOrderInput = {
+export type FileUploadCreateWithoutUploadedByInput = {
   id?: string
-  uploadedById?: string | null
   fileName: string
   mimeType: string
   sizeBytes: number
   storageKey: string
   category?: $Enums.FileCategory
+  description?: string | null
   createdAt?: Date | string
+  order: Prisma.OrderCreateNestedOneWithoutFilesInput
+  orderPhase?: Prisma.OrderPhaseCreateNestedOneWithoutFilesInput
+  planMarkers?: Prisma.PlanMarkerCreateNestedManyWithoutFileInput
+}
+
+export type FileUploadUncheckedCreateWithoutUploadedByInput = {
+  id?: string
+  orderId: string
+  orderPhaseId?: string | null
+  fileName: string
+  mimeType: string
+  sizeBytes: number
+  storageKey: string
+  category?: $Enums.FileCategory
+  description?: string | null
+  createdAt?: Date | string
+  planMarkers?: Prisma.PlanMarkerUncheckedCreateNestedManyWithoutFileInput
+}
+
+export type FileUploadCreateOrConnectWithoutUploadedByInput = {
+  where: Prisma.FileUploadWhereUniqueInput
+  create: Prisma.XOR<Prisma.FileUploadCreateWithoutUploadedByInput, Prisma.FileUploadUncheckedCreateWithoutUploadedByInput>
+}
+
+export type FileUploadCreateManyUploadedByInputEnvelope = {
+  data: Prisma.FileUploadCreateManyUploadedByInput | Prisma.FileUploadCreateManyUploadedByInput[]
+  skipDuplicates?: boolean
+}
+
+export type FileUploadUpsertWithWhereUniqueWithoutUploadedByInput = {
+  where: Prisma.FileUploadWhereUniqueInput
+  update: Prisma.XOR<Prisma.FileUploadUpdateWithoutUploadedByInput, Prisma.FileUploadUncheckedUpdateWithoutUploadedByInput>
+  create: Prisma.XOR<Prisma.FileUploadCreateWithoutUploadedByInput, Prisma.FileUploadUncheckedCreateWithoutUploadedByInput>
+}
+
+export type FileUploadUpdateWithWhereUniqueWithoutUploadedByInput = {
+  where: Prisma.FileUploadWhereUniqueInput
+  data: Prisma.XOR<Prisma.FileUploadUpdateWithoutUploadedByInput, Prisma.FileUploadUncheckedUpdateWithoutUploadedByInput>
+}
+
+export type FileUploadUpdateManyWithWhereWithoutUploadedByInput = {
+  where: Prisma.FileUploadScalarWhereInput
+  data: Prisma.XOR<Prisma.FileUploadUpdateManyMutationInput, Prisma.FileUploadUncheckedUpdateManyWithoutUploadedByInput>
+}
+
+export type FileUploadScalarWhereInput = {
+  AND?: Prisma.FileUploadScalarWhereInput | Prisma.FileUploadScalarWhereInput[]
+  OR?: Prisma.FileUploadScalarWhereInput[]
+  NOT?: Prisma.FileUploadScalarWhereInput | Prisma.FileUploadScalarWhereInput[]
+  id?: Prisma.StringFilter<"FileUpload"> | string
+  orderId?: Prisma.StringFilter<"FileUpload"> | string
+  orderPhaseId?: Prisma.StringNullableFilter<"FileUpload"> | string | null
+  uploadedById?: Prisma.StringNullableFilter<"FileUpload"> | string | null
+  fileName?: Prisma.StringFilter<"FileUpload"> | string
+  mimeType?: Prisma.StringFilter<"FileUpload"> | string
+  sizeBytes?: Prisma.IntFilter<"FileUpload"> | number
+  storageKey?: Prisma.StringFilter<"FileUpload"> | string
+  category?: Prisma.EnumFileCategoryFilter<"FileUpload"> | $Enums.FileCategory
+  description?: Prisma.StringNullableFilter<"FileUpload"> | string | null
+  createdAt?: Prisma.DateTimeFilter<"FileUpload"> | Date | string
+}
+
+export type FileUploadCreateWithoutOrderInput = {
+  id?: string
+  fileName: string
+  mimeType: string
+  sizeBytes: number
+  storageKey: string
+  category?: $Enums.FileCategory
+  description?: string | null
+  createdAt?: Date | string
+  orderPhase?: Prisma.OrderPhaseCreateNestedOneWithoutFilesInput
+  uploadedBy?: Prisma.UserCreateNestedOneWithoutFileUploadsInput
   planMarkers?: Prisma.PlanMarkerCreateNestedManyWithoutFileInput
 }
 
 export type FileUploadUncheckedCreateWithoutOrderInput = {
   id?: string
+  orderPhaseId?: string | null
   uploadedById?: string | null
   fileName: string
   mimeType: string
   sizeBytes: number
   storageKey: string
   category?: $Enums.FileCategory
+  description?: string | null
   createdAt?: Date | string
   planMarkers?: Prisma.PlanMarkerUncheckedCreateNestedManyWithoutFileInput
 }
@@ -571,34 +778,21 @@ export type FileUploadUpdateManyWithWhereWithoutOrderInput = {
   data: Prisma.XOR<Prisma.FileUploadUpdateManyMutationInput, Prisma.FileUploadUncheckedUpdateManyWithoutOrderInput>
 }
 
-export type FileUploadScalarWhereInput = {
-  AND?: Prisma.FileUploadScalarWhereInput | Prisma.FileUploadScalarWhereInput[]
-  OR?: Prisma.FileUploadScalarWhereInput[]
-  NOT?: Prisma.FileUploadScalarWhereInput | Prisma.FileUploadScalarWhereInput[]
-  id?: Prisma.StringFilter<"FileUpload"> | string
-  orderId?: Prisma.StringFilter<"FileUpload"> | string
-  uploadedById?: Prisma.StringNullableFilter<"FileUpload"> | string | null
-  fileName?: Prisma.StringFilter<"FileUpload"> | string
-  mimeType?: Prisma.StringFilter<"FileUpload"> | string
-  sizeBytes?: Prisma.IntFilter<"FileUpload"> | number
-  storageKey?: Prisma.StringFilter<"FileUpload"> | string
-  category?: Prisma.EnumFileCategoryFilter<"FileUpload"> | $Enums.FileCategory
-  createdAt?: Prisma.DateTimeFilter<"FileUpload"> | Date | string
-}
-
-export type FileUploadCreateWithoutPlanMarkersInput = {
+export type FileUploadCreateWithoutOrderPhaseInput = {
   id?: string
-  uploadedById?: string | null
   fileName: string
   mimeType: string
   sizeBytes: number
   storageKey: string
   category?: $Enums.FileCategory
+  description?: string | null
   createdAt?: Date | string
   order: Prisma.OrderCreateNestedOneWithoutFilesInput
+  uploadedBy?: Prisma.UserCreateNestedOneWithoutFileUploadsInput
+  planMarkers?: Prisma.PlanMarkerCreateNestedManyWithoutFileInput
 }
 
-export type FileUploadUncheckedCreateWithoutPlanMarkersInput = {
+export type FileUploadUncheckedCreateWithoutOrderPhaseInput = {
   id?: string
   orderId: string
   uploadedById?: string | null
@@ -607,6 +801,62 @@ export type FileUploadUncheckedCreateWithoutPlanMarkersInput = {
   sizeBytes: number
   storageKey: string
   category?: $Enums.FileCategory
+  description?: string | null
+  createdAt?: Date | string
+  planMarkers?: Prisma.PlanMarkerUncheckedCreateNestedManyWithoutFileInput
+}
+
+export type FileUploadCreateOrConnectWithoutOrderPhaseInput = {
+  where: Prisma.FileUploadWhereUniqueInput
+  create: Prisma.XOR<Prisma.FileUploadCreateWithoutOrderPhaseInput, Prisma.FileUploadUncheckedCreateWithoutOrderPhaseInput>
+}
+
+export type FileUploadCreateManyOrderPhaseInputEnvelope = {
+  data: Prisma.FileUploadCreateManyOrderPhaseInput | Prisma.FileUploadCreateManyOrderPhaseInput[]
+  skipDuplicates?: boolean
+}
+
+export type FileUploadUpsertWithWhereUniqueWithoutOrderPhaseInput = {
+  where: Prisma.FileUploadWhereUniqueInput
+  update: Prisma.XOR<Prisma.FileUploadUpdateWithoutOrderPhaseInput, Prisma.FileUploadUncheckedUpdateWithoutOrderPhaseInput>
+  create: Prisma.XOR<Prisma.FileUploadCreateWithoutOrderPhaseInput, Prisma.FileUploadUncheckedCreateWithoutOrderPhaseInput>
+}
+
+export type FileUploadUpdateWithWhereUniqueWithoutOrderPhaseInput = {
+  where: Prisma.FileUploadWhereUniqueInput
+  data: Prisma.XOR<Prisma.FileUploadUpdateWithoutOrderPhaseInput, Prisma.FileUploadUncheckedUpdateWithoutOrderPhaseInput>
+}
+
+export type FileUploadUpdateManyWithWhereWithoutOrderPhaseInput = {
+  where: Prisma.FileUploadScalarWhereInput
+  data: Prisma.XOR<Prisma.FileUploadUpdateManyMutationInput, Prisma.FileUploadUncheckedUpdateManyWithoutOrderPhaseInput>
+}
+
+export type FileUploadCreateWithoutPlanMarkersInput = {
+  id?: string
+  fileName: string
+  mimeType: string
+  sizeBytes: number
+  storageKey: string
+  category?: $Enums.FileCategory
+  description?: string | null
+  createdAt?: Date | string
+  order: Prisma.OrderCreateNestedOneWithoutFilesInput
+  orderPhase?: Prisma.OrderPhaseCreateNestedOneWithoutFilesInput
+  uploadedBy?: Prisma.UserCreateNestedOneWithoutFileUploadsInput
+}
+
+export type FileUploadUncheckedCreateWithoutPlanMarkersInput = {
+  id?: string
+  orderId: string
+  orderPhaseId?: string | null
+  uploadedById?: string | null
+  fileName: string
+  mimeType: string
+  sizeBytes: number
+  storageKey: string
+  category?: $Enums.FileCategory
+  description?: string | null
   createdAt?: Date | string
 }
 
@@ -628,17 +878,168 @@ export type FileUploadUpdateToOneWithWhereWithoutPlanMarkersInput = {
 
 export type FileUploadUpdateWithoutPlanMarkersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  fileName?: Prisma.StringFieldUpdateOperationsInput | string
+  mimeType?: Prisma.StringFieldUpdateOperationsInput | string
+  sizeBytes?: Prisma.IntFieldUpdateOperationsInput | number
+  storageKey?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.EnumFileCategoryFieldUpdateOperationsInput | $Enums.FileCategory
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  order?: Prisma.OrderUpdateOneRequiredWithoutFilesNestedInput
+  orderPhase?: Prisma.OrderPhaseUpdateOneWithoutFilesNestedInput
+  uploadedBy?: Prisma.UserUpdateOneWithoutFileUploadsNestedInput
+}
+
+export type FileUploadUncheckedUpdateWithoutPlanMarkersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  orderId?: Prisma.StringFieldUpdateOperationsInput | string
+  orderPhaseId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   uploadedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileName?: Prisma.StringFieldUpdateOperationsInput | string
   mimeType?: Prisma.StringFieldUpdateOperationsInput | string
   sizeBytes?: Prisma.IntFieldUpdateOperationsInput | number
   storageKey?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumFileCategoryFieldUpdateOperationsInput | $Enums.FileCategory
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  order?: Prisma.OrderUpdateOneRequiredWithoutFilesNestedInput
 }
 
-export type FileUploadUncheckedUpdateWithoutPlanMarkersInput = {
+export type FileUploadCreateManyUploadedByInput = {
+  id?: string
+  orderId: string
+  orderPhaseId?: string | null
+  fileName: string
+  mimeType: string
+  sizeBytes: number
+  storageKey: string
+  category?: $Enums.FileCategory
+  description?: string | null
+  createdAt?: Date | string
+}
+
+export type FileUploadUpdateWithoutUploadedByInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  fileName?: Prisma.StringFieldUpdateOperationsInput | string
+  mimeType?: Prisma.StringFieldUpdateOperationsInput | string
+  sizeBytes?: Prisma.IntFieldUpdateOperationsInput | number
+  storageKey?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.EnumFileCategoryFieldUpdateOperationsInput | $Enums.FileCategory
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  order?: Prisma.OrderUpdateOneRequiredWithoutFilesNestedInput
+  orderPhase?: Prisma.OrderPhaseUpdateOneWithoutFilesNestedInput
+  planMarkers?: Prisma.PlanMarkerUpdateManyWithoutFileNestedInput
+}
+
+export type FileUploadUncheckedUpdateWithoutUploadedByInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  orderId?: Prisma.StringFieldUpdateOperationsInput | string
+  orderPhaseId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileName?: Prisma.StringFieldUpdateOperationsInput | string
+  mimeType?: Prisma.StringFieldUpdateOperationsInput | string
+  sizeBytes?: Prisma.IntFieldUpdateOperationsInput | number
+  storageKey?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.EnumFileCategoryFieldUpdateOperationsInput | $Enums.FileCategory
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  planMarkers?: Prisma.PlanMarkerUncheckedUpdateManyWithoutFileNestedInput
+}
+
+export type FileUploadUncheckedUpdateManyWithoutUploadedByInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  orderId?: Prisma.StringFieldUpdateOperationsInput | string
+  orderPhaseId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileName?: Prisma.StringFieldUpdateOperationsInput | string
+  mimeType?: Prisma.StringFieldUpdateOperationsInput | string
+  sizeBytes?: Prisma.IntFieldUpdateOperationsInput | number
+  storageKey?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.EnumFileCategoryFieldUpdateOperationsInput | $Enums.FileCategory
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type FileUploadCreateManyOrderInput = {
+  id?: string
+  orderPhaseId?: string | null
+  uploadedById?: string | null
+  fileName: string
+  mimeType: string
+  sizeBytes: number
+  storageKey: string
+  category?: $Enums.FileCategory
+  description?: string | null
+  createdAt?: Date | string
+}
+
+export type FileUploadUpdateWithoutOrderInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  fileName?: Prisma.StringFieldUpdateOperationsInput | string
+  mimeType?: Prisma.StringFieldUpdateOperationsInput | string
+  sizeBytes?: Prisma.IntFieldUpdateOperationsInput | number
+  storageKey?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.EnumFileCategoryFieldUpdateOperationsInput | $Enums.FileCategory
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  orderPhase?: Prisma.OrderPhaseUpdateOneWithoutFilesNestedInput
+  uploadedBy?: Prisma.UserUpdateOneWithoutFileUploadsNestedInput
+  planMarkers?: Prisma.PlanMarkerUpdateManyWithoutFileNestedInput
+}
+
+export type FileUploadUncheckedUpdateWithoutOrderInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  orderPhaseId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  uploadedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileName?: Prisma.StringFieldUpdateOperationsInput | string
+  mimeType?: Prisma.StringFieldUpdateOperationsInput | string
+  sizeBytes?: Prisma.IntFieldUpdateOperationsInput | number
+  storageKey?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.EnumFileCategoryFieldUpdateOperationsInput | $Enums.FileCategory
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  planMarkers?: Prisma.PlanMarkerUncheckedUpdateManyWithoutFileNestedInput
+}
+
+export type FileUploadUncheckedUpdateManyWithoutOrderInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  orderPhaseId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  uploadedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileName?: Prisma.StringFieldUpdateOperationsInput | string
+  mimeType?: Prisma.StringFieldUpdateOperationsInput | string
+  sizeBytes?: Prisma.IntFieldUpdateOperationsInput | number
+  storageKey?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.EnumFileCategoryFieldUpdateOperationsInput | $Enums.FileCategory
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type FileUploadCreateManyOrderPhaseInput = {
+  id?: string
+  orderId: string
+  uploadedById?: string | null
+  fileName: string
+  mimeType: string
+  sizeBytes: number
+  storageKey: string
+  category?: $Enums.FileCategory
+  description?: string | null
+  createdAt?: Date | string
+}
+
+export type FileUploadUpdateWithoutOrderPhaseInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  fileName?: Prisma.StringFieldUpdateOperationsInput | string
+  mimeType?: Prisma.StringFieldUpdateOperationsInput | string
+  sizeBytes?: Prisma.IntFieldUpdateOperationsInput | number
+  storageKey?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.EnumFileCategoryFieldUpdateOperationsInput | $Enums.FileCategory
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  order?: Prisma.OrderUpdateOneRequiredWithoutFilesNestedInput
+  uploadedBy?: Prisma.UserUpdateOneWithoutFileUploadsNestedInput
+  planMarkers?: Prisma.PlanMarkerUpdateManyWithoutFileNestedInput
+}
+
+export type FileUploadUncheckedUpdateWithoutOrderPhaseInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   orderId?: Prisma.StringFieldUpdateOperationsInput | string
   uploadedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -647,52 +1048,21 @@ export type FileUploadUncheckedUpdateWithoutPlanMarkersInput = {
   sizeBytes?: Prisma.IntFieldUpdateOperationsInput | number
   storageKey?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumFileCategoryFieldUpdateOperationsInput | $Enums.FileCategory
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type FileUploadCreateManyOrderInput = {
-  id?: string
-  uploadedById?: string | null
-  fileName: string
-  mimeType: string
-  sizeBytes: number
-  storageKey: string
-  category?: $Enums.FileCategory
-  createdAt?: Date | string
-}
-
-export type FileUploadUpdateWithoutOrderInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  uploadedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  fileName?: Prisma.StringFieldUpdateOperationsInput | string
-  mimeType?: Prisma.StringFieldUpdateOperationsInput | string
-  sizeBytes?: Prisma.IntFieldUpdateOperationsInput | number
-  storageKey?: Prisma.StringFieldUpdateOperationsInput | string
-  category?: Prisma.EnumFileCategoryFieldUpdateOperationsInput | $Enums.FileCategory
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  planMarkers?: Prisma.PlanMarkerUpdateManyWithoutFileNestedInput
-}
-
-export type FileUploadUncheckedUpdateWithoutOrderInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  uploadedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  fileName?: Prisma.StringFieldUpdateOperationsInput | string
-  mimeType?: Prisma.StringFieldUpdateOperationsInput | string
-  sizeBytes?: Prisma.IntFieldUpdateOperationsInput | number
-  storageKey?: Prisma.StringFieldUpdateOperationsInput | string
-  category?: Prisma.EnumFileCategoryFieldUpdateOperationsInput | $Enums.FileCategory
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   planMarkers?: Prisma.PlanMarkerUncheckedUpdateManyWithoutFileNestedInput
 }
 
-export type FileUploadUncheckedUpdateManyWithoutOrderInput = {
+export type FileUploadUncheckedUpdateManyWithoutOrderPhaseInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  orderId?: Prisma.StringFieldUpdateOperationsInput | string
   uploadedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileName?: Prisma.StringFieldUpdateOperationsInput | string
   mimeType?: Prisma.StringFieldUpdateOperationsInput | string
   sizeBytes?: Prisma.IntFieldUpdateOperationsInput | number
   storageKey?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumFileCategoryFieldUpdateOperationsInput | $Enums.FileCategory
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -730,14 +1100,18 @@ export type FileUploadCountOutputTypeCountPlanMarkersArgs<ExtArgs extends runtim
 export type FileUploadSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   orderId?: boolean
+  orderPhaseId?: boolean
   uploadedById?: boolean
   fileName?: boolean
   mimeType?: boolean
   sizeBytes?: boolean
   storageKey?: boolean
   category?: boolean
+  description?: boolean
   createdAt?: boolean
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
+  orderPhase?: boolean | Prisma.FileUpload$orderPhaseArgs<ExtArgs>
+  uploadedBy?: boolean | Prisma.FileUpload$uploadedByArgs<ExtArgs>
   planMarkers?: boolean | Prisma.FileUpload$planMarkersArgs<ExtArgs>
   _count?: boolean | Prisma.FileUploadCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["fileUpload"]>
@@ -745,69 +1119,89 @@ export type FileUploadSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
 export type FileUploadSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   orderId?: boolean
+  orderPhaseId?: boolean
   uploadedById?: boolean
   fileName?: boolean
   mimeType?: boolean
   sizeBytes?: boolean
   storageKey?: boolean
   category?: boolean
+  description?: boolean
   createdAt?: boolean
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
+  orderPhase?: boolean | Prisma.FileUpload$orderPhaseArgs<ExtArgs>
+  uploadedBy?: boolean | Prisma.FileUpload$uploadedByArgs<ExtArgs>
 }, ExtArgs["result"]["fileUpload"]>
 
 export type FileUploadSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   orderId?: boolean
+  orderPhaseId?: boolean
   uploadedById?: boolean
   fileName?: boolean
   mimeType?: boolean
   sizeBytes?: boolean
   storageKey?: boolean
   category?: boolean
+  description?: boolean
   createdAt?: boolean
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
+  orderPhase?: boolean | Prisma.FileUpload$orderPhaseArgs<ExtArgs>
+  uploadedBy?: boolean | Prisma.FileUpload$uploadedByArgs<ExtArgs>
 }, ExtArgs["result"]["fileUpload"]>
 
 export type FileUploadSelectScalar = {
   id?: boolean
   orderId?: boolean
+  orderPhaseId?: boolean
   uploadedById?: boolean
   fileName?: boolean
   mimeType?: boolean
   sizeBytes?: boolean
   storageKey?: boolean
   category?: boolean
+  description?: boolean
   createdAt?: boolean
 }
 
-export type FileUploadOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "orderId" | "uploadedById" | "fileName" | "mimeType" | "sizeBytes" | "storageKey" | "category" | "createdAt", ExtArgs["result"]["fileUpload"]>
+export type FileUploadOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "orderId" | "orderPhaseId" | "uploadedById" | "fileName" | "mimeType" | "sizeBytes" | "storageKey" | "category" | "description" | "createdAt", ExtArgs["result"]["fileUpload"]>
 export type FileUploadInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
+  orderPhase?: boolean | Prisma.FileUpload$orderPhaseArgs<ExtArgs>
+  uploadedBy?: boolean | Prisma.FileUpload$uploadedByArgs<ExtArgs>
   planMarkers?: boolean | Prisma.FileUpload$planMarkersArgs<ExtArgs>
   _count?: boolean | Prisma.FileUploadCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type FileUploadIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
+  orderPhase?: boolean | Prisma.FileUpload$orderPhaseArgs<ExtArgs>
+  uploadedBy?: boolean | Prisma.FileUpload$uploadedByArgs<ExtArgs>
 }
 export type FileUploadIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
+  orderPhase?: boolean | Prisma.FileUpload$orderPhaseArgs<ExtArgs>
+  uploadedBy?: boolean | Prisma.FileUpload$uploadedByArgs<ExtArgs>
 }
 
 export type $FileUploadPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "FileUpload"
   objects: {
     order: Prisma.$OrderPayload<ExtArgs>
+    orderPhase: Prisma.$OrderPhasePayload<ExtArgs> | null
+    uploadedBy: Prisma.$UserPayload<ExtArgs> | null
     planMarkers: Prisma.$PlanMarkerPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     orderId: string
+    orderPhaseId: string | null
     uploadedById: string | null
     fileName: string
     mimeType: string
     sizeBytes: number
     storageKey: string
     category: $Enums.FileCategory
+    description: string | null
     createdAt: Date
   }, ExtArgs["result"]["fileUpload"]>
   composites: {}
@@ -1204,6 +1598,8 @@ readonly fields: FileUploadFieldRefs;
 export interface Prisma__FileUploadClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   order<T extends Prisma.OrderDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OrderDefaultArgs<ExtArgs>>): Prisma.Prisma__OrderClient<runtime.Types.Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  orderPhase<T extends Prisma.FileUpload$orderPhaseArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FileUpload$orderPhaseArgs<ExtArgs>>): Prisma.Prisma__OrderPhaseClient<runtime.Types.Result.GetResult<Prisma.$OrderPhasePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  uploadedBy<T extends Prisma.FileUpload$uploadedByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FileUpload$uploadedByArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   planMarkers<T extends Prisma.FileUpload$planMarkersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FileUpload$planMarkersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PlanMarkerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1236,12 +1632,14 @@ export interface Prisma__FileUploadClient<T, Null = never, ExtArgs extends runti
 export interface FileUploadFieldRefs {
   readonly id: Prisma.FieldRef<"FileUpload", 'String'>
   readonly orderId: Prisma.FieldRef<"FileUpload", 'String'>
+  readonly orderPhaseId: Prisma.FieldRef<"FileUpload", 'String'>
   readonly uploadedById: Prisma.FieldRef<"FileUpload", 'String'>
   readonly fileName: Prisma.FieldRef<"FileUpload", 'String'>
   readonly mimeType: Prisma.FieldRef<"FileUpload", 'String'>
   readonly sizeBytes: Prisma.FieldRef<"FileUpload", 'Int'>
   readonly storageKey: Prisma.FieldRef<"FileUpload", 'String'>
   readonly category: Prisma.FieldRef<"FileUpload", 'FileCategory'>
+  readonly description: Prisma.FieldRef<"FileUpload", 'String'>
   readonly createdAt: Prisma.FieldRef<"FileUpload", 'DateTime'>
 }
     
@@ -1641,6 +2039,44 @@ export type FileUploadDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.In
    * Limit how many FileUploads to delete.
    */
   limit?: number
+}
+
+/**
+ * FileUpload.orderPhase
+ */
+export type FileUpload$orderPhaseArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the OrderPhase
+   */
+  select?: Prisma.OrderPhaseSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the OrderPhase
+   */
+  omit?: Prisma.OrderPhaseOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OrderPhaseInclude<ExtArgs> | null
+  where?: Prisma.OrderPhaseWhereInput
+}
+
+/**
+ * FileUpload.uploadedBy
+ */
+export type FileUpload$uploadedByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the User
+   */
+  select?: Prisma.UserSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the User
+   */
+  omit?: Prisma.UserOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null
+  where?: Prisma.UserWhereInput
 }
 
 /**

@@ -14,6 +14,8 @@ export interface SessionUser {
   firstName: string;
   lastName: string;
   role: UserRole;
+  avatarUrl?: string | null;
+  mustChangePassword?: boolean;
 }
 
 function getSecret() {
@@ -41,6 +43,8 @@ export async function createSession(user: SessionUser): Promise<string> {
     firstName: user.firstName,
     lastName: user.lastName,
     role: user.role,
+    avatarUrl: user.avatarUrl ?? null,
+    mustChangePassword: user.mustChangePassword ?? false,
   })
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
@@ -64,6 +68,8 @@ export async function verifySession(
       firstName: payload.firstName as string,
       lastName: payload.lastName as string,
       role: payload.role as UserRole,
+      avatarUrl: (payload.avatarUrl as string | null) ?? null,
+      mustChangePassword: (payload.mustChangePassword as boolean) ?? false,
     };
   } catch {
     return null;
@@ -124,6 +130,8 @@ export async function login(
     firstName: user.firstName,
     lastName: user.lastName,
     role: user.role,
+    avatarUrl: user.avatarUrl,
+    mustChangePassword: user.mustChangePassword,
   };
 }
 

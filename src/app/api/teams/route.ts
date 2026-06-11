@@ -2,12 +2,14 @@ import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAuth, apiSuccess, apiError } from "@/lib/api";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   const auth = await requireAuth("orders.read");
   if (auth instanceof Response) return auth;
 
+  const includeInactive = new URL(request.url).searchParams.get("includeInactive") === "1";
+
   const teams = await prisma.team.findMany({
-    where: { tenantId: auth.tenantId, isActive: true },
+    where: { tenantId: auth.tenantId, ...(includeInactive ? {} : { isActive: true }) },
     include: {
       members: { include: { employee: { include: { user: true } } } },
       vehicle: true,

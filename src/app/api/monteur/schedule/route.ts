@@ -12,6 +12,13 @@ const orderInclude = {
   services: { include: { service: true } },
   checklists: { orderBy: { sortOrder: "asc" as const } },
   files: true,
+  phases: {
+    orderBy: { sortOrder: "asc" as const },
+    include: {
+      assignedTeam: { select: { id: true, name: true } },
+      assignedEmployee: { include: { user: { select: { firstName: true, lastName: true } } } },
+    },
+  },
   materialLines: {
     include: {
       reservations: {
@@ -20,7 +27,8 @@ const orderInclude = {
       },
     },
   },
-  vehicle: true,
+  team: { select: { id: true, name: true } },
+  vehicle: { select: { id: true, name: true, licensePlate: true } },
 };
 
 export async function GET(request: NextRequest) {

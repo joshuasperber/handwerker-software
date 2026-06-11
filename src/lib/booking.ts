@@ -5,23 +5,35 @@ import { createAuditLog } from "./audit";
 import { notifyBookingConfirmation } from "./notifications";
 import { uploadFile } from "./storage";
 
-export const bookingSchema = z.object({
-  serviceIds: z.array(z.string()).min(1),
-  firstName: z.string().min(1),
-  lastName: z.string().min(1),
-  email: z.string().email(),
-  phone: z.string().optional(),
-  street: z.string().min(1),
-  zipCode: z.string().min(4),
-  city: z.string().min(1),
+const customServiceSchema = z.object({
+  name: z.string().min(1),
   description: z.string().optional(),
-  questionAnswers: z.record(z.string(), z.unknown()).optional(),
-  gdprConsent: z.literal(true),
-  slotStart: z.string().datetime().optional(),
-  slotEnd: z.string().datetime().optional(),
-  employeeId: z.string().optional(),
-  priority: z.enum(["NORMAL", "DRINGEND", "NOTFALL"]).optional(),
+  quantity: z.number().int().positive().optional(),
 });
+
+export const bookingSchema = z
+  .object({
+    serviceIds: z.array(z.string()).default([]),
+    customServices: z.array(customServiceSchema).optional(),
+    firstName: z.string().min(1),
+    lastName: z.string().min(1),
+    email: z.string().email(),
+    phone: z.string().optional(),
+    street: z.string().min(1),
+    zipCode: z.string().min(4),
+    city: z.string().min(1),
+    description: z.string().optional(),
+    questionAnswers: z.record(z.string(), z.unknown()).optional(),
+    gdprConsent: z.literal(true),
+    slotStart: z.string().datetime().optional(),
+    slotEnd: z.string().datetime().optional(),
+    employeeId: z.string().optional(),
+    priority: z.enum(["NORMAL", "DRINGEND", "NOTFALL"]).optional(),
+  })
+  .refine(
+    (d) => d.serviceIds.length > 0 || (d.customServices?.length ?? 0) > 0,
+    { message: "Mindestens eine Leistung erforderlich", path: ["serviceIds"] }
+  );
 
 export type BookingData = z.infer<typeof bookingSchema>;
 
@@ -76,7 +88,16 @@ export async function createBooking(
       scheduledStart: hasSlot ? new Date(data.slotStart!) : undefined,
       scheduledEnd: hasSlot ? new Date(data.slotEnd!) : undefined,
       services: {
-        create: data.serviceIds.map((serviceId) => ({ serviceId })),
+        create: [
+          ...data.serviceIds.map((serviceId) => ({ serviceId })),
+          ...(data.customServices ?? [])
+            .filter((c) => c.name.trim())
+            .map((c) => ({
+              customName: c.name.trim(),
+              description: c.description?.trim() || null,
+              quantity: c.quantity && c.quantity > 0 ? Math.round(c.quantity) : 1,
+            })),
+        ],
       },
     },
   });

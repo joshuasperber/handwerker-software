@@ -162,6 +162,16 @@ export type AuditLog = Prisma.AuditLogModel
  */
 export type NotificationLog = Prisma.NotificationLogModel
 /**
+ * Model Notification
+ * * In-App-Benachrichtigung fuer einen konkreten Nutzer (Glocke / Benachrichtigungs-Center).
+ */
+export type Notification = Prisma.NotificationModel
+/**
+ * Model NotificationSettings
+ * * Pro-Tenant-Steuerung fuer automatische Benachrichtigungen/Jobs.
+ */
+export type NotificationSettings = Prisma.NotificationSettingsModel
+/**
  * Model CompanySettings
  * 
  */
@@ -246,6 +256,21 @@ export type VATSettings = Prisma.VATSettingsModel
  * 
  */
 export type CalculationDocument = Prisma.CalculationDocumentModel
+/**
+ * Model DocumentSequence
+ * 
+ */
+export type DocumentSequence = Prisma.DocumentSequenceModel
+/**
+ * Model Payment
+ * 
+ */
+export type Payment = Prisma.PaymentModel
+/**
+ * Model DunningNotice
+ * 
+ */
+export type DunningNotice = Prisma.DunningNoticeModel
 /**
  * Model Article
  * 
@@ -336,3 +361,13 @@ export type PlanMarker = Prisma.PlanMarkerModel
  * 
  */
 export type StaffAssignmentRequest = Prisma.StaffAssignmentRequestModel
+/**
+ * Model Invitation
+ * 
+ */
+export type Invitation = Prisma.InvitationModel
+/**
+ * Model OrderShare
+ * 
+ */
+export type OrderShare = Prisma.OrderShareModel

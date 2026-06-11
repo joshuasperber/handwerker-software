@@ -34,6 +34,12 @@ export default function LoginPage() {
         return;
       }
 
+      // Beim ersten Login (Initialpasswort) direkt zur Passwortänderung führen.
+      if (data.data?.user?.mustChangePassword) {
+        router.push("/dashboard/profil?changePassword=1");
+        return;
+      }
+
       router.push("/dashboard");
     } catch {
       setError("Verbindungsfehler");

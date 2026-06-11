@@ -2,9 +2,10 @@ import { redirect } from "next/navigation";
 import { getSession } from "@/lib/auth";
 import { canAccessMonteurApp } from "@/lib/permissions";
 import Link from "next/link";
-import { Wrench, LogOut } from "lucide-react";
+import { Wrench, LogOut, AlertTriangle } from "lucide-react";
 import { Suspense } from "react";
 import { MonteurBottomNav } from "@/components/monteur/bottom-nav";
+import { NotificationBell } from "@/components/notifications/notification-bell";
 import { SessionProvider } from "@/components/auth/can-access";
 
 export default async function MonteurLayout({
@@ -25,7 +26,10 @@ export default async function MonteurLayout({
           <span className="font-bold text-slate-900">Monteur</span>
         </div>
         <div className="flex items-center gap-3">
-          <span className="text-sm text-slate-500">{session.firstName}</span>
+          <NotificationBell />
+          <Link href="/dashboard/profil" className="text-sm text-slate-500 hover:text-blue-600">
+            {session.firstName}
+          </Link>
           {session.role !== "MONTEUR" && (
             <Link href="/dashboard" className="text-sm text-blue-600">Dashboard</Link>
           )}
@@ -34,7 +38,18 @@ export default async function MonteurLayout({
           </form>
         </div>
       </header>
-      <main className="flex-1 p-4 pb-20">{children}</main>
+      <main className="flex-1 p-4 pb-20">
+        {session.mustChangePassword && (
+          <Link
+            href="/dashboard/profil?changePassword=1"
+            className="mb-4 flex items-center gap-2.5 rounded-xl border border-amber-300 bg-amber-50 px-3 py-2.5 text-sm text-amber-800"
+          >
+            <AlertTriangle className="h-5 w-5 shrink-0" />
+            <span>Initialpasswort ändern – jetzt im Profil ein eigenes Passwort vergeben →</span>
+          </Link>
+        )}
+        {children}
+      </main>
       <Suspense fallback={null}>
         <MonteurBottomNav />
       </Suspense>

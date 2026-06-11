@@ -29,6 +29,10 @@ export type VehicleMinAggregateOutputType = {
   tenantId: string | null
   name: string | null
   licensePlate: string | null
+  vehicleType: string | null
+  status: $Enums.VehicleStatus | null
+  notes: string | null
+  assignedEmployeeId: string | null
   storageLocationId: string | null
   isActive: boolean | null
   createdAt: Date | null
@@ -40,6 +44,10 @@ export type VehicleMaxAggregateOutputType = {
   tenantId: string | null
   name: string | null
   licensePlate: string | null
+  vehicleType: string | null
+  status: $Enums.VehicleStatus | null
+  notes: string | null
+  assignedEmployeeId: string | null
   storageLocationId: string | null
   isActive: boolean | null
   createdAt: Date | null
@@ -51,6 +59,10 @@ export type VehicleCountAggregateOutputType = {
   tenantId: number
   name: number
   licensePlate: number
+  vehicleType: number
+  status: number
+  notes: number
+  assignedEmployeeId: number
   storageLocationId: number
   isActive: number
   createdAt: number
@@ -64,6 +76,10 @@ export type VehicleMinAggregateInputType = {
   tenantId?: true
   name?: true
   licensePlate?: true
+  vehicleType?: true
+  status?: true
+  notes?: true
+  assignedEmployeeId?: true
   storageLocationId?: true
   isActive?: true
   createdAt?: true
@@ -75,6 +91,10 @@ export type VehicleMaxAggregateInputType = {
   tenantId?: true
   name?: true
   licensePlate?: true
+  vehicleType?: true
+  status?: true
+  notes?: true
+  assignedEmployeeId?: true
   storageLocationId?: true
   isActive?: true
   createdAt?: true
@@ -86,6 +106,10 @@ export type VehicleCountAggregateInputType = {
   tenantId?: true
   name?: true
   licensePlate?: true
+  vehicleType?: true
+  status?: true
+  notes?: true
+  assignedEmployeeId?: true
   storageLocationId?: true
   isActive?: true
   createdAt?: true
@@ -170,6 +194,10 @@ export type VehicleGroupByOutputType = {
   tenantId: string
   name: string
   licensePlate: string | null
+  vehicleType: string | null
+  status: $Enums.VehicleStatus
+  notes: string | null
+  assignedEmployeeId: string | null
   storageLocationId: string | null
   isActive: boolean
   createdAt: Date
@@ -202,12 +230,17 @@ export type VehicleWhereInput = {
   tenantId?: Prisma.StringFilter<"Vehicle"> | string
   name?: Prisma.StringFilter<"Vehicle"> | string
   licensePlate?: Prisma.StringNullableFilter<"Vehicle"> | string | null
+  vehicleType?: Prisma.StringNullableFilter<"Vehicle"> | string | null
+  status?: Prisma.EnumVehicleStatusFilter<"Vehicle"> | $Enums.VehicleStatus
+  notes?: Prisma.StringNullableFilter<"Vehicle"> | string | null
+  assignedEmployeeId?: Prisma.StringNullableFilter<"Vehicle"> | string | null
   storageLocationId?: Prisma.StringNullableFilter<"Vehicle"> | string | null
   isActive?: Prisma.BoolFilter<"Vehicle"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Vehicle"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Vehicle"> | Date | string
   tenant?: Prisma.XOR<Prisma.TenantScalarRelationFilter, Prisma.TenantWhereInput>
   storageLocation?: Prisma.XOR<Prisma.StorageLocationNullableScalarRelationFilter, Prisma.StorageLocationWhereInput> | null
+  assignedEmployee?: Prisma.XOR<Prisma.EmployeeNullableScalarRelationFilter, Prisma.EmployeeWhereInput> | null
   teams?: Prisma.TeamListRelationFilter
   orders?: Prisma.OrderListRelationFilter
 }
@@ -217,12 +250,17 @@ export type VehicleOrderByWithRelationInput = {
   tenantId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   licensePlate?: Prisma.SortOrderInput | Prisma.SortOrder
+  vehicleType?: Prisma.SortOrderInput | Prisma.SortOrder
+  status?: Prisma.SortOrder
+  notes?: Prisma.SortOrderInput | Prisma.SortOrder
+  assignedEmployeeId?: Prisma.SortOrderInput | Prisma.SortOrder
   storageLocationId?: Prisma.SortOrderInput | Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   tenant?: Prisma.TenantOrderByWithRelationInput
   storageLocation?: Prisma.StorageLocationOrderByWithRelationInput
+  assignedEmployee?: Prisma.EmployeeOrderByWithRelationInput
   teams?: Prisma.TeamOrderByRelationAggregateInput
   orders?: Prisma.OrderOrderByRelationAggregateInput
 }
@@ -236,11 +274,16 @@ export type VehicleWhereUniqueInput = Prisma.AtLeast<{
   tenantId?: Prisma.StringFilter<"Vehicle"> | string
   name?: Prisma.StringFilter<"Vehicle"> | string
   licensePlate?: Prisma.StringNullableFilter<"Vehicle"> | string | null
+  vehicleType?: Prisma.StringNullableFilter<"Vehicle"> | string | null
+  status?: Prisma.EnumVehicleStatusFilter<"Vehicle"> | $Enums.VehicleStatus
+  notes?: Prisma.StringNullableFilter<"Vehicle"> | string | null
+  assignedEmployeeId?: Prisma.StringNullableFilter<"Vehicle"> | string | null
   isActive?: Prisma.BoolFilter<"Vehicle"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Vehicle"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Vehicle"> | Date | string
   tenant?: Prisma.XOR<Prisma.TenantScalarRelationFilter, Prisma.TenantWhereInput>
   storageLocation?: Prisma.XOR<Prisma.StorageLocationNullableScalarRelationFilter, Prisma.StorageLocationWhereInput> | null
+  assignedEmployee?: Prisma.XOR<Prisma.EmployeeNullableScalarRelationFilter, Prisma.EmployeeWhereInput> | null
   teams?: Prisma.TeamListRelationFilter
   orders?: Prisma.OrderListRelationFilter
 }, "id" | "storageLocationId">
@@ -250,6 +293,10 @@ export type VehicleOrderByWithAggregationInput = {
   tenantId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   licensePlate?: Prisma.SortOrderInput | Prisma.SortOrder
+  vehicleType?: Prisma.SortOrderInput | Prisma.SortOrder
+  status?: Prisma.SortOrder
+  notes?: Prisma.SortOrderInput | Prisma.SortOrder
+  assignedEmployeeId?: Prisma.SortOrderInput | Prisma.SortOrder
   storageLocationId?: Prisma.SortOrderInput | Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -267,6 +314,10 @@ export type VehicleScalarWhereWithAggregatesInput = {
   tenantId?: Prisma.StringWithAggregatesFilter<"Vehicle"> | string
   name?: Prisma.StringWithAggregatesFilter<"Vehicle"> | string
   licensePlate?: Prisma.StringNullableWithAggregatesFilter<"Vehicle"> | string | null
+  vehicleType?: Prisma.StringNullableWithAggregatesFilter<"Vehicle"> | string | null
+  status?: Prisma.EnumVehicleStatusWithAggregatesFilter<"Vehicle"> | $Enums.VehicleStatus
+  notes?: Prisma.StringNullableWithAggregatesFilter<"Vehicle"> | string | null
+  assignedEmployeeId?: Prisma.StringNullableWithAggregatesFilter<"Vehicle"> | string | null
   storageLocationId?: Prisma.StringNullableWithAggregatesFilter<"Vehicle"> | string | null
   isActive?: Prisma.BoolWithAggregatesFilter<"Vehicle"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Vehicle"> | Date | string
@@ -277,11 +328,15 @@ export type VehicleCreateInput = {
   id?: string
   name: string
   licensePlate?: string | null
+  vehicleType?: string | null
+  status?: $Enums.VehicleStatus
+  notes?: string | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutVehiclesInput
   storageLocation?: Prisma.StorageLocationCreateNestedOneWithoutVehicleInput
+  assignedEmployee?: Prisma.EmployeeCreateNestedOneWithoutAssignedVehiclesInput
   teams?: Prisma.TeamCreateNestedManyWithoutVehicleInput
   orders?: Prisma.OrderCreateNestedManyWithoutVehicleInput
 }
@@ -291,6 +346,10 @@ export type VehicleUncheckedCreateInput = {
   tenantId: string
   name: string
   licensePlate?: string | null
+  vehicleType?: string | null
+  status?: $Enums.VehicleStatus
+  notes?: string | null
+  assignedEmployeeId?: string | null
   storageLocationId?: string | null
   isActive?: boolean
   createdAt?: Date | string
@@ -303,11 +362,15 @@ export type VehicleUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   licensePlate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vehicleType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumVehicleStatusFieldUpdateOperationsInput | $Enums.VehicleStatus
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutVehiclesNestedInput
   storageLocation?: Prisma.StorageLocationUpdateOneWithoutVehicleNestedInput
+  assignedEmployee?: Prisma.EmployeeUpdateOneWithoutAssignedVehiclesNestedInput
   teams?: Prisma.TeamUpdateManyWithoutVehicleNestedInput
   orders?: Prisma.OrderUpdateManyWithoutVehicleNestedInput
 }
@@ -317,6 +380,10 @@ export type VehicleUncheckedUpdateInput = {
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   licensePlate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vehicleType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumVehicleStatusFieldUpdateOperationsInput | $Enums.VehicleStatus
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedEmployeeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   storageLocationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -330,6 +397,10 @@ export type VehicleCreateManyInput = {
   tenantId: string
   name: string
   licensePlate?: string | null
+  vehicleType?: string | null
+  status?: $Enums.VehicleStatus
+  notes?: string | null
+  assignedEmployeeId?: string | null
   storageLocationId?: string | null
   isActive?: boolean
   createdAt?: Date | string
@@ -340,6 +411,9 @@ export type VehicleUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   licensePlate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vehicleType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumVehicleStatusFieldUpdateOperationsInput | $Enums.VehicleStatus
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -350,6 +424,10 @@ export type VehicleUncheckedUpdateManyInput = {
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   licensePlate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vehicleType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumVehicleStatusFieldUpdateOperationsInput | $Enums.VehicleStatus
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedEmployeeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   storageLocationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -376,6 +454,10 @@ export type VehicleCountOrderByAggregateInput = {
   tenantId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   licensePlate?: Prisma.SortOrder
+  vehicleType?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  notes?: Prisma.SortOrder
+  assignedEmployeeId?: Prisma.SortOrder
   storageLocationId?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -387,6 +469,10 @@ export type VehicleMaxOrderByAggregateInput = {
   tenantId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   licensePlate?: Prisma.SortOrder
+  vehicleType?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  notes?: Prisma.SortOrder
+  assignedEmployeeId?: Prisma.SortOrder
   storageLocationId?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -398,6 +484,10 @@ export type VehicleMinOrderByAggregateInput = {
   tenantId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   licensePlate?: Prisma.SortOrder
+  vehicleType?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  notes?: Prisma.SortOrder
+  assignedEmployeeId?: Prisma.SortOrder
   storageLocationId?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -443,6 +533,48 @@ export type VehicleUncheckedUpdateManyWithoutTenantNestedInput = {
   connect?: Prisma.VehicleWhereUniqueInput | Prisma.VehicleWhereUniqueInput[]
   update?: Prisma.VehicleUpdateWithWhereUniqueWithoutTenantInput | Prisma.VehicleUpdateWithWhereUniqueWithoutTenantInput[]
   updateMany?: Prisma.VehicleUpdateManyWithWhereWithoutTenantInput | Prisma.VehicleUpdateManyWithWhereWithoutTenantInput[]
+  deleteMany?: Prisma.VehicleScalarWhereInput | Prisma.VehicleScalarWhereInput[]
+}
+
+export type VehicleCreateNestedManyWithoutAssignedEmployeeInput = {
+  create?: Prisma.XOR<Prisma.VehicleCreateWithoutAssignedEmployeeInput, Prisma.VehicleUncheckedCreateWithoutAssignedEmployeeInput> | Prisma.VehicleCreateWithoutAssignedEmployeeInput[] | Prisma.VehicleUncheckedCreateWithoutAssignedEmployeeInput[]
+  connectOrCreate?: Prisma.VehicleCreateOrConnectWithoutAssignedEmployeeInput | Prisma.VehicleCreateOrConnectWithoutAssignedEmployeeInput[]
+  createMany?: Prisma.VehicleCreateManyAssignedEmployeeInputEnvelope
+  connect?: Prisma.VehicleWhereUniqueInput | Prisma.VehicleWhereUniqueInput[]
+}
+
+export type VehicleUncheckedCreateNestedManyWithoutAssignedEmployeeInput = {
+  create?: Prisma.XOR<Prisma.VehicleCreateWithoutAssignedEmployeeInput, Prisma.VehicleUncheckedCreateWithoutAssignedEmployeeInput> | Prisma.VehicleCreateWithoutAssignedEmployeeInput[] | Prisma.VehicleUncheckedCreateWithoutAssignedEmployeeInput[]
+  connectOrCreate?: Prisma.VehicleCreateOrConnectWithoutAssignedEmployeeInput | Prisma.VehicleCreateOrConnectWithoutAssignedEmployeeInput[]
+  createMany?: Prisma.VehicleCreateManyAssignedEmployeeInputEnvelope
+  connect?: Prisma.VehicleWhereUniqueInput | Prisma.VehicleWhereUniqueInput[]
+}
+
+export type VehicleUpdateManyWithoutAssignedEmployeeNestedInput = {
+  create?: Prisma.XOR<Prisma.VehicleCreateWithoutAssignedEmployeeInput, Prisma.VehicleUncheckedCreateWithoutAssignedEmployeeInput> | Prisma.VehicleCreateWithoutAssignedEmployeeInput[] | Prisma.VehicleUncheckedCreateWithoutAssignedEmployeeInput[]
+  connectOrCreate?: Prisma.VehicleCreateOrConnectWithoutAssignedEmployeeInput | Prisma.VehicleCreateOrConnectWithoutAssignedEmployeeInput[]
+  upsert?: Prisma.VehicleUpsertWithWhereUniqueWithoutAssignedEmployeeInput | Prisma.VehicleUpsertWithWhereUniqueWithoutAssignedEmployeeInput[]
+  createMany?: Prisma.VehicleCreateManyAssignedEmployeeInputEnvelope
+  set?: Prisma.VehicleWhereUniqueInput | Prisma.VehicleWhereUniqueInput[]
+  disconnect?: Prisma.VehicleWhereUniqueInput | Prisma.VehicleWhereUniqueInput[]
+  delete?: Prisma.VehicleWhereUniqueInput | Prisma.VehicleWhereUniqueInput[]
+  connect?: Prisma.VehicleWhereUniqueInput | Prisma.VehicleWhereUniqueInput[]
+  update?: Prisma.VehicleUpdateWithWhereUniqueWithoutAssignedEmployeeInput | Prisma.VehicleUpdateWithWhereUniqueWithoutAssignedEmployeeInput[]
+  updateMany?: Prisma.VehicleUpdateManyWithWhereWithoutAssignedEmployeeInput | Prisma.VehicleUpdateManyWithWhereWithoutAssignedEmployeeInput[]
+  deleteMany?: Prisma.VehicleScalarWhereInput | Prisma.VehicleScalarWhereInput[]
+}
+
+export type VehicleUncheckedUpdateManyWithoutAssignedEmployeeNestedInput = {
+  create?: Prisma.XOR<Prisma.VehicleCreateWithoutAssignedEmployeeInput, Prisma.VehicleUncheckedCreateWithoutAssignedEmployeeInput> | Prisma.VehicleCreateWithoutAssignedEmployeeInput[] | Prisma.VehicleUncheckedCreateWithoutAssignedEmployeeInput[]
+  connectOrCreate?: Prisma.VehicleCreateOrConnectWithoutAssignedEmployeeInput | Prisma.VehicleCreateOrConnectWithoutAssignedEmployeeInput[]
+  upsert?: Prisma.VehicleUpsertWithWhereUniqueWithoutAssignedEmployeeInput | Prisma.VehicleUpsertWithWhereUniqueWithoutAssignedEmployeeInput[]
+  createMany?: Prisma.VehicleCreateManyAssignedEmployeeInputEnvelope
+  set?: Prisma.VehicleWhereUniqueInput | Prisma.VehicleWhereUniqueInput[]
+  disconnect?: Prisma.VehicleWhereUniqueInput | Prisma.VehicleWhereUniqueInput[]
+  delete?: Prisma.VehicleWhereUniqueInput | Prisma.VehicleWhereUniqueInput[]
+  connect?: Prisma.VehicleWhereUniqueInput | Prisma.VehicleWhereUniqueInput[]
+  update?: Prisma.VehicleUpdateWithWhereUniqueWithoutAssignedEmployeeInput | Prisma.VehicleUpdateWithWhereUniqueWithoutAssignedEmployeeInput[]
+  updateMany?: Prisma.VehicleUpdateManyWithWhereWithoutAssignedEmployeeInput | Prisma.VehicleUpdateManyWithWhereWithoutAssignedEmployeeInput[]
   deleteMany?: Prisma.VehicleScalarWhereInput | Prisma.VehicleScalarWhereInput[]
 }
 
@@ -510,14 +642,22 @@ export type VehicleUpdateOneWithoutTeamsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.VehicleUpdateToOneWithWhereWithoutTeamsInput, Prisma.VehicleUpdateWithoutTeamsInput>, Prisma.VehicleUncheckedUpdateWithoutTeamsInput>
 }
 
+export type EnumVehicleStatusFieldUpdateOperationsInput = {
+  set?: $Enums.VehicleStatus
+}
+
 export type VehicleCreateWithoutTenantInput = {
   id?: string
   name: string
   licensePlate?: string | null
+  vehicleType?: string | null
+  status?: $Enums.VehicleStatus
+  notes?: string | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   storageLocation?: Prisma.StorageLocationCreateNestedOneWithoutVehicleInput
+  assignedEmployee?: Prisma.EmployeeCreateNestedOneWithoutAssignedVehiclesInput
   teams?: Prisma.TeamCreateNestedManyWithoutVehicleInput
   orders?: Prisma.OrderCreateNestedManyWithoutVehicleInput
 }
@@ -526,6 +666,10 @@ export type VehicleUncheckedCreateWithoutTenantInput = {
   id?: string
   name: string
   licensePlate?: string | null
+  vehicleType?: string | null
+  status?: $Enums.VehicleStatus
+  notes?: string | null
+  assignedEmployeeId?: string | null
   storageLocationId?: string | null
   isActive?: boolean
   createdAt?: Date | string
@@ -568,21 +712,87 @@ export type VehicleScalarWhereInput = {
   tenantId?: Prisma.StringFilter<"Vehicle"> | string
   name?: Prisma.StringFilter<"Vehicle"> | string
   licensePlate?: Prisma.StringNullableFilter<"Vehicle"> | string | null
+  vehicleType?: Prisma.StringNullableFilter<"Vehicle"> | string | null
+  status?: Prisma.EnumVehicleStatusFilter<"Vehicle"> | $Enums.VehicleStatus
+  notes?: Prisma.StringNullableFilter<"Vehicle"> | string | null
+  assignedEmployeeId?: Prisma.StringNullableFilter<"Vehicle"> | string | null
   storageLocationId?: Prisma.StringNullableFilter<"Vehicle"> | string | null
   isActive?: Prisma.BoolFilter<"Vehicle"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Vehicle"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Vehicle"> | Date | string
 }
 
-export type VehicleCreateWithoutOrdersInput = {
+export type VehicleCreateWithoutAssignedEmployeeInput = {
   id?: string
   name: string
   licensePlate?: string | null
+  vehicleType?: string | null
+  status?: $Enums.VehicleStatus
+  notes?: string | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutVehiclesInput
   storageLocation?: Prisma.StorageLocationCreateNestedOneWithoutVehicleInput
+  teams?: Prisma.TeamCreateNestedManyWithoutVehicleInput
+  orders?: Prisma.OrderCreateNestedManyWithoutVehicleInput
+}
+
+export type VehicleUncheckedCreateWithoutAssignedEmployeeInput = {
+  id?: string
+  tenantId: string
+  name: string
+  licensePlate?: string | null
+  vehicleType?: string | null
+  status?: $Enums.VehicleStatus
+  notes?: string | null
+  storageLocationId?: string | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  teams?: Prisma.TeamUncheckedCreateNestedManyWithoutVehicleInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutVehicleInput
+}
+
+export type VehicleCreateOrConnectWithoutAssignedEmployeeInput = {
+  where: Prisma.VehicleWhereUniqueInput
+  create: Prisma.XOR<Prisma.VehicleCreateWithoutAssignedEmployeeInput, Prisma.VehicleUncheckedCreateWithoutAssignedEmployeeInput>
+}
+
+export type VehicleCreateManyAssignedEmployeeInputEnvelope = {
+  data: Prisma.VehicleCreateManyAssignedEmployeeInput | Prisma.VehicleCreateManyAssignedEmployeeInput[]
+  skipDuplicates?: boolean
+}
+
+export type VehicleUpsertWithWhereUniqueWithoutAssignedEmployeeInput = {
+  where: Prisma.VehicleWhereUniqueInput
+  update: Prisma.XOR<Prisma.VehicleUpdateWithoutAssignedEmployeeInput, Prisma.VehicleUncheckedUpdateWithoutAssignedEmployeeInput>
+  create: Prisma.XOR<Prisma.VehicleCreateWithoutAssignedEmployeeInput, Prisma.VehicleUncheckedCreateWithoutAssignedEmployeeInput>
+}
+
+export type VehicleUpdateWithWhereUniqueWithoutAssignedEmployeeInput = {
+  where: Prisma.VehicleWhereUniqueInput
+  data: Prisma.XOR<Prisma.VehicleUpdateWithoutAssignedEmployeeInput, Prisma.VehicleUncheckedUpdateWithoutAssignedEmployeeInput>
+}
+
+export type VehicleUpdateManyWithWhereWithoutAssignedEmployeeInput = {
+  where: Prisma.VehicleScalarWhereInput
+  data: Prisma.XOR<Prisma.VehicleUpdateManyMutationInput, Prisma.VehicleUncheckedUpdateManyWithoutAssignedEmployeeInput>
+}
+
+export type VehicleCreateWithoutOrdersInput = {
+  id?: string
+  name: string
+  licensePlate?: string | null
+  vehicleType?: string | null
+  status?: $Enums.VehicleStatus
+  notes?: string | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tenant: Prisma.TenantCreateNestedOneWithoutVehiclesInput
+  storageLocation?: Prisma.StorageLocationCreateNestedOneWithoutVehicleInput
+  assignedEmployee?: Prisma.EmployeeCreateNestedOneWithoutAssignedVehiclesInput
   teams?: Prisma.TeamCreateNestedManyWithoutVehicleInput
 }
 
@@ -591,6 +801,10 @@ export type VehicleUncheckedCreateWithoutOrdersInput = {
   tenantId: string
   name: string
   licensePlate?: string | null
+  vehicleType?: string | null
+  status?: $Enums.VehicleStatus
+  notes?: string | null
+  assignedEmployeeId?: string | null
   storageLocationId?: string | null
   isActive?: boolean
   createdAt?: Date | string
@@ -618,11 +832,15 @@ export type VehicleUpdateWithoutOrdersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   licensePlate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vehicleType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumVehicleStatusFieldUpdateOperationsInput | $Enums.VehicleStatus
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutVehiclesNestedInput
   storageLocation?: Prisma.StorageLocationUpdateOneWithoutVehicleNestedInput
+  assignedEmployee?: Prisma.EmployeeUpdateOneWithoutAssignedVehiclesNestedInput
   teams?: Prisma.TeamUpdateManyWithoutVehicleNestedInput
 }
 
@@ -631,6 +849,10 @@ export type VehicleUncheckedUpdateWithoutOrdersInput = {
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   licensePlate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vehicleType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumVehicleStatusFieldUpdateOperationsInput | $Enums.VehicleStatus
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedEmployeeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   storageLocationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -642,10 +864,14 @@ export type VehicleCreateWithoutStorageLocationInput = {
   id?: string
   name: string
   licensePlate?: string | null
+  vehicleType?: string | null
+  status?: $Enums.VehicleStatus
+  notes?: string | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutVehiclesInput
+  assignedEmployee?: Prisma.EmployeeCreateNestedOneWithoutAssignedVehiclesInput
   teams?: Prisma.TeamCreateNestedManyWithoutVehicleInput
   orders?: Prisma.OrderCreateNestedManyWithoutVehicleInput
 }
@@ -655,6 +881,10 @@ export type VehicleUncheckedCreateWithoutStorageLocationInput = {
   tenantId: string
   name: string
   licensePlate?: string | null
+  vehicleType?: string | null
+  status?: $Enums.VehicleStatus
+  notes?: string | null
+  assignedEmployeeId?: string | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -682,10 +912,14 @@ export type VehicleUpdateWithoutStorageLocationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   licensePlate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vehicleType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumVehicleStatusFieldUpdateOperationsInput | $Enums.VehicleStatus
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutVehiclesNestedInput
+  assignedEmployee?: Prisma.EmployeeUpdateOneWithoutAssignedVehiclesNestedInput
   teams?: Prisma.TeamUpdateManyWithoutVehicleNestedInput
   orders?: Prisma.OrderUpdateManyWithoutVehicleNestedInput
 }
@@ -695,6 +929,10 @@ export type VehicleUncheckedUpdateWithoutStorageLocationInput = {
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   licensePlate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vehicleType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumVehicleStatusFieldUpdateOperationsInput | $Enums.VehicleStatus
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedEmployeeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -706,11 +944,15 @@ export type VehicleCreateWithoutTeamsInput = {
   id?: string
   name: string
   licensePlate?: string | null
+  vehicleType?: string | null
+  status?: $Enums.VehicleStatus
+  notes?: string | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutVehiclesInput
   storageLocation?: Prisma.StorageLocationCreateNestedOneWithoutVehicleInput
+  assignedEmployee?: Prisma.EmployeeCreateNestedOneWithoutAssignedVehiclesInput
   orders?: Prisma.OrderCreateNestedManyWithoutVehicleInput
 }
 
@@ -719,6 +961,10 @@ export type VehicleUncheckedCreateWithoutTeamsInput = {
   tenantId: string
   name: string
   licensePlate?: string | null
+  vehicleType?: string | null
+  status?: $Enums.VehicleStatus
+  notes?: string | null
+  assignedEmployeeId?: string | null
   storageLocationId?: string | null
   isActive?: boolean
   createdAt?: Date | string
@@ -746,11 +992,15 @@ export type VehicleUpdateWithoutTeamsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   licensePlate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vehicleType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumVehicleStatusFieldUpdateOperationsInput | $Enums.VehicleStatus
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutVehiclesNestedInput
   storageLocation?: Prisma.StorageLocationUpdateOneWithoutVehicleNestedInput
+  assignedEmployee?: Prisma.EmployeeUpdateOneWithoutAssignedVehiclesNestedInput
   orders?: Prisma.OrderUpdateManyWithoutVehicleNestedInput
 }
 
@@ -759,6 +1009,10 @@ export type VehicleUncheckedUpdateWithoutTeamsInput = {
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   licensePlate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vehicleType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumVehicleStatusFieldUpdateOperationsInput | $Enums.VehicleStatus
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedEmployeeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   storageLocationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -770,6 +1024,10 @@ export type VehicleCreateManyTenantInput = {
   id?: string
   name: string
   licensePlate?: string | null
+  vehicleType?: string | null
+  status?: $Enums.VehicleStatus
+  notes?: string | null
+  assignedEmployeeId?: string | null
   storageLocationId?: string | null
   isActive?: boolean
   createdAt?: Date | string
@@ -780,10 +1038,14 @@ export type VehicleUpdateWithoutTenantInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   licensePlate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vehicleType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumVehicleStatusFieldUpdateOperationsInput | $Enums.VehicleStatus
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   storageLocation?: Prisma.StorageLocationUpdateOneWithoutVehicleNestedInput
+  assignedEmployee?: Prisma.EmployeeUpdateOneWithoutAssignedVehiclesNestedInput
   teams?: Prisma.TeamUpdateManyWithoutVehicleNestedInput
   orders?: Prisma.OrderUpdateManyWithoutVehicleNestedInput
 }
@@ -792,6 +1054,10 @@ export type VehicleUncheckedUpdateWithoutTenantInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   licensePlate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vehicleType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumVehicleStatusFieldUpdateOperationsInput | $Enums.VehicleStatus
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedEmployeeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   storageLocationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -804,6 +1070,70 @@ export type VehicleUncheckedUpdateManyWithoutTenantInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   licensePlate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vehicleType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumVehicleStatusFieldUpdateOperationsInput | $Enums.VehicleStatus
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedEmployeeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  storageLocationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type VehicleCreateManyAssignedEmployeeInput = {
+  id?: string
+  tenantId: string
+  name: string
+  licensePlate?: string | null
+  vehicleType?: string | null
+  status?: $Enums.VehicleStatus
+  notes?: string | null
+  storageLocationId?: string | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type VehicleUpdateWithoutAssignedEmployeeInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  licensePlate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vehicleType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumVehicleStatusFieldUpdateOperationsInput | $Enums.VehicleStatus
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutVehiclesNestedInput
+  storageLocation?: Prisma.StorageLocationUpdateOneWithoutVehicleNestedInput
+  teams?: Prisma.TeamUpdateManyWithoutVehicleNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutVehicleNestedInput
+}
+
+export type VehicleUncheckedUpdateWithoutAssignedEmployeeInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  licensePlate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vehicleType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumVehicleStatusFieldUpdateOperationsInput | $Enums.VehicleStatus
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  storageLocationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  teams?: Prisma.TeamUncheckedUpdateManyWithoutVehicleNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutVehicleNestedInput
+}
+
+export type VehicleUncheckedUpdateManyWithoutAssignedEmployeeInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  licensePlate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vehicleType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumVehicleStatusFieldUpdateOperationsInput | $Enums.VehicleStatus
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   storageLocationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -855,12 +1185,17 @@ export type VehicleSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   tenantId?: boolean
   name?: boolean
   licensePlate?: boolean
+  vehicleType?: boolean
+  status?: boolean
+  notes?: boolean
+  assignedEmployeeId?: boolean
   storageLocationId?: boolean
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   storageLocation?: boolean | Prisma.Vehicle$storageLocationArgs<ExtArgs>
+  assignedEmployee?: boolean | Prisma.Vehicle$assignedEmployeeArgs<ExtArgs>
   teams?: boolean | Prisma.Vehicle$teamsArgs<ExtArgs>
   orders?: boolean | Prisma.Vehicle$ordersArgs<ExtArgs>
   _count?: boolean | Prisma.VehicleCountOutputTypeDefaultArgs<ExtArgs>
@@ -871,12 +1206,17 @@ export type VehicleSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   tenantId?: boolean
   name?: boolean
   licensePlate?: boolean
+  vehicleType?: boolean
+  status?: boolean
+  notes?: boolean
+  assignedEmployeeId?: boolean
   storageLocationId?: boolean
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   storageLocation?: boolean | Prisma.Vehicle$storageLocationArgs<ExtArgs>
+  assignedEmployee?: boolean | Prisma.Vehicle$assignedEmployeeArgs<ExtArgs>
 }, ExtArgs["result"]["vehicle"]>
 
 export type VehicleSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -884,12 +1224,17 @@ export type VehicleSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   tenantId?: boolean
   name?: boolean
   licensePlate?: boolean
+  vehicleType?: boolean
+  status?: boolean
+  notes?: boolean
+  assignedEmployeeId?: boolean
   storageLocationId?: boolean
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   storageLocation?: boolean | Prisma.Vehicle$storageLocationArgs<ExtArgs>
+  assignedEmployee?: boolean | Prisma.Vehicle$assignedEmployeeArgs<ExtArgs>
 }, ExtArgs["result"]["vehicle"]>
 
 export type VehicleSelectScalar = {
@@ -897,16 +1242,21 @@ export type VehicleSelectScalar = {
   tenantId?: boolean
   name?: boolean
   licensePlate?: boolean
+  vehicleType?: boolean
+  status?: boolean
+  notes?: boolean
+  assignedEmployeeId?: boolean
   storageLocationId?: boolean
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type VehicleOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "name" | "licensePlate" | "storageLocationId" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["vehicle"]>
+export type VehicleOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "name" | "licensePlate" | "vehicleType" | "status" | "notes" | "assignedEmployeeId" | "storageLocationId" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["vehicle"]>
 export type VehicleInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   storageLocation?: boolean | Prisma.Vehicle$storageLocationArgs<ExtArgs>
+  assignedEmployee?: boolean | Prisma.Vehicle$assignedEmployeeArgs<ExtArgs>
   teams?: boolean | Prisma.Vehicle$teamsArgs<ExtArgs>
   orders?: boolean | Prisma.Vehicle$ordersArgs<ExtArgs>
   _count?: boolean | Prisma.VehicleCountOutputTypeDefaultArgs<ExtArgs>
@@ -914,10 +1264,12 @@ export type VehicleInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
 export type VehicleIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   storageLocation?: boolean | Prisma.Vehicle$storageLocationArgs<ExtArgs>
+  assignedEmployee?: boolean | Prisma.Vehicle$assignedEmployeeArgs<ExtArgs>
 }
 export type VehicleIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   storageLocation?: boolean | Prisma.Vehicle$storageLocationArgs<ExtArgs>
+  assignedEmployee?: boolean | Prisma.Vehicle$assignedEmployeeArgs<ExtArgs>
 }
 
 export type $VehiclePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -925,6 +1277,7 @@ export type $VehiclePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
   objects: {
     tenant: Prisma.$TenantPayload<ExtArgs>
     storageLocation: Prisma.$StorageLocationPayload<ExtArgs> | null
+    assignedEmployee: Prisma.$EmployeePayload<ExtArgs> | null
     teams: Prisma.$TeamPayload<ExtArgs>[]
     orders: Prisma.$OrderPayload<ExtArgs>[]
   }
@@ -933,6 +1286,10 @@ export type $VehiclePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     tenantId: string
     name: string
     licensePlate: string | null
+    vehicleType: string | null
+    status: $Enums.VehicleStatus
+    notes: string | null
+    assignedEmployeeId: string | null
     storageLocationId: string | null
     isActive: boolean
     createdAt: Date
@@ -1333,6 +1690,7 @@ export interface Prisma__VehicleClient<T, Null = never, ExtArgs extends runtime.
   readonly [Symbol.toStringTag]: "PrismaPromise"
   tenant<T extends Prisma.TenantDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TenantDefaultArgs<ExtArgs>>): Prisma.Prisma__TenantClient<runtime.Types.Result.GetResult<Prisma.$TenantPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   storageLocation<T extends Prisma.Vehicle$storageLocationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Vehicle$storageLocationArgs<ExtArgs>>): Prisma.Prisma__StorageLocationClient<runtime.Types.Result.GetResult<Prisma.$StorageLocationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  assignedEmployee<T extends Prisma.Vehicle$assignedEmployeeArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Vehicle$assignedEmployeeArgs<ExtArgs>>): Prisma.Prisma__EmployeeClient<runtime.Types.Result.GetResult<Prisma.$EmployeePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   teams<T extends Prisma.Vehicle$teamsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Vehicle$teamsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TeamPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   orders<T extends Prisma.Vehicle$ordersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Vehicle$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
@@ -1368,6 +1726,10 @@ export interface VehicleFieldRefs {
   readonly tenantId: Prisma.FieldRef<"Vehicle", 'String'>
   readonly name: Prisma.FieldRef<"Vehicle", 'String'>
   readonly licensePlate: Prisma.FieldRef<"Vehicle", 'String'>
+  readonly vehicleType: Prisma.FieldRef<"Vehicle", 'String'>
+  readonly status: Prisma.FieldRef<"Vehicle", 'VehicleStatus'>
+  readonly notes: Prisma.FieldRef<"Vehicle", 'String'>
+  readonly assignedEmployeeId: Prisma.FieldRef<"Vehicle", 'String'>
   readonly storageLocationId: Prisma.FieldRef<"Vehicle", 'String'>
   readonly isActive: Prisma.FieldRef<"Vehicle", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"Vehicle", 'DateTime'>
@@ -1789,6 +2151,25 @@ export type Vehicle$storageLocationArgs<ExtArgs extends runtime.Types.Extensions
    */
   include?: Prisma.StorageLocationInclude<ExtArgs> | null
   where?: Prisma.StorageLocationWhereInput
+}
+
+/**
+ * Vehicle.assignedEmployee
+ */
+export type Vehicle$assignedEmployeeArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Employee
+   */
+  select?: Prisma.EmployeeSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Employee
+   */
+  omit?: Prisma.EmployeeOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EmployeeInclude<ExtArgs> | null
+  where?: Prisma.EmployeeWhereInput
 }
 
 /**

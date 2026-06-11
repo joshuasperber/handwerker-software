@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
-import { calcAvailableQuantity, PHASE_TEMPLATES } from "./formulas";
-import type { MaterialOrderStatus, OrderPhaseType, OrderType, ReservationStatus } from "@/generated/prisma/client";
+import { calcAvailableQuantity } from "./formulas";
+import { standardPhaseCreateData } from "@/lib/orders/phases";
+import type { MaterialOrderStatus, OrderType, ReservationStatus } from "@/generated/prisma/client";
 
 export async function getArticleAvailability(tenantId: string, articleId: string) {
   const balances = await prisma.stockBalance.findMany({
@@ -173,15 +174,15 @@ export async function confirmReservationsForOrder(orderId: string, tenantId: str
   return checkOrderMaterialStatus(orderId, tenantId);
 }
 
-export function defaultPhasesForOrderType(orderType: OrderType) {
-  const key = orderType in PHASE_TEMPLATES ? orderType : "DEFAULT";
-  const template = PHASE_TEMPLATES[key] ?? PHASE_TEMPLATES.DEFAULT;
-  return template.map((p, i) => ({
-    name: p.name,
-    phaseType: p.phaseType as OrderPhaseType,
-    sortOrder: i,
-    status: "AUSSTEHEND" as const,
-  }));
+/**
+ * Standardphasen für jeden neuen Auftrag (Aufmaß, Angebot, Fertigen, Montieren,
+ * Rechnung). Der Auftragstyp wird der Einheitlichkeit halber nicht mehr für
+ * unterschiedliche Phasensätze genutzt – die Phasen lassen sich pro Auftrag
+ * individuell aktivieren, deaktivieren und sortieren.
+ */
+export function defaultPhasesForOrderType(_orderType?: OrderType) {
+  void _orderType;
+  return standardPhaseCreateData();
 }
 
 export async function createOrderWithWizardData(
@@ -194,6 +195,13 @@ export async function createOrderWithWizardData(
     description?: string;
     internalNotes?: string;
     serviceIds: string[];
+    customServices?: {
+      name: string;
+      description?: string;
+      quantity?: number;
+      unitPriceCents?: number;
+      notes?: string;
+    }[];
     employeeId?: string;
     scheduledStart?: string;
     scheduledEnd?: string;
@@ -202,6 +210,19 @@ export async function createOrderWithWizardData(
   }
 ) {
   const { generateOrderNumber } = await import("@/lib/utils");
+
+  const customServiceCreates = (data.customServices ?? [])
+    .filter((c) => c.name?.trim())
+    .map((c) => ({
+      customName: c.name.trim(),
+      description: c.description?.trim() || null,
+      quantity: c.quantity && c.quantity > 0 ? Math.round(c.quantity) : 1,
+      unitPriceCents:
+        c.unitPriceCents != null && Number.isFinite(c.unitPriceCents)
+          ? Math.round(c.unitPriceCents)
+          : null,
+      notes: c.notes?.trim() || null,
+    }));
 
   const order = await prisma.order.create({
     data: {
@@ -218,7 +239,10 @@ export async function createOrderWithWizardData(
       scheduledStart: data.scheduledStart ? new Date(data.scheduledStart) : undefined,
       scheduledEnd: data.scheduledEnd ? new Date(data.scheduledEnd) : undefined,
       services: {
-        create: data.serviceIds.map((serviceId) => ({ serviceId })),
+        create: [
+          ...data.serviceIds.map((serviceId) => ({ serviceId })),
+          ...customServiceCreates,
+        ],
       },
       phases: {
         create: defaultPhasesForOrderType(data.orderType),
@@ -239,14 +263,21 @@ export async function createOrderWithWizardData(
     await confirmReservationsForOrder(order.id, tenantId);
   }
 
-  if (data.employeeId && data.scheduledStart && data.scheduledEnd) {
+  // Sobald ein Termin gesetzt ist, wird ein Kalendereintrag erzeugt – auch ohne
+  // zugewiesenen Monteur. So erscheint der Auftrag direkt im Team-Kalender und
+  // kann später per Drag-and-drop einem Mitarbeiter zugeordnet werden.
+  if (data.scheduledStart) {
+    const start = new Date(data.scheduledStart);
+    const end = data.scheduledEnd
+      ? new Date(data.scheduledEnd)
+      : new Date(start.getTime() + 2 * 60 * 60 * 1000);
     await prisma.appointment.create({
       data: {
         tenantId,
         orderId: order.id,
-        employeeId: data.employeeId,
-        startTime: new Date(data.scheduledStart),
-        endTime: new Date(data.scheduledEnd),
+        employeeId: data.employeeId || null,
+        startTime: start,
+        endTime: end,
         status: "GEPLANT",
       },
     });

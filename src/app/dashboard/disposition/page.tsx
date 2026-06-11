@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Users, Truck, Calendar, AlertCircle } from "lucide-react";
+import { InfoButton } from "@/components/ui/info-button";
+import { Users, Truck, AlertCircle } from "lucide-react";
 import { formatDateTime } from "@/lib/utils";
 import { MATERIAL_STATUS_LABELS } from "@/lib/inventory/formulas";
 import { Button } from "@/components/ui/button";
@@ -37,6 +38,8 @@ interface TodayOrder {
   materialStatus: string;
   materialAmpel: string;
   employees: string[];
+  team: string | null;
+  vehicle: { name: string; licensePlate: string | null } | null;
 }
 
 export default function DispositionPage() {
@@ -80,20 +83,31 @@ export default function DispositionPage() {
   return (
     <div>
       <div className="flex items-center justify-between mb-4">
-        <h1 className="text-2xl font-bold text-slate-900">Disposition</h1>
-        <Link href="/dashboard/disposition/teams">
-          <Button variant="outline" size="lg">Teams verwalten</Button>
-        </Link>
+        <div className="flex items-center gap-2">
+          <h1 className="text-2xl font-bold text-slate-900">Disposition</h1>
+          <InfoButton title="Disposition">
+            <p>
+              In der Disposition können Aufträge Mitarbeitern, Teams oder Fahrzeugen zugewiesen
+              werden. Die Ansicht hilft dabei, Termine und Ressourcen zu planen.
+            </p>
+            <p>
+              Teams sind feste Kolonnen (Monteur + Helfer + Fahrzeug). Eigene Teams legen Sie
+              unter „Teams verwalten“ an.
+            </p>
+          </InfoButton>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <Link href="/dashboard/leitstand">
+            <Button variant="outline" size="lg">Leitstand</Button>
+          </Link>
+          <Link href="/dashboard/disposition/fahrzeuge">
+            <Button variant="outline" size="lg">Fahrzeuge</Button>
+          </Link>
+          <Link href="/dashboard/disposition/teams">
+            <Button variant="outline" size="lg">Teams verwalten</Button>
+          </Link>
+        </div>
       </div>
-
-      <Card className="mb-6 !p-4 bg-slate-50">
-        <p className="text-sm text-slate-600">
-          <strong>Was ist Disposition?</strong> Hier sehen Sie den operativen Überblick: Wer ist heute im Einsatz?
-          Wer ist verfügbar? Gibt es Materialprobleme? Teams sind feste Kolonnen (Monteur + Helfer + Fahrzeug).
-          „Team Alpha“ ist ein Demo-Team aus dem Seed – eigene Teams legen Sie unter{' '}
-          <Link href="/dashboard/disposition/teams" className="text-[#0d5c63] underline">Teams verwalten</Link> an.
-        </p>
-      </Card>
 
       {(critical?.materialIssues?.length ?? 0) > 0 && (
         <Card className="mb-6 !border-red-200 !bg-red-50">
@@ -145,6 +159,19 @@ export default function DispositionPage() {
                 {o.employees.length > 0 && (
                   <p className="text-xs text-slate-500 mt-1">{o.employees.join(", ")}</p>
                 )}
+                <div className="flex flex-wrap gap-1.5 mt-1.5">
+                  {o.team && (
+                    <span className="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full bg-[#0d5c63]/10 text-[#0d5c63]">
+                      <Users className="h-3 w-3" /> {o.team}
+                    </span>
+                  )}
+                  {o.vehicle && (
+                    <span className="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">
+                      <Truck className="h-3 w-3" /> {o.vehicle.name}
+                      {o.vehicle.licensePlate && ` (${o.vehicle.licensePlate})`}
+                    </span>
+                  )}
+                </div>
               </Link>
             ))}
             {!todayOrders.length && (

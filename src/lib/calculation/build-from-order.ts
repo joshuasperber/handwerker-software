@@ -29,24 +29,61 @@ export async function createCalculationFromOrder(tenantId: string, orderId: stri
   const kmRate = company?.defaultKilometerRate ?? 0.45;
   const travelRate = company?.defaultTravelHourlyRate ?? 45;
 
-  const laborCreates =
-    order.services.length > 0
-      ? order.services.map((os) => ({
-          description: os.service.name,
-          laborType: "ONSITE_WORK" as const,
-          hours: Math.max(os.service.durationMinutes / 60, 0.25),
-          hourlyRateNet: defaultRate,
-          quantityWorkers: 1,
-        }))
-      : [
-          {
-            description: order.title ?? order.orderNumber,
-            laborType: "ONSITE_WORK" as const,
-            hours: 2,
-            hourlyRateNet: defaultRate,
-            quantityWorkers: 1,
-          },
-        ];
+  // Katalog-Leistungen → Arbeitszeit aus hinterlegter Dauer.
+  // „Sonstige Leistungen“ (customName): mit Festpreis als Zusatzposition,
+  // ohne Festpreis als Arbeitszeit (1 h je Einheit).
+  const laborCreates: {
+    description: string;
+    laborType: "ONSITE_WORK";
+    hours: number;
+    hourlyRateNet: number;
+    quantityWorkers: number;
+  }[] = [];
+
+  const additionalCreates: {
+    category: "OTHER";
+    description: string;
+    amountNet: number;
+    markupPercent: number;
+  }[] = [];
+
+  for (const os of order.services) {
+    const qty = os.quantity && os.quantity > 0 ? os.quantity : 1;
+    if (os.service) {
+      laborCreates.push({
+        description: os.service.name,
+        laborType: "ONSITE_WORK",
+        hours: Math.max((os.service.durationMinutes / 60) * qty, 0.25),
+        hourlyRateNet: defaultRate,
+        quantityWorkers: 1,
+      });
+    } else if (os.unitPriceCents != null) {
+      additionalCreates.push({
+        category: "OTHER",
+        description: os.customName ?? "Sonstige Leistung",
+        amountNet: (os.unitPriceCents / 100) * qty,
+        markupPercent: 0,
+      });
+    } else {
+      laborCreates.push({
+        description: os.customName ?? "Sonstige Leistung",
+        laborType: "ONSITE_WORK",
+        hours: Math.max(qty, 0.25),
+        hourlyRateNet: defaultRate,
+        quantityWorkers: 1,
+      });
+    }
+  }
+
+  if (laborCreates.length === 0 && additionalCreates.length === 0) {
+    laborCreates.push({
+      description: order.title ?? order.orderNumber,
+      laborType: "ONSITE_WORK",
+      hours: 2,
+      hourlyRateNet: defaultRate,
+      quantityWorkers: 1,
+    });
+  }
 
   const materialCreates = order.materialLines
     .filter((l) => !l.isTool)
@@ -70,8 +107,9 @@ export async function createCalculationFromOrder(tenantId: string, orderId: stri
       orderId: order.id,
       customerId: order.customerId,
       title: `Kalkulation ${order.orderNumber}`,
-      laborItems: { create: laborCreates },
+      ...(laborCreates.length ? { laborItems: { create: laborCreates } } : {}),
       ...(materialCreates.length ? { materialItems: { create: materialCreates } } : {}),
+      ...(additionalCreates.length ? { additionalItems: { create: additionalCreates } } : {}),
       travelCost: {
         create: {
           startAddress: startAddress || "Betrieb",
@@ -80,7 +118,10 @@ export async function createCalculationFromOrder(tenantId: string, orderId: stri
           estimatedDriveTimeHours: 0.5,
           kilometerRateNet: kmRate,
           travelHourlyRateNet: travelRate,
-          calculationMode: "FORMULA",
+          // Zone des Kundenstandorts vorbelegen (Kunde → Standort → Zone → Anfahrtskosten).
+          // recalculateCalculationRecord ermittelt daraus den korrekten Preis/Modus.
+          selectedZoneId: order.property.travelZoneId ?? undefined,
+          calculationMode: order.property.travelZoneId ? "ZONE_FLAT_FEE" : "FORMULA",
         },
       },
       riskSettings: {

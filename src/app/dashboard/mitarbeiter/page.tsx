@@ -6,13 +6,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ROLE_LABELS } from "@/lib/utils";
 import { CanAccess } from "@/components/auth/can-access";
-import { Pencil, Plus, Search } from "lucide-react";
+import { AddButton } from "@/components/ui/add-button";
+import { saveJson } from "@/lib/save-toast";
+import { Pencil, Search } from "lucide-react";
 
 interface Employee {
   id: string;
   color: string;
   operationalStatus: string;
-  user: { firstName: string; lastName: string; email: string; role: string; phone: string | null; isActive: boolean };
+  user: { firstName: string; lastName: string; email: string; role: string; phone: string | null; address: string | null; isActive: boolean };
   qualifications: { name: string }[];
 }
 
@@ -25,6 +27,7 @@ const EMPTY_FORM = {
   password: "",
   role: "MONTEUR",
   phone: "",
+  address: "",
   color: "#3b82f6",
   qualifications: "",
   isActive: true,
@@ -64,6 +67,7 @@ export default function MitarbeiterPage() {
       password: "",
       role: emp.user.role,
       phone: emp.user.phone ?? "",
+      address: emp.user.address ?? "",
       color: emp.color,
       qualifications: emp.qualifications.map((q) => q.name).join(", "),
       isActive: emp.user.isActive,
@@ -89,6 +93,7 @@ export default function MitarbeiterPage() {
       email: form.email,
       role: form.role,
       phone: form.phone || undefined,
+      address: form.address || undefined,
       color: form.color,
       isActive: form.isActive,
       qualifications: form.qualifications
@@ -103,12 +108,15 @@ export default function MitarbeiterPage() {
       ? payload
       : { ...payload, password: form.password || undefined };
 
-    const res = await fetch(url, {
-      method,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    });
-    const data = await res.json();
+    const data = await saveJson(
+      url,
+      {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      },
+      { error: "Fehler beim Speichern" }
+    );
     if (data.success) {
       cancelForm();
       load();
@@ -134,12 +142,10 @@ export default function MitarbeiterPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
         <h1 className="text-2xl font-bold text-slate-900">Mitarbeiter</h1>
         <CanAccess permission="employees.write">
-          <Button size="lg" variant="action" onClick={startCreate}>
-            <Plus className="h-5 w-5" /> Mitarbeiter anlegen
-          </Button>
+          <AddButton onClick={startCreate}>Mitarbeiter anlegen</AddButton>
         </CanAccess>
       </div>
 
@@ -184,11 +190,11 @@ export default function MitarbeiterPage() {
             <Input label="Nachname *" value={form.lastName} onChange={(e) => setForm({ ...form, lastName: e.target.value })} required />
             <Input label="E-Mail (Login) *" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} required />
             <Input
-              label={editingId ? "Neues Passwort (leer = unverändert)" : "Passwort (leer = demo1234)"}
+              label={editingId ? "Passwort zurücksetzen (leer = unverändert)" : "Initialpasswort (leer = admin1234)"}
               type="password"
               value={form.password}
               onChange={(e) => setForm({ ...form, password: e.target.value })}
-              placeholder={editingId ? "" : "demo1234"}
+              placeholder={editingId ? "" : "admin1234"}
             />
             <div>
               <label className="text-sm font-medium">Rolle *</label>
@@ -199,6 +205,7 @@ export default function MitarbeiterPage() {
               </select>
             </div>
             <Input label="Telefon" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
+            <Input label="Adresse" value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} className="sm:col-span-2" />
             <div>
               <label className="text-sm font-medium">Kalenderfarbe</label>
               <div className="flex items-center gap-2 mt-1">

@@ -159,10 +159,43 @@ export const APPOINTMENT_STATUS_LABELS: Record<string, string> = {
 };
 
 export const PHASE_STATUS_LABELS: Record<string, string> = {
-  AUSSTEHEND: "Ausstehend",
-  IN_ARBEIT: "In Arbeit",
+  AUSSTEHEND: "Offen",
+  IN_ARBEIT: "In Bearbeitung",
   ABGESCHLOSSEN: "Abgeschlossen",
+  UEBERSPRUNGEN: "Übersprungen",
   STORNIERT: "Storniert",
+};
+
+/** Auswählbare Phasen-Status in logischer Reihenfolge. */
+export const PHASE_STATUS_FLOW: string[] = [
+  "AUSSTEHEND",
+  "IN_ARBEIT",
+  "ABGESCHLOSSEN",
+  "UEBERSPRUNGEN",
+];
+
+/** Badge-Farb-Status (vgl. Badge-Komponente) je Phasen-Status. */
+export const PHASE_STATUS_BADGE: Record<string, string> = {
+  AUSSTEHEND: "NEUE_ANFRAGE",
+  IN_ARBEIT: "IN_ARBEIT",
+  ABGESCHLOSSEN: "ABGESCHLOSSEN",
+  UEBERSPRUNGEN: "DRAFT",
+  STORNIERT: "STORNIERT",
+};
+
+export const VEHICLE_STATUS_LABELS: Record<string, string> = {
+  VERFUEGBAR: "Verfügbar",
+  IM_EINSATZ: "Im Einsatz",
+  WERKSTATT: "Werkstatt",
+  INAKTIV: "Inaktiv",
+};
+
+/** Badge-Farb-Status (vgl. Badge-Komponente) je Fahrzeug-Status. */
+export const VEHICLE_STATUS_BADGE: Record<string, string> = {
+  VERFUEGBAR: "VERFUEGBAR",
+  IM_EINSATZ: "IM_TERMIN",
+  WERKSTATT: "URLAUB",
+  INAKTIV: "STORNIERT",
 };
 
 export const ROLE_LABELS: Record<string, string> = {
@@ -171,6 +204,7 @@ export const ROLE_LABELS: Record<string, string> = {
   BUERO: "Büro",
   MONTEUR: "Monteur",
   KUNDE: "Kunde",
+  GAST: "Gast (eingeladen)",
 };
 
 /** Erzeugt eine Auftragsnummer im Format AUF-JJJJMMTT-XXXX. */

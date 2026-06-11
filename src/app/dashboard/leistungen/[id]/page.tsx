@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { NumberInput } from "@/components/ui/number-input";
 import { ChevronLeft, Plus, Trash2, Wrench } from "lucide-react";
 
 interface TemplateLine {
@@ -143,8 +144,8 @@ export default function LeistungDetailPage() {
               Keine Artikel im Inventar. Bitte zuerst unter <Link href="/dashboard/inventar" className="underline">Inventar</Link> anlegen.
             </p>
           )}
-          <Input label="Menge" type="number" value={materialForm.defaultQuantity}
-            onChange={(e) => setMaterialForm({ ...materialForm, defaultQuantity: parseFloat(e.target.value) || 0 })} />
+          <NumberInput label="Menge" min={0} value={materialForm.defaultQuantity}
+            onValueChange={(v) => setMaterialForm({ ...materialForm, defaultQuantity: v ?? 0 })} />
           <Button type="submit" size="sm"><Plus className="h-4 w-4 mr-1" /> Material hinzufügen</Button>
         </form>
       </Card>
@@ -165,7 +166,7 @@ export default function LeistungDetailPage() {
         </div>
         <form onSubmit={addTool} className="flex flex-wrap gap-2 items-end">
           <Input label="Werkzeug" value={toolForm.name} onChange={(e) => setToolForm({ ...toolForm, name: e.target.value })} />
-          <Input label="Anzahl" type="number" value={toolForm.defaultQuantity} onChange={(e) => setToolForm({ ...toolForm, defaultQuantity: parseFloat(e.target.value) || 1 })} />
+          <NumberInput label="Anzahl" min={1} value={toolForm.defaultQuantity} onValueChange={(v) => setToolForm({ ...toolForm, defaultQuantity: v ?? 1 })} />
           <Button type="submit" size="sm" variant="outline">Werkzeug hinzufügen</Button>
         </form>
       </Card>

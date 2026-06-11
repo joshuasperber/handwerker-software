@@ -41,6 +41,7 @@ export type CompanySettingsAvgAggregateOutputType = {
   defaultKilometerRate: number | null
   defaultTravelHourlyRate: number | null
   additionalOverheadPercent: number | null
+  paymentTermsDays: number | null
 }
 
 export type CompanySettingsSumAggregateOutputType = {
@@ -58,6 +59,7 @@ export type CompanySettingsSumAggregateOutputType = {
   defaultKilometerRate: number | null
   defaultTravelHourlyRate: number | null
   additionalOverheadPercent: number | null
+  paymentTermsDays: number | null
 }
 
 export type CompanySettingsMinAggregateOutputType = {
@@ -83,6 +85,19 @@ export type CompanySettingsMinAggregateOutputType = {
   defaultKilometerRate: number | null
   defaultTravelHourlyRate: number | null
   additionalOverheadPercent: number | null
+  phone: string | null
+  email: string | null
+  website: string | null
+  invoiceLogoUrl: string | null
+  bankName: string | null
+  iban: string | null
+  bic: string | null
+  taxNumber: string | null
+  vatId: string | null
+  paymentTermsDays: number | null
+  invoiceIntroText: string | null
+  invoiceFooterText: string | null
+  invoiceNotes: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -110,6 +125,19 @@ export type CompanySettingsMaxAggregateOutputType = {
   defaultKilometerRate: number | null
   defaultTravelHourlyRate: number | null
   additionalOverheadPercent: number | null
+  phone: string | null
+  email: string | null
+  website: string | null
+  invoiceLogoUrl: string | null
+  bankName: string | null
+  iban: string | null
+  bic: string | null
+  taxNumber: string | null
+  vatId: string | null
+  paymentTermsDays: number | null
+  invoiceIntroText: string | null
+  invoiceFooterText: string | null
+  invoiceNotes: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -137,6 +165,19 @@ export type CompanySettingsCountAggregateOutputType = {
   defaultKilometerRate: number
   defaultTravelHourlyRate: number
   additionalOverheadPercent: number
+  phone: number
+  email: number
+  website: number
+  invoiceLogoUrl: number
+  bankName: number
+  iban: number
+  bic: number
+  taxNumber: number
+  vatId: number
+  paymentTermsDays: number
+  invoiceIntroText: number
+  invoiceFooterText: number
+  invoiceNotes: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -158,6 +199,7 @@ export type CompanySettingsAvgAggregateInputType = {
   defaultKilometerRate?: true
   defaultTravelHourlyRate?: true
   additionalOverheadPercent?: true
+  paymentTermsDays?: true
 }
 
 export type CompanySettingsSumAggregateInputType = {
@@ -175,6 +217,7 @@ export type CompanySettingsSumAggregateInputType = {
   defaultKilometerRate?: true
   defaultTravelHourlyRate?: true
   additionalOverheadPercent?: true
+  paymentTermsDays?: true
 }
 
 export type CompanySettingsMinAggregateInputType = {
@@ -200,6 +243,19 @@ export type CompanySettingsMinAggregateInputType = {
   defaultKilometerRate?: true
   defaultTravelHourlyRate?: true
   additionalOverheadPercent?: true
+  phone?: true
+  email?: true
+  website?: true
+  invoiceLogoUrl?: true
+  bankName?: true
+  iban?: true
+  bic?: true
+  taxNumber?: true
+  vatId?: true
+  paymentTermsDays?: true
+  invoiceIntroText?: true
+  invoiceFooterText?: true
+  invoiceNotes?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -227,6 +283,19 @@ export type CompanySettingsMaxAggregateInputType = {
   defaultKilometerRate?: true
   defaultTravelHourlyRate?: true
   additionalOverheadPercent?: true
+  phone?: true
+  email?: true
+  website?: true
+  invoiceLogoUrl?: true
+  bankName?: true
+  iban?: true
+  bic?: true
+  taxNumber?: true
+  vatId?: true
+  paymentTermsDays?: true
+  invoiceIntroText?: true
+  invoiceFooterText?: true
+  invoiceNotes?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -254,6 +323,19 @@ export type CompanySettingsCountAggregateInputType = {
   defaultKilometerRate?: true
   defaultTravelHourlyRate?: true
   additionalOverheadPercent?: true
+  phone?: true
+  email?: true
+  website?: true
+  invoiceLogoUrl?: true
+  bankName?: true
+  iban?: true
+  bic?: true
+  taxNumber?: true
+  vatId?: true
+  paymentTermsDays?: true
+  invoiceIntroText?: true
+  invoiceFooterText?: true
+  invoiceNotes?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -368,6 +450,19 @@ export type CompanySettingsGroupByOutputType = {
   defaultKilometerRate: number
   defaultTravelHourlyRate: number
   additionalOverheadPercent: number
+  phone: string | null
+  email: string | null
+  website: string | null
+  invoiceLogoUrl: string | null
+  bankName: string | null
+  iban: string | null
+  bic: string | null
+  taxNumber: string | null
+  vatId: string | null
+  paymentTermsDays: number
+  invoiceIntroText: string | null
+  invoiceFooterText: string | null
+  invoiceNotes: string | null
   createdAt: Date
   updatedAt: Date
   _count: CompanySettingsCountAggregateOutputType | null
@@ -418,6 +513,19 @@ export type CompanySettingsWhereInput = {
   defaultKilometerRate?: Prisma.FloatFilter<"CompanySettings"> | number
   defaultTravelHourlyRate?: Prisma.FloatFilter<"CompanySettings"> | number
   additionalOverheadPercent?: Prisma.FloatFilter<"CompanySettings"> | number
+  phone?: Prisma.StringNullableFilter<"CompanySettings"> | string | null
+  email?: Prisma.StringNullableFilter<"CompanySettings"> | string | null
+  website?: Prisma.StringNullableFilter<"CompanySettings"> | string | null
+  invoiceLogoUrl?: Prisma.StringNullableFilter<"CompanySettings"> | string | null
+  bankName?: Prisma.StringNullableFilter<"CompanySettings"> | string | null
+  iban?: Prisma.StringNullableFilter<"CompanySettings"> | string | null
+  bic?: Prisma.StringNullableFilter<"CompanySettings"> | string | null
+  taxNumber?: Prisma.StringNullableFilter<"CompanySettings"> | string | null
+  vatId?: Prisma.StringNullableFilter<"CompanySettings"> | string | null
+  paymentTermsDays?: Prisma.IntFilter<"CompanySettings"> | number
+  invoiceIntroText?: Prisma.StringNullableFilter<"CompanySettings"> | string | null
+  invoiceFooterText?: Prisma.StringNullableFilter<"CompanySettings"> | string | null
+  invoiceNotes?: Prisma.StringNullableFilter<"CompanySettings"> | string | null
   createdAt?: Prisma.DateTimeFilter<"CompanySettings"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CompanySettings"> | Date | string
   tenant?: Prisma.XOR<Prisma.TenantScalarRelationFilter, Prisma.TenantWhereInput>
@@ -446,6 +554,19 @@ export type CompanySettingsOrderByWithRelationInput = {
   defaultKilometerRate?: Prisma.SortOrder
   defaultTravelHourlyRate?: Prisma.SortOrder
   additionalOverheadPercent?: Prisma.SortOrder
+  phone?: Prisma.SortOrderInput | Prisma.SortOrder
+  email?: Prisma.SortOrderInput | Prisma.SortOrder
+  website?: Prisma.SortOrderInput | Prisma.SortOrder
+  invoiceLogoUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  bankName?: Prisma.SortOrderInput | Prisma.SortOrder
+  iban?: Prisma.SortOrderInput | Prisma.SortOrder
+  bic?: Prisma.SortOrderInput | Prisma.SortOrder
+  taxNumber?: Prisma.SortOrderInput | Prisma.SortOrder
+  vatId?: Prisma.SortOrderInput | Prisma.SortOrder
+  paymentTermsDays?: Prisma.SortOrder
+  invoiceIntroText?: Prisma.SortOrderInput | Prisma.SortOrder
+  invoiceFooterText?: Prisma.SortOrderInput | Prisma.SortOrder
+  invoiceNotes?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   tenant?: Prisma.TenantOrderByWithRelationInput
@@ -477,6 +598,19 @@ export type CompanySettingsWhereUniqueInput = Prisma.AtLeast<{
   defaultKilometerRate?: Prisma.FloatFilter<"CompanySettings"> | number
   defaultTravelHourlyRate?: Prisma.FloatFilter<"CompanySettings"> | number
   additionalOverheadPercent?: Prisma.FloatFilter<"CompanySettings"> | number
+  phone?: Prisma.StringNullableFilter<"CompanySettings"> | string | null
+  email?: Prisma.StringNullableFilter<"CompanySettings"> | string | null
+  website?: Prisma.StringNullableFilter<"CompanySettings"> | string | null
+  invoiceLogoUrl?: Prisma.StringNullableFilter<"CompanySettings"> | string | null
+  bankName?: Prisma.StringNullableFilter<"CompanySettings"> | string | null
+  iban?: Prisma.StringNullableFilter<"CompanySettings"> | string | null
+  bic?: Prisma.StringNullableFilter<"CompanySettings"> | string | null
+  taxNumber?: Prisma.StringNullableFilter<"CompanySettings"> | string | null
+  vatId?: Prisma.StringNullableFilter<"CompanySettings"> | string | null
+  paymentTermsDays?: Prisma.IntFilter<"CompanySettings"> | number
+  invoiceIntroText?: Prisma.StringNullableFilter<"CompanySettings"> | string | null
+  invoiceFooterText?: Prisma.StringNullableFilter<"CompanySettings"> | string | null
+  invoiceNotes?: Prisma.StringNullableFilter<"CompanySettings"> | string | null
   createdAt?: Prisma.DateTimeFilter<"CompanySettings"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CompanySettings"> | Date | string
   tenant?: Prisma.XOR<Prisma.TenantScalarRelationFilter, Prisma.TenantWhereInput>
@@ -505,6 +639,19 @@ export type CompanySettingsOrderByWithAggregationInput = {
   defaultKilometerRate?: Prisma.SortOrder
   defaultTravelHourlyRate?: Prisma.SortOrder
   additionalOverheadPercent?: Prisma.SortOrder
+  phone?: Prisma.SortOrderInput | Prisma.SortOrder
+  email?: Prisma.SortOrderInput | Prisma.SortOrder
+  website?: Prisma.SortOrderInput | Prisma.SortOrder
+  invoiceLogoUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  bankName?: Prisma.SortOrderInput | Prisma.SortOrder
+  iban?: Prisma.SortOrderInput | Prisma.SortOrder
+  bic?: Prisma.SortOrderInput | Prisma.SortOrder
+  taxNumber?: Prisma.SortOrderInput | Prisma.SortOrder
+  vatId?: Prisma.SortOrderInput | Prisma.SortOrder
+  paymentTermsDays?: Prisma.SortOrder
+  invoiceIntroText?: Prisma.SortOrderInput | Prisma.SortOrder
+  invoiceFooterText?: Prisma.SortOrderInput | Prisma.SortOrder
+  invoiceNotes?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.CompanySettingsCountOrderByAggregateInput
@@ -540,6 +687,19 @@ export type CompanySettingsScalarWhereWithAggregatesInput = {
   defaultKilometerRate?: Prisma.FloatWithAggregatesFilter<"CompanySettings"> | number
   defaultTravelHourlyRate?: Prisma.FloatWithAggregatesFilter<"CompanySettings"> | number
   additionalOverheadPercent?: Prisma.FloatWithAggregatesFilter<"CompanySettings"> | number
+  phone?: Prisma.StringNullableWithAggregatesFilter<"CompanySettings"> | string | null
+  email?: Prisma.StringNullableWithAggregatesFilter<"CompanySettings"> | string | null
+  website?: Prisma.StringNullableWithAggregatesFilter<"CompanySettings"> | string | null
+  invoiceLogoUrl?: Prisma.StringNullableWithAggregatesFilter<"CompanySettings"> | string | null
+  bankName?: Prisma.StringNullableWithAggregatesFilter<"CompanySettings"> | string | null
+  iban?: Prisma.StringNullableWithAggregatesFilter<"CompanySettings"> | string | null
+  bic?: Prisma.StringNullableWithAggregatesFilter<"CompanySettings"> | string | null
+  taxNumber?: Prisma.StringNullableWithAggregatesFilter<"CompanySettings"> | string | null
+  vatId?: Prisma.StringNullableWithAggregatesFilter<"CompanySettings"> | string | null
+  paymentTermsDays?: Prisma.IntWithAggregatesFilter<"CompanySettings"> | number
+  invoiceIntroText?: Prisma.StringNullableWithAggregatesFilter<"CompanySettings"> | string | null
+  invoiceFooterText?: Prisma.StringNullableWithAggregatesFilter<"CompanySettings"> | string | null
+  invoiceNotes?: Prisma.StringNullableWithAggregatesFilter<"CompanySettings"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"CompanySettings"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"CompanySettings"> | Date | string
 }
@@ -566,6 +726,19 @@ export type CompanySettingsCreateInput = {
   defaultKilometerRate?: number
   defaultTravelHourlyRate?: number
   additionalOverheadPercent?: number
+  phone?: string | null
+  email?: string | null
+  website?: string | null
+  invoiceLogoUrl?: string | null
+  bankName?: string | null
+  iban?: string | null
+  bic?: string | null
+  taxNumber?: string | null
+  vatId?: string | null
+  paymentTermsDays?: number
+  invoiceIntroText?: string | null
+  invoiceFooterText?: string | null
+  invoiceNotes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutCompanySettingsInput
@@ -594,6 +767,19 @@ export type CompanySettingsUncheckedCreateInput = {
   defaultKilometerRate?: number
   defaultTravelHourlyRate?: number
   additionalOverheadPercent?: number
+  phone?: string | null
+  email?: string | null
+  website?: string | null
+  invoiceLogoUrl?: string | null
+  bankName?: string | null
+  iban?: string | null
+  bic?: string | null
+  taxNumber?: string | null
+  vatId?: string | null
+  paymentTermsDays?: number
+  invoiceIntroText?: string | null
+  invoiceFooterText?: string | null
+  invoiceNotes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -620,6 +806,19 @@ export type CompanySettingsUpdateInput = {
   defaultKilometerRate?: Prisma.FloatFieldUpdateOperationsInput | number
   defaultTravelHourlyRate?: Prisma.FloatFieldUpdateOperationsInput | number
   additionalOverheadPercent?: Prisma.FloatFieldUpdateOperationsInput | number
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invoiceLogoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  iban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentTermsDays?: Prisma.IntFieldUpdateOperationsInput | number
+  invoiceIntroText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invoiceFooterText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invoiceNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutCompanySettingsNestedInput
@@ -648,6 +847,19 @@ export type CompanySettingsUncheckedUpdateInput = {
   defaultKilometerRate?: Prisma.FloatFieldUpdateOperationsInput | number
   defaultTravelHourlyRate?: Prisma.FloatFieldUpdateOperationsInput | number
   additionalOverheadPercent?: Prisma.FloatFieldUpdateOperationsInput | number
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invoiceLogoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  iban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentTermsDays?: Prisma.IntFieldUpdateOperationsInput | number
+  invoiceIntroText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invoiceFooterText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invoiceNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -675,6 +887,19 @@ export type CompanySettingsCreateManyInput = {
   defaultKilometerRate?: number
   defaultTravelHourlyRate?: number
   additionalOverheadPercent?: number
+  phone?: string | null
+  email?: string | null
+  website?: string | null
+  invoiceLogoUrl?: string | null
+  bankName?: string | null
+  iban?: string | null
+  bic?: string | null
+  taxNumber?: string | null
+  vatId?: string | null
+  paymentTermsDays?: number
+  invoiceIntroText?: string | null
+  invoiceFooterText?: string | null
+  invoiceNotes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -701,6 +926,19 @@ export type CompanySettingsUpdateManyMutationInput = {
   defaultKilometerRate?: Prisma.FloatFieldUpdateOperationsInput | number
   defaultTravelHourlyRate?: Prisma.FloatFieldUpdateOperationsInput | number
   additionalOverheadPercent?: Prisma.FloatFieldUpdateOperationsInput | number
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invoiceLogoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  iban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentTermsDays?: Prisma.IntFieldUpdateOperationsInput | number
+  invoiceIntroText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invoiceFooterText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invoiceNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -728,6 +966,19 @@ export type CompanySettingsUncheckedUpdateManyInput = {
   defaultKilometerRate?: Prisma.FloatFieldUpdateOperationsInput | number
   defaultTravelHourlyRate?: Prisma.FloatFieldUpdateOperationsInput | number
   additionalOverheadPercent?: Prisma.FloatFieldUpdateOperationsInput | number
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invoiceLogoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  iban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentTermsDays?: Prisma.IntFieldUpdateOperationsInput | number
+  invoiceIntroText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invoiceFooterText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invoiceNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -760,6 +1011,19 @@ export type CompanySettingsCountOrderByAggregateInput = {
   defaultKilometerRate?: Prisma.SortOrder
   defaultTravelHourlyRate?: Prisma.SortOrder
   additionalOverheadPercent?: Prisma.SortOrder
+  phone?: Prisma.SortOrder
+  email?: Prisma.SortOrder
+  website?: Prisma.SortOrder
+  invoiceLogoUrl?: Prisma.SortOrder
+  bankName?: Prisma.SortOrder
+  iban?: Prisma.SortOrder
+  bic?: Prisma.SortOrder
+  taxNumber?: Prisma.SortOrder
+  vatId?: Prisma.SortOrder
+  paymentTermsDays?: Prisma.SortOrder
+  invoiceIntroText?: Prisma.SortOrder
+  invoiceFooterText?: Prisma.SortOrder
+  invoiceNotes?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -779,6 +1043,7 @@ export type CompanySettingsAvgOrderByAggregateInput = {
   defaultKilometerRate?: Prisma.SortOrder
   defaultTravelHourlyRate?: Prisma.SortOrder
   additionalOverheadPercent?: Prisma.SortOrder
+  paymentTermsDays?: Prisma.SortOrder
 }
 
 export type CompanySettingsMaxOrderByAggregateInput = {
@@ -804,6 +1069,19 @@ export type CompanySettingsMaxOrderByAggregateInput = {
   defaultKilometerRate?: Prisma.SortOrder
   defaultTravelHourlyRate?: Prisma.SortOrder
   additionalOverheadPercent?: Prisma.SortOrder
+  phone?: Prisma.SortOrder
+  email?: Prisma.SortOrder
+  website?: Prisma.SortOrder
+  invoiceLogoUrl?: Prisma.SortOrder
+  bankName?: Prisma.SortOrder
+  iban?: Prisma.SortOrder
+  bic?: Prisma.SortOrder
+  taxNumber?: Prisma.SortOrder
+  vatId?: Prisma.SortOrder
+  paymentTermsDays?: Prisma.SortOrder
+  invoiceIntroText?: Prisma.SortOrder
+  invoiceFooterText?: Prisma.SortOrder
+  invoiceNotes?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -831,6 +1109,19 @@ export type CompanySettingsMinOrderByAggregateInput = {
   defaultKilometerRate?: Prisma.SortOrder
   defaultTravelHourlyRate?: Prisma.SortOrder
   additionalOverheadPercent?: Prisma.SortOrder
+  phone?: Prisma.SortOrder
+  email?: Prisma.SortOrder
+  website?: Prisma.SortOrder
+  invoiceLogoUrl?: Prisma.SortOrder
+  bankName?: Prisma.SortOrder
+  iban?: Prisma.SortOrder
+  bic?: Prisma.SortOrder
+  taxNumber?: Prisma.SortOrder
+  vatId?: Prisma.SortOrder
+  paymentTermsDays?: Prisma.SortOrder
+  invoiceIntroText?: Prisma.SortOrder
+  invoiceFooterText?: Prisma.SortOrder
+  invoiceNotes?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -850,6 +1141,7 @@ export type CompanySettingsSumOrderByAggregateInput = {
   defaultKilometerRate?: Prisma.SortOrder
   defaultTravelHourlyRate?: Prisma.SortOrder
   additionalOverheadPercent?: Prisma.SortOrder
+  paymentTermsDays?: Prisma.SortOrder
 }
 
 export type CompanySettingsCreateNestedOneWithoutTenantInput = {
@@ -906,6 +1198,19 @@ export type CompanySettingsCreateWithoutTenantInput = {
   defaultKilometerRate?: number
   defaultTravelHourlyRate?: number
   additionalOverheadPercent?: number
+  phone?: string | null
+  email?: string | null
+  website?: string | null
+  invoiceLogoUrl?: string | null
+  bankName?: string | null
+  iban?: string | null
+  bic?: string | null
+  taxNumber?: string | null
+  vatId?: string | null
+  paymentTermsDays?: number
+  invoiceIntroText?: string | null
+  invoiceFooterText?: string | null
+  invoiceNotes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -932,6 +1237,19 @@ export type CompanySettingsUncheckedCreateWithoutTenantInput = {
   defaultKilometerRate?: number
   defaultTravelHourlyRate?: number
   additionalOverheadPercent?: number
+  phone?: string | null
+  email?: string | null
+  website?: string | null
+  invoiceLogoUrl?: string | null
+  bankName?: string | null
+  iban?: string | null
+  bic?: string | null
+  taxNumber?: string | null
+  vatId?: string | null
+  paymentTermsDays?: number
+  invoiceIntroText?: string | null
+  invoiceFooterText?: string | null
+  invoiceNotes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -974,6 +1292,19 @@ export type CompanySettingsUpdateWithoutTenantInput = {
   defaultKilometerRate?: Prisma.FloatFieldUpdateOperationsInput | number
   defaultTravelHourlyRate?: Prisma.FloatFieldUpdateOperationsInput | number
   additionalOverheadPercent?: Prisma.FloatFieldUpdateOperationsInput | number
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invoiceLogoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  iban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentTermsDays?: Prisma.IntFieldUpdateOperationsInput | number
+  invoiceIntroText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invoiceFooterText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invoiceNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1000,6 +1331,19 @@ export type CompanySettingsUncheckedUpdateWithoutTenantInput = {
   defaultKilometerRate?: Prisma.FloatFieldUpdateOperationsInput | number
   defaultTravelHourlyRate?: Prisma.FloatFieldUpdateOperationsInput | number
   additionalOverheadPercent?: Prisma.FloatFieldUpdateOperationsInput | number
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invoiceLogoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  iban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentTermsDays?: Prisma.IntFieldUpdateOperationsInput | number
+  invoiceIntroText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invoiceFooterText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invoiceNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1029,6 +1373,19 @@ export type CompanySettingsSelect<ExtArgs extends runtime.Types.Extensions.Inter
   defaultKilometerRate?: boolean
   defaultTravelHourlyRate?: boolean
   additionalOverheadPercent?: boolean
+  phone?: boolean
+  email?: boolean
+  website?: boolean
+  invoiceLogoUrl?: boolean
+  bankName?: boolean
+  iban?: boolean
+  bic?: boolean
+  taxNumber?: boolean
+  vatId?: boolean
+  paymentTermsDays?: boolean
+  invoiceIntroText?: boolean
+  invoiceFooterText?: boolean
+  invoiceNotes?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
@@ -1057,6 +1414,19 @@ export type CompanySettingsSelectCreateManyAndReturn<ExtArgs extends runtime.Typ
   defaultKilometerRate?: boolean
   defaultTravelHourlyRate?: boolean
   additionalOverheadPercent?: boolean
+  phone?: boolean
+  email?: boolean
+  website?: boolean
+  invoiceLogoUrl?: boolean
+  bankName?: boolean
+  iban?: boolean
+  bic?: boolean
+  taxNumber?: boolean
+  vatId?: boolean
+  paymentTermsDays?: boolean
+  invoiceIntroText?: boolean
+  invoiceFooterText?: boolean
+  invoiceNotes?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
@@ -1085,6 +1455,19 @@ export type CompanySettingsSelectUpdateManyAndReturn<ExtArgs extends runtime.Typ
   defaultKilometerRate?: boolean
   defaultTravelHourlyRate?: boolean
   additionalOverheadPercent?: boolean
+  phone?: boolean
+  email?: boolean
+  website?: boolean
+  invoiceLogoUrl?: boolean
+  bankName?: boolean
+  iban?: boolean
+  bic?: boolean
+  taxNumber?: boolean
+  vatId?: boolean
+  paymentTermsDays?: boolean
+  invoiceIntroText?: boolean
+  invoiceFooterText?: boolean
+  invoiceNotes?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
@@ -1113,11 +1496,24 @@ export type CompanySettingsSelectScalar = {
   defaultKilometerRate?: boolean
   defaultTravelHourlyRate?: boolean
   additionalOverheadPercent?: boolean
+  phone?: boolean
+  email?: boolean
+  website?: boolean
+  invoiceLogoUrl?: boolean
+  bankName?: boolean
+  iban?: boolean
+  bic?: boolean
+  taxNumber?: boolean
+  vatId?: boolean
+  paymentTermsDays?: boolean
+  invoiceIntroText?: boolean
+  invoiceFooterText?: boolean
+  invoiceNotes?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type CompanySettingsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "companyName" | "street" | "houseNumber" | "postalCode" | "city" | "country" | "latitude" | "longitude" | "defaultVatRate" | "defaultHourlyRate" | "defaultWorkshopHourlyRate" | "defaultMaterialMarkupPercent" | "defaultProcurementHourlyRate" | "defaultOverheadPercent" | "defaultRiskPercent" | "defaultProfitPercent" | "defaultIncomeTaxPercent" | "defaultKilometerRate" | "defaultTravelHourlyRate" | "additionalOverheadPercent" | "createdAt" | "updatedAt", ExtArgs["result"]["companySettings"]>
+export type CompanySettingsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "companyName" | "street" | "houseNumber" | "postalCode" | "city" | "country" | "latitude" | "longitude" | "defaultVatRate" | "defaultHourlyRate" | "defaultWorkshopHourlyRate" | "defaultMaterialMarkupPercent" | "defaultProcurementHourlyRate" | "defaultOverheadPercent" | "defaultRiskPercent" | "defaultProfitPercent" | "defaultIncomeTaxPercent" | "defaultKilometerRate" | "defaultTravelHourlyRate" | "additionalOverheadPercent" | "phone" | "email" | "website" | "invoiceLogoUrl" | "bankName" | "iban" | "bic" | "taxNumber" | "vatId" | "paymentTermsDays" | "invoiceIntroText" | "invoiceFooterText" | "invoiceNotes" | "createdAt" | "updatedAt", ExtArgs["result"]["companySettings"]>
 export type CompanySettingsInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
 }
@@ -1156,6 +1552,19 @@ export type $CompanySettingsPayload<ExtArgs extends runtime.Types.Extensions.Int
     defaultKilometerRate: number
     defaultTravelHourlyRate: number
     additionalOverheadPercent: number
+    phone: string | null
+    email: string | null
+    website: string | null
+    invoiceLogoUrl: string | null
+    bankName: string | null
+    iban: string | null
+    bic: string | null
+    taxNumber: string | null
+    vatId: string | null
+    paymentTermsDays: number
+    invoiceIntroText: string | null
+    invoiceFooterText: string | null
+    invoiceNotes: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["companySettings"]>
@@ -1604,6 +2013,19 @@ export interface CompanySettingsFieldRefs {
   readonly defaultKilometerRate: Prisma.FieldRef<"CompanySettings", 'Float'>
   readonly defaultTravelHourlyRate: Prisma.FieldRef<"CompanySettings", 'Float'>
   readonly additionalOverheadPercent: Prisma.FieldRef<"CompanySettings", 'Float'>
+  readonly phone: Prisma.FieldRef<"CompanySettings", 'String'>
+  readonly email: Prisma.FieldRef<"CompanySettings", 'String'>
+  readonly website: Prisma.FieldRef<"CompanySettings", 'String'>
+  readonly invoiceLogoUrl: Prisma.FieldRef<"CompanySettings", 'String'>
+  readonly bankName: Prisma.FieldRef<"CompanySettings", 'String'>
+  readonly iban: Prisma.FieldRef<"CompanySettings", 'String'>
+  readonly bic: Prisma.FieldRef<"CompanySettings", 'String'>
+  readonly taxNumber: Prisma.FieldRef<"CompanySettings", 'String'>
+  readonly vatId: Prisma.FieldRef<"CompanySettings", 'String'>
+  readonly paymentTermsDays: Prisma.FieldRef<"CompanySettings", 'Int'>
+  readonly invoiceIntroText: Prisma.FieldRef<"CompanySettings", 'String'>
+  readonly invoiceFooterText: Prisma.FieldRef<"CompanySettings", 'String'>
+  readonly invoiceNotes: Prisma.FieldRef<"CompanySettings", 'String'>
   readonly createdAt: Prisma.FieldRef<"CompanySettings", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"CompanySettings", 'DateTime'>
 }

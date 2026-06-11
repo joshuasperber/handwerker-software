@@ -640,10 +640,12 @@ export type ServiceCreateNestedOneWithoutOrderServicesInput = {
   connect?: Prisma.ServiceWhereUniqueInput
 }
 
-export type ServiceUpdateOneRequiredWithoutOrderServicesNestedInput = {
+export type ServiceUpdateOneWithoutOrderServicesNestedInput = {
   create?: Prisma.XOR<Prisma.ServiceCreateWithoutOrderServicesInput, Prisma.ServiceUncheckedCreateWithoutOrderServicesInput>
   connectOrCreate?: Prisma.ServiceCreateOrConnectWithoutOrderServicesInput
   upsert?: Prisma.ServiceUpsertWithoutOrderServicesInput
+  disconnect?: Prisma.ServiceWhereInput | boolean
+  delete?: Prisma.ServiceWhereInput | boolean
   connect?: Prisma.ServiceWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.ServiceUpdateToOneWithWhereWithoutOrderServicesInput, Prisma.ServiceUpdateWithoutOrderServicesInput>, Prisma.ServiceUncheckedUpdateWithoutOrderServicesInput>
 }

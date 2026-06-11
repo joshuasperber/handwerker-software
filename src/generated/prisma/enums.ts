@@ -14,10 +14,21 @@ export const UserRole = {
   MEISTER: 'MEISTER',
   BUERO: 'BUERO',
   MONTEUR: 'MONTEUR',
-  KUNDE: 'KUNDE'
+  KUNDE: 'KUNDE',
+  GAST: 'GAST'
 } as const
 
 export type UserRole = (typeof UserRole)[keyof typeof UserRole]
+
+
+export const InvitationStatus = {
+  PENDING: 'PENDING',
+  ACCEPTED: 'ACCEPTED',
+  EXPIRED: 'EXPIRED',
+  REVOKED: 'REVOKED'
+} as const
+
+export type InvitationStatus = (typeof InvitationStatus)[keyof typeof InvitationStatus]
 
 
 export const OrderStatus = {
@@ -58,7 +69,8 @@ export type AppointmentStatus = (typeof AppointmentStatus)[keyof typeof Appointm
 
 export const NotificationChannel = {
   EMAIL: 'EMAIL',
-  SMS: 'SMS'
+  SMS: 'SMS',
+  IN_APP: 'IN_APP'
 } as const
 
 export type NotificationChannel = (typeof NotificationChannel)[keyof typeof NotificationChannel]
@@ -69,7 +81,14 @@ export const NotificationType = {
   TERMINERINNERUNG: 'TERMINERINNERUNG',
   VERSPAETUNG: 'VERSPAETUNG',
   ABSCHLUSS: 'ABSCHLUSS',
-  STATUSAENDERUNG: 'STATUSAENDERUNG'
+  STATUSAENDERUNG: 'STATUSAENDERUNG',
+  EINLADUNG: 'EINLADUNG',
+  NACHRICHT: 'NACHRICHT',
+  FREIGABE: 'FREIGABE',
+  RECHNUNG: 'RECHNUNG',
+  MAHNUNG: 'MAHNUNG',
+  BESTELLVORSCHLAG: 'BESTELLVORSCHLAG',
+  SYSTEM: 'SYSTEM'
 } as const
 
 export type NotificationType = (typeof NotificationType)[keyof typeof NotificationType]
@@ -82,7 +101,14 @@ export const FileCategory = {
   DOKUMENT: 'DOKUMENT',
   ABSCHLUSS: 'ABSCHLUSS',
   PLAN: 'PLAN',
-  GRUNDRISS: 'GRUNDRISS'
+  GRUNDRISS: 'GRUNDRISS',
+  AUFMASS: 'AUFMASS',
+  BAUSTELLE: 'BAUSTELLE',
+  WOHNUNG: 'WOHNUNG',
+  BESONDERHEITEN: 'BESONDERHEITEN',
+  SCHAEDEN: 'SCHAEDEN',
+  MONTAGE: 'MONTAGE',
+  BESONDERE_SITUATION: 'BESONDERE_SITUATION'
 } as const
 
 export type FileCategory = (typeof FileCategory)[keyof typeof FileCategory]
@@ -228,6 +254,29 @@ export const CalculationDocumentType = {
 export type CalculationDocumentType = (typeof CalculationDocumentType)[keyof typeof CalculationDocumentType]
 
 
+export const DocumentStatus = {
+  ENTWURF: 'ENTWURF',
+  OFFEN: 'OFFEN',
+  TEILBEZAHLT: 'TEILBEZAHLT',
+  BEZAHLT: 'BEZAHLT',
+  STORNIERT: 'STORNIERT'
+} as const
+
+export type DocumentStatus = (typeof DocumentStatus)[keyof typeof DocumentStatus]
+
+
+export const PaymentMethod = {
+  UEBERWEISUNG: 'UEBERWEISUNG',
+  BAR: 'BAR',
+  KARTE: 'KARTE',
+  LASTSCHRIFT: 'LASTSCHRIFT',
+  PAYPAL: 'PAYPAL',
+  SONSTIGES: 'SONSTIGES'
+} as const
+
+export type PaymentMethod = (typeof PaymentMethod)[keyof typeof PaymentMethod]
+
+
 export const MachineCostMethod = {
   AMORTIZATION: 'AMORTIZATION',
   FLAT_RATE: 'FLAT_RATE'
@@ -307,6 +356,7 @@ export const OrderPhaseStatus = {
   AUSSTEHEND: 'AUSSTEHEND',
   IN_ARBEIT: 'IN_ARBEIT',
   ABGESCHLOSSEN: 'ABGESCHLOSSEN',
+  UEBERSPRUNGEN: 'UEBERSPRUNGEN',
   STORNIERT: 'STORNIERT'
 } as const
 
@@ -417,6 +467,16 @@ export const PlanMarkerType = {
 } as const
 
 export type PlanMarkerType = (typeof PlanMarkerType)[keyof typeof PlanMarkerType]
+
+
+export const VehicleStatus = {
+  VERFUEGBAR: 'VERFUEGBAR',
+  IM_EINSATZ: 'IM_EINSATZ',
+  WERKSTATT: 'WERKSTATT',
+  INAKTIV: 'INAKTIV'
+} as const
+
+export type VehicleStatus = (typeof VehicleStatus)[keyof typeof VehicleStatus]
 
 
 export const StaffRequestStatus = {

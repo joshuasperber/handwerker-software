@@ -1,18 +1,22 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { saveJson } from "@/lib/save-toast";
 import { ChevronLeft } from "lucide-react";
+
+interface Zone { id: string; name: string; isActive: boolean }
 
 export default function NeuerKundePage() {
   const router = useRouter();
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const [zones, setZones] = useState<Zone[]>([]);
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
@@ -24,35 +28,44 @@ export default function NeuerKundePage() {
     zipCode: "",
     city: "",
     propertyLabel: "Hauptadresse",
+    travelZoneId: "",
   });
+
+  useEffect(() => {
+    fetch("/api/travel-zones").then((r) => r.json()).then((d) => { if (d.success) setZones(d.data); });
+  }, []);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     setSaving(true);
     setError("");
-    const res = await fetch("/api/customers", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        firstName: form.firstName,
-        lastName: form.lastName,
-        email: form.email || undefined,
-        phone: form.phone || undefined,
-        company: form.company || undefined,
-        notes: form.notes || undefined,
-        property: form.street
-          ? {
-              label: form.propertyLabel,
-              street: form.street,
-              zipCode: form.zipCode,
-              city: form.city,
-            }
-          : undefined,
-      }),
-    });
-    const data = await res.json();
+    const data = await saveJson<{ id: string }>(
+      "/api/customers",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          firstName: form.firstName,
+          lastName: form.lastName,
+          email: form.email || undefined,
+          phone: form.phone || undefined,
+          company: form.company || undefined,
+          notes: form.notes || undefined,
+          property: form.street
+            ? {
+                label: form.propertyLabel,
+                street: form.street,
+                zipCode: form.zipCode,
+                city: form.city,
+                travelZoneId: form.travelZoneId || undefined,
+              }
+            : undefined,
+        }),
+      },
+      { success: "Kunde angelegt", error: "Fehler beim Anlegen" }
+    );
     setSaving(false);
-    if (data.success) router.push(`/dashboard/kunden/${data.data.id}`);
+    if (data.success && data.data) router.push(`/dashboard/kunden/${data.data.id}`);
     else setError(data.error ?? "Fehler beim Anlegen");
   }
 
@@ -74,12 +87,28 @@ export default function NeuerKundePage() {
             <Textarea label="Notizen" value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} rows={2} className="sm:col-span-2" />
           </div>
         </Card>
-        <Card title="Erstes Objekt / Einsatzort (optional)">
+        <Card title="Hauptadresse">
+          <p className="text-sm text-slate-500 mb-3">
+            Bei der Erstanlage wird nur die Hauptadresse erfasst. Weitere Adressen / Standorte können später beim Bearbeiten des Kunden hinzugefügt werden.
+          </p>
           <div className="grid gap-3 sm:grid-cols-2">
             <Input label="Bezeichnung" value={form.propertyLabel} onChange={(e) => setForm({ ...form, propertyLabel: e.target.value })} />
             <Input label="Straße" value={form.street} onChange={(e) => setForm({ ...form, street: e.target.value })} />
             <Input label="PLZ" value={form.zipCode} onChange={(e) => setForm({ ...form, zipCode: e.target.value })} />
             <Input label="Ort" value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} />
+            <div className="sm:col-span-2">
+              <label className="text-sm font-medium">Anfahrtszone (optional)</label>
+              <select
+                className="w-full h-9 rounded-lg border border-slate-300 px-3 text-sm mt-1"
+                value={form.travelZoneId}
+                onChange={(e) => setForm({ ...form, travelZoneId: e.target.value })}
+              >
+                <option value="">Keine Zone</option>
+                {zones.filter((z) => z.isActive).map((z) => (
+                  <option key={z.id} value={z.id}>{z.name}</option>
+                ))}
+              </select>
+            </div>
           </div>
         </Card>
         <Button type="submit" className="mt-6" variant="action" disabled={saving}>

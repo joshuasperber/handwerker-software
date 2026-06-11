@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAuth, apiSuccess, apiError } from "@/lib/api";
+import { standardPhaseCreateData } from "@/lib/orders/phases";
 
 export async function GET(request: NextRequest) {
   const auth = await requireAuth("orders.read");
@@ -36,22 +37,34 @@ export async function GET(request: NextRequest) {
     take: 100,
   });
 
+  // Bestehende Aufträge ohne Phasen erhalten automatisch die Standardphasen,
+  // damit die Übersicht für alle Aufträge eine Phase anzeigen kann.
+  const ordersWithoutPhases = orders.filter((o) => o.phases.length === 0);
+  if (ordersWithoutPhases.length > 0) {
+    await prisma.$transaction(
+      ordersWithoutPhases.map((o) =>
+        prisma.orderPhase.createMany({
+          data: standardPhaseCreateData().map((phase) => ({ ...phase, orderId: o.id })),
+        })
+      )
+    );
+    const refreshed = await prisma.orderPhase.findMany({
+      where: { orderId: { in: ordersWithoutPhases.map((o) => o.id) } },
+      orderBy: { sortOrder: "asc" },
+    });
+    const byOrder = new Map<string, typeof refreshed>();
+    for (const phase of refreshed) {
+      const list = byOrder.get(phase.orderId) ?? [];
+      list.push(phase);
+      byOrder.set(phase.orderId, list);
+    }
+    for (const o of ordersWithoutPhases) {
+      o.phases = (byOrder.get(o.id) ?? []) as typeof o.phases;
+    }
+  }
+
   return apiSuccess(orders);
 }
-
-/**
- * Standard-Phasenablauf für jeden neuen Auftrag. Beginnt immer mit der
- * verpflichtenden Voranmeldung/Besichtigung, in der Preis, Ort und mögliche
- * Aufpreise geprüft werden, bevor die eigentliche Ausführung startet.
- */
-const DEFAULT_ORDER_PHASES = [
-  { name: "Voranmeldung / Besichtigung", phaseType: "BESICHTIGUNG" },
-  { name: "Angebot & Kalkulation", phaseType: "PLANUNG" },
-  { name: "Materialbestellung", phaseType: "MATERIALBESTELLUNG" },
-  { name: "Ausführung", phaseType: "AUSFUEHRUNG_1" },
-  { name: "Abnahme", phaseType: "ABNAHME" },
-  { name: "Rechnung", phaseType: "RECHNUNG" },
-] as const;
 
 export async function POST(request: NextRequest) {
   const auth = await requireAuth("orders.write");
@@ -76,12 +89,7 @@ export async function POST(request: NextRequest) {
       internalNotes,
       services: { create: serviceIds.map((id: string) => ({ serviceId: id })) },
       phases: {
-        create: DEFAULT_ORDER_PHASES.map((p, index) => ({
-          name: p.name,
-          phaseType: p.phaseType as never,
-          status: "AUSSTEHEND",
-          sortOrder: index,
-        })),
+        create: standardPhaseCreateData(),
       },
     },
     include: {

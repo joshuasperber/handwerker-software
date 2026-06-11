@@ -7,10 +7,11 @@ import { de } from "date-fns/locale";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { MonteurMaterialView } from "@/components/monteur/material-view";
-import { APPOINTMENT_STATUS_LABELS, formatDateTime } from "@/lib/utils";
+import { APPOINTMENT_STATUS_LABELS, PHASE_STATUS_LABELS, PHASE_STATUS_BADGE, formatDateTime } from "@/lib/utils";
 import { fetchJson } from "@/lib/fetch-json";
+import { getCurrentPhase, phaseAssigneeLabel, type PhaseSummary } from "@/lib/phase-status";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, Clock, Package, MapPin, Smartphone } from "lucide-react";
+import { Calendar, Clock, Package, MapPin, Smartphone, Layers } from "lucide-react";
 
 interface Appointment {
   id: string;
@@ -22,6 +23,7 @@ interface Appointment {
     customer: { firstName: string; lastName: string };
     property: { street: string; city: string };
     services: { service: { name: string } }[];
+    phases?: PhaseSummary[];
   };
 }
 
@@ -53,6 +55,8 @@ export function MonteurDashboardOverview() {
   }, [selectedDate]);
 
   useEffect(() => {
+    // Absichtlicher Lade-Indikator beim (Neu-)Laden – Daten kommen asynchron.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     load();
   }, [load]);
 
@@ -135,7 +139,10 @@ export function MonteurDashboardOverview() {
           <p className="text-slate-500 py-6 text-center text-sm">Keine Termine an diesem Tag.</p>
         ) : (
           <div className="divide-y divide-slate-50">
-            {appointments.map((apt) => (
+            {appointments.map((apt) => {
+              const currentPhase = getCurrentPhase(apt.order.phases);
+              const assignee = phaseAssigneeLabel(currentPhase);
+              return (
               <Link
                 key={apt.id}
                 href={`/dashboard/auftraege/${apt.order.id}`}
@@ -157,11 +164,27 @@ export function MonteurDashboardOverview() {
                         {apt.order.services.map((s) => s.service.name).join(", ")}
                       </p>
                     )}
+                    {currentPhase && (
+                      <p className="text-xs text-slate-500 flex items-center gap-1 mt-0.5 truncate">
+                        <Layers className="h-3 w-3 shrink-0" />
+                        {currentPhase.name}
+                        {assignee ? ` · ${assignee}` : ""}
+                      </p>
+                    )}
                   </div>
                 </div>
-                <Badge status={apt.status} label={APPOINTMENT_STATUS_LABELS[apt.status] ?? apt.status} />
+                <div className="flex flex-col items-end gap-1 shrink-0">
+                  <Badge status={apt.status} label={APPOINTMENT_STATUS_LABELS[apt.status] ?? apt.status} />
+                  {currentPhase && (
+                    <Badge
+                      status={PHASE_STATUS_BADGE[currentPhase.status] ?? "DRAFT"}
+                      label={PHASE_STATUS_LABELS[currentPhase.status] ?? currentPhase.status}
+                    />
+                  )}
+                </div>
               </Link>
-            ))}
+              );
+            })}
           </div>
         )}
         <div className="mt-4 pt-4 border-t border-slate-100">

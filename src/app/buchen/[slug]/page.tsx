@@ -24,7 +24,14 @@ import {
   MapPin,
   AlertCircle,
   Phone,
+  Plus,
+  Trash2,
 } from "lucide-react";
+
+interface CustomServiceInput {
+  name: string;
+  description: string;
+}
 
 interface Service {
   id: string;
@@ -64,6 +71,7 @@ export default function BookingPage() {
   const [tenant, setTenant] = useState<Tenant | null>(null);
   const [services, setServices] = useState<Service[]>([]);
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
+  const [customServices, setCustomServices] = useState<CustomServiceInput[]>([]);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [description, setDescription] = useState("");
   const [priority, setPriority] = useState<Priority>("NORMAL");
@@ -102,7 +110,7 @@ export default function BookingPage() {
   }, [slug, address.zipCode]);
 
   const loadSlots = useCallback(async () => {
-    if (!addressValid?.inArea) return;
+    if (!addressValid?.inArea || selectedServices.length === 0) return;
     setLoading(true);
     const res = await fetch("/api/public/booking/availability", {
       method: "POST",
@@ -119,10 +127,14 @@ export default function BookingPage() {
   }, [slug, selectedServices, address.zipCode, addressValid?.inArea]);
 
   useEffect(() => {
+    // Adressprüfung mit bewusstem Lade-Indikator; Ergebnis folgt asynchron.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (step === 2 && address.zipCode.length >= 4) validateAddress();
   }, [step, address.zipCode, validateAddress]);
 
   useEffect(() => {
+    // Slot-Abruf mit bewusstem Lade-Indikator; Ergebnis folgt asynchron.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (step === 3 && addressValid?.inArea) loadSlots();
   }, [step, addressValid, loadSlots]);
 
@@ -132,15 +144,29 @@ export default function BookingPage() {
     );
   }
 
+  function addCustomService() {
+    setCustomServices((prev) => [...prev, { name: "", description: "" }]);
+  }
+  function updateCustomService(index: number, patch: Partial<CustomServiceInput>) {
+    setCustomServices((prev) => prev.map((c, i) => (i === index ? { ...c, ...patch } : c)));
+  }
+  function removeCustomService(index: number) {
+    setCustomServices((prev) => prev.filter((_, i) => i !== index));
+  }
+
+  const namedCustomServices = customServices.filter((c) => c.name.trim());
+  const hasCatalogService = selectedServices.length > 0;
+
   function validateStep(): boolean {
     const e: Record<string, string> = {};
-    if (step === 0 && selectedServices.length === 0) e.services = "Bitte wählen Sie mindestens eine Leistung.";
+    if (step === 0 && selectedServices.length === 0 && namedCustomServices.length === 0)
+      e.services = "Bitte wählen Sie mindestens eine Leistung oder erfassen Sie eine sonstige Leistung.";
     if (step === 2) {
       if (!address.street) e.street = "Bitte geben Sie Ihre Straße ein.";
       if (!address.zipCode || address.zipCode.length < 4) e.zipCode = "Bitte geben Sie eine gültige PLZ ein.";
       if (!address.city) e.city = "Bitte geben Sie Ihren Ort ein.";
     }
-    if (step === 3 && addressValid?.inArea && !selectedSlot) e.slot = "Bitte wählen Sie einen Termin.";
+    if (step === 3 && addressValid?.inArea && hasCatalogService && !selectedSlot) e.slot = "Bitte wählen Sie einen Termin.";
     if (step === 4) {
       if (!contact.firstName) e.firstName = "Bitte geben Sie Ihren Vornamen ein.";
       if (!contact.lastName) e.lastName = "Bitte geben Sie Ihren Nachnamen ein.";
@@ -164,6 +190,10 @@ export default function BookingPage() {
 
     const bookingData = {
       serviceIds: selectedServices,
+      customServices: namedCustomServices.map((c) => ({
+        name: c.name,
+        description: c.description || undefined,
+      })),
       ...contact,
       ...address,
       description,
@@ -283,6 +313,45 @@ export default function BookingPage() {
                   </div>
                 </label>
               ))}
+
+              <div className="rounded-xl border border-dashed border-slate-300 p-4">
+                <div className="flex items-center justify-between gap-2">
+                  <div>
+                    <p className="font-medium text-sm">Sonstige Leistung</p>
+                    <p className="text-xs text-slate-500">Nicht aufgeführt? Beschreiben Sie Ihr Anliegen frei – wir melden uns mit einem Vorschlag.</p>
+                  </div>
+                  <Button type="button" variant="outline" size="sm" onClick={addCustomService}>
+                    <Plus className="h-4 w-4 mr-1" /> Hinzufügen
+                  </Button>
+                </div>
+                {customServices.length > 0 && (
+                  <div className="mt-3 space-y-3">
+                    {customServices.map((c, i) => (
+                      <div key={i} className="rounded-lg border border-slate-200 p-3 space-y-2">
+                        <div className="flex items-start gap-2">
+                          <Input
+                            label="Bezeichnung"
+                            className="flex-1"
+                            value={c.name}
+                            onChange={(e) => updateCustomService(i, { name: e.target.value })}
+                            placeholder="z. B. Sonderwunsch / Beratung"
+                          />
+                          <button type="button" onClick={() => removeCustomService(i)} className="text-red-500 mt-7 shrink-0" aria-label="Entfernen">
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                        </div>
+                        <Textarea
+                          label="Beschreibung (optional)"
+                          value={c.description}
+                          onChange={(e) => updateCustomService(i, { description: e.target.value })}
+                          rows={2}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
               {errors.services && <p className="text-sm text-red-600">{errors.services}</p>}
             </div>
           )}
@@ -384,6 +453,10 @@ export default function BookingPage() {
                 <div className="rounded-lg bg-yellow-50 p-4 text-sm text-yellow-800">
                   Da Ihre Adresse außerhalb unseres Einsatzgebiets liegt, nehmen wir Ihre Anfrage entgegen und melden uns mit einem Terminvorschlag bei Ihnen.
                 </div>
+              ) : !hasCatalogService ? (
+                <div className="rounded-lg bg-blue-50 p-4 text-sm text-blue-800">
+                  Für Ihre sonstige Leistung schlagen wir Ihnen passende Termine telefonisch oder per E-Mail vor. Sie können die Anfrage direkt absenden.
+                </div>
               ) : loading ? (
                 <div className="flex justify-center py-8"><Loader2 className="h-6 w-6 animate-spin text-[#0d5c63]" /></div>
               ) : slots.length === 0 ? (
@@ -428,7 +501,7 @@ export default function BookingPage() {
             <div className="space-y-4">
               <h2 className="text-lg font-semibold">Zusammenfassung prüfen</h2>
               <div className="rounded-xl bg-slate-50 p-4 space-y-2 text-sm">
-                <p><strong>Leistung:</strong> {selectedServiceObjects.map((s) => s.name).join(", ")}</p>
+                <p><strong>Leistung:</strong> {[...selectedServiceObjects.map((s) => s.name), ...namedCustomServices.map((c) => `${c.name} (sonstige)`)].join(", ")}</p>
                 <p><strong>Adresse:</strong> {address.street}, {address.zipCode} {address.city}</p>
                 {selectedSlot && <p><strong>Termin:</strong> {formatDateTime(selectedSlot.start)}</p>}
                 {!selectedSlot && <p><strong>Termin:</strong> Rückmeldung durch unser Büro</p>}

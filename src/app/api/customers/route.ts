@@ -8,7 +8,10 @@ export async function GET() {
   const customers = await prisma.customer.findMany({
     where: { tenantId: auth.tenantId },
     include: {
-      properties: true,
+      properties: {
+        include: { travelZone: true },
+        orderBy: [{ isPrimary: "desc" }, { createdAt: "asc" }],
+      },
       _count: { select: { orders: true } },
     },
     orderBy: { lastName: "asc" },
@@ -41,6 +44,10 @@ export async function POST(request: Request) {
                 street: body.property.street,
                 zipCode: body.property.zipCode,
                 city: body.property.city,
+                // Bei der Erstanlage ist die erste Adresse immer die Hauptadresse.
+                isPrimary: true,
+                isActive: true,
+                travelZoneId: body.property.travelZoneId || null,
               },
             },
           }

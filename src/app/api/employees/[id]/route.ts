@@ -44,6 +44,7 @@ export async function PATCH(
     lastName,
     email,
     phone,
+    address,
     role,
     password,
     color,
@@ -69,10 +70,15 @@ export async function PATCH(
       ...(firstName !== undefined ? { firstName } : {}),
       ...(lastName !== undefined ? { lastName } : {}),
       ...(email !== undefined ? { email: email.toLowerCase() } : {}),
-      ...(phone !== undefined ? { phone } : {}),
+      ...(phone !== undefined ? { phone: phone || null } : {}),
+      ...(address !== undefined ? { address: address || null } : {}),
       ...(role !== undefined ? { role } : {}),
       ...(isActive !== undefined ? { isActive } : {}),
-      ...(password ? { passwordHash: await hashPassword(password) } : {}),
+      // Setzt der Admin ein neues Passwort, gilt es als Reset: der Mitarbeiter
+      // muss es beim nächsten Login erneut ändern.
+      ...(password
+        ? { passwordHash: await hashPassword(password), mustChangePassword: true }
+        : {}),
     },
   });
 

@@ -5,10 +5,14 @@ import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { NumberInput } from "@/components/ui/number-input";
+import { InfoButton } from "@/components/ui/info-button";
 import { calcMachinePaybackAnalysis } from "@/lib/calculation/formulas";
 import { formatEuro } from "@/lib/utils";
 import { CanAccess } from "@/components/auth/can-access";
-import { Plus, Trash2, ChevronLeft, Calculator } from "lucide-react";
+import { AddButton } from "@/components/ui/add-button";
+import { saveJson } from "@/lib/save-toast";
+import { Trash2, ChevronLeft, Calculator } from "lucide-react";
 
 interface Machine {
   id: string;
@@ -32,17 +36,17 @@ const EMPTY = {
   name: "",
   machineType: "",
   costMethod: "AMORTIZATION" as "AMORTIZATION" | "FLAT_RATE",
-  flatRatePerHourNet: "25",
-  purchasePriceNet: "",
-  residualValueNet: "0",
-  expectedLifetimeYears: "3",
-  expectedHoursPerYear: "400",
-  expectedRepairCostsNet: "0",
-  expectedMaintenanceCostsNet: "0",
-  expectedConsumablePartsNet: "0",
-  insuranceCostsNet: "0",
-  energyCostsTotalNet: "0",
-  breakageRiskPercent: "15",
+  flatRatePerHourNet: 25 as number | null,
+  purchasePriceNet: null as number | null,
+  residualValueNet: 0 as number | null,
+  expectedLifetimeYears: 3 as number | null,
+  expectedHoursPerYear: 400 as number | null,
+  expectedRepairCostsNet: 0 as number | null,
+  expectedMaintenanceCostsNet: 0 as number | null,
+  expectedConsumablePartsNet: 0 as number | null,
+  insuranceCostsNet: 0 as number | null,
+  energyCostsTotalNet: 0 as number | null,
+  breakageRiskPercent: 15 as number | null,
 };
 
 export default function MaschinenPage() {
@@ -59,12 +63,12 @@ export default function MaschinenPage() {
   useEffect(() => { load(); }, []);
 
   const preview = useMemo(() => {
-    const years = parseFloat(form.expectedLifetimeYears) || 3;
-    const hoursPerYear = parseFloat(form.expectedHoursPerYear) || 400;
+    const years = form.expectedLifetimeYears ?? 3;
+    const hoursPerYear = form.expectedHoursPerYear ?? 400;
     const lifetimeHours = years * hoursPerYear;
 
     if (form.costMethod === "FLAT_RATE") {
-      const rate = parseFloat(form.flatRatePerHourNet) || 0;
+      const rate = form.flatRatePerHourNet ?? 0;
       if (rate <= 0) return null;
       return calcMachinePaybackAnalysis({
         costMethod: "FLAT_RATE",
@@ -82,19 +86,19 @@ export default function MaschinenPage() {
       });
     }
 
-    const purchase = parseFloat(form.purchasePriceNet) || 0;
+    const purchase = form.purchasePriceNet ?? 0;
     if (purchase <= 0 || lifetimeHours <= 0) return null;
     return calcMachinePaybackAnalysis({
       costMethod: "AMORTIZATION",
       purchasePriceNet: purchase,
-      residualValueNet: parseFloat(form.residualValueNet) || 0,
-      expectedRepairCostsNet: parseFloat(form.expectedRepairCostsNet) || 0,
-      expectedMaintenanceCostsNet: parseFloat(form.expectedMaintenanceCostsNet) || 0,
-      expectedConsumablePartsNet: parseFloat(form.expectedConsumablePartsNet) || 0,
-      insuranceCostsNet: parseFloat(form.insuranceCostsNet) || 0,
-      energyCostsTotalNet: parseFloat(form.energyCostsTotalNet) || 0,
+      residualValueNet: form.residualValueNet ?? 0,
+      expectedRepairCostsNet: form.expectedRepairCostsNet ?? 0,
+      expectedMaintenanceCostsNet: form.expectedMaintenanceCostsNet ?? 0,
+      expectedConsumablePartsNet: form.expectedConsumablePartsNet ?? 0,
+      insuranceCostsNet: form.insuranceCostsNet ?? 0,
+      energyCostsTotalNet: form.energyCostsTotalNet ?? 0,
       expectedLifetimeHours: lifetimeHours,
-      breakageRiskPercent: parseFloat(form.breakageRiskPercent) || 15,
+      breakageRiskPercent: form.breakageRiskPercent ?? 15,
       expectedHoursPerYear: hoursPerYear,
     });
   }, [form]);
@@ -103,28 +107,31 @@ export default function MaschinenPage() {
     e.preventDefault();
     setSaving(true);
     setFormError("");
-    const years = parseFloat(form.expectedLifetimeYears) || 3;
-    const hoursPerYear = parseFloat(form.expectedHoursPerYear) || 400;
-    const res = await fetch("/api/machines", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name: form.name,
-        machineType: form.machineType || undefined,
-        costMethod: form.costMethod,
-        flatRatePerHourNet: form.costMethod === "FLAT_RATE" ? parseFloat(form.flatRatePerHourNet) : undefined,
-        purchasePriceNet: form.costMethod === "AMORTIZATION" ? parseFloat(form.purchasePriceNet) : 0,
-        residualValueNet: parseFloat(form.residualValueNet) || 0,
-        expectedLifetimeHours: years * hoursPerYear,
-        expectedRepairCostsNet: parseFloat(form.expectedRepairCostsNet) || 0,
-        expectedMaintenanceCostsNet: parseFloat(form.expectedMaintenanceCostsNet) || 0,
-        expectedConsumablePartsNet: parseFloat(form.expectedConsumablePartsNet) || 0,
-        insuranceCostsNet: parseFloat(form.insuranceCostsNet) || 0,
-        energyCostsTotalNet: parseFloat(form.energyCostsTotalNet) || 0,
-        breakageRiskPercent: parseFloat(form.breakageRiskPercent) || 15,
-      }),
-    });
-    const data = await res.json();
+    const years = form.expectedLifetimeYears ?? 3;
+    const hoursPerYear = form.expectedHoursPerYear ?? 400;
+    const data = await saveJson(
+      "/api/machines",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: form.name,
+          machineType: form.machineType || undefined,
+          costMethod: form.costMethod,
+          flatRatePerHourNet: form.costMethod === "FLAT_RATE" ? (form.flatRatePerHourNet ?? 0) : undefined,
+          purchasePriceNet: form.costMethod === "AMORTIZATION" ? (form.purchasePriceNet ?? 0) : 0,
+          residualValueNet: form.residualValueNet ?? 0,
+          expectedLifetimeHours: years * hoursPerYear,
+          expectedRepairCostsNet: form.expectedRepairCostsNet ?? 0,
+          expectedMaintenanceCostsNet: form.expectedMaintenanceCostsNet ?? 0,
+          expectedConsumablePartsNet: form.expectedConsumablePartsNet ?? 0,
+          insuranceCostsNet: form.insuranceCostsNet ?? 0,
+          energyCostsTotalNet: form.energyCostsTotalNet ?? 0,
+          breakageRiskPercent: form.breakageRiskPercent ?? 15,
+        }),
+      },
+      { error: "Maschine konnte nicht angelegt werden." }
+    );
     setSaving(false);
     if (data.success) {
       setShowForm(false);
@@ -161,37 +168,29 @@ export default function MaschinenPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
         <div>
           <h1 className="text-2xl font-bold text-slate-900">Maschinen & Geräte</h1>
           <p className="text-sm text-slate-500 mt-1">Stundensatz per Amortisation oder einfache Pauschale</p>
         </div>
         <CanAccess permission="calculations.settings">
-          <Button size="lg" variant="action" onClick={() => setShowForm(!showForm)}>
-            <Plus className="h-5 w-5" /> Maschine hinzufügen
-          </Button>
+          <AddButton onClick={() => setShowForm(!showForm)}>Maschine hinzufügen</AddButton>
         </CanAccess>
       </div>
 
-      <Card className="mb-6 bg-slate-50 border-slate-200">
-        <p className="text-sm font-semibold text-slate-800 mb-2">Wie werden Maschinenkosten berechnet?</p>
-        <div className="grid md:grid-cols-2 gap-4 text-sm text-slate-600">
-          <div>
-            <p className="font-medium text-slate-700 mb-1">Amortisation (detailliert)</p>
-            <p>Gesamtkosten = Anschaffung − Restwert + Reparatur + Wartung + Verschleiß + Versicherung + Energie</p>
-            <p className="mt-1">Stundensatz = Gesamtkosten ÷ Nutzungsstunden × (1 + Ausfallrisiko %)</p>
-            <p className="mt-1 text-xs text-slate-500">Restwert = erwarteter Verkaufswert am Lebensende (nicht der Wert heute). 0 € = volle Anschaffung abschreiben.</p>
-            <p className="mt-2 font-medium text-slate-700">Ersatzrücklage am Lebensende</p>
-            <p>= (Stundensatz × Nutzungsstunden) − Gesamtkosten — der Überschuss für die nächste Maschine, wenn der Stundensatz den Ausfallrisiko-Zuschlag enthält.</p>
-            <p className="mt-1 text-xs text-slate-500">In der Kalkulation: Stundensatz × Einsatzstunden = Maschinenkosten</p>
-          </div>
-          <div>
-            <p className="font-medium text-slate-700 mb-1">Pauschale (einfach)</p>
-            <p>Sie geben direkt einen €/h-Satz ein – ideal wenn Anschaffungsdaten unbekannt sind.</p>
-            <p className="mt-1">Maschinenkosten = Pauschale × Einsatzstunden (in der Kalkulation bearbeitbar)</p>
-          </div>
-        </div>
-      </Card>
+      <div className="flex items-center justify-end mb-4">
+        <InfoButton title="Wie werden Maschinenkosten berechnet?">
+          <p className="font-medium text-foreground">Amortisation (detailliert)</p>
+          <p>Gesamtkosten = Anschaffung − Restwert + Reparatur + Wartung + Verschleiß + Versicherung + Energie</p>
+          <p>Stundensatz = Gesamtkosten ÷ Nutzungsstunden × (1 + Ausfallrisiko %)</p>
+          <p className="text-xs">Restwert = erwarteter Verkaufswert am Lebensende (nicht der Wert heute). 0 € = volle Anschaffung abschreiben.</p>
+          <p className="font-medium text-foreground">Ersatzrücklage am Lebensende</p>
+          <p>= (Stundensatz × Nutzungsstunden) − Gesamtkosten — der Überschuss für die nächste Maschine, wenn der Stundensatz den Ausfallrisiko-Zuschlag enthält.</p>
+          <p className="text-xs">In der Kalkulation: Stundensatz × Einsatzstunden = Maschinenkosten</p>
+          <p className="font-medium text-foreground">Pauschale (einfach)</p>
+          <p>Sie geben direkt einen €/h-Satz ein – ideal wenn Anschaffungsdaten unbekannt sind. Maschinenkosten = Pauschale × Einsatzstunden (in der Kalkulation bearbeitbar).</p>
+        </InfoButton>
+      </div>
 
       <CanAccess permission="calculations.settings">
       {showForm && (
@@ -222,21 +221,21 @@ export default function MaschinenPage() {
 
             {form.costMethod === "FLAT_RATE" ? (
               <>
-                <Input label="Pauschale netto (€/h) *" type="number" step="0.01" value={form.flatRatePerHourNet} onChange={(e) => setForm({ ...form, flatRatePerHourNet: e.target.value })} required />
-                <Input label="Geplante Stunden/Jahr (für Übersicht)" type="number" value={form.expectedHoursPerYear} onChange={(e) => setForm({ ...form, expectedHoursPerYear: e.target.value })} />
+                <NumberInput label="Pauschale netto (€/h)" suffix="€/h" required min={0} value={form.flatRatePerHourNet} onValueChange={(v) => setForm({ ...form, flatRatePerHourNet: v })} />
+                <NumberInput label="Geplante Stunden/Jahr (für Übersicht)" min={0} value={form.expectedHoursPerYear} onValueChange={(v) => setForm({ ...form, expectedHoursPerYear: v })} />
               </>
             ) : (
               <>
-                <Input label="Anschaffung netto (€) *" type="number" value={form.purchasePriceNet} onChange={(e) => setForm({ ...form, purchasePriceNet: e.target.value })} required />
-                <Input label="Restwert am Lebensende (€)" type="number" value={form.residualValueNet} onChange={(e) => setForm({ ...form, residualValueNet: e.target.value })} />
-                <Input label="Erwartete Nutzungsdauer (Jahre)" type="number" value={form.expectedLifetimeYears} onChange={(e) => setForm({ ...form, expectedLifetimeYears: e.target.value })} />
-                <Input label="Betriebsstunden pro Jahr" type="number" value={form.expectedHoursPerYear} onChange={(e) => setForm({ ...form, expectedHoursPerYear: e.target.value })} />
-                <Input label="Reparaturkosten gesamt (€)" type="number" value={form.expectedRepairCostsNet} onChange={(e) => setForm({ ...form, expectedRepairCostsNet: e.target.value })} />
-                <Input label="Wartungskosten gesamt (€)" type="number" value={form.expectedMaintenanceCostsNet} onChange={(e) => setForm({ ...form, expectedMaintenanceCostsNet: e.target.value })} />
-                <Input label="Verschleißteile (€)" type="number" value={form.expectedConsumablePartsNet} onChange={(e) => setForm({ ...form, expectedConsumablePartsNet: e.target.value })} />
-                <Input label="Versicherung (€)" type="number" value={form.insuranceCostsNet} onChange={(e) => setForm({ ...form, insuranceCostsNet: e.target.value })} />
-                <Input label="Energiekosten gesamt (€)" type="number" value={form.energyCostsTotalNet} onChange={(e) => setForm({ ...form, energyCostsTotalNet: e.target.value })} />
-                <Input label="Ausfallrisiko (%)" type="number" value={form.breakageRiskPercent} onChange={(e) => setForm({ ...form, breakageRiskPercent: e.target.value })} />
+                <NumberInput label="Anschaffung netto" suffix="€" required min={0} value={form.purchasePriceNet} onValueChange={(v) => setForm({ ...form, purchasePriceNet: v })} />
+                <NumberInput label="Restwert am Lebensende" suffix="€" min={0} value={form.residualValueNet} onValueChange={(v) => setForm({ ...form, residualValueNet: v })} />
+                <NumberInput label="Erwartete Nutzungsdauer (Jahre)" min={0} value={form.expectedLifetimeYears} onValueChange={(v) => setForm({ ...form, expectedLifetimeYears: v })} />
+                <NumberInput label="Betriebsstunden pro Jahr" min={0} value={form.expectedHoursPerYear} onValueChange={(v) => setForm({ ...form, expectedHoursPerYear: v })} />
+                <NumberInput label="Reparaturkosten gesamt" suffix="€" min={0} value={form.expectedRepairCostsNet} onValueChange={(v) => setForm({ ...form, expectedRepairCostsNet: v })} />
+                <NumberInput label="Wartungskosten gesamt" suffix="€" min={0} value={form.expectedMaintenanceCostsNet} onValueChange={(v) => setForm({ ...form, expectedMaintenanceCostsNet: v })} />
+                <NumberInput label="Verschleißteile" suffix="€" min={0} value={form.expectedConsumablePartsNet} onValueChange={(v) => setForm({ ...form, expectedConsumablePartsNet: v })} />
+                <NumberInput label="Versicherung" suffix="€" min={0} value={form.insuranceCostsNet} onValueChange={(v) => setForm({ ...form, insuranceCostsNet: v })} />
+                <NumberInput label="Energiekosten gesamt" suffix="€" min={0} value={form.energyCostsTotalNet} onValueChange={(v) => setForm({ ...form, energyCostsTotalNet: v })} />
+                <NumberInput label="Ausfallrisiko" suffix="%" min={0} value={form.breakageRiskPercent} onValueChange={(v) => setForm({ ...form, breakageRiskPercent: v })} />
               </>
             )}
 

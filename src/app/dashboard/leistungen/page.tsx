@@ -5,10 +5,13 @@ import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { NumberInput } from "@/components/ui/number-input";
 import { Textarea } from "@/components/ui/textarea";
 import { formatCurrency } from "@/lib/utils";
 import { CanAccess } from "@/components/auth/can-access";
-import { Clock, Plus } from "lucide-react";
+import { AddButton } from "@/components/ui/add-button";
+import { saveJson } from "@/lib/save-toast";
+import { Clock } from "lucide-react";
 
 interface Service {
   id: string;
@@ -27,9 +30,9 @@ export default function LeistungenPage() {
   const [form, setForm] = useState({
     name: "",
     description: "",
-    durationMinutes: 60,
-    bufferMinutes: 15,
-    priceEuro: "",
+    durationMinutes: 60 as number | null,
+    bufferMinutes: 15 as number | null,
+    priceEuro: null as number | null,
   });
 
   function load() {
@@ -42,35 +45,35 @@ export default function LeistungenPage() {
 
   async function createService(e: React.FormEvent) {
     e.preventDefault();
-    const res = await fetch("/api/services", {
+    const res = await saveJson("/api/services", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         name: form.name,
         description: form.description || undefined,
-        durationMinutes: form.durationMinutes,
-        bufferMinutes: form.bufferMinutes,
-        priceCents: form.priceEuro ? Math.round(parseFloat(form.priceEuro) * 100) : undefined,
+        durationMinutes: form.durationMinutes ?? 0,
+        bufferMinutes: form.bufferMinutes ?? 0,
+        priceCents: form.priceEuro != null ? Math.round(form.priceEuro * 100) : undefined,
       }),
     });
-    if ((await res.json()).success) {
+    if (res.success) {
       setShowForm(false);
-      setForm({ name: "", description: "", durationMinutes: 60, bufferMinutes: 15, priceEuro: "" });
+      setForm({ name: "", description: "", durationMinutes: 60, bufferMinutes: 15, priceEuro: null });
       load();
     }
   }
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
         <div>
           <h1 className="text-2xl font-bold text-slate-900">Leistungskatalog</h1>
           <p className="text-sm text-slate-500 mt-1">Leistungen mit Dauer, Preis und Stückliste für Aufträge</p>
         </div>
         <CanAccess permission="services.write">
-          <Button size="lg" variant="action" onClick={() => setShowForm(!showForm)}>
-            <Plus className="h-5 w-5" /> Leistung hinzufügen
-          </Button>
+          <AddButton onClick={() => setShowForm(!showForm)}>
+            Leistung hinzufügen
+          </AddButton>
         </CanAccess>
       </div>
 
@@ -80,9 +83,9 @@ export default function LeistungenPage() {
           <form onSubmit={createService} className="grid gap-3 sm:grid-cols-2">
             <Input label="Bezeichnung *" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required className="sm:col-span-2" />
             <Textarea label="Beschreibung" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={2} className="sm:col-span-2" />
-            <Input label="Dauer (Min.) *" type="number" value={form.durationMinutes} onChange={(e) => setForm({ ...form, durationMinutes: parseInt(e.target.value) || 0 })} />
-            <Input label="Puffer (Min.)" type="number" value={form.bufferMinutes} onChange={(e) => setForm({ ...form, bufferMinutes: parseInt(e.target.value) || 0 })} />
-            <Input label="Listenpreis (€ brutto/ netto je Einstellung)" type="number" value={form.priceEuro} onChange={(e) => setForm({ ...form, priceEuro: e.target.value })} />
+            <NumberInput label="Dauer (Min.)" required allowDecimal={false} min={0} value={form.durationMinutes} onValueChange={(v) => setForm({ ...form, durationMinutes: v })} />
+            <NumberInput label="Puffer (Min.)" allowDecimal={false} min={0} value={form.bufferMinutes} onValueChange={(v) => setForm({ ...form, bufferMinutes: v })} />
+            <NumberInput label="Listenpreis" suffix="€" value={form.priceEuro} onValueChange={(v) => setForm({ ...form, priceEuro: v })} />
             <div className="sm:col-span-2 flex gap-2">
               <Button type="submit" variant="action">Speichern</Button>
               <Button type="button" variant="outline" onClick={() => setShowForm(false)}>Abbrechen</Button>

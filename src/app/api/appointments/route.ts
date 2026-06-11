@@ -29,6 +29,8 @@ export async function GET(request: NextRequest) {
           customer: true,
           property: true,
           services: { include: { service: true } },
+          team: { select: { id: true, name: true } },
+          vehicle: { select: { id: true, name: true, licensePlate: true } },
         },
       },
       employee: { include: { user: true } },
