@@ -8,6 +8,9 @@ import {
   clearSessionCookie,
   verifySession,
   COOKIE_NAME,
+  SESSION_COOKIE_OPTIONS,
+  SESSION_DURATION,
+  applySessionCookie,
 } from "./auth-session";
 
 export type { SessionUser };
@@ -18,6 +21,9 @@ export {
   clearSessionCookie,
   verifySession,
   COOKIE_NAME,
+  SESSION_COOKIE_OPTIONS,
+  SESSION_DURATION,
+  applySessionCookie,
 };
 
 export async function hashPassword(password: string): Promise<string> {

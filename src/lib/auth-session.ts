@@ -1,9 +1,18 @@
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
+import type { NextResponse } from "next/server";
 import type { UserRole } from "@/generated/prisma/enums";
 
 const COOKIE_NAME = "handwerker-session";
-const SESSION_DURATION = 60 * 60 * 24 * 7; // 7 days
+export const SESSION_DURATION = 60 * 60 * 24 * 7; // 7 days
+
+export const SESSION_COOKIE_OPTIONS = {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: "lax" as const,
+  maxAge: SESSION_DURATION,
+  path: "/",
+};
 
 export interface SessionUser {
   id: string;
@@ -23,6 +32,8 @@ function getSecret() {
 }
 
 export async function createSession(user: SessionUser): Promise<string> {
+  // Profilbilder nie ins JWT — Data-URLs würden das Cookie >4 KB sprengen und
+  // Browser verwerfen die Session beim nächsten Klick.
   const token = await new SignJWT({
     sub: user.id,
     tenantId: user.tenantId,
@@ -30,7 +41,6 @@ export async function createSession(user: SessionUser): Promise<string> {
     firstName: user.firstName,
     lastName: user.lastName,
     role: user.role,
-    avatarUrl: user.avatarUrl ?? null,
     mustChangePassword: user.mustChangePassword ?? false,
   })
     .setProtectedHeader({ alg: "HS256" })
@@ -54,7 +64,7 @@ export async function verifySession(token: string): Promise<SessionUser | null> 
       firstName: payload.firstName as string,
       lastName: payload.lastName as string,
       role: payload.role as UserRole,
-      avatarUrl: (payload.avatarUrl as string | null) ?? null,
+      avatarUrl: null,
       mustChangePassword: (payload.mustChangePassword as boolean) ?? false,
     };
   } catch {
@@ -69,20 +79,18 @@ export async function getSession(): Promise<SessionUser | null> {
   return verifySession(token);
 }
 
+export function applySessionCookie(response: NextResponse, token: string): void {
+  response.cookies.set(COOKIE_NAME, token, SESSION_COOKIE_OPTIONS);
+}
+
 export async function setSessionCookie(token: string): Promise<void> {
   const cookieStore = await cookies();
-  cookieStore.set(COOKIE_NAME, token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
-    maxAge: SESSION_DURATION,
-    path: "/",
-  });
+  cookieStore.set(COOKIE_NAME, token, SESSION_COOKIE_OPTIONS);
 }
 
 export async function clearSessionCookie(): Promise<void> {
   const cookieStore = await cookies();
-  cookieStore.delete(COOKIE_NAME);
+  cookieStore.delete({ name: COOKIE_NAME, path: "/" });
 }
 
 export { COOKIE_NAME };

@@ -57,6 +57,13 @@ function ChartCard({
 export function DashboardView({ data }: { data: DashboardAnalytics }) {
   return (
     <div className="space-y-6">
+      {data.invoiceMetricsApproximate && (
+        <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+          Rechnungs-Kennzahlen werden vorläufig aus Kalkulationen abgeleitet. Für
+          vollständige Offene-Posten-Auswertungen bitte die Produktions-Datenbank
+          mit dem aktuellen Schema synchronisieren.
+        </div>
+      )}
       <KpiCards kpis={data.kpis} />
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">

@@ -2,7 +2,13 @@ import { Card } from "@/components/ui/card";
 import { Wrench } from "lucide-react";
 import { LoginForm } from "./login-form";
 
-export default function LoginPage() {
+export default async function LoginPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ error?: string }>;
+}) {
+  const { error } = await searchParams;
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-50 px-4">
       <Card className="w-full max-w-md">
@@ -14,7 +20,7 @@ export default function LoginPage() {
           <p className="text-sm text-slate-500 mt-1">Melden Sie sich an</p>
         </div>
 
-        <LoginForm />
+        <LoginForm errorCode={error} />
       </Card>
     </div>
   );

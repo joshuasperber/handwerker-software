@@ -82,6 +82,149 @@ export interface DashboardAnalytics {
   upcomingAppointments: UpcomingAppointmentDTO[];
   recentOrders: RecentOrderDTO[];
   overdueInvoices: OverdueInvoiceDTO[];
+  /** True when invoice KPIs use legacy calculation fields (e.g. DB schema not yet migrated). */
+  invoiceMetricsApproximate?: boolean;
+}
+
+interface InvoiceRevenueDoc {
+  issueDate: Date;
+  amount: number;
+}
+
+interface InvoiceAnalyticsSlice {
+  revenueDocs: InvoiceRevenueDoc[];
+  openInvoicesCount: number;
+  openInvoicesSum: number;
+  overdueInvoices: OverdueInvoiceDTO[];
+  approximate: boolean;
+}
+
+async function loadInvoiceAnalytics(
+  tenantId: string,
+  rangeMonthsStart: Date,
+  now: Date
+): Promise<InvoiceAnalyticsSlice> {
+  try {
+    const [invoiceDocsForRevenue, openInvoiceDocs, overdueDocs] =
+      await Promise.all([
+        prisma.calculationDocument.findMany({
+          where: {
+            documentType: "INVOICE",
+            issueDate: { gte: rangeMonthsStart },
+            calculation: { tenantId },
+          },
+          select: {
+            issueDate: true,
+            grossAmount: true,
+          },
+        }),
+        prisma.calculationDocument.findMany({
+          where: {
+            documentType: "INVOICE",
+            status: { in: ["OFFEN", "TEILBEZAHLT"] },
+            calculation: { tenantId },
+          },
+          select: { grossAmount: true, paidAmount: true },
+        }),
+        prisma.calculationDocument.findMany({
+          where: {
+            documentType: "INVOICE",
+            status: { in: ["OFFEN", "TEILBEZAHLT"] },
+            dueDate: { lt: now },
+            calculation: { tenantId },
+          },
+          include: { calculation: { include: { customer: true } } },
+          orderBy: { dueDate: "asc" },
+          take: 6,
+        }),
+      ]);
+
+    return {
+      revenueDocs: invoiceDocsForRevenue.map((doc) => ({
+        issueDate: doc.issueDate,
+        amount: doc.grossAmount ?? 0,
+      })),
+      openInvoicesCount: openInvoiceDocs.length,
+      openInvoicesSum: openInvoiceDocs.reduce(
+        (sum, doc) => sum + Math.max(0, doc.grossAmount - doc.paidAmount),
+        0
+      ),
+      overdueInvoices: overdueDocs.map((doc) => ({
+        id: doc.id,
+        documentNumber: doc.documentNumber,
+        dueDate: (doc.dueDate ?? doc.issueDate).toISOString(),
+        amount: Math.max(0, doc.grossAmount - doc.paidAmount),
+        customer: doc.calculation?.customer
+          ? `${doc.calculation.customer.firstName} ${doc.calculation.customer.lastName}`
+          : "—",
+      })),
+      approximate: false,
+    };
+  } catch (error) {
+    console.warn(
+      "[dashboard] document-based invoice analytics failed, using legacy fallback:",
+      error
+    );
+  }
+
+  try {
+    const [invoiceDocsForRevenue, openInvoiceAgg, overdueDocs] = await Promise.all([
+    prisma.calculationDocument.findMany({
+      where: {
+        documentType: "INVOICE",
+        issueDate: { gte: rangeMonthsStart },
+        calculation: { tenantId },
+      },
+      select: {
+        issueDate: true,
+        calculation: { select: { grossSalesPrice: true } },
+      },
+    }),
+    prisma.calculation.aggregate({
+      where: { tenantId, status: "INVOICE_CREATED" },
+      _count: { _all: true },
+      _sum: { grossSalesPrice: true },
+    }),
+    prisma.calculationDocument.findMany({
+      where: {
+        documentType: "INVOICE",
+        dueDate: { lt: now },
+        calculation: { tenantId, status: "INVOICE_CREATED" },
+      },
+      include: { calculation: { include: { customer: true } } },
+      orderBy: { dueDate: "asc" },
+      take: 6,
+    }),
+  ]);
+
+  return {
+    revenueDocs: invoiceDocsForRevenue.map((doc) => ({
+      issueDate: doc.issueDate,
+      amount: doc.calculation?.grossSalesPrice ?? 0,
+    })),
+    openInvoicesCount: openInvoiceAgg._count._all,
+    openInvoicesSum: openInvoiceAgg._sum.grossSalesPrice ?? 0,
+    overdueInvoices: overdueDocs.map((doc) => ({
+      id: doc.id,
+      documentNumber: doc.documentNumber,
+      dueDate: (doc.dueDate ?? doc.issueDate).toISOString(),
+      amount: doc.calculation?.grossSalesPrice ?? 0,
+      customer: doc.calculation?.customer
+        ? `${doc.calculation.customer.firstName} ${doc.calculation.customer.lastName}`
+        : "—",
+    })),
+    approximate: true,
+  };
+  } catch (legacyError) {
+    console.error("[dashboard] legacy invoice analytics failed:", legacyError);
+    return {
+      revenueDocs: [],
+      openInvoicesCount: 0,
+      openInvoicesSum: 0,
+      overdueInvoices: [],
+      approximate: true,
+    };
+  }
 }
 
 export async function getDashboardAnalytics(
@@ -95,8 +238,7 @@ export async function getDashboardAnalytics(
   });
 
   const [
-    invoiceDocsForRevenue,
-    openInvoiceDocs,
+    invoiceAnalytics,
     invoiceStatusGroups,
     openOrdersCount,
     ordersStatusGroups,
@@ -104,27 +246,8 @@ export async function getDashboardAnalytics(
     appointmentsForWeeks,
     upcomingAppointments,
     recentOrders,
-    overdueInvoices,
   ] = await Promise.all([
-    prisma.calculationDocument.findMany({
-      where: {
-        documentType: "INVOICE",
-        issueDate: { gte: rangeMonthsStart },
-        calculation: { tenantId },
-      },
-      select: {
-        issueDate: true,
-        grossAmount: true,
-      },
-    }),
-    prisma.calculationDocument.findMany({
-      where: {
-        documentType: "INVOICE",
-        status: { in: ["OFFEN", "TEILBEZAHLT"] },
-        calculation: { tenantId },
-      },
-      select: { grossAmount: true, paidAmount: true },
-    }),
+    loadInvoiceAnalytics(tenantId, rangeMonthsStart, now),
     prisma.calculation.groupBy({
       by: ["status"],
       where: { tenantId },
@@ -175,28 +298,12 @@ export async function getDashboardAnalytics(
       orderBy: { createdAt: "desc" },
       take: 6,
     }),
-    prisma.calculationDocument.findMany({
-      where: {
-        documentType: "INVOICE",
-        status: { in: ["OFFEN", "TEILBEZAHLT"] },
-        dueDate: { lt: now },
-        calculation: { tenantId },
-      },
-      include: { calculation: { include: { customer: true } } },
-      orderBy: { dueDate: "asc" },
-      take: 6,
-    }),
   ]);
-
-  const openInvoicesSum = openInvoiceDocs.reduce(
-    (sum, d) => sum + Math.max(0, d.grossAmount - d.paidAmount),
-    0
-  );
 
   const monthBuckets = buildMonthBuckets(now);
   let revenueThisMonth = 0;
-  for (const doc of invoiceDocsForRevenue) {
-    const amount = doc.grossAmount ?? 0;
+  for (const doc of invoiceAnalytics.revenueDocs) {
+    const amount = doc.amount;
     const key = monthKey(doc.issueDate);
     const bucket = monthBuckets.find((m) => m.key === key);
     if (bucket) bucket.umsatz += amount;
@@ -233,9 +340,10 @@ export async function getDashboardAnalytics(
       revenueThisMonth,
       openOrders: openOrdersCount,
       appointmentsToday,
-      openInvoicesCount: openInvoiceDocs.length,
-      openInvoicesSum,
+      openInvoicesCount: invoiceAnalytics.openInvoicesCount,
+      openInvoicesSum: invoiceAnalytics.openInvoicesSum,
     },
+    invoiceMetricsApproximate: invoiceAnalytics.approximate,
     revenuePerMonth: monthBuckets.map(({ label, umsatz }) => ({
       label,
       umsatz: Math.round(umsatz),
@@ -270,15 +378,7 @@ export async function getDashboardAnalytics(
       city: order.property?.city ?? null,
       createdAt: order.createdAt.toISOString(),
     })),
-    overdueInvoices: overdueInvoices.map((doc) => ({
-      id: doc.id,
-      documentNumber: doc.documentNumber,
-      dueDate: (doc.dueDate ?? doc.issueDate).toISOString(),
-      amount: Math.max(0, doc.grossAmount - doc.paidAmount),
-      customer: doc.calculation?.customer
-        ? `${doc.calculation.customer.firstName} ${doc.calculation.customer.lastName}`
-        : "—",
-    })),
+    overdueInvoices: invoiceAnalytics.overdueInvoices,
   };
 }
 

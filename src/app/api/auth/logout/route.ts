@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { COOKIE_NAME } from "@/lib/auth";
+import { COOKIE_NAME, SESSION_COOKIE_OPTIONS } from "@/lib/auth";
 
 function loginRedirectUrl(request: NextRequest): URL {
   const forwardedHost = request.headers.get("x-forwarded-host");
@@ -22,11 +22,8 @@ async function handleLogout(request: NextRequest) {
   // Bei 307 bleibt die Methode POST → /login antwortet mit 405 und leerer Seite.
   const response = NextResponse.redirect(loginRedirectUrl(request), 303);
   response.cookies.set(COOKIE_NAME, "", {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
+    ...SESSION_COOKIE_OPTIONS,
     maxAge: 0,
-    path: "/",
   });
   return response;
 }

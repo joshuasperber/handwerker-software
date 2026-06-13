@@ -39,7 +39,14 @@ function getDashboardPermission(pathname: string): Permission | null | undefined
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const token = request.cookies.get("handwerker-session")?.value;
-  const session = token ? await verifySession(token) : null;
+  let session = null;
+  if (token) {
+    try {
+      session = await verifySession(token);
+    } catch (error) {
+      console.error("[middleware] session verify failed:", error);
+    }
+  }
 
   if (pathname.startsWith("/dashboard")) {
     if (!session) return NextResponse.redirect(new URL("/login", request.url));
