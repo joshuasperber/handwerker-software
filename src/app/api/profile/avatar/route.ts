@@ -23,7 +23,7 @@ export async function GET() {
   const parsed = parseDataUrl(user.avatarUrl);
   if (!parsed) return new Response(null, { status: 404 });
 
-  return new Response(parsed.buffer, {
+  return new Response(new Uint8Array(parsed.buffer), {
     headers: {
       "Content-Type": parsed.mime,
       "Cache-Control": "private, max-age=3600",
