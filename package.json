@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev --webpack -p 3003",
     "build": "prisma generate && next build",
+    "postinstall": "prisma generate",
     "start": "next start -p 3003",
     "lint": "eslint",
     "db:generate": "prisma generate",
