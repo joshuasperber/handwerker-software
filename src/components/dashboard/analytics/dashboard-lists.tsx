@@ -23,51 +23,94 @@ function EmptyRow({ message }: { message: string }) {
 }
 
 export function UpcomingAppointmentsList({
-  items,
+  overdue,
+  upcoming,
 }: {
-  items: UpcomingAppointmentDTO[];
+  overdue: UpcomingAppointmentDTO[];
+  upcoming: UpcomingAppointmentDTO[];
 }) {
+  const hasOverdue = overdue.length > 0;
+  const hasUpcoming = upcoming.length > 0;
+
   return (
     <Card>
       <CardHeader className="border-b">
         <CardTitle className="flex items-center gap-2">
           <CalendarClock className="h-4 w-4 text-[#0d5c63]" />
-          Nächste Termine
+          Termine
         </CardTitle>
       </CardHeader>
       <CardContent className="pt-0">
-        {items.length === 0 ? (
-          <EmptyRow message="Keine anstehenden Termine." />
+        {!hasOverdue && !hasUpcoming ? (
+          <EmptyRow message="Keine anstehenden oder überfälligen Termine." />
         ) : (
-          <ul className="divide-y divide-border/60">
-            {items.map((appt) => (
-              <li key={appt.id}>
-                <Link
-                  href={appt.orderId ? `/dashboard/auftraege/${appt.orderId}` : "/dashboard/termine"}
-                  className="group flex items-center justify-between gap-3 py-3 transition-colors hover:bg-muted/50"
-                >
-                  <div className="min-w-0">
-                    <p className="truncate font-medium">{appt.customer}</p>
-                    <p className="truncate text-xs text-muted-foreground">
-                      {formatDateTime(appt.start)}
-                      {appt.city ? ` · ${appt.city}` : ""}
-                    </p>
-                  </div>
-                  <div className="flex shrink-0 items-center gap-2">
-                    {appt.employee && (
-                      <span className="hidden text-xs text-muted-foreground sm:inline">
-                        {appt.employee}
-                      </span>
-                    )}
-                    <ChevronRight className="h-4 w-4 text-muted-foreground/50 transition-transform group-hover:translate-x-0.5" />
-                  </div>
-                </Link>
-              </li>
-            ))}
-          </ul>
+          <div className="divide-y divide-border/60">
+            {hasOverdue && (
+              <section>
+                <p className="flex items-center gap-1.5 py-2 text-xs font-medium text-red-600">
+                  <AlertTriangle className="h-3.5 w-3.5" />
+                  Überfällig ({overdue.length})
+                </p>
+                <ul>
+                  {overdue.map((appt) => (
+                    <AppointmentRow key={appt.id} appt={appt} overdue />
+                  ))}
+                </ul>
+              </section>
+            )}
+            {hasUpcoming && (
+              <section>
+                {hasOverdue && (
+                  <p className="py-2 text-xs font-medium text-muted-foreground">
+                    Anstehend
+                  </p>
+                )}
+                <ul>
+                  {upcoming.map((appt) => (
+                    <AppointmentRow key={appt.id} appt={appt} />
+                  ))}
+                </ul>
+              </section>
+            )}
+          </div>
         )}
       </CardContent>
     </Card>
+  );
+}
+
+function AppointmentRow({
+  appt,
+  overdue = false,
+}: {
+  appt: UpcomingAppointmentDTO;
+  overdue?: boolean;
+}) {
+  return (
+    <li>
+      <Link
+        href={appt.orderId ? `/dashboard/auftraege/${appt.orderId}` : "/dashboard/termine"}
+        className="group flex items-center justify-between gap-3 py-3 transition-colors hover:bg-muted/50"
+      >
+        <div className="min-w-0">
+          <p className={`truncate font-medium ${overdue ? "text-red-700" : ""}`}>
+            {appt.customer}
+          </p>
+          <p className="truncate text-xs text-muted-foreground">
+            {formatDateTime(appt.start)}
+            {appt.city ? ` · ${appt.city}` : ""}
+          </p>
+        </div>
+        <div className="flex shrink-0 items-center gap-2">
+          {appt.employee && (
+            <span className="hidden text-xs text-muted-foreground sm:inline">
+              {appt.employee}
+            </span>
+          )}
+          <ChevronRight className="h-4 w-4 text-muted-foreground/50 transition-transform group-hover:translate-x-0.5" />
+        </div>
+      </Link>
+    </li>
   );
 }
 

@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import type { OrderStatus } from "@/generated/prisma/client";
 import {
   startOfDay,
   endOfDay,
@@ -13,7 +14,10 @@ import { de } from "date-fns/locale";
 import {
   ORDER_STATUS_LABELS,
   ORDER_STATUS_FLOW,
+  DONE_ORDER_STATUSES,
 } from "@/lib/utils";
+
+const ACTIVE_APPOINTMENT_STATUSES = ["ABGESCHLOSSEN", "STORNIERT"] as const;
 
 const MONTHS_BACK = 6;
 const WEEKS_BACK = 8;
@@ -72,6 +76,7 @@ export interface DashboardAnalytics {
     revenueThisMonth: number;
     openOrders: number;
     appointmentsToday: number;
+    overdueAppointments: number;
     openInvoicesCount: number;
     openInvoicesSum: number;
   };
@@ -80,6 +85,7 @@ export interface DashboardAnalytics {
   invoiceStatus: Array<ChartPoint & { status: string }>;
   appointmentsPerWeek: ChartPoint[];
   upcomingAppointments: UpcomingAppointmentDTO[];
+  overdueAppointments: UpcomingAppointmentDTO[];
   recentOrders: RecentOrderDTO[];
   overdueInvoices: OverdueInvoiceDTO[];
   /** True when invoice KPIs use legacy calculation fields (e.g. DB schema not yet migrated). */
@@ -130,7 +136,7 @@ async function loadInvoiceAnalytics(
           where: {
             documentType: "INVOICE",
             status: { in: ["OFFEN", "TEILBEZAHLT"] },
-            dueDate: { lt: now },
+            dueDate: { not: null, lt: now },
             calculation: { tenantId },
           },
           include: { calculation: { include: { customer: true } } },
@@ -188,7 +194,7 @@ async function loadInvoiceAnalytics(
     prisma.calculationDocument.findMany({
       where: {
         documentType: "INVOICE",
-        dueDate: { lt: now },
+        dueDate: { not: null, lt: now },
         calculation: { tenantId, status: "INVOICE_CREATED" },
       },
       include: { calculation: { include: { customer: true } } },
@@ -243,7 +249,9 @@ export async function getDashboardAnalytics(
     openOrdersCount,
     ordersStatusGroups,
     appointmentsToday,
+    overdueAppointmentsCount,
     appointmentsForWeeks,
+    overdueAppointments,
     upcomingAppointments,
     recentOrders,
   ] = await Promise.all([
@@ -256,7 +264,7 @@ export async function getDashboardAnalytics(
     prisma.order.count({
       where: {
         tenantId,
-        status: { notIn: ["ABGESCHLOSSEN", "ABGERECHNET", "STORNIERT"] },
+        status: { notIn: DONE_ORDER_STATUSES as OrderStatus[] },
       },
     }),
     prisma.order.groupBy({
@@ -268,22 +276,42 @@ export async function getDashboardAnalytics(
       where: {
         tenantId,
         startTime: { gte: startOfDay(now), lte: endOfDay(now) },
-        status: { not: "STORNIERT" },
+        status: { notIn: [...ACTIVE_APPOINTMENT_STATUSES] },
+      },
+    }),
+    prisma.appointment.count({
+      where: {
+        tenantId,
+        startTime: { lt: now },
+        status: { notIn: [...ACTIVE_APPOINTMENT_STATUSES] },
       },
     }),
     prisma.appointment.findMany({
       where: {
         tenantId,
         startTime: { gte: rangeWeeksStart },
-        status: { not: "STORNIERT" },
+        status: { notIn: ["STORNIERT"] },
       },
       select: { startTime: true },
     }),
     prisma.appointment.findMany({
       where: {
         tenantId,
+        startTime: { lt: now },
+        status: { notIn: [...ACTIVE_APPOINTMENT_STATUSES] },
+      },
+      include: {
+        order: { include: { customer: true, property: true } },
+        employee: { include: { user: true } },
+      },
+      orderBy: { startTime: "asc" },
+      take: 6,
+    }),
+    prisma.appointment.findMany({
+      where: {
+        tenantId,
         startTime: { gte: now },
-        status: { not: "STORNIERT" },
+        status: { notIn: ["STORNIERT"] },
       },
       include: {
         order: { include: { customer: true, property: true } },
@@ -340,6 +368,7 @@ export async function getDashboardAnalytics(
       revenueThisMonth,
       openOrders: openOrdersCount,
       appointmentsToday,
+      overdueAppointments: overdueAppointmentsCount,
       openInvoicesCount: invoiceAnalytics.openInvoicesCount,
       openInvoicesSum: invoiceAnalytics.openInvoicesSum,
     },
@@ -354,19 +383,8 @@ export async function getDashboardAnalytics(
       label,
       value,
     })),
-    upcomingAppointments: upcomingAppointments.map((appt) => ({
-      id: appt.id,
-      start: appt.startTime.toISOString(),
-      orderId: appt.order?.id ?? null,
-      orderNumber: appt.order?.orderNumber ?? null,
-      customer: appt.order
-        ? `${appt.order.customer.firstName} ${appt.order.customer.lastName}`
-        : "—",
-      city: appt.order?.property?.city ?? null,
-      employee: appt.employee?.user
-        ? `${appt.employee.user.firstName} ${appt.employee.user.lastName}`
-        : null,
-    })),
+    upcomingAppointments: upcomingAppointments.map(mapAppointmentToDTO),
+    overdueAppointments: overdueAppointments.map(mapAppointmentToDTO),
     recentOrders: recentOrders.map((order) => ({
       id: order.id,
       orderNumber: order.orderNumber,
@@ -379,6 +397,36 @@ export async function getDashboardAnalytics(
       createdAt: order.createdAt.toISOString(),
     })),
     overdueInvoices: invoiceAnalytics.overdueInvoices,
+  };
+}
+
+type AppointmentWithRelations = {
+  id: string;
+  startTime: Date;
+  order: {
+    id: string;
+    orderNumber: string;
+    customer: { firstName: string; lastName: string };
+    property: { city: string | null } | null;
+  } | null;
+  employee: {
+    user: { firstName: string; lastName: string };
+  } | null;
+};
+
+function mapAppointmentToDTO(appt: AppointmentWithRelations): UpcomingAppointmentDTO {
+  return {
+    id: appt.id,
+    start: appt.startTime.toISOString(),
+    orderId: appt.order?.id ?? null,
+    orderNumber: appt.order?.orderNumber ?? null,
+    customer: appt.order
+      ? `${appt.order.customer.firstName} ${appt.order.customer.lastName}`
+      : "—",
+    city: appt.order?.property?.city ?? null,
+    employee: appt.employee?.user
+      ? `${appt.employee.user.firstName} ${appt.employee.user.lastName}`
+      : null,
   };
 }
 

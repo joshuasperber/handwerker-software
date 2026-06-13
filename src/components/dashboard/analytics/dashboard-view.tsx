@@ -110,7 +110,10 @@ export function DashboardView({ data }: { data: DashboardAnalytics }) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, delay: 0.25, ease: "easeOut" }}
       >
-        <UpcomingAppointmentsList items={data.upcomingAppointments} />
+        <UpcomingAppointmentsList
+          overdue={data.overdueAppointments}
+          upcoming={data.upcomingAppointments}
+        />
         <RecentOrdersList items={data.recentOrders} />
         <OverdueInvoicesList items={data.overdueInvoices} />
       </motion.div>

@@ -47,10 +47,16 @@ export function KpiCards({ kpis }: { kpis: DashboardAnalytics["kpis"] }) {
     {
       label: "Termine heute",
       value: String(kpis.appointmentsToday),
-      hint: "Geplante Einsätze",
+      hint:
+        kpis.overdueAppointments > 0
+          ? `${kpis.overdueAppointments} überfällig`
+          : "Geplante Einsätze",
       icon: CalendarClock,
-      accent: "text-slate-900",
-      iconBg: "bg-[#e87722]/10 text-[#e87722]",
+      accent: kpis.overdueAppointments > 0 ? "text-red-600" : "text-slate-900",
+      iconBg:
+        kpis.overdueAppointments > 0
+          ? "bg-red-50 text-red-600"
+          : "bg-[#e87722]/10 text-[#e87722]",
       href: "/dashboard/disposition",
     },
     {
@@ -60,7 +66,7 @@ export function KpiCards({ kpis }: { kpis: DashboardAnalytics["kpis"] }) {
       icon: FileWarning,
       accent: "text-slate-900",
       iconBg: "bg-amber-50 text-amber-600",
-      href: "/dashboard/kalkulation",
+      href: "/dashboard/rechnungen",
     },
   ];
 
