@@ -28,7 +28,7 @@ export default function DashboardError({
               Dashboard konnte nicht geladen werden
             </h2>
             <p className="text-sm text-muted-foreground">
-              Beim Laden der Auswertungen ist ein Fehler aufgetreten. Bitte
+              Beim Laden dieser Seite ist ein Fehler aufgetreten. Bitte
               versuche es erneut.
             </p>
           </div>

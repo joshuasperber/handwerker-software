@@ -5,6 +5,14 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+/** Anzeigename einer Auftrags-Leistung (Katalog oder „Sonstige Leistung“). */
+export function orderServiceLabel(entry: {
+  service?: { name: string } | null;
+  customName?: string | null;
+}): string {
+  return entry.service?.name ?? entry.customName ?? "Sonstige Leistung";
+}
+
 const euroFormatter = new Intl.NumberFormat("de-DE", {
   style: "currency",
   currency: "EUR",

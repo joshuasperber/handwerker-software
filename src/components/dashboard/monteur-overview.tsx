@@ -7,7 +7,7 @@ import { de } from "date-fns/locale";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { MonteurMaterialView } from "@/components/monteur/material-view";
-import { APPOINTMENT_STATUS_LABELS, PHASE_STATUS_LABELS, PHASE_STATUS_BADGE, formatDateTime } from "@/lib/utils";
+import { APPOINTMENT_STATUS_LABELS, PHASE_STATUS_LABELS, PHASE_STATUS_BADGE, formatDateTime, orderServiceLabel } from "@/lib/utils";
 import { fetchJson } from "@/lib/fetch-json";
 import { getCurrentPhase, phaseAssigneeLabel, type PhaseSummary } from "@/lib/phase-status";
 import { Badge } from "@/components/ui/badge";
@@ -22,7 +22,7 @@ interface Appointment {
     orderNumber: string;
     customer: { firstName: string; lastName: string };
     property: { street: string; city: string };
-    services: { service: { name: string } }[];
+    services: { service: { name: string } | null; customName?: string | null }[];
     phases?: PhaseSummary[];
   };
 }
@@ -161,7 +161,7 @@ export function MonteurDashboardOverview() {
                     </p>
                     {apt.order.services.length > 0 && (
                       <p className="text-xs text-slate-400 mt-0.5 truncate">
-                        {apt.order.services.map((s) => s.service.name).join(", ")}
+                        {apt.order.services.map((s) => orderServiceLabel(s)).join(", ")}
                       </p>
                     )}
                     {currentPhase && (

@@ -17,11 +17,20 @@ export default async function DashboardLayout({
   if (session.role === "KUNDE") redirect("/kunde");
   if (!canAccessDashboard(session.role)) redirect(getRoleHomePath(session.role));
 
-  const dbUser = await prisma.user.findFirst({
-    where: { id: session.id, tenantId: session.tenantId },
-    select: { avatarUrl: true },
-  });
-  const sessionWithAvatar = { ...session, avatarUrl: dbUser?.avatarUrl ?? null };
+  let sessionWithAvatar = session;
+  try {
+    const dbUser = await prisma.user.findFirst({
+      where: { id: session.id, tenantId: session.tenantId },
+      select: { avatarUrl: true },
+    });
+    const rawAvatar = dbUser?.avatarUrl ?? null;
+    const avatarUrl = rawAvatar?.startsWith("data:")
+      ? "/api/profile/avatar"
+      : rawAvatar;
+    sessionWithAvatar = { ...session, avatarUrl };
+  } catch (error) {
+    console.error("[dashboard/layout] avatar load failed:", error);
+  }
 
   const navItems = getDashboardNavItems(session.role);
 

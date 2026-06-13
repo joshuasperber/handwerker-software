@@ -11,6 +11,7 @@ import {
   isOrderDone,
   isToday,
   isOverdue,
+  orderServiceLabel,
 } from "@/lib/utils";
 import { getCurrentPhase } from "@/lib/phase-status";
 import { CanAccess } from "@/components/auth/can-access";
@@ -25,7 +26,7 @@ interface Order {
   scheduledStart: string | null;
   customer: { firstName: string; lastName: string; email: string };
   property: { street: string; city: string; zipCode: string };
-  services: { service: { name: string } }[];
+  services: { service: { name: string } | null; customName?: string | null }[];
   phases?: { id: string; name: string; status: string; isEnabled: boolean; sortOrder: number }[];
 }
 
@@ -156,7 +157,7 @@ export default function AuftraegePage() {
                     </td>
                     <td className="py-3 pr-4">{order.customer.firstName} {order.customer.lastName}</td>
                     <td className="py-3 pr-4 text-slate-500">
-                      {order.services.map((s) => s.service.name).join(", ")}
+                      {order.services.map((s) => orderServiceLabel(s)).join(", ")}
                     </td>
                     <td className="py-3 pr-4 text-slate-500">{order.property.city}</td>
                     <td className="py-3 pr-4 hidden md:table-cell">
