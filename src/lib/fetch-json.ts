@@ -16,16 +16,14 @@ export async function fetchJson<T = unknown>(
 
     if (!text.trim()) {
       const error = res.ok ? "Leere Server-Antwort" : `HTTP ${res.status}`;
-      if (res.status === 401 && typeof window !== "undefined") {
-        window.location.assign("/login");
-      }
       return { success: false, error, status: res.status };
     }
 
     const parsed = JSON.parse(text) as ApiResponse<T>;
 
     if (!res.ok) {
-      if (res.status === 401 && typeof window !== "undefined") {
+      // Nur bei explizitem Auth-Fehler umleiten — nicht bei jedem API-Fehler.
+      if (res.status === 401 && typeof window !== "undefined" && url.startsWith("/api/auth/me")) {
         window.location.assign("/login");
       }
       return {

@@ -64,6 +64,17 @@ export default async function MonteurLayout({
             <span>Kein Mitarbeiterprofil verknüpft — Termine und Aufträge können nicht angezeigt werden. Bitte den Administrator kontaktieren.</span>
           </div>
         )}
+        {!employee && session.role !== "MONTEUR" && (
+          <div className="mb-4 flex items-center gap-2.5 rounded-xl border border-blue-200 bg-blue-50 px-3 py-2.5 text-sm text-blue-900">
+            <AlertTriangle className="h-5 w-5 shrink-0" />
+            <span>
+              Sie sind als {session.role === "ADMIN" ? "Administrator" : "Büro"} in der Feld-Ansicht.
+              {" "}
+              <Link href="/dashboard" className="font-medium underline">Zum Dashboard</Link>
+              {" "}— hier sehen Sie nur Monteur-Termine, wenn Ihr Konto mit einem Mitarbeiterprofil verknüpft ist.
+            </span>
+          </div>
+        )}
         {children}
       </main>
       <Suspense fallback={null}>

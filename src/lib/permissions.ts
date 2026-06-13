@@ -156,23 +156,7 @@ export function canAccessCustomerPortal(role: UserRole): boolean {
   return role === "KUNDE";
 }
 
-/** Startseite nach Login / Einladung je nach Rolle. */
-export function getRoleHomePath(
-  role: UserRole,
-  options?: { mustChangePassword?: boolean }
-): string {
-  if (options?.mustChangePassword) return "/dashboard/profil?changePassword=1";
-  switch (role) {
-    case "GAST":
-      return "/portal";
-    case "MONTEUR":
-      return "/monteur/tagesplan";
-    case "KUNDE":
-      return "/kunde";
-    default:
-      return "/dashboard";
-  }
-}
+export { getRoleHomePath } from "@/lib/role-routing";
 
 export function canManageOrders(role: UserRole): boolean {
   return hasPermission(role, "orders.write");
