@@ -36,6 +36,7 @@ export type CustomerMinAggregateOutputType = {
   notes: string | null
   gdprConsent: boolean | null
   gdprConsentAt: Date | null
+  bookingConfirmationEmailTemplate: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -52,6 +53,7 @@ export type CustomerMaxAggregateOutputType = {
   notes: string | null
   gdprConsent: boolean | null
   gdprConsentAt: Date | null
+  bookingConfirmationEmailTemplate: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -68,6 +70,7 @@ export type CustomerCountAggregateOutputType = {
   notes: number
   gdprConsent: number
   gdprConsentAt: number
+  bookingConfirmationEmailTemplate: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -86,6 +89,7 @@ export type CustomerMinAggregateInputType = {
   notes?: true
   gdprConsent?: true
   gdprConsentAt?: true
+  bookingConfirmationEmailTemplate?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -102,6 +106,7 @@ export type CustomerMaxAggregateInputType = {
   notes?: true
   gdprConsent?: true
   gdprConsentAt?: true
+  bookingConfirmationEmailTemplate?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -118,6 +123,7 @@ export type CustomerCountAggregateInputType = {
   notes?: true
   gdprConsent?: true
   gdprConsentAt?: true
+  bookingConfirmationEmailTemplate?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -207,6 +213,7 @@ export type CustomerGroupByOutputType = {
   notes: string | null
   gdprConsent: boolean
   gdprConsentAt: Date | null
+  bookingConfirmationEmailTemplate: string | null
   createdAt: Date
   updatedAt: Date
   _count: CustomerCountAggregateOutputType | null
@@ -244,6 +251,7 @@ export type CustomerWhereInput = {
   notes?: Prisma.StringNullableFilter<"Customer"> | string | null
   gdprConsent?: Prisma.BoolFilter<"Customer"> | boolean
   gdprConsentAt?: Prisma.DateTimeNullableFilter<"Customer"> | Date | string | null
+  bookingConfirmationEmailTemplate?: Prisma.StringNullableFilter<"Customer"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Customer"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Customer"> | Date | string
   tenant?: Prisma.XOR<Prisma.TenantScalarRelationFilter, Prisma.TenantWhereInput>
@@ -265,6 +273,7 @@ export type CustomerOrderByWithRelationInput = {
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   gdprConsent?: Prisma.SortOrder
   gdprConsentAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  bookingConfirmationEmailTemplate?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   tenant?: Prisma.TenantOrderByWithRelationInput
@@ -290,6 +299,7 @@ export type CustomerWhereUniqueInput = Prisma.AtLeast<{
   notes?: Prisma.StringNullableFilter<"Customer"> | string | null
   gdprConsent?: Prisma.BoolFilter<"Customer"> | boolean
   gdprConsentAt?: Prisma.DateTimeNullableFilter<"Customer"> | Date | string | null
+  bookingConfirmationEmailTemplate?: Prisma.StringNullableFilter<"Customer"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Customer"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Customer"> | Date | string
   tenant?: Prisma.XOR<Prisma.TenantScalarRelationFilter, Prisma.TenantWhereInput>
@@ -311,6 +321,7 @@ export type CustomerOrderByWithAggregationInput = {
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   gdprConsent?: Prisma.SortOrder
   gdprConsentAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  bookingConfirmationEmailTemplate?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.CustomerCountOrderByAggregateInput
@@ -333,6 +344,7 @@ export type CustomerScalarWhereWithAggregatesInput = {
   notes?: Prisma.StringNullableWithAggregatesFilter<"Customer"> | string | null
   gdprConsent?: Prisma.BoolWithAggregatesFilter<"Customer"> | boolean
   gdprConsentAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Customer"> | Date | string | null
+  bookingConfirmationEmailTemplate?: Prisma.StringNullableWithAggregatesFilter<"Customer"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Customer"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Customer"> | Date | string
 }
@@ -347,6 +359,7 @@ export type CustomerCreateInput = {
   notes?: string | null
   gdprConsent?: boolean
   gdprConsentAt?: Date | string | null
+  bookingConfirmationEmailTemplate?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutCustomersInput
@@ -368,6 +381,7 @@ export type CustomerUncheckedCreateInput = {
   notes?: string | null
   gdprConsent?: boolean
   gdprConsentAt?: Date | string | null
+  bookingConfirmationEmailTemplate?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutCustomerInput
@@ -385,6 +399,7 @@ export type CustomerUpdateInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gdprConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gdprConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationEmailTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutCustomersNestedInput
@@ -406,6 +421,7 @@ export type CustomerUncheckedUpdateInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gdprConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gdprConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationEmailTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   properties?: Prisma.PropertyUncheckedUpdateManyWithoutCustomerNestedInput
@@ -425,6 +441,7 @@ export type CustomerCreateManyInput = {
   notes?: string | null
   gdprConsent?: boolean
   gdprConsentAt?: Date | string | null
+  bookingConfirmationEmailTemplate?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -439,6 +456,7 @@ export type CustomerUpdateManyMutationInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gdprConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gdprConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationEmailTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -455,6 +473,7 @@ export type CustomerUncheckedUpdateManyInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gdprConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gdprConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationEmailTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -491,6 +510,7 @@ export type CustomerCountOrderByAggregateInput = {
   notes?: Prisma.SortOrder
   gdprConsent?: Prisma.SortOrder
   gdprConsentAt?: Prisma.SortOrder
+  bookingConfirmationEmailTemplate?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -507,6 +527,7 @@ export type CustomerMaxOrderByAggregateInput = {
   notes?: Prisma.SortOrder
   gdprConsent?: Prisma.SortOrder
   gdprConsentAt?: Prisma.SortOrder
+  bookingConfirmationEmailTemplate?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -523,6 +544,7 @@ export type CustomerMinOrderByAggregateInput = {
   notes?: Prisma.SortOrder
   gdprConsent?: Prisma.SortOrder
   gdprConsentAt?: Prisma.SortOrder
+  bookingConfirmationEmailTemplate?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -660,6 +682,7 @@ export type CustomerCreateWithoutTenantInput = {
   notes?: string | null
   gdprConsent?: boolean
   gdprConsentAt?: Date | string | null
+  bookingConfirmationEmailTemplate?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user?: Prisma.UserCreateNestedOneWithoutCustomerInput
@@ -679,6 +702,7 @@ export type CustomerUncheckedCreateWithoutTenantInput = {
   notes?: string | null
   gdprConsent?: boolean
   gdprConsentAt?: Date | string | null
+  bookingConfirmationEmailTemplate?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutCustomerInput
@@ -727,6 +751,7 @@ export type CustomerScalarWhereInput = {
   notes?: Prisma.StringNullableFilter<"Customer"> | string | null
   gdprConsent?: Prisma.BoolFilter<"Customer"> | boolean
   gdprConsentAt?: Prisma.DateTimeNullableFilter<"Customer"> | Date | string | null
+  bookingConfirmationEmailTemplate?: Prisma.StringNullableFilter<"Customer"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Customer"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Customer"> | Date | string
 }
@@ -741,6 +766,7 @@ export type CustomerCreateWithoutUserInput = {
   notes?: string | null
   gdprConsent?: boolean
   gdprConsentAt?: Date | string | null
+  bookingConfirmationEmailTemplate?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutCustomersInput
@@ -760,6 +786,7 @@ export type CustomerUncheckedCreateWithoutUserInput = {
   notes?: string | null
   gdprConsent?: boolean
   gdprConsentAt?: Date | string | null
+  bookingConfirmationEmailTemplate?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutCustomerInput
@@ -793,6 +820,7 @@ export type CustomerUpdateWithoutUserInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gdprConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gdprConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationEmailTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutCustomersNestedInput
@@ -812,6 +840,7 @@ export type CustomerUncheckedUpdateWithoutUserInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gdprConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gdprConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationEmailTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   properties?: Prisma.PropertyUncheckedUpdateManyWithoutCustomerNestedInput
@@ -829,6 +858,7 @@ export type CustomerCreateWithoutPropertiesInput = {
   notes?: string | null
   gdprConsent?: boolean
   gdprConsentAt?: Date | string | null
+  bookingConfirmationEmailTemplate?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutCustomersInput
@@ -849,6 +879,7 @@ export type CustomerUncheckedCreateWithoutPropertiesInput = {
   notes?: string | null
   gdprConsent?: boolean
   gdprConsentAt?: Date | string | null
+  bookingConfirmationEmailTemplate?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutCustomerInput
@@ -881,6 +912,7 @@ export type CustomerUpdateWithoutPropertiesInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gdprConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gdprConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationEmailTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutCustomersNestedInput
@@ -901,6 +933,7 @@ export type CustomerUncheckedUpdateWithoutPropertiesInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gdprConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gdprConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationEmailTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   orders?: Prisma.OrderUncheckedUpdateManyWithoutCustomerNestedInput
@@ -917,6 +950,7 @@ export type CustomerCreateWithoutOrdersInput = {
   notes?: string | null
   gdprConsent?: boolean
   gdprConsentAt?: Date | string | null
+  bookingConfirmationEmailTemplate?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutCustomersInput
@@ -937,6 +971,7 @@ export type CustomerUncheckedCreateWithoutOrdersInput = {
   notes?: string | null
   gdprConsent?: boolean
   gdprConsentAt?: Date | string | null
+  bookingConfirmationEmailTemplate?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutCustomerInput
@@ -969,6 +1004,7 @@ export type CustomerUpdateWithoutOrdersInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gdprConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gdprConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationEmailTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutCustomersNestedInput
@@ -989,6 +1025,7 @@ export type CustomerUncheckedUpdateWithoutOrdersInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gdprConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gdprConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationEmailTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   properties?: Prisma.PropertyUncheckedUpdateManyWithoutCustomerNestedInput
@@ -1005,6 +1042,7 @@ export type CustomerCreateWithoutCalculationsInput = {
   notes?: string | null
   gdprConsent?: boolean
   gdprConsentAt?: Date | string | null
+  bookingConfirmationEmailTemplate?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutCustomersInput
@@ -1025,6 +1063,7 @@ export type CustomerUncheckedCreateWithoutCalculationsInput = {
   notes?: string | null
   gdprConsent?: boolean
   gdprConsentAt?: Date | string | null
+  bookingConfirmationEmailTemplate?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutCustomerInput
@@ -1057,6 +1096,7 @@ export type CustomerUpdateWithoutCalculationsInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gdprConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gdprConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationEmailTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutCustomersNestedInput
@@ -1077,6 +1117,7 @@ export type CustomerUncheckedUpdateWithoutCalculationsInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gdprConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gdprConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationEmailTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   properties?: Prisma.PropertyUncheckedUpdateManyWithoutCustomerNestedInput
@@ -1094,6 +1135,7 @@ export type CustomerCreateManyTenantInput = {
   notes?: string | null
   gdprConsent?: boolean
   gdprConsentAt?: Date | string | null
+  bookingConfirmationEmailTemplate?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1108,6 +1150,7 @@ export type CustomerUpdateWithoutTenantInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gdprConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gdprConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationEmailTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneWithoutCustomerNestedInput
@@ -1127,6 +1170,7 @@ export type CustomerUncheckedUpdateWithoutTenantInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gdprConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gdprConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationEmailTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   properties?: Prisma.PropertyUncheckedUpdateManyWithoutCustomerNestedInput
@@ -1145,6 +1189,7 @@ export type CustomerUncheckedUpdateManyWithoutTenantInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gdprConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gdprConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationEmailTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1210,6 +1255,7 @@ export type CustomerSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   notes?: boolean
   gdprConsent?: boolean
   gdprConsentAt?: boolean
+  bookingConfirmationEmailTemplate?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
@@ -1232,6 +1278,7 @@ export type CustomerSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   notes?: boolean
   gdprConsent?: boolean
   gdprConsentAt?: boolean
+  bookingConfirmationEmailTemplate?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
@@ -1250,6 +1297,7 @@ export type CustomerSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   notes?: boolean
   gdprConsent?: boolean
   gdprConsentAt?: boolean
+  bookingConfirmationEmailTemplate?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
@@ -1268,11 +1316,12 @@ export type CustomerSelectScalar = {
   notes?: boolean
   gdprConsent?: boolean
   gdprConsentAt?: boolean
+  bookingConfirmationEmailTemplate?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type CustomerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "userId" | "firstName" | "lastName" | "email" | "phone" | "company" | "notes" | "gdprConsent" | "gdprConsentAt" | "createdAt" | "updatedAt", ExtArgs["result"]["customer"]>
+export type CustomerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "userId" | "firstName" | "lastName" | "email" | "phone" | "company" | "notes" | "gdprConsent" | "gdprConsentAt" | "bookingConfirmationEmailTemplate" | "createdAt" | "updatedAt", ExtArgs["result"]["customer"]>
 export type CustomerInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   user?: boolean | Prisma.Customer$userArgs<ExtArgs>
@@ -1311,6 +1360,10 @@ export type $CustomerPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     notes: string | null
     gdprConsent: boolean
     gdprConsentAt: Date | null
+    /**
+     * * Optionale eigene Buchungsbestätigung; null = Tenant-Standard aus Einstellungen
+     */
+    bookingConfirmationEmailTemplate: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["customer"]>
@@ -1752,6 +1805,7 @@ export interface CustomerFieldRefs {
   readonly notes: Prisma.FieldRef<"Customer", 'String'>
   readonly gdprConsent: Prisma.FieldRef<"Customer", 'Boolean'>
   readonly gdprConsentAt: Prisma.FieldRef<"Customer", 'DateTime'>
+  readonly bookingConfirmationEmailTemplate: Prisma.FieldRef<"Customer", 'String'>
   readonly createdAt: Prisma.FieldRef<"Customer", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Customer", 'DateTime'>
 }

@@ -1,19 +1,26 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
+import { getRoleHomePath } from "@/lib/permissions";
 import { Wrench } from "lucide-react";
 
+const DEFAULT_TENANT = process.env.NEXT_PUBLIC_DEFAULT_TENANT_SLUG ?? "demo";
+
 export default function LoginPage() {
-  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [tenantSlug, setTenantSlug] = useState(DEFAULT_TENANT);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const fromUrl = new URLSearchParams(window.location.search).get("tenant");
+    if (fromUrl) setTenantSlug(fromUrl);
+  }, []);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -24,7 +31,7 @@ export default function LoginPage() {
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password, tenantSlug: "demo" }),
+        body: JSON.stringify({ email, password, tenantSlug: tenantSlug.trim() || undefined }),
       });
 
       const data = await res.json();
@@ -34,13 +41,13 @@ export default function LoginPage() {
         return;
       }
 
-      // Beim ersten Login (Initialpasswort) direkt zur Passwortänderung führen.
-      if (data.data?.user?.mustChangePassword) {
-        router.push("/dashboard/profil?changePassword=1");
-        return;
-      }
+      const target = getRoleHomePath(data.data?.user?.role ?? "MONTEUR", {
+        mustChangePassword: data.data?.user?.mustChangePassword,
+      });
 
-      router.push("/dashboard");
+      // Volle Seitennavigation statt client router — vermeidet ChunkLoadError nach Login.
+      window.location.assign(target);
+      return;
     } catch {
       setError("Verbindungsfehler");
     } finally {
@@ -75,6 +82,13 @@ export default function LoginPage() {
             onChange={(e) => setPassword(e.target.value)}
             required
             autoComplete="current-password"
+          />
+          <Input
+            label="Betrieb (Kürzel)"
+            value={tenantSlug}
+            onChange={(e) => setTenantSlug(e.target.value)}
+            placeholder="demo"
+            autoComplete="organization"
           />
 
           {error && (

@@ -343,6 +343,11 @@ export function PhotoGallery({
                   loading="lazy"
                   className="h-full w-full object-cover transition group-hover:scale-105"
                 />
+              ) : isImage(file.mimeType) && !file.url ? (
+                <span className="flex h-full w-full flex-col items-center justify-center gap-1 p-1 text-amber-600">
+                  <AlertCircle className="h-5 w-5" />
+                  <span className="text-center text-[10px] leading-tight">Speicher nicht verfügbar</span>
+                </span>
               ) : (
                 <span className="flex h-full w-full flex-col items-center justify-center gap-1 p-1 text-slate-400">
                   <FileText className="h-6 w-6" />

@@ -42,6 +42,7 @@ export type OrderMinAggregateOutputType = {
   customerNotes: string | null
   scheduledStart: Date | null
   scheduledEnd: Date | null
+  bookingConfirmationSentAt: Date | null
   completedAt: Date | null
   invoicedAt: Date | null
   teamId: string | null
@@ -68,6 +69,7 @@ export type OrderMaxAggregateOutputType = {
   customerNotes: string | null
   scheduledStart: Date | null
   scheduledEnd: Date | null
+  bookingConfirmationSentAt: Date | null
   completedAt: Date | null
   invoicedAt: Date | null
   teamId: string | null
@@ -95,6 +97,7 @@ export type OrderCountAggregateOutputType = {
   questionAnswers: number
   scheduledStart: number
   scheduledEnd: number
+  bookingConfirmationSentAt: number
   completedAt: number
   invoicedAt: number
   teamId: number
@@ -123,6 +126,7 @@ export type OrderMinAggregateInputType = {
   customerNotes?: true
   scheduledStart?: true
   scheduledEnd?: true
+  bookingConfirmationSentAt?: true
   completedAt?: true
   invoicedAt?: true
   teamId?: true
@@ -149,6 +153,7 @@ export type OrderMaxAggregateInputType = {
   customerNotes?: true
   scheduledStart?: true
   scheduledEnd?: true
+  bookingConfirmationSentAt?: true
   completedAt?: true
   invoicedAt?: true
   teamId?: true
@@ -176,6 +181,7 @@ export type OrderCountAggregateInputType = {
   questionAnswers?: true
   scheduledStart?: true
   scheduledEnd?: true
+  bookingConfirmationSentAt?: true
   completedAt?: true
   invoicedAt?: true
   teamId?: true
@@ -276,6 +282,7 @@ export type OrderGroupByOutputType = {
   questionAnswers: runtime.JsonValue | null
   scheduledStart: Date | null
   scheduledEnd: Date | null
+  bookingConfirmationSentAt: Date | null
   completedAt: Date | null
   invoicedAt: Date | null
   teamId: string | null
@@ -324,6 +331,7 @@ export type OrderWhereInput = {
   questionAnswers?: Prisma.JsonNullableFilter<"Order">
   scheduledStart?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
   scheduledEnd?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
+  bookingConfirmationSentAt?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
   completedAt?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
   invoicedAt?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
   teamId?: Prisma.StringNullableFilter<"Order"> | string | null
@@ -372,6 +380,7 @@ export type OrderOrderByWithRelationInput = {
   questionAnswers?: Prisma.SortOrderInput | Prisma.SortOrder
   scheduledStart?: Prisma.SortOrderInput | Prisma.SortOrder
   scheduledEnd?: Prisma.SortOrderInput | Prisma.SortOrder
+  bookingConfirmationSentAt?: Prisma.SortOrderInput | Prisma.SortOrder
   completedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   invoicedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   teamId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -424,6 +433,7 @@ export type OrderWhereUniqueInput = Prisma.AtLeast<{
   questionAnswers?: Prisma.JsonNullableFilter<"Order">
   scheduledStart?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
   scheduledEnd?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
+  bookingConfirmationSentAt?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
   completedAt?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
   invoicedAt?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
   teamId?: Prisma.StringNullableFilter<"Order"> | string | null
@@ -472,6 +482,7 @@ export type OrderOrderByWithAggregationInput = {
   questionAnswers?: Prisma.SortOrderInput | Prisma.SortOrder
   scheduledStart?: Prisma.SortOrderInput | Prisma.SortOrder
   scheduledEnd?: Prisma.SortOrderInput | Prisma.SortOrder
+  bookingConfirmationSentAt?: Prisma.SortOrderInput | Prisma.SortOrder
   completedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   invoicedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   teamId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -505,6 +516,7 @@ export type OrderScalarWhereWithAggregatesInput = {
   questionAnswers?: Prisma.JsonNullableWithAggregatesFilter<"Order">
   scheduledStart?: Prisma.DateTimeNullableWithAggregatesFilter<"Order"> | Date | string | null
   scheduledEnd?: Prisma.DateTimeNullableWithAggregatesFilter<"Order"> | Date | string | null
+  bookingConfirmationSentAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Order"> | Date | string | null
   completedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Order"> | Date | string | null
   invoicedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Order"> | Date | string | null
   teamId?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
@@ -529,6 +541,7 @@ export type OrderCreateInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
+  bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
   createdAt?: Date | string
@@ -575,6 +588,7 @@ export type OrderUncheckedCreateInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
+  bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
   teamId?: string | null
@@ -615,6 +629,7 @@ export type OrderUpdateInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -661,6 +676,7 @@ export type OrderUncheckedUpdateInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -704,6 +720,7 @@ export type OrderCreateManyInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
+  bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
   teamId?: string | null
@@ -728,6 +745,7 @@ export type OrderUpdateManyMutationInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -753,6 +771,7 @@ export type OrderUncheckedUpdateManyInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -795,6 +814,7 @@ export type OrderCountOrderByAggregateInput = {
   questionAnswers?: Prisma.SortOrder
   scheduledStart?: Prisma.SortOrder
   scheduledEnd?: Prisma.SortOrder
+  bookingConfirmationSentAt?: Prisma.SortOrder
   completedAt?: Prisma.SortOrder
   invoicedAt?: Prisma.SortOrder
   teamId?: Prisma.SortOrder
@@ -821,6 +841,7 @@ export type OrderMaxOrderByAggregateInput = {
   customerNotes?: Prisma.SortOrder
   scheduledStart?: Prisma.SortOrder
   scheduledEnd?: Prisma.SortOrder
+  bookingConfirmationSentAt?: Prisma.SortOrder
   completedAt?: Prisma.SortOrder
   invoicedAt?: Prisma.SortOrder
   teamId?: Prisma.SortOrder
@@ -847,6 +868,7 @@ export type OrderMinOrderByAggregateInput = {
   customerNotes?: Prisma.SortOrder
   scheduledStart?: Prisma.SortOrder
   scheduledEnd?: Prisma.SortOrder
+  bookingConfirmationSentAt?: Prisma.SortOrder
   completedAt?: Prisma.SortOrder
   invoicedAt?: Prisma.SortOrder
   teamId?: Prisma.SortOrder
@@ -1347,6 +1369,7 @@ export type OrderCreateWithoutTenantInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
+  bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
   createdAt?: Date | string
@@ -1391,6 +1414,7 @@ export type OrderUncheckedCreateWithoutTenantInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
+  bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
   teamId?: string | null
@@ -1463,6 +1487,7 @@ export type OrderScalarWhereInput = {
   questionAnswers?: Prisma.JsonNullableFilter<"Order">
   scheduledStart?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
   scheduledEnd?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
+  bookingConfirmationSentAt?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
   completedAt?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
   invoicedAt?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
   teamId?: Prisma.StringNullableFilter<"Order"> | string | null
@@ -1487,6 +1512,7 @@ export type OrderCreateWithoutCustomerInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
+  bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
   createdAt?: Date | string
@@ -1531,6 +1557,7 @@ export type OrderUncheckedCreateWithoutCustomerInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
+  bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
   teamId?: string | null
@@ -1597,6 +1624,7 @@ export type OrderCreateWithoutPropertyInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
+  bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
   createdAt?: Date | string
@@ -1641,6 +1669,7 @@ export type OrderUncheckedCreateWithoutPropertyInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
+  bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
   teamId?: string | null
@@ -1707,6 +1736,7 @@ export type OrderCreateWithoutServicesInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
+  bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
   createdAt?: Date | string
@@ -1752,6 +1782,7 @@ export type OrderUncheckedCreateWithoutServicesInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
+  bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
   teamId?: string | null
@@ -1807,6 +1838,7 @@ export type OrderUpdateWithoutServicesInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1852,6 +1884,7 @@ export type OrderUncheckedUpdateWithoutServicesInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1891,6 +1924,7 @@ export type OrderCreateWithoutAppointmentsInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
+  bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
   createdAt?: Date | string
@@ -1936,6 +1970,7 @@ export type OrderUncheckedCreateWithoutAppointmentsInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
+  bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
   teamId?: string | null
@@ -1991,6 +2026,7 @@ export type OrderUpdateWithoutAppointmentsInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2036,6 +2072,7 @@ export type OrderUncheckedUpdateWithoutAppointmentsInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2075,6 +2112,7 @@ export type OrderCreateWithoutChecklistsInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
+  bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
   createdAt?: Date | string
@@ -2120,6 +2158,7 @@ export type OrderUncheckedCreateWithoutChecklistsInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
+  bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
   teamId?: string | null
@@ -2175,6 +2214,7 @@ export type OrderUpdateWithoutChecklistsInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2220,6 +2260,7 @@ export type OrderUncheckedUpdateWithoutChecklistsInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2259,6 +2300,7 @@ export type OrderCreateWithoutFilesInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
+  bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
   createdAt?: Date | string
@@ -2304,6 +2346,7 @@ export type OrderUncheckedCreateWithoutFilesInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
+  bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
   teamId?: string | null
@@ -2359,6 +2402,7 @@ export type OrderUpdateWithoutFilesInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2404,6 +2448,7 @@ export type OrderUncheckedUpdateWithoutFilesInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2443,6 +2488,7 @@ export type OrderCreateWithoutTimeEntriesInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
+  bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
   createdAt?: Date | string
@@ -2488,6 +2534,7 @@ export type OrderUncheckedCreateWithoutTimeEntriesInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
+  bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
   teamId?: string | null
@@ -2543,6 +2590,7 @@ export type OrderUpdateWithoutTimeEntriesInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2588,6 +2636,7 @@ export type OrderUncheckedUpdateWithoutTimeEntriesInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2627,6 +2676,7 @@ export type OrderCreateWithoutMaterialUsagesInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
+  bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
   createdAt?: Date | string
@@ -2672,6 +2722,7 @@ export type OrderUncheckedCreateWithoutMaterialUsagesInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
+  bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
   teamId?: string | null
@@ -2727,6 +2778,7 @@ export type OrderUpdateWithoutMaterialUsagesInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2772,6 +2824,7 @@ export type OrderUncheckedUpdateWithoutMaterialUsagesInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2811,6 +2864,7 @@ export type OrderCreateWithoutMessagesInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
+  bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
   createdAt?: Date | string
@@ -2856,6 +2910,7 @@ export type OrderUncheckedCreateWithoutMessagesInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
+  bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
   teamId?: string | null
@@ -2911,6 +2966,7 @@ export type OrderUpdateWithoutMessagesInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2956,6 +3012,7 @@ export type OrderUncheckedUpdateWithoutMessagesInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2995,6 +3052,7 @@ export type OrderCreateWithoutCalculationsInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
+  bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
   createdAt?: Date | string
@@ -3040,6 +3098,7 @@ export type OrderUncheckedCreateWithoutCalculationsInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
+  bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
   teamId?: string | null
@@ -3095,6 +3154,7 @@ export type OrderUpdateWithoutCalculationsInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3140,6 +3200,7 @@ export type OrderUncheckedUpdateWithoutCalculationsInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3179,6 +3240,7 @@ export type OrderCreateWithoutStockMovementsInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
+  bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
   createdAt?: Date | string
@@ -3224,6 +3286,7 @@ export type OrderUncheckedCreateWithoutStockMovementsInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
+  bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
   teamId?: string | null
@@ -3279,6 +3342,7 @@ export type OrderUpdateWithoutStockMovementsInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3324,6 +3388,7 @@ export type OrderUncheckedUpdateWithoutStockMovementsInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3363,6 +3428,7 @@ export type OrderCreateWithoutReservationsInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
+  bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
   createdAt?: Date | string
@@ -3408,6 +3474,7 @@ export type OrderUncheckedCreateWithoutReservationsInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
+  bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
   teamId?: string | null
@@ -3463,6 +3530,7 @@ export type OrderUpdateWithoutReservationsInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3508,6 +3576,7 @@ export type OrderUncheckedUpdateWithoutReservationsInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3547,6 +3616,7 @@ export type OrderCreateWithoutPhasesInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
+  bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
   createdAt?: Date | string
@@ -3592,6 +3662,7 @@ export type OrderUncheckedCreateWithoutPhasesInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
+  bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
   teamId?: string | null
@@ -3647,6 +3718,7 @@ export type OrderUpdateWithoutPhasesInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3692,6 +3764,7 @@ export type OrderUncheckedUpdateWithoutPhasesInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3731,6 +3804,7 @@ export type OrderCreateWithoutMaterialLinesInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
+  bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
   createdAt?: Date | string
@@ -3776,6 +3850,7 @@ export type OrderUncheckedCreateWithoutMaterialLinesInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
+  bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
   teamId?: string | null
@@ -3831,6 +3906,7 @@ export type OrderUpdateWithoutMaterialLinesInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3876,6 +3952,7 @@ export type OrderUncheckedUpdateWithoutMaterialLinesInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3915,6 +3992,7 @@ export type OrderCreateWithoutPurchaseOrdersInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
+  bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
   createdAt?: Date | string
@@ -3960,6 +4038,7 @@ export type OrderUncheckedCreateWithoutPurchaseOrdersInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
+  bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
   teamId?: string | null
@@ -4015,6 +4094,7 @@ export type OrderUpdateWithoutPurchaseOrdersInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4060,6 +4140,7 @@ export type OrderUncheckedUpdateWithoutPurchaseOrdersInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4099,6 +4180,7 @@ export type OrderCreateWithoutTeamInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
+  bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
   createdAt?: Date | string
@@ -4144,6 +4226,7 @@ export type OrderUncheckedCreateWithoutTeamInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
+  bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
   vehicleId?: string | null
@@ -4209,6 +4292,7 @@ export type OrderCreateWithoutVehicleInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
+  bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
   createdAt?: Date | string
@@ -4254,6 +4338,7 @@ export type OrderUncheckedCreateWithoutVehicleInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
+  bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
   teamId?: string | null
@@ -4319,6 +4404,7 @@ export type OrderCreateWithoutPlanMarkersInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
+  bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
   createdAt?: Date | string
@@ -4364,6 +4450,7 @@ export type OrderUncheckedCreateWithoutPlanMarkersInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
+  bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
   teamId?: string | null
@@ -4419,6 +4506,7 @@ export type OrderUpdateWithoutPlanMarkersInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4464,6 +4552,7 @@ export type OrderUncheckedUpdateWithoutPlanMarkersInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4503,6 +4592,7 @@ export type OrderCreateWithoutStaffRequestsInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
+  bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
   createdAt?: Date | string
@@ -4548,6 +4638,7 @@ export type OrderUncheckedCreateWithoutStaffRequestsInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
+  bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
   teamId?: string | null
@@ -4603,6 +4694,7 @@ export type OrderUpdateWithoutStaffRequestsInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4648,6 +4740,7 @@ export type OrderUncheckedUpdateWithoutStaffRequestsInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4687,6 +4780,7 @@ export type OrderCreateWithoutSharesInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
+  bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
   createdAt?: Date | string
@@ -4732,6 +4826,7 @@ export type OrderUncheckedCreateWithoutSharesInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
+  bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
   teamId?: string | null
@@ -4787,6 +4882,7 @@ export type OrderUpdateWithoutSharesInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4832,6 +4928,7 @@ export type OrderUncheckedUpdateWithoutSharesInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4873,6 +4970,7 @@ export type OrderCreateManyTenantInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
+  bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
   teamId?: string | null
@@ -4897,6 +4995,7 @@ export type OrderUpdateWithoutTenantInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4941,6 +5040,7 @@ export type OrderUncheckedUpdateWithoutTenantInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4983,6 +5083,7 @@ export type OrderUncheckedUpdateManyWithoutTenantInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5009,6 +5110,7 @@ export type OrderCreateManyCustomerInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
+  bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
   teamId?: string | null
@@ -5033,6 +5135,7 @@ export type OrderUpdateWithoutCustomerInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -5077,6 +5180,7 @@ export type OrderUncheckedUpdateWithoutCustomerInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5119,6 +5223,7 @@ export type OrderUncheckedUpdateManyWithoutCustomerInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5145,6 +5250,7 @@ export type OrderCreateManyPropertyInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
+  bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
   teamId?: string | null
@@ -5169,6 +5275,7 @@ export type OrderUpdateWithoutPropertyInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -5213,6 +5320,7 @@ export type OrderUncheckedUpdateWithoutPropertyInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5255,6 +5363,7 @@ export type OrderUncheckedUpdateManyWithoutPropertyInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5282,6 +5391,7 @@ export type OrderCreateManyTeamInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
+  bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
   vehicleId?: string | null
@@ -5305,6 +5415,7 @@ export type OrderUpdateWithoutTeamInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -5350,6 +5461,7 @@ export type OrderUncheckedUpdateWithoutTeamInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5392,6 +5504,7 @@ export type OrderUncheckedUpdateManyWithoutTeamInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5418,6 +5531,7 @@ export type OrderCreateManyVehicleInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Date | string | null
   scheduledEnd?: Date | string | null
+  bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
   teamId?: string | null
@@ -5441,6 +5555,7 @@ export type OrderUpdateWithoutVehicleInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -5486,6 +5601,7 @@ export type OrderUncheckedUpdateWithoutVehicleInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5528,6 +5644,7 @@ export type OrderUncheckedUpdateManyWithoutVehicleInput = {
   questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5720,6 +5837,7 @@ export type OrderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   questionAnswers?: boolean
   scheduledStart?: boolean
   scheduledEnd?: boolean
+  bookingConfirmationSentAt?: boolean
   completedAt?: boolean
   invoicedAt?: boolean
   teamId?: boolean
@@ -5769,6 +5887,7 @@ export type OrderSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   questionAnswers?: boolean
   scheduledStart?: boolean
   scheduledEnd?: boolean
+  bookingConfirmationSentAt?: boolean
   completedAt?: boolean
   invoicedAt?: boolean
   teamId?: boolean
@@ -5801,6 +5920,7 @@ export type OrderSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   questionAnswers?: boolean
   scheduledStart?: boolean
   scheduledEnd?: boolean
+  bookingConfirmationSentAt?: boolean
   completedAt?: boolean
   invoicedAt?: boolean
   teamId?: boolean
@@ -5833,6 +5953,7 @@ export type OrderSelectScalar = {
   questionAnswers?: boolean
   scheduledStart?: boolean
   scheduledEnd?: boolean
+  bookingConfirmationSentAt?: boolean
   completedAt?: boolean
   invoicedAt?: boolean
   teamId?: boolean
@@ -5841,7 +5962,7 @@ export type OrderSelectScalar = {
   updatedAt?: boolean
 }
 
-export type OrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "customerId" | "propertyId" | "orderNumber" | "title" | "orderType" | "status" | "priority" | "materialStatus" | "completionResult" | "customerConfirmationStatus" | "description" | "internalNotes" | "customerNotes" | "questionAnswers" | "scheduledStart" | "scheduledEnd" | "completedAt" | "invoicedAt" | "teamId" | "vehicleId" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
+export type OrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "customerId" | "propertyId" | "orderNumber" | "title" | "orderType" | "status" | "priority" | "materialStatus" | "completionResult" | "customerConfirmationStatus" | "description" | "internalNotes" | "customerNotes" | "questionAnswers" | "scheduledStart" | "scheduledEnd" | "bookingConfirmationSentAt" | "completedAt" | "invoicedAt" | "teamId" | "vehicleId" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
 export type OrderInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   customer?: boolean | Prisma.CustomerDefaultArgs<ExtArgs>
@@ -5925,6 +6046,7 @@ export type $OrderPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     questionAnswers: runtime.JsonValue | null
     scheduledStart: Date | null
     scheduledEnd: Date | null
+    bookingConfirmationSentAt: Date | null
     completedAt: Date | null
     invoicedAt: Date | null
     teamId: string | null
@@ -6393,6 +6515,7 @@ export interface OrderFieldRefs {
   readonly questionAnswers: Prisma.FieldRef<"Order", 'Json'>
   readonly scheduledStart: Prisma.FieldRef<"Order", 'DateTime'>
   readonly scheduledEnd: Prisma.FieldRef<"Order", 'DateTime'>
+  readonly bookingConfirmationSentAt: Prisma.FieldRef<"Order", 'DateTime'>
   readonly completedAt: Prisma.FieldRef<"Order", 'DateTime'>
   readonly invoicedAt: Prisma.FieldRef<"Order", 'DateTime'>
   readonly teamId: Prisma.FieldRef<"Order", 'String'>

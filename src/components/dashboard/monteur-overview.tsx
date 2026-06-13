@@ -85,7 +85,7 @@ export function MonteurDashboardOverview() {
       </div>
 
       <div className="grid gap-4 sm:grid-cols-3">
-        <Link href="/dashboard/termine">
+        <Link href="/monteur/tagesplan">
           <Card className="!p-4 hover:shadow-md transition-shadow h-full">
             <div className="flex items-start gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-lg text-[#0d5c63] bg-[#0d5c63]/10">
@@ -100,7 +100,7 @@ export function MonteurDashboardOverview() {
             </div>
           </Card>
         </Link>
-        <Link href="/dashboard/inventar">
+        <Link href="/monteur/material">
           <Card className="!p-4 hover:shadow-md transition-shadow h-full">
             <div className="flex items-start gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-lg text-orange-700 bg-orange-50">
@@ -115,7 +115,7 @@ export function MonteurDashboardOverview() {
             </div>
           </Card>
         </Link>
-        <Link href="/dashboard/stundenzettel">
+        <Link href="/monteur/stundenzettel">
           <Card className="!p-4 hover:shadow-md transition-shadow h-full">
             <div className="flex items-start gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-lg text-blue-700 bg-blue-50">
@@ -145,7 +145,7 @@ export function MonteurDashboardOverview() {
               return (
               <Link
                 key={apt.id}
-                href={`/dashboard/auftraege/${apt.order.id}`}
+                href={`/monteur/auftrag/${apt.order.id}`}
                 className="flex items-center justify-between py-3 hover:bg-slate-50 -mx-2 px-2 rounded-lg"
               >
                 <div className="flex items-start gap-3 min-w-0">
@@ -188,7 +188,7 @@ export function MonteurDashboardOverview() {
           </div>
         )}
         <div className="mt-4 pt-4 border-t border-slate-100">
-          <Link href="/monteur" className="text-sm text-[#0d5c63] hover:underline">
+          <Link href="/monteur/tagesplan" className="text-sm text-[#0d5c63] hover:underline">
             In der Feld-App starten (Navigation, Checkliste, Abschluss) →
           </Link>
         </div>

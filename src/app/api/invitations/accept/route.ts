@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { apiSuccess, apiError } from "@/lib/api";
 import { hashPassword, createSession, setSessionCookie } from "@/lib/auth";
+import { getRoleHomePath } from "@/lib/permissions";
 
 /** Lädt eine Einladung anhand des Tokens und prüft ihre Gültigkeit. */
 async function loadValidInvitation(token: string) {
@@ -90,6 +91,6 @@ export async function POST(request: NextRequest) {
   const sessionToken = await createSession(sessionUser);
   await setSessionCookie(sessionToken);
 
-  const redirectTo = invitation.role === "GAST" ? "/portal" : "/dashboard";
+  const redirectTo = getRoleHomePath(user.role);
   return apiSuccess({ user: sessionUser, redirectTo }, 201);
 }

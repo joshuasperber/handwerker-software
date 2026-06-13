@@ -38,6 +38,7 @@ interface CustomerDetail {
   phone: string | null;
   company: string | null;
   notes: string | null;
+  bookingConfirmationEmailTemplate: string | null;
   properties: Property[];
   orders: { id: string; orderNumber: string; status: string; createdAt: string }[];
 }
@@ -49,7 +50,15 @@ export default function KundeDetailPage() {
   const router = useRouter();
   const [customer, setCustomer] = useState<CustomerDetail | null>(null);
   const [zones, setZones] = useState<Zone[]>([]);
-  const [form, setForm] = useState({ firstName: "", lastName: "", email: "", phone: "", company: "", notes: "" });
+  const [form, setForm] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    company: "",
+    notes: "",
+    bookingConfirmationEmailTemplate: "",
+  });
   const [addingProperty, setAddingProperty] = useState(false);
   const [propertyForm, setPropertyForm] = useState({ ...EMPTY_PROP, label: "Weiterer Standort" });
   const [editPropId, setEditPropId] = useState<string | null>(null);
@@ -67,6 +76,7 @@ export default function KundeDetailPage() {
           phone: d.data.phone ?? "",
           company: d.data.company ?? "",
           notes: d.data.notes ?? "",
+          bookingConfirmationEmailTemplate: d.data.bookingConfirmationEmailTemplate ?? "",
         });
       }
     });
@@ -190,6 +200,15 @@ export default function KundeDetailPage() {
             <Input label="Telefon" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
             <Input label="Firma" value={form.company} onChange={(e) => setForm({ ...form, company: e.target.value })} />
             <Textarea label="Notizen" value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} rows={3} />
+            <Textarea
+              label="Eigene Buchungsbestätigung (optional)"
+              value={form.bookingConfirmationEmailTemplate}
+              onChange={(e) =>
+                setForm({ ...form, bookingConfirmationEmailTemplate: e.target.value })
+              }
+              rows={4}
+              placeholder="Leer = Firmenstandard aus Einstellungen · Platzhalter: {{kunde}}, {{datum}}, {{auftragsnummer}}, {{ort}}"
+            />
             <Button type="submit" size="sm">Speichern</Button>
           </form>
         </Card>
@@ -204,7 +223,8 @@ export default function KundeDetailPage() {
               <a href={mailtoHref}><Mail className="h-4 w-4 mr-1" /> E-Mail schreiben</a>
             </Button>
             <p className="text-xs text-slate-400 mt-2">
-              Es wird keine E-Mail automatisch versendet. Nachrichten an den Kunden erfolgen bewusst über diese Aktion.
+              Automatische E-Mails (Buchung, Erinnerung) gehen an diese Adresse. Vorlagen unter
+              Einstellungen → Benachrichtigungen; pro Kunde optional im Stammdaten-Formular.
             </p>
           </Card>
 

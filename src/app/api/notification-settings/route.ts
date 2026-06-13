@@ -12,6 +12,8 @@ export async function GET() {
 }
 
 const schema = z.object({
+  bookingConfirmationEnabled: z.boolean().optional(),
+  bookingConfirmationEmailTemplate: z.string().max(2000).optional().nullable(),
   appointmentReminderEnabled: z.boolean().optional(),
   appointmentReminderHoursBefore: z.number().int().min(1).max(336).optional(),
   remindCustomer: z.boolean().optional(),

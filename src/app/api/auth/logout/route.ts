@@ -1,12 +1,40 @@
-import { NextResponse } from "next/server";
-import { clearSessionCookie } from "@/lib/auth";
+import { NextRequest, NextResponse } from "next/server";
+import { COOKIE_NAME } from "@/lib/auth";
 
-export async function POST() {
-  await clearSessionCookie();
-  return NextResponse.redirect(new URL("/login", process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3003"));
+function loginRedirectUrl(request: NextRequest): URL {
+  const forwardedHost = request.headers.get("x-forwarded-host");
+  const forwardedProto = request.headers.get("x-forwarded-proto") ?? "https";
+
+  if (forwardedHost) {
+    return new URL("/login", `${forwardedProto}://${forwardedHost}`);
+  }
+
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL;
+  if (appUrl) {
+    return new URL("/login", appUrl);
+  }
+
+  return new URL("/login", request.url);
 }
 
-export async function GET() {
-  await clearSessionCookie();
-  return NextResponse.redirect(new URL("/login", process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3003"));
+async function handleLogout(request: NextRequest) {
+  // 303 statt 307: Nach Form-POST darf der Browser /login per GET laden.
+  // Bei 307 bleibt die Methode POST → /login antwortet mit 405 und leerer Seite.
+  const response = NextResponse.redirect(loginRedirectUrl(request), 303);
+  response.cookies.set(COOKIE_NAME, "", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    maxAge: 0,
+    path: "/",
+  });
+  return response;
+}
+
+export async function POST(request: NextRequest) {
+  return handleLogout(request);
+}
+
+export async function GET(request: NextRequest) {
+  return handleLogout(request);
 }

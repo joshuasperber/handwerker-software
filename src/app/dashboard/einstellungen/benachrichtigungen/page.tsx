@@ -11,9 +11,11 @@ import { InfoButton } from "@/components/ui/info-button";
 import { fetchJson } from "@/lib/fetch-json";
 import { saveJson } from "@/lib/save-toast";
 import { formatDateTime } from "@/lib/utils";
-import { Bell, Clock, Receipt, PackageSearch, Play, ScrollText } from "lucide-react";
+import { Bell, Clock, Receipt, PackageSearch, Play, ScrollText, Mail } from "lucide-react";
 
 interface Settings {
+  bookingConfirmationEnabled: boolean;
+  bookingConfirmationEmailTemplate: string;
   appointmentReminderEnabled: boolean;
   appointmentReminderHoursBefore: number;
   remindCustomer: boolean;
@@ -29,6 +31,14 @@ interface Settings {
   dunningEmailTemplate: string;
 }
 
+function hoursToDaysLabel(hours: number): string {
+  if (hours % 24 === 0 && hours >= 24) {
+    const days = hours / 24;
+    return days === 1 ? "1 Tag vorher" : `${days} Tage vorher`;
+  }
+  return `${hours} Stunden vorher`;
+}
+
 interface LogEntry {
   id: string;
   type: string;
@@ -39,6 +49,8 @@ interface LogEntry {
 }
 
 const EMPTY: Settings = {
+  bookingConfirmationEnabled: true,
+  bookingConfirmationEmailTemplate: "",
   appointmentReminderEnabled: true,
   appointmentReminderHoursBefore: 24,
   remindCustomer: true,
@@ -95,6 +107,7 @@ export default function BenachrichtigungenPage() {
           setForm({
             ...EMPTY,
             ...d,
+            bookingConfirmationEmailTemplate: d.bookingConfirmationEmailTemplate ?? "",
             reminderEmailTemplate: d.reminderEmailTemplate ?? "",
             dunningEmailTemplate: d.dunningEmailTemplate ?? "",
           });
@@ -145,17 +158,57 @@ export default function BenachrichtigungenPage() {
         Benachrichtigungen &amp; Automatisierung
         <InfoButton title="Wie funktioniert das?">
           <p>
-            Hier steuern Sie die automatischen Benachrichtigungen. Geplante Läufe
-            werden täglich vom Server ausgeführt (Vercel Cron). Mit dem Button
-            &quot;Jetzt ausführen&quot; können Sie einen Lauf jederzeit manuell anstoßen.
+            Hier steuern Sie automatische Kunden-E-Mails. Die Empfänger-Adresse wird
+            immer aus dem Kundenprofil gelesen. Geplante Erinnerungen laufen täglich
+            über den Server (Vercel Cron). Pro Kunde kann die Buchungsbestätigung im
+            Kundenprofil individuell überschrieben werden.
           </p>
         </InfoButton>
       </h1>
 
       <Card className="mb-5">
         <h2 className="font-semibold text-slate-900 flex items-center gap-2 mb-1">
-          <Clock className="h-5 w-5 text-[#0d5c63]" /> Terminerinnerungen
+          <Mail className="h-5 w-5 text-[#0d5c63]" /> Buchungsbestätigung (sofort)
         </h2>
+        <p className="text-xs text-slate-500 mb-3">
+          Wird direkt nach der Terminbuchung (Widget oder erster Termin im Büro) an die
+          E-Mail-Adresse aus dem Kundenprofil gesendet — einmal pro Auftrag.
+        </p>
+        <div className="divide-y divide-slate-100">
+          <Row label="Buchungsbestätigung aktiv">
+            <Switch
+              checked={form.bookingConfirmationEnabled}
+              onCheckedChange={(v) => set("bookingConfirmationEnabled", v)}
+            />
+          </Row>
+        </div>
+        <div className="mt-3">
+          <Label className="text-xs flex items-center gap-1">
+            E-Mail-Vorlage (optional)
+            <InfoButton title="Platzhalter">
+              <p>
+                Verfügbare Platzhalter: {"{{kunde}}"}, {"{{datum}}"}, {"{{auftragsnummer}}"},
+                {" {{ort}}"}. Leer = Standardtext.
+              </p>
+            </InfoButton>
+          </Label>
+          <Textarea
+            rows={4}
+            value={form.bookingConfirmationEmailTemplate}
+            onChange={(e) => set("bookingConfirmationEmailTemplate", e.target.value)}
+            placeholder={"Sehr geehrte/r {{kunde}},\n\nvielen Dank für Ihre Buchung. Ihr Termin ist am {{datum}}.\n\nAuftragsnummer: {{auftragsnummer}}\n{{ort}}"}
+          />
+        </div>
+      </Card>
+
+      <Card className="mb-5">
+        <h2 className="font-semibold text-slate-900 flex items-center gap-2 mb-1">
+          <Clock className="h-5 w-5 text-[#0d5c63]" /> Terminerinnerung (vor Termin)
+        </h2>
+        <p className="text-xs text-slate-500 mb-3">
+          Zweite automatische E-Mail an den Kunden — standardmäßig 24 Stunden (= 1 Tag)
+          vor Terminbeginn.
+        </p>
         <div className="divide-y divide-slate-100">
           <Row label="Terminerinnerungen aktiv">
             <Switch
@@ -163,15 +216,38 @@ export default function BenachrichtigungenPage() {
               onCheckedChange={(v) => set("appointmentReminderEnabled", v)}
             />
           </Row>
-          <Row label="Vorlaufzeit" hint="Stunden vor Terminbeginn">
-            <Input
-              type="number"
-              min={1}
-              max={336}
-              value={form.appointmentReminderHoursBefore}
-              onChange={(e) => set("appointmentReminderHoursBefore", Number(e.target.value))}
-              className="h-9 w-24"
-            />
+          <Row
+            label="Vorlaufzeit"
+            hint={`${hoursToDaysLabel(form.appointmentReminderHoursBefore)} · E-Mail aus Kundenprofil`}
+          >
+            <div className="flex items-center gap-2">
+              <Button
+                type="button"
+                variant={form.appointmentReminderHoursBefore === 24 ? "default" : "outline"}
+                size="sm"
+                onClick={() => set("appointmentReminderHoursBefore", 24)}
+              >
+                1 Tag
+              </Button>
+              <Button
+                type="button"
+                variant={form.appointmentReminderHoursBefore === 48 ? "default" : "outline"}
+                size="sm"
+                onClick={() => set("appointmentReminderHoursBefore", 48)}
+              >
+                2 Tage
+              </Button>
+              <Input
+                type="number"
+                min={1}
+                max={336}
+                value={form.appointmentReminderHoursBefore}
+                onChange={(e) => set("appointmentReminderHoursBefore", Number(e.target.value))}
+                className="h-9 w-20"
+                title="Stunden vor Termin"
+              />
+              <span className="text-xs text-slate-500">Std.</span>
+            </div>
           </Row>
           <Row label="Kunde erinnern" hint="per E-Mail">
             <Switch checked={form.remindCustomer} onCheckedChange={(v) => set("remindCustomer", v)} />

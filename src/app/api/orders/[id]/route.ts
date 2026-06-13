@@ -5,6 +5,7 @@ import { auditOrderStatusChange, auditEntityChange } from "@/lib/audit";
 import { notifyStatusChange } from "@/lib/notifications";
 import { syncTeamAppointmentsForOrder } from "@/lib/team-appointments";
 import { ensureOrderPhases } from "@/lib/orders/phases";
+import { hasPermission } from "@/lib/permissions";
 
 export async function GET(
   _request: NextRequest,
@@ -21,8 +22,10 @@ export async function GET(
   });
   if (!existing) return apiError("Auftrag nicht gefunden", 404);
 
-  // Bestehende Aufträge ohne Phasen automatisch mit Standardphasen versorgen.
-  await ensureOrderPhases(id);
+  // Phasen nur bei Schreibzugriff nachziehen (GET soll nicht mutieren).
+  if (hasPermission(auth.role, "orders.write")) {
+    await ensureOrderPhases(id);
+  }
 
   const order = await prisma.order.findFirst({
     where: { id, tenantId: auth.tenantId },

@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { SessionProvider } from "@/components/auth/can-access";
 import { DashboardShell } from "@/components/dashboard/dashboard-shell";
 import { getSession } from "@/lib/auth";
-import { canAccessDashboard, canAccessMonteurApp, getDashboardNavItems } from "@/lib/permissions";
+import { canAccessDashboard, canAccessMonteurApp, getDashboardNavItems, getRoleHomePath } from "@/lib/permissions";
 import { ROLE_LABELS } from "@/lib/utils";
 
 export default async function DashboardLayout({
@@ -13,7 +13,8 @@ export default async function DashboardLayout({
   const session = await getSession();
   if (!session) redirect("/login");
   if (session.role === "GAST") redirect("/portal");
-  if (!canAccessDashboard(session.role)) redirect("/monteur");
+  if (session.role === "KUNDE") redirect("/kunde");
+  if (!canAccessDashboard(session.role)) redirect(getRoleHomePath(session.role));
 
   const navItems = getDashboardNavItems(session.role);
 

@@ -15,6 +15,7 @@ interface Message {
   status: string;
   senderId: string | null;
   recipientUserId: string | null;
+  recipient: string | null;
   readAt: string | null;
   createdAt: string;
   sender: { firstName: string; lastName: string } | null;
@@ -45,14 +46,15 @@ function StatusBadge({ message, mineId }: { message: Message; mineId: string }) 
     );
   }
 
-  // Eingehend
-  return message.readAt ? (
-    <span className="text-xs bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full">Gelesen</span>
-  ) : (
-    <span className="text-xs bg-[#0d5c63]/10 text-[#0d5c63] px-2 py-0.5 rounded-full inline-flex items-center gap-1">
-      <Mail className="h-3 w-3" /> Neu
-    </span>
-  );
+  if (!outgoing) {
+    return message.readAt || !message.recipientUserId ? (
+      <span className="text-xs bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full">Gelesen</span>
+    ) : (
+      <span className="text-xs bg-[#0d5c63]/10 text-[#0d5c63] px-2 py-0.5 rounded-full inline-flex items-center gap-1">
+        <Mail className="h-3 w-3" /> Neu
+      </span>
+    );
+  }
 }
 
 export function MessageList({
@@ -88,7 +90,11 @@ export function MessageList({
         {messages.map((m) => {
           const outgoing = m.senderId === session.id;
           const counterpart = outgoing
-            ? m.recipientUser ? `An ${m.recipientUser.firstName} ${m.recipientUser.lastName}` : "Gesendet"
+            ? m.recipientUser
+              ? `An ${m.recipientUser.firstName} ${m.recipientUser.lastName}`
+              : m.recipient === "BUERO"
+                ? "An Büro"
+                : "Gesendet"
             : m.sender ? `Von ${m.sender.firstName} ${m.sender.lastName}` : "System";
           const Icon = m.category === "SHARE" ? Share2 : m.category === "MATERIAL_REQUEST" ? Package : MessageSquare;
           return (

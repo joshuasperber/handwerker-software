@@ -8,7 +8,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { CanAccess, usePermission } from "@/components/auth/can-access";
 import { formatDateTime } from "@/lib/utils";
 import { fetchJson } from "@/lib/fetch-json";
-import { Package, MessageSquare, CheckCircle } from "lucide-react";
+import { Package, MessageSquare, CheckCircle, Send } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { ROLE_LABELS } from "@/lib/utils";
 
 interface Message {
   id: string;
@@ -28,13 +30,27 @@ interface OrderOption {
   label: string;
 }
 
-export function MessagesInbox({ compact = false }: { compact?: boolean }) {
+export function MessagesInbox({
+  compact = false,
+  ordersApiUrl = "/api/orders",
+  showDirectCompose = false,
+}: {
+  compact?: boolean;
+  ordersApiUrl?: string;
+  showDirectCompose?: boolean;
+}) {
   const canResolve = usePermission("orders.write");
+  const canReadOrders = usePermission("orders.read");
+  const orderHref = (orderId: string) =>
+    canReadOrders ? `/dashboard/auftraege/${orderId}` : `/monteur/auftrag/${orderId}`;
   const [messages, setMessages] = useState<Message[]>([]);
   const [filter, setFilter] = useState<"all" | "MATERIAL_REQUEST" | "GENERAL">("all");
   const [orders, setOrders] = useState<OrderOption[]>([]);
   const [form, setForm] = useState({ orderId: "", body: "" });
+  const [directForm, setDirectForm] = useState({ recipientUserId: "", subject: "", body: "", orderId: "" });
+  const [recipients, setRecipients] = useState<{ id: string; firstName: string; lastName: string; role: string }[]>([]);
   const [sending, setSending] = useState(false);
+  const [directSending, setDirectSending] = useState(false);
   const [msg, setMsg] = useState("");
   const [loadError, setLoadError] = useState("");
 
@@ -53,7 +69,7 @@ export function MessagesInbox({ compact = false }: { compact?: boolean }) {
   useEffect(() => { load(); }, [filter]);
 
   useEffect(() => {
-    fetchJson<{ id: string; orderNumber: string; customer: { lastName: string } }[]>("/api/orders")
+    fetchJson<{ id: string; orderNumber: string; customer: { lastName: string } }[]>(ordersApiUrl)
       .then((d) => {
         if (d.success && d.data) {
           setOrders(
@@ -65,7 +81,41 @@ export function MessagesInbox({ compact = false }: { compact?: boolean }) {
           );
         }
       });
-  }, []);
+  }, [ordersApiUrl]);
+
+  useEffect(() => {
+    if (!showDirectCompose) return;
+    fetchJson<typeof recipients>("/api/monteur/message-recipients").then((d) => {
+      if (d.success && d.data) setRecipients(d.data);
+    });
+  }, [showDirectCompose]);
+
+  async function submitDirectMessage(e: React.FormEvent) {
+    e.preventDefault();
+    if (!directForm.recipientUserId || !directForm.body.trim()) return;
+    setDirectSending(true);
+    setMsg("");
+    const res = await fetch("/api/messages", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        recipientUserId: directForm.recipientUserId,
+        subject: directForm.subject.trim() || undefined,
+        body: directForm.body.trim(),
+        orderId: directForm.orderId || undefined,
+        category: "DIRECT",
+      }),
+    });
+    const data = await res.json();
+    setDirectSending(false);
+    if (data.success) {
+      setDirectForm({ recipientUserId: "", subject: "", body: "", orderId: "" });
+      setMsg("Nachricht an Büro gesendet.");
+      load();
+    } else {
+      setMsg(data.error ?? "Senden fehlgeschlagen");
+    }
+  }
 
   async function submitMaterialRequest(e: React.FormEvent) {
     e.preventDefault();
@@ -115,9 +165,64 @@ export function MessagesInbox({ compact = false }: { compact?: boolean }) {
     <div className={compact ? "space-y-4" : ""}>
       {!compact && <h1 className="text-2xl font-bold text-slate-900 mb-6">Nachrichten</h1>}
 
+      {showDirectCompose && (
+        <Card title="Nachricht an Büro" className="mb-6">
+          <p className="text-sm text-slate-600 mb-3">
+            Direktnachricht an Admin, Büro oder Meister – erscheint im Posteingang des Empfängers.
+          </p>
+          <form onSubmit={submitDirectMessage} className="space-y-3">
+            <div>
+              <label className="text-sm font-medium">Empfänger *</label>
+              <select
+                className="w-full mt-1 h-10 rounded-lg border border-slate-300 px-3 text-sm"
+                value={directForm.recipientUserId}
+                onChange={(e) => setDirectForm({ ...directForm, recipientUserId: e.target.value })}
+                required
+              >
+                <option value="">— Person auswählen —</option>
+                {recipients.map((u) => (
+                  <option key={u.id} value={u.id}>
+                    {u.firstName} {u.lastName} · {ROLE_LABELS[u.role] ?? u.role}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="text-sm font-medium">Auftrag (optional)</label>
+              <select
+                className="w-full mt-1 h-10 rounded-lg border border-slate-300 px-3 text-sm"
+                value={directForm.orderId}
+                onChange={(e) => setDirectForm({ ...directForm, orderId: e.target.value })}
+              >
+                <option value="">— Kein Auftrag —</option>
+                {orders.map((o) => (
+                  <option key={o.id} value={o.id}>{o.label}</option>
+                ))}
+              </select>
+            </div>
+            <Input
+              label="Betreff (optional)"
+              value={directForm.subject}
+              onChange={(e) => setDirectForm({ ...directForm, subject: e.target.value })}
+            />
+            <Textarea
+              label="Nachricht *"
+              rows={3}
+              value={directForm.body}
+              onChange={(e) => setDirectForm({ ...directForm, body: e.target.value })}
+              required
+            />
+            <Button type="submit" variant="action" disabled={directSending}>
+              <Send className="h-4 w-4 mr-1" />
+              {directSending ? "Senden..." : "Nachricht senden"}
+            </Button>
+          </form>
+        </Card>
+      )}
+
       <Card title="Material melden" className="mb-6">
         <p className="text-sm text-slate-600 mb-3">
-          Fehlende Teile oder Material melden – geht als Bestellanfrage an Büro/Chef (erscheint unter Material).
+          Fehlende Teile oder Material melden – geht als Bestellanfrage an Büro/Chef (erscheint im Posteingang und unter Material).
         </p>
         <form onSubmit={submitMaterialRequest} className="space-y-3">
           <div>
@@ -196,7 +301,7 @@ export function MessagesInbox({ compact = false }: { compact?: boolean }) {
                     {m.order && (
                       <>
                         {" · "}
-                        <Link href={`/dashboard/auftraege/${m.order.id ?? ""}`} className="text-[#0d5c63] hover:underline">
+                        <Link href={orderHref(m.order.id ?? "")} className="text-[#0d5c63] hover:underline">
                           {m.order.orderNumber}
                         </Link>
                       </>
@@ -212,7 +317,7 @@ export function MessagesInbox({ compact = false }: { compact?: boolean }) {
                   )}
                 </CanAccess>
               </div>
-              {canResolve && m.category === "MATERIAL_REQUEST" && m.status === "OPEN" && (
+              {canResolve && m.category === "MATERIAL_REQUEST" && m.status === "OPEN" && canReadOrders && (
                 <Link href="/dashboard/einkauf" className="text-xs text-[#0d5c63] hover:underline mt-2 inline-block">
                   → Zum Einkauf / Bestellung
                 </Link>

@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAuth, apiSuccess, apiError } from "@/lib/api";
+import { requireTenantOrder } from "@/lib/tenant-scope";
 
 export async function POST(
   request: NextRequest,
@@ -10,6 +11,9 @@ export async function POST(
   if (auth instanceof Response) return auth;
 
   const { id: orderId } = await params;
+  const order = await requireTenantOrder(auth.tenantId, orderId);
+  if (!order) return apiError("Auftrag nicht gefunden", 404);
+
   const body = await request.json();
 
   const employee = await prisma.employee.findFirst({

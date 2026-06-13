@@ -48,6 +48,9 @@ export async function PATCH(
       ...(body.phone !== undefined ? { phone: body.phone } : {}),
       ...(body.company !== undefined ? { company: body.company } : {}),
       ...(body.notes !== undefined ? { notes: body.notes } : {}),
+      ...(body.bookingConfirmationEmailTemplate !== undefined
+        ? { bookingConfirmationEmailTemplate: body.bookingConfirmationEmailTemplate || null }
+        : {}),
     },
     include: { properties: true },
   });

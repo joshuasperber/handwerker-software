@@ -24,11 +24,19 @@ import { toast } from "sonner";
 
 const STATUS_FLOW = ORDER_STATUS_FLOW;
 
+const CONFIRMATION_LABELS: Record<string, string> = {
+  OFFEN: "Kunde offen",
+  BESTAETIGT: "Kunde bestätigt",
+  ABGESAGT: "Kunde abgesagt",
+  NICHT_ERREICHBAR: "Nicht erreichbar",
+};
+
 interface OrderDetail {
   id: string;
   orderNumber: string;
   status: string;
   priority: string;
+  customerConfirmationStatus?: string;
   description: string | null;
   internalNotes: string | null;
   scheduledStart: string | null;
@@ -172,6 +180,19 @@ export default function AuftragDetailPage() {
       `/api/orders/${id}`,
       { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ status }) },
       { success: "Status aktualisiert" }
+    );
+    loadOrder();
+  }
+
+  async function updateConfirmation(customerConfirmationStatus: string) {
+    await saveJson(
+      `/api/orders/${id}`,
+      {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ customerConfirmationStatus }),
+      },
+      { success: "Kundenbestätigung aktualisiert" }
     );
     loadOrder();
   }
@@ -343,8 +364,15 @@ export default function AuftragDetailPage() {
     const fd = new FormData();
     fd.append("file", file);
     fd.append("category", "PLAN");
-    await fetch(`/api/orders/${id}/files`, { method: "POST", body: fd });
-    loadOrder();
+    const res = await fetch(`/api/orders/${id}/files`, { method: "POST", body: fd });
+    const data = await res.json();
+    if (data.success) {
+      toast.success("Plan hochgeladen");
+      loadOrder();
+    } else {
+      toast.error(data.error ?? "Upload fehlgeschlagen");
+    }
+    e.target.value = "";
   }
 
   if (!order) return <div className="text-slate-500">Laden...</div>;
@@ -422,6 +450,16 @@ export default function AuftragDetailPage() {
             >
               {STATUS_FLOW.map((s) => (
                 <option key={s} value={s}>{ORDER_STATUS_LABELS[s]}</option>
+              ))}
+            </select>
+            <select
+              value={order.customerConfirmationStatus ?? "OFFEN"}
+              onChange={(e) => updateConfirmation(e.target.value)}
+              className="h-10 rounded-lg border border-slate-300 px-3 text-sm"
+              title="Kundenbestätigung für Terminerinnerungen"
+            >
+              {Object.entries(CONFIRMATION_LABELS).map(([k, v]) => (
+                <option key={k} value={k}>{v}</option>
               ))}
             </select>
           </CanAccess>

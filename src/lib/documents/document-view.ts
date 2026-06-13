@@ -16,6 +16,7 @@ export interface DocumentListItem {
   customerName: string;
   title: string | null;
   calculationId: string;
+  orderId: string | null;
   sentAt: string | null;
   canceledAt: string | null;
   cancelOfId: string | null;
@@ -43,6 +44,7 @@ interface RawDoc {
   calculation: {
     id: string;
     title: string | null;
+    orderId: string | null;
     customer: { firstName: string; lastName: string } | null;
   };
 }
@@ -87,6 +89,7 @@ export function toDocumentListItem(doc: RawDoc, now = new Date()): DocumentListI
     customerName,
     title: doc.calculation.title,
     calculationId: doc.calculation.id,
+    orderId: doc.calculation.orderId,
     sentAt: doc.sentAt?.toISOString() ?? null,
     canceledAt: doc.canceledAt?.toISOString() ?? null,
     cancelOfId: doc.cancelOfId,

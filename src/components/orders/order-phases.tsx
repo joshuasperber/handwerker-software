@@ -58,6 +58,10 @@ interface OrderPhasesProps {
   filesBaseUrl?: string;
   /** Dürfen Fotos zu Phasen hochgeladen/gelöscht werden? */
   canManageFiles?: boolean;
+  /** Basis-URL der Phasen-API (PATCH/POST). */
+  phasesApiBase?: string;
+  /** Phasen anlegen/löschen/sortieren — Monteur nur Status/Notizen. */
+  allowStructureEdit?: boolean;
 }
 
 function toLocalInput(value: string | null): string {
@@ -74,7 +78,10 @@ export function OrderPhases({
   onChanged,
   filesBaseUrl = `/api/orders/${orderId}/files`,
   canManageFiles = canEdit,
+  phasesApiBase,
+  allowStructureEdit = canEdit,
 }: OrderPhasesProps) {
+  const phasesUrl = phasesApiBase ?? `/api/orders/${orderId}/phases`;
   const [showDisabled, setShowDisabled] = useState(false);
   const [busyId, setBusyId] = useState<string | null>(null);
   const [adding, setAdding] = useState(false);
@@ -86,7 +93,7 @@ export function OrderPhases({
 
   async function patchPhase(phaseId: string, data: Record<string, unknown>) {
     setBusyId(phaseId);
-    const res = await fetch(`/api/orders/${orderId}/phases/${phaseId}`, {
+    const res = await fetch(`${phasesUrl}/${phaseId}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
@@ -101,7 +108,7 @@ export function OrderPhases({
 
   async function deletePhase(phaseId: string) {
     setBusyId(phaseId);
-    const res = await fetch(`/api/orders/${orderId}/phases/${phaseId}`, {
+    const res = await fetch(`${phasesUrl}/${phaseId}`, {
       method: "DELETE",
     });
     setBusyId(null);
@@ -114,7 +121,7 @@ export function OrderPhases({
   }
 
   async function reorder(list: OrderPhaseData[]) {
-    const res = await fetch(`/api/orders/${orderId}/phases`, {
+    const res = await fetch(phasesUrl, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ order: list.map((p) => p.id) }),
@@ -136,7 +143,7 @@ export function OrderPhases({
     const name = newName.trim();
     if (!name) return;
     setAdding(true);
-    const res = await fetch(`/api/orders/${orderId}/phases`, {
+    const res = await fetch(phasesUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name }),
@@ -151,7 +158,7 @@ export function OrderPhases({
   }
 
   async function resetDefaults() {
-    const res = await fetch(`/api/orders/${orderId}/phases`, {
+    const res = await fetch(phasesUrl, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ action: "resetDefaults" }),
@@ -164,7 +171,7 @@ export function OrderPhases({
     <Card
       title="Phasen"
       action={
-        canEdit && phases.length === 0 ? (
+        allowStructureEdit && canEdit && phases.length === 0 ? (
           <Button size="sm" variant="outline" onClick={resetDefaults}>
             <RotateCcw className="h-4 w-4 mr-1" /> Standardphasen anlegen
           </Button>
@@ -173,7 +180,7 @@ export function OrderPhases({
     >
       <PhaseStepper phases={enabled} />
 
-      {canEdit && (
+      {allowStructureEdit && canEdit && (
         <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
           <label className="flex items-center gap-2 text-xs text-slate-500">
             <Switch
@@ -197,6 +204,7 @@ export function OrderPhases({
               teams={teams}
               employees={employees}
               canEdit={canEdit}
+              allowStructureEdit={allowStructureEdit}
               busy={busyId === phase.id}
               isFirst={sorted[0]?.id === phase.id}
               isLast={sorted[sorted.length - 1]?.id === phase.id}
@@ -217,7 +225,7 @@ export function OrderPhases({
         <p className="text-sm text-slate-500 py-2">Keine Phasen vorhanden.</p>
       )}
 
-      {canEdit && (
+      {allowStructureEdit && canEdit && (
         <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-slate-100 pt-4">
           <input
             type="text"
@@ -291,6 +299,7 @@ interface PhaseRowProps {
   teams: { id: string; name: string }[];
   employees: { id: string; user: { firstName: string; lastName: string } }[];
   canEdit: boolean;
+  allowStructureEdit: boolean;
   busy: boolean;
   isFirst: boolean;
   isLast: boolean;
@@ -310,6 +319,7 @@ function PhaseRow({
   teams,
   employees,
   canEdit,
+  allowStructureEdit,
   busy,
   isFirst,
   isLast,
@@ -339,6 +349,10 @@ function PhaseRow({
     end !== toLocalInput(phase.plannedEnd);
 
   function saveDetails() {
+    if (!allowStructureEdit) {
+      onPatch({ notes, specialNotes: special });
+      return;
+    }
     onPatch({
       notes,
       specialNotes: special,
@@ -412,6 +426,7 @@ function PhaseRow({
                   ))}
                 </select>
               </div>
+              {allowStructureEdit && (
               <label className="flex items-center gap-2 text-sm text-slate-600 mt-4 sm:mt-5">
                 <Switch
                   checked={phase.isEnabled}
@@ -420,6 +435,8 @@ function PhaseRow({
                 />
                 Phase aktiv
               </label>
+              )}
+              {allowStructureEdit && (
               <div className="flex items-center gap-1 mt-4 sm:mt-5">
                 <Button size="sm" variant="ghost" onClick={onMoveUp} disabled={isFirst || busy} title="Nach oben">
                   <ChevronUp className="h-4 w-4" />
@@ -438,9 +455,12 @@ function PhaseRow({
                   <Trash2 className="h-4 w-4" />
                 </Button>
               </div>
+              )}
             </div>
 
-            <div className="grid gap-3 sm:grid-cols-2">
+            <div className={`grid gap-3 ${allowStructureEdit ? "sm:grid-cols-2" : ""}`}>
+              {allowStructureEdit && (
+              <>
               <div>
                 <label className="block text-xs text-slate-500 mb-1">Zuständiges Team</label>
                 <select
@@ -469,6 +489,10 @@ function PhaseRow({
                   ))}
                 </select>
               </div>
+              </>
+              )}
+              {allowStructureEdit && (
+              <>
               <div>
                 <label className="block text-xs text-slate-500 mb-1">Termin von</label>
                 <input
@@ -487,6 +511,8 @@ function PhaseRow({
                   className="w-full h-9 rounded-lg border border-slate-300 px-2 text-sm"
                 />
               </div>
+              </>
+              )}
             </div>
 
             <div>

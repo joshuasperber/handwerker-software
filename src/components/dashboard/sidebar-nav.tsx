@@ -13,6 +13,11 @@ import {
   ShoppingCart,
   Truck,
   Cog,
+  Receipt,
+  Clock,
+  Settings,
+  User,
+  Bell,
   type LucideIcon,
 } from "lucide-react";
 import { DashboardNavLink } from "@/components/dashboard/nav-link";
@@ -25,6 +30,11 @@ const NAV_ICONS: Record<string, LucideIcon> = {
   "/dashboard/einkauf": ShoppingCart,
   "/dashboard/disposition": Truck,
   "/dashboard/kalkulation": Calculator,
+  "/dashboard/rechnungen": Receipt,
+  "/dashboard/stundenzettel": Clock,
+  "/dashboard/einstellungen/rechnung": Settings,
+  "/dashboard/einstellungen/benachrichtigungen": Bell,
+  "/dashboard/profil": User,
   "/dashboard/kunden": Users,
   "/dashboard/mitarbeiter": UserCircle,
   "/dashboard/leistungen": Wrench,

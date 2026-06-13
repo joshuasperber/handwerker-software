@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { requireAuth, apiSuccess, apiError } from "@/lib/api";
-import { notifyNewMessage } from "@/lib/notifications";
+import { notifyNewMessage, createInAppNotification } from "@/lib/notifications";
 import type { Prisma } from "@/generated/prisma/client";
 
 export async function GET(request: Request) {
@@ -19,11 +19,35 @@ export async function GET(request: Request) {
       tenantId: auth.tenantId,
       ...(orderId ? { orderId } : {}),
       ...(category ? { category } : {}),
-      ...(box === "inbox" ? { recipientUserId: auth.id } : {}),
-      ...(box === "sent" ? { senderId: auth.id } : {}),
-      // Gäste sehen ausschließlich Nachrichten, die sie betreffen (Datenschutz).
       ...(isGuest ? { OR: [{ recipientUserId: auth.id }, { senderId: auth.id }] } : {}),
     };
+
+    const officeRoles = ["ADMIN", "BUERO", "MEISTER"];
+
+    if (box === "inbox" && !isGuest) {
+      if (officeRoles.includes(auth.role)) {
+        where.OR = [
+          { recipientUserId: auth.id },
+          { recipientUserId: null, recipient: { in: ["BUERO", "ALL", "ADMIN"] } },
+          { category: "MATERIAL_REQUEST", recipientUserId: null },
+        ];
+      } else {
+        where.recipientUserId = auth.id;
+      }
+    } else if (box === "sent") {
+      where.senderId = auth.id;
+    } else if (!isGuest && auth.role === "MONTEUR") {
+      // Monteur sieht nur eigene und an ihn gerichtete Nachrichten (nicht alle Betriebsnachrichten).
+      where.OR = [{ senderId: auth.id }, { recipientUserId: auth.id }];
+    } else if (!isGuest && officeRoles.includes(auth.role) && !category) {
+      // Büro ohne Box-Filter: keine fremden Direktnachrichten zwischen Kollegen.
+      where.OR = [
+        { recipientUserId: auth.id },
+        { senderId: auth.id },
+        { recipientUserId: null, recipient: { in: ["BUERO", "ALL", "ADMIN"] } },
+        { category: "MATERIAL_REQUEST" },
+      ];
+    }
 
     const messages = await prisma.message.findMany({
       where,
@@ -80,6 +104,13 @@ export async function POST(request: Request) {
       return apiError("Bitte einen Empfänger auswählen", 400);
     }
 
+    if (auth.role === "GAST" && body.orderId) {
+      const share = await prisma.orderShare.findFirst({
+        where: { orderId: body.orderId, sharedWithUserId: auth.id, tenantId: auth.tenantId },
+      });
+      if (!share) return apiError("Auftrag nicht freigegeben", 403);
+    }
+
     const message = await prisma.message.create({
       data: {
         tenantId: auth.tenantId,
@@ -106,6 +137,40 @@ export async function POST(request: Request) {
         recipientEmail,
         `${auth.firstName} ${auth.lastName}`,
         body.subject || null
+      );
+    }
+
+    // Büro-Nachrichten (z. B. Materialanfrage vom Monteur) → In-App an Admin/Büro/Meister
+    const isOfficeBroadcast =
+      !recipientUserId &&
+      (body.recipient === "BUERO" ||
+        message.recipient === "BUERO" ||
+        message.category === "MATERIAL_REQUEST");
+    if (isOfficeBroadcast) {
+      const officeUsers = await prisma.user.findMany({
+        where: {
+          tenantId: auth.tenantId,
+          isActive: true,
+          role: { in: ["ADMIN", "BUERO", "MEISTER"] },
+        },
+        select: { id: true },
+      });
+      const senderName = `${auth.firstName} ${auth.lastName}`;
+      const title =
+        message.category === "MATERIAL_REQUEST"
+          ? `Materialanfrage von ${senderName}`
+          : `Nachricht von ${senderName}`;
+      await Promise.all(
+        officeUsers.map((u) =>
+          createInAppNotification({
+            tenantId: auth.tenantId,
+            userId: u.id,
+            type: "NACHRICHT",
+            title,
+            body: String(body.body).trim().slice(0, 200),
+            link: "/dashboard/nachrichten",
+          })
+        )
       );
     }
 

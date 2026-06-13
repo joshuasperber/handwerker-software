@@ -24,6 +24,7 @@ const DOC_SELECT = {
     select: {
       id: true,
       title: true,
+      orderId: true,
       customer: { select: { firstName: true, lastName: true } },
     },
   },

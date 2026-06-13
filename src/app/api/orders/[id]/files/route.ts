@@ -1,8 +1,13 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAuth, apiSuccess, apiError } from "@/lib/api";
-import { uploadFile, getSignedDownloadUrl } from "@/lib/storage";
-import { validateUpload, isValidPhotoCategory, NON_PHOTO_CATEGORIES } from "@/lib/files";
+import {
+  uploadFile,
+  getSignedDownloadUrl,
+  isStorageConfigured,
+  StorageUploadError,
+} from "@/lib/storage";
+import { validateUpload, isValidFileCategory, NON_PHOTO_CATEGORIES } from "@/lib/files";
 import type { FileCategory } from "@/generated/prisma/client";
 
 export async function POST(
@@ -11,6 +16,10 @@ export async function POST(
 ) {
   const auth = await requireAuth("orders.write");
   if (auth instanceof Response) return auth;
+
+  if (!isStorageConfigured()) {
+    return apiError("Dateispeicher ist nicht konfiguriert. Bitte den Administrator kontaktieren.", 503);
+  }
 
   const { id: orderId } = await params;
 
@@ -24,7 +33,7 @@ export async function POST(
   const formData = await request.formData();
   const files = formData.getAll("file").filter((f): f is File => f instanceof File);
   const rawCategory = (formData.get("category") as string) ?? "KUNDENFOTO";
-  const category: FileCategory = isValidPhotoCategory(rawCategory)
+  const category: FileCategory = isValidFileCategory(rawCategory)
     ? rawCategory
     : "KUNDENFOTO";
   const description = ((formData.get("description") as string) || "").trim() || null;
@@ -49,7 +58,15 @@ export async function POST(
       return apiError(`${file.name}: ${validation.error}`, 400);
     }
 
-    const { key } = await uploadFile(buffer, file.name, file.type, `orders/${orderId}`);
+    let key: string;
+    try {
+      ({ key } = await uploadFile(buffer, file.name, file.type, `orders/${orderId}`));
+    } catch (err) {
+      if (err instanceof StorageUploadError) {
+        return apiError(err.message, 502);
+      }
+      throw err;
+    }
     const upload = await prisma.fileUpload.create({
       data: {
         orderId,

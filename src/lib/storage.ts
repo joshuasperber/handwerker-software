@@ -9,6 +9,25 @@ import {
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { v4 as uuidv4 } from "uuid";
 
+/** Häufiger Tippfehler in Vercel: S3_ACCES_KEY statt S3_ACCESS_KEY */
+function getS3AccessKey(): string {
+  return process.env.S3_ACCESS_KEY ?? process.env.S3_ACCES_KEY ?? "";
+}
+
+function getS3SecretKey(): string {
+  return process.env.S3_SECRET_KEY ?? "";
+}
+
+export class StorageUploadError extends Error {
+  constructor(
+    message: string,
+    public readonly cause?: unknown
+  ) {
+    super(message);
+    this.name = "StorageUploadError";
+  }
+}
+
 function getS3Client() {
   const endpoint = process.env.S3_ENDPOINT;
   const region = process.env.S3_REGION ?? "us-east-1";
@@ -18,8 +37,8 @@ function getS3Client() {
     endpoint: endpoint || undefined,
     forcePathStyle: !!endpoint,
     credentials: {
-      accessKeyId: process.env.S3_ACCESS_KEY ?? "",
-      secretAccessKey: process.env.S3_SECRET_KEY ?? "",
+      accessKeyId: getS3AccessKey(),
+      secretAccessKey: getS3SecretKey(),
     },
   });
 }
@@ -49,20 +68,34 @@ export async function uploadFile(
   mimeType: string,
   folder = "uploads"
 ): Promise<{ key: string; url: string }> {
+  if (!isStorageConfigured()) {
+    throw new StorageUploadError(
+      "S3 nicht konfiguriert. In Vercel S3_ACCESS_KEY und S3_SECRET_KEY setzen (nicht S3_ACCES_KEY)."
+    );
+  }
+
   const bucket = process.env.S3_BUCKET ?? "handwerker-uploads";
   const key = `${folder}/${uuidv4()}-${fileName.replace(/[^a-zA-Z0-9.-]/g, "_")}`;
 
-  const client = getS3Client();
-  await ensureBucketExists(client, bucket);
+  try {
+    const client = getS3Client();
+    await ensureBucketExists(client, bucket);
 
-  await client.send(
-    new PutObjectCommand({
-      Bucket: bucket,
-      Key: key,
-      Body: file,
-      ContentType: mimeType,
-    })
-  );
+    await client.send(
+      new PutObjectCommand({
+        Bucket: bucket,
+        Key: key,
+        Body: file,
+        ContentType: mimeType,
+      })
+    );
+  } catch (err) {
+    const detail = err instanceof Error ? err.message : "Unbekannter Fehler";
+    throw new StorageUploadError(
+      `S3-Upload fehlgeschlagen (${detail}). Endpoint, Bucket und Zugangsdaten prüfen.`,
+      err
+    );
+  }
 
   const publicUrl = process.env.S3_PUBLIC_URL
     ? `${process.env.S3_PUBLIC_URL}/${key}`
@@ -86,7 +119,7 @@ export async function getSignedDownloadUrl(
 }
 
 export function isStorageConfigured(): boolean {
-  return !!(process.env.S3_ACCESS_KEY && process.env.S3_SECRET_KEY);
+  return !!(getS3AccessKey() && getS3SecretKey());
 }
 
 /** Lädt eine Datei als Buffer aus dem Bucket; null bei Fehler/fehlender Datei. */

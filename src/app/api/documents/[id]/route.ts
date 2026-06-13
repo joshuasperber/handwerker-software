@@ -11,6 +11,7 @@ async function loadDoc(tenantId: string, id: string) {
         select: {
           id: true,
           title: true,
+          orderId: true,
           customer: { select: { firstName: true, lastName: true } },
         },
       },

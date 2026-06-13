@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/auth";
-import { canAccessMonteurApp } from "@/lib/permissions";
+import { canAccessMonteurApp, getRoleHomePath } from "@/lib/permissions";
+import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import { Wrench, LogOut, AlertTriangle } from "lucide-react";
 import { Suspense } from "react";
@@ -15,7 +16,14 @@ export default async function MonteurLayout({
 }) {
   const session = await getSession();
   if (!session) redirect("/login");
-  if (!canAccessMonteurApp(session.role)) redirect("/dashboard");
+  if (session.role === "KUNDE") redirect("/kunde");
+  if (session.role === "GAST") redirect("/portal");
+  if (!canAccessMonteurApp(session.role)) redirect(getRoleHomePath(session.role));
+
+  const employee = await prisma.employee.findFirst({
+    where: { userId: session.id, tenantId: session.tenantId },
+    select: { id: true },
+  });
 
   return (
     <SessionProvider user={session}>
@@ -47,6 +55,12 @@ export default async function MonteurLayout({
             <AlertTriangle className="h-5 w-5 shrink-0" />
             <span>Initialpasswort ändern – jetzt im Profil ein eigenes Passwort vergeben →</span>
           </Link>
+        )}
+        {!employee && session.role === "MONTEUR" && (
+          <div className="mb-4 flex items-center gap-2.5 rounded-xl border border-red-200 bg-red-50 px-3 py-2.5 text-sm text-red-800">
+            <AlertTriangle className="h-5 w-5 shrink-0" />
+            <span>Kein Mitarbeiterprofil verknüpft — Termine und Aufträge können nicht angezeigt werden. Bitte den Administrator kontaktieren.</span>
+          </div>
         )}
         {children}
       </main>

@@ -65,6 +65,7 @@ const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
     "inventory.read",
     "inventory.write",
     "inventory.reserve",
+    "monteur.own",
   ],
   MEISTER: [
     "customers.read",
@@ -94,6 +95,7 @@ const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
     "inventory.read",
     "inventory.write",
     "inventory.reserve",
+    "monteur.own",
   ],
   BUERO: [
     "customers.read",
@@ -124,16 +126,10 @@ const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
     "inventory.reserve",
   ],
   MONTEUR: [
-    "orders.read",
-    "appointments.read",
     "monteur.own",
     "messages.read",
     "messages.write",
-    "customers.read",
-    "employees.read",
     "inventory.read",
-    "inventory.write",
-    "inventory.reserve",
   ],
   KUNDE: ["customer.own"],
   GAST: ["shared.read", "messages.read", "messages.write"],
@@ -154,6 +150,28 @@ export function canAccessMonteurApp(role: UserRole): boolean {
 /** Eingeladene Gäste nutzen ein eigenes, schlankes Portal. */
 export function canAccessGuestPortal(role: UserRole): boolean {
   return role === "GAST";
+}
+
+export function canAccessCustomerPortal(role: UserRole): boolean {
+  return role === "KUNDE";
+}
+
+/** Startseite nach Login / Einladung je nach Rolle. */
+export function getRoleHomePath(
+  role: UserRole,
+  options?: { mustChangePassword?: boolean }
+): string {
+  if (options?.mustChangePassword) return "/dashboard/profil?changePassword=1";
+  switch (role) {
+    case "GAST":
+      return "/portal";
+    case "MONTEUR":
+      return "/monteur/tagesplan";
+    case "KUNDE":
+      return "/kunde";
+    default:
+      return "/dashboard";
+  }
 }
 
 export function canManageOrders(role: UserRole): boolean {
@@ -187,11 +205,19 @@ export const DASHBOARD_NAV_CONFIG: {
 
 /** Monteur: gleiche Dashboard-Ansicht wie Admin, ohne diese Bereiche */
 const MONTEUR_EXCLUDED_NAV = new Set([
+  "/dashboard/auftraege",
+  "/dashboard/termine",
+  "/dashboard/kunden",
+  "/dashboard/mitarbeiter",
+  "/dashboard/inventar",
   "/dashboard/einkauf",
   "/dashboard/disposition",
   "/dashboard/kalkulation",
+  "/dashboard/rechnungen",
   "/dashboard/maschinen",
   "/dashboard/leistungen",
+  "/dashboard/einstellungen/rechnung",
+  "/dashboard/einstellungen/benachrichtigungen",
 ]);
 
 export function getDashboardNavItems(role: UserRole) {

@@ -30,10 +30,20 @@ export async function requireMonteurOrder(auth: SessionUser, orderId: string) {
   const employee = await getEmployeeForUser(auth);
   if (!employee) return { error: apiError("Kein Mitarbeiterprofil", 403) };
 
-  const hasAccess = await prisma.appointment.findFirst({
+  const hasAppointment = await prisma.appointment.findFirst({
     where: { orderId, tenantId: auth.tenantId, employeeId: employee.id },
   });
-  if (!hasAccess) return { error: apiError("Kein Zugriff auf diesen Auftrag", 403) };
+
+  if (!hasAppointment) {
+    const hasPhase = await prisma.orderPhase.findFirst({
+      where: {
+        orderId,
+        assignedEmployeeId: employee.id,
+        order: { tenantId: auth.tenantId },
+      },
+    });
+    if (!hasPhase) return { error: apiError("Kein Zugriff auf diesen Auftrag", 403) };
+  }
 
   const order = await prisma.order.findFirst({
     where: { id: orderId, tenantId: auth.tenantId },

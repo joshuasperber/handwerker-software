@@ -27,6 +27,7 @@ export async function runAppointmentReminders(
       status: "GEPLANT",
       reminderSentAt: null,
       startTime: { gte: now, lte: windowEnd },
+      order: { customerConfirmationStatus: "BESTAETIGT" },
     },
     include: {
       order: { include: { customer: true, property: true } },

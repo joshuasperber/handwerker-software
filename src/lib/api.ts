@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getSession, type SessionUser } from "./auth";
 import { hasPermission, type Permission } from "./permissions";
+import { prisma } from "./prisma";
 
 export function apiSuccess<T>(data: T, status = 200) {
   return NextResponse.json({ success: true, data }, { status });
@@ -17,6 +18,15 @@ export async function requireAuth(
   if (!session) {
     return apiError("Nicht authentifiziert", 401);
   }
+
+  const active = await prisma.user.findFirst({
+    where: { id: session.id, tenantId: session.tenantId, isActive: true },
+    select: { id: true },
+  });
+  if (!active) {
+    return apiError("Nicht authentifiziert", 401);
+  }
+
   if (permission && !hasPermission(session.role, permission)) {
     return apiError("Keine Berechtigung", 403);
   }

@@ -38,16 +38,20 @@ export default function MonteurAuftragPage() {
   const [error, setError] = useState("");
 
   const load = useCallback(() => {
-    fetch(`/api/orders/${id}`).then((r) => r.json()).then((d) => {
-      if (d.success) {
-        setOrder(d.data);
-        const init: Record<string, number> = {};
-        for (const line of d.data.materialLines ?? []) {
-          if (!line.isTool) init[line.id] = line.quantityRequired;
+    fetch(`/api/monteur/orders/${id}`)
+      .then((r) => r.json())
+      .then((d) => {
+        if (d.success) {
+          setOrder(d.data);
+          const init: Record<string, number> = {};
+          for (const line of d.data.materialLines ?? []) {
+            if (!line.isTool) init[line.id] = line.quantityRequired;
+          }
+          setConsumption(init);
+        } else {
+          setError(d.error ?? "Auftrag nicht gefunden");
         }
-        setConsumption(init);
-      }
-    });
+      });
   }, [id]);
 
   useEffect(() => { load(); }, [load]);
@@ -89,7 +93,7 @@ export default function MonteurAuftragPage() {
       toast.success("Einsatz abgeschlossen", {
         description: "Gut gemacht! Der Auftrag ist jetzt abrechnungsbereit.",
       });
-      setTimeout(() => router.push("/monteur"), 1200);
+      setTimeout(() => router.push("/monteur/tagesplan"), 1200);
     } else {
       toast.error("Abschluss fehlgeschlagen", {
         description: data.error ?? "Bitte versuchen Sie es erneut.",
@@ -104,7 +108,7 @@ export default function MonteurAuftragPage() {
 
   return (
     <div>
-      <Link href="/monteur" className="flex items-center gap-1 text-sm text-blue-600 mb-4">
+      <Link href="/monteur/tagesplan" className="flex items-center gap-1 text-sm text-blue-600 mb-4">
         <ChevronLeft className="h-4 w-4" /> Zurück zum Tagesplan
       </Link>
 
@@ -117,7 +121,9 @@ export default function MonteurAuftragPage() {
           phases={order.phases ?? []}
           teams={[]}
           employees={[]}
-          canEdit={false}
+          canEdit
+          allowStructureEdit={false}
+          phasesApiBase={`/api/monteur/orders/${id}/phases`}
           onChanged={load}
           filesBaseUrl={`/api/monteur/orders/${id}/files`}
           canManageFiles

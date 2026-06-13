@@ -10,8 +10,21 @@ import { DashboardSkeleton } from "@/components/dashboard/analytics/dashboard-sk
 export const dynamic = "force-dynamic";
 
 async function DashboardData({ tenantId }: { tenantId: string }) {
-  const data = await getDashboardAnalytics(tenantId);
-  return <DashboardView data={data} />;
+  try {
+    const data = await getDashboardAnalytics(tenantId);
+    return <DashboardView data={data} />;
+  } catch (error) {
+    console.error("[dashboard] analytics failed:", error);
+    return (
+      <div className="rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
+        <p className="font-medium">Auswertungen vorübergehend nicht verfügbar</p>
+        <p className="mt-1 text-amber-800">
+          Die Kennzahlen konnten nicht geladen werden. Aufträge und andere Bereiche
+          bleiben über die Navigation erreichbar.
+        </p>
+      </div>
+    );
+  }
 }
 
 export default async function DashboardPage() {

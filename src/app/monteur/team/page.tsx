@@ -1,7 +1,5 @@
-"use client";
+import { redirect } from "next/navigation";
 
-import { TeamCalendarView } from "@/components/calendar/team-calendar-view";
-
-export default function MonteurTeamPage() {
-  return <TeamCalendarView title="Team-Kalender" />;
+export default function MonteurTeamRedirectPage() {
+  redirect("/monteur/mitarbeiter");
 }

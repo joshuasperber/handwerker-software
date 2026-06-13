@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -47,6 +48,7 @@ interface DocItem {
   customerName: string;
   title: string | null;
   calculationId: string;
+  orderId: string | null;
   sentAt: string | null;
   canceledAt: string | null;
   cancelOfId: string | null;
@@ -317,7 +319,15 @@ export default function RechnungenPage() {
                 const open = isInvoice && doc.status !== "STORNIERT" && doc.openAmount > 0;
                 return (
                   <tr key={doc.id} className="border-b border-slate-100 hover:bg-slate-50">
-                    <td className="px-3 py-2 font-mono text-xs">{doc.documentNumber}</td>
+                    <td className="px-3 py-2 font-mono text-xs">
+                      <div>{doc.documentNumber}</div>
+                      <div className="mt-0.5 flex flex-wrap gap-2 text-[10px] font-sans font-normal text-[#0d5c63]">
+                        <Link href={`/dashboard/kalkulation/${doc.calculationId}`}>Kalkulation</Link>
+                        {doc.orderId && (
+                          <Link href={`/dashboard/auftraege/${doc.orderId}`}>Auftrag</Link>
+                        )}
+                      </div>
+                    </td>
                     <td className="px-3 py-2">
                       {doc.documentType === "INVOICE" ? (
                         <Receipt className="inline h-3.5 w-3.5 mr-1 text-slate-400" />

@@ -155,10 +155,20 @@ export default function KalkulationWizardPage() {
 
   return (
     <div>
-      <div className="mb-4 flex items-center justify-between">
-        <Link href="/dashboard/kalkulation" className="text-sm text-[#0d5c63] flex items-center gap-1">
-          <ChevronLeft className="h-4 w-4" /> Zurück
-        </Link>
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+        <div className="flex flex-wrap items-center gap-3">
+          <Link href="/dashboard/kalkulation" className="text-sm text-[#0d5c63] flex items-center gap-1">
+            <ChevronLeft className="h-4 w-4" /> Zurück
+          </Link>
+          {calc.orderId && (
+            <Link
+              href={`/dashboard/auftraege/${calc.orderId}`}
+              className="text-sm text-[#0d5c63] hover:underline"
+            >
+              → Zum Auftrag
+            </Link>
+          )}
+        </div>
         <Button variant="outline" size="sm" onClick={loadExample}>Beispiel aus Spec laden</Button>
       </div>
 

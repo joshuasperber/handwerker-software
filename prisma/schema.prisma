@@ -196,6 +196,8 @@ model Customer {
   notes       String?
   gdprConsent Boolean  @default(false)
   gdprConsentAt DateTime?
+  /** Optionale eigene Buchungsbestätigung; null = Tenant-Standard aus Einstellungen */
+  bookingConfirmationEmailTemplate String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -367,6 +369,7 @@ model Order {
   questionAnswers Json?
   scheduledStart  DateTime?
   scheduledEnd    DateTime?
+  bookingConfirmationSentAt DateTime?
   completedAt     DateTime?
   invoicedAt      DateTime?
   teamId          String?
@@ -606,6 +609,7 @@ model NotificationSettings {
   id       String @id @default(cuid())
   tenantId String @unique
 
+  bookingConfirmationEnabled Boolean @default(true)
   appointmentReminderEnabled    Boolean @default(true)
   appointmentReminderHoursBefore Int    @default(24)
   remindCustomer                Boolean @default(true)
@@ -622,6 +626,7 @@ model NotificationSettings {
   defaultSms   Boolean @default(false)
 
   // Optionale Vorlagen-Texte mit {{platzhaltern}}
+  bookingConfirmationEmailTemplate String?
   reminderEmailTemplate String?
   dunningEmailTemplate  String?
 

@@ -43,6 +43,15 @@ export function isValidPhotoCategory(value: string): value is FileCategory {
   return PHOTO_CATEGORIES.some((c) => c.value === value);
 }
 
+/**
+ * Gültige Kategorie für Datei-Uploads inkl. Plan/Grundriss.
+ * Wird beim Upload genutzt, damit Pläne korrekt als PLAN/GRUNDRISS gespeichert
+ * werden (und im Plan-Viewer erscheinen) statt still auf KUNDENFOTO zu fallen.
+ */
+export function isValidFileCategory(value: string): value is FileCategory {
+  return isValidPhotoCategory(value) || (NON_PHOTO_CATEGORIES as string[]).includes(value);
+}
+
 export function formatBytes(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`;
   if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(0)} KB`;

@@ -189,6 +189,7 @@ export const CustomerScalarFieldEnum = {
   notes: 'notes',
   gdprConsent: 'gdprConsent',
   gdprConsentAt: 'gdprConsentAt',
+  bookingConfirmationEmailTemplate: 'bookingConfirmationEmailTemplate',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -332,6 +333,7 @@ export const OrderScalarFieldEnum = {
   questionAnswers: 'questionAnswers',
   scheduledStart: 'scheduledStart',
   scheduledEnd: 'scheduledEnd',
+  bookingConfirmationSentAt: 'bookingConfirmationSentAt',
   completedAt: 'completedAt',
   invoicedAt: 'invoicedAt',
   teamId: 'teamId',
@@ -523,6 +525,7 @@ export type NotificationScalarFieldEnum = (typeof NotificationScalarFieldEnum)[k
 export const NotificationSettingsScalarFieldEnum = {
   id: 'id',
   tenantId: 'tenantId',
+  bookingConfirmationEnabled: 'bookingConfirmationEnabled',
   appointmentReminderEnabled: 'appointmentReminderEnabled',
   appointmentReminderHoursBefore: 'appointmentReminderHoursBefore',
   remindCustomer: 'remindCustomer',
@@ -534,6 +537,7 @@ export const NotificationSettingsScalarFieldEnum = {
   reorderCheckEnabled: 'reorderCheckEnabled',
   defaultEmail: 'defaultEmail',
   defaultSms: 'defaultSms',
+  bookingConfirmationEmailTemplate: 'bookingConfirmationEmailTemplate',
   reminderEmailTemplate: 'reminderEmailTemplate',
   dunningEmailTemplate: 'dunningEmailTemplate',
   updatedAt: 'updatedAt',

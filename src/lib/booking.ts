@@ -1,9 +1,9 @@
 import { z } from "zod";
 import { prisma } from "./prisma";
-import { generateOrderNumber, formatDateTime } from "./utils";
+import { generateOrderNumber } from "./utils";
 import { createAuditLog } from "./audit";
-import { notifyBookingConfirmation } from "./notifications";
-import { uploadFile } from "./storage";
+import { sendBookingConfirmationForOrder } from "./customer-email-notifications";
+import { uploadFile, isStorageConfigured } from "./storage";
 
 const customServiceSchema = z.object({
   name: z.string().min(1),
@@ -115,7 +115,11 @@ export async function createBooking(
     });
   }
 
+  if (photoFiles.length > 0 && !isStorageConfigured()) {
+    console.warn("[booking] Fotos übersprungen – Dateispeicher nicht konfiguriert");
+  }
   for (const photo of photoFiles) {
+    if (!isStorageConfigured()) continue;
     const { key } = await uploadFile(photo.buffer, photo.name, photo.type, `orders/${order.id}`);
     await prisma.fileUpload.create({
       data: {
@@ -138,12 +142,14 @@ export async function createBooking(
   });
 
   if (hasSlot) {
-    await notifyBookingConfirmation(
+    await sendBookingConfirmationForOrder({
       tenantId,
-      data.email,
+      orderId: order.id,
       orderNumber,
-      formatDateTime(data.slotStart!)
-    );
+      customer,
+      appointmentStart: new Date(data.slotStart!),
+      city: property.city,
+    });
   }
 
   return { orderNumber, orderId: order.id, status: order.status };

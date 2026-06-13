@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { requireAuth, apiSuccess, apiError } from "@/lib/api";
 import { createOrderWithWizardData } from "@/lib/inventory/orders";
+import { validateOrderCreateRefs } from "@/lib/tenant-scope";
 import type { OrderType } from "@/generated/prisma/client";
 
 export async function POST(request: NextRequest) {
@@ -32,6 +33,14 @@ export async function POST(request: NextRequest) {
   if (!customerId || !propertyId || !title || (!hasCatalog && !hasCustom)) {
     return apiError("Kunde, Objekt, Titel und mindestens eine Leistung sind Pflicht", 400);
   }
+
+  const refError = await validateOrderCreateRefs(auth.tenantId, {
+    customerId,
+    propertyId,
+    serviceIds: serviceIds ?? [],
+    employeeId: employeeId || null,
+  });
+  if (refError) return apiError(refError, 404);
 
   const order = await createOrderWithWizardData(auth.tenantId, {
     customerId,

@@ -2,7 +2,12 @@ import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAuth, apiSuccess, apiError } from "@/lib/api";
 import { requireMonteurOrder } from "@/lib/monteur-access";
-import { uploadFile, getSignedDownloadUrl } from "@/lib/storage";
+import {
+  uploadFile,
+  getSignedDownloadUrl,
+  isStorageConfigured,
+  StorageUploadError,
+} from "@/lib/storage";
 import { validateUpload, isValidPhotoCategory, NON_PHOTO_CATEGORIES } from "@/lib/files";
 import type { FileCategory } from "@/generated/prisma/client";
 
@@ -16,6 +21,10 @@ export async function POST(
   const { id: orderId } = await params;
   const access = await requireMonteurOrder(auth, orderId);
   if ("error" in access && access.error) return access.error;
+
+  if (!isStorageConfigured()) {
+    return apiError("Dateispeicher ist nicht konfiguriert. Bitte den Administrator kontaktieren.", 503);
+  }
 
   const formData = await request.formData();
   const files = formData.getAll("file").filter((f): f is File => f instanceof File);
@@ -44,7 +53,15 @@ export async function POST(
       return apiError(`${file.name}: ${validation.error}`, 400);
     }
 
-    const { key } = await uploadFile(buffer, file.name, file.type, `orders/${orderId}`);
+    let key: string;
+    try {
+      ({ key } = await uploadFile(buffer, file.name, file.type, `orders/${orderId}`));
+    } catch (err) {
+      if (err instanceof StorageUploadError) {
+        return apiError(err.message, 502);
+      }
+      throw err;
+    }
     const upload = await prisma.fileUpload.create({
       data: {
         orderId,

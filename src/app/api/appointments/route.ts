@@ -3,6 +3,8 @@ import { prisma } from "@/lib/prisma";
 import { requireAuth, apiSuccess, apiError, getClientIp } from "@/lib/api";
 import { auditEntityChange } from "@/lib/audit";
 import { findEmployeeScheduleConflict } from "@/lib/disposition/schedule-conflicts";
+import { maybeSendBookingConfirmationForOrder } from "@/lib/customer-email-notifications";
+import { requireTenantOrder, requireTenantEmployee } from "@/lib/tenant-scope";
 
 export async function GET(request: NextRequest) {
   const auth = await requireAuth("appointments.read");
@@ -52,7 +54,13 @@ export async function POST(request: NextRequest) {
     return apiError("Pflichtfelder fehlen", 400);
   }
 
+  const order = await requireTenantOrder(auth.tenantId, orderId);
+  if (!order) return apiError("Auftrag nicht gefunden", 404);
+
   if (employeeId) {
+    const employee = await requireTenantEmployee(auth.tenantId, employeeId);
+    if (!employee) return apiError("Mitarbeiter nicht gefunden", 404);
+
     const duplicate = await prisma.appointment.findFirst({
       where: { tenantId: auth.tenantId, orderId, employeeId },
     });
@@ -71,6 +79,10 @@ export async function POST(request: NextRequest) {
     }
   }
 
+  const priorAppointments = await prisma.appointment.count({
+    where: { tenantId: auth.tenantId, orderId },
+  });
+
   const appointment = await prisma.appointment.create({
     data: {
       tenantId: auth.tenantId,
@@ -87,7 +99,7 @@ export async function POST(request: NextRequest) {
   });
 
   await prisma.order.update({
-    where: { id: orderId },
+    where: { id: orderId, tenantId: auth.tenantId },
     data: { status: "EINGEPLANT", scheduledStart: new Date(startTime), scheduledEnd: new Date(endTime) },
   });
 
@@ -100,6 +112,12 @@ export async function POST(request: NextRequest) {
     body,
     getClientIp(request)
   );
+
+  if (priorAppointments === 0) {
+    await maybeSendBookingConfirmationForOrder(auth.tenantId, orderId).catch((err) => {
+      console.error("[appointments] Buchungsbestätigung:", err);
+    });
+  }
 
   return apiSuccess(appointment, 201);
 }

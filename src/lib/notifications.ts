@@ -100,12 +100,14 @@ async function sendEmail(
 ): Promise<boolean> {
   const host = process.env.SMTP_HOST;
   if (!host) {
-    console.log(
-      `[EMAIL DEV] To: ${to}, Subject: ${subject}` +
-        (attachments?.length ? ` (+${attachments.length} Anhang)` : "") +
-        `\n${body}`
-    );
-    return true;
+    if (process.env.NODE_ENV === "development") {
+      console.log(
+        `[EMAIL DEV] To: ${to}, Subject: ${subject}` +
+          (attachments?.length ? ` (+${attachments.length} Anhang)` : "") +
+          `\n${body}`
+      );
+    }
+    return false;
   }
 
   try {
@@ -140,8 +142,10 @@ async function sendEmail(
 async function sendSms(to: string, body: string): Promise<boolean> {
   const sid = process.env.TWILIO_ACCOUNT_SID;
   if (!sid) {
-    console.log(`[SMS DEV] To: ${to}\n${body}`);
-    return true;
+    if (process.env.NODE_ENV === "development") {
+      console.log(`[SMS DEV] To: ${to}\n${body}`);
+    }
+    return false;
   }
 
   try {
@@ -167,6 +171,7 @@ async function sendSms(to: string, body: string): Promise<boolean> {
   }
 }
 
+/** @deprecated Nutze sendBookingConfirmationForOrder aus customer-email-notifications */
 export async function notifyBookingConfirmation(
   tenantId: string,
   email: string,

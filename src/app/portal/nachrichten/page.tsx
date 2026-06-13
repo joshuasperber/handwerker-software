@@ -25,7 +25,7 @@ export default function PortalMessagesPage() {
         />
       </Card>
 
-      <MessageList refreshKey={refreshKey} emptyLabel="Noch keine Nachrichten." />
+      <MessageList box="inbox" refreshKey={refreshKey} emptyLabel="Noch keine Nachrichten." />
     </div>
   );
 }
