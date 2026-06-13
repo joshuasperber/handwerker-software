@@ -1,4 +1,4 @@
-import { UserRole } from "@/generated/prisma/client";
+import { UserRole } from "@/generated/prisma/enums";
 
 export type Permission =
   | "tenant.manage"

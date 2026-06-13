@@ -31,7 +31,11 @@ export default function LoginPage() {
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password, tenantSlug: tenantSlug.trim() || undefined }),
+        body: JSON.stringify({
+          email,
+          password,
+          tenantSlug: tenantSlug.trim() || DEFAULT_TENANT,
+        }),
       });
 
       const data = await res.json();
@@ -41,8 +45,14 @@ export default function LoginPage() {
         return;
       }
 
-      const target = getRoleHomePath(data.data?.user?.role ?? "MONTEUR", {
-        mustChangePassword: data.data?.user?.mustChangePassword,
+      const user = data.data?.user;
+      if (!user?.role) {
+        setError("Anmeldung fehlgeschlagen: Benutzerrolle fehlt in der Antwort.");
+        return;
+      }
+
+      const target = getRoleHomePath(user.role, {
+        mustChangePassword: user.mustChangePassword,
       });
 
       // Volle Seitennavigation statt client router — vermeidet ChunkLoadError nach Login.

@@ -31,7 +31,9 @@ export default async function MonteurLayout({
       <header className="sticky top-0 z-10 flex h-14 items-center justify-between border-b border-slate-200 bg-white px-4">
         <div className="flex items-center gap-2">
           <Wrench className="h-5 w-5 text-blue-600" />
-          <span className="font-bold text-slate-900">Monteur</span>
+          <span className="font-bold text-slate-900">
+            {session.role === "MONTEUR" ? "Monteur" : "Feld-Ansicht"}
+          </span>
         </div>
         <div className="flex items-center gap-3">
           <NotificationBell />
