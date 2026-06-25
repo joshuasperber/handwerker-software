@@ -116,20 +116,14 @@ export function isToday(value: string | Date | null | undefined): boolean {
   );
 }
 
-/**
- * True, wenn ein (nicht erledigter) Auftrag überfällig ist: Der geplante
- * Termin liegt an einem vergangenen Tag, der Auftrag wurde aber nicht erledigt.
- */
+import { isOrderOverdue } from "@/lib/scheduling/overdue";
+
+/** @deprecated Alias — bitte isOrderOverdue aus @/lib/scheduling/overdue verwenden. */
 export function isOverdue(
   scheduledStart: string | Date | null | undefined,
   status: string
 ): boolean {
-  if (isOrderDone(status)) return false;
-  const date = toDate(scheduledStart);
-  if (!date) return false;
-  const startOfToday = new Date();
-  startOfToday.setHours(0, 0, 0, 0);
-  return date < startOfToday;
+  return isOrderOverdue(scheduledStart, status);
 }
 
 /** Logische Reihenfolge der Auftragsstatus (für Status-Auswahl). */

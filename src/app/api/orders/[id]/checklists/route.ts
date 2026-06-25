@@ -1,9 +1,15 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAuth, apiSuccess, apiError } from "@/lib/api";
+import { parseBody } from "@/lib/api-body";
+import {
+  toggleChecklistSchema,
+  applyChecklistTemplateSchema,
+} from "@/lib/schemas/orders";
+import { toggleOrderChecklistItem } from "@/lib/orders/checklist";
 
 export async function GET(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const auth = await requireAuth("orders.read");
@@ -27,24 +33,18 @@ export async function PATCH(
   if (auth instanceof Response) return auth;
 
   const { id: orderId } = await params;
-  const body = await request.json();
-  const { checklistId, isChecked } = body;
+  const body = await parseBody(request, toggleChecklistSchema);
+  if (body instanceof Response) return body;
 
-  const item = await prisma.orderChecklist.findFirst({
-    where: { id: checklistId, orderId, order: { tenantId: auth.tenantId } },
+  const updated = await toggleOrderChecklistItem({
+    tenantId: auth.tenantId,
+    orderId,
+    checklistId: body.checklistId,
+    isChecked: body.isChecked,
+    userId: auth.id,
   });
 
-  if (!item) return apiError("Checklistenpunkt nicht gefunden", 404);
-
-  const updated = await prisma.orderChecklist.update({
-    where: { id: checklistId },
-    data: {
-      isChecked,
-      checkedAt: isChecked ? new Date() : null,
-      checkedBy: isChecked ? auth.id : null,
-    },
-  });
-
+  if (updated instanceof Response) return updated;
   return apiSuccess(updated);
 }
 
@@ -56,10 +56,11 @@ export async function POST(
   if (auth instanceof Response) return auth;
 
   const { id: orderId } = await params;
-  const { templateId } = await request.json();
+  const body = await parseBody(request, applyChecklistTemplateSchema);
+  if (body instanceof Response) return body;
 
   const template = await prisma.checklistTemplate.findFirst({
-    where: { id: templateId, tenantId: auth.tenantId },
+    where: { id: body.templateId, tenantId: auth.tenantId },
     include: { items: { orderBy: { sortOrder: "asc" } } },
   });
 

@@ -5,12 +5,13 @@ import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { APPOINTMENT_STATUS_LABELS, PHASE_STATUS_LABELS, PHASE_STATUS_BADGE, formatDateTime } from "@/lib/utils";
+import { APPOINTMENT_STATUS_LABELS, PHASE_STATUS_LABELS, PHASE_STATUS_BADGE, formatDateTime, orderServiceLabel } from "@/lib/utils";
+import { isAppointmentOverdue } from "@/lib/scheduling/overdue";
 import { getCurrentPhase, phaseAssigneeLabel, type PhaseSummary } from "@/lib/phase-status";
 import { calcPickupWithReserve } from "@/lib/monteur/pickup-list";
 import {
   MapPin, Phone, Navigation, CheckCircle, Camera, Package,
-  Car, MapPinned, Play, Pause, Layers, Users,
+  Car, MapPinned, Play, Pause, Layers, Users, Plus,
 } from "lucide-react";
 import { format } from "date-fns";
 import { de } from "date-fns/locale";
@@ -75,6 +76,17 @@ function MonteurTagesplanViewContent() {
     order: { id: string; orderNumber: string; customer: { firstName: string; lastName: string }; property: { street: string; city: string } };
     requestedBy: { firstName: string; lastName: string };
   }[]>([]);
+  const [showOwnAppt, setShowOwnAppt] = useState(false);
+  const [ownCustomers, setOwnCustomers] = useState<{ id: string; name: string; properties: { id: string; label: string; street: string; city: string }[] }[]>([]);
+  const [ownForm, setOwnForm] = useState({
+    customerId: "",
+    propertyId: "",
+    title: "",
+    startTime: "",
+    endTime: "",
+    description: "",
+  });
+  const [ownSaving, setOwnSaving] = useState(false);
 
   const loadSchedule = useCallback(() => {
     setScheduleError("");
@@ -87,7 +99,10 @@ function MonteurTagesplanViewContent() {
       .catch(() => setScheduleError("Verbindungsfehler beim Laden der Termine"));
   }, [selectedDate]);
 
-  useEffect(() => { loadSchedule(); }, [loadSchedule]);
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Tagesplan neu laden bei Datumswechsel
+    loadSchedule();
+  }, [loadSchedule]);
 
   const loadRequests = useCallback(() => {
     fetch(`/api/staff-requests?mine=1&date=${selectedDate}`)
@@ -96,6 +111,13 @@ function MonteurTagesplanViewContent() {
   }, [selectedDate]);
 
   useEffect(() => { loadRequests(); }, [loadRequests]);
+
+  useEffect(() => {
+    if (!showOwnAppt) return;
+    fetch("/api/monteur/customers")
+      .then((r) => r.json())
+      .then((d) => { if (d.success) setOwnCustomers(d.data); });
+  }, [showOwnAppt]);
 
   const nextAppointment = appointments.find(
     (a) => !["ABGESCHLOSSEN", "STORNIERT"].includes(a.status)
@@ -117,7 +139,43 @@ function MonteurTagesplanViewContent() {
       (vehicleFilter === "all" || a.order.vehicle?.id === vehicleFilter)
   );
 
+  async function createOwnAppointment() {
+    if (!ownForm.customerId || !ownForm.propertyId || !ownForm.title || !ownForm.startTime || !ownForm.endTime) {
+      toast.error("Bitte alle Pflichtfelder ausfüllen");
+      return;
+    }
+    setOwnSaving(true);
+    const res = await fetch("/api/monteur/appointments", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        customerId: ownForm.customerId,
+        propertyId: ownForm.propertyId,
+        title: ownForm.title,
+        startTime: new Date(ownForm.startTime).toISOString(),
+        endTime: new Date(ownForm.endTime).toISOString(),
+        description: ownForm.description || undefined,
+      }),
+    });
+    const data = await res.json();
+    setOwnSaving(false);
+    if (data.success) {
+      toast.success("Termin angelegt");
+      setShowOwnAppt(false);
+      setOwnForm({ customerId: "", propertyId: "", title: "", startTime: "", endTime: "", description: "" });
+      loadSchedule();
+    } else {
+      toast.error(data.error ?? "Termin konnte nicht angelegt werden");
+    }
+  }
+
+  const selectedOwnCustomer = ownCustomers.find((c) => c.id === ownForm.customerId);
+
   async function updateStatus(appointmentId: string, status: string) {
+    if (appointmentId.startsWith("phase-")) {
+      toast.info("Status über Phasen-Termin — bitte Auftrag öffnen");
+      return;
+    }
     const res = await fetch(`/api/monteur/appointments/${appointmentId}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
@@ -259,7 +317,86 @@ function MonteurTagesplanViewContent() {
           onChange={(e) => setSelectedDate(e.target.value)}
           className="mt-2 min-h-[44px] rounded-lg border border-slate-300 px-3 text-sm w-full"
         />
+        <Button
+          size="touch"
+          variant="outline"
+          className="mt-2 w-full"
+          onClick={() => setShowOwnAppt(true)}
+        >
+          <Plus className="h-4 w-4 mr-1" /> Eigener Termin
+        </Button>
       </div>
+
+      {showOwnAppt && (
+        <Card className="!p-4 border-2 border-[#0d5c63]/30">
+          <p className="font-semibold text-[#0d5c63] mb-3">Eigener Termin anlegen</p>
+          <div className="space-y-3">
+            <div>
+              <label className="text-xs text-slate-500">Kunde</label>
+              <select
+                className="mt-1 w-full min-h-[44px] rounded-lg border px-3 text-sm"
+                value={ownForm.customerId}
+                onChange={(e) => setOwnForm({ ...ownForm, customerId: e.target.value, propertyId: "" })}
+              >
+                <option value="">Kunde wählen…</option>
+                {ownCustomers.map((c) => (
+                  <option key={c.id} value={c.id}>{c.name}</option>
+                ))}
+              </select>
+            </div>
+            {selectedOwnCustomer && (
+              <div>
+                <label className="text-xs text-slate-500">Objekt</label>
+                <select
+                  className="mt-1 w-full min-h-[44px] rounded-lg border px-3 text-sm"
+                  value={ownForm.propertyId}
+                  onChange={(e) => setOwnForm({ ...ownForm, propertyId: e.target.value })}
+                >
+                  <option value="">Objekt wählen…</option>
+                  {selectedOwnCustomer.properties.map((p) => (
+                    <option key={p.id} value={p.id}>{p.label || p.street}, {p.city}</option>
+                  ))}
+                </select>
+              </div>
+            )}
+            <div>
+              <label className="text-xs text-slate-500">Titel</label>
+              <input
+                className="mt-1 w-full min-h-[44px] rounded-lg border px-3 text-sm"
+                value={ownForm.title}
+                onChange={(e) => setOwnForm({ ...ownForm, title: e.target.value })}
+                placeholder="z. B. Nacharbeit Küche"
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              <div>
+                <label className="text-xs text-slate-500">Beginn</label>
+                <input
+                  type="datetime-local"
+                  className="mt-1 w-full min-h-[44px] rounded-lg border px-2 text-sm"
+                  value={ownForm.startTime}
+                  onChange={(e) => setOwnForm({ ...ownForm, startTime: e.target.value })}
+                />
+              </div>
+              <div>
+                <label className="text-xs text-slate-500">Ende</label>
+                <input
+                  type="datetime-local"
+                  className="mt-1 w-full min-h-[44px] rounded-lg border px-2 text-sm"
+                  value={ownForm.endTime}
+                  onChange={(e) => setOwnForm({ ...ownForm, endTime: e.target.value })}
+                />
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <Button size="touch" variant="action" className="flex-1" onClick={createOwnAppointment} disabled={ownSaving}>
+                {ownSaving ? "Speichern…" : "Anlegen"}
+              </Button>
+              <Button size="touch" variant="outline" onClick={() => setShowOwnAppt(false)}>Abbrechen</Button>
+            </div>
+          </div>
+        </Card>
+      )}
 
       {scheduleError && (
         <p className="text-sm text-red-600 bg-red-50 rounded-lg px-3 py-2">{scheduleError}</p>
@@ -387,7 +524,7 @@ function MonteurTagesplanViewContent() {
                 <div className="min-w-0">
                   <p className="font-semibold">{formatDateTime(apt.startTime)}</p>
                   <p className="text-sm text-slate-600">{apt.order.customer.firstName} {apt.order.customer.lastName}</p>
-                  <p className="text-xs text-slate-400">{apt.order.services.map((s) => s.service?.name ?? s.customName ?? "Sonstige Leistung").join(", ")}</p>
+                  <p className="text-xs text-slate-400">{apt.order.services.map((s) => orderServiceLabel(s)).join(", ")}</p>
                   {(apt.order.team || apt.order.vehicle) && (
                     <div className="flex flex-wrap gap-1.5 mt-1.5">
                       {apt.order.team && (
@@ -413,6 +550,9 @@ function MonteurTagesplanViewContent() {
                   })()}
                 </div>
                 <div className="flex flex-col items-end gap-1 shrink-0">
+                  {isAppointmentOverdue(apt.startTime, apt.status) && (
+                    <Badge status="UEBERFAELLIG" label="Überfällig" />
+                  )}
                   <Badge status={apt.status} label={APPOINTMENT_STATUS_LABELS[apt.status] ?? apt.status} />
                   {(() => {
                     const cp = getCurrentPhase(apt.order.phases);

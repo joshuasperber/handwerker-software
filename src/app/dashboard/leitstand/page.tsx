@@ -16,6 +16,8 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { PHASE_STATUS_LABELS } from "@/lib/utils";
+import { isAppointmentOverdue } from "@/lib/scheduling/overdue";
+import { AssignOrderButton } from "@/components/disposition/assign-employees-panel";
 
 interface BoardOrder {
   id: string;
@@ -52,6 +54,7 @@ interface WeekAppointment {
   startTime: string;
   endTime: string;
   status: string;
+  orderPhase?: { id: string; name: string } | null;
   order: {
     orderNumber: string;
     customer: { firstName: string; lastName: string } | null;
@@ -178,15 +181,24 @@ export default function LeitstandPage() {
               <Clock className="h-4 w-4" /> Heutige Einsätze
             </h2>
             <div className="grid gap-3 sm:grid-cols-2">
-              {orders.map((o) => (
+              {orders.map((o) => {
+                const overdue = o.scheduledStart && isAppointmentOverdue(o.scheduledStart, "GEPLANT");
+                return (
                 <div key={o.id} className="rounded-xl bg-slate-900 ring-1 ring-slate-800 p-4">
                   <div className="flex items-center justify-between gap-2">
                     <span className="text-lg font-bold text-cyan-400">{o.orderNumber}</span>
-                    {o.scheduledStart && (
-                      <span className="text-sm font-semibold tabular-nums text-slate-300">
-                        {format(new Date(o.scheduledStart), "HH:mm")}
-                      </span>
-                    )}
+                    <div className="flex items-center gap-2">
+                      {overdue && (
+                        <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-red-500/20 text-red-300">
+                          Überfällig
+                        </span>
+                      )}
+                      {o.scheduledStart && (
+                        <span className="text-sm font-semibold tabular-nums text-slate-300">
+                          {format(new Date(o.scheduledStart), "HH:mm")}
+                        </span>
+                      )}
+                    </div>
                   </div>
                   <p className="font-medium text-slate-100 truncate mt-0.5">{o.title}</p>
                   <p className="text-sm text-slate-400 truncate">{o.customer} · {o.address}</p>
@@ -208,8 +220,19 @@ export default function LeitstandPage() {
                   {o.employees.length > 0 && (
                     <p className="text-xs text-slate-400 mt-2">{o.employees.join(", ")}</p>
                   )}
+                  {o.employees.length === 0 && (
+                    <div className="mt-2">
+                      <AssignOrderButton
+                        orderId={o.id}
+                        orderNumber={o.orderNumber}
+                        defaultStart={o.scheduledStart}
+                        onAssigned={loadData}
+                      />
+                    </div>
+                  )}
                 </div>
-              ))}
+              );
+              })}
               {!orders.length && (
                 <p className="text-slate-500 col-span-full text-center py-10">Keine Einsätze heute geplant.</p>
               )}
@@ -364,12 +387,17 @@ function WeekTimeline({ appointments, now }: { appointments: WeekAppointment[]; 
                     )}
                   {dayAppts.map((a) => {
                     const { left, width } = blockGeometry(new Date(a.startTime), new Date(a.endTime));
-                    const label = a.order?.team?.name ?? a.employee?.user?.lastName ?? a.order?.orderNumber ?? "";
+                    const phaseLabel = a.orderPhase?.name ? `${a.orderPhase.name} · ` : "";
+                    const customerLabel = a.order?.customer
+                      ? `${a.order.customer.lastName}`
+                      : "";
+                    const label = `${phaseLabel}${customerLabel || a.order?.orderNumber || ""}`;
+                    const overdue = isAppointmentOverdue(a.startTime, a.status);
                     return (
                       <div
                         key={a.id}
-                        title={`${a.order?.orderNumber ?? ""} · ${format(new Date(a.startTime), "HH:mm")}–${format(new Date(a.endTime), "HH:mm")}${a.order?.team ? ` · ${a.order.team.name}` : ""}`}
-                        className={`absolute top-1 bottom-1 rounded-md ring-1 px-1.5 flex items-center overflow-hidden ${teamColor(a.order?.team?.id)} ${a.status === "STORNIERT" ? "opacity-40 line-through" : ""}`}
+                        title={`${a.order?.orderNumber ?? ""} · ${format(new Date(a.startTime), "HH:mm")}–${format(new Date(a.endTime), "HH:mm")}${a.orderPhase ? ` · ${a.orderPhase.name}` : ""}`}
+                        className={`absolute top-1 bottom-1 rounded-md ring-1 px-1.5 flex items-center overflow-hidden ${overdue ? "bg-red-600/80 ring-red-400/40" : teamColor(a.order?.team?.id)} ${a.status === "STORNIERT" ? "opacity-40 line-through" : ""}`}
                         style={{ left: `${left}%`, width: `${Math.max(width, 4)}%` }}
                       >
                         <span className="text-[10px] font-medium text-white truncate">{label}</span>

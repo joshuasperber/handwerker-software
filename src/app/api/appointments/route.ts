@@ -35,6 +35,7 @@ export async function GET(request: NextRequest) {
           vehicle: { select: { id: true, name: true, licensePlate: true } },
         },
       },
+      orderPhase: { select: { id: true, name: true } },
       employee: { include: { user: true } },
     },
     orderBy: { startTime: "asc" },

@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { recalculateCalculationRecord } from "@/lib/calculation/recalculate-db";
+import { orderServiceLabel } from "@/lib/utils";
 
 export async function createCalculationFromOrder(tenantId: string, orderId: string) {
   const existing = await prisma.calculation.findFirst({
@@ -51,7 +52,7 @@ export async function createCalculationFromOrder(tenantId: string, orderId: stri
     const qty = os.quantity && os.quantity > 0 ? os.quantity : 1;
     if (os.service) {
       laborCreates.push({
-        description: os.service.name,
+        description: orderServiceLabel(os),
         laborType: "ONSITE_WORK",
         hours: Math.max((os.service.durationMinutes / 60) * qty, 0.25),
         hourlyRateNet: defaultRate,

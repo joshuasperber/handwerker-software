@@ -5,7 +5,7 @@ import { auditOrderStatusChange, auditEntityChange } from "@/lib/audit";
 import { notifyStatusChange } from "@/lib/notifications";
 import { syncTeamAppointmentsForOrder } from "@/lib/team-appointments";
 import { ensureOrderPhases } from "@/lib/orders/phases";
-import { hasPermission } from "@/lib/permissions";
+import { ORDER_DETAIL_INCLUDE } from "@/lib/orders/includes";
 
 export async function GET(
   _request: NextRequest,
@@ -22,36 +22,9 @@ export async function GET(
   });
   if (!existing) return apiError("Auftrag nicht gefunden", 404);
 
-  // Phasen nur bei Schreibzugriff nachziehen (GET soll nicht mutieren).
-  if (hasPermission(auth.role, "orders.write")) {
-    await ensureOrderPhases(id);
-  }
-
   const order = await prisma.order.findFirst({
     where: { id, tenantId: auth.tenantId },
-    include: {
-      customer: true,
-      property: true,
-      services: { include: { service: true } },
-      appointments: { include: { employee: { include: { user: true } } } },
-      files: true,
-      checklists: { orderBy: { sortOrder: "asc" } },
-      messages: { orderBy: { createdAt: "desc" }, include: { sender: true } },
-      timeEntries: { include: { employee: { include: { user: true } } } },
-      materialUsages: { include: { employee: { include: { user: true } } } },
-      phases: {
-        orderBy: { sortOrder: "asc" },
-        include: {
-          assignedTeam: { select: { id: true, name: true } },
-          assignedEmployee: { include: { user: { select: { firstName: true, lastName: true } } } },
-          files: { orderBy: { createdAt: "desc" } },
-        },
-      },
-      materialLines: { include: { article: true, reservations: true } },
-      team: { include: { members: { include: { employee: { include: { user: true } } } } } },
-      vehicle: true,
-      planMarkers: { include: { article: true, file: true } },
-    },
+    include: ORDER_DETAIL_INCLUDE,
   });
 
   if (!order) return apiError("Auftrag nicht gefunden", 404);
@@ -75,6 +48,8 @@ export async function PATCH(
   });
 
   if (!existing) return apiError("Auftrag nicht gefunden", 404);
+
+  await ensureOrderPhases(id);
 
   const { status, priority, description, internalNotes, scheduledStart, scheduledEnd, teamId, vehicleId, completionResult, customerConfirmationStatus } = body;
 

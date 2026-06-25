@@ -1,6 +1,10 @@
 import { prisma } from "@/lib/prisma";
 import { requireAuth, apiSuccess } from "@/lib/api";
 import { calcAvailableQuantity } from "@/lib/inventory/formulas";
+import {
+  buildOrderOverdueWhere,
+  buildTodayActiveOrdersWhere,
+} from "@/lib/scheduling/overdue";
 
 export async function GET() {
   const auth = await requireAuth("orders.read");
@@ -15,17 +19,8 @@ export async function GET() {
     articleId?: string;
   }[] = [];
 
-  const todayStart = new Date();
-  todayStart.setHours(0, 0, 0, 0);
-  const todayEnd = new Date();
-  todayEnd.setHours(23, 59, 59, 999);
-
   const todayOrders = await prisma.order.findMany({
-    where: {
-      tenantId: auth.tenantId,
-      scheduledStart: { gte: todayStart, lte: todayEnd },
-      status: { notIn: ["STORNIERT", "ABGESCHLOSSEN", "ABGERECHNET"] },
-    },
+    where: buildTodayActiveOrdersWhere(auth.tenantId),
     include: { appointments: true },
   });
 
@@ -88,11 +83,7 @@ export async function GET() {
   }
 
   const overdue = await prisma.order.count({
-    where: {
-      tenantId: auth.tenantId,
-      scheduledStart: { lt: todayStart },
-      status: { in: ["NEUE_ANFRAGE", "TERMIN_GEBUCHT", "EINGEPLANT"] },
-    },
+    where: buildOrderOverdueWhere(auth.tenantId),
   });
 
   if (overdue > 0) {

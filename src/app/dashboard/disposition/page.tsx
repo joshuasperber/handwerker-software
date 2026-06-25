@@ -5,10 +5,12 @@ import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { InfoButton } from "@/components/ui/info-button";
-import { Users, Truck, AlertCircle } from "lucide-react";
+import { Users, Truck, AlertCircle, UserX } from "lucide-react";
 import { formatDateTime } from "@/lib/utils";
+import { isAppointmentOverdue } from "@/lib/scheduling/overdue";
 import { MATERIAL_STATUS_LABELS } from "@/lib/inventory/formulas";
 import { Button } from "@/components/ui/button";
+import { AssignOrderButton } from "@/components/disposition/assign-employees-panel";
 
 interface EmployeeAvail {
   id: string;
@@ -40,27 +42,45 @@ interface TodayOrder {
   employees: string[];
   team: string | null;
   vehicle: { name: string; licensePlate: string | null } | null;
+  scheduledStart: string | null;
+}
+
+interface UnassignedOrder {
+  id: string;
+  orderNumber: string;
+  title: string;
+  customer: string;
+  scheduledStart: string | null;
+  scheduledEnd: string | null;
+  phases: { id: string; name: string }[];
 }
 
 export default function DispositionPage() {
   const [employees, setEmployees] = useState<EmployeeAvail[]>([]);
   const [teams, setTeams] = useState<Team[]>([]);
   const [todayOrders, setTodayOrders] = useState<TodayOrder[]>([]);
-  const [critical, setCritical] = useState<{ materialIssues: unknown[]; delayedOrders: unknown[] } | null>(null);
+  const [unassigned, setUnassigned] = useState<UnassignedOrder[]>([]);
+  const [critical, setCritical] = useState<{ warnings: { type: string; severity: string }[] } | null>(null);
 
-  useEffect(() => {
+  function loadAll() {
     Promise.all([
       fetch("/api/disposition/availability").then((r) => r.json()),
       fetch("/api/dashboard/today").then((r) => r.json()),
       fetch("/api/dashboard/critical").then((r) => r.json()),
-    ]).then(([d, t, c]) => {
+      fetch("/api/disposition/unassigned").then((r) => r.json()),
+    ]).then(([d, t, c, u]) => {
       if (d.success) {
         setEmployees(d.data.employees);
         setTeams(d.data.teams);
       }
       if (t.success) setTodayOrders(t.data.orders);
       if (c.success) setCritical(c.data);
+      if (u.success) setUnassigned(u.data);
     });
+  }
+
+  useEffect(() => {
+    loadAll();
   }, []);
 
   // Vereinfachter, kalenderbasierter Mitarbeiter-Status:
@@ -109,14 +129,46 @@ export default function DispositionPage() {
         </div>
       </div>
 
-      {(critical?.materialIssues?.length ?? 0) > 0 && (
+      {(critical?.warnings?.filter((w) => w.type === "material_missing").length ?? 0) > 0 && (
         <Card className="mb-6 !border-red-200 !bg-red-50">
           <div className="flex items-center gap-2 text-red-700 font-medium mb-2">
             <AlertCircle className="h-5 w-5" /> Kritische Materialsituation
           </div>
           <p className="text-sm text-red-600">
-            {critical!.materialIssues.length} Auftrag/Aufträge mit fehlendem Material
+            {critical!.warnings.filter((w) => w.type === "material_missing").length} Auftrag/Aufträge mit fehlendem Material
           </p>
+        </Card>
+      )}
+
+      {unassigned.length > 0 && (
+        <Card title="Ohne Mitarbeiter" className="mb-6 !border-amber-200 !bg-amber-50/50">
+          <div className="flex items-center gap-2 text-amber-800 font-medium mb-3">
+            <UserX className="h-5 w-5" />
+            {unassigned.length} Auftrag/Aufträge ohne Zuweisung
+          </div>
+          <div className="divide-y divide-amber-100">
+            {unassigned.slice(0, 8).map((o) => (
+              <div key={o.id} className="py-3 flex flex-wrap items-center justify-between gap-2">
+                <div>
+                  <Link href={`/dashboard/auftraege/${o.id}`} className="font-medium text-[#0d5c63] hover:underline">
+                    {o.orderNumber}
+                  </Link>
+                  <p className="text-sm text-slate-600">{o.title} · {o.customer}</p>
+                  {o.scheduledStart && (
+                    <p className="text-xs text-slate-400">{formatDateTime(o.scheduledStart)}</p>
+                  )}
+                </div>
+                <AssignOrderButton
+                  orderId={o.id}
+                  orderNumber={o.orderNumber}
+                  phases={o.phases}
+                  defaultStart={o.scheduledStart}
+                  defaultEnd={o.scheduledEnd}
+                  onAssigned={loadAll}
+                />
+              </div>
+            ))}
+          </div>
         </Card>
       )}
 
@@ -138,7 +190,9 @@ export default function DispositionPage() {
       <div className="grid gap-6 lg:grid-cols-2">
         <Card title="Heutige Einsätze">
           <div className="divide-y divide-slate-50">
-            {todayOrders.map((o) => (
+            {todayOrders.map((o) => {
+              const overdue = o.scheduledStart && isAppointmentOverdue(o.scheduledStart, "GEPLANT");
+              return (
               <Link
                 key={o.id}
                 href={`/dashboard/auftraege/${o.id}`}
@@ -146,13 +200,16 @@ export default function DispositionPage() {
               >
                 <div className="flex items-center justify-between">
                   <p className="font-medium text-[#0d5c63]">{o.orderNumber}</p>
-                  <span className={`text-xs px-2 py-0.5 rounded-full ${
+                  <div className="flex items-center gap-1.5">
+                    {overdue && <Badge status="UEBERFAELLIG" label="Überfällig" />}
+                    <span className={`text-xs px-2 py-0.5 rounded-full ${
                     o.materialAmpel === "red" ? "bg-red-100 text-red-700" :
                     o.materialAmpel === "yellow" ? "bg-yellow-100 text-yellow-700" :
                     "bg-green-100 text-green-700"
                   }`}>
                     {MATERIAL_STATUS_LABELS[o.materialStatus] ?? o.materialStatus}
                   </span>
+                  </div>
                 </div>
                 <p className="text-sm text-slate-600">{o.title}</p>
                 <p className="text-xs text-slate-400">{o.customer} · {o.address}</p>
@@ -173,7 +230,8 @@ export default function DispositionPage() {
                   )}
                 </div>
               </Link>
-            ))}
+            );
+            })}
             {!todayOrders.length && (
               <p className="text-sm text-slate-500 py-4 text-center">Keine Einsätze heute.</p>
             )}

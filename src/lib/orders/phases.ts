@@ -8,9 +8,9 @@ import type { OrderPhaseType } from "@/generated/prisma/client";
  */
 export const STANDARD_PHASES = [
   { phaseKey: "AUFMASS", name: "Aufmaß", phaseType: "BESICHTIGUNG" },
-  { phaseKey: "ANGEBOT", name: "Angebot", phaseType: "PLANUNG" },
+  { phaseKey: "ANGEBOT", name: "Vertrag vorstellen", phaseType: "PLANUNG" },
   { phaseKey: "FERTIGEN", name: "Fertigen", phaseType: "VORFERTIGUNG" },
-  { phaseKey: "MONTIEREN", name: "Montieren", phaseType: "AUSFUEHRUNG_1" },
+  { phaseKey: "MONTIEREN", name: "Möbel einbauen", phaseType: "AUSFUEHRUNG_1" },
   { phaseKey: "RECHNUNG", name: "Rechnung", phaseType: "RECHNUNG" },
 ] as const;
 

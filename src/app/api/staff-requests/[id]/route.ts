@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { requireAuth, apiSuccess, apiError } from "@/lib/api";
 import { getEmployeeForUser } from "@/lib/monteur-access";
 import { acceptStaffRequest, declineStaffRequest } from "@/lib/staff-requests";
+import { queueStaffRequestResponded } from "@/lib/inngest/dispatch";
 
 export async function PATCH(
   request: NextRequest,
@@ -28,10 +29,35 @@ export async function PATCH(
 
   if (action === "accept") {
     const result = await acceptStaffRequest(id, auth.tenantId);
+    const empName = result.employee
+      ? `${result.employee.user.firstName} ${result.employee.user.lastName}`
+      : "Mitarbeiter";
+    await queueStaffRequestResponded({
+      tenantId: auth.tenantId,
+      requestedById: existing.requestedById,
+      orderNumber: result.order?.orderNumber ?? "",
+      employeeName: empName,
+      accepted: true,
+    }).catch((err) => console.error("[staff-request accept notify]", err));
     return apiSuccess(result);
   }
   if (action === "decline") {
+    const emp = await prisma.employee.findFirst({
+      where: { id: employee.id },
+      include: { user: true },
+    });
+    const order = await prisma.order.findFirst({
+      where: { id: existing.orderId },
+      select: { orderNumber: true },
+    });
     await declineStaffRequest(id, auth.tenantId);
+    await queueStaffRequestResponded({
+      tenantId: auth.tenantId,
+      requestedById: existing.requestedById,
+      orderNumber: order?.orderNumber ?? "",
+      employeeName: emp ? `${emp.user.firstName} ${emp.user.lastName}` : "Mitarbeiter",
+      accepted: false,
+    }).catch((err) => console.error("[staff-request decline notify]", err));
     return apiSuccess({ declined: true });
   }
 

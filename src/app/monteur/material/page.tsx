@@ -17,6 +17,7 @@ export default function MonteurMaterialPage() {
   const [error, setError] = useState("");
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Datenfetch beim Datumswechsel
     setLoading(true);
     setError("");
     fetchJson<{ byOrder: unknown[]; aggregated: unknown[] }>(`/api/monteur/pickup?date=${selectedDate}`)

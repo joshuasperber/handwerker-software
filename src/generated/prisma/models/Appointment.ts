@@ -28,10 +28,12 @@ export type AppointmentMinAggregateOutputType = {
   id: string | null
   tenantId: string | null
   orderId: string | null
+  orderPhaseId: string | null
   employeeId: string | null
   startTime: Date | null
   endTime: Date | null
   status: $Enums.AppointmentStatus | null
+  isTentative: boolean | null
   notes: string | null
   reminderSentAt: Date | null
   createdAt: Date | null
@@ -42,10 +44,12 @@ export type AppointmentMaxAggregateOutputType = {
   id: string | null
   tenantId: string | null
   orderId: string | null
+  orderPhaseId: string | null
   employeeId: string | null
   startTime: Date | null
   endTime: Date | null
   status: $Enums.AppointmentStatus | null
+  isTentative: boolean | null
   notes: string | null
   reminderSentAt: Date | null
   createdAt: Date | null
@@ -56,10 +60,12 @@ export type AppointmentCountAggregateOutputType = {
   id: number
   tenantId: number
   orderId: number
+  orderPhaseId: number
   employeeId: number
   startTime: number
   endTime: number
   status: number
+  isTentative: number
   notes: number
   reminderSentAt: number
   createdAt: number
@@ -72,10 +78,12 @@ export type AppointmentMinAggregateInputType = {
   id?: true
   tenantId?: true
   orderId?: true
+  orderPhaseId?: true
   employeeId?: true
   startTime?: true
   endTime?: true
   status?: true
+  isTentative?: true
   notes?: true
   reminderSentAt?: true
   createdAt?: true
@@ -86,10 +94,12 @@ export type AppointmentMaxAggregateInputType = {
   id?: true
   tenantId?: true
   orderId?: true
+  orderPhaseId?: true
   employeeId?: true
   startTime?: true
   endTime?: true
   status?: true
+  isTentative?: true
   notes?: true
   reminderSentAt?: true
   createdAt?: true
@@ -100,10 +110,12 @@ export type AppointmentCountAggregateInputType = {
   id?: true
   tenantId?: true
   orderId?: true
+  orderPhaseId?: true
   employeeId?: true
   startTime?: true
   endTime?: true
   status?: true
+  isTentative?: true
   notes?: true
   reminderSentAt?: true
   createdAt?: true
@@ -187,10 +199,12 @@ export type AppointmentGroupByOutputType = {
   id: string
   tenantId: string
   orderId: string
+  orderPhaseId: string | null
   employeeId: string | null
   startTime: Date
   endTime: Date
   status: $Enums.AppointmentStatus
+  isTentative: boolean
   notes: string | null
   reminderSentAt: Date | null
   createdAt: Date
@@ -222,16 +236,19 @@ export type AppointmentWhereInput = {
   id?: Prisma.StringFilter<"Appointment"> | string
   tenantId?: Prisma.StringFilter<"Appointment"> | string
   orderId?: Prisma.StringFilter<"Appointment"> | string
+  orderPhaseId?: Prisma.StringNullableFilter<"Appointment"> | string | null
   employeeId?: Prisma.StringNullableFilter<"Appointment"> | string | null
   startTime?: Prisma.DateTimeFilter<"Appointment"> | Date | string
   endTime?: Prisma.DateTimeFilter<"Appointment"> | Date | string
   status?: Prisma.EnumAppointmentStatusFilter<"Appointment"> | $Enums.AppointmentStatus
+  isTentative?: Prisma.BoolFilter<"Appointment"> | boolean
   notes?: Prisma.StringNullableFilter<"Appointment"> | string | null
   reminderSentAt?: Prisma.DateTimeNullableFilter<"Appointment"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Appointment"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Appointment"> | Date | string
   tenant?: Prisma.XOR<Prisma.TenantScalarRelationFilter, Prisma.TenantWhereInput>
   order?: Prisma.XOR<Prisma.OrderScalarRelationFilter, Prisma.OrderWhereInput>
+  orderPhase?: Prisma.XOR<Prisma.OrderPhaseNullableScalarRelationFilter, Prisma.OrderPhaseWhereInput> | null
   employee?: Prisma.XOR<Prisma.EmployeeNullableScalarRelationFilter, Prisma.EmployeeWhereInput> | null
 }
 
@@ -239,16 +256,19 @@ export type AppointmentOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   tenantId?: Prisma.SortOrder
   orderId?: Prisma.SortOrder
+  orderPhaseId?: Prisma.SortOrderInput | Prisma.SortOrder
   employeeId?: Prisma.SortOrderInput | Prisma.SortOrder
   startTime?: Prisma.SortOrder
   endTime?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  isTentative?: Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   reminderSentAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   tenant?: Prisma.TenantOrderByWithRelationInput
   order?: Prisma.OrderOrderByWithRelationInput
+  orderPhase?: Prisma.OrderPhaseOrderByWithRelationInput
   employee?: Prisma.EmployeeOrderByWithRelationInput
 }
 
@@ -259,16 +279,19 @@ export type AppointmentWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.AppointmentWhereInput | Prisma.AppointmentWhereInput[]
   tenantId?: Prisma.StringFilter<"Appointment"> | string
   orderId?: Prisma.StringFilter<"Appointment"> | string
+  orderPhaseId?: Prisma.StringNullableFilter<"Appointment"> | string | null
   employeeId?: Prisma.StringNullableFilter<"Appointment"> | string | null
   startTime?: Prisma.DateTimeFilter<"Appointment"> | Date | string
   endTime?: Prisma.DateTimeFilter<"Appointment"> | Date | string
   status?: Prisma.EnumAppointmentStatusFilter<"Appointment"> | $Enums.AppointmentStatus
+  isTentative?: Prisma.BoolFilter<"Appointment"> | boolean
   notes?: Prisma.StringNullableFilter<"Appointment"> | string | null
   reminderSentAt?: Prisma.DateTimeNullableFilter<"Appointment"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Appointment"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Appointment"> | Date | string
   tenant?: Prisma.XOR<Prisma.TenantScalarRelationFilter, Prisma.TenantWhereInput>
   order?: Prisma.XOR<Prisma.OrderScalarRelationFilter, Prisma.OrderWhereInput>
+  orderPhase?: Prisma.XOR<Prisma.OrderPhaseNullableScalarRelationFilter, Prisma.OrderPhaseWhereInput> | null
   employee?: Prisma.XOR<Prisma.EmployeeNullableScalarRelationFilter, Prisma.EmployeeWhereInput> | null
 }, "id">
 
@@ -276,10 +299,12 @@ export type AppointmentOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   tenantId?: Prisma.SortOrder
   orderId?: Prisma.SortOrder
+  orderPhaseId?: Prisma.SortOrderInput | Prisma.SortOrder
   employeeId?: Prisma.SortOrderInput | Prisma.SortOrder
   startTime?: Prisma.SortOrder
   endTime?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  isTentative?: Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   reminderSentAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -296,10 +321,12 @@ export type AppointmentScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"Appointment"> | string
   tenantId?: Prisma.StringWithAggregatesFilter<"Appointment"> | string
   orderId?: Prisma.StringWithAggregatesFilter<"Appointment"> | string
+  orderPhaseId?: Prisma.StringNullableWithAggregatesFilter<"Appointment"> | string | null
   employeeId?: Prisma.StringNullableWithAggregatesFilter<"Appointment"> | string | null
   startTime?: Prisma.DateTimeWithAggregatesFilter<"Appointment"> | Date | string
   endTime?: Prisma.DateTimeWithAggregatesFilter<"Appointment"> | Date | string
   status?: Prisma.EnumAppointmentStatusWithAggregatesFilter<"Appointment"> | $Enums.AppointmentStatus
+  isTentative?: Prisma.BoolWithAggregatesFilter<"Appointment"> | boolean
   notes?: Prisma.StringNullableWithAggregatesFilter<"Appointment"> | string | null
   reminderSentAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Appointment"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Appointment"> | Date | string
@@ -311,12 +338,14 @@ export type AppointmentCreateInput = {
   startTime: Date | string
   endTime: Date | string
   status?: $Enums.AppointmentStatus
+  isTentative?: boolean
   notes?: string | null
   reminderSentAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutAppointmentsInput
   order: Prisma.OrderCreateNestedOneWithoutAppointmentsInput
+  orderPhase?: Prisma.OrderPhaseCreateNestedOneWithoutAppointmentsInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutAppointmentsInput
 }
 
@@ -324,10 +353,12 @@ export type AppointmentUncheckedCreateInput = {
   id?: string
   tenantId: string
   orderId: string
+  orderPhaseId?: string | null
   employeeId?: string | null
   startTime: Date | string
   endTime: Date | string
   status?: $Enums.AppointmentStatus
+  isTentative?: boolean
   notes?: string | null
   reminderSentAt?: Date | string | null
   createdAt?: Date | string
@@ -339,12 +370,14 @@ export type AppointmentUpdateInput = {
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
+  isTentative?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reminderSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutAppointmentsNestedInput
   order?: Prisma.OrderUpdateOneRequiredWithoutAppointmentsNestedInput
+  orderPhase?: Prisma.OrderPhaseUpdateOneWithoutAppointmentsNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutAppointmentsNestedInput
 }
 
@@ -352,10 +385,12 @@ export type AppointmentUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   orderId?: Prisma.StringFieldUpdateOperationsInput | string
+  orderPhaseId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employeeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
+  isTentative?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reminderSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -366,10 +401,12 @@ export type AppointmentCreateManyInput = {
   id?: string
   tenantId: string
   orderId: string
+  orderPhaseId?: string | null
   employeeId?: string | null
   startTime: Date | string
   endTime: Date | string
   status?: $Enums.AppointmentStatus
+  isTentative?: boolean
   notes?: string | null
   reminderSentAt?: Date | string | null
   createdAt?: Date | string
@@ -381,6 +418,7 @@ export type AppointmentUpdateManyMutationInput = {
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
+  isTentative?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reminderSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -391,10 +429,12 @@ export type AppointmentUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   orderId?: Prisma.StringFieldUpdateOperationsInput | string
+  orderPhaseId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employeeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
+  isTentative?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reminderSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -415,10 +455,12 @@ export type AppointmentCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   tenantId?: Prisma.SortOrder
   orderId?: Prisma.SortOrder
+  orderPhaseId?: Prisma.SortOrder
   employeeId?: Prisma.SortOrder
   startTime?: Prisma.SortOrder
   endTime?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  isTentative?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   reminderSentAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -429,10 +471,12 @@ export type AppointmentMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   tenantId?: Prisma.SortOrder
   orderId?: Prisma.SortOrder
+  orderPhaseId?: Prisma.SortOrder
   employeeId?: Prisma.SortOrder
   startTime?: Prisma.SortOrder
   endTime?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  isTentative?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   reminderSentAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -443,10 +487,12 @@ export type AppointmentMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   tenantId?: Prisma.SortOrder
   orderId?: Prisma.SortOrder
+  orderPhaseId?: Prisma.SortOrder
   employeeId?: Prisma.SortOrder
   startTime?: Prisma.SortOrder
   endTime?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  isTentative?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   reminderSentAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -583,26 +629,72 @@ export type EnumAppointmentStatusFieldUpdateOperationsInput = {
   set?: $Enums.AppointmentStatus
 }
 
+export type AppointmentCreateNestedManyWithoutOrderPhaseInput = {
+  create?: Prisma.XOR<Prisma.AppointmentCreateWithoutOrderPhaseInput, Prisma.AppointmentUncheckedCreateWithoutOrderPhaseInput> | Prisma.AppointmentCreateWithoutOrderPhaseInput[] | Prisma.AppointmentUncheckedCreateWithoutOrderPhaseInput[]
+  connectOrCreate?: Prisma.AppointmentCreateOrConnectWithoutOrderPhaseInput | Prisma.AppointmentCreateOrConnectWithoutOrderPhaseInput[]
+  createMany?: Prisma.AppointmentCreateManyOrderPhaseInputEnvelope
+  connect?: Prisma.AppointmentWhereUniqueInput | Prisma.AppointmentWhereUniqueInput[]
+}
+
+export type AppointmentUncheckedCreateNestedManyWithoutOrderPhaseInput = {
+  create?: Prisma.XOR<Prisma.AppointmentCreateWithoutOrderPhaseInput, Prisma.AppointmentUncheckedCreateWithoutOrderPhaseInput> | Prisma.AppointmentCreateWithoutOrderPhaseInput[] | Prisma.AppointmentUncheckedCreateWithoutOrderPhaseInput[]
+  connectOrCreate?: Prisma.AppointmentCreateOrConnectWithoutOrderPhaseInput | Prisma.AppointmentCreateOrConnectWithoutOrderPhaseInput[]
+  createMany?: Prisma.AppointmentCreateManyOrderPhaseInputEnvelope
+  connect?: Prisma.AppointmentWhereUniqueInput | Prisma.AppointmentWhereUniqueInput[]
+}
+
+export type AppointmentUpdateManyWithoutOrderPhaseNestedInput = {
+  create?: Prisma.XOR<Prisma.AppointmentCreateWithoutOrderPhaseInput, Prisma.AppointmentUncheckedCreateWithoutOrderPhaseInput> | Prisma.AppointmentCreateWithoutOrderPhaseInput[] | Prisma.AppointmentUncheckedCreateWithoutOrderPhaseInput[]
+  connectOrCreate?: Prisma.AppointmentCreateOrConnectWithoutOrderPhaseInput | Prisma.AppointmentCreateOrConnectWithoutOrderPhaseInput[]
+  upsert?: Prisma.AppointmentUpsertWithWhereUniqueWithoutOrderPhaseInput | Prisma.AppointmentUpsertWithWhereUniqueWithoutOrderPhaseInput[]
+  createMany?: Prisma.AppointmentCreateManyOrderPhaseInputEnvelope
+  set?: Prisma.AppointmentWhereUniqueInput | Prisma.AppointmentWhereUniqueInput[]
+  disconnect?: Prisma.AppointmentWhereUniqueInput | Prisma.AppointmentWhereUniqueInput[]
+  delete?: Prisma.AppointmentWhereUniqueInput | Prisma.AppointmentWhereUniqueInput[]
+  connect?: Prisma.AppointmentWhereUniqueInput | Prisma.AppointmentWhereUniqueInput[]
+  update?: Prisma.AppointmentUpdateWithWhereUniqueWithoutOrderPhaseInput | Prisma.AppointmentUpdateWithWhereUniqueWithoutOrderPhaseInput[]
+  updateMany?: Prisma.AppointmentUpdateManyWithWhereWithoutOrderPhaseInput | Prisma.AppointmentUpdateManyWithWhereWithoutOrderPhaseInput[]
+  deleteMany?: Prisma.AppointmentScalarWhereInput | Prisma.AppointmentScalarWhereInput[]
+}
+
+export type AppointmentUncheckedUpdateManyWithoutOrderPhaseNestedInput = {
+  create?: Prisma.XOR<Prisma.AppointmentCreateWithoutOrderPhaseInput, Prisma.AppointmentUncheckedCreateWithoutOrderPhaseInput> | Prisma.AppointmentCreateWithoutOrderPhaseInput[] | Prisma.AppointmentUncheckedCreateWithoutOrderPhaseInput[]
+  connectOrCreate?: Prisma.AppointmentCreateOrConnectWithoutOrderPhaseInput | Prisma.AppointmentCreateOrConnectWithoutOrderPhaseInput[]
+  upsert?: Prisma.AppointmentUpsertWithWhereUniqueWithoutOrderPhaseInput | Prisma.AppointmentUpsertWithWhereUniqueWithoutOrderPhaseInput[]
+  createMany?: Prisma.AppointmentCreateManyOrderPhaseInputEnvelope
+  set?: Prisma.AppointmentWhereUniqueInput | Prisma.AppointmentWhereUniqueInput[]
+  disconnect?: Prisma.AppointmentWhereUniqueInput | Prisma.AppointmentWhereUniqueInput[]
+  delete?: Prisma.AppointmentWhereUniqueInput | Prisma.AppointmentWhereUniqueInput[]
+  connect?: Prisma.AppointmentWhereUniqueInput | Prisma.AppointmentWhereUniqueInput[]
+  update?: Prisma.AppointmentUpdateWithWhereUniqueWithoutOrderPhaseInput | Prisma.AppointmentUpdateWithWhereUniqueWithoutOrderPhaseInput[]
+  updateMany?: Prisma.AppointmentUpdateManyWithWhereWithoutOrderPhaseInput | Prisma.AppointmentUpdateManyWithWhereWithoutOrderPhaseInput[]
+  deleteMany?: Prisma.AppointmentScalarWhereInput | Prisma.AppointmentScalarWhereInput[]
+}
+
 export type AppointmentCreateWithoutTenantInput = {
   id?: string
   startTime: Date | string
   endTime: Date | string
   status?: $Enums.AppointmentStatus
+  isTentative?: boolean
   notes?: string | null
   reminderSentAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   order: Prisma.OrderCreateNestedOneWithoutAppointmentsInput
+  orderPhase?: Prisma.OrderPhaseCreateNestedOneWithoutAppointmentsInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutAppointmentsInput
 }
 
 export type AppointmentUncheckedCreateWithoutTenantInput = {
   id?: string
   orderId: string
+  orderPhaseId?: string | null
   employeeId?: string | null
   startTime: Date | string
   endTime: Date | string
   status?: $Enums.AppointmentStatus
+  isTentative?: boolean
   notes?: string | null
   reminderSentAt?: Date | string | null
   createdAt?: Date | string
@@ -642,10 +734,12 @@ export type AppointmentScalarWhereInput = {
   id?: Prisma.StringFilter<"Appointment"> | string
   tenantId?: Prisma.StringFilter<"Appointment"> | string
   orderId?: Prisma.StringFilter<"Appointment"> | string
+  orderPhaseId?: Prisma.StringNullableFilter<"Appointment"> | string | null
   employeeId?: Prisma.StringNullableFilter<"Appointment"> | string | null
   startTime?: Prisma.DateTimeFilter<"Appointment"> | Date | string
   endTime?: Prisma.DateTimeFilter<"Appointment"> | Date | string
   status?: Prisma.EnumAppointmentStatusFilter<"Appointment"> | $Enums.AppointmentStatus
+  isTentative?: Prisma.BoolFilter<"Appointment"> | boolean
   notes?: Prisma.StringNullableFilter<"Appointment"> | string | null
   reminderSentAt?: Prisma.DateTimeNullableFilter<"Appointment"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Appointment"> | Date | string
@@ -657,21 +751,25 @@ export type AppointmentCreateWithoutEmployeeInput = {
   startTime: Date | string
   endTime: Date | string
   status?: $Enums.AppointmentStatus
+  isTentative?: boolean
   notes?: string | null
   reminderSentAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutAppointmentsInput
   order: Prisma.OrderCreateNestedOneWithoutAppointmentsInput
+  orderPhase?: Prisma.OrderPhaseCreateNestedOneWithoutAppointmentsInput
 }
 
 export type AppointmentUncheckedCreateWithoutEmployeeInput = {
   id?: string
   tenantId: string
   orderId: string
+  orderPhaseId?: string | null
   startTime: Date | string
   endTime: Date | string
   status?: $Enums.AppointmentStatus
+  isTentative?: boolean
   notes?: string | null
   reminderSentAt?: Date | string | null
   createdAt?: Date | string
@@ -709,21 +807,25 @@ export type AppointmentCreateWithoutOrderInput = {
   startTime: Date | string
   endTime: Date | string
   status?: $Enums.AppointmentStatus
+  isTentative?: boolean
   notes?: string | null
   reminderSentAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutAppointmentsInput
+  orderPhase?: Prisma.OrderPhaseCreateNestedOneWithoutAppointmentsInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutAppointmentsInput
 }
 
 export type AppointmentUncheckedCreateWithoutOrderInput = {
   id?: string
   tenantId: string
+  orderPhaseId?: string | null
   employeeId?: string | null
   startTime: Date | string
   endTime: Date | string
   status?: $Enums.AppointmentStatus
+  isTentative?: boolean
   notes?: string | null
   reminderSentAt?: Date | string | null
   createdAt?: Date | string
@@ -756,13 +858,71 @@ export type AppointmentUpdateManyWithWhereWithoutOrderInput = {
   data: Prisma.XOR<Prisma.AppointmentUpdateManyMutationInput, Prisma.AppointmentUncheckedUpdateManyWithoutOrderInput>
 }
 
-export type AppointmentCreateManyTenantInput = {
+export type AppointmentCreateWithoutOrderPhaseInput = {
   id?: string
+  startTime: Date | string
+  endTime: Date | string
+  status?: $Enums.AppointmentStatus
+  isTentative?: boolean
+  notes?: string | null
+  reminderSentAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tenant: Prisma.TenantCreateNestedOneWithoutAppointmentsInput
+  order: Prisma.OrderCreateNestedOneWithoutAppointmentsInput
+  employee?: Prisma.EmployeeCreateNestedOneWithoutAppointmentsInput
+}
+
+export type AppointmentUncheckedCreateWithoutOrderPhaseInput = {
+  id?: string
+  tenantId: string
   orderId: string
   employeeId?: string | null
   startTime: Date | string
   endTime: Date | string
   status?: $Enums.AppointmentStatus
+  isTentative?: boolean
+  notes?: string | null
+  reminderSentAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type AppointmentCreateOrConnectWithoutOrderPhaseInput = {
+  where: Prisma.AppointmentWhereUniqueInput
+  create: Prisma.XOR<Prisma.AppointmentCreateWithoutOrderPhaseInput, Prisma.AppointmentUncheckedCreateWithoutOrderPhaseInput>
+}
+
+export type AppointmentCreateManyOrderPhaseInputEnvelope = {
+  data: Prisma.AppointmentCreateManyOrderPhaseInput | Prisma.AppointmentCreateManyOrderPhaseInput[]
+  skipDuplicates?: boolean
+}
+
+export type AppointmentUpsertWithWhereUniqueWithoutOrderPhaseInput = {
+  where: Prisma.AppointmentWhereUniqueInput
+  update: Prisma.XOR<Prisma.AppointmentUpdateWithoutOrderPhaseInput, Prisma.AppointmentUncheckedUpdateWithoutOrderPhaseInput>
+  create: Prisma.XOR<Prisma.AppointmentCreateWithoutOrderPhaseInput, Prisma.AppointmentUncheckedCreateWithoutOrderPhaseInput>
+}
+
+export type AppointmentUpdateWithWhereUniqueWithoutOrderPhaseInput = {
+  where: Prisma.AppointmentWhereUniqueInput
+  data: Prisma.XOR<Prisma.AppointmentUpdateWithoutOrderPhaseInput, Prisma.AppointmentUncheckedUpdateWithoutOrderPhaseInput>
+}
+
+export type AppointmentUpdateManyWithWhereWithoutOrderPhaseInput = {
+  where: Prisma.AppointmentScalarWhereInput
+  data: Prisma.XOR<Prisma.AppointmentUpdateManyMutationInput, Prisma.AppointmentUncheckedUpdateManyWithoutOrderPhaseInput>
+}
+
+export type AppointmentCreateManyTenantInput = {
+  id?: string
+  orderId: string
+  orderPhaseId?: string | null
+  employeeId?: string | null
+  startTime: Date | string
+  endTime: Date | string
+  status?: $Enums.AppointmentStatus
+  isTentative?: boolean
   notes?: string | null
   reminderSentAt?: Date | string | null
   createdAt?: Date | string
@@ -774,21 +934,25 @@ export type AppointmentUpdateWithoutTenantInput = {
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
+  isTentative?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reminderSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   order?: Prisma.OrderUpdateOneRequiredWithoutAppointmentsNestedInput
+  orderPhase?: Prisma.OrderPhaseUpdateOneWithoutAppointmentsNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutAppointmentsNestedInput
 }
 
 export type AppointmentUncheckedUpdateWithoutTenantInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   orderId?: Prisma.StringFieldUpdateOperationsInput | string
+  orderPhaseId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employeeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
+  isTentative?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reminderSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -798,10 +962,12 @@ export type AppointmentUncheckedUpdateWithoutTenantInput = {
 export type AppointmentUncheckedUpdateManyWithoutTenantInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   orderId?: Prisma.StringFieldUpdateOperationsInput | string
+  orderPhaseId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employeeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
+  isTentative?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reminderSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -812,9 +978,11 @@ export type AppointmentCreateManyEmployeeInput = {
   id?: string
   tenantId: string
   orderId: string
+  orderPhaseId?: string | null
   startTime: Date | string
   endTime: Date | string
   status?: $Enums.AppointmentStatus
+  isTentative?: boolean
   notes?: string | null
   reminderSentAt?: Date | string | null
   createdAt?: Date | string
@@ -826,21 +994,25 @@ export type AppointmentUpdateWithoutEmployeeInput = {
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
+  isTentative?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reminderSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutAppointmentsNestedInput
   order?: Prisma.OrderUpdateOneRequiredWithoutAppointmentsNestedInput
+  orderPhase?: Prisma.OrderPhaseUpdateOneWithoutAppointmentsNestedInput
 }
 
 export type AppointmentUncheckedUpdateWithoutEmployeeInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   orderId?: Prisma.StringFieldUpdateOperationsInput | string
+  orderPhaseId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
+  isTentative?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reminderSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -851,9 +1023,11 @@ export type AppointmentUncheckedUpdateManyWithoutEmployeeInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   orderId?: Prisma.StringFieldUpdateOperationsInput | string
+  orderPhaseId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
+  isTentative?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reminderSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -863,10 +1037,12 @@ export type AppointmentUncheckedUpdateManyWithoutEmployeeInput = {
 export type AppointmentCreateManyOrderInput = {
   id?: string
   tenantId: string
+  orderPhaseId?: string | null
   employeeId?: string | null
   startTime: Date | string
   endTime: Date | string
   status?: $Enums.AppointmentStatus
+  isTentative?: boolean
   notes?: string | null
   reminderSentAt?: Date | string | null
   createdAt?: Date | string
@@ -878,21 +1054,25 @@ export type AppointmentUpdateWithoutOrderInput = {
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
+  isTentative?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reminderSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutAppointmentsNestedInput
+  orderPhase?: Prisma.OrderPhaseUpdateOneWithoutAppointmentsNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutAppointmentsNestedInput
 }
 
 export type AppointmentUncheckedUpdateWithoutOrderInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  orderPhaseId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employeeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
+  isTentative?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reminderSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -902,10 +1082,72 @@ export type AppointmentUncheckedUpdateWithoutOrderInput = {
 export type AppointmentUncheckedUpdateManyWithoutOrderInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  orderPhaseId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employeeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
+  isTentative?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reminderSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type AppointmentCreateManyOrderPhaseInput = {
+  id?: string
+  tenantId: string
+  orderId: string
+  employeeId?: string | null
+  startTime: Date | string
+  endTime: Date | string
+  status?: $Enums.AppointmentStatus
+  isTentative?: boolean
+  notes?: string | null
+  reminderSentAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type AppointmentUpdateWithoutOrderPhaseInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
+  isTentative?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reminderSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutAppointmentsNestedInput
+  order?: Prisma.OrderUpdateOneRequiredWithoutAppointmentsNestedInput
+  employee?: Prisma.EmployeeUpdateOneWithoutAppointmentsNestedInput
+}
+
+export type AppointmentUncheckedUpdateWithoutOrderPhaseInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  orderId?: Prisma.StringFieldUpdateOperationsInput | string
+  employeeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
+  isTentative?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reminderSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type AppointmentUncheckedUpdateManyWithoutOrderPhaseInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  orderId?: Prisma.StringFieldUpdateOperationsInput | string
+  employeeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
+  isTentative?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reminderSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -918,16 +1160,19 @@ export type AppointmentSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   id?: boolean
   tenantId?: boolean
   orderId?: boolean
+  orderPhaseId?: boolean
   employeeId?: boolean
   startTime?: boolean
   endTime?: boolean
   status?: boolean
+  isTentative?: boolean
   notes?: boolean
   reminderSentAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
+  orderPhase?: boolean | Prisma.Appointment$orderPhaseArgs<ExtArgs>
   employee?: boolean | Prisma.Appointment$employeeArgs<ExtArgs>
 }, ExtArgs["result"]["appointment"]>
 
@@ -935,16 +1180,19 @@ export type AppointmentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   id?: boolean
   tenantId?: boolean
   orderId?: boolean
+  orderPhaseId?: boolean
   employeeId?: boolean
   startTime?: boolean
   endTime?: boolean
   status?: boolean
+  isTentative?: boolean
   notes?: boolean
   reminderSentAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
+  orderPhase?: boolean | Prisma.Appointment$orderPhaseArgs<ExtArgs>
   employee?: boolean | Prisma.Appointment$employeeArgs<ExtArgs>
 }, ExtArgs["result"]["appointment"]>
 
@@ -952,16 +1200,19 @@ export type AppointmentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   id?: boolean
   tenantId?: boolean
   orderId?: boolean
+  orderPhaseId?: boolean
   employeeId?: boolean
   startTime?: boolean
   endTime?: boolean
   status?: boolean
+  isTentative?: boolean
   notes?: boolean
   reminderSentAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
+  orderPhase?: boolean | Prisma.Appointment$orderPhaseArgs<ExtArgs>
   employee?: boolean | Prisma.Appointment$employeeArgs<ExtArgs>
 }, ExtArgs["result"]["appointment"]>
 
@@ -969,30 +1220,35 @@ export type AppointmentSelectScalar = {
   id?: boolean
   tenantId?: boolean
   orderId?: boolean
+  orderPhaseId?: boolean
   employeeId?: boolean
   startTime?: boolean
   endTime?: boolean
   status?: boolean
+  isTentative?: boolean
   notes?: boolean
   reminderSentAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type AppointmentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "orderId" | "employeeId" | "startTime" | "endTime" | "status" | "notes" | "reminderSentAt" | "createdAt" | "updatedAt", ExtArgs["result"]["appointment"]>
+export type AppointmentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "orderId" | "orderPhaseId" | "employeeId" | "startTime" | "endTime" | "status" | "isTentative" | "notes" | "reminderSentAt" | "createdAt" | "updatedAt", ExtArgs["result"]["appointment"]>
 export type AppointmentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
+  orderPhase?: boolean | Prisma.Appointment$orderPhaseArgs<ExtArgs>
   employee?: boolean | Prisma.Appointment$employeeArgs<ExtArgs>
 }
 export type AppointmentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
+  orderPhase?: boolean | Prisma.Appointment$orderPhaseArgs<ExtArgs>
   employee?: boolean | Prisma.Appointment$employeeArgs<ExtArgs>
 }
 export type AppointmentIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
+  orderPhase?: boolean | Prisma.Appointment$orderPhaseArgs<ExtArgs>
   employee?: boolean | Prisma.Appointment$employeeArgs<ExtArgs>
 }
 
@@ -1001,16 +1257,19 @@ export type $AppointmentPayload<ExtArgs extends runtime.Types.Extensions.Interna
   objects: {
     tenant: Prisma.$TenantPayload<ExtArgs>
     order: Prisma.$OrderPayload<ExtArgs>
+    orderPhase: Prisma.$OrderPhasePayload<ExtArgs> | null
     employee: Prisma.$EmployeePayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     tenantId: string
     orderId: string
+    orderPhaseId: string | null
     employeeId: string | null
     startTime: Date
     endTime: Date
     status: $Enums.AppointmentStatus
+    isTentative: boolean
     notes: string | null
     reminderSentAt: Date | null
     createdAt: Date
@@ -1411,6 +1670,7 @@ export interface Prisma__AppointmentClient<T, Null = never, ExtArgs extends runt
   readonly [Symbol.toStringTag]: "PrismaPromise"
   tenant<T extends Prisma.TenantDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TenantDefaultArgs<ExtArgs>>): Prisma.Prisma__TenantClient<runtime.Types.Result.GetResult<Prisma.$TenantPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   order<T extends Prisma.OrderDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OrderDefaultArgs<ExtArgs>>): Prisma.Prisma__OrderClient<runtime.Types.Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  orderPhase<T extends Prisma.Appointment$orderPhaseArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Appointment$orderPhaseArgs<ExtArgs>>): Prisma.Prisma__OrderPhaseClient<runtime.Types.Result.GetResult<Prisma.$OrderPhasePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   employee<T extends Prisma.Appointment$employeeArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Appointment$employeeArgs<ExtArgs>>): Prisma.Prisma__EmployeeClient<runtime.Types.Result.GetResult<Prisma.$EmployeePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1444,10 +1704,12 @@ export interface AppointmentFieldRefs {
   readonly id: Prisma.FieldRef<"Appointment", 'String'>
   readonly tenantId: Prisma.FieldRef<"Appointment", 'String'>
   readonly orderId: Prisma.FieldRef<"Appointment", 'String'>
+  readonly orderPhaseId: Prisma.FieldRef<"Appointment", 'String'>
   readonly employeeId: Prisma.FieldRef<"Appointment", 'String'>
   readonly startTime: Prisma.FieldRef<"Appointment", 'DateTime'>
   readonly endTime: Prisma.FieldRef<"Appointment", 'DateTime'>
   readonly status: Prisma.FieldRef<"Appointment", 'AppointmentStatus'>
+  readonly isTentative: Prisma.FieldRef<"Appointment", 'Boolean'>
   readonly notes: Prisma.FieldRef<"Appointment", 'String'>
   readonly reminderSentAt: Prisma.FieldRef<"Appointment", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"Appointment", 'DateTime'>
@@ -1850,6 +2112,25 @@ export type AppointmentDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.I
    * Limit how many Appointments to delete.
    */
   limit?: number
+}
+
+/**
+ * Appointment.orderPhase
+ */
+export type Appointment$orderPhaseArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the OrderPhase
+   */
+  select?: Prisma.OrderPhaseSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the OrderPhase
+   */
+  omit?: Prisma.OrderPhaseOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OrderPhaseInclude<ExtArgs> | null
+  where?: Prisma.OrderPhaseWhereInput
 }
 
 /**

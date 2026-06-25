@@ -8,10 +8,13 @@ import {
   canAccessMonteurApp,
   canAccessGuestPortal,
   canAccessCustomerPortal,
+  isMonteurExcludedDashboardPath,
   type Permission,
 } from "@/lib/permissions";
 
-function getDashboardPermission(pathname: string): Permission | null | undefined {
+function getDashboardPermission(
+  pathname: string
+): Permission | null | "deny" {
   if (pathname === "/dashboard" || pathname === "/dashboard/profil") return null;
   if (pathname === "/dashboard/auftraege/neu") return "orders.write";
   if (pathname === "/dashboard/kunden/neu") return "customers.write";
@@ -31,9 +34,11 @@ function getDashboardPermission(pathname: string): Permission | null | undefined
   if (pathname.startsWith("/dashboard/maschinen")) return "calculations.settings";
   if (pathname.startsWith("/dashboard/einstellungen/rechnung")) return "calculations.settings";
   if (pathname.startsWith("/dashboard/einstellungen/benachrichtigungen")) return "notifications.manage";
+  if (pathname.startsWith("/dashboard/einstellungen/system")) return "notifications.manage";
+  if (pathname.startsWith("/dashboard/einstellungen")) return "tenant.manage";
   if (pathname.startsWith("/dashboard/nachrichten")) return "messages.read";
   if (pathname.startsWith("/dashboard/stundenzettel")) return "monteur.own";
-  return undefined;
+  return "deny";
 }
 
 export async function middleware(request: NextRequest) {
@@ -55,8 +60,14 @@ export async function middleware(request: NextRequest) {
     if (!canAccessDashboard(session.role)) {
       return NextResponse.redirect(new URL(getRoleHomePath(session.role), request.url));
     }
+    if (session.role === "MONTEUR" && isMonteurExcludedDashboardPath(pathname)) {
+      return NextResponse.redirect(new URL("/dashboard", request.url));
+    }
     const perm = getDashboardPermission(pathname);
-    if (perm !== undefined && perm !== null && !hasPermission(session.role, perm)) {
+    if (perm === "deny") {
+      return NextResponse.redirect(new URL("/dashboard", request.url));
+    }
+    if (perm !== null && !hasPermission(session.role, perm)) {
       return NextResponse.redirect(new URL("/dashboard", request.url));
     }
   }

@@ -7,8 +7,14 @@ import {
   SESSION_COOKIE_OPTIONS,
   applySessionCookie,
 } from "@/lib/auth";
-import { apiSuccess, apiError } from "@/lib/api";
+import { apiSuccess, apiError, getClientIp } from "@/lib/api";
 import { getRoleHomePath } from "@/lib/role-routing";
+import {
+  isLoginRateLimited,
+  recordLoginAttempt,
+  pruneLoginAttempts,
+} from "@/lib/auth/rate-limit";
+import { logger } from "@/lib/logger";
 
 const DEFAULT_TENANT = process.env.NEXT_PUBLIC_DEFAULT_TENANT_SLUG ?? "demo";
 
@@ -31,41 +37,23 @@ function loginErrorRedirect(request: NextRequest, code: string): NextResponse {
 }
 
 function mapLoginError(err: unknown) {
-  const message = err instanceof Error ? err.message : String(err);
-  if (message.includes("DATABASE_URL is not set")) {
-    return apiError(
-      "Datenbank nicht konfiguriert. DATABASE_URL in Vercel setzen (Supabase Connection String).",
-      503
-    );
+  if (process.env.NODE_ENV === "development") {
+    const message = err instanceof Error ? err.message : String(err);
+    if (message.includes("DATABASE_URL is not set")) {
+      return apiError(
+        "Datenbank nicht konfiguriert. DATABASE_URL in Vercel setzen (Supabase Connection String).",
+        503
+      );
+    }
+    if (message.includes("JWT_SECRET is not set")) {
+      return apiError("Auth nicht konfiguriert. JWT_SECRET in Vercel setzen.", 503);
+    }
+    return apiError(`Anmeldung fehlgeschlagen: ${message.slice(0, 120)}`, 500);
   }
-  if (message.includes("JWT_SECRET is not set")) {
-    return apiError("Auth nicht konfiguriert. JWT_SECRET in Vercel setzen.", 503);
-  }
-  if (
-    message.includes("password authentication failed") ||
-    message.includes("Authentication failed")
-  ) {
-    return apiError("Supabase-Datenbankpasswort in DATABASE_URL ist falsch.", 503);
-  }
-  if (message.includes("prepared statement")) {
-    return apiError(
-      "DATABASE_URL: Transaction Pooler (Port 6543) mit ?pgbouncer=true verwenden.",
-      503
-    );
-  }
-  if (
-    message.includes("connect") ||
-    message.includes("ECONNREFUSED") ||
-    message.includes("Can't reach database") ||
-    message.includes("ENOTFOUND") ||
-    message.includes("timeout")
-  ) {
-    return apiError(
-      "Datenbank nicht erreichbar. DATABASE_URL prüfen (Supabase Pooler, Port 6543).",
-      503
-    );
-  }
-  return apiError(`Anmeldung fehlgeschlagen: ${message.slice(0, 120)}`, 500);
+  return apiError(
+    "Anmeldung vorübergehend nicht möglich. Bitte später erneut versuchen.",
+    503
+  );
 }
 
 async function parseLoginInput(request: NextRequest) {
@@ -95,11 +83,22 @@ export async function POST(request: NextRequest) {
         : loginErrorRedirect(request, "invalid");
     }
 
+    const ip = getClientIp(request);
+    const rate = await isLoginRateLimited(parsed.data.email, ip);
+    if (rate.limited) {
+      return jsonClient
+        ? apiError(rate.reason ?? "Zu viele Versuche", 429)
+        : loginErrorRedirect(request, "rate");
+    }
+
     const user = await login(
       parsed.data.email,
       parsed.data.password,
       parsed.data.tenantSlug
     );
+
+    await recordLoginAttempt(parsed.data.email, ip, Boolean(user));
+    void pruneLoginAttempts().catch(() => undefined);
 
     if (!user) {
       return jsonClient
@@ -122,7 +121,7 @@ export async function POST(request: NextRequest) {
     applySessionCookie(response, token);
     return response;
   } catch (err) {
-    console.error("[auth/login]", err);
+    logger.error("login failed", { route: "/api/auth/login" }, err);
     const jsonClient = wantsJsonResponse(request);
     const mapped = mapLoginError(err);
     if (jsonClient) return mapped;

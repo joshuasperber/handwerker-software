@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAuth, apiSuccess, apiError } from "@/lib/api";
 import { hashPassword } from "@/lib/auth";
+import { bumpSessionVersion } from "@/lib/auth/session-version";
 import type { UserRole } from "@/generated/prisma/client";
 
 const ALLOWED_ROLES: UserRole[] = ["ADMIN", "MEISTER", "BUERO", "MONTEUR"];
@@ -64,6 +65,9 @@ export async function PATCH(
     if (existing) return apiError("E-Mail bereits vergeben", 400);
   }
 
+  const roleChanged = role !== undefined && role !== employee.user.role;
+  const deactivate = isActive === false && employee.user.isActive;
+
   await prisma.user.update({
     where: { id: employee.userId },
     data: {
@@ -74,13 +78,15 @@ export async function PATCH(
       ...(address !== undefined ? { address: address || null } : {}),
       ...(role !== undefined ? { role } : {}),
       ...(isActive !== undefined ? { isActive } : {}),
-      // Setzt der Admin ein neues Passwort, gilt es als Reset: der Mitarbeiter
-      // muss es beim nächsten Login erneut ändern.
       ...(password
         ? { passwordHash: await hashPassword(password), mustChangePassword: true }
         : {}),
     },
   });
+
+  if (password || roleChanged || deactivate) {
+    await bumpSessionVersion(employee.userId);
+  }
 
   if (qualifications !== undefined) {
     await prisma.employeeQualification.deleteMany({ where: { employeeId: id } });

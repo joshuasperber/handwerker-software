@@ -449,7 +449,9 @@ export const ModelName = {
   PlanMarker: 'PlanMarker',
   StaffAssignmentRequest: 'StaffAssignmentRequest',
   Invitation: 'Invitation',
-  OrderShare: 'OrderShare'
+  OrderShare: 'OrderShare',
+  JobRun: 'JobRun',
+  LoginAttempt: 'LoginAttempt'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -465,7 +467,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "tenant" | "user" | "customer" | "property" | "service" | "serviceQuestion" | "serviceQualification" | "employee" | "employeeQualification" | "workingHours" | "employeeWorkingHours" | "serviceArea" | "order" | "orderService" | "appointment" | "checklistTemplate" | "checklistItem" | "orderChecklist" | "fileUpload" | "timeEntry" | "materialUsage" | "message" | "auditLog" | "notificationLog" | "notification" | "notificationSettings" | "companySettings" | "monthlyFixedCost" | "overheadSettings" | "machine" | "travelZone" | "calculation" | "laborItem" | "materialItem" | "machineUsageItem" | "procurementCost" | "travelCost" | "additionalCostItem" | "riskSettings" | "profitSettings" | "incomeTaxSettings" | "vATSettings" | "calculationDocument" | "documentSequence" | "payment" | "dunningNotice" | "article" | "storageLocation" | "stockBalance" | "stockMovement" | "reservation" | "serviceMaterialTemplate" | "orderPhase" | "orderMaterialLine" | "purchaseOrder" | "purchaseOrderLine" | "delivery" | "manualReorderSuggestion" | "team" | "teamMember" | "vehicle" | "employeeAbsence" | "planMarker" | "staffAssignmentRequest" | "invitation" | "orderShare"
+    modelProps: "tenant" | "user" | "customer" | "property" | "service" | "serviceQuestion" | "serviceQualification" | "employee" | "employeeQualification" | "workingHours" | "employeeWorkingHours" | "serviceArea" | "order" | "orderService" | "appointment" | "checklistTemplate" | "checklistItem" | "orderChecklist" | "fileUpload" | "timeEntry" | "materialUsage" | "message" | "auditLog" | "notificationLog" | "notification" | "notificationSettings" | "companySettings" | "monthlyFixedCost" | "overheadSettings" | "machine" | "travelZone" | "calculation" | "laborItem" | "materialItem" | "machineUsageItem" | "procurementCost" | "travelCost" | "additionalCostItem" | "riskSettings" | "profitSettings" | "incomeTaxSettings" | "vATSettings" | "calculationDocument" | "documentSequence" | "payment" | "dunningNotice" | "article" | "storageLocation" | "stockBalance" | "stockMovement" | "reservation" | "serviceMaterialTemplate" | "orderPhase" | "orderMaterialLine" | "purchaseOrder" | "purchaseOrderLine" | "delivery" | "manualReorderSuggestion" | "team" | "teamMember" | "vehicle" | "employeeAbsence" | "planMarker" | "staffAssignmentRequest" | "invitation" | "orderShare" | "jobRun" | "loginAttempt"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -5353,6 +5355,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    JobRun: {
+      payload: Prisma.$JobRunPayload<ExtArgs>
+      fields: Prisma.JobRunFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.JobRunFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JobRunPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.JobRunFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JobRunPayload>
+        }
+        findFirst: {
+          args: Prisma.JobRunFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JobRunPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.JobRunFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JobRunPayload>
+        }
+        findMany: {
+          args: Prisma.JobRunFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JobRunPayload>[]
+        }
+        create: {
+          args: Prisma.JobRunCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JobRunPayload>
+        }
+        createMany: {
+          args: Prisma.JobRunCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.JobRunCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JobRunPayload>[]
+        }
+        delete: {
+          args: Prisma.JobRunDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JobRunPayload>
+        }
+        update: {
+          args: Prisma.JobRunUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JobRunPayload>
+        }
+        deleteMany: {
+          args: Prisma.JobRunDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.JobRunUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.JobRunUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JobRunPayload>[]
+        }
+        upsert: {
+          args: Prisma.JobRunUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JobRunPayload>
+        }
+        aggregate: {
+          args: Prisma.JobRunAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateJobRun>
+        }
+        groupBy: {
+          args: Prisma.JobRunGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.JobRunGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.JobRunCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.JobRunCountAggregateOutputType> | number
+        }
+      }
+    }
+    LoginAttempt: {
+      payload: Prisma.$LoginAttemptPayload<ExtArgs>
+      fields: Prisma.LoginAttemptFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.LoginAttemptFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoginAttemptPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.LoginAttemptFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoginAttemptPayload>
+        }
+        findFirst: {
+          args: Prisma.LoginAttemptFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoginAttemptPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.LoginAttemptFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoginAttemptPayload>
+        }
+        findMany: {
+          args: Prisma.LoginAttemptFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoginAttemptPayload>[]
+        }
+        create: {
+          args: Prisma.LoginAttemptCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoginAttemptPayload>
+        }
+        createMany: {
+          args: Prisma.LoginAttemptCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.LoginAttemptCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoginAttemptPayload>[]
+        }
+        delete: {
+          args: Prisma.LoginAttemptDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoginAttemptPayload>
+        }
+        update: {
+          args: Prisma.LoginAttemptUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoginAttemptPayload>
+        }
+        deleteMany: {
+          args: Prisma.LoginAttemptDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.LoginAttemptUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.LoginAttemptUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoginAttemptPayload>[]
+        }
+        upsert: {
+          args: Prisma.LoginAttemptUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoginAttemptPayload>
+        }
+        aggregate: {
+          args: Prisma.LoginAttemptAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateLoginAttempt>
+        }
+        groupBy: {
+          args: Prisma.LoginAttemptGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LoginAttemptGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.LoginAttemptCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LoginAttemptCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -5426,6 +5576,7 @@ export const UserScalarFieldEnum = {
   role: 'role',
   isActive: 'isActive',
   mustChangePassword: 'mustChangePassword',
+  sessionVersion: 'sessionVersion',
   lastLoginAt: 'lastLoginAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -5620,10 +5771,12 @@ export const AppointmentScalarFieldEnum = {
   id: 'id',
   tenantId: 'tenantId',
   orderId: 'orderId',
+  orderPhaseId: 'orderPhaseId',
   employeeId: 'employeeId',
   startTime: 'startTime',
   endTime: 'endTime',
   status: 'status',
+  isTentative: 'isTentative',
   notes: 'notes',
   reminderSentAt: 'reminderSentAt',
   createdAt: 'createdAt',
@@ -6519,6 +6672,37 @@ export const OrderShareScalarFieldEnum = {
 export type OrderShareScalarFieldEnum = (typeof OrderShareScalarFieldEnum)[keyof typeof OrderShareScalarFieldEnum]
 
 
+export const JobRunScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  jobName: 'jobName',
+  trigger: 'trigger',
+  status: 'status',
+  startedAt: 'startedAt',
+  finishedAt: 'finishedAt',
+  durationMs: 'durationMs',
+  tenantCount: 'tenantCount',
+  processed: 'processed',
+  skipped: 'skipped',
+  errors: 'errors',
+  report: 'report',
+  errorMessage: 'errorMessage'
+} as const
+
+export type JobRunScalarFieldEnum = (typeof JobRunScalarFieldEnum)[keyof typeof JobRunScalarFieldEnum]
+
+
+export const LoginAttemptScalarFieldEnum = {
+  id: 'id',
+  email: 'email',
+  ip: 'ip',
+  success: 'success',
+  createdAt: 'createdAt'
+} as const
+
+export type LoginAttemptScalarFieldEnum = (typeof LoginAttemptScalarFieldEnum)[keyof typeof LoginAttemptScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -7188,6 +7372,34 @@ export type EnumInvitationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<
 export type ListEnumInvitationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InvitationStatus[]'>
     
 
+
+/**
+ * Reference to a field of type 'JobRunTrigger'
+ */
+export type EnumJobRunTriggerFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'JobRunTrigger'>
+    
+
+
+/**
+ * Reference to a field of type 'JobRunTrigger[]'
+ */
+export type ListEnumJobRunTriggerFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'JobRunTrigger[]'>
+    
+
+
+/**
+ * Reference to a field of type 'JobRunStatus'
+ */
+export type EnumJobRunStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'JobRunStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'JobRunStatus[]'
+ */
+export type ListEnumJobRunStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'JobRunStatus[]'>
+    
+
 /**
  * Batch Payload for updateMany & deleteMany & createMany
  */
@@ -7364,6 +7576,8 @@ export type GlobalOmitConfig = {
   staffAssignmentRequest?: Prisma.StaffAssignmentRequestOmit
   invitation?: Prisma.InvitationOmit
   orderShare?: Prisma.OrderShareOmit
+  jobRun?: Prisma.JobRunOmit
+  loginAttempt?: Prisma.LoginAttemptOmit
 }
 
 /* Types for Logging */

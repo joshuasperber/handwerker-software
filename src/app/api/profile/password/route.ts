@@ -8,6 +8,7 @@ import {
   createSession,
   setSessionCookie,
 } from "@/lib/auth";
+import { bumpSessionVersion } from "@/lib/auth/session-version";
 
 const passwordSchema = z
   .object({
@@ -42,7 +43,7 @@ export async function POST(request: NextRequest) {
     return apiError("Neues Passwort muss sich vom alten unterscheiden", 400);
   }
 
-  const updated = await prisma.user.update({
+  await prisma.user.update({
     where: { id: user.id },
     data: {
       passwordHash: await hashPassword(newPassword),
@@ -50,7 +51,10 @@ export async function POST(request: NextRequest) {
     },
   });
 
-  // Session aktualisieren, damit der "Passwort ändern"-Hinweis verschwindet.
+  await bumpSessionVersion(user.id);
+
+  const updated = await prisma.user.findFirstOrThrow({ where: { id: user.id } });
+
   const token = await createSession({
     id: updated.id,
     tenantId: updated.tenantId,
@@ -60,6 +64,7 @@ export async function POST(request: NextRequest) {
     role: updated.role,
     avatarUrl: updated.avatarUrl,
     mustChangePassword: updated.mustChangePassword,
+    sessionVersion: updated.sessionVersion,
   });
   await setSessionCookie(token);
 

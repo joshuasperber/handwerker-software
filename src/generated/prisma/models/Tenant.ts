@@ -330,6 +330,7 @@ export type TenantWhereInput = {
   dunningNotices?: Prisma.DunningNoticeListRelationFilter
   inAppNotifications?: Prisma.NotificationListRelationFilter
   notificationSettings?: Prisma.XOR<Prisma.NotificationSettingsNullableScalarRelationFilter, Prisma.NotificationSettingsWhereInput> | null
+  jobRuns?: Prisma.JobRunListRelationFilter
 }
 
 export type TenantOrderByWithRelationInput = {
@@ -382,6 +383,7 @@ export type TenantOrderByWithRelationInput = {
   dunningNotices?: Prisma.DunningNoticeOrderByRelationAggregateInput
   inAppNotifications?: Prisma.NotificationOrderByRelationAggregateInput
   notificationSettings?: Prisma.NotificationSettingsOrderByWithRelationInput
+  jobRuns?: Prisma.JobRunOrderByRelationAggregateInput
 }
 
 export type TenantWhereUniqueInput = Prisma.AtLeast<{
@@ -437,6 +439,7 @@ export type TenantWhereUniqueInput = Prisma.AtLeast<{
   dunningNotices?: Prisma.DunningNoticeListRelationFilter
   inAppNotifications?: Prisma.NotificationListRelationFilter
   notificationSettings?: Prisma.XOR<Prisma.NotificationSettingsNullableScalarRelationFilter, Prisma.NotificationSettingsWhereInput> | null
+  jobRuns?: Prisma.JobRunListRelationFilter
 }, "id" | "slug">
 
 export type TenantOrderByWithAggregationInput = {
@@ -533,6 +536,7 @@ export type TenantCreateInput = {
   dunningNotices?: Prisma.DunningNoticeCreateNestedManyWithoutTenantInput
   inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateInput = {
@@ -585,6 +589,7 @@ export type TenantUncheckedCreateInput = {
   dunningNotices?: Prisma.DunningNoticeUncheckedCreateNestedManyWithoutTenantInput
   inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUpdateInput = {
@@ -637,6 +642,7 @@ export type TenantUpdateInput = {
   dunningNotices?: Prisma.DunningNoticeUpdateManyWithoutTenantNestedInput
   inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateInput = {
@@ -689,6 +695,7 @@ export type TenantUncheckedUpdateInput = {
   dunningNotices?: Prisma.DunningNoticeUncheckedUpdateManyWithoutTenantNestedInput
   inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateManyInput = {
@@ -810,6 +817,11 @@ export type TenantSumOrderByAggregateInput = {
 export type TenantScalarRelationFilter = {
   is?: Prisma.TenantWhereInput
   isNot?: Prisma.TenantWhereInput
+}
+
+export type TenantNullableScalarRelationFilter = {
+  is?: Prisma.TenantWhereInput | null
+  isNot?: Prisma.TenantWhereInput | null
 }
 
 export type StringFieldUpdateOperationsInput = {
@@ -1308,6 +1320,22 @@ export type TenantUpdateOneRequiredWithoutOrderSharesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.TenantUpdateToOneWithWhereWithoutOrderSharesInput, Prisma.TenantUpdateWithoutOrderSharesInput>, Prisma.TenantUncheckedUpdateWithoutOrderSharesInput>
 }
 
+export type TenantCreateNestedOneWithoutJobRunsInput = {
+  create?: Prisma.XOR<Prisma.TenantCreateWithoutJobRunsInput, Prisma.TenantUncheckedCreateWithoutJobRunsInput>
+  connectOrCreate?: Prisma.TenantCreateOrConnectWithoutJobRunsInput
+  connect?: Prisma.TenantWhereUniqueInput
+}
+
+export type TenantUpdateOneWithoutJobRunsNestedInput = {
+  create?: Prisma.XOR<Prisma.TenantCreateWithoutJobRunsInput, Prisma.TenantUncheckedCreateWithoutJobRunsInput>
+  connectOrCreate?: Prisma.TenantCreateOrConnectWithoutJobRunsInput
+  upsert?: Prisma.TenantUpsertWithoutJobRunsInput
+  disconnect?: Prisma.TenantWhereInput | boolean
+  delete?: Prisma.TenantWhereInput | boolean
+  connect?: Prisma.TenantWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TenantUpdateToOneWithWhereWithoutJobRunsInput, Prisma.TenantUpdateWithoutJobRunsInput>, Prisma.TenantUncheckedUpdateWithoutJobRunsInput>
+}
+
 export type TenantCreateWithoutUsersInput = {
   id?: string
   slug: string
@@ -1357,6 +1385,7 @@ export type TenantCreateWithoutUsersInput = {
   dunningNotices?: Prisma.DunningNoticeCreateNestedManyWithoutTenantInput
   inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutUsersInput = {
@@ -1408,6 +1437,7 @@ export type TenantUncheckedCreateWithoutUsersInput = {
   dunningNotices?: Prisma.DunningNoticeUncheckedCreateNestedManyWithoutTenantInput
   inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutUsersInput = {
@@ -1475,6 +1505,7 @@ export type TenantUpdateWithoutUsersInput = {
   dunningNotices?: Prisma.DunningNoticeUpdateManyWithoutTenantNestedInput
   inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutUsersInput = {
@@ -1526,6 +1557,7 @@ export type TenantUncheckedUpdateWithoutUsersInput = {
   dunningNotices?: Prisma.DunningNoticeUncheckedUpdateManyWithoutTenantNestedInput
   inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutCustomersInput = {
@@ -1577,6 +1609,7 @@ export type TenantCreateWithoutCustomersInput = {
   dunningNotices?: Prisma.DunningNoticeCreateNestedManyWithoutTenantInput
   inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutCustomersInput = {
@@ -1628,6 +1661,7 @@ export type TenantUncheckedCreateWithoutCustomersInput = {
   dunningNotices?: Prisma.DunningNoticeUncheckedCreateNestedManyWithoutTenantInput
   inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutCustomersInput = {
@@ -1695,6 +1729,7 @@ export type TenantUpdateWithoutCustomersInput = {
   dunningNotices?: Prisma.DunningNoticeUpdateManyWithoutTenantNestedInput
   inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutCustomersInput = {
@@ -1746,6 +1781,7 @@ export type TenantUncheckedUpdateWithoutCustomersInput = {
   dunningNotices?: Prisma.DunningNoticeUncheckedUpdateManyWithoutTenantNestedInput
   inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutPropertiesInput = {
@@ -1797,6 +1833,7 @@ export type TenantCreateWithoutPropertiesInput = {
   dunningNotices?: Prisma.DunningNoticeCreateNestedManyWithoutTenantInput
   inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutPropertiesInput = {
@@ -1848,6 +1885,7 @@ export type TenantUncheckedCreateWithoutPropertiesInput = {
   dunningNotices?: Prisma.DunningNoticeUncheckedCreateNestedManyWithoutTenantInput
   inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutPropertiesInput = {
@@ -1915,6 +1953,7 @@ export type TenantUpdateWithoutPropertiesInput = {
   dunningNotices?: Prisma.DunningNoticeUpdateManyWithoutTenantNestedInput
   inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutPropertiesInput = {
@@ -1966,6 +2005,7 @@ export type TenantUncheckedUpdateWithoutPropertiesInput = {
   dunningNotices?: Prisma.DunningNoticeUncheckedUpdateManyWithoutTenantNestedInput
   inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutServicesInput = {
@@ -2017,6 +2057,7 @@ export type TenantCreateWithoutServicesInput = {
   dunningNotices?: Prisma.DunningNoticeCreateNestedManyWithoutTenantInput
   inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutServicesInput = {
@@ -2068,6 +2109,7 @@ export type TenantUncheckedCreateWithoutServicesInput = {
   dunningNotices?: Prisma.DunningNoticeUncheckedCreateNestedManyWithoutTenantInput
   inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutServicesInput = {
@@ -2135,6 +2177,7 @@ export type TenantUpdateWithoutServicesInput = {
   dunningNotices?: Prisma.DunningNoticeUpdateManyWithoutTenantNestedInput
   inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutServicesInput = {
@@ -2186,6 +2229,7 @@ export type TenantUncheckedUpdateWithoutServicesInput = {
   dunningNotices?: Prisma.DunningNoticeUncheckedUpdateManyWithoutTenantNestedInput
   inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutEmployeesInput = {
@@ -2237,6 +2281,7 @@ export type TenantCreateWithoutEmployeesInput = {
   dunningNotices?: Prisma.DunningNoticeCreateNestedManyWithoutTenantInput
   inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutEmployeesInput = {
@@ -2288,6 +2333,7 @@ export type TenantUncheckedCreateWithoutEmployeesInput = {
   dunningNotices?: Prisma.DunningNoticeUncheckedCreateNestedManyWithoutTenantInput
   inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutEmployeesInput = {
@@ -2355,6 +2401,7 @@ export type TenantUpdateWithoutEmployeesInput = {
   dunningNotices?: Prisma.DunningNoticeUpdateManyWithoutTenantNestedInput
   inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutEmployeesInput = {
@@ -2406,6 +2453,7 @@ export type TenantUncheckedUpdateWithoutEmployeesInput = {
   dunningNotices?: Prisma.DunningNoticeUncheckedUpdateManyWithoutTenantNestedInput
   inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutWorkingHoursInput = {
@@ -2457,6 +2505,7 @@ export type TenantCreateWithoutWorkingHoursInput = {
   dunningNotices?: Prisma.DunningNoticeCreateNestedManyWithoutTenantInput
   inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutWorkingHoursInput = {
@@ -2508,6 +2557,7 @@ export type TenantUncheckedCreateWithoutWorkingHoursInput = {
   dunningNotices?: Prisma.DunningNoticeUncheckedCreateNestedManyWithoutTenantInput
   inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutWorkingHoursInput = {
@@ -2575,6 +2625,7 @@ export type TenantUpdateWithoutWorkingHoursInput = {
   dunningNotices?: Prisma.DunningNoticeUpdateManyWithoutTenantNestedInput
   inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutWorkingHoursInput = {
@@ -2626,6 +2677,7 @@ export type TenantUncheckedUpdateWithoutWorkingHoursInput = {
   dunningNotices?: Prisma.DunningNoticeUncheckedUpdateManyWithoutTenantNestedInput
   inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutServiceAreasInput = {
@@ -2677,6 +2729,7 @@ export type TenantCreateWithoutServiceAreasInput = {
   dunningNotices?: Prisma.DunningNoticeCreateNestedManyWithoutTenantInput
   inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutServiceAreasInput = {
@@ -2728,6 +2781,7 @@ export type TenantUncheckedCreateWithoutServiceAreasInput = {
   dunningNotices?: Prisma.DunningNoticeUncheckedCreateNestedManyWithoutTenantInput
   inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutServiceAreasInput = {
@@ -2795,6 +2849,7 @@ export type TenantUpdateWithoutServiceAreasInput = {
   dunningNotices?: Prisma.DunningNoticeUpdateManyWithoutTenantNestedInput
   inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutServiceAreasInput = {
@@ -2846,6 +2901,7 @@ export type TenantUncheckedUpdateWithoutServiceAreasInput = {
   dunningNotices?: Prisma.DunningNoticeUncheckedUpdateManyWithoutTenantNestedInput
   inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutOrdersInput = {
@@ -2897,6 +2953,7 @@ export type TenantCreateWithoutOrdersInput = {
   dunningNotices?: Prisma.DunningNoticeCreateNestedManyWithoutTenantInput
   inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutOrdersInput = {
@@ -2948,6 +3005,7 @@ export type TenantUncheckedCreateWithoutOrdersInput = {
   dunningNotices?: Prisma.DunningNoticeUncheckedCreateNestedManyWithoutTenantInput
   inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutOrdersInput = {
@@ -3015,6 +3073,7 @@ export type TenantUpdateWithoutOrdersInput = {
   dunningNotices?: Prisma.DunningNoticeUpdateManyWithoutTenantNestedInput
   inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutOrdersInput = {
@@ -3066,6 +3125,7 @@ export type TenantUncheckedUpdateWithoutOrdersInput = {
   dunningNotices?: Prisma.DunningNoticeUncheckedUpdateManyWithoutTenantNestedInput
   inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutAppointmentsInput = {
@@ -3117,6 +3177,7 @@ export type TenantCreateWithoutAppointmentsInput = {
   dunningNotices?: Prisma.DunningNoticeCreateNestedManyWithoutTenantInput
   inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutAppointmentsInput = {
@@ -3168,6 +3229,7 @@ export type TenantUncheckedCreateWithoutAppointmentsInput = {
   dunningNotices?: Prisma.DunningNoticeUncheckedCreateNestedManyWithoutTenantInput
   inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutAppointmentsInput = {
@@ -3235,6 +3297,7 @@ export type TenantUpdateWithoutAppointmentsInput = {
   dunningNotices?: Prisma.DunningNoticeUpdateManyWithoutTenantNestedInput
   inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutAppointmentsInput = {
@@ -3286,6 +3349,7 @@ export type TenantUncheckedUpdateWithoutAppointmentsInput = {
   dunningNotices?: Prisma.DunningNoticeUncheckedUpdateManyWithoutTenantNestedInput
   inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutChecklistTemplatesInput = {
@@ -3337,6 +3401,7 @@ export type TenantCreateWithoutChecklistTemplatesInput = {
   dunningNotices?: Prisma.DunningNoticeCreateNestedManyWithoutTenantInput
   inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutChecklistTemplatesInput = {
@@ -3388,6 +3453,7 @@ export type TenantUncheckedCreateWithoutChecklistTemplatesInput = {
   dunningNotices?: Prisma.DunningNoticeUncheckedCreateNestedManyWithoutTenantInput
   inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutChecklistTemplatesInput = {
@@ -3455,6 +3521,7 @@ export type TenantUpdateWithoutChecklistTemplatesInput = {
   dunningNotices?: Prisma.DunningNoticeUpdateManyWithoutTenantNestedInput
   inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutChecklistTemplatesInput = {
@@ -3506,6 +3573,7 @@ export type TenantUncheckedUpdateWithoutChecklistTemplatesInput = {
   dunningNotices?: Prisma.DunningNoticeUncheckedUpdateManyWithoutTenantNestedInput
   inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutMessagesInput = {
@@ -3557,6 +3625,7 @@ export type TenantCreateWithoutMessagesInput = {
   dunningNotices?: Prisma.DunningNoticeCreateNestedManyWithoutTenantInput
   inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutMessagesInput = {
@@ -3608,6 +3677,7 @@ export type TenantUncheckedCreateWithoutMessagesInput = {
   dunningNotices?: Prisma.DunningNoticeUncheckedCreateNestedManyWithoutTenantInput
   inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutMessagesInput = {
@@ -3675,6 +3745,7 @@ export type TenantUpdateWithoutMessagesInput = {
   dunningNotices?: Prisma.DunningNoticeUpdateManyWithoutTenantNestedInput
   inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutMessagesInput = {
@@ -3726,6 +3797,7 @@ export type TenantUncheckedUpdateWithoutMessagesInput = {
   dunningNotices?: Prisma.DunningNoticeUncheckedUpdateManyWithoutTenantNestedInput
   inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutAuditLogsInput = {
@@ -3777,6 +3849,7 @@ export type TenantCreateWithoutAuditLogsInput = {
   dunningNotices?: Prisma.DunningNoticeCreateNestedManyWithoutTenantInput
   inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutAuditLogsInput = {
@@ -3828,6 +3901,7 @@ export type TenantUncheckedCreateWithoutAuditLogsInput = {
   dunningNotices?: Prisma.DunningNoticeUncheckedCreateNestedManyWithoutTenantInput
   inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutAuditLogsInput = {
@@ -3895,6 +3969,7 @@ export type TenantUpdateWithoutAuditLogsInput = {
   dunningNotices?: Prisma.DunningNoticeUpdateManyWithoutTenantNestedInput
   inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutAuditLogsInput = {
@@ -3946,6 +4021,7 @@ export type TenantUncheckedUpdateWithoutAuditLogsInput = {
   dunningNotices?: Prisma.DunningNoticeUncheckedUpdateManyWithoutTenantNestedInput
   inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutNotificationsInput = {
@@ -3997,6 +4073,7 @@ export type TenantCreateWithoutNotificationsInput = {
   dunningNotices?: Prisma.DunningNoticeCreateNestedManyWithoutTenantInput
   inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutNotificationsInput = {
@@ -4048,6 +4125,7 @@ export type TenantUncheckedCreateWithoutNotificationsInput = {
   dunningNotices?: Prisma.DunningNoticeUncheckedCreateNestedManyWithoutTenantInput
   inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutNotificationsInput = {
@@ -4115,6 +4193,7 @@ export type TenantUpdateWithoutNotificationsInput = {
   dunningNotices?: Prisma.DunningNoticeUpdateManyWithoutTenantNestedInput
   inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutNotificationsInput = {
@@ -4166,6 +4245,7 @@ export type TenantUncheckedUpdateWithoutNotificationsInput = {
   dunningNotices?: Prisma.DunningNoticeUncheckedUpdateManyWithoutTenantNestedInput
   inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutInAppNotificationsInput = {
@@ -4217,6 +4297,7 @@ export type TenantCreateWithoutInAppNotificationsInput = {
   payments?: Prisma.PaymentCreateNestedManyWithoutTenantInput
   dunningNotices?: Prisma.DunningNoticeCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutInAppNotificationsInput = {
@@ -4268,6 +4349,7 @@ export type TenantUncheckedCreateWithoutInAppNotificationsInput = {
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutTenantInput
   dunningNotices?: Prisma.DunningNoticeUncheckedCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutInAppNotificationsInput = {
@@ -4335,6 +4417,7 @@ export type TenantUpdateWithoutInAppNotificationsInput = {
   payments?: Prisma.PaymentUpdateManyWithoutTenantNestedInput
   dunningNotices?: Prisma.DunningNoticeUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutInAppNotificationsInput = {
@@ -4386,6 +4469,7 @@ export type TenantUncheckedUpdateWithoutInAppNotificationsInput = {
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutTenantNestedInput
   dunningNotices?: Prisma.DunningNoticeUncheckedUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutNotificationSettingsInput = {
@@ -4437,6 +4521,7 @@ export type TenantCreateWithoutNotificationSettingsInput = {
   payments?: Prisma.PaymentCreateNestedManyWithoutTenantInput
   dunningNotices?: Prisma.DunningNoticeCreateNestedManyWithoutTenantInput
   inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
+  jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutNotificationSettingsInput = {
@@ -4488,6 +4573,7 @@ export type TenantUncheckedCreateWithoutNotificationSettingsInput = {
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutTenantInput
   dunningNotices?: Prisma.DunningNoticeUncheckedCreateNestedManyWithoutTenantInput
   inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
+  jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutNotificationSettingsInput = {
@@ -4555,6 +4641,7 @@ export type TenantUpdateWithoutNotificationSettingsInput = {
   payments?: Prisma.PaymentUpdateManyWithoutTenantNestedInput
   dunningNotices?: Prisma.DunningNoticeUpdateManyWithoutTenantNestedInput
   inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutNotificationSettingsInput = {
@@ -4606,6 +4693,7 @@ export type TenantUncheckedUpdateWithoutNotificationSettingsInput = {
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutTenantNestedInput
   dunningNotices?: Prisma.DunningNoticeUncheckedUpdateManyWithoutTenantNestedInput
   inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutCompanySettingsInput = {
@@ -4657,6 +4745,7 @@ export type TenantCreateWithoutCompanySettingsInput = {
   dunningNotices?: Prisma.DunningNoticeCreateNestedManyWithoutTenantInput
   inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutCompanySettingsInput = {
@@ -4708,6 +4797,7 @@ export type TenantUncheckedCreateWithoutCompanySettingsInput = {
   dunningNotices?: Prisma.DunningNoticeUncheckedCreateNestedManyWithoutTenantInput
   inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutCompanySettingsInput = {
@@ -4775,6 +4865,7 @@ export type TenantUpdateWithoutCompanySettingsInput = {
   dunningNotices?: Prisma.DunningNoticeUpdateManyWithoutTenantNestedInput
   inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutCompanySettingsInput = {
@@ -4826,6 +4917,7 @@ export type TenantUncheckedUpdateWithoutCompanySettingsInput = {
   dunningNotices?: Prisma.DunningNoticeUncheckedUpdateManyWithoutTenantNestedInput
   inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutMonthlyFixedCostsInput = {
@@ -4877,6 +4969,7 @@ export type TenantCreateWithoutMonthlyFixedCostsInput = {
   dunningNotices?: Prisma.DunningNoticeCreateNestedManyWithoutTenantInput
   inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutMonthlyFixedCostsInput = {
@@ -4928,6 +5021,7 @@ export type TenantUncheckedCreateWithoutMonthlyFixedCostsInput = {
   dunningNotices?: Prisma.DunningNoticeUncheckedCreateNestedManyWithoutTenantInput
   inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutMonthlyFixedCostsInput = {
@@ -4995,6 +5089,7 @@ export type TenantUpdateWithoutMonthlyFixedCostsInput = {
   dunningNotices?: Prisma.DunningNoticeUpdateManyWithoutTenantNestedInput
   inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutMonthlyFixedCostsInput = {
@@ -5046,6 +5141,7 @@ export type TenantUncheckedUpdateWithoutMonthlyFixedCostsInput = {
   dunningNotices?: Prisma.DunningNoticeUncheckedUpdateManyWithoutTenantNestedInput
   inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutOverheadSettingsInput = {
@@ -5097,6 +5193,7 @@ export type TenantCreateWithoutOverheadSettingsInput = {
   dunningNotices?: Prisma.DunningNoticeCreateNestedManyWithoutTenantInput
   inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutOverheadSettingsInput = {
@@ -5148,6 +5245,7 @@ export type TenantUncheckedCreateWithoutOverheadSettingsInput = {
   dunningNotices?: Prisma.DunningNoticeUncheckedCreateNestedManyWithoutTenantInput
   inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutOverheadSettingsInput = {
@@ -5215,6 +5313,7 @@ export type TenantUpdateWithoutOverheadSettingsInput = {
   dunningNotices?: Prisma.DunningNoticeUpdateManyWithoutTenantNestedInput
   inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutOverheadSettingsInput = {
@@ -5266,6 +5365,7 @@ export type TenantUncheckedUpdateWithoutOverheadSettingsInput = {
   dunningNotices?: Prisma.DunningNoticeUncheckedUpdateManyWithoutTenantNestedInput
   inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutMachinesInput = {
@@ -5317,6 +5417,7 @@ export type TenantCreateWithoutMachinesInput = {
   dunningNotices?: Prisma.DunningNoticeCreateNestedManyWithoutTenantInput
   inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutMachinesInput = {
@@ -5368,6 +5469,7 @@ export type TenantUncheckedCreateWithoutMachinesInput = {
   dunningNotices?: Prisma.DunningNoticeUncheckedCreateNestedManyWithoutTenantInput
   inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutMachinesInput = {
@@ -5435,6 +5537,7 @@ export type TenantUpdateWithoutMachinesInput = {
   dunningNotices?: Prisma.DunningNoticeUpdateManyWithoutTenantNestedInput
   inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutMachinesInput = {
@@ -5486,6 +5589,7 @@ export type TenantUncheckedUpdateWithoutMachinesInput = {
   dunningNotices?: Prisma.DunningNoticeUncheckedUpdateManyWithoutTenantNestedInput
   inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutTravelZonesInput = {
@@ -5537,6 +5641,7 @@ export type TenantCreateWithoutTravelZonesInput = {
   dunningNotices?: Prisma.DunningNoticeCreateNestedManyWithoutTenantInput
   inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutTravelZonesInput = {
@@ -5588,6 +5693,7 @@ export type TenantUncheckedCreateWithoutTravelZonesInput = {
   dunningNotices?: Prisma.DunningNoticeUncheckedCreateNestedManyWithoutTenantInput
   inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutTravelZonesInput = {
@@ -5655,6 +5761,7 @@ export type TenantUpdateWithoutTravelZonesInput = {
   dunningNotices?: Prisma.DunningNoticeUpdateManyWithoutTenantNestedInput
   inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutTravelZonesInput = {
@@ -5706,6 +5813,7 @@ export type TenantUncheckedUpdateWithoutTravelZonesInput = {
   dunningNotices?: Prisma.DunningNoticeUncheckedUpdateManyWithoutTenantNestedInput
   inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutCalculationsInput = {
@@ -5757,6 +5865,7 @@ export type TenantCreateWithoutCalculationsInput = {
   dunningNotices?: Prisma.DunningNoticeCreateNestedManyWithoutTenantInput
   inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutCalculationsInput = {
@@ -5808,6 +5917,7 @@ export type TenantUncheckedCreateWithoutCalculationsInput = {
   dunningNotices?: Prisma.DunningNoticeUncheckedCreateNestedManyWithoutTenantInput
   inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutCalculationsInput = {
@@ -5875,6 +5985,7 @@ export type TenantUpdateWithoutCalculationsInput = {
   dunningNotices?: Prisma.DunningNoticeUpdateManyWithoutTenantNestedInput
   inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutCalculationsInput = {
@@ -5926,6 +6037,7 @@ export type TenantUncheckedUpdateWithoutCalculationsInput = {
   dunningNotices?: Prisma.DunningNoticeUncheckedUpdateManyWithoutTenantNestedInput
   inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutDocumentSequencesInput = {
@@ -5977,6 +6089,7 @@ export type TenantCreateWithoutDocumentSequencesInput = {
   dunningNotices?: Prisma.DunningNoticeCreateNestedManyWithoutTenantInput
   inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutDocumentSequencesInput = {
@@ -6028,6 +6141,7 @@ export type TenantUncheckedCreateWithoutDocumentSequencesInput = {
   dunningNotices?: Prisma.DunningNoticeUncheckedCreateNestedManyWithoutTenantInput
   inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutDocumentSequencesInput = {
@@ -6095,6 +6209,7 @@ export type TenantUpdateWithoutDocumentSequencesInput = {
   dunningNotices?: Prisma.DunningNoticeUpdateManyWithoutTenantNestedInput
   inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutDocumentSequencesInput = {
@@ -6146,6 +6261,7 @@ export type TenantUncheckedUpdateWithoutDocumentSequencesInput = {
   dunningNotices?: Prisma.DunningNoticeUncheckedUpdateManyWithoutTenantNestedInput
   inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutPaymentsInput = {
@@ -6197,6 +6313,7 @@ export type TenantCreateWithoutPaymentsInput = {
   dunningNotices?: Prisma.DunningNoticeCreateNestedManyWithoutTenantInput
   inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutPaymentsInput = {
@@ -6248,6 +6365,7 @@ export type TenantUncheckedCreateWithoutPaymentsInput = {
   dunningNotices?: Prisma.DunningNoticeUncheckedCreateNestedManyWithoutTenantInput
   inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutPaymentsInput = {
@@ -6315,6 +6433,7 @@ export type TenantUpdateWithoutPaymentsInput = {
   dunningNotices?: Prisma.DunningNoticeUpdateManyWithoutTenantNestedInput
   inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutPaymentsInput = {
@@ -6366,6 +6485,7 @@ export type TenantUncheckedUpdateWithoutPaymentsInput = {
   dunningNotices?: Prisma.DunningNoticeUncheckedUpdateManyWithoutTenantNestedInput
   inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutDunningNoticesInput = {
@@ -6417,6 +6537,7 @@ export type TenantCreateWithoutDunningNoticesInput = {
   payments?: Prisma.PaymentCreateNestedManyWithoutTenantInput
   inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutDunningNoticesInput = {
@@ -6468,6 +6589,7 @@ export type TenantUncheckedCreateWithoutDunningNoticesInput = {
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutTenantInput
   inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutDunningNoticesInput = {
@@ -6535,6 +6657,7 @@ export type TenantUpdateWithoutDunningNoticesInput = {
   payments?: Prisma.PaymentUpdateManyWithoutTenantNestedInput
   inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutDunningNoticesInput = {
@@ -6586,6 +6709,7 @@ export type TenantUncheckedUpdateWithoutDunningNoticesInput = {
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutTenantNestedInput
   inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutArticlesInput = {
@@ -6637,6 +6761,7 @@ export type TenantCreateWithoutArticlesInput = {
   dunningNotices?: Prisma.DunningNoticeCreateNestedManyWithoutTenantInput
   inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutArticlesInput = {
@@ -6688,6 +6813,7 @@ export type TenantUncheckedCreateWithoutArticlesInput = {
   dunningNotices?: Prisma.DunningNoticeUncheckedCreateNestedManyWithoutTenantInput
   inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutArticlesInput = {
@@ -6755,6 +6881,7 @@ export type TenantUpdateWithoutArticlesInput = {
   dunningNotices?: Prisma.DunningNoticeUpdateManyWithoutTenantNestedInput
   inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutArticlesInput = {
@@ -6806,6 +6933,7 @@ export type TenantUncheckedUpdateWithoutArticlesInput = {
   dunningNotices?: Prisma.DunningNoticeUncheckedUpdateManyWithoutTenantNestedInput
   inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutStorageLocationsInput = {
@@ -6857,6 +6985,7 @@ export type TenantCreateWithoutStorageLocationsInput = {
   dunningNotices?: Prisma.DunningNoticeCreateNestedManyWithoutTenantInput
   inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutStorageLocationsInput = {
@@ -6908,6 +7037,7 @@ export type TenantUncheckedCreateWithoutStorageLocationsInput = {
   dunningNotices?: Prisma.DunningNoticeUncheckedCreateNestedManyWithoutTenantInput
   inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutStorageLocationsInput = {
@@ -6975,6 +7105,7 @@ export type TenantUpdateWithoutStorageLocationsInput = {
   dunningNotices?: Prisma.DunningNoticeUpdateManyWithoutTenantNestedInput
   inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutStorageLocationsInput = {
@@ -7026,6 +7157,7 @@ export type TenantUncheckedUpdateWithoutStorageLocationsInput = {
   dunningNotices?: Prisma.DunningNoticeUncheckedUpdateManyWithoutTenantNestedInput
   inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutPurchaseOrdersInput = {
@@ -7077,6 +7209,7 @@ export type TenantCreateWithoutPurchaseOrdersInput = {
   dunningNotices?: Prisma.DunningNoticeCreateNestedManyWithoutTenantInput
   inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutPurchaseOrdersInput = {
@@ -7128,6 +7261,7 @@ export type TenantUncheckedCreateWithoutPurchaseOrdersInput = {
   dunningNotices?: Prisma.DunningNoticeUncheckedCreateNestedManyWithoutTenantInput
   inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutPurchaseOrdersInput = {
@@ -7195,6 +7329,7 @@ export type TenantUpdateWithoutPurchaseOrdersInput = {
   dunningNotices?: Prisma.DunningNoticeUpdateManyWithoutTenantNestedInput
   inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutPurchaseOrdersInput = {
@@ -7246,6 +7381,7 @@ export type TenantUncheckedUpdateWithoutPurchaseOrdersInput = {
   dunningNotices?: Prisma.DunningNoticeUncheckedUpdateManyWithoutTenantNestedInput
   inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutDeliveriesInput = {
@@ -7297,6 +7433,7 @@ export type TenantCreateWithoutDeliveriesInput = {
   dunningNotices?: Prisma.DunningNoticeCreateNestedManyWithoutTenantInput
   inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutDeliveriesInput = {
@@ -7348,6 +7485,7 @@ export type TenantUncheckedCreateWithoutDeliveriesInput = {
   dunningNotices?: Prisma.DunningNoticeUncheckedCreateNestedManyWithoutTenantInput
   inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutDeliveriesInput = {
@@ -7415,6 +7553,7 @@ export type TenantUpdateWithoutDeliveriesInput = {
   dunningNotices?: Prisma.DunningNoticeUpdateManyWithoutTenantNestedInput
   inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutDeliveriesInput = {
@@ -7466,6 +7605,7 @@ export type TenantUncheckedUpdateWithoutDeliveriesInput = {
   dunningNotices?: Prisma.DunningNoticeUncheckedUpdateManyWithoutTenantNestedInput
   inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutManualReorderSuggestionsInput = {
@@ -7517,6 +7657,7 @@ export type TenantCreateWithoutManualReorderSuggestionsInput = {
   dunningNotices?: Prisma.DunningNoticeCreateNestedManyWithoutTenantInput
   inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutManualReorderSuggestionsInput = {
@@ -7568,6 +7709,7 @@ export type TenantUncheckedCreateWithoutManualReorderSuggestionsInput = {
   dunningNotices?: Prisma.DunningNoticeUncheckedCreateNestedManyWithoutTenantInput
   inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutManualReorderSuggestionsInput = {
@@ -7635,6 +7777,7 @@ export type TenantUpdateWithoutManualReorderSuggestionsInput = {
   dunningNotices?: Prisma.DunningNoticeUpdateManyWithoutTenantNestedInput
   inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutManualReorderSuggestionsInput = {
@@ -7686,6 +7829,7 @@ export type TenantUncheckedUpdateWithoutManualReorderSuggestionsInput = {
   dunningNotices?: Prisma.DunningNoticeUncheckedUpdateManyWithoutTenantNestedInput
   inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutTeamsInput = {
@@ -7737,6 +7881,7 @@ export type TenantCreateWithoutTeamsInput = {
   dunningNotices?: Prisma.DunningNoticeCreateNestedManyWithoutTenantInput
   inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutTeamsInput = {
@@ -7788,6 +7933,7 @@ export type TenantUncheckedCreateWithoutTeamsInput = {
   dunningNotices?: Prisma.DunningNoticeUncheckedCreateNestedManyWithoutTenantInput
   inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutTeamsInput = {
@@ -7855,6 +8001,7 @@ export type TenantUpdateWithoutTeamsInput = {
   dunningNotices?: Prisma.DunningNoticeUpdateManyWithoutTenantNestedInput
   inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutTeamsInput = {
@@ -7906,6 +8053,7 @@ export type TenantUncheckedUpdateWithoutTeamsInput = {
   dunningNotices?: Prisma.DunningNoticeUncheckedUpdateManyWithoutTenantNestedInput
   inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutVehiclesInput = {
@@ -7957,6 +8105,7 @@ export type TenantCreateWithoutVehiclesInput = {
   dunningNotices?: Prisma.DunningNoticeCreateNestedManyWithoutTenantInput
   inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutVehiclesInput = {
@@ -8008,6 +8157,7 @@ export type TenantUncheckedCreateWithoutVehiclesInput = {
   dunningNotices?: Prisma.DunningNoticeUncheckedCreateNestedManyWithoutTenantInput
   inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutVehiclesInput = {
@@ -8075,6 +8225,7 @@ export type TenantUpdateWithoutVehiclesInput = {
   dunningNotices?: Prisma.DunningNoticeUpdateManyWithoutTenantNestedInput
   inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutVehiclesInput = {
@@ -8126,6 +8277,7 @@ export type TenantUncheckedUpdateWithoutVehiclesInput = {
   dunningNotices?: Prisma.DunningNoticeUncheckedUpdateManyWithoutTenantNestedInput
   inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutStaffAssignmentRequestsInput = {
@@ -8177,6 +8329,7 @@ export type TenantCreateWithoutStaffAssignmentRequestsInput = {
   dunningNotices?: Prisma.DunningNoticeCreateNestedManyWithoutTenantInput
   inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutStaffAssignmentRequestsInput = {
@@ -8228,6 +8381,7 @@ export type TenantUncheckedCreateWithoutStaffAssignmentRequestsInput = {
   dunningNotices?: Prisma.DunningNoticeUncheckedCreateNestedManyWithoutTenantInput
   inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutStaffAssignmentRequestsInput = {
@@ -8295,6 +8449,7 @@ export type TenantUpdateWithoutStaffAssignmentRequestsInput = {
   dunningNotices?: Prisma.DunningNoticeUpdateManyWithoutTenantNestedInput
   inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutStaffAssignmentRequestsInput = {
@@ -8346,6 +8501,7 @@ export type TenantUncheckedUpdateWithoutStaffAssignmentRequestsInput = {
   dunningNotices?: Prisma.DunningNoticeUncheckedUpdateManyWithoutTenantNestedInput
   inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutInvitationsInput = {
@@ -8397,6 +8553,7 @@ export type TenantCreateWithoutInvitationsInput = {
   dunningNotices?: Prisma.DunningNoticeCreateNestedManyWithoutTenantInput
   inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutInvitationsInput = {
@@ -8448,6 +8605,7 @@ export type TenantUncheckedCreateWithoutInvitationsInput = {
   dunningNotices?: Prisma.DunningNoticeUncheckedCreateNestedManyWithoutTenantInput
   inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutInvitationsInput = {
@@ -8515,6 +8673,7 @@ export type TenantUpdateWithoutInvitationsInput = {
   dunningNotices?: Prisma.DunningNoticeUpdateManyWithoutTenantNestedInput
   inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutInvitationsInput = {
@@ -8566,6 +8725,7 @@ export type TenantUncheckedUpdateWithoutInvitationsInput = {
   dunningNotices?: Prisma.DunningNoticeUncheckedUpdateManyWithoutTenantNestedInput
   inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutOrderSharesInput = {
@@ -8617,6 +8777,7 @@ export type TenantCreateWithoutOrderSharesInput = {
   dunningNotices?: Prisma.DunningNoticeCreateNestedManyWithoutTenantInput
   inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutOrderSharesInput = {
@@ -8668,6 +8829,7 @@ export type TenantUncheckedCreateWithoutOrderSharesInput = {
   dunningNotices?: Prisma.DunningNoticeUncheckedCreateNestedManyWithoutTenantInput
   inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutOrderSharesInput = {
@@ -8735,6 +8897,7 @@ export type TenantUpdateWithoutOrderSharesInput = {
   dunningNotices?: Prisma.DunningNoticeUpdateManyWithoutTenantNestedInput
   inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutOrderSharesInput = {
@@ -8786,6 +8949,231 @@ export type TenantUncheckedUpdateWithoutOrderSharesInput = {
   dunningNotices?: Prisma.DunningNoticeUncheckedUpdateManyWithoutTenantNestedInput
   inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
+}
+
+export type TenantCreateWithoutJobRunsInput = {
+  id?: string
+  slug: string
+  name: string
+  email: string
+  phone?: string | null
+  address?: string | null
+  city?: string | null
+  zipCode?: string | null
+  logoUrl?: string | null
+  primaryColor?: string
+  privacyPolicyUrl?: string | null
+  imprintUrl?: string | null
+  bufferMinutes?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserCreateNestedManyWithoutTenantInput
+  customers?: Prisma.CustomerCreateNestedManyWithoutTenantInput
+  properties?: Prisma.PropertyCreateNestedManyWithoutTenantInput
+  services?: Prisma.ServiceCreateNestedManyWithoutTenantInput
+  employees?: Prisma.EmployeeCreateNestedManyWithoutTenantInput
+  orders?: Prisma.OrderCreateNestedManyWithoutTenantInput
+  appointments?: Prisma.AppointmentCreateNestedManyWithoutTenantInput
+  checklistTemplates?: Prisma.ChecklistTemplateCreateNestedManyWithoutTenantInput
+  messages?: Prisma.MessageCreateNestedManyWithoutTenantInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutTenantInput
+  serviceAreas?: Prisma.ServiceAreaCreateNestedManyWithoutTenantInput
+  workingHours?: Prisma.WorkingHoursCreateNestedManyWithoutTenantInput
+  notifications?: Prisma.NotificationLogCreateNestedManyWithoutTenantInput
+  companySettings?: Prisma.CompanySettingsCreateNestedOneWithoutTenantInput
+  monthlyFixedCosts?: Prisma.MonthlyFixedCostCreateNestedManyWithoutTenantInput
+  overheadSettings?: Prisma.OverheadSettingsCreateNestedOneWithoutTenantInput
+  machines?: Prisma.MachineCreateNestedManyWithoutTenantInput
+  travelZones?: Prisma.TravelZoneCreateNestedManyWithoutTenantInput
+  calculations?: Prisma.CalculationCreateNestedManyWithoutTenantInput
+  articles?: Prisma.ArticleCreateNestedManyWithoutTenantInput
+  storageLocations?: Prisma.StorageLocationCreateNestedManyWithoutTenantInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutTenantInput
+  staffAssignmentRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutTenantInput
+  deliveries?: Prisma.DeliveryCreateNestedManyWithoutTenantInput
+  manualReorderSuggestions?: Prisma.ManualReorderSuggestionCreateNestedManyWithoutTenantInput
+  teams?: Prisma.TeamCreateNestedManyWithoutTenantInput
+  vehicles?: Prisma.VehicleCreateNestedManyWithoutTenantInput
+  invitations?: Prisma.InvitationCreateNestedManyWithoutTenantInput
+  orderShares?: Prisma.OrderShareCreateNestedManyWithoutTenantInput
+  documentSequences?: Prisma.DocumentSequenceCreateNestedManyWithoutTenantInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutTenantInput
+  dunningNotices?: Prisma.DunningNoticeCreateNestedManyWithoutTenantInput
+  inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
+  notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
+}
+
+export type TenantUncheckedCreateWithoutJobRunsInput = {
+  id?: string
+  slug: string
+  name: string
+  email: string
+  phone?: string | null
+  address?: string | null
+  city?: string | null
+  zipCode?: string | null
+  logoUrl?: string | null
+  primaryColor?: string
+  privacyPolicyUrl?: string | null
+  imprintUrl?: string | null
+  bufferMinutes?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutTenantInput
+  customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutTenantInput
+  properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutTenantInput
+  services?: Prisma.ServiceUncheckedCreateNestedManyWithoutTenantInput
+  employees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutTenantInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutTenantInput
+  appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutTenantInput
+  checklistTemplates?: Prisma.ChecklistTemplateUncheckedCreateNestedManyWithoutTenantInput
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutTenantInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutTenantInput
+  serviceAreas?: Prisma.ServiceAreaUncheckedCreateNestedManyWithoutTenantInput
+  workingHours?: Prisma.WorkingHoursUncheckedCreateNestedManyWithoutTenantInput
+  notifications?: Prisma.NotificationLogUncheckedCreateNestedManyWithoutTenantInput
+  companySettings?: Prisma.CompanySettingsUncheckedCreateNestedOneWithoutTenantInput
+  monthlyFixedCosts?: Prisma.MonthlyFixedCostUncheckedCreateNestedManyWithoutTenantInput
+  overheadSettings?: Prisma.OverheadSettingsUncheckedCreateNestedOneWithoutTenantInput
+  machines?: Prisma.MachineUncheckedCreateNestedManyWithoutTenantInput
+  travelZones?: Prisma.TravelZoneUncheckedCreateNestedManyWithoutTenantInput
+  calculations?: Prisma.CalculationUncheckedCreateNestedManyWithoutTenantInput
+  articles?: Prisma.ArticleUncheckedCreateNestedManyWithoutTenantInput
+  storageLocations?: Prisma.StorageLocationUncheckedCreateNestedManyWithoutTenantInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutTenantInput
+  staffAssignmentRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutTenantInput
+  deliveries?: Prisma.DeliveryUncheckedCreateNestedManyWithoutTenantInput
+  manualReorderSuggestions?: Prisma.ManualReorderSuggestionUncheckedCreateNestedManyWithoutTenantInput
+  teams?: Prisma.TeamUncheckedCreateNestedManyWithoutTenantInput
+  vehicles?: Prisma.VehicleUncheckedCreateNestedManyWithoutTenantInput
+  invitations?: Prisma.InvitationUncheckedCreateNestedManyWithoutTenantInput
+  orderShares?: Prisma.OrderShareUncheckedCreateNestedManyWithoutTenantInput
+  documentSequences?: Prisma.DocumentSequenceUncheckedCreateNestedManyWithoutTenantInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutTenantInput
+  dunningNotices?: Prisma.DunningNoticeUncheckedCreateNestedManyWithoutTenantInput
+  inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
+  notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
+}
+
+export type TenantCreateOrConnectWithoutJobRunsInput = {
+  where: Prisma.TenantWhereUniqueInput
+  create: Prisma.XOR<Prisma.TenantCreateWithoutJobRunsInput, Prisma.TenantUncheckedCreateWithoutJobRunsInput>
+}
+
+export type TenantUpsertWithoutJobRunsInput = {
+  update: Prisma.XOR<Prisma.TenantUpdateWithoutJobRunsInput, Prisma.TenantUncheckedUpdateWithoutJobRunsInput>
+  create: Prisma.XOR<Prisma.TenantCreateWithoutJobRunsInput, Prisma.TenantUncheckedCreateWithoutJobRunsInput>
+  where?: Prisma.TenantWhereInput
+}
+
+export type TenantUpdateToOneWithWhereWithoutJobRunsInput = {
+  where?: Prisma.TenantWhereInput
+  data: Prisma.XOR<Prisma.TenantUpdateWithoutJobRunsInput, Prisma.TenantUncheckedUpdateWithoutJobRunsInput>
+}
+
+export type TenantUpdateWithoutJobRunsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUpdateManyWithoutTenantNestedInput
+  customers?: Prisma.CustomerUpdateManyWithoutTenantNestedInput
+  properties?: Prisma.PropertyUpdateManyWithoutTenantNestedInput
+  services?: Prisma.ServiceUpdateManyWithoutTenantNestedInput
+  employees?: Prisma.EmployeeUpdateManyWithoutTenantNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutTenantNestedInput
+  appointments?: Prisma.AppointmentUpdateManyWithoutTenantNestedInput
+  checklistTemplates?: Prisma.ChecklistTemplateUpdateManyWithoutTenantNestedInput
+  messages?: Prisma.MessageUpdateManyWithoutTenantNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutTenantNestedInput
+  serviceAreas?: Prisma.ServiceAreaUpdateManyWithoutTenantNestedInput
+  workingHours?: Prisma.WorkingHoursUpdateManyWithoutTenantNestedInput
+  notifications?: Prisma.NotificationLogUpdateManyWithoutTenantNestedInput
+  companySettings?: Prisma.CompanySettingsUpdateOneWithoutTenantNestedInput
+  monthlyFixedCosts?: Prisma.MonthlyFixedCostUpdateManyWithoutTenantNestedInput
+  overheadSettings?: Prisma.OverheadSettingsUpdateOneWithoutTenantNestedInput
+  machines?: Prisma.MachineUpdateManyWithoutTenantNestedInput
+  travelZones?: Prisma.TravelZoneUpdateManyWithoutTenantNestedInput
+  calculations?: Prisma.CalculationUpdateManyWithoutTenantNestedInput
+  articles?: Prisma.ArticleUpdateManyWithoutTenantNestedInput
+  storageLocations?: Prisma.StorageLocationUpdateManyWithoutTenantNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutTenantNestedInput
+  staffAssignmentRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutTenantNestedInput
+  deliveries?: Prisma.DeliveryUpdateManyWithoutTenantNestedInput
+  manualReorderSuggestions?: Prisma.ManualReorderSuggestionUpdateManyWithoutTenantNestedInput
+  teams?: Prisma.TeamUpdateManyWithoutTenantNestedInput
+  vehicles?: Prisma.VehicleUpdateManyWithoutTenantNestedInput
+  invitations?: Prisma.InvitationUpdateManyWithoutTenantNestedInput
+  orderShares?: Prisma.OrderShareUpdateManyWithoutTenantNestedInput
+  documentSequences?: Prisma.DocumentSequenceUpdateManyWithoutTenantNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutTenantNestedInput
+  dunningNotices?: Prisma.DunningNoticeUpdateManyWithoutTenantNestedInput
+  inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
+  notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
+}
+
+export type TenantUncheckedUpdateWithoutJobRunsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUncheckedUpdateManyWithoutTenantNestedInput
+  customers?: Prisma.CustomerUncheckedUpdateManyWithoutTenantNestedInput
+  properties?: Prisma.PropertyUncheckedUpdateManyWithoutTenantNestedInput
+  services?: Prisma.ServiceUncheckedUpdateManyWithoutTenantNestedInput
+  employees?: Prisma.EmployeeUncheckedUpdateManyWithoutTenantNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutTenantNestedInput
+  appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutTenantNestedInput
+  checklistTemplates?: Prisma.ChecklistTemplateUncheckedUpdateManyWithoutTenantNestedInput
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutTenantNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutTenantNestedInput
+  serviceAreas?: Prisma.ServiceAreaUncheckedUpdateManyWithoutTenantNestedInput
+  workingHours?: Prisma.WorkingHoursUncheckedUpdateManyWithoutTenantNestedInput
+  notifications?: Prisma.NotificationLogUncheckedUpdateManyWithoutTenantNestedInput
+  companySettings?: Prisma.CompanySettingsUncheckedUpdateOneWithoutTenantNestedInput
+  monthlyFixedCosts?: Prisma.MonthlyFixedCostUncheckedUpdateManyWithoutTenantNestedInput
+  overheadSettings?: Prisma.OverheadSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  machines?: Prisma.MachineUncheckedUpdateManyWithoutTenantNestedInput
+  travelZones?: Prisma.TravelZoneUncheckedUpdateManyWithoutTenantNestedInput
+  calculations?: Prisma.CalculationUncheckedUpdateManyWithoutTenantNestedInput
+  articles?: Prisma.ArticleUncheckedUpdateManyWithoutTenantNestedInput
+  storageLocations?: Prisma.StorageLocationUncheckedUpdateManyWithoutTenantNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutTenantNestedInput
+  staffAssignmentRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutTenantNestedInput
+  deliveries?: Prisma.DeliveryUncheckedUpdateManyWithoutTenantNestedInput
+  manualReorderSuggestions?: Prisma.ManualReorderSuggestionUncheckedUpdateManyWithoutTenantNestedInput
+  teams?: Prisma.TeamUncheckedUpdateManyWithoutTenantNestedInput
+  vehicles?: Prisma.VehicleUncheckedUpdateManyWithoutTenantNestedInput
+  invitations?: Prisma.InvitationUncheckedUpdateManyWithoutTenantNestedInput
+  orderShares?: Prisma.OrderShareUncheckedUpdateManyWithoutTenantNestedInput
+  documentSequences?: Prisma.DocumentSequenceUncheckedUpdateManyWithoutTenantNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutTenantNestedInput
+  dunningNotices?: Prisma.DunningNoticeUncheckedUpdateManyWithoutTenantNestedInput
+  inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
+  notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
 }
 
 
@@ -8825,6 +9213,7 @@ export type TenantCountOutputType = {
   payments: number
   dunningNotices: number
   inAppNotifications: number
+  jobRuns: number
 }
 
 export type TenantCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -8859,6 +9248,7 @@ export type TenantCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions
   payments?: boolean | TenantCountOutputTypeCountPaymentsArgs
   dunningNotices?: boolean | TenantCountOutputTypeCountDunningNoticesArgs
   inAppNotifications?: boolean | TenantCountOutputTypeCountInAppNotificationsArgs
+  jobRuns?: boolean | TenantCountOutputTypeCountJobRunsArgs
 }
 
 /**
@@ -9088,6 +9478,13 @@ export type TenantCountOutputTypeCountInAppNotificationsArgs<ExtArgs extends run
   where?: Prisma.NotificationWhereInput
 }
 
+/**
+ * TenantCountOutputType without action
+ */
+export type TenantCountOutputTypeCountJobRunsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.JobRunWhereInput
+}
+
 
 export type TenantSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -9139,6 +9536,7 @@ export type TenantSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   dunningNotices?: boolean | Prisma.Tenant$dunningNoticesArgs<ExtArgs>
   inAppNotifications?: boolean | Prisma.Tenant$inAppNotificationsArgs<ExtArgs>
   notificationSettings?: boolean | Prisma.Tenant$notificationSettingsArgs<ExtArgs>
+  jobRuns?: boolean | Prisma.Tenant$jobRunsArgs<ExtArgs>
   _count?: boolean | Prisma.TenantCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["tenant"]>
 
@@ -9232,6 +9630,7 @@ export type TenantInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   dunningNotices?: boolean | Prisma.Tenant$dunningNoticesArgs<ExtArgs>
   inAppNotifications?: boolean | Prisma.Tenant$inAppNotificationsArgs<ExtArgs>
   notificationSettings?: boolean | Prisma.Tenant$notificationSettingsArgs<ExtArgs>
+  jobRuns?: boolean | Prisma.Tenant$jobRunsArgs<ExtArgs>
   _count?: boolean | Prisma.TenantCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type TenantIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -9274,6 +9673,7 @@ export type $TenantPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     dunningNotices: Prisma.$DunningNoticePayload<ExtArgs>[]
     inAppNotifications: Prisma.$NotificationPayload<ExtArgs>[]
     notificationSettings: Prisma.$NotificationSettingsPayload<ExtArgs> | null
+    jobRuns: Prisma.$JobRunPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -9719,6 +10119,7 @@ export interface Prisma__TenantClient<T, Null = never, ExtArgs extends runtime.T
   dunningNotices<T extends Prisma.Tenant$dunningNoticesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tenant$dunningNoticesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DunningNoticePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   inAppNotifications<T extends Prisma.Tenant$inAppNotificationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tenant$inAppNotificationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   notificationSettings<T extends Prisma.Tenant$notificationSettingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tenant$notificationSettingsArgs<ExtArgs>>): Prisma.Prisma__NotificationSettingsClient<runtime.Types.Result.GetResult<Prisma.$NotificationSettingsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  jobRuns<T extends Prisma.Tenant$jobRunsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tenant$jobRunsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$JobRunPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -10954,6 +11355,30 @@ export type Tenant$notificationSettingsArgs<ExtArgs extends runtime.Types.Extens
    */
   include?: Prisma.NotificationSettingsInclude<ExtArgs> | null
   where?: Prisma.NotificationSettingsWhereInput
+}
+
+/**
+ * Tenant.jobRuns
+ */
+export type Tenant$jobRunsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the JobRun
+   */
+  select?: Prisma.JobRunSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the JobRun
+   */
+  omit?: Prisma.JobRunOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.JobRunInclude<ExtArgs> | null
+  where?: Prisma.JobRunWhereInput
+  orderBy?: Prisma.JobRunOrderByWithRelationInput | Prisma.JobRunOrderByWithRelationInput[]
+  cursor?: Prisma.JobRunWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.JobRunScalarFieldEnum | Prisma.JobRunScalarFieldEnum[]
 }
 
 /**

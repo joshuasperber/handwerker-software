@@ -16,8 +16,12 @@ import {
   ORDER_STATUS_FLOW,
   DONE_ORDER_STATUSES,
 } from "@/lib/utils";
+import { buildAppointmentOverdueWhere, TERMINAL_APPOINTMENT_STATUSES } from "@/lib/scheduling/overdue";
+import { toDocumentListItem } from "@/lib/documents/document-view";
 
-const ACTIVE_APPOINTMENT_STATUSES = ["ABGESCHLOSSEN", "STORNIERT"] as const;
+const INVOICE_DOC_INCLUDE = {
+  calculation: { include: { customer: true } },
+} as const;
 
 const MONTHS_BACK = 6;
 const WEEKS_BACK = 8;
@@ -111,58 +115,47 @@ async function loadInvoiceAnalytics(
   now: Date
 ): Promise<InvoiceAnalyticsSlice> {
   try {
-    const [invoiceDocsForRevenue, openInvoiceDocs, overdueDocs] =
-      await Promise.all([
-        prisma.calculationDocument.findMany({
-          where: {
-            documentType: "INVOICE",
-            issueDate: { gte: rangeMonthsStart },
-            calculation: { tenantId },
-          },
-          select: {
-            issueDate: true,
-            grossAmount: true,
-          },
-        }),
-        prisma.calculationDocument.findMany({
-          where: {
-            documentType: "INVOICE",
-            status: { in: ["OFFEN", "TEILBEZAHLT"] },
-            calculation: { tenantId },
-          },
-          select: { grossAmount: true, paidAmount: true },
-        }),
-        prisma.calculationDocument.findMany({
-          where: {
-            documentType: "INVOICE",
-            status: { in: ["OFFEN", "TEILBEZAHLT"] },
-            dueDate: { not: null, lt: now },
-            calculation: { tenantId },
-          },
-          include: { calculation: { include: { customer: true } } },
-          orderBy: { dueDate: "asc" },
-          take: 6,
-        }),
-      ]);
+    const [invoiceDocsForRevenue, openInvoiceDocs] = await Promise.all([
+      prisma.calculationDocument.findMany({
+        where: {
+          documentType: "INVOICE",
+          issueDate: { gte: rangeMonthsStart },
+          calculation: { tenantId },
+        },
+        select: {
+          issueDate: true,
+          grossAmount: true,
+        },
+      }),
+      prisma.calculationDocument.findMany({
+        where: {
+          documentType: "INVOICE",
+          status: { in: ["OFFEN", "TEILBEZAHLT"] },
+          calculation: { tenantId },
+        },
+        include: INVOICE_DOC_INCLUDE,
+      }),
+    ]);
+
+    const openItems = openInvoiceDocs.map((doc) => toDocumentListItem(doc, now));
+    const overdueItems = openItems
+      .filter((item) => item.overdue)
+      .sort((a, b) => (a.dueDate ?? "").localeCompare(b.dueDate ?? ""))
+      .slice(0, 6);
 
     return {
       revenueDocs: invoiceDocsForRevenue.map((doc) => ({
         issueDate: doc.issueDate,
         amount: doc.grossAmount ?? 0,
       })),
-      openInvoicesCount: openInvoiceDocs.length,
-      openInvoicesSum: openInvoiceDocs.reduce(
-        (sum, doc) => sum + Math.max(0, doc.grossAmount - doc.paidAmount),
-        0
-      ),
-      overdueInvoices: overdueDocs.map((doc) => ({
-        id: doc.id,
-        documentNumber: doc.documentNumber,
-        dueDate: (doc.dueDate ?? doc.issueDate).toISOString(),
-        amount: Math.max(0, doc.grossAmount - doc.paidAmount),
-        customer: doc.calculation?.customer
-          ? `${doc.calculation.customer.firstName} ${doc.calculation.customer.lastName}`
-          : "—",
+      openInvoicesCount: openItems.length,
+      openInvoicesSum: openItems.reduce((sum, item) => sum + item.openAmount, 0),
+      overdueInvoices: overdueItems.map((item) => ({
+        id: item.id,
+        documentNumber: item.documentNumber,
+        dueDate: item.dueDate!,
+        amount: item.openAmount,
+        customer: item.customerName,
       })),
       approximate: false,
     };
@@ -174,7 +167,7 @@ async function loadInvoiceAnalytics(
   }
 
   try {
-    const [invoiceDocsForRevenue, openInvoiceAgg, overdueDocs] = await Promise.all([
+    const [invoiceDocsForRevenue, legacyOpenDocs] = await Promise.all([
     prisma.calculationDocument.findMany({
       where: {
         documentType: "INVOICE",
@@ -186,38 +179,34 @@ async function loadInvoiceAnalytics(
         calculation: { select: { grossSalesPrice: true } },
       },
     }),
-    prisma.calculation.aggregate({
-      where: { tenantId, status: "INVOICE_CREATED" },
-      _count: { _all: true },
-      _sum: { grossSalesPrice: true },
-    }),
     prisma.calculationDocument.findMany({
       where: {
         documentType: "INVOICE",
-        dueDate: { not: null, lt: now },
         calculation: { tenantId, status: "INVOICE_CREATED" },
       },
-      include: { calculation: { include: { customer: true } } },
-      orderBy: { dueDate: "asc" },
-      take: 6,
+      include: INVOICE_DOC_INCLUDE,
     }),
   ]);
+
+  const legacyItems = legacyOpenDocs.map((doc) => toDocumentListItem(doc, now));
+  const overdueItems = legacyItems
+    .filter((item) => item.overdue)
+    .sort((a, b) => (a.dueDate ?? "").localeCompare(b.dueDate ?? ""))
+    .slice(0, 6);
 
   return {
     revenueDocs: invoiceDocsForRevenue.map((doc) => ({
       issueDate: doc.issueDate,
       amount: doc.calculation?.grossSalesPrice ?? 0,
     })),
-    openInvoicesCount: openInvoiceAgg._count._all,
-    openInvoicesSum: openInvoiceAgg._sum.grossSalesPrice ?? 0,
-    overdueInvoices: overdueDocs.map((doc) => ({
-      id: doc.id,
-      documentNumber: doc.documentNumber,
-      dueDate: (doc.dueDate ?? doc.issueDate).toISOString(),
-      amount: doc.calculation?.grossSalesPrice ?? 0,
-      customer: doc.calculation?.customer
-        ? `${doc.calculation.customer.firstName} ${doc.calculation.customer.lastName}`
-        : "—",
+    openInvoicesCount: legacyItems.length,
+    openInvoicesSum: legacyItems.reduce((sum, item) => sum + item.openAmount, 0),
+    overdueInvoices: overdueItems.map((item) => ({
+      id: item.id,
+      documentNumber: item.documentNumber,
+      dueDate: item.dueDate!,
+      amount: item.openAmount,
+      customer: item.customerName,
     })),
     approximate: true,
   };
@@ -276,15 +265,11 @@ export async function getDashboardAnalytics(
       where: {
         tenantId,
         startTime: { gte: startOfDay(now), lte: endOfDay(now) },
-        status: { notIn: [...ACTIVE_APPOINTMENT_STATUSES] },
+        status: { notIn: TERMINAL_APPOINTMENT_STATUSES },
       },
     }),
     prisma.appointment.count({
-      where: {
-        tenantId,
-        startTime: { lt: now },
-        status: { notIn: [...ACTIVE_APPOINTMENT_STATUSES] },
-      },
+      where: buildAppointmentOverdueWhere(tenantId, now),
     }),
     prisma.appointment.findMany({
       where: {
@@ -295,11 +280,7 @@ export async function getDashboardAnalytics(
       select: { startTime: true },
     }),
     prisma.appointment.findMany({
-      where: {
-        tenantId,
-        startTime: { lt: now },
-        status: { notIn: [...ACTIVE_APPOINTMENT_STATUSES] },
-      },
+      where: buildAppointmentOverdueWhere(tenantId, now),
       include: {
         order: { include: { customer: true, property: true } },
         employee: { include: { user: true } },

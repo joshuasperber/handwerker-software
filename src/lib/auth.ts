@@ -70,5 +70,6 @@ export async function login(
     role: user.role,
     avatarUrl: user.avatarUrl,
     mustChangePassword: user.mustChangePassword,
+    sessionVersion: user.sessionVersion,
   };
 }

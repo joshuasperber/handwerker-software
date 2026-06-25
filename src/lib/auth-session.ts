@@ -23,6 +23,7 @@ export interface SessionUser {
   role: UserRole;
   avatarUrl?: string | null;
   mustChangePassword?: boolean;
+  sessionVersion?: number;
 }
 
 function getSecret() {
@@ -32,8 +33,6 @@ function getSecret() {
 }
 
 export async function createSession(user: SessionUser): Promise<string> {
-  // Profilbilder nie ins JWT — Data-URLs würden das Cookie >4 KB sprengen und
-  // Browser verwerfen die Session beim nächsten Klick.
   const token = await new SignJWT({
     sub: user.id,
     tenantId: user.tenantId,
@@ -42,6 +41,7 @@ export async function createSession(user: SessionUser): Promise<string> {
     lastName: user.lastName,
     role: user.role,
     mustChangePassword: user.mustChangePassword ?? false,
+    sessionVersion: user.sessionVersion ?? 0,
   })
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
@@ -66,6 +66,7 @@ export async function verifySession(token: string): Promise<SessionUser | null> 
       role: payload.role as UserRole,
       avatarUrl: null,
       mustChangePassword: (payload.mustChangePassword as boolean) ?? false,
+      sessionVersion: (payload.sessionVersion as number) ?? 0,
     };
   } catch {
     return null;

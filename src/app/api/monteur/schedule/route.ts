@@ -31,6 +31,10 @@ const orderInclude = {
   vehicle: { select: { id: true, name: true, licensePlate: true } },
 };
 
+type ScheduleEntry = Awaited<
+  ReturnType<typeof prisma.appointment.findMany<{ include: { order: { include: typeof orderInclude } } }>>
+>[number];
+
 export async function GET(request: NextRequest) {
   const auth = await requireAuth("monteur.own");
   if (auth instanceof Response) return auth;
@@ -67,13 +71,57 @@ export async function GET(request: NextRequest) {
     },
     include: {
       order: { include: orderInclude },
+      orderPhase: { select: { id: true, name: true } },
     },
     orderBy: { startTime: "asc" },
   });
 
+  const phaseOnly = await prisma.orderPhase.findMany({
+    where: {
+      assignedEmployeeId: employee.id,
+      isEnabled: true,
+      status: { notIn: ["ABGESCHLOSSEN", "STORNIERT", "UEBERSPRUNGEN"] },
+      plannedStart: { gte: rangeStart, lte: rangeEnd },
+      order: { tenantId: auth.tenantId },
+    },
+    include: {
+      order: { include: orderInclude },
+    },
+    orderBy: { plannedStart: "asc" },
+  });
+
+  const coveredPhaseIds = new Set(
+    appointments.map((a) => a.orderPhaseId).filter(Boolean) as string[]
+  );
+
+  const synthetic: ScheduleEntry[] = phaseOnly
+    .filter((p) => !coveredPhaseIds.has(p.id))
+    .filter((p) => p.plannedStart && p.plannedEnd)
+    .map((p) => ({
+      id: `phase-${p.id}`,
+      tenantId: auth.tenantId,
+      orderId: p.orderId,
+      orderPhaseId: p.id,
+      employeeId: employee.id,
+      startTime: p.plannedStart!,
+      endTime: p.plannedEnd!,
+      status: p.status === "IN_ARBEIT" ? "IN_ARBEIT" : "GEPLANT",
+      isTentative: true,
+      notes: `Phase: ${p.name}`,
+      reminderSentAt: null,
+      createdAt: p.createdAt,
+      updatedAt: p.updatedAt,
+      order: p.order,
+      orderPhase: { id: p.id, name: p.name },
+    })) as ScheduleEntry[];
+
+  const merged = [...appointments, ...synthetic].sort(
+    (a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime()
+  );
+
   if (weekStartStr) {
-    const days: Record<string, typeof appointments> = {};
-    for (const apt of appointments) {
+    const days: Record<string, typeof merged> = {};
+    for (const apt of merged) {
       const key = format(new Date(apt.startTime), "yyyy-MM-dd");
       if (!days[key]) days[key] = [];
       days[key].push(apt);
@@ -82,9 +130,9 @@ export async function GET(request: NextRequest) {
       weekStart: format(rangeStart, "yyyy-MM-dd"),
       weekEnd: format(rangeEnd, "yyyy-MM-dd"),
       days,
-      total: appointments.length,
+      total: merged.length,
     });
   }
 
-  return apiSuccess(appointments);
+  return apiSuccess(merged);
 }

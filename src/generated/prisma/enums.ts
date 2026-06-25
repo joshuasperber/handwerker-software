@@ -79,6 +79,7 @@ export type NotificationChannel = (typeof NotificationChannel)[keyof typeof Noti
 export const NotificationType = {
   BUCHUNGSBESTAETIGUNG: 'BUCHUNGSBESTAETIGUNG',
   TERMINERINNERUNG: 'TERMINERINNERUNG',
+  TERMIN_ZUWEISUNG: 'TERMIN_ZUWEISUNG',
   VERSPAETUNG: 'VERSPAETUNG',
   ABSCHLUSS: 'ABSCHLUSS',
   STATUSAENDERUNG: 'STATUSAENDERUNG',
@@ -487,3 +488,21 @@ export const StaffRequestStatus = {
 } as const
 
 export type StaffRequestStatus = (typeof StaffRequestStatus)[keyof typeof StaffRequestStatus]
+
+
+export const JobRunStatus = {
+  RUNNING: 'RUNNING',
+  COMPLETED: 'COMPLETED',
+  PARTIAL: 'PARTIAL',
+  FAILED: 'FAILED'
+} as const
+
+export type JobRunStatus = (typeof JobRunStatus)[keyof typeof JobRunStatus]
+
+
+export const JobRunTrigger = {
+  CRON: 'CRON',
+  MANUAL: 'MANUAL'
+} as const
+
+export type JobRunTrigger = (typeof JobRunTrigger)[keyof typeof JobRunTrigger]

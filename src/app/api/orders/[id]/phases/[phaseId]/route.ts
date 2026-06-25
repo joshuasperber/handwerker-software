@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAuth, apiSuccess, apiError } from "@/lib/api";
+import { syncPhaseAppointments } from "@/lib/scheduling/sync-phase-appointments";
 
 const PHASE_INCLUDE = {
   assignedTeam: { select: { id: true, name: true } },
@@ -51,6 +52,28 @@ export async function PATCH(
     },
     include: PHASE_INCLUDE,
   });
+
+  if (body.status === "ABGESCHLOSSEN") {
+    const next = await prisma.orderPhase.findFirst({
+      where: {
+        orderId: id,
+        isEnabled: true,
+        sortOrder: { gt: updated.sortOrder },
+        status: "AUSSTEHEND",
+      },
+      orderBy: { sortOrder: "asc" },
+    });
+    if (next) {
+      await prisma.orderPhase.update({
+        where: { id: next.id },
+        data: { status: "IN_ARBEIT" },
+      });
+    }
+  }
+
+  await syncPhaseAppointments(auth.tenantId, phaseId).catch((err) =>
+    console.error("[phase-sync]", err)
+  );
 
   return apiSuccess(updated);
 }

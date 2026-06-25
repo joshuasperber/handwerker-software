@@ -10,11 +10,14 @@ import { DashboardSkeleton } from "@/components/dashboard/analytics/dashboard-sk
 export const dynamic = "force-dynamic";
 
 async function DashboardData({ tenantId }: { tenantId: string }) {
+  let data: Awaited<ReturnType<typeof getDashboardAnalytics>> | null = null;
   try {
-    const data = await getDashboardAnalytics(tenantId);
-    return <DashboardView data={data} />;
+    data = await getDashboardAnalytics(tenantId);
   } catch (error) {
     console.error("[dashboard] analytics failed:", error);
+  }
+
+  if (!data) {
     return (
       <div className="rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
         <p className="font-medium">Auswertungen vorübergehend nicht verfügbar</p>
@@ -25,6 +28,8 @@ async function DashboardData({ tenantId }: { tenantId: string }) {
       </div>
     );
   }
+
+  return <DashboardView data={data} />;
 }
 
 export default async function DashboardPage() {

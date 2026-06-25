@@ -116,7 +116,9 @@ export const ModelName = {
   PlanMarker: 'PlanMarker',
   StaffAssignmentRequest: 'StaffAssignmentRequest',
   Invitation: 'Invitation',
-  OrderShare: 'OrderShare'
+  OrderShare: 'OrderShare',
+  JobRun: 'JobRun',
+  LoginAttempt: 'LoginAttempt'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -169,6 +171,7 @@ export const UserScalarFieldEnum = {
   role: 'role',
   isActive: 'isActive',
   mustChangePassword: 'mustChangePassword',
+  sessionVersion: 'sessionVersion',
   lastLoginAt: 'lastLoginAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -363,10 +366,12 @@ export const AppointmentScalarFieldEnum = {
   id: 'id',
   tenantId: 'tenantId',
   orderId: 'orderId',
+  orderPhaseId: 'orderPhaseId',
   employeeId: 'employeeId',
   startTime: 'startTime',
   endTime: 'endTime',
   status: 'status',
+  isTentative: 'isTentative',
   notes: 'notes',
   reminderSentAt: 'reminderSentAt',
   createdAt: 'createdAt',
@@ -1260,6 +1265,37 @@ export const OrderShareScalarFieldEnum = {
 } as const
 
 export type OrderShareScalarFieldEnum = (typeof OrderShareScalarFieldEnum)[keyof typeof OrderShareScalarFieldEnum]
+
+
+export const JobRunScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  jobName: 'jobName',
+  trigger: 'trigger',
+  status: 'status',
+  startedAt: 'startedAt',
+  finishedAt: 'finishedAt',
+  durationMs: 'durationMs',
+  tenantCount: 'tenantCount',
+  processed: 'processed',
+  skipped: 'skipped',
+  errors: 'errors',
+  report: 'report',
+  errorMessage: 'errorMessage'
+} as const
+
+export type JobRunScalarFieldEnum = (typeof JobRunScalarFieldEnum)[keyof typeof JobRunScalarFieldEnum]
+
+
+export const LoginAttemptScalarFieldEnum = {
+  id: 'id',
+  email: 'email',
+  ip: 'ip',
+  success: 'success',
+  createdAt: 'createdAt'
+} as const
+
+export type LoginAttemptScalarFieldEnum = (typeof LoginAttemptScalarFieldEnum)[keyof typeof LoginAttemptScalarFieldEnum]
 
 
 export const SortOrder = {

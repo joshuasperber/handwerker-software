@@ -193,7 +193,7 @@ export function StundenzettelView({ title = "Stundenzettel" }: { title?: string 
           </Button>
         </div>
         <p className="text-xs text-slate-400 mt-2">
-          Alternativ: Im Tagesplan bei einem Auftrag „Pause erfassen" oder Zeiten beim Abschluss.
+          Alternativ: Im Tagesplan bei einem Auftrag &quot;Pause erfassen&quot; oder Zeiten beim Abschluss.
         </p>
       </Card>
 

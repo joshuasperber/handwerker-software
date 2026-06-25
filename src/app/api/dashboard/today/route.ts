@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { requireAuth, apiSuccess } from "@/lib/api";
 import { materialAmpel } from "@/lib/inventory/formulas";
 import { getCurrentPhase } from "@/lib/phase-status";
+import { orderServiceLabel } from "@/lib/utils";
 
 export async function GET() {
   const auth = await requireAuth("orders.read");
@@ -50,7 +51,7 @@ export async function GET() {
     return {
     id: o.id,
     orderNumber: o.orderNumber,
-    title: o.title ?? o.services.map((s) => s.service?.name ?? s.customName ?? "Sonstige Leistung").join(", "),
+    title: o.title ?? o.services.map((s) => orderServiceLabel(s)).join(", "),
     customer: `${o.customer.firstName} ${o.customer.lastName}`,
     address: `${o.property.street}, ${o.property.zipCode} ${o.property.city}`,
     status: o.status,

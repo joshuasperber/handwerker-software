@@ -347,3 +347,13 @@ export type Invitation = Prisma.InvitationModel
  * 
  */
 export type OrderShare = Prisma.OrderShareModel
+/**
+ * Model JobRun
+ * 
+ */
+export type JobRun = Prisma.JobRunModel
+/**
+ * Model LoginAttempt
+ * 
+ */
+export type LoginAttempt = Prisma.LoginAttemptModel

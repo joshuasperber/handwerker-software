@@ -6,6 +6,7 @@ import {
   staffSkipMessage,
   validateStaffRequestTargets,
 } from "@/lib/staff-request-validation";
+import { queueStaffRequestCreated } from "@/lib/inngest/dispatch";
 
 export async function GET(request: NextRequest) {
   try {
@@ -128,6 +129,13 @@ export async function POST(request: NextRequest) {
       include: { employee: { include: { user: true } } },
     });
     created.push(req);
+    await queueStaffRequestCreated({
+      tenantId: auth.tenantId,
+      orderId,
+      orderNumber: order.orderNumber,
+      employeeId,
+      message,
+    }).catch((err) => console.error("[staff-request notify]", err));
   }
 
   return apiSuccess({ created, count: created.length, skipped }, 201);

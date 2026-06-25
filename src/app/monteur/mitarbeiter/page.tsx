@@ -71,7 +71,7 @@ export default function MonteurMitarbeiterPage() {
       {colleagues.length === 0 ? (
         <Card><p className="text-center text-slate-500 py-8">Keine Kollegen in Ihren Teams gefunden.</p></Card>
       ) : filtered.length === 0 ? (
-        <Card><p className="text-center text-slate-500 py-8">Keine Treffer für „{search}".</p></Card>
+        <Card><p className="text-center text-slate-500 py-8">Keine Treffer für &quot;{search}&quot;.</p></Card>
       ) : (
         <ul className="space-y-3">
           {filtered.map((c) => (

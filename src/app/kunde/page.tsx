@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { fetchJson } from "@/lib/fetch-json";
-import { ORDER_STATUS_LABELS, formatDate } from "@/lib/utils";
+import { ORDER_STATUS_LABELS, formatDate, orderServiceLabel } from "@/lib/utils";
 import { ClipboardList, MapPin } from "lucide-react";
 
 interface CustomerOrder {
@@ -77,7 +77,7 @@ export default function KundePage() {
             )}
             {o.services.length > 0 && (
               <p className="text-xs text-slate-400 mt-2">
-                {o.services.map((s) => s.service?.name ?? s.customName).filter(Boolean).join(" · ")}
+                {o.services.map((s) => orderServiceLabel(s)).join(" · ")}
               </p>
             )}
             <p className="text-xs text-slate-400 mt-2">

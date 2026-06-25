@@ -27,6 +27,7 @@ import {
   Loader2,
   RotateCcw,
 } from "lucide-react";
+import { format } from "date-fns";
 import { toast } from "sonner";
 import { PhotoGallery } from "@/components/orders/photo-gallery";
 
@@ -279,6 +280,11 @@ function PhaseStepper({ phases }: { phases: OrderPhaseData[] }) {
             <span className="text-[10px] sm:text-xs text-center leading-tight text-slate-600 line-clamp-2">
               {phase.name}
             </span>
+            {phase.plannedStart && (
+              <span className="text-[9px] text-slate-400 tabular-nums">
+                {format(new Date(phase.plannedStart), "dd.MM.")}
+              </span>
+            )}
           </div>
           {idx < phases.length - 1 && (
             <span
@@ -438,6 +444,16 @@ function PhaseRow({
               )}
               {allowStructureEdit && (
               <div className="flex items-center gap-1 mt-4 sm:mt-5">
+                {phase.status !== "ABGESCHLOSSEN" && phase.isEnabled && (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    disabled={busy}
+                    onClick={() => onPatch({ status: "ABGESCHLOSSEN" })}
+                  >
+                    <Check className="h-4 w-4 mr-1" /> Abschließen
+                  </Button>
+                )}
                 <Button size="sm" variant="ghost" onClick={onMoveUp} disabled={isFirst || busy} title="Nach oben">
                   <ChevronUp className="h-4 w-4" />
                 </Button>

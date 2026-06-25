@@ -56,6 +56,7 @@ const statusBadgeColors: Record<string, string> = {
   // Zusatzmarkierungen, die zusätzlich zum Status angezeigt werden
   HEUTE: STATUS_BLUE,
   UEBERFAELLIG: STATUS_RED,
+  OVERDUE: STATUS_RED,
   // Terminstatus (AppointmentStatus)
   GEPLANT: STATUS_GREEN,
   ANGEKOMMEN: STATUS_AMBER,

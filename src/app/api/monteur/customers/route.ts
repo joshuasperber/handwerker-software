@@ -2,56 +2,28 @@ import { prisma } from "@/lib/prisma";
 import { requireAuth, apiSuccess } from "@/lib/api";
 import { getEmployeeForUser } from "@/lib/monteur-access";
 
-/** Kunden aus eigenen Terminen (read-only für Monteur). */
+/** Kunden für Monteur-Self-Service (eigene vergangene Aufträge + Tenant-Kunden). */
 export async function GET() {
-  const auth = await requireAuth("monteur.own");
+  const auth = await requireAuth("monteur.create_own");
   if (auth instanceof Response) return auth;
 
   const employee = await getEmployeeForUser(auth);
   if (!employee) return apiSuccess([]);
 
-  const appointments = await prisma.appointment.findMany({
-    where: {
-      tenantId: auth.tenantId,
-      employeeId: employee.id,
-      status: { not: "STORNIERT" },
+  const customers = await prisma.customer.findMany({
+    where: { tenantId: auth.tenantId },
+    include: {
+      properties: { select: { id: true, label: true, street: true, city: true } },
     },
-    select: {
-      order: {
-        select: {
-          customer: {
-            select: {
-              id: true,
-              firstName: true,
-              lastName: true,
-              email: true,
-              phone: true,
-              company: true,
-            },
-          },
-          property: {
-            select: { street: true, zipCode: true, city: true },
-          },
-        },
-      },
-    },
-    orderBy: { startTime: "desc" },
-    take: 200,
+    orderBy: [{ lastName: "asc" }, { firstName: "asc" }],
+    take: 100,
   });
 
-  const seen = new Set<string>();
-  const customers = [];
-  for (const apt of appointments) {
-    const c = apt.order.customer;
-    if (seen.has(c.id)) continue;
-    seen.add(c.id);
-    customers.push({
-      ...c,
-      primaryAddress: apt.order.property
-        ? `${apt.order.property.street}, ${apt.order.property.zipCode} ${apt.order.property.city}`
-        : null,
-    });
-  }
-
-  return apiSuccess(customers);
+  return apiSuccess(
+    customers.map((c) => ({
+      id: c.id,
+      name: `${c.firstName} ${c.lastName}`,
+      properties: c.properties,
+    }))
+  );
 }

@@ -71,7 +71,7 @@ export default function MonteurKundenPage() {
       {customers.length === 0 ? (
         <Card><p className="text-center text-slate-500 py-8">Noch keine Kunden in Ihren Terminen.</p></Card>
       ) : filtered.length === 0 ? (
-        <Card><p className="text-center text-slate-500 py-8">Keine Treffer für „{search}".</p></Card>
+        <Card><p className="text-center text-slate-500 py-8">Keine Treffer für &quot;{search}&quot;.</p></Card>
       ) : (
         <ul className="space-y-3">
           {filtered.map((c) => (

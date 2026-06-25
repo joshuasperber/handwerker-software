@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { requireAuth, apiSuccess } from "@/lib/api";
 import { startOfDay, endOfDay } from "date-fns";
+import { buildOrderOverdueWhere } from "@/lib/scheduling/overdue";
 
 export async function GET() {
   const auth = await requireAuth("orders.read");
@@ -64,7 +65,7 @@ export async function GET() {
         OR: [
           { status: "EINGEPLANT", appointments: { none: { employeeId: { not: null } } } },
           { priority: "NOTFALL", status: { notIn: ["ABGESCHLOSSEN", "ABRECHNUNGSBEREIT", "ABGERECHNET", "STORNIERT"] } },
-          { scheduledStart: { lt: today }, status: { in: ["EINGEPLANT", "TERMIN_GEBUCHT"] } },
+          buildOrderOverdueWhere(auth.tenantId, today),
         ],
       },
       include: { customer: true, property: true },

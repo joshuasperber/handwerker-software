@@ -32,6 +32,7 @@ export type Permission =
   | "inventory.write"
   | "inventory.reserve"
   | "monteur.own"
+  | "monteur.create_own"
   | "customer.own";
 
 const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
@@ -127,6 +128,7 @@ const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
   ],
   MONTEUR: [
     "monteur.own",
+    "monteur.create_own",
     "messages.read",
     "messages.write",
     "inventory.read",
@@ -182,13 +184,14 @@ export const DASHBOARD_NAV_CONFIG: {
   { href: "/dashboard/maschinen", label: "Maschinen", permission: "calculations.settings" },
   { href: "/dashboard/einstellungen/rechnung", label: "Rechnungseinstellungen", permission: "calculations.settings" },
   { href: "/dashboard/einstellungen/benachrichtigungen", label: "Benachrichtigungen", permission: "notifications.manage" },
+  { href: "/dashboard/einstellungen/system", label: "Systemstatus", permission: "notifications.manage" },
   { href: "/dashboard/nachrichten", label: "Nachrichten", permission: "messages.read" },
   { href: "/dashboard/stundenzettel", label: "Stundenzettel", permission: "monteur.own" },
   { href: "/dashboard/profil", label: "Profil", permission: null },
 ];
 
 /** Monteur: gleiche Dashboard-Ansicht wie Admin, ohne diese Bereiche */
-const MONTEUR_EXCLUDED_NAV = new Set([
+export const MONTEUR_EXCLUDED_DASHBOARD_PREFIXES = [
   "/dashboard/auftraege",
   "/dashboard/termine",
   "/dashboard/kunden",
@@ -202,7 +205,15 @@ const MONTEUR_EXCLUDED_NAV = new Set([
   "/dashboard/leistungen",
   "/dashboard/einstellungen/rechnung",
   "/dashboard/einstellungen/benachrichtigungen",
-]);
+] as const;
+
+const MONTEUR_EXCLUDED_NAV = new Set<string>(MONTEUR_EXCLUDED_DASHBOARD_PREFIXES);
+
+export function isMonteurExcludedDashboardPath(pathname: string): boolean {
+  return MONTEUR_EXCLUDED_DASHBOARD_PREFIXES.some(
+    (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`)
+  );
+}
 
 export function getDashboardNavItems(role: UserRole) {
   return DASHBOARD_NAV_CONFIG.filter((item) => {

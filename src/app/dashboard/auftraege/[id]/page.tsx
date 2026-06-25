@@ -4,15 +4,16 @@ import { useEffect, useState, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { ORDER_STATUS_FLOW, ORDER_STATUS_LABELS, PRIORITY_LABELS, PRIORITY_COLORS, formatDateTime, isOverdue } from "@/lib/utils";
+import { formatDateTime } from "@/lib/utils";
 import { MATERIAL_STATUS_LABELS } from "@/lib/inventory/formulas";
-import { MapPin, Phone, Mail, Clock, CheckSquare, Upload, Calculator, Users, CheckCircle, History, ExternalLink } from "lucide-react";
+import { Clock, CheckSquare, Upload, History, CheckCircle } from "lucide-react";
 import { PlanViewer } from "@/components/orders/plan-viewer";
 import { PhotoGallery } from "@/components/orders/photo-gallery";
 import { OrderBillingSection } from "@/components/orders/billing-section";
+import { OrderDetailHeader } from "@/components/orders/order-detail-header";
+import { OrderCustomerSection } from "@/components/orders/order-customer-section";
 import { OrderPhases, type OrderPhaseData } from "@/components/orders/order-phases";
 import { OrderSharePanel } from "@/components/orders/order-share-panel";
 import { usePermission } from "@/components/auth/can-access";
@@ -21,15 +22,6 @@ import { saveJson } from "@/lib/save-toast";
 import { CanAccess } from "@/components/auth/can-access";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { toast } from "sonner";
-
-const STATUS_FLOW = ORDER_STATUS_FLOW;
-
-const CONFIRMATION_LABELS: Record<string, string> = {
-  OFFEN: "Kunde offen",
-  BESTAETIGT: "Kunde bestätigt",
-  ABGESAGT: "Kunde abgesagt",
-  NICHT_ERREICHBAR: "Nicht erreichbar",
-};
 
 interface OrderDetail {
   id: string;
@@ -389,82 +381,17 @@ export default function AuftragDetailPage() {
         loading={completing}
         onConfirm={completeOrderOffice}
       />
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-900">{order.title ?? order.orderNumber}</h1>
-          <p className="text-sm text-slate-400">{order.orderNumber}</p>
-          {isOverdue(order.scheduledStart, order.status) && (
-            <Badge status="UEBERFAELLIG" label="Überfällig" className="mt-2 mr-2" />
-          )}
-          <Badge status={order.status} label={ORDER_STATUS_LABELS[order.status]} className="mt-2" />
-          <span className={`ml-2 text-xs px-2 py-0.5 rounded-full ${PRIORITY_COLORS[order.priority]}`}>
-            {PRIORITY_LABELS[order.priority]}
-          </span>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          <CanAccess permission="calculations.write">
-            {calculation ? (
-              <Link href={`/dashboard/kalkulation/${calculation.id}`}>
-                <Button size="sm" variant="outline">
-                  <ExternalLink className="h-4 w-4 mr-1" /> Zur Kalkulation
-                </Button>
-              </Link>
-            ) : (
-              <Button size="sm" variant="outline" onClick={createCalculation}>
-                <Calculator className="h-4 w-4 mr-1" /> Grundkalkulation
-              </Button>
-            )}
-          </CanAccess>
-          <CanAccess permission="orders.assign">
-            {order.team && (
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={planTeamInCalendar}
-                disabled={!order.scheduledStart && !assignStart}
-                title={!order.scheduledStart && !assignStart ? "Zuerst Terminzeiten setzen" : undefined}
-              >
-                <Users className="h-4 w-4 mr-1" /> Team in Kalender
-              </Button>
-            )}
-          </CanAccess>
-          <CanAccess permission="orders.write">
-            {!["ABRECHNUNGSBEREIT", "ABGERECHNET", "STORNIERT"].includes(order.status) && (
-              <Button size="sm" variant="action" onClick={() => setConfirmComplete(true)}>
-                <CheckCircle className="h-4 w-4 mr-1" /> Abschließen
-              </Button>
-            )}
-            <select
-              value={order.priority}
-              onChange={(e) => updatePriority(e.target.value)}
-              className="h-10 rounded-lg border border-slate-300 px-3 text-sm"
-            >
-              {Object.entries(PRIORITY_LABELS).map(([k, v]) => (
-                <option key={k} value={k}>{v}</option>
-              ))}
-            </select>
-            <select
-              value={order.status}
-              onChange={(e) => updateStatus(e.target.value)}
-              className="h-10 rounded-lg border border-slate-300 px-3 text-sm"
-            >
-              {STATUS_FLOW.map((s) => (
-                <option key={s} value={s}>{ORDER_STATUS_LABELS[s]}</option>
-              ))}
-            </select>
-            <select
-              value={order.customerConfirmationStatus ?? "OFFEN"}
-              onChange={(e) => updateConfirmation(e.target.value)}
-              className="h-10 rounded-lg border border-slate-300 px-3 text-sm"
-              title="Kundenbestätigung für Terminerinnerungen"
-            >
-              {Object.entries(CONFIRMATION_LABELS).map(([k, v]) => (
-                <option key={k} value={k}>{v}</option>
-              ))}
-            </select>
-          </CanAccess>
-        </div>
-      </div>
+      <OrderDetailHeader
+        order={order}
+        calculation={calculation}
+        canPlanTeam={!!(order.scheduledStart || assignStart)}
+        onCreateCalculation={createCalculation}
+        onPlanTeamInCalendar={planTeamInCalendar}
+        onComplete={() => setConfirmComplete(true)}
+        onUpdatePriority={updatePriority}
+        onUpdateStatus={updateStatus}
+        onUpdateConfirmation={updateConfirmation}
+      />
       {actionMsg && <p className="text-sm text-slate-600 mb-4">{actionMsg}</p>}
 
       <CanAccess permission="calculations.read">
@@ -479,41 +406,12 @@ export default function AuftragDetailPage() {
 
       <div className="grid gap-6 lg:grid-cols-3">
         <div className="lg:col-span-2 space-y-6">
-          <Card title="Kunde & Einsatzort">
-            <div className="space-y-3">
-              <p className="font-medium">{order.customer.firstName} {order.customer.lastName}</p>
-              <div className="flex items-center gap-2 text-sm text-slate-500">
-                <Mail className="h-4 w-4" /> {order.customer.email}
-              </div>
-              {order.customer.phone && (
-                <div className="flex items-center gap-2 text-sm text-slate-500">
-                  <Phone className="h-4 w-4" /> {order.customer.phone}
-                </div>
-              )}
-              <div className="flex items-center gap-2 text-sm text-slate-500">
-                <MapPin className="h-4 w-4" />
-                {order.property.street}, {order.property.zipCode} {order.property.city}
-              </div>
-            </div>
-          </Card>
-
-          <Card title="Leistungen">
-            {order.services.map((s, i) => (
-              <div key={i} className="flex justify-between py-2 border-b border-slate-50 last:border-0">
-                <span>
-                  {s.service?.name ?? s.customName ?? "Sonstige Leistung"}
-                  {!s.service && <span className="ml-2 text-[10px] uppercase tracking-wide text-amber-600">sonstige</span>}
-                  {s.description && <span className="block text-xs text-slate-400">{s.description}</span>}
-                </span>
-                <span className="text-slate-400">
-                  {s.service ? `${s.service.durationMinutes} Min.` : s.unitPriceCents != null ? `${(s.unitPriceCents / 100).toLocaleString("de-DE", { style: "currency", currency: "EUR" })}` : `${s.quantity ?? 1}×`}
-                </span>
-              </div>
-            ))}
-            {order.description && (
-              <p className="mt-3 text-sm text-slate-600">{order.description}</p>
-            )}
-          </Card>
+          <OrderCustomerSection
+            customer={order.customer}
+            property={order.property}
+            services={order.services}
+            description={order.description}
+          />
 
           <OrderPhases
             orderId={order.id}

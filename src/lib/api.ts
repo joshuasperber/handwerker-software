@@ -21,10 +21,19 @@ export async function requireAuth(
 
   const active = await prisma.user.findFirst({
     where: { id: session.id, tenantId: session.tenantId, isActive: true },
-    select: { id: true },
+    select: { id: true, sessionVersion: true, role: true },
   });
   if (!active) {
     return apiError("Nicht authentifiziert", 401);
+  }
+
+  const tokenVersion = session.sessionVersion ?? 0;
+  if (tokenVersion !== active.sessionVersion) {
+    return apiError("Sitzung abgelaufen — bitte erneut anmelden", 401);
+  }
+
+  if (active.role !== session.role) {
+    return apiError("Sitzung abgelaufen — bitte erneut anmelden", 401);
   }
 
   if (permission && !hasPermission(session.role, permission)) {

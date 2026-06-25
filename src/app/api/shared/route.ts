@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { requireAuth, apiSuccess } from "@/lib/api";
+import { orderServiceLabel } from "@/lib/utils";
 
 /** Aufträge/Anfragen, die ausdrücklich mit der angemeldeten Person geteilt wurden. */
 export async function GET() {
@@ -41,7 +42,7 @@ export async function GET() {
       createdAt: s.order.createdAt,
       customer: `${s.order.customer.firstName} ${s.order.customer.lastName}`,
       location: `${s.order.property.zipCode} ${s.order.property.city}`,
-      services: s.order.services.map((sv) => sv.service?.name ?? sv.customName ?? "Sonstige Leistung"),
+      services: s.order.services.map((sv) => orderServiceLabel(sv)),
     },
   }));
 

@@ -406,6 +406,11 @@ export default function NeuerAuftragPage() {
 
       {step === 4 && (
         <Card title="Termin & Mitarbeiter (optional)">
+          {form.scheduledStart && !form.employeeId && (
+            <p className="mb-3 text-sm text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
+              Hinweis: Ohne Monteur-Zuweisung erscheint der Termin nicht im Monteur-Tagesplan.
+            </p>
+          )}
           <div className="grid gap-3 sm:grid-cols-2">
             <div>
               <label className="text-sm font-medium">Monteur</label>
