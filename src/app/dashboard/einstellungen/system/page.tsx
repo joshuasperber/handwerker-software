@@ -63,21 +63,34 @@ export default function SystemStatusPage() {
   } | null>(null);
   const [runs, setRuns] = useState<JobRunRow[]>([]);
 
+  function applySystemData(d: { success?: boolean; data?: { health: typeof health; recentRuns: JobRunRow[] } }) {
+    if (d.success && d.data) {
+      setHealth(d.data.health);
+      setRuns(d.data.recentRuns);
+    }
+  }
+
   function load() {
     setLoading(true);
     fetch("/api/admin/system")
       .then((r) => r.json())
-      .then((d) => {
-        if (d.success) {
-          setHealth(d.data.health);
-          setRuns(d.data.recentRuns);
-        }
-      })
+      .then(applySystemData)
       .finally(() => setLoading(false));
   }
 
   useEffect(() => {
-    load();
+    let cancelled = false;
+    fetch("/api/admin/system")
+      .then((r) => r.json())
+      .then((d) => {
+        if (!cancelled) applySystemData(d);
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   async function triggerCron() {
