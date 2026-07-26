@@ -18,6 +18,13 @@ import { de } from "date-fns/locale";
 import { toast } from "sonner";
 import { compressImage } from "@/lib/image-compression";
 import { swrKeys, useApiSWR } from "@/lib/swr";
+import {
+  WorkDayTimeFields,
+  combineDateAndTime,
+  combineEndDateAndTime,
+  defaultWorkDayTimes,
+  type WorkDayTimeValue,
+} from "@/components/ui/work-day-time-fields";
 
 interface MaterialLine {
   id: string;
@@ -87,8 +94,7 @@ function MonteurTagesplanViewContent() {
     customerId: "",
     propertyId: "",
     title: "",
-    startTime: "",
-    endTime: "",
+    workDay: defaultWorkDayTimes() as WorkDayTimeValue,
     description: "",
   });
   const [ownSaving, setOwnSaving] = useState(false);
@@ -133,7 +139,13 @@ function MonteurTagesplanViewContent() {
   );
 
   async function createOwnAppointment() {
-    if (!ownForm.customerId || !ownForm.propertyId || !ownForm.title || !ownForm.startTime || !ownForm.endTime) {
+    const startLocal = combineDateAndTime(ownForm.workDay.date, ownForm.workDay.startTime);
+    const endLocal = combineEndDateAndTime(
+      ownForm.workDay.date,
+      ownForm.workDay.startTime,
+      ownForm.workDay.endTime
+    );
+    if (!ownForm.customerId || !ownForm.propertyId || !ownForm.title || !ownForm.workDay.startTime || !ownForm.workDay.endTime) {
       toast.error("Bitte alle Pflichtfelder ausfüllen");
       return;
     }
@@ -145,8 +157,8 @@ function MonteurTagesplanViewContent() {
         customerId: ownForm.customerId,
         propertyId: ownForm.propertyId,
         title: ownForm.title,
-        startTime: new Date(ownForm.startTime).toISOString(),
-        endTime: new Date(ownForm.endTime).toISOString(),
+        startTime: new Date(startLocal).toISOString(),
+        endTime: new Date(endLocal).toISOString(),
         description: ownForm.description || undefined,
       }),
     });
@@ -155,7 +167,13 @@ function MonteurTagesplanViewContent() {
     if (data.success) {
       toast.success("Termin angelegt");
       setShowOwnAppt(false);
-      setOwnForm({ customerId: "", propertyId: "", title: "", startTime: "", endTime: "", description: "" });
+      setOwnForm({
+        customerId: "",
+        propertyId: "",
+        title: "",
+        workDay: defaultWorkDayTimes(),
+        description: "",
+      });
       loadSchedule();
     } else {
       toast.error(data.error ?? "Termin konnte nicht angelegt werden");
@@ -314,7 +332,10 @@ function MonteurTagesplanViewContent() {
           size="touch"
           variant="outline"
           className="mt-2 w-full"
-          onClick={() => setShowOwnAppt(true)}
+          onClick={() => {
+            setOwnForm((prev) => ({ ...prev, workDay: defaultWorkDayTimes() }));
+            setShowOwnAppt(true);
+          }}
         >
           <Plus className="h-4 w-4 mr-1" /> Eigener Termin
         </Button>
@@ -361,26 +382,12 @@ function MonteurTagesplanViewContent() {
                 placeholder="z. B. Nacharbeit Küche"
               />
             </div>
-            <div className="grid grid-cols-2 gap-2">
-              <div>
-                <label className="text-xs text-slate-500">Beginn</label>
-                <input
-                  type="datetime-local"
-                  className="mt-1 w-full min-h-[44px] rounded-lg border px-2 text-sm"
-                  value={ownForm.startTime}
-                  onChange={(e) => setOwnForm({ ...ownForm, startTime: e.target.value })}
-                />
-              </div>
-              <div>
-                <label className="text-xs text-slate-500">Ende</label>
-                <input
-                  type="datetime-local"
-                  className="mt-1 w-full min-h-[44px] rounded-lg border px-2 text-sm"
-                  value={ownForm.endTime}
-                  onChange={(e) => setOwnForm({ ...ownForm, endTime: e.target.value })}
-                />
-              </div>
-            </div>
+            <WorkDayTimeFields
+              compact
+              required
+              value={ownForm.workDay}
+              onChange={(workDay) => setOwnForm({ ...ownForm, workDay })}
+            />
             <div className="flex gap-2">
               <Button size="touch" variant="action" className="flex-1" onClick={createOwnAppointment} disabled={ownSaving}>
                 {ownSaving ? "Speichern…" : "Anlegen"}

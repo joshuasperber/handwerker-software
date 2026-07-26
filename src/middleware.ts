@@ -24,6 +24,7 @@ function getDashboardPermission(
   if (pathname.startsWith("/dashboard/inventar")) return "inventory.read";
   if (pathname.startsWith("/dashboard/einkauf")) return "inventory.read";
   if (pathname.startsWith("/dashboard/disposition")) return "appointments.read";
+  if (pathname.startsWith("/dashboard/stunden")) return "time_entries.read";
   if (pathname.startsWith("/dashboard/leitstand")) return "appointments.read";
   if (pathname.startsWith("/dashboard/kalkulation/einstellungen")) return "calculations.settings";
   if (pathname.startsWith("/dashboard/kalkulation/zonen")) return "calculations.settings";
@@ -35,6 +36,7 @@ function getDashboardPermission(
   if (pathname.startsWith("/dashboard/mitarbeiter")) return "employees.read";
   if (pathname.startsWith("/dashboard/leistungen")) return "services.read";
   if (pathname.startsWith("/dashboard/maschinen")) return "calculations.settings";
+  if (pathname.startsWith("/dashboard/einstellungen/betrieb")) return "tenant.manage";
   if (pathname.startsWith("/dashboard/einstellungen/rechnung")) return "calculations.settings";
   if (pathname.startsWith("/dashboard/einstellungen/benachrichtigungen")) return "notifications.manage";
   if (pathname.startsWith("/dashboard/einstellungen/system")) return "notifications.manage";

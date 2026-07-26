@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -12,6 +11,7 @@ import { MATERIAL_STATUS_LABELS } from "@/lib/inventory/formulas";
 import { Button } from "@/components/ui/button";
 import { CanAccess } from "@/components/auth/can-access";
 import { AssignOrderButton } from "@/components/disposition/assign-employees-panel";
+import { swrKeys, useApiSWR } from "@/lib/swr";
 
 interface EmployeeAvail {
   id: string;
@@ -57,37 +57,42 @@ interface UnassignedOrder {
 }
 
 export default function DispositionPage() {
-  const [employees, setEmployees] = useState<EmployeeAvail[]>([]);
-  const [teams, setTeams] = useState<Team[]>([]);
-  const [todayOrders, setTodayOrders] = useState<TodayOrder[]>([]);
-  const [unassigned, setUnassigned] = useState<UnassignedOrder[]>([]);
-  const [critical, setCritical] = useState<{ warnings: { type: string; severity: string }[] } | null>(null);
-  const [loadError, setLoadError] = useState("");
+  const {
+    data: availability,
+    error: availError,
+    mutate: mutateAvail,
+  } = useApiSWR<{ employees: EmployeeAvail[]; teams: Team[] }>(
+    swrKeys.dispositionAvailability()
+  );
+  const {
+    data: today,
+    error: todayError,
+    mutate: mutateToday,
+  } = useApiSWR<{ orders: TodayOrder[] }>(swrKeys.dashboardToday());
+  const { data: critical, mutate: mutateCritical } = useApiSWR<{
+    warnings: { type: string; severity: string }[];
+  }>(swrKeys.dashboardCritical());
+  const {
+    data: unassignedData,
+    error: unassignedError,
+    mutate: mutateUnassigned,
+  } = useApiSWR<UnassignedOrder[]>(swrKeys.dispositionUnassigned());
+
+  const employees = availability?.employees ?? [];
+  const teams = availability?.teams ?? [];
+  const todayOrders = today?.orders ?? [];
+  const unassigned = unassignedData ?? [];
+  const loadError =
+    availError || todayError || unassignedError
+      ? "Einige Dispositionsdaten konnten nicht geladen werden."
+      : "";
 
   function loadAll() {
-    Promise.all([
-      fetch("/api/disposition/availability").then((r) => r.json()),
-      fetch("/api/dashboard/today").then((r) => r.json()),
-      fetch("/api/dashboard/critical").then((r) => r.json()),
-      fetch("/api/disposition/unassigned").then((r) => r.json()),
-    ]).then(([d, t, c, u]) => {
-      let ok = true;
-      if (d.success) {
-        setEmployees(d.data.employees);
-        setTeams(d.data.teams);
-      } else ok = false;
-      if (t.success) setTodayOrders(t.data.orders);
-      else ok = false;
-      if (c.success) setCritical(c.data);
-      if (u.success) setUnassigned(u.data);
-      else ok = false;
-      setLoadError(ok ? "" : "Einige Dispositionsdaten konnten nicht geladen werden.");
-    }).catch(() => setLoadError("Disposition konnte nicht geladen werden."));
+    void mutateAvail();
+    void mutateToday();
+    void mutateCritical();
+    void mutateUnassigned();
   }
-
-  useEffect(() => {
-    loadAll();
-  }, []);
 
   // Vereinfachter, kalenderbasierter Mitarbeiter-Status:
   //  - Im Urlaub  → es liegt eine Abwesenheit vor

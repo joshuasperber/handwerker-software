@@ -40,6 +40,12 @@ export function LoginForm({ errorCode }: { errorCode?: string }) {
         Anmelden
       </Button>
 
+      <p className="text-center text-sm">
+        <Link href="/passwort-vergessen" className="text-[#0d5c63] font-medium hover:underline">
+          Passwort vergessen?
+        </Link>
+      </p>
+
       <p className="text-center text-xs text-slate-400">
         Demo: admin@demo.de / demo1234
       </p>

@@ -18,6 +18,14 @@ import {
   calcWorkedHours,
   validateTimeEntryInput,
 } from "@/lib/time-entry";
+import {
+  WorkDayTimeFields,
+  combineDateAndTime,
+  combineEndDateAndTime,
+  defaultWorkDayTimes,
+  splitDateTimeLocal,
+  type WorkDayTimeValue,
+} from "@/components/ui/work-day-time-fields";
 
 interface TimeEntry {
   id: string;
@@ -42,25 +50,43 @@ interface OrderOption {
   customer: { firstName?: string; lastName: string };
 }
 
-function toDatetimeLocal(d: Date) {
-  const pad = (n: number) => String(n).padStart(2, "0");
-  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
-}
+type TimeForm = {
+  orderId: string;
+  activity: string;
+  workDay: WorkDayTimeValue;
+  breakMinutes: string;
+  notes: string;
+};
 
-function defaultEndTime() {
-  const d = new Date();
-  d.setHours(d.getHours() + 1);
-  return toDatetimeLocal(d);
-}
-
-const emptyForm = () => ({
+const emptyForm = (): TimeForm => ({
   orderId: "",
   activity: "",
-  startTime: toDatetimeLocal(new Date()),
-  endTime: defaultEndTime(),
+  workDay: defaultWorkDayTimes(),
   breakMinutes: "0",
   notes: "",
 });
+
+function formStartIso(workDay: WorkDayTimeValue) {
+  return combineDateAndTime(workDay.date, workDay.startTime);
+}
+
+function formEndIso(workDay: WorkDayTimeValue) {
+  if (!workDay.endTime) return "";
+  return combineEndDateAndTime(workDay.date, workDay.startTime, workDay.endTime);
+}
+
+function toLocalDateTimeValue(iso: string) {
+  return format(new Date(iso), "yyyy-MM-dd'T'HH:mm");
+}
+
+function entryToWorkDay(entry: TimeEntry): WorkDayTimeValue {
+  const start = splitDateTimeLocal(toLocalDateTimeValue(entry.startTime));
+  if (!entry.endTime) {
+    return { date: start.date, startTime: start.time, endTime: "" };
+  }
+  const end = splitDateTimeLocal(toLocalDateTimeValue(entry.endTime));
+  return { date: start.date, startTime: start.time, endTime: end.time };
+}
 
 export function StundenzettelView({ title = "Stundenzettel" }: { title?: string }) {
   const [weekStart, setWeekStart] = useState(
@@ -77,14 +103,7 @@ export function StundenzettelView({ title = "Stundenzettel" }: { title?: string 
   const [saving, setSaving] = useState(false);
   const [formMsg, setFormMsg] = useState("");
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [editForm, setEditForm] = useState({
-    orderId: "",
-    activity: "",
-    startTime: "",
-    endTime: "",
-    breakMinutes: "0",
-    notes: "",
-  });
+  const [editForm, setEditForm] = useState<TimeForm>(emptyForm);
   const [form, setForm] = useState(emptyForm);
 
   function loadEntries() {
@@ -131,9 +150,11 @@ export function StundenzettelView({ title = "Stundenzettel" }: { title?: string 
   }, [orders, orderSearch]);
 
   const previewHours = useMemo(() => {
-    if (!form.startTime || !form.endTime) return null;
-    return calcWorkedHours(form.startTime, form.endTime, Number(form.breakMinutes) || 0);
-  }, [form.startTime, form.endTime, form.breakMinutes]);
+    const start = formStartIso(form.workDay);
+    const end = formEndIso(form.workDay);
+    if (!start || !end) return null;
+    return calcWorkedHours(start, end, Number(form.breakMinutes) || 0);
+  }, [form.workDay, form.breakMinutes]);
 
   function entryLabel(e: TimeEntry) {
     if (e.order) {
@@ -152,9 +173,11 @@ export function StundenzettelView({ title = "Stundenzettel" }: { title?: string 
     e.preventDefault();
     setFormMsg("");
 
+    const startLocal = formStartIso(form.workDay);
+    const endLocal = formEndIso(form.workDay);
     const validationError = validateTimeEntryInput({
-      startTime: form.startTime,
-      endTime: form.endTime,
+      startTime: startLocal,
+      endTime: endLocal,
       breakMinutes: Number(form.breakMinutes) || 0,
       orderId: form.orderId || null,
       activity: form.activity,
@@ -173,8 +196,8 @@ export function StundenzettelView({ title = "Stundenzettel" }: { title?: string 
       body: JSON.stringify({
         orderId: form.orderId || null,
         activity: form.activity.trim() || null,
-        startTime: new Date(form.startTime).toISOString(),
-        endTime: new Date(form.endTime).toISOString(),
+        startTime: new Date(startLocal).toISOString(),
+        endTime: new Date(endLocal).toISOString(),
         breakMinutes: Number(form.breakMinutes) || 0,
         notes: form.notes.trim() || undefined,
       }),
@@ -197,22 +220,23 @@ export function StundenzettelView({ title = "Stundenzettel" }: { title?: string 
     setEditForm({
       orderId: entry.order?.id ?? "",
       activity: entry.activity ?? "",
-      startTime: toDatetimeLocal(new Date(entry.startTime)),
-      endTime: entry.endTime ? toDatetimeLocal(new Date(entry.endTime)) : "",
+      workDay: entryToWorkDay(entry),
       breakMinutes: String(entry.breakMinutes ?? 0),
       notes: entry.notes ?? "",
     });
   }
 
   async function saveEdit(entryId: string) {
+    const startLocal = formStartIso(editForm.workDay);
+    const endLocal = formEndIso(editForm.workDay);
     const validationError = validateTimeEntryInput({
-      startTime: editForm.startTime,
-      endTime: editForm.endTime || null,
+      startTime: startLocal,
+      endTime: endLocal || null,
       breakMinutes: Number(editForm.breakMinutes) || 0,
       orderId: editForm.orderId || null,
       activity: editForm.activity,
       notes: editForm.notes,
-      requireEndTime: Boolean(editForm.endTime),
+      requireEndTime: Boolean(editForm.workDay.endTime),
     });
     if (validationError) {
       setFormMsg(validationError);
@@ -226,8 +250,8 @@ export function StundenzettelView({ title = "Stundenzettel" }: { title?: string 
       body: JSON.stringify({
         orderId: editForm.orderId || null,
         activity: editForm.activity.trim() || null,
-        startTime: new Date(editForm.startTime).toISOString(),
-        endTime: editForm.endTime ? new Date(editForm.endTime).toISOString() : null,
+        startTime: new Date(startLocal).toISOString(),
+        endTime: endLocal ? new Date(endLocal).toISOString() : null,
         breakMinutes: Number(editForm.breakMinutes) || 0,
         notes: editForm.notes.trim() || null,
       }),
@@ -287,7 +311,10 @@ export function StundenzettelView({ title = "Stundenzettel" }: { title?: string 
             size="sm"
             onClick={() => {
               setFormMsg("");
-              setShowForm((v) => !v);
+              setShowForm((v) => {
+                if (!v) setForm(emptyForm());
+                return !v;
+              });
             }}
           >
             <Plus className="h-4 w-4 mr-1" /> Zeit erfassen
@@ -358,28 +385,11 @@ export function StundenzettelView({ title = "Stundenzettel" }: { title?: string 
               </select>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div>
-                <label className="text-sm font-medium">Beginn *</label>
-                <input
-                  type="datetime-local"
-                  className="w-full mt-1 h-10 rounded-lg border border-slate-300 px-3 text-sm"
-                  value={form.startTime}
-                  onChange={(e) => setForm({ ...form, startTime: e.target.value })}
-                  required
-                />
-              </div>
-              <div>
-                <label className="text-sm font-medium">Ende *</label>
-                <input
-                  type="datetime-local"
-                  className="w-full mt-1 h-10 rounded-lg border border-slate-300 px-3 text-sm"
-                  value={form.endTime}
-                  onChange={(e) => setForm({ ...form, endTime: e.target.value })}
-                  required
-                />
-              </div>
-            </div>
+            <WorkDayTimeFields
+              value={form.workDay}
+              onChange={(workDay) => setForm({ ...form, workDay })}
+              required
+            />
 
             <Input
               label="Pause (Minuten)"
@@ -478,30 +488,12 @@ export function StundenzettelView({ title = "Stundenzettel" }: { title?: string 
                         ))}
                       </select>
                     </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      <div>
-                        <label className="text-xs font-medium">Beginn</label>
-                        <input
-                          type="datetime-local"
-                          className="w-full mt-1 h-9 rounded-lg border border-slate-300 px-2 text-sm"
-                          value={editForm.startTime}
-                          onChange={(ev) =>
-                            setEditForm({ ...editForm, startTime: ev.target.value })
-                          }
-                        />
-                      </div>
-                      <div>
-                        <label className="text-xs font-medium">Ende</label>
-                        <input
-                          type="datetime-local"
-                          className="w-full mt-1 h-9 rounded-lg border border-slate-300 px-2 text-sm"
-                          value={editForm.endTime}
-                          onChange={(ev) =>
-                            setEditForm({ ...editForm, endTime: ev.target.value })
-                          }
-                        />
-                      </div>
-                    </div>
+                    <WorkDayTimeFields
+                      compact
+                      endOptional
+                      value={editForm.workDay}
+                      onChange={(workDay) => setEditForm({ ...editForm, workDay })}
+                    />
                     <Input
                       label="Pause (Minuten)"
                       type="number"

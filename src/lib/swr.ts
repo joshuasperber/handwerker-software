@@ -9,7 +9,18 @@ export const swrKeys = {
   employees: () => "/api/employees",
   articles: () => "/api/articles",
   stock: () => "/api/stock",
+  storageLocations: () => "/api/storage-locations",
+  stockMovements: (limit = 80) => `/api/stock/movements?limit=${limit}`,
+  storageLocation: (id: string) => `/api/storage-locations/${id}`,
+  dispositionAvailability: () => "/api/disposition/availability",
+  dispositionUnassigned: () => "/api/disposition/unassigned",
+  dashboardToday: () => "/api/dashboard/today",
+  dashboardCritical: () => "/api/dashboard/critical",
   monteurSchedule: (date: string) => `/api/monteur/schedule?date=${date}`,
+  timeEntries: (qs = "") => `/api/time-entries${qs ? `?${qs}` : ""}`,
+  messagesUnreadCount: () => "/api/messages/unread-count",
+  onboardingStatus: () => "/api/onboarding/status",
+  tenantSettings: () => "/api/tenant/settings",
 } as const;
 
 async function jsonFetcher<T>(url: string): Promise<T> {

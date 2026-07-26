@@ -25,6 +25,7 @@ import {
   Bell,
   Euro,
   ChevronDown,
+  Building2,
   type LucideIcon,
 } from "lucide-react";
 import { DashboardNavLink } from "@/components/dashboard/nav-link";
@@ -33,6 +34,7 @@ import {
   type NavSection,
 } from "@/lib/permissions";
 import { cn } from "@/lib/utils";
+import { swrKeys, useApiSWR } from "@/lib/swr";
 
 const NAV_ICONS: Record<string, LucideIcon> = {
   "/dashboard": LayoutDashboard,
@@ -42,11 +44,13 @@ const NAV_ICONS: Record<string, LucideIcon> = {
   "/dashboard/inventar": Package,
   "/dashboard/einkauf": ShoppingCart,
   "/dashboard/disposition": Truck,
+  "/dashboard/stunden": Clock,
   "/dashboard/kalkulation": Calculator,
   "/dashboard/rechnungen": Receipt,
   "/dashboard/umsatz": Euro,
   "/dashboard/finanzuebersicht": TrendingUp,
   "/dashboard/stundenzettel": Clock,
+  "/dashboard/einstellungen/betrieb": Building2,
   "/dashboard/einstellungen/rechnung": Settings,
   "/dashboard/einstellungen/benachrichtigungen": Bell,
   "/dashboard/profil": User,
@@ -82,6 +86,11 @@ export function DashboardSidebarNav({
   onNavigate?: () => void;
 }) {
   const pathname = usePathname();
+  const { data: unread } = useApiSWR<{ count: number }>(
+    swrKeys.messagesUnreadCount(),
+    { refreshInterval: 60_000 }
+  );
+  const messagesBadge = unread?.count ?? 0;
 
   const { sections, ungrouped } = useMemo(() => {
     const bySection = new Map<Exclude<NavSection, null>, NavItem[]>();
@@ -133,6 +142,9 @@ export function DashboardSidebarNav({
         label={item.label}
         icon={Icon}
         onClick={onNavigate}
+        badge={
+          item.href === "/dashboard/nachrichten" ? messagesBadge : undefined
+        }
       />
     );
   }

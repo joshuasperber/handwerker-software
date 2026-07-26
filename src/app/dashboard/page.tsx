@@ -6,6 +6,7 @@ import { getDashboardAnalytics } from "@/lib/dashboard/analytics";
 import { MonteurDashboardOverview } from "@/components/dashboard/monteur-overview";
 import { DashboardView } from "@/components/dashboard/analytics/dashboard-view";
 import { DashboardSkeleton } from "@/components/dashboard/analytics/dashboard-skeleton";
+import { OnboardingChecklist } from "@/components/dashboard/onboarding-checklist";
 
 export const dynamic = "force-dynamic";
 
@@ -58,6 +59,8 @@ export default async function DashboardPage() {
           </AddButton>
         )}
       </div>
+
+      {session?.role === "ADMIN" && <OnboardingChecklist />}
 
       {session ? (
         <Suspense fallback={<DashboardSkeleton />}>

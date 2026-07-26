@@ -25,6 +25,7 @@ import {
   MOVEMENT_TYPE_LABELS,
   REASON_LABELS,
 } from "@/lib/inventory/reasons";
+import { swrKeys, useApiSWR } from "@/lib/swr";
 
 interface ArticleRow {
   id: string;
@@ -113,9 +114,30 @@ interface LocationStock {
 }
 
 export default function InventarPage() {
-  const [articles, setArticles] = useState<ArticleRow[]>([]);
-  const [summary, setSummary] = useState<StockSummary | null>(null);
-  const [locations, setLocations] = useState<StorageLocation[]>([]);
+  const {
+    data: articlesData,
+    error: articlesError,
+    isLoading: articlesLoading,
+    mutate: mutateArticles,
+  } = useApiSWR<ArticleRow[]>(swrKeys.articles());
+  const { data: summary, mutate: mutateStock } = useApiSWR<StockSummary>(
+    swrKeys.stock()
+  );
+  const {
+    data: locationsData,
+    error: locationsError,
+    mutate: mutateLocations,
+  } = useApiSWR<StorageLocation[]>(swrKeys.storageLocations());
+
+  const articles = articlesData ?? [];
+  const locations = locationsData ?? [];
+  const loading = articlesLoading && !articlesData;
+  const loadError = articlesError
+    ? "Artikel konnten nicht geladen werden."
+    : locationsError
+      ? "Lagerorte konnten nicht geladen werden."
+      : "";
+
   const [selectedLocationId, setSelectedLocationId] = useState<string | null>(null);
   const [locationDetail, setLocationDetail] = useState<LocationStock | null>(null);
   const [stockForm, setStockForm] = useState({
@@ -159,7 +181,6 @@ export default function InventarPage() {
   } | null>(null);
   const [dndQty, setDndQty] = useState<number | null>(null);
   const [dndMsg, setDndMsg] = useState("");
-  const [movements, setMovements] = useState<MovementRow[]>([]);
   const [form, setForm] = useState({
     name: "",
     unit: "Stück",
@@ -175,8 +196,49 @@ export default function InventarPage() {
     salesPriceNet: null as number | null,
   });
   const [unitMode, setUnitMode] = useState<"preset" | "custom">("preset");
-  const [loading, setLoading] = useState(true);
-  const [loadError, setLoadError] = useState("");
+
+  const movementsKey =
+    tab === "bewegungen" ? swrKeys.stockMovements(80) : null;
+  const { data: movementsData, mutate: mutateMovements } =
+    useApiSWR<MovementRow[]>(movementsKey);
+  const movements = movementsData ?? [];
+
+  const locationDetailKey = selectedLocationId
+    ? swrKeys.storageLocation(selectedLocationId)
+    : null;
+  const { data: locationDetailRaw, mutate: mutateLocationDetail } =
+    useApiSWR<{
+      id: string;
+      name: string;
+      locationType: string;
+      stock: LocationStock["stock"];
+      totalOnHand: number;
+      totalReserved: number;
+    }>(locationDetailKey);
+
+  useEffect(() => {
+    if (!locationDetailRaw) {
+      setLocationDetail(null);
+      return;
+    }
+    setLocationDetail({
+      id: locationDetailRaw.id,
+      name: locationDetailRaw.name,
+      locationType: locationDetailRaw.locationType,
+      stock: locationDetailRaw.stock,
+      totalOnHand: locationDetailRaw.totalOnHand,
+      totalReserved: locationDetailRaw.totalReserved,
+    });
+  }, [locationDetailRaw, locationRefreshKey]);
+
+  useEffect(() => {
+    if (!locations.length) return;
+    setForm((f) => {
+      if (f.initialLocationId) return f;
+      const haupt = locations.find((loc) => loc.locationType === "HAUPTLAGER");
+      return { ...f, initialLocationId: haupt?.id ?? locations[0].id };
+    });
+  }, [locations]);
 
   function resolvedUnit() {
     return unitMode === "custom"
@@ -185,24 +247,16 @@ export default function InventarPage() {
   }
 
   function refreshLocationDetail(locationId: string) {
-    fetch(`/api/storage-locations/${locationId}`)
-      .then((r) => r.json())
-      .then((d) => {
-        if (d.success) {
-          setLocationDetail({
-            id: d.data.id,
-            name: d.data.name,
-            locationType: d.data.locationType,
-            stock: d.data.stock,
-            totalOnHand: d.data.totalOnHand,
-            totalReserved: d.data.totalReserved,
-          });
-        }
-      });
+    if (selectedLocationId === locationId) {
+      void mutateLocationDetail();
+    }
   }
 
   function afterStockChange() {
-    load();
+    void mutateArticles();
+    void mutateStock();
+    void mutateLocations();
+    void mutateMovements();
     setLocationRefreshKey((k) => k + 1);
     if (selectedLocationId) {
       refreshLocationDetail(selectedLocationId);
@@ -210,70 +264,8 @@ export default function InventarPage() {
   }
 
   function load() {
-    setLoadError("");
-    Promise.all([
-      fetch("/api/articles").then((r) => r.json()),
-      fetch("/api/stock").then((r) => r.json()),
-      fetch("/api/storage-locations").then((r) => r.json()),
-    ]).then(([a, s, l]) => {
-      if (a.success) setArticles(a.data);
-      else setLoadError("Artikel konnten nicht geladen werden.");
-      if (s.success) setSummary(s.data);
-      if (l.success && l.data?.length) {
-        setLocations(l.data);
-        // Standard-Lagerort für das Formular vorbelegen (Hauptlager bevorzugt).
-        setForm((f) => {
-          if (f.initialLocationId) return f;
-          const haupt = l.data.find(
-            (loc: { locationType: string }) => loc.locationType === "HAUPTLAGER"
-          );
-          return { ...f, initialLocationId: haupt?.id ?? l.data[0].id };
-        });
-      } else if (l.success) {
-        setLocations(l.data);
-      } else if (!l.success) {
-        setLoadError((prev) => prev || "Lagerorte konnten nicht geladen werden.");
-      }
-      setLoading(false);
-    }).catch(() => {
-      setLoadError("Inventardaten konnten nicht geladen werden.");
-      setLoading(false);
-    });
+    afterStockChange();
   }
-
-  useEffect(() => { load(); }, []);
-
-  useEffect(() => {
-    if (tab !== "bewegungen") return;
-    fetch("/api/stock/movements?limit=80")
-      .then((r) => r.json())
-      .then((d) => { if (d.success) setMovements(d.data); });
-  }, [tab, stockMsg, transferMsg, locationRefreshKey]);
-
-  useEffect(() => {
-    let active = true;
-    (async () => {
-      if (!selectedLocationId) {
-        if (active) setLocationDetail(null);
-        return;
-      }
-      const r = await fetch(`/api/storage-locations/${selectedLocationId}`);
-      const d = await r.json();
-      if (active && d.success) {
-        setLocationDetail({
-          id: d.data.id,
-          name: d.data.name,
-          locationType: d.data.locationType,
-          stock: d.data.stock,
-          totalOnHand: d.data.totalOnHand,
-          totalReserved: d.data.totalReserved,
-        });
-      }
-    })();
-    return () => {
-      active = false;
-    };
-  }, [selectedLocationId, locationRefreshKey]);
 
   async function assignStockToLocation(e: React.FormEvent) {
     e.preventDefault();

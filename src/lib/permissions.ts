@@ -34,7 +34,9 @@ export type Permission =
   | "monteur.own"
   | "monteur.create_own"
   | "customer.own"
-  | "ai.chat";
+  | "ai.chat"
+  | "time_entries.read"
+  | "time_entries.approve";
 
 const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
   ADMIN: [
@@ -69,6 +71,8 @@ const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
     "inventory.reserve",
     "monteur.own",
     "ai.chat",
+    "time_entries.read",
+    "time_entries.approve",
   ],
   MEISTER: [
     "customers.read",
@@ -100,6 +104,8 @@ const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
     "inventory.reserve",
     "monteur.own",
     "ai.chat",
+    "time_entries.read",
+    "time_entries.approve",
   ],
   BUERO: [
     "customers.read",
@@ -129,6 +135,8 @@ const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
     "inventory.write",
     "inventory.reserve",
     "ai.chat",
+    "time_entries.read",
+    "time_entries.approve",
   ],
   MONTEUR: [
     "monteur.own",
@@ -197,6 +205,7 @@ export const DASHBOARD_NAV_CONFIG: {
   { href: "/dashboard/projekte", label: "Projekte", permission: "orders.read", section: "betrieb" },
   { href: "/dashboard/termine", label: "Termine", permission: "appointments.read", section: "betrieb" },
   { href: "/dashboard/disposition", label: "Disposition", permission: "appointments.read", section: "betrieb" },
+  { href: "/dashboard/stunden", label: "Team-Stunden", permission: "time_entries.read", section: "betrieb" },
   { href: "/dashboard/inventar", label: "Inventar", permission: "inventory.read", section: "material" },
   { href: "/dashboard/einkauf", label: "Einkauf", permission: "inventory.read", section: "material" },
   { href: "/dashboard/kalkulation", label: "Kalkulation", permission: "calculations.read", section: "finanzen" },
@@ -207,6 +216,7 @@ export const DASHBOARD_NAV_CONFIG: {
   { href: "/dashboard/mitarbeiter", label: "Mitarbeiter", permission: "employees.read", section: "stammdaten" },
   { href: "/dashboard/leistungen", label: "Leistungen", permission: "services.read", section: "stammdaten" },
   { href: "/dashboard/maschinen", label: "Maschinen", permission: "calculations.settings", section: "stammdaten" },
+  { href: "/dashboard/einstellungen/betrieb", label: "Betrieb", permission: "tenant.manage", section: "einstellungen" },
   { href: "/dashboard/einstellungen/rechnung", label: "Rechnungseinstellungen", permission: "calculations.settings", section: "einstellungen" },
   { href: "/dashboard/einstellungen/benachrichtigungen", label: "Benachrichtigungen", permission: "notifications.manage", section: "einstellungen" },
   { href: "/dashboard/einstellungen/system", label: "Systemstatus", permission: "notifications.manage", section: "einstellungen" },

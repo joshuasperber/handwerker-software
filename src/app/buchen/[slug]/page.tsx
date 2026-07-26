@@ -53,6 +53,7 @@ interface Tenant {
   phone: string | null;
   primaryColor: string;
   privacyPolicyUrl: string | null;
+  imprintUrl: string | null;
 }
 
 interface TimeSlot {
@@ -541,13 +542,20 @@ export default function BookingPage() {
             </Button>
           )}
         </div>
-        <div className="mx-auto max-w-2xl mt-3 flex justify-between text-xs text-slate-400">
+        <div className="mx-auto max-w-2xl mt-3 flex justify-between gap-3 text-xs text-slate-400">
           {tenant.phone && (
             <span className="flex items-center gap-1"><Phone className="h-3 w-3" /> Notfall: {tenant.phone}</span>
           )}
-          {tenant.privacyPolicyUrl && (
-            <Link href={tenant.privacyPolicyUrl} className="hover:text-slate-600">Datenschutz</Link>
-          )}
+          <span className="flex gap-3">
+            {tenant.privacyPolicyUrl && (
+              <Link href={tenant.privacyPolicyUrl} className="hover:text-slate-600">Datenschutz</Link>
+            )}
+            {tenant.imprintUrl && (
+              <a href={tenant.imprintUrl} className="hover:text-slate-600" target="_blank" rel="noreferrer">
+                Impressum
+              </a>
+            )}
+          </span>
         </div>
       </footer>
     </div>
