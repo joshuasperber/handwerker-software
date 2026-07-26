@@ -2,7 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { requireAuth, apiSuccess, apiError } from "@/lib/api";
 
 export async function GET() {
-  const auth = await requireAuth("calculations.read");
+  const auth = await requireAuth();
   if (auth instanceof Response) return auth;
 
   const zones = await prisma.travelZone.findMany({

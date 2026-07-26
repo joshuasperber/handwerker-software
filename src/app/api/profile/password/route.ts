@@ -9,6 +9,8 @@ import {
   setSessionCookie,
 } from "@/lib/auth";
 import { bumpSessionVersion } from "@/lib/auth/session-version";
+import { updateSupabaseAuthPassword } from "@/lib/supabase/auth-users";
+import { isSupabaseAuthConfigured } from "@/lib/supabase/env";
 
 const passwordSchema = z
   .object({
@@ -36,11 +38,36 @@ export async function POST(request: NextRequest) {
   });
   if (!user) return apiError("Benutzer nicht gefunden", 404);
 
-  const valid = await verifyPassword(oldPassword, user.passwordHash);
-  if (!valid) return apiError("Aktuelles Passwort ist falsch", 400);
+  let oldValid = await verifyPassword(oldPassword, user.passwordHash);
+  if (!oldValid && isSupabaseAuthConfigured() && user.supabaseUserId) {
+    const { signInWithSupabasePassword } = await import("@/lib/supabase/auth-users");
+    const check = await signInWithSupabasePassword(user.email, oldPassword);
+    oldValid = check.ok;
+  }
+  if (!oldValid) return apiError("Aktuelles Passwort ist falsch", 400);
 
-  if (await verifyPassword(newPassword, user.passwordHash)) {
+  if (user.passwordHash && (await verifyPassword(newPassword, user.passwordHash))) {
     return apiError("Neues Passwort muss sich vom alten unterscheiden", 400);
+  }
+
+  if (isSupabaseAuthConfigured()) {
+    if (user.supabaseUserId) {
+      const updated = await updateSupabaseAuthPassword(user.supabaseUserId, newPassword);
+      if (!updated.ok) return apiError(updated.error, 400);
+    } else {
+      const { createSupabaseAuthUser } = await import("@/lib/supabase/auth-users");
+      const created = await createSupabaseAuthUser({
+        email: user.email,
+        password: newPassword,
+        firstName: user.firstName,
+        lastName: user.lastName,
+      });
+      if (!created.ok) return apiError(created.error, 400);
+      await prisma.user.update({
+        where: { id: user.id },
+        data: { supabaseUserId: created.supabaseUserId },
+      });
+    }
   }
 
   await prisma.user.update({

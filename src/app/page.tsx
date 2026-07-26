@@ -11,11 +11,11 @@ export default function HomePage() {
             <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#0d5c63] text-white">
               <Wrench className="h-5 w-5" />
             </div>
-            <span className="text-lg font-bold text-slate-900">Handwerker App</span>
+            <span className="text-lg font-bold text-slate-900">JoMaster</span>
           </div>
           <div className="flex items-center gap-3">
-            <Link href="/buchen/demo">
-              <Button variant="outline" size="sm">Termin buchen</Button>
+            <Link href="/registrieren">
+              <Button variant="outline" size="sm">Betrieb anlegen</Button>
             </Link>
             <Link href="/login">
               <Button size="sm">Anmelden</Button>
@@ -26,19 +26,19 @@ export default function HomePage() {
 
       <section className="mx-auto max-w-6xl px-4 py-20 text-center">
         <h1 className="text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl">
-          Die Handwerker-Software<br />
-          <span className="text-[#0d5c63]">für KMU-Betriebe</span>
+          JoMaster<br />
+          <span className="text-[#0d5c63]">für KMU-Handwerksbetriebe</span>
         </h1>
         <p className="mx-auto mt-6 max-w-2xl text-lg text-slate-600">
           Online-Terminbuchung, Disposition, Monteur-App und Büro-Dashboard in einer
           DSGVO-konformen SaaS-Lösung. Skalierbar für Angebote, Rechnungen und KI-Funktionen.
         </p>
         <div className="mt-10 flex flex-wrap justify-center gap-4">
-          <Link href="/buchen/demo">
-            <Button size="lg" variant="action">Demo-Buchung starten</Button>
+          <Link href="/registrieren">
+            <Button size="lg" variant="action">Kostenlos starten</Button>
           </Link>
           <Link href="/login">
-            <Button variant="outline" size="lg">Dashboard öffnen</Button>
+            <Button variant="outline" size="lg">Anmelden</Button>
           </Link>
         </div>
       </section>
@@ -68,7 +68,7 @@ export default function HomePage() {
       </section>
 
       <footer className="border-t border-slate-200 py-8 text-center text-sm text-slate-500">
-        Handwerker App MVP · DSGVO-orientiert · Multi-Tenant SaaS
+        JoMaster · DSGVO-orientiert · Multi-Tenant SaaS
       </footer>
     </div>
   );

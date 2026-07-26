@@ -2,7 +2,9 @@ import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAuth, apiSuccess, apiError, getClientIp } from "@/lib/api";
 import { requireMonteurOrder } from "@/lib/monteur-access";
+import type { OrderStatus } from "@/generated/prisma/client";
 import { auditOrderStatusChange } from "@/lib/audit";
+import { areOrderChecklistsComplete } from "@/lib/orders/checklist";
 
 export async function PATCH(
   request: NextRequest,
@@ -19,10 +21,10 @@ export async function PATCH(
   const ip = getClientIp(request);
 
   const checklists = await prisma.orderChecklist.findMany({ where: { orderId } });
-  const allDone = checklists.length === 0 || checklists.every((c) => c.isChecked);
+  const allDone = areOrderChecklistsComplete(checklists);
 
-  let newStatus = body.status ?? "ABGESCHLOSSEN";
-  if (newStatus === "ABGESCHLOSSEN" && allDone) {
+  let newStatus: OrderStatus = "ABGESCHLOSSEN";
+  if (allDone) {
     newStatus = "ABRECHNUNGSBEREIT";
   }
 

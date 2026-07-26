@@ -72,9 +72,10 @@ export async function DELETE(
   if (auth instanceof Response) return auth;
 
   const { id } = await params;
-  await prisma.staffAssignmentRequest.updateMany({
+  const result = await prisma.staffAssignmentRequest.updateMany({
     where: { id, tenantId: auth.tenantId, status: "PENDING" },
     data: { status: "CANCELLED" },
   });
+  if (result.count === 0) return apiError("Anfrage nicht gefunden oder bereits bearbeitet", 404);
   return apiSuccess({ cancelled: true });
 }

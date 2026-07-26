@@ -32,6 +32,7 @@ export type ArticleAvgAggregateOutputType = {
   reorderQuantity: number | null
   packageSize: number | null
   purchasePriceNet: number | null
+  salesPriceNet: number | null
 }
 
 export type ArticleSumAggregateOutputType = {
@@ -40,6 +41,7 @@ export type ArticleSumAggregateOutputType = {
   reorderQuantity: number | null
   packageSize: number | null
   purchasePriceNet: number | null
+  salesPriceNet: number | null
 }
 
 export type ArticleMinAggregateOutputType = {
@@ -49,6 +51,7 @@ export type ArticleMinAggregateOutputType = {
   sku: string | null
   unit: string | null
   category: string | null
+  description: string | null
   articleType: $Enums.ArticleType | null
   minimumStock: number | null
   targetStock: number | null
@@ -57,6 +60,7 @@ export type ArticleMinAggregateOutputType = {
   reorderStrategy: $Enums.ReorderStrategy | null
   supplierName: string | null
   purchasePriceNet: number | null
+  salesPriceNet: number | null
   isActive: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -69,6 +73,7 @@ export type ArticleMaxAggregateOutputType = {
   sku: string | null
   unit: string | null
   category: string | null
+  description: string | null
   articleType: $Enums.ArticleType | null
   minimumStock: number | null
   targetStock: number | null
@@ -77,6 +82,7 @@ export type ArticleMaxAggregateOutputType = {
   reorderStrategy: $Enums.ReorderStrategy | null
   supplierName: string | null
   purchasePriceNet: number | null
+  salesPriceNet: number | null
   isActive: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -89,6 +95,7 @@ export type ArticleCountAggregateOutputType = {
   sku: number
   unit: number
   category: number
+  description: number
   articleType: number
   minimumStock: number
   targetStock: number
@@ -97,6 +104,7 @@ export type ArticleCountAggregateOutputType = {
   reorderStrategy: number
   supplierName: number
   purchasePriceNet: number
+  salesPriceNet: number
   isActive: number
   createdAt: number
   updatedAt: number
@@ -110,6 +118,7 @@ export type ArticleAvgAggregateInputType = {
   reorderQuantity?: true
   packageSize?: true
   purchasePriceNet?: true
+  salesPriceNet?: true
 }
 
 export type ArticleSumAggregateInputType = {
@@ -118,6 +127,7 @@ export type ArticleSumAggregateInputType = {
   reorderQuantity?: true
   packageSize?: true
   purchasePriceNet?: true
+  salesPriceNet?: true
 }
 
 export type ArticleMinAggregateInputType = {
@@ -127,6 +137,7 @@ export type ArticleMinAggregateInputType = {
   sku?: true
   unit?: true
   category?: true
+  description?: true
   articleType?: true
   minimumStock?: true
   targetStock?: true
@@ -135,6 +146,7 @@ export type ArticleMinAggregateInputType = {
   reorderStrategy?: true
   supplierName?: true
   purchasePriceNet?: true
+  salesPriceNet?: true
   isActive?: true
   createdAt?: true
   updatedAt?: true
@@ -147,6 +159,7 @@ export type ArticleMaxAggregateInputType = {
   sku?: true
   unit?: true
   category?: true
+  description?: true
   articleType?: true
   minimumStock?: true
   targetStock?: true
@@ -155,6 +168,7 @@ export type ArticleMaxAggregateInputType = {
   reorderStrategy?: true
   supplierName?: true
   purchasePriceNet?: true
+  salesPriceNet?: true
   isActive?: true
   createdAt?: true
   updatedAt?: true
@@ -167,6 +181,7 @@ export type ArticleCountAggregateInputType = {
   sku?: true
   unit?: true
   category?: true
+  description?: true
   articleType?: true
   minimumStock?: true
   targetStock?: true
@@ -175,6 +190,7 @@ export type ArticleCountAggregateInputType = {
   reorderStrategy?: true
   supplierName?: true
   purchasePriceNet?: true
+  salesPriceNet?: true
   isActive?: true
   createdAt?: true
   updatedAt?: true
@@ -274,6 +290,7 @@ export type ArticleGroupByOutputType = {
   sku: string | null
   unit: string
   category: string | null
+  description: string | null
   articleType: $Enums.ArticleType
   minimumStock: number
   targetStock: number
@@ -282,6 +299,7 @@ export type ArticleGroupByOutputType = {
   reorderStrategy: $Enums.ReorderStrategy
   supplierName: string | null
   purchasePriceNet: number | null
+  salesPriceNet: number | null
   isActive: boolean
   createdAt: Date
   updatedAt: Date
@@ -317,6 +335,7 @@ export type ArticleWhereInput = {
   sku?: Prisma.StringNullableFilter<"Article"> | string | null
   unit?: Prisma.StringFilter<"Article"> | string
   category?: Prisma.StringNullableFilter<"Article"> | string | null
+  description?: Prisma.StringNullableFilter<"Article"> | string | null
   articleType?: Prisma.EnumArticleTypeFilter<"Article"> | $Enums.ArticleType
   minimumStock?: Prisma.FloatFilter<"Article"> | number
   targetStock?: Prisma.FloatFilter<"Article"> | number
@@ -325,6 +344,7 @@ export type ArticleWhereInput = {
   reorderStrategy?: Prisma.EnumReorderStrategyFilter<"Article"> | $Enums.ReorderStrategy
   supplierName?: Prisma.StringNullableFilter<"Article"> | string | null
   purchasePriceNet?: Prisma.FloatNullableFilter<"Article"> | number | null
+  salesPriceNet?: Prisma.FloatNullableFilter<"Article"> | number | null
   isActive?: Prisma.BoolFilter<"Article"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Article"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Article"> | Date | string
@@ -337,6 +357,8 @@ export type ArticleWhereInput = {
   purchaseOrderLines?: Prisma.PurchaseOrderLineListRelationFilter
   planMarkers?: Prisma.PlanMarkerListRelationFilter
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionListRelationFilter
+  materialItems?: Prisma.MaterialItemListRelationFilter
+  projectCosts?: Prisma.ProjectCostListRelationFilter
 }
 
 export type ArticleOrderByWithRelationInput = {
@@ -346,6 +368,7 @@ export type ArticleOrderByWithRelationInput = {
   sku?: Prisma.SortOrderInput | Prisma.SortOrder
   unit?: Prisma.SortOrder
   category?: Prisma.SortOrderInput | Prisma.SortOrder
+  description?: Prisma.SortOrderInput | Prisma.SortOrder
   articleType?: Prisma.SortOrder
   minimumStock?: Prisma.SortOrder
   targetStock?: Prisma.SortOrder
@@ -354,6 +377,7 @@ export type ArticleOrderByWithRelationInput = {
   reorderStrategy?: Prisma.SortOrder
   supplierName?: Prisma.SortOrderInput | Prisma.SortOrder
   purchasePriceNet?: Prisma.SortOrderInput | Prisma.SortOrder
+  salesPriceNet?: Prisma.SortOrderInput | Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -366,6 +390,8 @@ export type ArticleOrderByWithRelationInput = {
   purchaseOrderLines?: Prisma.PurchaseOrderLineOrderByRelationAggregateInput
   planMarkers?: Prisma.PlanMarkerOrderByRelationAggregateInput
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionOrderByRelationAggregateInput
+  materialItems?: Prisma.MaterialItemOrderByRelationAggregateInput
+  projectCosts?: Prisma.ProjectCostOrderByRelationAggregateInput
 }
 
 export type ArticleWhereUniqueInput = Prisma.AtLeast<{
@@ -378,6 +404,7 @@ export type ArticleWhereUniqueInput = Prisma.AtLeast<{
   sku?: Prisma.StringNullableFilter<"Article"> | string | null
   unit?: Prisma.StringFilter<"Article"> | string
   category?: Prisma.StringNullableFilter<"Article"> | string | null
+  description?: Prisma.StringNullableFilter<"Article"> | string | null
   articleType?: Prisma.EnumArticleTypeFilter<"Article"> | $Enums.ArticleType
   minimumStock?: Prisma.FloatFilter<"Article"> | number
   targetStock?: Prisma.FloatFilter<"Article"> | number
@@ -386,6 +413,7 @@ export type ArticleWhereUniqueInput = Prisma.AtLeast<{
   reorderStrategy?: Prisma.EnumReorderStrategyFilter<"Article"> | $Enums.ReorderStrategy
   supplierName?: Prisma.StringNullableFilter<"Article"> | string | null
   purchasePriceNet?: Prisma.FloatNullableFilter<"Article"> | number | null
+  salesPriceNet?: Prisma.FloatNullableFilter<"Article"> | number | null
   isActive?: Prisma.BoolFilter<"Article"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Article"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Article"> | Date | string
@@ -398,6 +426,8 @@ export type ArticleWhereUniqueInput = Prisma.AtLeast<{
   purchaseOrderLines?: Prisma.PurchaseOrderLineListRelationFilter
   planMarkers?: Prisma.PlanMarkerListRelationFilter
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionListRelationFilter
+  materialItems?: Prisma.MaterialItemListRelationFilter
+  projectCosts?: Prisma.ProjectCostListRelationFilter
 }, "id">
 
 export type ArticleOrderByWithAggregationInput = {
@@ -407,6 +437,7 @@ export type ArticleOrderByWithAggregationInput = {
   sku?: Prisma.SortOrderInput | Prisma.SortOrder
   unit?: Prisma.SortOrder
   category?: Prisma.SortOrderInput | Prisma.SortOrder
+  description?: Prisma.SortOrderInput | Prisma.SortOrder
   articleType?: Prisma.SortOrder
   minimumStock?: Prisma.SortOrder
   targetStock?: Prisma.SortOrder
@@ -415,6 +446,7 @@ export type ArticleOrderByWithAggregationInput = {
   reorderStrategy?: Prisma.SortOrder
   supplierName?: Prisma.SortOrderInput | Prisma.SortOrder
   purchasePriceNet?: Prisma.SortOrderInput | Prisma.SortOrder
+  salesPriceNet?: Prisma.SortOrderInput | Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -435,6 +467,7 @@ export type ArticleScalarWhereWithAggregatesInput = {
   sku?: Prisma.StringNullableWithAggregatesFilter<"Article"> | string | null
   unit?: Prisma.StringWithAggregatesFilter<"Article"> | string
   category?: Prisma.StringNullableWithAggregatesFilter<"Article"> | string | null
+  description?: Prisma.StringNullableWithAggregatesFilter<"Article"> | string | null
   articleType?: Prisma.EnumArticleTypeWithAggregatesFilter<"Article"> | $Enums.ArticleType
   minimumStock?: Prisma.FloatWithAggregatesFilter<"Article"> | number
   targetStock?: Prisma.FloatWithAggregatesFilter<"Article"> | number
@@ -443,6 +476,7 @@ export type ArticleScalarWhereWithAggregatesInput = {
   reorderStrategy?: Prisma.EnumReorderStrategyWithAggregatesFilter<"Article"> | $Enums.ReorderStrategy
   supplierName?: Prisma.StringNullableWithAggregatesFilter<"Article"> | string | null
   purchasePriceNet?: Prisma.FloatNullableWithAggregatesFilter<"Article"> | number | null
+  salesPriceNet?: Prisma.FloatNullableWithAggregatesFilter<"Article"> | number | null
   isActive?: Prisma.BoolWithAggregatesFilter<"Article"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Article"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Article"> | Date | string
@@ -454,6 +488,7 @@ export type ArticleCreateInput = {
   sku?: string | null
   unit?: string
   category?: string | null
+  description?: string | null
   articleType?: $Enums.ArticleType
   minimumStock?: number
   targetStock?: number
@@ -462,6 +497,7 @@ export type ArticleCreateInput = {
   reorderStrategy?: $Enums.ReorderStrategy
   supplierName?: string | null
   purchasePriceNet?: number | null
+  salesPriceNet?: number | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -474,6 +510,8 @@ export type ArticleCreateInput = {
   purchaseOrderLines?: Prisma.PurchaseOrderLineCreateNestedManyWithoutArticleInput
   planMarkers?: Prisma.PlanMarkerCreateNestedManyWithoutArticleInput
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionCreateNestedManyWithoutArticleInput
+  materialItems?: Prisma.MaterialItemCreateNestedManyWithoutArticleInput
+  projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutArticleInput
 }
 
 export type ArticleUncheckedCreateInput = {
@@ -483,6 +521,7 @@ export type ArticleUncheckedCreateInput = {
   sku?: string | null
   unit?: string
   category?: string | null
+  description?: string | null
   articleType?: $Enums.ArticleType
   minimumStock?: number
   targetStock?: number
@@ -491,6 +530,7 @@ export type ArticleUncheckedCreateInput = {
   reorderStrategy?: $Enums.ReorderStrategy
   supplierName?: string | null
   purchasePriceNet?: number | null
+  salesPriceNet?: number | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -502,6 +542,8 @@ export type ArticleUncheckedCreateInput = {
   purchaseOrderLines?: Prisma.PurchaseOrderLineUncheckedCreateNestedManyWithoutArticleInput
   planMarkers?: Prisma.PlanMarkerUncheckedCreateNestedManyWithoutArticleInput
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionUncheckedCreateNestedManyWithoutArticleInput
+  materialItems?: Prisma.MaterialItemUncheckedCreateNestedManyWithoutArticleInput
+  projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutArticleInput
 }
 
 export type ArticleUpdateInput = {
@@ -510,6 +552,7 @@ export type ArticleUpdateInput = {
   sku?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   articleType?: Prisma.EnumArticleTypeFieldUpdateOperationsInput | $Enums.ArticleType
   minimumStock?: Prisma.FloatFieldUpdateOperationsInput | number
   targetStock?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -518,6 +561,7 @@ export type ArticleUpdateInput = {
   reorderStrategy?: Prisma.EnumReorderStrategyFieldUpdateOperationsInput | $Enums.ReorderStrategy
   supplierName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   purchasePriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  salesPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -530,6 +574,8 @@ export type ArticleUpdateInput = {
   purchaseOrderLines?: Prisma.PurchaseOrderLineUpdateManyWithoutArticleNestedInput
   planMarkers?: Prisma.PlanMarkerUpdateManyWithoutArticleNestedInput
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionUpdateManyWithoutArticleNestedInput
+  materialItems?: Prisma.MaterialItemUpdateManyWithoutArticleNestedInput
+  projectCosts?: Prisma.ProjectCostUpdateManyWithoutArticleNestedInput
 }
 
 export type ArticleUncheckedUpdateInput = {
@@ -539,6 +585,7 @@ export type ArticleUncheckedUpdateInput = {
   sku?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   articleType?: Prisma.EnumArticleTypeFieldUpdateOperationsInput | $Enums.ArticleType
   minimumStock?: Prisma.FloatFieldUpdateOperationsInput | number
   targetStock?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -547,6 +594,7 @@ export type ArticleUncheckedUpdateInput = {
   reorderStrategy?: Prisma.EnumReorderStrategyFieldUpdateOperationsInput | $Enums.ReorderStrategy
   supplierName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   purchasePriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  salesPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -558,6 +606,8 @@ export type ArticleUncheckedUpdateInput = {
   purchaseOrderLines?: Prisma.PurchaseOrderLineUncheckedUpdateManyWithoutArticleNestedInput
   planMarkers?: Prisma.PlanMarkerUncheckedUpdateManyWithoutArticleNestedInput
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionUncheckedUpdateManyWithoutArticleNestedInput
+  materialItems?: Prisma.MaterialItemUncheckedUpdateManyWithoutArticleNestedInput
+  projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutArticleNestedInput
 }
 
 export type ArticleCreateManyInput = {
@@ -567,6 +617,7 @@ export type ArticleCreateManyInput = {
   sku?: string | null
   unit?: string
   category?: string | null
+  description?: string | null
   articleType?: $Enums.ArticleType
   minimumStock?: number
   targetStock?: number
@@ -575,6 +626,7 @@ export type ArticleCreateManyInput = {
   reorderStrategy?: $Enums.ReorderStrategy
   supplierName?: string | null
   purchasePriceNet?: number | null
+  salesPriceNet?: number | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -586,6 +638,7 @@ export type ArticleUpdateManyMutationInput = {
   sku?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   articleType?: Prisma.EnumArticleTypeFieldUpdateOperationsInput | $Enums.ArticleType
   minimumStock?: Prisma.FloatFieldUpdateOperationsInput | number
   targetStock?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -594,6 +647,7 @@ export type ArticleUpdateManyMutationInput = {
   reorderStrategy?: Prisma.EnumReorderStrategyFieldUpdateOperationsInput | $Enums.ReorderStrategy
   supplierName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   purchasePriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  salesPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -606,6 +660,7 @@ export type ArticleUncheckedUpdateManyInput = {
   sku?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   articleType?: Prisma.EnumArticleTypeFieldUpdateOperationsInput | $Enums.ArticleType
   minimumStock?: Prisma.FloatFieldUpdateOperationsInput | number
   targetStock?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -614,6 +669,7 @@ export type ArticleUncheckedUpdateManyInput = {
   reorderStrategy?: Prisma.EnumReorderStrategyFieldUpdateOperationsInput | $Enums.ReorderStrategy
   supplierName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   purchasePriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  salesPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -629,6 +685,11 @@ export type ArticleOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
+export type ArticleNullableScalarRelationFilter = {
+  is?: Prisma.ArticleWhereInput | null
+  isNot?: Prisma.ArticleWhereInput | null
+}
+
 export type ArticleCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   tenantId?: Prisma.SortOrder
@@ -636,6 +697,7 @@ export type ArticleCountOrderByAggregateInput = {
   sku?: Prisma.SortOrder
   unit?: Prisma.SortOrder
   category?: Prisma.SortOrder
+  description?: Prisma.SortOrder
   articleType?: Prisma.SortOrder
   minimumStock?: Prisma.SortOrder
   targetStock?: Prisma.SortOrder
@@ -644,6 +706,7 @@ export type ArticleCountOrderByAggregateInput = {
   reorderStrategy?: Prisma.SortOrder
   supplierName?: Prisma.SortOrder
   purchasePriceNet?: Prisma.SortOrder
+  salesPriceNet?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -655,6 +718,7 @@ export type ArticleAvgOrderByAggregateInput = {
   reorderQuantity?: Prisma.SortOrder
   packageSize?: Prisma.SortOrder
   purchasePriceNet?: Prisma.SortOrder
+  salesPriceNet?: Prisma.SortOrder
 }
 
 export type ArticleMaxOrderByAggregateInput = {
@@ -664,6 +728,7 @@ export type ArticleMaxOrderByAggregateInput = {
   sku?: Prisma.SortOrder
   unit?: Prisma.SortOrder
   category?: Prisma.SortOrder
+  description?: Prisma.SortOrder
   articleType?: Prisma.SortOrder
   minimumStock?: Prisma.SortOrder
   targetStock?: Prisma.SortOrder
@@ -672,6 +737,7 @@ export type ArticleMaxOrderByAggregateInput = {
   reorderStrategy?: Prisma.SortOrder
   supplierName?: Prisma.SortOrder
   purchasePriceNet?: Prisma.SortOrder
+  salesPriceNet?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -684,6 +750,7 @@ export type ArticleMinOrderByAggregateInput = {
   sku?: Prisma.SortOrder
   unit?: Prisma.SortOrder
   category?: Prisma.SortOrder
+  description?: Prisma.SortOrder
   articleType?: Prisma.SortOrder
   minimumStock?: Prisma.SortOrder
   targetStock?: Prisma.SortOrder
@@ -692,6 +759,7 @@ export type ArticleMinOrderByAggregateInput = {
   reorderStrategy?: Prisma.SortOrder
   supplierName?: Prisma.SortOrder
   purchasePriceNet?: Prisma.SortOrder
+  salesPriceNet?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -703,16 +771,12 @@ export type ArticleSumOrderByAggregateInput = {
   reorderQuantity?: Prisma.SortOrder
   packageSize?: Prisma.SortOrder
   purchasePriceNet?: Prisma.SortOrder
+  salesPriceNet?: Prisma.SortOrder
 }
 
 export type ArticleScalarRelationFilter = {
   is?: Prisma.ArticleWhereInput
   isNot?: Prisma.ArticleWhereInput
-}
-
-export type ArticleNullableScalarRelationFilter = {
-  is?: Prisma.ArticleWhereInput | null
-  isNot?: Prisma.ArticleWhereInput | null
 }
 
 export type ArticleCreateNestedManyWithoutTenantInput = {
@@ -755,6 +819,22 @@ export type ArticleUncheckedUpdateManyWithoutTenantNestedInput = {
   update?: Prisma.ArticleUpdateWithWhereUniqueWithoutTenantInput | Prisma.ArticleUpdateWithWhereUniqueWithoutTenantInput[]
   updateMany?: Prisma.ArticleUpdateManyWithWhereWithoutTenantInput | Prisma.ArticleUpdateManyWithWhereWithoutTenantInput[]
   deleteMany?: Prisma.ArticleScalarWhereInput | Prisma.ArticleScalarWhereInput[]
+}
+
+export type ArticleCreateNestedOneWithoutMaterialItemsInput = {
+  create?: Prisma.XOR<Prisma.ArticleCreateWithoutMaterialItemsInput, Prisma.ArticleUncheckedCreateWithoutMaterialItemsInput>
+  connectOrCreate?: Prisma.ArticleCreateOrConnectWithoutMaterialItemsInput
+  connect?: Prisma.ArticleWhereUniqueInput
+}
+
+export type ArticleUpdateOneWithoutMaterialItemsNestedInput = {
+  create?: Prisma.XOR<Prisma.ArticleCreateWithoutMaterialItemsInput, Prisma.ArticleUncheckedCreateWithoutMaterialItemsInput>
+  connectOrCreate?: Prisma.ArticleCreateOrConnectWithoutMaterialItemsInput
+  upsert?: Prisma.ArticleUpsertWithoutMaterialItemsInput
+  disconnect?: Prisma.ArticleWhereInput | boolean
+  delete?: Prisma.ArticleWhereInput | boolean
+  connect?: Prisma.ArticleWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ArticleUpdateToOneWithWhereWithoutMaterialItemsInput, Prisma.ArticleUpdateWithoutMaterialItemsInput>, Prisma.ArticleUncheckedUpdateWithoutMaterialItemsInput>
 }
 
 export type EnumArticleTypeFieldUpdateOperationsInput = {
@@ -883,12 +963,29 @@ export type ArticleUpdateOneWithoutPlanMarkersNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ArticleUpdateToOneWithWhereWithoutPlanMarkersInput, Prisma.ArticleUpdateWithoutPlanMarkersInput>, Prisma.ArticleUncheckedUpdateWithoutPlanMarkersInput>
 }
 
+export type ArticleCreateNestedOneWithoutProjectCostsInput = {
+  create?: Prisma.XOR<Prisma.ArticleCreateWithoutProjectCostsInput, Prisma.ArticleUncheckedCreateWithoutProjectCostsInput>
+  connectOrCreate?: Prisma.ArticleCreateOrConnectWithoutProjectCostsInput
+  connect?: Prisma.ArticleWhereUniqueInput
+}
+
+export type ArticleUpdateOneWithoutProjectCostsNestedInput = {
+  create?: Prisma.XOR<Prisma.ArticleCreateWithoutProjectCostsInput, Prisma.ArticleUncheckedCreateWithoutProjectCostsInput>
+  connectOrCreate?: Prisma.ArticleCreateOrConnectWithoutProjectCostsInput
+  upsert?: Prisma.ArticleUpsertWithoutProjectCostsInput
+  disconnect?: Prisma.ArticleWhereInput | boolean
+  delete?: Prisma.ArticleWhereInput | boolean
+  connect?: Prisma.ArticleWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ArticleUpdateToOneWithWhereWithoutProjectCostsInput, Prisma.ArticleUpdateWithoutProjectCostsInput>, Prisma.ArticleUncheckedUpdateWithoutProjectCostsInput>
+}
+
 export type ArticleCreateWithoutTenantInput = {
   id?: string
   name: string
   sku?: string | null
   unit?: string
   category?: string | null
+  description?: string | null
   articleType?: $Enums.ArticleType
   minimumStock?: number
   targetStock?: number
@@ -897,6 +994,7 @@ export type ArticleCreateWithoutTenantInput = {
   reorderStrategy?: $Enums.ReorderStrategy
   supplierName?: string | null
   purchasePriceNet?: number | null
+  salesPriceNet?: number | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -908,6 +1006,8 @@ export type ArticleCreateWithoutTenantInput = {
   purchaseOrderLines?: Prisma.PurchaseOrderLineCreateNestedManyWithoutArticleInput
   planMarkers?: Prisma.PlanMarkerCreateNestedManyWithoutArticleInput
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionCreateNestedManyWithoutArticleInput
+  materialItems?: Prisma.MaterialItemCreateNestedManyWithoutArticleInput
+  projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutArticleInput
 }
 
 export type ArticleUncheckedCreateWithoutTenantInput = {
@@ -916,6 +1016,7 @@ export type ArticleUncheckedCreateWithoutTenantInput = {
   sku?: string | null
   unit?: string
   category?: string | null
+  description?: string | null
   articleType?: $Enums.ArticleType
   minimumStock?: number
   targetStock?: number
@@ -924,6 +1025,7 @@ export type ArticleUncheckedCreateWithoutTenantInput = {
   reorderStrategy?: $Enums.ReorderStrategy
   supplierName?: string | null
   purchasePriceNet?: number | null
+  salesPriceNet?: number | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -935,6 +1037,8 @@ export type ArticleUncheckedCreateWithoutTenantInput = {
   purchaseOrderLines?: Prisma.PurchaseOrderLineUncheckedCreateNestedManyWithoutArticleInput
   planMarkers?: Prisma.PlanMarkerUncheckedCreateNestedManyWithoutArticleInput
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionUncheckedCreateNestedManyWithoutArticleInput
+  materialItems?: Prisma.MaterialItemUncheckedCreateNestedManyWithoutArticleInput
+  projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutArticleInput
 }
 
 export type ArticleCreateOrConnectWithoutTenantInput = {
@@ -973,6 +1077,7 @@ export type ArticleScalarWhereInput = {
   sku?: Prisma.StringNullableFilter<"Article"> | string | null
   unit?: Prisma.StringFilter<"Article"> | string
   category?: Prisma.StringNullableFilter<"Article"> | string | null
+  description?: Prisma.StringNullableFilter<"Article"> | string | null
   articleType?: Prisma.EnumArticleTypeFilter<"Article"> | $Enums.ArticleType
   minimumStock?: Prisma.FloatFilter<"Article"> | number
   targetStock?: Prisma.FloatFilter<"Article"> | number
@@ -981,17 +1086,19 @@ export type ArticleScalarWhereInput = {
   reorderStrategy?: Prisma.EnumReorderStrategyFilter<"Article"> | $Enums.ReorderStrategy
   supplierName?: Prisma.StringNullableFilter<"Article"> | string | null
   purchasePriceNet?: Prisma.FloatNullableFilter<"Article"> | number | null
+  salesPriceNet?: Prisma.FloatNullableFilter<"Article"> | number | null
   isActive?: Prisma.BoolFilter<"Article"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Article"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Article"> | Date | string
 }
 
-export type ArticleCreateWithoutStockBalancesInput = {
+export type ArticleCreateWithoutMaterialItemsInput = {
   id?: string
   name: string
   sku?: string | null
   unit?: string
   category?: string | null
+  description?: string | null
   articleType?: $Enums.ArticleType
   minimumStock?: number
   targetStock?: number
@@ -1000,6 +1107,147 @@ export type ArticleCreateWithoutStockBalancesInput = {
   reorderStrategy?: $Enums.ReorderStrategy
   supplierName?: string | null
   purchasePriceNet?: number | null
+  salesPriceNet?: number | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tenant: Prisma.TenantCreateNestedOneWithoutArticlesInput
+  stockBalances?: Prisma.StockBalanceCreateNestedManyWithoutArticleInput
+  movements?: Prisma.StockMovementCreateNestedManyWithoutArticleInput
+  reservations?: Prisma.ReservationCreateNestedManyWithoutArticleInput
+  serviceTemplates?: Prisma.ServiceMaterialTemplateCreateNestedManyWithoutArticleInput
+  orderMaterialLines?: Prisma.OrderMaterialLineCreateNestedManyWithoutArticleInput
+  purchaseOrderLines?: Prisma.PurchaseOrderLineCreateNestedManyWithoutArticleInput
+  planMarkers?: Prisma.PlanMarkerCreateNestedManyWithoutArticleInput
+  manualReorderSuggestions?: Prisma.ManualReorderSuggestionCreateNestedManyWithoutArticleInput
+  projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutArticleInput
+}
+
+export type ArticleUncheckedCreateWithoutMaterialItemsInput = {
+  id?: string
+  tenantId: string
+  name: string
+  sku?: string | null
+  unit?: string
+  category?: string | null
+  description?: string | null
+  articleType?: $Enums.ArticleType
+  minimumStock?: number
+  targetStock?: number
+  reorderQuantity?: number
+  packageSize?: number
+  reorderStrategy?: $Enums.ReorderStrategy
+  supplierName?: string | null
+  purchasePriceNet?: number | null
+  salesPriceNet?: number | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  stockBalances?: Prisma.StockBalanceUncheckedCreateNestedManyWithoutArticleInput
+  movements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutArticleInput
+  reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutArticleInput
+  serviceTemplates?: Prisma.ServiceMaterialTemplateUncheckedCreateNestedManyWithoutArticleInput
+  orderMaterialLines?: Prisma.OrderMaterialLineUncheckedCreateNestedManyWithoutArticleInput
+  purchaseOrderLines?: Prisma.PurchaseOrderLineUncheckedCreateNestedManyWithoutArticleInput
+  planMarkers?: Prisma.PlanMarkerUncheckedCreateNestedManyWithoutArticleInput
+  manualReorderSuggestions?: Prisma.ManualReorderSuggestionUncheckedCreateNestedManyWithoutArticleInput
+  projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutArticleInput
+}
+
+export type ArticleCreateOrConnectWithoutMaterialItemsInput = {
+  where: Prisma.ArticleWhereUniqueInput
+  create: Prisma.XOR<Prisma.ArticleCreateWithoutMaterialItemsInput, Prisma.ArticleUncheckedCreateWithoutMaterialItemsInput>
+}
+
+export type ArticleUpsertWithoutMaterialItemsInput = {
+  update: Prisma.XOR<Prisma.ArticleUpdateWithoutMaterialItemsInput, Prisma.ArticleUncheckedUpdateWithoutMaterialItemsInput>
+  create: Prisma.XOR<Prisma.ArticleCreateWithoutMaterialItemsInput, Prisma.ArticleUncheckedCreateWithoutMaterialItemsInput>
+  where?: Prisma.ArticleWhereInput
+}
+
+export type ArticleUpdateToOneWithWhereWithoutMaterialItemsInput = {
+  where?: Prisma.ArticleWhereInput
+  data: Prisma.XOR<Prisma.ArticleUpdateWithoutMaterialItemsInput, Prisma.ArticleUncheckedUpdateWithoutMaterialItemsInput>
+}
+
+export type ArticleUpdateWithoutMaterialItemsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  sku?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unit?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  articleType?: Prisma.EnumArticleTypeFieldUpdateOperationsInput | $Enums.ArticleType
+  minimumStock?: Prisma.FloatFieldUpdateOperationsInput | number
+  targetStock?: Prisma.FloatFieldUpdateOperationsInput | number
+  reorderQuantity?: Prisma.FloatFieldUpdateOperationsInput | number
+  packageSize?: Prisma.FloatFieldUpdateOperationsInput | number
+  reorderStrategy?: Prisma.EnumReorderStrategyFieldUpdateOperationsInput | $Enums.ReorderStrategy
+  supplierName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  purchasePriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  salesPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutArticlesNestedInput
+  stockBalances?: Prisma.StockBalanceUpdateManyWithoutArticleNestedInput
+  movements?: Prisma.StockMovementUpdateManyWithoutArticleNestedInput
+  reservations?: Prisma.ReservationUpdateManyWithoutArticleNestedInput
+  serviceTemplates?: Prisma.ServiceMaterialTemplateUpdateManyWithoutArticleNestedInput
+  orderMaterialLines?: Prisma.OrderMaterialLineUpdateManyWithoutArticleNestedInput
+  purchaseOrderLines?: Prisma.PurchaseOrderLineUpdateManyWithoutArticleNestedInput
+  planMarkers?: Prisma.PlanMarkerUpdateManyWithoutArticleNestedInput
+  manualReorderSuggestions?: Prisma.ManualReorderSuggestionUpdateManyWithoutArticleNestedInput
+  projectCosts?: Prisma.ProjectCostUpdateManyWithoutArticleNestedInput
+}
+
+export type ArticleUncheckedUpdateWithoutMaterialItemsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  sku?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unit?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  articleType?: Prisma.EnumArticleTypeFieldUpdateOperationsInput | $Enums.ArticleType
+  minimumStock?: Prisma.FloatFieldUpdateOperationsInput | number
+  targetStock?: Prisma.FloatFieldUpdateOperationsInput | number
+  reorderQuantity?: Prisma.FloatFieldUpdateOperationsInput | number
+  packageSize?: Prisma.FloatFieldUpdateOperationsInput | number
+  reorderStrategy?: Prisma.EnumReorderStrategyFieldUpdateOperationsInput | $Enums.ReorderStrategy
+  supplierName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  purchasePriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  salesPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  stockBalances?: Prisma.StockBalanceUncheckedUpdateManyWithoutArticleNestedInput
+  movements?: Prisma.StockMovementUncheckedUpdateManyWithoutArticleNestedInput
+  reservations?: Prisma.ReservationUncheckedUpdateManyWithoutArticleNestedInput
+  serviceTemplates?: Prisma.ServiceMaterialTemplateUncheckedUpdateManyWithoutArticleNestedInput
+  orderMaterialLines?: Prisma.OrderMaterialLineUncheckedUpdateManyWithoutArticleNestedInput
+  purchaseOrderLines?: Prisma.PurchaseOrderLineUncheckedUpdateManyWithoutArticleNestedInput
+  planMarkers?: Prisma.PlanMarkerUncheckedUpdateManyWithoutArticleNestedInput
+  manualReorderSuggestions?: Prisma.ManualReorderSuggestionUncheckedUpdateManyWithoutArticleNestedInput
+  projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutArticleNestedInput
+}
+
+export type ArticleCreateWithoutStockBalancesInput = {
+  id?: string
+  name: string
+  sku?: string | null
+  unit?: string
+  category?: string | null
+  description?: string | null
+  articleType?: $Enums.ArticleType
+  minimumStock?: number
+  targetStock?: number
+  reorderQuantity?: number
+  packageSize?: number
+  reorderStrategy?: $Enums.ReorderStrategy
+  supplierName?: string | null
+  purchasePriceNet?: number | null
+  salesPriceNet?: number | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1011,6 +1259,8 @@ export type ArticleCreateWithoutStockBalancesInput = {
   purchaseOrderLines?: Prisma.PurchaseOrderLineCreateNestedManyWithoutArticleInput
   planMarkers?: Prisma.PlanMarkerCreateNestedManyWithoutArticleInput
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionCreateNestedManyWithoutArticleInput
+  materialItems?: Prisma.MaterialItemCreateNestedManyWithoutArticleInput
+  projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutArticleInput
 }
 
 export type ArticleUncheckedCreateWithoutStockBalancesInput = {
@@ -1020,6 +1270,7 @@ export type ArticleUncheckedCreateWithoutStockBalancesInput = {
   sku?: string | null
   unit?: string
   category?: string | null
+  description?: string | null
   articleType?: $Enums.ArticleType
   minimumStock?: number
   targetStock?: number
@@ -1028,6 +1279,7 @@ export type ArticleUncheckedCreateWithoutStockBalancesInput = {
   reorderStrategy?: $Enums.ReorderStrategy
   supplierName?: string | null
   purchasePriceNet?: number | null
+  salesPriceNet?: number | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1038,6 +1290,8 @@ export type ArticleUncheckedCreateWithoutStockBalancesInput = {
   purchaseOrderLines?: Prisma.PurchaseOrderLineUncheckedCreateNestedManyWithoutArticleInput
   planMarkers?: Prisma.PlanMarkerUncheckedCreateNestedManyWithoutArticleInput
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionUncheckedCreateNestedManyWithoutArticleInput
+  materialItems?: Prisma.MaterialItemUncheckedCreateNestedManyWithoutArticleInput
+  projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutArticleInput
 }
 
 export type ArticleCreateOrConnectWithoutStockBalancesInput = {
@@ -1062,6 +1316,7 @@ export type ArticleUpdateWithoutStockBalancesInput = {
   sku?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   articleType?: Prisma.EnumArticleTypeFieldUpdateOperationsInput | $Enums.ArticleType
   minimumStock?: Prisma.FloatFieldUpdateOperationsInput | number
   targetStock?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -1070,6 +1325,7 @@ export type ArticleUpdateWithoutStockBalancesInput = {
   reorderStrategy?: Prisma.EnumReorderStrategyFieldUpdateOperationsInput | $Enums.ReorderStrategy
   supplierName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   purchasePriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  salesPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1081,6 +1337,8 @@ export type ArticleUpdateWithoutStockBalancesInput = {
   purchaseOrderLines?: Prisma.PurchaseOrderLineUpdateManyWithoutArticleNestedInput
   planMarkers?: Prisma.PlanMarkerUpdateManyWithoutArticleNestedInput
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionUpdateManyWithoutArticleNestedInput
+  materialItems?: Prisma.MaterialItemUpdateManyWithoutArticleNestedInput
+  projectCosts?: Prisma.ProjectCostUpdateManyWithoutArticleNestedInput
 }
 
 export type ArticleUncheckedUpdateWithoutStockBalancesInput = {
@@ -1090,6 +1348,7 @@ export type ArticleUncheckedUpdateWithoutStockBalancesInput = {
   sku?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   articleType?: Prisma.EnumArticleTypeFieldUpdateOperationsInput | $Enums.ArticleType
   minimumStock?: Prisma.FloatFieldUpdateOperationsInput | number
   targetStock?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -1098,6 +1357,7 @@ export type ArticleUncheckedUpdateWithoutStockBalancesInput = {
   reorderStrategy?: Prisma.EnumReorderStrategyFieldUpdateOperationsInput | $Enums.ReorderStrategy
   supplierName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   purchasePriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  salesPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1108,6 +1368,8 @@ export type ArticleUncheckedUpdateWithoutStockBalancesInput = {
   purchaseOrderLines?: Prisma.PurchaseOrderLineUncheckedUpdateManyWithoutArticleNestedInput
   planMarkers?: Prisma.PlanMarkerUncheckedUpdateManyWithoutArticleNestedInput
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionUncheckedUpdateManyWithoutArticleNestedInput
+  materialItems?: Prisma.MaterialItemUncheckedUpdateManyWithoutArticleNestedInput
+  projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutArticleNestedInput
 }
 
 export type ArticleCreateWithoutMovementsInput = {
@@ -1116,6 +1378,7 @@ export type ArticleCreateWithoutMovementsInput = {
   sku?: string | null
   unit?: string
   category?: string | null
+  description?: string | null
   articleType?: $Enums.ArticleType
   minimumStock?: number
   targetStock?: number
@@ -1124,6 +1387,7 @@ export type ArticleCreateWithoutMovementsInput = {
   reorderStrategy?: $Enums.ReorderStrategy
   supplierName?: string | null
   purchasePriceNet?: number | null
+  salesPriceNet?: number | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1135,6 +1399,8 @@ export type ArticleCreateWithoutMovementsInput = {
   purchaseOrderLines?: Prisma.PurchaseOrderLineCreateNestedManyWithoutArticleInput
   planMarkers?: Prisma.PlanMarkerCreateNestedManyWithoutArticleInput
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionCreateNestedManyWithoutArticleInput
+  materialItems?: Prisma.MaterialItemCreateNestedManyWithoutArticleInput
+  projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutArticleInput
 }
 
 export type ArticleUncheckedCreateWithoutMovementsInput = {
@@ -1144,6 +1410,7 @@ export type ArticleUncheckedCreateWithoutMovementsInput = {
   sku?: string | null
   unit?: string
   category?: string | null
+  description?: string | null
   articleType?: $Enums.ArticleType
   minimumStock?: number
   targetStock?: number
@@ -1152,6 +1419,7 @@ export type ArticleUncheckedCreateWithoutMovementsInput = {
   reorderStrategy?: $Enums.ReorderStrategy
   supplierName?: string | null
   purchasePriceNet?: number | null
+  salesPriceNet?: number | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1162,6 +1430,8 @@ export type ArticleUncheckedCreateWithoutMovementsInput = {
   purchaseOrderLines?: Prisma.PurchaseOrderLineUncheckedCreateNestedManyWithoutArticleInput
   planMarkers?: Prisma.PlanMarkerUncheckedCreateNestedManyWithoutArticleInput
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionUncheckedCreateNestedManyWithoutArticleInput
+  materialItems?: Prisma.MaterialItemUncheckedCreateNestedManyWithoutArticleInput
+  projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutArticleInput
 }
 
 export type ArticleCreateOrConnectWithoutMovementsInput = {
@@ -1186,6 +1456,7 @@ export type ArticleUpdateWithoutMovementsInput = {
   sku?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   articleType?: Prisma.EnumArticleTypeFieldUpdateOperationsInput | $Enums.ArticleType
   minimumStock?: Prisma.FloatFieldUpdateOperationsInput | number
   targetStock?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -1194,6 +1465,7 @@ export type ArticleUpdateWithoutMovementsInput = {
   reorderStrategy?: Prisma.EnumReorderStrategyFieldUpdateOperationsInput | $Enums.ReorderStrategy
   supplierName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   purchasePriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  salesPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1205,6 +1477,8 @@ export type ArticleUpdateWithoutMovementsInput = {
   purchaseOrderLines?: Prisma.PurchaseOrderLineUpdateManyWithoutArticleNestedInput
   planMarkers?: Prisma.PlanMarkerUpdateManyWithoutArticleNestedInput
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionUpdateManyWithoutArticleNestedInput
+  materialItems?: Prisma.MaterialItemUpdateManyWithoutArticleNestedInput
+  projectCosts?: Prisma.ProjectCostUpdateManyWithoutArticleNestedInput
 }
 
 export type ArticleUncheckedUpdateWithoutMovementsInput = {
@@ -1214,6 +1488,7 @@ export type ArticleUncheckedUpdateWithoutMovementsInput = {
   sku?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   articleType?: Prisma.EnumArticleTypeFieldUpdateOperationsInput | $Enums.ArticleType
   minimumStock?: Prisma.FloatFieldUpdateOperationsInput | number
   targetStock?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -1222,6 +1497,7 @@ export type ArticleUncheckedUpdateWithoutMovementsInput = {
   reorderStrategy?: Prisma.EnumReorderStrategyFieldUpdateOperationsInput | $Enums.ReorderStrategy
   supplierName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   purchasePriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  salesPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1232,6 +1508,8 @@ export type ArticleUncheckedUpdateWithoutMovementsInput = {
   purchaseOrderLines?: Prisma.PurchaseOrderLineUncheckedUpdateManyWithoutArticleNestedInput
   planMarkers?: Prisma.PlanMarkerUncheckedUpdateManyWithoutArticleNestedInput
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionUncheckedUpdateManyWithoutArticleNestedInput
+  materialItems?: Prisma.MaterialItemUncheckedUpdateManyWithoutArticleNestedInput
+  projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutArticleNestedInput
 }
 
 export type ArticleCreateWithoutReservationsInput = {
@@ -1240,6 +1518,7 @@ export type ArticleCreateWithoutReservationsInput = {
   sku?: string | null
   unit?: string
   category?: string | null
+  description?: string | null
   articleType?: $Enums.ArticleType
   minimumStock?: number
   targetStock?: number
@@ -1248,6 +1527,7 @@ export type ArticleCreateWithoutReservationsInput = {
   reorderStrategy?: $Enums.ReorderStrategy
   supplierName?: string | null
   purchasePriceNet?: number | null
+  salesPriceNet?: number | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1259,6 +1539,8 @@ export type ArticleCreateWithoutReservationsInput = {
   purchaseOrderLines?: Prisma.PurchaseOrderLineCreateNestedManyWithoutArticleInput
   planMarkers?: Prisma.PlanMarkerCreateNestedManyWithoutArticleInput
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionCreateNestedManyWithoutArticleInput
+  materialItems?: Prisma.MaterialItemCreateNestedManyWithoutArticleInput
+  projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutArticleInput
 }
 
 export type ArticleUncheckedCreateWithoutReservationsInput = {
@@ -1268,6 +1550,7 @@ export type ArticleUncheckedCreateWithoutReservationsInput = {
   sku?: string | null
   unit?: string
   category?: string | null
+  description?: string | null
   articleType?: $Enums.ArticleType
   minimumStock?: number
   targetStock?: number
@@ -1276,6 +1559,7 @@ export type ArticleUncheckedCreateWithoutReservationsInput = {
   reorderStrategy?: $Enums.ReorderStrategy
   supplierName?: string | null
   purchasePriceNet?: number | null
+  salesPriceNet?: number | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1286,6 +1570,8 @@ export type ArticleUncheckedCreateWithoutReservationsInput = {
   purchaseOrderLines?: Prisma.PurchaseOrderLineUncheckedCreateNestedManyWithoutArticleInput
   planMarkers?: Prisma.PlanMarkerUncheckedCreateNestedManyWithoutArticleInput
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionUncheckedCreateNestedManyWithoutArticleInput
+  materialItems?: Prisma.MaterialItemUncheckedCreateNestedManyWithoutArticleInput
+  projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutArticleInput
 }
 
 export type ArticleCreateOrConnectWithoutReservationsInput = {
@@ -1310,6 +1596,7 @@ export type ArticleUpdateWithoutReservationsInput = {
   sku?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   articleType?: Prisma.EnumArticleTypeFieldUpdateOperationsInput | $Enums.ArticleType
   minimumStock?: Prisma.FloatFieldUpdateOperationsInput | number
   targetStock?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -1318,6 +1605,7 @@ export type ArticleUpdateWithoutReservationsInput = {
   reorderStrategy?: Prisma.EnumReorderStrategyFieldUpdateOperationsInput | $Enums.ReorderStrategy
   supplierName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   purchasePriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  salesPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1329,6 +1617,8 @@ export type ArticleUpdateWithoutReservationsInput = {
   purchaseOrderLines?: Prisma.PurchaseOrderLineUpdateManyWithoutArticleNestedInput
   planMarkers?: Prisma.PlanMarkerUpdateManyWithoutArticleNestedInput
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionUpdateManyWithoutArticleNestedInput
+  materialItems?: Prisma.MaterialItemUpdateManyWithoutArticleNestedInput
+  projectCosts?: Prisma.ProjectCostUpdateManyWithoutArticleNestedInput
 }
 
 export type ArticleUncheckedUpdateWithoutReservationsInput = {
@@ -1338,6 +1628,7 @@ export type ArticleUncheckedUpdateWithoutReservationsInput = {
   sku?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   articleType?: Prisma.EnumArticleTypeFieldUpdateOperationsInput | $Enums.ArticleType
   minimumStock?: Prisma.FloatFieldUpdateOperationsInput | number
   targetStock?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -1346,6 +1637,7 @@ export type ArticleUncheckedUpdateWithoutReservationsInput = {
   reorderStrategy?: Prisma.EnumReorderStrategyFieldUpdateOperationsInput | $Enums.ReorderStrategy
   supplierName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   purchasePriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  salesPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1356,6 +1648,8 @@ export type ArticleUncheckedUpdateWithoutReservationsInput = {
   purchaseOrderLines?: Prisma.PurchaseOrderLineUncheckedUpdateManyWithoutArticleNestedInput
   planMarkers?: Prisma.PlanMarkerUncheckedUpdateManyWithoutArticleNestedInput
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionUncheckedUpdateManyWithoutArticleNestedInput
+  materialItems?: Prisma.MaterialItemUncheckedUpdateManyWithoutArticleNestedInput
+  projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutArticleNestedInput
 }
 
 export type ArticleCreateWithoutServiceTemplatesInput = {
@@ -1364,6 +1658,7 @@ export type ArticleCreateWithoutServiceTemplatesInput = {
   sku?: string | null
   unit?: string
   category?: string | null
+  description?: string | null
   articleType?: $Enums.ArticleType
   minimumStock?: number
   targetStock?: number
@@ -1372,6 +1667,7 @@ export type ArticleCreateWithoutServiceTemplatesInput = {
   reorderStrategy?: $Enums.ReorderStrategy
   supplierName?: string | null
   purchasePriceNet?: number | null
+  salesPriceNet?: number | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1383,6 +1679,8 @@ export type ArticleCreateWithoutServiceTemplatesInput = {
   purchaseOrderLines?: Prisma.PurchaseOrderLineCreateNestedManyWithoutArticleInput
   planMarkers?: Prisma.PlanMarkerCreateNestedManyWithoutArticleInput
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionCreateNestedManyWithoutArticleInput
+  materialItems?: Prisma.MaterialItemCreateNestedManyWithoutArticleInput
+  projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutArticleInput
 }
 
 export type ArticleUncheckedCreateWithoutServiceTemplatesInput = {
@@ -1392,6 +1690,7 @@ export type ArticleUncheckedCreateWithoutServiceTemplatesInput = {
   sku?: string | null
   unit?: string
   category?: string | null
+  description?: string | null
   articleType?: $Enums.ArticleType
   minimumStock?: number
   targetStock?: number
@@ -1400,6 +1699,7 @@ export type ArticleUncheckedCreateWithoutServiceTemplatesInput = {
   reorderStrategy?: $Enums.ReorderStrategy
   supplierName?: string | null
   purchasePriceNet?: number | null
+  salesPriceNet?: number | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1410,6 +1710,8 @@ export type ArticleUncheckedCreateWithoutServiceTemplatesInput = {
   purchaseOrderLines?: Prisma.PurchaseOrderLineUncheckedCreateNestedManyWithoutArticleInput
   planMarkers?: Prisma.PlanMarkerUncheckedCreateNestedManyWithoutArticleInput
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionUncheckedCreateNestedManyWithoutArticleInput
+  materialItems?: Prisma.MaterialItemUncheckedCreateNestedManyWithoutArticleInput
+  projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutArticleInput
 }
 
 export type ArticleCreateOrConnectWithoutServiceTemplatesInput = {
@@ -1434,6 +1736,7 @@ export type ArticleUpdateWithoutServiceTemplatesInput = {
   sku?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   articleType?: Prisma.EnumArticleTypeFieldUpdateOperationsInput | $Enums.ArticleType
   minimumStock?: Prisma.FloatFieldUpdateOperationsInput | number
   targetStock?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -1442,6 +1745,7 @@ export type ArticleUpdateWithoutServiceTemplatesInput = {
   reorderStrategy?: Prisma.EnumReorderStrategyFieldUpdateOperationsInput | $Enums.ReorderStrategy
   supplierName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   purchasePriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  salesPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1453,6 +1757,8 @@ export type ArticleUpdateWithoutServiceTemplatesInput = {
   purchaseOrderLines?: Prisma.PurchaseOrderLineUpdateManyWithoutArticleNestedInput
   planMarkers?: Prisma.PlanMarkerUpdateManyWithoutArticleNestedInput
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionUpdateManyWithoutArticleNestedInput
+  materialItems?: Prisma.MaterialItemUpdateManyWithoutArticleNestedInput
+  projectCosts?: Prisma.ProjectCostUpdateManyWithoutArticleNestedInput
 }
 
 export type ArticleUncheckedUpdateWithoutServiceTemplatesInput = {
@@ -1462,6 +1768,7 @@ export type ArticleUncheckedUpdateWithoutServiceTemplatesInput = {
   sku?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   articleType?: Prisma.EnumArticleTypeFieldUpdateOperationsInput | $Enums.ArticleType
   minimumStock?: Prisma.FloatFieldUpdateOperationsInput | number
   targetStock?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -1470,6 +1777,7 @@ export type ArticleUncheckedUpdateWithoutServiceTemplatesInput = {
   reorderStrategy?: Prisma.EnumReorderStrategyFieldUpdateOperationsInput | $Enums.ReorderStrategy
   supplierName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   purchasePriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  salesPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1480,6 +1788,8 @@ export type ArticleUncheckedUpdateWithoutServiceTemplatesInput = {
   purchaseOrderLines?: Prisma.PurchaseOrderLineUncheckedUpdateManyWithoutArticleNestedInput
   planMarkers?: Prisma.PlanMarkerUncheckedUpdateManyWithoutArticleNestedInput
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionUncheckedUpdateManyWithoutArticleNestedInput
+  materialItems?: Prisma.MaterialItemUncheckedUpdateManyWithoutArticleNestedInput
+  projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutArticleNestedInput
 }
 
 export type ArticleCreateWithoutOrderMaterialLinesInput = {
@@ -1488,6 +1798,7 @@ export type ArticleCreateWithoutOrderMaterialLinesInput = {
   sku?: string | null
   unit?: string
   category?: string | null
+  description?: string | null
   articleType?: $Enums.ArticleType
   minimumStock?: number
   targetStock?: number
@@ -1496,6 +1807,7 @@ export type ArticleCreateWithoutOrderMaterialLinesInput = {
   reorderStrategy?: $Enums.ReorderStrategy
   supplierName?: string | null
   purchasePriceNet?: number | null
+  salesPriceNet?: number | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1507,6 +1819,8 @@ export type ArticleCreateWithoutOrderMaterialLinesInput = {
   purchaseOrderLines?: Prisma.PurchaseOrderLineCreateNestedManyWithoutArticleInput
   planMarkers?: Prisma.PlanMarkerCreateNestedManyWithoutArticleInput
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionCreateNestedManyWithoutArticleInput
+  materialItems?: Prisma.MaterialItemCreateNestedManyWithoutArticleInput
+  projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutArticleInput
 }
 
 export type ArticleUncheckedCreateWithoutOrderMaterialLinesInput = {
@@ -1516,6 +1830,7 @@ export type ArticleUncheckedCreateWithoutOrderMaterialLinesInput = {
   sku?: string | null
   unit?: string
   category?: string | null
+  description?: string | null
   articleType?: $Enums.ArticleType
   minimumStock?: number
   targetStock?: number
@@ -1524,6 +1839,7 @@ export type ArticleUncheckedCreateWithoutOrderMaterialLinesInput = {
   reorderStrategy?: $Enums.ReorderStrategy
   supplierName?: string | null
   purchasePriceNet?: number | null
+  salesPriceNet?: number | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1534,6 +1850,8 @@ export type ArticleUncheckedCreateWithoutOrderMaterialLinesInput = {
   purchaseOrderLines?: Prisma.PurchaseOrderLineUncheckedCreateNestedManyWithoutArticleInput
   planMarkers?: Prisma.PlanMarkerUncheckedCreateNestedManyWithoutArticleInput
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionUncheckedCreateNestedManyWithoutArticleInput
+  materialItems?: Prisma.MaterialItemUncheckedCreateNestedManyWithoutArticleInput
+  projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutArticleInput
 }
 
 export type ArticleCreateOrConnectWithoutOrderMaterialLinesInput = {
@@ -1558,6 +1876,7 @@ export type ArticleUpdateWithoutOrderMaterialLinesInput = {
   sku?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   articleType?: Prisma.EnumArticleTypeFieldUpdateOperationsInput | $Enums.ArticleType
   minimumStock?: Prisma.FloatFieldUpdateOperationsInput | number
   targetStock?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -1566,6 +1885,7 @@ export type ArticleUpdateWithoutOrderMaterialLinesInput = {
   reorderStrategy?: Prisma.EnumReorderStrategyFieldUpdateOperationsInput | $Enums.ReorderStrategy
   supplierName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   purchasePriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  salesPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1577,6 +1897,8 @@ export type ArticleUpdateWithoutOrderMaterialLinesInput = {
   purchaseOrderLines?: Prisma.PurchaseOrderLineUpdateManyWithoutArticleNestedInput
   planMarkers?: Prisma.PlanMarkerUpdateManyWithoutArticleNestedInput
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionUpdateManyWithoutArticleNestedInput
+  materialItems?: Prisma.MaterialItemUpdateManyWithoutArticleNestedInput
+  projectCosts?: Prisma.ProjectCostUpdateManyWithoutArticleNestedInput
 }
 
 export type ArticleUncheckedUpdateWithoutOrderMaterialLinesInput = {
@@ -1586,6 +1908,7 @@ export type ArticleUncheckedUpdateWithoutOrderMaterialLinesInput = {
   sku?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   articleType?: Prisma.EnumArticleTypeFieldUpdateOperationsInput | $Enums.ArticleType
   minimumStock?: Prisma.FloatFieldUpdateOperationsInput | number
   targetStock?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -1594,6 +1917,7 @@ export type ArticleUncheckedUpdateWithoutOrderMaterialLinesInput = {
   reorderStrategy?: Prisma.EnumReorderStrategyFieldUpdateOperationsInput | $Enums.ReorderStrategy
   supplierName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   purchasePriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  salesPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1604,6 +1928,8 @@ export type ArticleUncheckedUpdateWithoutOrderMaterialLinesInput = {
   purchaseOrderLines?: Prisma.PurchaseOrderLineUncheckedUpdateManyWithoutArticleNestedInput
   planMarkers?: Prisma.PlanMarkerUncheckedUpdateManyWithoutArticleNestedInput
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionUncheckedUpdateManyWithoutArticleNestedInput
+  materialItems?: Prisma.MaterialItemUncheckedUpdateManyWithoutArticleNestedInput
+  projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutArticleNestedInput
 }
 
 export type ArticleCreateWithoutPurchaseOrderLinesInput = {
@@ -1612,6 +1938,7 @@ export type ArticleCreateWithoutPurchaseOrderLinesInput = {
   sku?: string | null
   unit?: string
   category?: string | null
+  description?: string | null
   articleType?: $Enums.ArticleType
   minimumStock?: number
   targetStock?: number
@@ -1620,6 +1947,7 @@ export type ArticleCreateWithoutPurchaseOrderLinesInput = {
   reorderStrategy?: $Enums.ReorderStrategy
   supplierName?: string | null
   purchasePriceNet?: number | null
+  salesPriceNet?: number | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1631,6 +1959,8 @@ export type ArticleCreateWithoutPurchaseOrderLinesInput = {
   orderMaterialLines?: Prisma.OrderMaterialLineCreateNestedManyWithoutArticleInput
   planMarkers?: Prisma.PlanMarkerCreateNestedManyWithoutArticleInput
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionCreateNestedManyWithoutArticleInput
+  materialItems?: Prisma.MaterialItemCreateNestedManyWithoutArticleInput
+  projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutArticleInput
 }
 
 export type ArticleUncheckedCreateWithoutPurchaseOrderLinesInput = {
@@ -1640,6 +1970,7 @@ export type ArticleUncheckedCreateWithoutPurchaseOrderLinesInput = {
   sku?: string | null
   unit?: string
   category?: string | null
+  description?: string | null
   articleType?: $Enums.ArticleType
   minimumStock?: number
   targetStock?: number
@@ -1648,6 +1979,7 @@ export type ArticleUncheckedCreateWithoutPurchaseOrderLinesInput = {
   reorderStrategy?: $Enums.ReorderStrategy
   supplierName?: string | null
   purchasePriceNet?: number | null
+  salesPriceNet?: number | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1658,6 +1990,8 @@ export type ArticleUncheckedCreateWithoutPurchaseOrderLinesInput = {
   orderMaterialLines?: Prisma.OrderMaterialLineUncheckedCreateNestedManyWithoutArticleInput
   planMarkers?: Prisma.PlanMarkerUncheckedCreateNestedManyWithoutArticleInput
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionUncheckedCreateNestedManyWithoutArticleInput
+  materialItems?: Prisma.MaterialItemUncheckedCreateNestedManyWithoutArticleInput
+  projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutArticleInput
 }
 
 export type ArticleCreateOrConnectWithoutPurchaseOrderLinesInput = {
@@ -1682,6 +2016,7 @@ export type ArticleUpdateWithoutPurchaseOrderLinesInput = {
   sku?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   articleType?: Prisma.EnumArticleTypeFieldUpdateOperationsInput | $Enums.ArticleType
   minimumStock?: Prisma.FloatFieldUpdateOperationsInput | number
   targetStock?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -1690,6 +2025,7 @@ export type ArticleUpdateWithoutPurchaseOrderLinesInput = {
   reorderStrategy?: Prisma.EnumReorderStrategyFieldUpdateOperationsInput | $Enums.ReorderStrategy
   supplierName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   purchasePriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  salesPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1701,6 +2037,8 @@ export type ArticleUpdateWithoutPurchaseOrderLinesInput = {
   orderMaterialLines?: Prisma.OrderMaterialLineUpdateManyWithoutArticleNestedInput
   planMarkers?: Prisma.PlanMarkerUpdateManyWithoutArticleNestedInput
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionUpdateManyWithoutArticleNestedInput
+  materialItems?: Prisma.MaterialItemUpdateManyWithoutArticleNestedInput
+  projectCosts?: Prisma.ProjectCostUpdateManyWithoutArticleNestedInput
 }
 
 export type ArticleUncheckedUpdateWithoutPurchaseOrderLinesInput = {
@@ -1710,6 +2048,7 @@ export type ArticleUncheckedUpdateWithoutPurchaseOrderLinesInput = {
   sku?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   articleType?: Prisma.EnumArticleTypeFieldUpdateOperationsInput | $Enums.ArticleType
   minimumStock?: Prisma.FloatFieldUpdateOperationsInput | number
   targetStock?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -1718,6 +2057,7 @@ export type ArticleUncheckedUpdateWithoutPurchaseOrderLinesInput = {
   reorderStrategy?: Prisma.EnumReorderStrategyFieldUpdateOperationsInput | $Enums.ReorderStrategy
   supplierName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   purchasePriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  salesPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1728,6 +2068,8 @@ export type ArticleUncheckedUpdateWithoutPurchaseOrderLinesInput = {
   orderMaterialLines?: Prisma.OrderMaterialLineUncheckedUpdateManyWithoutArticleNestedInput
   planMarkers?: Prisma.PlanMarkerUncheckedUpdateManyWithoutArticleNestedInput
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionUncheckedUpdateManyWithoutArticleNestedInput
+  materialItems?: Prisma.MaterialItemUncheckedUpdateManyWithoutArticleNestedInput
+  projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutArticleNestedInput
 }
 
 export type ArticleCreateWithoutManualReorderSuggestionsInput = {
@@ -1736,6 +2078,7 @@ export type ArticleCreateWithoutManualReorderSuggestionsInput = {
   sku?: string | null
   unit?: string
   category?: string | null
+  description?: string | null
   articleType?: $Enums.ArticleType
   minimumStock?: number
   targetStock?: number
@@ -1744,6 +2087,7 @@ export type ArticleCreateWithoutManualReorderSuggestionsInput = {
   reorderStrategy?: $Enums.ReorderStrategy
   supplierName?: string | null
   purchasePriceNet?: number | null
+  salesPriceNet?: number | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1755,6 +2099,8 @@ export type ArticleCreateWithoutManualReorderSuggestionsInput = {
   orderMaterialLines?: Prisma.OrderMaterialLineCreateNestedManyWithoutArticleInput
   purchaseOrderLines?: Prisma.PurchaseOrderLineCreateNestedManyWithoutArticleInput
   planMarkers?: Prisma.PlanMarkerCreateNestedManyWithoutArticleInput
+  materialItems?: Prisma.MaterialItemCreateNestedManyWithoutArticleInput
+  projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutArticleInput
 }
 
 export type ArticleUncheckedCreateWithoutManualReorderSuggestionsInput = {
@@ -1764,6 +2110,7 @@ export type ArticleUncheckedCreateWithoutManualReorderSuggestionsInput = {
   sku?: string | null
   unit?: string
   category?: string | null
+  description?: string | null
   articleType?: $Enums.ArticleType
   minimumStock?: number
   targetStock?: number
@@ -1772,6 +2119,7 @@ export type ArticleUncheckedCreateWithoutManualReorderSuggestionsInput = {
   reorderStrategy?: $Enums.ReorderStrategy
   supplierName?: string | null
   purchasePriceNet?: number | null
+  salesPriceNet?: number | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1782,6 +2130,8 @@ export type ArticleUncheckedCreateWithoutManualReorderSuggestionsInput = {
   orderMaterialLines?: Prisma.OrderMaterialLineUncheckedCreateNestedManyWithoutArticleInput
   purchaseOrderLines?: Prisma.PurchaseOrderLineUncheckedCreateNestedManyWithoutArticleInput
   planMarkers?: Prisma.PlanMarkerUncheckedCreateNestedManyWithoutArticleInput
+  materialItems?: Prisma.MaterialItemUncheckedCreateNestedManyWithoutArticleInput
+  projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutArticleInput
 }
 
 export type ArticleCreateOrConnectWithoutManualReorderSuggestionsInput = {
@@ -1806,6 +2156,7 @@ export type ArticleUpdateWithoutManualReorderSuggestionsInput = {
   sku?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   articleType?: Prisma.EnumArticleTypeFieldUpdateOperationsInput | $Enums.ArticleType
   minimumStock?: Prisma.FloatFieldUpdateOperationsInput | number
   targetStock?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -1814,6 +2165,7 @@ export type ArticleUpdateWithoutManualReorderSuggestionsInput = {
   reorderStrategy?: Prisma.EnumReorderStrategyFieldUpdateOperationsInput | $Enums.ReorderStrategy
   supplierName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   purchasePriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  salesPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1825,6 +2177,8 @@ export type ArticleUpdateWithoutManualReorderSuggestionsInput = {
   orderMaterialLines?: Prisma.OrderMaterialLineUpdateManyWithoutArticleNestedInput
   purchaseOrderLines?: Prisma.PurchaseOrderLineUpdateManyWithoutArticleNestedInput
   planMarkers?: Prisma.PlanMarkerUpdateManyWithoutArticleNestedInput
+  materialItems?: Prisma.MaterialItemUpdateManyWithoutArticleNestedInput
+  projectCosts?: Prisma.ProjectCostUpdateManyWithoutArticleNestedInput
 }
 
 export type ArticleUncheckedUpdateWithoutManualReorderSuggestionsInput = {
@@ -1834,6 +2188,7 @@ export type ArticleUncheckedUpdateWithoutManualReorderSuggestionsInput = {
   sku?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   articleType?: Prisma.EnumArticleTypeFieldUpdateOperationsInput | $Enums.ArticleType
   minimumStock?: Prisma.FloatFieldUpdateOperationsInput | number
   targetStock?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -1842,6 +2197,7 @@ export type ArticleUncheckedUpdateWithoutManualReorderSuggestionsInput = {
   reorderStrategy?: Prisma.EnumReorderStrategyFieldUpdateOperationsInput | $Enums.ReorderStrategy
   supplierName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   purchasePriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  salesPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1852,6 +2208,8 @@ export type ArticleUncheckedUpdateWithoutManualReorderSuggestionsInput = {
   orderMaterialLines?: Prisma.OrderMaterialLineUncheckedUpdateManyWithoutArticleNestedInput
   purchaseOrderLines?: Prisma.PurchaseOrderLineUncheckedUpdateManyWithoutArticleNestedInput
   planMarkers?: Prisma.PlanMarkerUncheckedUpdateManyWithoutArticleNestedInput
+  materialItems?: Prisma.MaterialItemUncheckedUpdateManyWithoutArticleNestedInput
+  projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutArticleNestedInput
 }
 
 export type ArticleCreateWithoutPlanMarkersInput = {
@@ -1860,6 +2218,7 @@ export type ArticleCreateWithoutPlanMarkersInput = {
   sku?: string | null
   unit?: string
   category?: string | null
+  description?: string | null
   articleType?: $Enums.ArticleType
   minimumStock?: number
   targetStock?: number
@@ -1868,6 +2227,7 @@ export type ArticleCreateWithoutPlanMarkersInput = {
   reorderStrategy?: $Enums.ReorderStrategy
   supplierName?: string | null
   purchasePriceNet?: number | null
+  salesPriceNet?: number | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1879,6 +2239,8 @@ export type ArticleCreateWithoutPlanMarkersInput = {
   orderMaterialLines?: Prisma.OrderMaterialLineCreateNestedManyWithoutArticleInput
   purchaseOrderLines?: Prisma.PurchaseOrderLineCreateNestedManyWithoutArticleInput
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionCreateNestedManyWithoutArticleInput
+  materialItems?: Prisma.MaterialItemCreateNestedManyWithoutArticleInput
+  projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutArticleInput
 }
 
 export type ArticleUncheckedCreateWithoutPlanMarkersInput = {
@@ -1888,6 +2250,7 @@ export type ArticleUncheckedCreateWithoutPlanMarkersInput = {
   sku?: string | null
   unit?: string
   category?: string | null
+  description?: string | null
   articleType?: $Enums.ArticleType
   minimumStock?: number
   targetStock?: number
@@ -1896,6 +2259,7 @@ export type ArticleUncheckedCreateWithoutPlanMarkersInput = {
   reorderStrategy?: $Enums.ReorderStrategy
   supplierName?: string | null
   purchasePriceNet?: number | null
+  salesPriceNet?: number | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1906,6 +2270,8 @@ export type ArticleUncheckedCreateWithoutPlanMarkersInput = {
   orderMaterialLines?: Prisma.OrderMaterialLineUncheckedCreateNestedManyWithoutArticleInput
   purchaseOrderLines?: Prisma.PurchaseOrderLineUncheckedCreateNestedManyWithoutArticleInput
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionUncheckedCreateNestedManyWithoutArticleInput
+  materialItems?: Prisma.MaterialItemUncheckedCreateNestedManyWithoutArticleInput
+  projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutArticleInput
 }
 
 export type ArticleCreateOrConnectWithoutPlanMarkersInput = {
@@ -1930,6 +2296,7 @@ export type ArticleUpdateWithoutPlanMarkersInput = {
   sku?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   articleType?: Prisma.EnumArticleTypeFieldUpdateOperationsInput | $Enums.ArticleType
   minimumStock?: Prisma.FloatFieldUpdateOperationsInput | number
   targetStock?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -1938,6 +2305,7 @@ export type ArticleUpdateWithoutPlanMarkersInput = {
   reorderStrategy?: Prisma.EnumReorderStrategyFieldUpdateOperationsInput | $Enums.ReorderStrategy
   supplierName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   purchasePriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  salesPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1949,6 +2317,8 @@ export type ArticleUpdateWithoutPlanMarkersInput = {
   orderMaterialLines?: Prisma.OrderMaterialLineUpdateManyWithoutArticleNestedInput
   purchaseOrderLines?: Prisma.PurchaseOrderLineUpdateManyWithoutArticleNestedInput
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionUpdateManyWithoutArticleNestedInput
+  materialItems?: Prisma.MaterialItemUpdateManyWithoutArticleNestedInput
+  projectCosts?: Prisma.ProjectCostUpdateManyWithoutArticleNestedInput
 }
 
 export type ArticleUncheckedUpdateWithoutPlanMarkersInput = {
@@ -1958,6 +2328,7 @@ export type ArticleUncheckedUpdateWithoutPlanMarkersInput = {
   sku?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   articleType?: Prisma.EnumArticleTypeFieldUpdateOperationsInput | $Enums.ArticleType
   minimumStock?: Prisma.FloatFieldUpdateOperationsInput | number
   targetStock?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -1966,6 +2337,7 @@ export type ArticleUncheckedUpdateWithoutPlanMarkersInput = {
   reorderStrategy?: Prisma.EnumReorderStrategyFieldUpdateOperationsInput | $Enums.ReorderStrategy
   supplierName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   purchasePriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  salesPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1976,14 +2348,17 @@ export type ArticleUncheckedUpdateWithoutPlanMarkersInput = {
   orderMaterialLines?: Prisma.OrderMaterialLineUncheckedUpdateManyWithoutArticleNestedInput
   purchaseOrderLines?: Prisma.PurchaseOrderLineUncheckedUpdateManyWithoutArticleNestedInput
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionUncheckedUpdateManyWithoutArticleNestedInput
+  materialItems?: Prisma.MaterialItemUncheckedUpdateManyWithoutArticleNestedInput
+  projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutArticleNestedInput
 }
 
-export type ArticleCreateManyTenantInput = {
+export type ArticleCreateWithoutProjectCostsInput = {
   id?: string
   name: string
   sku?: string | null
   unit?: string
   category?: string | null
+  description?: string | null
   articleType?: $Enums.ArticleType
   minimumStock?: number
   targetStock?: number
@@ -1992,17 +2367,76 @@ export type ArticleCreateManyTenantInput = {
   reorderStrategy?: $Enums.ReorderStrategy
   supplierName?: string | null
   purchasePriceNet?: number | null
+  salesPriceNet?: number | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  tenant: Prisma.TenantCreateNestedOneWithoutArticlesInput
+  stockBalances?: Prisma.StockBalanceCreateNestedManyWithoutArticleInput
+  movements?: Prisma.StockMovementCreateNestedManyWithoutArticleInput
+  reservations?: Prisma.ReservationCreateNestedManyWithoutArticleInput
+  serviceTemplates?: Prisma.ServiceMaterialTemplateCreateNestedManyWithoutArticleInput
+  orderMaterialLines?: Prisma.OrderMaterialLineCreateNestedManyWithoutArticleInput
+  purchaseOrderLines?: Prisma.PurchaseOrderLineCreateNestedManyWithoutArticleInput
+  planMarkers?: Prisma.PlanMarkerCreateNestedManyWithoutArticleInput
+  manualReorderSuggestions?: Prisma.ManualReorderSuggestionCreateNestedManyWithoutArticleInput
+  materialItems?: Prisma.MaterialItemCreateNestedManyWithoutArticleInput
 }
 
-export type ArticleUpdateWithoutTenantInput = {
+export type ArticleUncheckedCreateWithoutProjectCostsInput = {
+  id?: string
+  tenantId: string
+  name: string
+  sku?: string | null
+  unit?: string
+  category?: string | null
+  description?: string | null
+  articleType?: $Enums.ArticleType
+  minimumStock?: number
+  targetStock?: number
+  reorderQuantity?: number
+  packageSize?: number
+  reorderStrategy?: $Enums.ReorderStrategy
+  supplierName?: string | null
+  purchasePriceNet?: number | null
+  salesPriceNet?: number | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  stockBalances?: Prisma.StockBalanceUncheckedCreateNestedManyWithoutArticleInput
+  movements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutArticleInput
+  reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutArticleInput
+  serviceTemplates?: Prisma.ServiceMaterialTemplateUncheckedCreateNestedManyWithoutArticleInput
+  orderMaterialLines?: Prisma.OrderMaterialLineUncheckedCreateNestedManyWithoutArticleInput
+  purchaseOrderLines?: Prisma.PurchaseOrderLineUncheckedCreateNestedManyWithoutArticleInput
+  planMarkers?: Prisma.PlanMarkerUncheckedCreateNestedManyWithoutArticleInput
+  manualReorderSuggestions?: Prisma.ManualReorderSuggestionUncheckedCreateNestedManyWithoutArticleInput
+  materialItems?: Prisma.MaterialItemUncheckedCreateNestedManyWithoutArticleInput
+}
+
+export type ArticleCreateOrConnectWithoutProjectCostsInput = {
+  where: Prisma.ArticleWhereUniqueInput
+  create: Prisma.XOR<Prisma.ArticleCreateWithoutProjectCostsInput, Prisma.ArticleUncheckedCreateWithoutProjectCostsInput>
+}
+
+export type ArticleUpsertWithoutProjectCostsInput = {
+  update: Prisma.XOR<Prisma.ArticleUpdateWithoutProjectCostsInput, Prisma.ArticleUncheckedUpdateWithoutProjectCostsInput>
+  create: Prisma.XOR<Prisma.ArticleCreateWithoutProjectCostsInput, Prisma.ArticleUncheckedCreateWithoutProjectCostsInput>
+  where?: Prisma.ArticleWhereInput
+}
+
+export type ArticleUpdateToOneWithWhereWithoutProjectCostsInput = {
+  where?: Prisma.ArticleWhereInput
+  data: Prisma.XOR<Prisma.ArticleUpdateWithoutProjectCostsInput, Prisma.ArticleUncheckedUpdateWithoutProjectCostsInput>
+}
+
+export type ArticleUpdateWithoutProjectCostsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   sku?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   articleType?: Prisma.EnumArticleTypeFieldUpdateOperationsInput | $Enums.ArticleType
   minimumStock?: Prisma.FloatFieldUpdateOperationsInput | number
   targetStock?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -2011,9 +2445,11 @@ export type ArticleUpdateWithoutTenantInput = {
   reorderStrategy?: Prisma.EnumReorderStrategyFieldUpdateOperationsInput | $Enums.ReorderStrategy
   supplierName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   purchasePriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  salesPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutArticlesNestedInput
   stockBalances?: Prisma.StockBalanceUpdateManyWithoutArticleNestedInput
   movements?: Prisma.StockMovementUpdateManyWithoutArticleNestedInput
   reservations?: Prisma.ReservationUpdateManyWithoutArticleNestedInput
@@ -2022,14 +2458,17 @@ export type ArticleUpdateWithoutTenantInput = {
   purchaseOrderLines?: Prisma.PurchaseOrderLineUpdateManyWithoutArticleNestedInput
   planMarkers?: Prisma.PlanMarkerUpdateManyWithoutArticleNestedInput
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionUpdateManyWithoutArticleNestedInput
+  materialItems?: Prisma.MaterialItemUpdateManyWithoutArticleNestedInput
 }
 
-export type ArticleUncheckedUpdateWithoutTenantInput = {
+export type ArticleUncheckedUpdateWithoutProjectCostsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   sku?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   articleType?: Prisma.EnumArticleTypeFieldUpdateOperationsInput | $Enums.ArticleType
   minimumStock?: Prisma.FloatFieldUpdateOperationsInput | number
   targetStock?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -2038,6 +2477,7 @@ export type ArticleUncheckedUpdateWithoutTenantInput = {
   reorderStrategy?: Prisma.EnumReorderStrategyFieldUpdateOperationsInput | $Enums.ReorderStrategy
   supplierName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   purchasePriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  salesPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2049,14 +2489,37 @@ export type ArticleUncheckedUpdateWithoutTenantInput = {
   purchaseOrderLines?: Prisma.PurchaseOrderLineUncheckedUpdateManyWithoutArticleNestedInput
   planMarkers?: Prisma.PlanMarkerUncheckedUpdateManyWithoutArticleNestedInput
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionUncheckedUpdateManyWithoutArticleNestedInput
+  materialItems?: Prisma.MaterialItemUncheckedUpdateManyWithoutArticleNestedInput
 }
 
-export type ArticleUncheckedUpdateManyWithoutTenantInput = {
+export type ArticleCreateManyTenantInput = {
+  id?: string
+  name: string
+  sku?: string | null
+  unit?: string
+  category?: string | null
+  description?: string | null
+  articleType?: $Enums.ArticleType
+  minimumStock?: number
+  targetStock?: number
+  reorderQuantity?: number
+  packageSize?: number
+  reorderStrategy?: $Enums.ReorderStrategy
+  supplierName?: string | null
+  purchasePriceNet?: number | null
+  salesPriceNet?: number | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type ArticleUpdateWithoutTenantInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   sku?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   articleType?: Prisma.EnumArticleTypeFieldUpdateOperationsInput | $Enums.ArticleType
   minimumStock?: Prisma.FloatFieldUpdateOperationsInput | number
   targetStock?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -2065,6 +2528,69 @@ export type ArticleUncheckedUpdateManyWithoutTenantInput = {
   reorderStrategy?: Prisma.EnumReorderStrategyFieldUpdateOperationsInput | $Enums.ReorderStrategy
   supplierName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   purchasePriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  salesPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  stockBalances?: Prisma.StockBalanceUpdateManyWithoutArticleNestedInput
+  movements?: Prisma.StockMovementUpdateManyWithoutArticleNestedInput
+  reservations?: Prisma.ReservationUpdateManyWithoutArticleNestedInput
+  serviceTemplates?: Prisma.ServiceMaterialTemplateUpdateManyWithoutArticleNestedInput
+  orderMaterialLines?: Prisma.OrderMaterialLineUpdateManyWithoutArticleNestedInput
+  purchaseOrderLines?: Prisma.PurchaseOrderLineUpdateManyWithoutArticleNestedInput
+  planMarkers?: Prisma.PlanMarkerUpdateManyWithoutArticleNestedInput
+  manualReorderSuggestions?: Prisma.ManualReorderSuggestionUpdateManyWithoutArticleNestedInput
+  materialItems?: Prisma.MaterialItemUpdateManyWithoutArticleNestedInput
+  projectCosts?: Prisma.ProjectCostUpdateManyWithoutArticleNestedInput
+}
+
+export type ArticleUncheckedUpdateWithoutTenantInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  sku?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unit?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  articleType?: Prisma.EnumArticleTypeFieldUpdateOperationsInput | $Enums.ArticleType
+  minimumStock?: Prisma.FloatFieldUpdateOperationsInput | number
+  targetStock?: Prisma.FloatFieldUpdateOperationsInput | number
+  reorderQuantity?: Prisma.FloatFieldUpdateOperationsInput | number
+  packageSize?: Prisma.FloatFieldUpdateOperationsInput | number
+  reorderStrategy?: Prisma.EnumReorderStrategyFieldUpdateOperationsInput | $Enums.ReorderStrategy
+  supplierName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  purchasePriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  salesPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  stockBalances?: Prisma.StockBalanceUncheckedUpdateManyWithoutArticleNestedInput
+  movements?: Prisma.StockMovementUncheckedUpdateManyWithoutArticleNestedInput
+  reservations?: Prisma.ReservationUncheckedUpdateManyWithoutArticleNestedInput
+  serviceTemplates?: Prisma.ServiceMaterialTemplateUncheckedUpdateManyWithoutArticleNestedInput
+  orderMaterialLines?: Prisma.OrderMaterialLineUncheckedUpdateManyWithoutArticleNestedInput
+  purchaseOrderLines?: Prisma.PurchaseOrderLineUncheckedUpdateManyWithoutArticleNestedInput
+  planMarkers?: Prisma.PlanMarkerUncheckedUpdateManyWithoutArticleNestedInput
+  manualReorderSuggestions?: Prisma.ManualReorderSuggestionUncheckedUpdateManyWithoutArticleNestedInput
+  materialItems?: Prisma.MaterialItemUncheckedUpdateManyWithoutArticleNestedInput
+  projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutArticleNestedInput
+}
+
+export type ArticleUncheckedUpdateManyWithoutTenantInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  sku?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unit?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  articleType?: Prisma.EnumArticleTypeFieldUpdateOperationsInput | $Enums.ArticleType
+  minimumStock?: Prisma.FloatFieldUpdateOperationsInput | number
+  targetStock?: Prisma.FloatFieldUpdateOperationsInput | number
+  reorderQuantity?: Prisma.FloatFieldUpdateOperationsInput | number
+  packageSize?: Prisma.FloatFieldUpdateOperationsInput | number
+  reorderStrategy?: Prisma.EnumReorderStrategyFieldUpdateOperationsInput | $Enums.ReorderStrategy
+  supplierName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  purchasePriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  salesPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2084,6 +2610,8 @@ export type ArticleCountOutputType = {
   purchaseOrderLines: number
   planMarkers: number
   manualReorderSuggestions: number
+  materialItems: number
+  projectCosts: number
 }
 
 export type ArticleCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2095,6 +2623,8 @@ export type ArticleCountOutputTypeSelect<ExtArgs extends runtime.Types.Extension
   purchaseOrderLines?: boolean | ArticleCountOutputTypeCountPurchaseOrderLinesArgs
   planMarkers?: boolean | ArticleCountOutputTypeCountPlanMarkersArgs
   manualReorderSuggestions?: boolean | ArticleCountOutputTypeCountManualReorderSuggestionsArgs
+  materialItems?: boolean | ArticleCountOutputTypeCountMaterialItemsArgs
+  projectCosts?: boolean | ArticleCountOutputTypeCountProjectCostsArgs
 }
 
 /**
@@ -2163,6 +2693,20 @@ export type ArticleCountOutputTypeCountManualReorderSuggestionsArgs<ExtArgs exte
   where?: Prisma.ManualReorderSuggestionWhereInput
 }
 
+/**
+ * ArticleCountOutputType without action
+ */
+export type ArticleCountOutputTypeCountMaterialItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.MaterialItemWhereInput
+}
+
+/**
+ * ArticleCountOutputType without action
+ */
+export type ArticleCountOutputTypeCountProjectCostsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ProjectCostWhereInput
+}
+
 
 export type ArticleSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -2171,6 +2715,7 @@ export type ArticleSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   sku?: boolean
   unit?: boolean
   category?: boolean
+  description?: boolean
   articleType?: boolean
   minimumStock?: boolean
   targetStock?: boolean
@@ -2179,6 +2724,7 @@ export type ArticleSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   reorderStrategy?: boolean
   supplierName?: boolean
   purchasePriceNet?: boolean
+  salesPriceNet?: boolean
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -2191,6 +2737,8 @@ export type ArticleSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   purchaseOrderLines?: boolean | Prisma.Article$purchaseOrderLinesArgs<ExtArgs>
   planMarkers?: boolean | Prisma.Article$planMarkersArgs<ExtArgs>
   manualReorderSuggestions?: boolean | Prisma.Article$manualReorderSuggestionsArgs<ExtArgs>
+  materialItems?: boolean | Prisma.Article$materialItemsArgs<ExtArgs>
+  projectCosts?: boolean | Prisma.Article$projectCostsArgs<ExtArgs>
   _count?: boolean | Prisma.ArticleCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["article"]>
 
@@ -2201,6 +2749,7 @@ export type ArticleSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   sku?: boolean
   unit?: boolean
   category?: boolean
+  description?: boolean
   articleType?: boolean
   minimumStock?: boolean
   targetStock?: boolean
@@ -2209,6 +2758,7 @@ export type ArticleSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   reorderStrategy?: boolean
   supplierName?: boolean
   purchasePriceNet?: boolean
+  salesPriceNet?: boolean
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -2222,6 +2772,7 @@ export type ArticleSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   sku?: boolean
   unit?: boolean
   category?: boolean
+  description?: boolean
   articleType?: boolean
   minimumStock?: boolean
   targetStock?: boolean
@@ -2230,6 +2781,7 @@ export type ArticleSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   reorderStrategy?: boolean
   supplierName?: boolean
   purchasePriceNet?: boolean
+  salesPriceNet?: boolean
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -2243,6 +2795,7 @@ export type ArticleSelectScalar = {
   sku?: boolean
   unit?: boolean
   category?: boolean
+  description?: boolean
   articleType?: boolean
   minimumStock?: boolean
   targetStock?: boolean
@@ -2251,12 +2804,13 @@ export type ArticleSelectScalar = {
   reorderStrategy?: boolean
   supplierName?: boolean
   purchasePriceNet?: boolean
+  salesPriceNet?: boolean
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type ArticleOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "name" | "sku" | "unit" | "category" | "articleType" | "minimumStock" | "targetStock" | "reorderQuantity" | "packageSize" | "reorderStrategy" | "supplierName" | "purchasePriceNet" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["article"]>
+export type ArticleOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "name" | "sku" | "unit" | "category" | "description" | "articleType" | "minimumStock" | "targetStock" | "reorderQuantity" | "packageSize" | "reorderStrategy" | "supplierName" | "purchasePriceNet" | "salesPriceNet" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["article"]>
 export type ArticleInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   stockBalances?: boolean | Prisma.Article$stockBalancesArgs<ExtArgs>
@@ -2267,6 +2821,8 @@ export type ArticleInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   purchaseOrderLines?: boolean | Prisma.Article$purchaseOrderLinesArgs<ExtArgs>
   planMarkers?: boolean | Prisma.Article$planMarkersArgs<ExtArgs>
   manualReorderSuggestions?: boolean | Prisma.Article$manualReorderSuggestionsArgs<ExtArgs>
+  materialItems?: boolean | Prisma.Article$materialItemsArgs<ExtArgs>
+  projectCosts?: boolean | Prisma.Article$projectCostsArgs<ExtArgs>
   _count?: boolean | Prisma.ArticleCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ArticleIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2288,6 +2844,8 @@ export type $ArticlePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     purchaseOrderLines: Prisma.$PurchaseOrderLinePayload<ExtArgs>[]
     planMarkers: Prisma.$PlanMarkerPayload<ExtArgs>[]
     manualReorderSuggestions: Prisma.$ManualReorderSuggestionPayload<ExtArgs>[]
+    materialItems: Prisma.$MaterialItemPayload<ExtArgs>[]
+    projectCosts: Prisma.$ProjectCostPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2296,6 +2854,7 @@ export type $ArticlePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     sku: string | null
     unit: string
     category: string | null
+    description: string | null
     articleType: $Enums.ArticleType
     minimumStock: number
     targetStock: number
@@ -2304,6 +2863,7 @@ export type $ArticlePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     reorderStrategy: $Enums.ReorderStrategy
     supplierName: string | null
     purchasePriceNet: number | null
+    salesPriceNet: number | null
     isActive: boolean
     createdAt: Date
     updatedAt: Date
@@ -2710,6 +3270,8 @@ export interface Prisma__ArticleClient<T, Null = never, ExtArgs extends runtime.
   purchaseOrderLines<T extends Prisma.Article$purchaseOrderLinesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Article$purchaseOrderLinesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PurchaseOrderLinePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   planMarkers<T extends Prisma.Article$planMarkersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Article$planMarkersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PlanMarkerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   manualReorderSuggestions<T extends Prisma.Article$manualReorderSuggestionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Article$manualReorderSuggestionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ManualReorderSuggestionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  materialItems<T extends Prisma.Article$materialItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Article$materialItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MaterialItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  projectCosts<T extends Prisma.Article$projectCostsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Article$projectCostsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectCostPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2745,6 +3307,7 @@ export interface ArticleFieldRefs {
   readonly sku: Prisma.FieldRef<"Article", 'String'>
   readonly unit: Prisma.FieldRef<"Article", 'String'>
   readonly category: Prisma.FieldRef<"Article", 'String'>
+  readonly description: Prisma.FieldRef<"Article", 'String'>
   readonly articleType: Prisma.FieldRef<"Article", 'ArticleType'>
   readonly minimumStock: Prisma.FieldRef<"Article", 'Float'>
   readonly targetStock: Prisma.FieldRef<"Article", 'Float'>
@@ -2753,6 +3316,7 @@ export interface ArticleFieldRefs {
   readonly reorderStrategy: Prisma.FieldRef<"Article", 'ReorderStrategy'>
   readonly supplierName: Prisma.FieldRef<"Article", 'String'>
   readonly purchasePriceNet: Prisma.FieldRef<"Article", 'Float'>
+  readonly salesPriceNet: Prisma.FieldRef<"Article", 'Float'>
   readonly isActive: Prisma.FieldRef<"Article", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"Article", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Article", 'DateTime'>
@@ -3346,6 +3910,54 @@ export type Article$manualReorderSuggestionsArgs<ExtArgs extends runtime.Types.E
   take?: number
   skip?: number
   distinct?: Prisma.ManualReorderSuggestionScalarFieldEnum | Prisma.ManualReorderSuggestionScalarFieldEnum[]
+}
+
+/**
+ * Article.materialItems
+ */
+export type Article$materialItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the MaterialItem
+   */
+  select?: Prisma.MaterialItemSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the MaterialItem
+   */
+  omit?: Prisma.MaterialItemOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MaterialItemInclude<ExtArgs> | null
+  where?: Prisma.MaterialItemWhereInput
+  orderBy?: Prisma.MaterialItemOrderByWithRelationInput | Prisma.MaterialItemOrderByWithRelationInput[]
+  cursor?: Prisma.MaterialItemWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.MaterialItemScalarFieldEnum | Prisma.MaterialItemScalarFieldEnum[]
+}
+
+/**
+ * Article.projectCosts
+ */
+export type Article$projectCostsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ProjectCost
+   */
+  select?: Prisma.ProjectCostSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ProjectCost
+   */
+  omit?: Prisma.ProjectCostOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ProjectCostInclude<ExtArgs> | null
+  where?: Prisma.ProjectCostWhereInput
+  orderBy?: Prisma.ProjectCostOrderByWithRelationInput | Prisma.ProjectCostOrderByWithRelationInput[]
+  cursor?: Prisma.ProjectCostWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ProjectCostScalarFieldEnum | Prisma.ProjectCostScalarFieldEnum[]
 }
 
 /**

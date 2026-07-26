@@ -10,6 +10,7 @@ import { formatDateTime } from "@/lib/utils";
 import { isAppointmentOverdue } from "@/lib/scheduling/overdue";
 import { MATERIAL_STATUS_LABELS } from "@/lib/inventory/formulas";
 import { Button } from "@/components/ui/button";
+import { CanAccess } from "@/components/auth/can-access";
 import { AssignOrderButton } from "@/components/disposition/assign-employees-panel";
 
 interface EmployeeAvail {
@@ -61,6 +62,7 @@ export default function DispositionPage() {
   const [todayOrders, setTodayOrders] = useState<TodayOrder[]>([]);
   const [unassigned, setUnassigned] = useState<UnassignedOrder[]>([]);
   const [critical, setCritical] = useState<{ warnings: { type: string; severity: string }[] } | null>(null);
+  const [loadError, setLoadError] = useState("");
 
   function loadAll() {
     Promise.all([
@@ -69,14 +71,18 @@ export default function DispositionPage() {
       fetch("/api/dashboard/critical").then((r) => r.json()),
       fetch("/api/disposition/unassigned").then((r) => r.json()),
     ]).then(([d, t, c, u]) => {
+      let ok = true;
       if (d.success) {
         setEmployees(d.data.employees);
         setTeams(d.data.teams);
-      }
+      } else ok = false;
       if (t.success) setTodayOrders(t.data.orders);
+      else ok = false;
       if (c.success) setCritical(c.data);
       if (u.success) setUnassigned(u.data);
-    });
+      else ok = false;
+      setLoadError(ok ? "" : "Einige Dispositionsdaten konnten nicht geladen werden.");
+    }).catch(() => setLoadError("Disposition konnte nicht geladen werden."));
   }
 
   useEffect(() => {
@@ -129,6 +135,12 @@ export default function DispositionPage() {
         </div>
       </div>
 
+      {loadError && (
+        <Card className="mb-6 !border-red-200 !bg-red-50 !p-4">
+          <p className="text-sm text-red-700">{loadError}</p>
+        </Card>
+      )}
+
       {(critical?.warnings?.filter((w) => w.type === "material_missing").length ?? 0) > 0 && (
         <Card className="mb-6 !border-red-200 !bg-red-50">
           <div className="flex items-center gap-2 text-red-700 font-medium mb-2">
@@ -158,14 +170,16 @@ export default function DispositionPage() {
                     <p className="text-xs text-slate-400">{formatDateTime(o.scheduledStart)}</p>
                   )}
                 </div>
-                <AssignOrderButton
-                  orderId={o.id}
-                  orderNumber={o.orderNumber}
-                  phases={o.phases}
-                  defaultStart={o.scheduledStart}
-                  defaultEnd={o.scheduledEnd}
-                  onAssigned={loadAll}
-                />
+                <CanAccess permission="orders.assign">
+                  <AssignOrderButton
+                    orderId={o.id}
+                    orderNumber={o.orderNumber}
+                    phases={o.phases}
+                    defaultStart={o.scheduledStart}
+                    defaultEnd={o.scheduledEnd}
+                    onAssigned={loadAll}
+                  />
+                </CanAccess>
               </div>
             ))}
           </div>

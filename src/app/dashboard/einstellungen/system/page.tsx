@@ -62,16 +62,21 @@ export default function SystemStatusPage() {
     lastJobRun?: JobRunRow | null;
   } | null>(null);
   const [runs, setRuns] = useState<JobRunRow[]>([]);
+  const [loadError, setLoadError] = useState("");
 
-  function applySystemData(d: { success?: boolean; data?: { health: typeof health; recentRuns: JobRunRow[] } }) {
+  function applySystemData(d: { success?: boolean; error?: string; data?: { health: typeof health; recentRuns: JobRunRow[] } }) {
     if (d.success && d.data) {
       setHealth(d.data.health);
       setRuns(d.data.recentRuns);
+      setLoadError("");
+    } else {
+      setLoadError(d.error ?? "Systemstatus konnte nicht geladen werden.");
     }
   }
 
   function load() {
     setLoading(true);
+    setLoadError("");
     fetch("/api/admin/system")
       .then((r) => r.json())
       .then(applySystemData)
@@ -120,6 +125,12 @@ export default function SystemStatusPage() {
           <RefreshCw className={`h-4 w-4 mr-1 ${loading ? "animate-spin" : ""}`} /> Aktualisieren
         </Button>
       </div>
+
+      {loadError && (
+        <Card className="mb-6 !border-red-200 !bg-red-50 !p-4">
+          <p className="text-sm text-red-700">{loadError}</p>
+        </Card>
+      )}
 
       {health && (
         <Card title="Gesamtstatus" className="mb-6">

@@ -71,22 +71,15 @@ export default function KalkulationListPage() {
         </CanAccess>
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-3 mb-6">
-        <Card className="!p-4">
-          <p className="text-sm text-slate-500">Enthält intern</p>
-          <p className="text-sm mt-1">Gemeinkosten · Wagnis · Gewinn · ESt-Bedarf</p>
-        </Card>
-        <Card className="!p-4">
-          <p className="text-sm text-slate-500">Sichtbar für Kunden</p>
-          <p className="text-sm mt-1">Arbeit · Material · Fahrt · optional Maschine</p>
-        </Card>
-        <Card className="!p-4">
-          <CanAccess permission="calculations.settings">
-            <Link href="/dashboard/kalkulation/einstellungen" className="text-sm text-[#0d5c63] font-medium hover:underline">
-              Unternehmensprofil & Fixkosten einrichten →
-            </Link>
-          </CanAccess>
-        </Card>
+      <div className="mb-6">
+        <CanAccess permission="calculations.settings">
+          <Link
+            href="/dashboard/kalkulation/einstellungen"
+            className="text-sm text-[#0d5c63] font-medium hover:underline"
+          >
+            Unternehmensprofil & Fixkosten einrichten →
+          </Link>
+        </CanAccess>
       </div>
 
       <Card>

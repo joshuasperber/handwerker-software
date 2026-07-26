@@ -77,12 +77,16 @@ export async function PUT(
     await prisma.materialItem.createMany({
       data: body.materialItems.map((m: Record<string, unknown>) => ({
         calculationId: id,
+        articleId: m.articleId ? String(m.articleId) : null,
         name: String(m.name),
+        description: m.description != null ? String(m.description) : null,
         quantity: Number(m.quantity),
-        unit: String(m.unit ?? "Stk"),
+        unit: String(m.unit ?? "Stück"),
         purchasePriceNet: Number(m.purchasePriceNet),
         markupPercent: Number(m.markupPercent ?? 25),
         wastePercent: Number(m.wastePercent ?? 0),
+        supplierName: m.supplierName != null ? String(m.supplierName) : null,
+        articleNumber: m.articleNumber != null ? String(m.articleNumber) : null,
         isVisibleToCustomer: m.isVisibleToCustomer !== false,
       })),
     });
@@ -190,10 +194,66 @@ export async function PUT(
   }
 
   if (body.vat) {
+    const vat = body.vat as Record<string, unknown>;
+    const taxTreatment =
+      (vat.taxTreatment as string) ??
+      (vat.reverseCharge ? "REVERSE_CHARGE" : "STANDARD_VAT");
+    const reverseCharge = taxTreatment === "REVERSE_CHARGE";
     await prisma.vATSettings.upsert({
       where: { calculationId: id },
-      create: { calculationId: id, ...body.vat },
-      update: body.vat,
+      create: {
+        calculationId: id,
+        vatRatePercent: Number(vat.vatRatePercent ?? 19),
+        taxTreatment: taxTreatment as "STANDARD_VAT" | "REVERSE_CHARGE" | "BUILDING_EXEMPTION" | "MANUAL_REVIEW",
+        reverseCharge,
+        reverseChargeConfirmed: Boolean(vat.reverseChargeConfirmed),
+        includeSection13bNote: vat.includeSection13bNote !== false,
+        taxExempt: Boolean(vat.taxExempt),
+        vatNote: (vat.vatNote as string) || null,
+      },
+      update: {
+        vatRatePercent: Number(vat.vatRatePercent ?? 19),
+        taxTreatment: taxTreatment as "STANDARD_VAT" | "REVERSE_CHARGE" | "BUILDING_EXEMPTION" | "MANUAL_REVIEW",
+        reverseCharge,
+        reverseChargeConfirmed: Boolean(vat.reverseChargeConfirmed),
+        includeSection13bNote: vat.includeSection13bNote !== false,
+        taxExempt: Boolean(vat.taxExempt),
+        vatNote: (vat.vatNote as string) || null,
+      },
+    });
+  }
+
+  if (
+    body.useFixedPrice != null ||
+    body.fixedPriceNet !== undefined ||
+    body.fixedPriceLabel !== undefined
+  ) {
+    const useFixedPrice =
+      body.useFixedPrice != null ? Boolean(body.useFixedPrice) : existing.useFixedPrice;
+    const fixedPriceNet =
+      body.fixedPriceNet === null
+        ? null
+        : body.fixedPriceNet !== undefined
+          ? Number(body.fixedPriceNet)
+          : existing.fixedPriceNet;
+    const fixedPriceLabel =
+      body.fixedPriceLabel === null
+        ? null
+        : body.fixedPriceLabel !== undefined
+          ? String(body.fixedPriceLabel).trim() || null
+          : existing.fixedPriceLabel;
+
+    if (useFixedPrice && (fixedPriceNet == null || !Number.isFinite(fixedPriceNet))) {
+      return apiError("Bitte einen gültigen Festpreis in € angeben.", 400);
+    }
+
+    await prisma.calculation.update({
+      where: { id },
+      data: {
+        useFixedPrice,
+        fixedPriceNet: useFixedPrice ? fixedPriceNet : fixedPriceNet,
+        fixedPriceLabel,
+      },
     });
   }
 

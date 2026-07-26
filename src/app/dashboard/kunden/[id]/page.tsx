@@ -7,6 +7,8 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { InfoButton } from "@/components/ui/info-button";
+import { BUILDING_EXEMPTION_INFO } from "@/lib/tax/treatment";
 import { ChevronLeft, MapPin, Mail, Phone, Trash2, Star, Pencil, Plus, X, Check } from "lucide-react";
 
 interface Zone {
@@ -30,6 +32,16 @@ interface Property {
   travelZone: Zone | null;
 }
 
+interface TaxExemptionCertificate {
+  hasCertificate: boolean;
+  issuingTaxOffice: string | null;
+  validFrom: string | null;
+  validTo: string | null;
+  certificateNumber: string | null;
+  documentFileName: string | null;
+  notes: string | null;
+}
+
 interface CustomerDetail {
   id: string;
   firstName: string;
@@ -37,8 +49,17 @@ interface CustomerDetail {
   email: string;
   phone: string | null;
   company: string | null;
+  customerType: "PRIVAT" | "GEWERBLICH";
+  contactPerson: string | null;
+  vatId: string | null;
+  taxNumber: string | null;
+  billingStreet: string | null;
+  billingZipCode: string | null;
+  billingCity: string | null;
+  taxNotes: string | null;
   notes: string | null;
   bookingConfirmationEmailTemplate: string | null;
+  taxExemptionCertificate: TaxExemptionCertificate | null;
   properties: Property[];
   orders: { id: string; orderNumber: string; status: string; createdAt: string }[];
 }
@@ -56,8 +77,25 @@ export default function KundeDetailPage() {
     email: "",
     phone: "",
     company: "",
+    customerType: "PRIVAT" as "PRIVAT" | "GEWERBLICH",
+    contactPerson: "",
+    vatId: "",
+    taxNumber: "",
+    billingStreet: "",
+    billingZipCode: "",
+    billingCity: "",
+    taxNotes: "",
     notes: "",
     bookingConfirmationEmailTemplate: "",
+  });
+  const [taxCert, setTaxCert] = useState({
+    hasCertificate: false,
+    issuingTaxOffice: "",
+    validFrom: "",
+    validTo: "",
+    certificateNumber: "",
+    documentFileName: "",
+    notes: "",
   });
   const [addingProperty, setAddingProperty] = useState(false);
   const [propertyForm, setPropertyForm] = useState({ ...EMPTY_PROP, label: "Weiterer Standort" });
@@ -75,8 +113,26 @@ export default function KundeDetailPage() {
           email: d.data.email,
           phone: d.data.phone ?? "",
           company: d.data.company ?? "",
+          customerType: d.data.customerType ?? "PRIVAT",
+          contactPerson: d.data.contactPerson ?? "",
+          vatId: d.data.vatId ?? "",
+          taxNumber: d.data.taxNumber ?? "",
+          billingStreet: d.data.billingStreet ?? "",
+          billingZipCode: d.data.billingZipCode ?? "",
+          billingCity: d.data.billingCity ?? "",
+          taxNotes: d.data.taxNotes ?? "",
           notes: d.data.notes ?? "",
           bookingConfirmationEmailTemplate: d.data.bookingConfirmationEmailTemplate ?? "",
+        });
+        const cert = d.data.taxExemptionCertificate;
+        setTaxCert({
+          hasCertificate: cert?.hasCertificate ?? false,
+          issuingTaxOffice: cert?.issuingTaxOffice ?? "",
+          validFrom: cert?.validFrom ? cert.validFrom.slice(0, 10) : "",
+          validTo: cert?.validTo ? cert.validTo.slice(0, 10) : "",
+          certificateNumber: cert?.certificateNumber ?? "",
+          documentFileName: cert?.documentFileName ?? "",
+          notes: cert?.notes ?? "",
         });
       }
     });
@@ -88,6 +144,16 @@ export default function KundeDetailPage() {
   }, [id]);
 
   const activeZones = zones.filter((z) => z.isActive);
+
+  async function saveTaxCert(e: React.FormEvent) {
+    e.preventDefault();
+    await fetch(`/api/customers/${id}/tax-exemption`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(taxCert),
+    });
+    load();
+  }
 
   async function save(e: React.FormEvent) {
     e.preventDefault();
@@ -192,13 +258,46 @@ export default function KundeDetailPage() {
       <div className="grid gap-6 lg:grid-cols-2">
         <Card title="Stammdaten">
           <form onSubmit={save} className="space-y-3">
+            <div>
+              <label className="text-sm font-medium">Kundenart</label>
+              <select
+                className="w-full h-10 rounded-lg border mt-1 px-3 text-sm"
+                value={form.customerType}
+                onChange={(e) => setForm({ ...form, customerType: e.target.value as "PRIVAT" | "GEWERBLICH" })}
+              >
+                <option value="PRIVAT">Privatkunde</option>
+                <option value="GEWERBLICH">Gewerblicher Kunde / Unternehmen</option>
+              </select>
+              <p className="text-xs text-slate-500 mt-1">
+                Gewerblich markieren entfernt nicht automatisch die Umsatzsteuer — es werden nur zusätzliche Felder freigeschaltet.
+              </p>
+            </div>
             <div className="grid grid-cols-2 gap-3">
               <Input label="Vorname" value={form.firstName} onChange={(e) => setForm({ ...form, firstName: e.target.value })} />
               <Input label="Nachname" value={form.lastName} onChange={(e) => setForm({ ...form, lastName: e.target.value })} />
             </div>
             <Input label="E-Mail" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
             <Input label="Telefon" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
-            <Input label="Firma" value={form.company} onChange={(e) => setForm({ ...form, company: e.target.value })} />
+            {form.customerType === "GEWERBLICH" && (
+              <>
+                <Input label="Firmenname" value={form.company} onChange={(e) => setForm({ ...form, company: e.target.value })} />
+                <Input label="Ansprechpartner" value={form.contactPerson} onChange={(e) => setForm({ ...form, contactPerson: e.target.value })} />
+                <div className="grid grid-cols-2 gap-3">
+                  <Input label="USt-IdNr." value={form.vatId} onChange={(e) => setForm({ ...form, vatId: e.target.value })} />
+                  <Input label="Steuernummer" value={form.taxNumber} onChange={(e) => setForm({ ...form, taxNumber: e.target.value })} />
+                </div>
+                <p className="text-sm font-medium text-slate-700">Rechnungsadresse (optional, abweichend vom Einsatzort)</p>
+                <Input label="Straße" value={form.billingStreet} onChange={(e) => setForm({ ...form, billingStreet: e.target.value })} />
+                <div className="grid grid-cols-2 gap-3">
+                  <Input label="PLZ" value={form.billingZipCode} onChange={(e) => setForm({ ...form, billingZipCode: e.target.value })} />
+                  <Input label="Ort" value={form.billingCity} onChange={(e) => setForm({ ...form, billingCity: e.target.value })} />
+                </div>
+                <Textarea label="Hinweise zur steuerlichen Behandlung" value={form.taxNotes} onChange={(e) => setForm({ ...form, taxNotes: e.target.value })} rows={2} />
+              </>
+            )}
+            {form.customerType === "PRIVAT" && (
+              <Input label="Firma (optional)" value={form.company} onChange={(e) => setForm({ ...form, company: e.target.value })} />
+            )}
             <Textarea label="Notizen" value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} rows={3} />
             <Textarea
               label="Eigene Buchungsbestätigung (optional)"
@@ -226,6 +325,39 @@ export default function KundeDetailPage() {
               Automatische E-Mails (Buchung, Erinnerung) gehen an diese Adresse. Vorlagen unter
               Einstellungen → Benachrichtigungen; pro Kunde optional im Stammdaten-Formular.
             </p>
+          </Card>
+
+          <Card
+            title="Freistellungsbescheinigung (Bauabzugsteuer)"
+            action={
+              <InfoButton title="Freistellungsbescheinigung">
+                <p>{BUILDING_EXEMPTION_INFO}</p>
+              </InfoButton>
+            }
+          >
+            <form onSubmit={saveTaxCert} className="space-y-3">
+              <label className="flex items-center gap-2 text-sm">
+                <input
+                  type="checkbox"
+                  checked={taxCert.hasCertificate}
+                  onChange={(e) => setTaxCert({ ...taxCert, hasCertificate: e.target.checked })}
+                />
+                Freistellungsbescheinigung liegt vor
+              </label>
+              {taxCert.hasCertificate && (
+                <>
+                  <Input label="Ausstellendes Finanzamt" value={taxCert.issuingTaxOffice} onChange={(e) => setTaxCert({ ...taxCert, issuingTaxOffice: e.target.value })} />
+                  <div className="grid grid-cols-2 gap-3">
+                    <Input label="Gültig von" type="date" value={taxCert.validFrom} onChange={(e) => setTaxCert({ ...taxCert, validFrom: e.target.value })} />
+                    <Input label="Gültig bis" type="date" value={taxCert.validTo} onChange={(e) => setTaxCert({ ...taxCert, validTo: e.target.value })} />
+                  </div>
+                  <Input label="Bescheinigungsnummer / Aktenzeichen" value={taxCert.certificateNumber} onChange={(e) => setTaxCert({ ...taxCert, certificateNumber: e.target.value })} />
+                  <Input label="Dokument (Dateiname / Referenz)" value={taxCert.documentFileName} onChange={(e) => setTaxCert({ ...taxCert, documentFileName: e.target.value })} placeholder="z. B. freistellung.pdf" />
+                  <Textarea label="Notiz" value={taxCert.notes} onChange={(e) => setTaxCert({ ...taxCert, notes: e.target.value })} rows={2} />
+                </>
+              )}
+              <Button type="submit" size="sm">Freistellung speichern</Button>
+            </form>
           </Card>
 
           <Card title="Adressen / Standorte">

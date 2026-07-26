@@ -126,6 +126,33 @@ export const QuestionType = {
 export type QuestionType = (typeof QuestionType)[keyof typeof QuestionType]
 
 
+export const CustomerType = {
+  PRIVAT: 'PRIVAT',
+  GEWERBLICH: 'GEWERBLICH'
+} as const
+
+export type CustomerType = (typeof CustomerType)[keyof typeof CustomerType]
+
+
+export const TaxTreatmentType = {
+  STANDARD_VAT: 'STANDARD_VAT',
+  REVERSE_CHARGE: 'REVERSE_CHARGE',
+  BUILDING_EXEMPTION: 'BUILDING_EXEMPTION',
+  MANUAL_REVIEW: 'MANUAL_REVIEW'
+} as const
+
+export type TaxTreatmentType = (typeof TaxTreatmentType)[keyof typeof TaxTreatmentType]
+
+
+export const TimeEntryStatus = {
+  OPEN: 'OPEN',
+  REVIEWED: 'REVIEWED',
+  APPROVED: 'APPROVED'
+} as const
+
+export type TimeEntryStatus = (typeof TimeEntryStatus)[keyof typeof TimeEntryStatus]
+
+
 export const FixedCostCategory = {
   MIETE: 'MIETE',
   STROM: 'STROM',
@@ -490,6 +517,61 @@ export const StaffRequestStatus = {
 export type StaffRequestStatus = (typeof StaffRequestStatus)[keyof typeof StaffRequestStatus]
 
 
+export const ExpenseCategory = {
+  MATERIAL: 'MATERIAL',
+  MACHINERY: 'MACHINERY',
+  TOOLS: 'TOOLS',
+  FUEL: 'FUEL',
+  VEHICLES: 'VEHICLES',
+  RENT: 'RENT',
+  SUBCONTRACTOR: 'SUBCONTRACTOR',
+  INSURANCE: 'INSURANCE',
+  SOFTWARE: 'SOFTWARE',
+  TELECOM: 'TELECOM',
+  OTHER: 'OTHER'
+} as const
+
+export type ExpenseCategory = (typeof ExpenseCategory)[keyof typeof ExpenseCategory]
+
+
+export const ExpensePaymentStatus = {
+  OFFEN: 'OFFEN',
+  BEZAHLT: 'BEZAHLT'
+} as const
+
+export type ExpensePaymentStatus = (typeof ExpensePaymentStatus)[keyof typeof ExpensePaymentStatus]
+
+
+export const FinanceRevenueBasis = {
+  ISSUE_DATE: 'ISSUE_DATE',
+  PAYMENT_DATE: 'PAYMENT_DATE'
+} as const
+
+export type FinanceRevenueBasis = (typeof FinanceRevenueBasis)[keyof typeof FinanceRevenueBasis]
+
+
+export const PlannedInvestmentCategory = {
+  MACHINE: 'MACHINE',
+  TOOL: 'TOOL',
+  VEHICLE: 'VEHICLE',
+  SOFTWARE: 'SOFTWARE',
+  MATERIAL_BULK: 'MATERIAL_BULK',
+  OTHER: 'OTHER'
+} as const
+
+export type PlannedInvestmentCategory = (typeof PlannedInvestmentCategory)[keyof typeof PlannedInvestmentCategory]
+
+
+export const PlannedInvestmentStatus = {
+  PLANNED: 'PLANNED',
+  PURCHASED: 'PURCHASED',
+  POSTPONED: 'POSTPONED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type PlannedInvestmentStatus = (typeof PlannedInvestmentStatus)[keyof typeof PlannedInvestmentStatus]
+
+
 export const JobRunStatus = {
   RUNNING: 'RUNNING',
   COMPLETED: 'COMPLETED',
@@ -506,3 +588,28 @@ export const JobRunTrigger = {
 } as const
 
 export type JobRunTrigger = (typeof JobRunTrigger)[keyof typeof JobRunTrigger]
+
+
+export const ProjectStatus = {
+  GEPLANT: 'GEPLANT',
+  AKTIV: 'AKTIV',
+  PAUSIERT: 'PAUSIERT',
+  ABGESCHLOSSEN: 'ABGESCHLOSSEN',
+  ABGERECHNET: 'ABGERECHNET',
+  STORNIERT: 'STORNIERT'
+} as const
+
+export type ProjectStatus = (typeof ProjectStatus)[keyof typeof ProjectStatus]
+
+
+export const ProjectCostSource = {
+  MANUAL: 'MANUAL',
+  INVENTORY: 'INVENTORY',
+  EXPENSE: 'EXPENSE',
+  ORDER_MATERIAL: 'ORDER_MATERIAL',
+  RECEIPT: 'RECEIPT',
+  INVOICE: 'INVOICE',
+  ORDER: 'ORDER'
+} as const
+
+export type ProjectCostSource = (typeof ProjectCostSource)[keyof typeof ProjectCostSource]

@@ -2,7 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { requireAuth, apiSuccess } from "@/lib/api";
 import { getEmployeeForUser } from "@/lib/monteur-access";
 
-/** Kunden für Monteur-Self-Service (eigene vergangene Aufträge + Tenant-Kunden). */
+/** Kunden für Monteur-Self-Service (nur aus eigenen Aufträgen/Terminen). */
 export async function GET() {
   const auth = await requireAuth("monteur.create_own");
   if (auth instanceof Response) return auth;
@@ -10,8 +10,20 @@ export async function GET() {
   const employee = await getEmployeeForUser(auth);
   if (!employee) return apiSuccess([]);
 
+  const linkedOrders = await prisma.order.findMany({
+    where: {
+      tenantId: auth.tenantId,
+      appointments: { some: { employeeId: employee.id } },
+    },
+    select: { customerId: true },
+    distinct: ["customerId"],
+  });
+
+  const customerIds = linkedOrders.map((o) => o.customerId);
+  if (!customerIds.length) return apiSuccess([]);
+
   const customers = await prisma.customer.findMany({
-    where: { tenantId: auth.tenantId },
+    where: { tenantId: auth.tenantId, id: { in: customerIds } },
     include: {
       properties: { select: { id: true, label: true, street: true, city: true } },
     },

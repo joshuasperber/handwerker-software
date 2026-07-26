@@ -370,6 +370,9 @@ async function main() {
     },
   });
 
+  const { ensureOrderTypeDefinitions } = await import("../src/lib/orders/order-types");
+  await ensureOrderTypeDefinitions(tenant.id);
+
   const service2 = await prisma.service.create({
     data: {
       tenantId: tenant.id,

@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import type { DocumentCalcInput, DocumentCompanyInput } from "./build-document-html";
+import { calcVatWithTreatment, resolveTaxTreatment } from "@/lib/tax/treatment";
 
 export async function loadCalculationForDocument(tenantId: string, calculationId: string) {
   const calc = await prisma.calculation.findFirst({
@@ -8,6 +9,7 @@ export async function loadCalculationForDocument(tenantId: string, calculationId
       laborItems: true,
       materialItems: true,
       travelCost: true,
+      vatSettings: true,
       customer: true,
       order: { include: { property: true } },
     },
@@ -19,11 +21,41 @@ export async function loadCalculationForDocument(tenantId: string, calculationId
     prisma.tenant.findUnique({ where: { id: tenantId } }),
   ]);
 
+  const taxTreatment = resolveTaxTreatment(
+    calc.vatSettings?.taxTreatment ?? null,
+    calc.vatSettings?.reverseCharge
+  );
+
+  const useFixedPrice =
+    Boolean(calc.useFixedPrice) &&
+    calc.fixedPriceNet != null &&
+    Number.isFinite(calc.fixedPriceNet);
+  const customerNet = useFixedPrice ? Number(calc.fixedPriceNet) : calc.netSalesPrice;
+
+  const vatResult = calcVatWithTreatment(
+    {
+      netSalesPrice: customerNet,
+      vatRatePercent: calc.vatSettings?.vatRatePercent ?? 19,
+      taxTreatment,
+      reverseCharge: calc.vatSettings?.reverseCharge,
+      taxExempt: calc.vatSettings?.taxExempt,
+    },
+    { includeSection13bNote: calc.vatSettings?.includeSection13bNote !== false }
+  );
+
   const docCalc: DocumentCalcInput = {
     title: calc.title,
-    netSalesPrice: calc.netSalesPrice,
-    vatAmount: calc.vatAmount,
-    grossSalesPrice: calc.grossSalesPrice,
+    netSalesPrice: customerNet,
+    vatAmount: vatResult.vatAmount,
+    grossSalesPrice: vatResult.grossSalesPrice,
+    taxTreatment: vatResult.taxTreatment,
+    isReverseCharge: vatResult.isReverseCharge,
+    vatNote: calc.vatSettings?.vatNote,
+    invoiceTaxNotice: vatResult.invoiceNotice,
+    section13bNote: vatResult.section13bNote,
+    useFixedPrice,
+    fixedPriceLabel: calc.fixedPriceLabel,
+    calculatedNetSalesPrice: calc.netSalesPrice,
     laborTotal: calc.laborTotal,
     materialTotal: calc.materialTotal,
     machineTotal: calc.machineTotal,

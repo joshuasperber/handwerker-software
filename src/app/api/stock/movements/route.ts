@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAuth, apiSuccess } from "@/lib/api";
+import { calcDocumentedUnitMargin } from "@/lib/inventory/reasons";
 
 export async function GET(request: NextRequest) {
   const auth = await requireAuth("inventory.read");
@@ -20,10 +21,30 @@ export async function GET(request: NextRequest) {
     include: {
       article: { select: { name: true, unit: true } },
       storageLocation: { select: { name: true, locationType: true } },
+      order: { select: { id: true, orderNumber: true } },
+      customer: { select: { id: true, firstName: true, lastName: true } },
+      employee: {
+        select: {
+          id: true,
+          user: { select: { firstName: true, lastName: true } },
+        },
+      },
+      createdBy: { select: { id: true, firstName: true, lastName: true } },
     },
-    orderBy: { createdAt: "desc" },
+    orderBy: [{ occurredAt: "desc" }, { createdAt: "desc" }],
     take: limit,
   });
 
-  return apiSuccess(movements);
+  const data = movements.map((m) => {
+    const unitMargin = calcDocumentedUnitMargin(m.purchasePriceNet, m.salePriceNet);
+    return {
+      ...m,
+      documentedUnitMargin: unitMargin,
+      documentedTotalMargin:
+        unitMargin != null ? Math.round(unitMargin * m.quantity * 100) / 100 : null,
+      hasReceipt: Boolean(m.receiptStorageKey),
+    };
+  });
+
+  return apiSuccess(data);
 }

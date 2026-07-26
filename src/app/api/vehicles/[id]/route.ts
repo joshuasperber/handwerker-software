@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAuth, apiSuccess, apiError } from "@/lib/api";
+import { requireTenantEmployee } from "@/lib/tenant-scope";
 
 const VEHICLE_INCLUDE = {
   storageLocation: true,
@@ -20,6 +21,11 @@ export async function PATCH(
 
   const vehicle = await prisma.vehicle.findFirst({ where: { id, tenantId: auth.tenantId } });
   if (!vehicle) return apiError("Fahrzeug nicht gefunden", 404);
+
+  if (body.assignedEmployeeId) {
+    const employee = await requireTenantEmployee(auth.tenantId, body.assignedEmployeeId);
+    if (!employee) return apiError("Mitarbeiter nicht gefunden", 404);
+  }
 
   const updated = await prisma.vehicle.update({
     where: { id },

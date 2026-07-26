@@ -3,9 +3,10 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
+import { SwrProvider } from "@/components/providers/swr-provider";
 
 export const metadata: Metadata = {
-  title: "Handwerker App – SaaS für Handwerksbetriebe",
+  title: "JoMaster – Software für Handwerksbetriebe",
   description:
     "Online-Terminbuchung, Disposition, Monteur-App und Büro-Dashboard für KMU-Handwerksbetriebe",
   manifest: "/manifest.json",
@@ -29,8 +30,10 @@ export default function RootLayout({
       className={cn("h-full", "antialiased", "font-sans")}
     >
       <body className="min-h-full flex flex-col font-sans">
-        <TooltipProvider>{children}</TooltipProvider>
-        <Toaster position="top-right" richColors closeButton />
+        <SwrProvider>
+          <TooltipProvider>{children}</TooltipProvider>
+          <Toaster position="top-right" richColors closeButton />
+        </SwrProvider>
       </body>
     </html>
   );

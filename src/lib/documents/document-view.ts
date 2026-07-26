@@ -1,4 +1,5 @@
 import type { DocumentSnapshot } from "./snapshot";
+import { TAX_TREATMENT_SHORT, type TaxTreatment } from "@/lib/tax/treatment";
 
 export interface DocumentListItem {
   id: string;
@@ -22,6 +23,8 @@ export interface DocumentListItem {
   cancelOfId: string | null;
   hasPdf: boolean;
   eInvoiceFormat: string | null;
+  taxTreatmentLabel: string | null;
+  isReverseCharge: boolean;
 }
 
 interface RawDoc {
@@ -49,6 +52,21 @@ interface RawDoc {
   };
 }
 
+function taxInfoFromSnapshot(snap: unknown): { label: string | null; isReverseCharge: boolean } {
+  const s = snap as DocumentSnapshot | null;
+  const treatment = s?.calc?.taxTreatment;
+  const isReverseCharge = Boolean(s?.calc?.isReverseCharge ?? treatment === "REVERSE_CHARGE");
+  if (treatment) {
+    return {
+      label: TAX_TREATMENT_SHORT[treatment as TaxTreatment] ?? treatment,
+      isReverseCharge,
+    };
+  }
+  if (isReverseCharge || (s?.amounts?.vat === 0 && (s?.amounts?.net ?? 0) > 0)) {
+    return { label: TAX_TREATMENT_SHORT.REVERSE_CHARGE, isReverseCharge: true };
+  }
+  return { label: null, isReverseCharge: false };
+}
 function customerNameFromSnapshot(snap: unknown): string | null {
   const s = snap as DocumentSnapshot | null;
   const c = s?.calc?.customer;
@@ -73,6 +91,8 @@ export function toDocumentListItem(doc: RawDoc, now = new Date()): DocumentListI
           .join(" ")
       : "—");
 
+  const taxInfo = taxInfoFromSnapshot(doc.dataSnapshotJson);
+
   return {
     id: doc.id,
     documentNumber: doc.documentNumber,
@@ -95,6 +115,8 @@ export function toDocumentListItem(doc: RawDoc, now = new Date()): DocumentListI
     cancelOfId: doc.cancelOfId,
     hasPdf: !!doc.pdfStorageKey,
     eInvoiceFormat: doc.eInvoiceFormat,
+    taxTreatmentLabel: taxInfo.label,
+    isReverseCharge: taxInfo.isReverseCharge,
   };
 }
 

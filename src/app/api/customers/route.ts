@@ -34,13 +34,30 @@ export async function POST(request: Request) {
       email: body.email ?? `${body.firstName}.${body.lastName}@kunde.local`.toLowerCase(),
       phone: body.phone,
       company: body.company,
+      customerType: body.customerType ?? "PRIVAT",
+      contactPerson: body.contactPerson || null,
+      vatId: body.vatId || null,
+      taxNumber: body.taxNumber || null,
+      billingStreet:
+        body.billingStreet ||
+        body.property?.street ||
+        null,
+      billingZipCode:
+        body.billingZipCode ||
+        body.property?.zipCode ||
+        null,
+      billingCity:
+        body.billingCity ||
+        body.property?.city ||
+        null,
+      taxNotes: body.taxNotes || null,
       notes: body.notes,
       ...(body.property
         ? {
             properties: {
               create: {
                 tenantId: auth.tenantId,
-                label: body.property.label ?? "Hauptadresse",
+                label: body.property.label ?? "Ausführungsadresse",
                 street: body.property.street,
                 zipCode: body.property.zipCode,
                 city: body.property.city,

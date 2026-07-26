@@ -1,29 +1,45 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Badge } from "@/components/ui/badge";
 import { formatDateTime } from "@/lib/utils";
 import { fetchJson } from "@/lib/fetch-json";
+import { toast } from "sonner";
 import { startOfWeek, endOfWeek, format } from "date-fns";
 import { de } from "date-fns/locale";
 import { Clock, Plus, Pencil, Trash2 } from "lucide-react";
+import {
+  TIME_ENTRY_ACTIVITIES,
+  TIME_ENTRY_STATUS_LABELS,
+  calcWorkedHours,
+  validateTimeEntryInput,
+} from "@/lib/time-entry";
 
 interface TimeEntry {
   id: string;
   startTime: string;
   endTime: string | null;
   breakMinutes: number;
+  activity: string | null;
   notes: string | null;
-  order: { id: string; orderNumber: string; customer: { firstName: string; lastName: string } };
+  status: string;
+  order: {
+    id: string;
+    orderNumber: string;
+    customer: { firstName: string; lastName: string };
+  } | null;
 }
 
 interface OrderOption {
   id: string;
   orderNumber: string;
-  customer: { lastName: string };
+  title?: string | null;
+  status?: string;
+  customer: { firstName?: string; lastName: string };
 }
 
 function toDatetimeLocal(d: Date) {
@@ -31,74 +47,134 @@ function toDatetimeLocal(d: Date) {
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
 }
 
+function defaultEndTime() {
+  const d = new Date();
+  d.setHours(d.getHours() + 1);
+  return toDatetimeLocal(d);
+}
+
+const emptyForm = () => ({
+  orderId: "",
+  activity: "",
+  startTime: toDatetimeLocal(new Date()),
+  endTime: defaultEndTime(),
+  breakMinutes: "0",
+  notes: "",
+});
+
 export function StundenzettelView({ title = "Stundenzettel" }: { title?: string }) {
-  const [weekStart, setWeekStart] = useState(format(startOfWeek(new Date(), { weekStartsOn: 1 }), "yyyy-MM-dd"));
+  const [weekStart, setWeekStart] = useState(
+    format(startOfWeek(new Date(), { weekStartsOn: 1 }), "yyyy-MM-dd")
+  );
   const [entries, setEntries] = useState<TimeEntry[]>([]);
   const [totalHours, setTotalHours] = useState(0);
   const [error, setError] = useState("");
   const [orders, setOrders] = useState<OrderOption[]>([]);
+  const [ordersError, setOrdersError] = useState("");
+  const [ordersLoading, setOrdersLoading] = useState(true);
+  const [orderSearch, setOrderSearch] = useState("");
   const [showForm, setShowForm] = useState(false);
   const [saving, setSaving] = useState(false);
   const [formMsg, setFormMsg] = useState("");
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editForm, setEditForm] = useState({
+    orderId: "",
+    activity: "",
     startTime: "",
     endTime: "",
     breakMinutes: "0",
     notes: "",
   });
-  const [form, setForm] = useState({
-    orderId: "",
-    startTime: toDatetimeLocal(new Date()),
-    endTime: "",
-    breakMinutes: "0",
-    notes: "",
-  });
+  const [form, setForm] = useState(emptyForm);
 
   function loadEntries() {
     const from = weekStart;
     const to = format(endOfWeek(new Date(weekStart), { weekStartsOn: 1 }), "yyyy-MM-dd");
-    fetchJson<{ entries: TimeEntry[]; totalHours: number }>(`/api/monteur/timesheet?from=${from}&to=${to}`)
-      .then((d) => {
-        if (d.success && d.data) {
-          setEntries(d.data.entries);
-          setTotalHours(d.data.totalHours);
-          setError("");
-        } else {
-          setError(d.error ?? "Zeiten konnten nicht geladen werden");
-        }
-      });
+    fetchJson<{ entries: TimeEntry[]; totalHours: number }>(
+      `/api/monteur/timesheet?from=${from}&to=${to}`
+    ).then((d) => {
+      if (d.success && d.data) {
+        setEntries(d.data.entries);
+        setTotalHours(d.data.totalHours);
+        setError("");
+      } else {
+        setError(d.error ?? "Zeiten konnten nicht geladen werden");
+      }
+    });
   }
 
-  useEffect(() => { loadEntries(); }, [weekStart]);
+  useEffect(() => {
+    loadEntries();
+  }, [weekStart]);
 
   useEffect(() => {
+    setOrdersLoading(true);
     fetchJson<OrderOption[]>("/api/monteur/orders").then((d) => {
-      if (d.success && d.data) setOrders(d.data);
+      setOrdersLoading(false);
+      if (d.success && d.data) {
+        setOrders(d.data);
+        setOrdersError("");
+      } else {
+        setOrders([]);
+        setOrdersError(d.error ?? "Aufträge konnten nicht geladen werden.");
+      }
     });
   }, []);
 
+  const filteredOrders = useMemo(() => {
+    const q = orderSearch.trim().toLowerCase();
+    if (!q) return orders;
+    return orders.filter((o) => {
+      const hay = `${o.orderNumber} ${o.title ?? ""} ${o.customer?.lastName ?? ""} ${o.customer?.firstName ?? ""}`.toLowerCase();
+      return hay.includes(q);
+    });
+  }, [orders, orderSearch]);
+
+  const previewHours = useMemo(() => {
+    if (!form.startTime || !form.endTime) return null;
+    return calcWorkedHours(form.startTime, form.endTime, Number(form.breakMinutes) || 0);
+  }, [form.startTime, form.endTime, form.breakMinutes]);
+
+  function entryLabel(e: TimeEntry) {
+    if (e.order) {
+      return `${e.order.orderNumber} · ${e.order.customer.lastName}`;
+    }
+    return e.activity || "Ohne Auftrag";
+  }
+
   function entryHours(e: TimeEntry) {
-    if (!e.endTime) return "läuft";
-    const ms = new Date(e.endTime).getTime() - new Date(e.startTime).getTime();
-    const h = Math.max(0, ms / 3600000 - (e.breakMinutes ?? 0) / 60);
+    const h = calcWorkedHours(e.startTime, e.endTime, e.breakMinutes ?? 0);
+    if (h == null) return "läuft";
     return `${h.toFixed(2)} h`;
   }
 
   async function submitTime(e: React.FormEvent) {
     e.preventDefault();
     setFormMsg("");
-    if (!form.orderId) {
-      setFormMsg("Bitte einen Auftrag auswählen.");
+
+    const validationError = validateTimeEntryInput({
+      startTime: form.startTime,
+      endTime: form.endTime,
+      breakMinutes: Number(form.breakMinutes) || 0,
+      orderId: form.orderId || null,
+      activity: form.activity,
+      notes: form.notes,
+      requireEndTime: true,
+    });
+    if (validationError) {
+      setFormMsg(validationError);
       return;
     }
+
     setSaving(true);
-    const res = await fetch(`/api/monteur/orders/${form.orderId}/time`, {
+    const res = await fetch("/api/monteur/time", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
+        orderId: form.orderId || null,
+        activity: form.activity.trim() || null,
         startTime: new Date(form.startTime).toISOString(),
-        endTime: form.endTime ? new Date(form.endTime).toISOString() : undefined,
+        endTime: new Date(form.endTime).toISOString(),
         breakMinutes: Number(form.breakMinutes) || 0,
         notes: form.notes.trim() || undefined,
       }),
@@ -106,15 +182,10 @@ export function StundenzettelView({ title = "Stundenzettel" }: { title?: string 
     const data = await res.json();
     setSaving(false);
     if (data.success) {
-      setForm({
-        orderId: "",
-        startTime: toDatetimeLocal(new Date()),
-        endTime: "",
-        breakMinutes: "0",
-        notes: "",
-      });
+      setForm(emptyForm());
       setShowForm(false);
-      setFormMsg("Zeit erfasst.");
+      setFormMsg("");
+      toast.success("Stundenzettel gespeichert");
       loadEntries();
     } else {
       setFormMsg(data.error ?? "Erfassung fehlgeschlagen");
@@ -124,6 +195,8 @@ export function StundenzettelView({ title = "Stundenzettel" }: { title?: string 
   function startEdit(entry: TimeEntry) {
     setEditingId(entry.id);
     setEditForm({
+      orderId: entry.order?.id ?? "",
+      activity: entry.activity ?? "",
       startTime: toDatetimeLocal(new Date(entry.startTime)),
       endTime: entry.endTime ? toDatetimeLocal(new Date(entry.endTime)) : "",
       breakMinutes: String(entry.breakMinutes ?? 0),
@@ -132,11 +205,27 @@ export function StundenzettelView({ title = "Stundenzettel" }: { title?: string 
   }
 
   async function saveEdit(entryId: string) {
+    const validationError = validateTimeEntryInput({
+      startTime: editForm.startTime,
+      endTime: editForm.endTime || null,
+      breakMinutes: Number(editForm.breakMinutes) || 0,
+      orderId: editForm.orderId || null,
+      activity: editForm.activity,
+      notes: editForm.notes,
+      requireEndTime: Boolean(editForm.endTime),
+    });
+    if (validationError) {
+      setFormMsg(validationError);
+      return;
+    }
+
     setSaving(true);
     const res = await fetch(`/api/monteur/time/${entryId}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
+        orderId: editForm.orderId || null,
+        activity: editForm.activity.trim() || null,
         startTime: new Date(editForm.startTime).toISOString(),
         endTime: editForm.endTime ? new Date(editForm.endTime).toISOString() : null,
         breakMinutes: Number(editForm.breakMinutes) || 0,
@@ -147,6 +236,7 @@ export function StundenzettelView({ title = "Stundenzettel" }: { title?: string 
     setSaving(false);
     if (data.success) {
       setEditingId(null);
+      toast.success("Zeiteintrag aktualisiert");
       loadEntries();
     } else {
       setFormMsg(data.error ?? "Speichern fehlgeschlagen");
@@ -158,6 +248,7 @@ export function StundenzettelView({ title = "Stundenzettel" }: { title?: string 
     const res = await fetch(`/api/monteur/time/${entryId}`, { method: "DELETE" });
     const data = await res.json();
     if (data.success) {
+      toast.success("Zeiteintrag gelöscht");
       loadEntries();
     } else {
       setFormMsg(data.error ?? "Löschen fehlgeschlagen");
@@ -170,7 +261,9 @@ export function StundenzettelView({ title = "Stundenzettel" }: { title?: string 
         <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
           <Clock className="h-6 w-6 text-[#0d5c63]" /> {title}
         </h1>
-        <p className="text-sm text-slate-500 mt-1">Arbeitszeiten erfassen und einsehen</p>
+        <p className="text-sm text-slate-500 mt-1">
+          Arbeitszeiten mit oder ohne Auftrag erfassen
+        </p>
         <input
           type="date"
           value={weekStart}
@@ -188,34 +281,83 @@ export function StundenzettelView({ title = "Stundenzettel" }: { title?: string 
             <p className="text-sm text-slate-600">Summe diese Woche</p>
             <p className="text-2xl font-bold text-[#0d5c63]">{totalHours} Stunden</p>
           </div>
-          <Button type="button" variant="action" size="sm" onClick={() => setShowForm((v) => !v)}>
+          <Button
+            type="button"
+            variant="action"
+            size="sm"
+            onClick={() => {
+              setFormMsg("");
+              setShowForm((v) => !v);
+            }}
+          >
             <Plus className="h-4 w-4 mr-1" /> Zeit erfassen
           </Button>
         </div>
-        <p className="text-xs text-slate-400 mt-2">
-          Alternativ: Im Tagesplan bei einem Auftrag &quot;Pause erfassen&quot; oder Zeiten beim Abschluss.
-        </p>
       </Card>
 
       {showForm && (
         <Card title="Neue Zeitbuchung">
           <form onSubmit={submitTime} className="space-y-3">
             <div>
-              <label className="text-sm font-medium">Auftrag *</label>
+              <label className="text-sm font-medium">Auftrag (optional)</label>
+              {ordersLoading ? (
+                <p className="text-xs text-slate-400 mt-1">Aufträge werden geladen…</p>
+              ) : ordersError ? (
+                <p className="text-xs text-red-600 mt-1">{ordersError}</p>
+              ) : orders.length === 0 ? (
+                <p className="text-xs text-amber-700 mt-1 bg-amber-50 rounded-lg px-3 py-2">
+                  Keine Aufträge zur Auswahl. Du kannst die Zeit trotzdem ohne Auftrag
+                  erfassen — bitte Tätigkeit oder Notiz angeben.
+                </p>
+              ) : (
+                <>
+                  {orders.length > 8 && (
+                    <Input
+                      className="mt-1"
+                      placeholder="Auftrag suchen…"
+                      value={orderSearch}
+                      onChange={(e) => setOrderSearch(e.target.value)}
+                    />
+                  )}
+                  <select
+                    className="w-full mt-1 h-10 rounded-lg border border-slate-300 px-3 text-sm"
+                    value={form.orderId}
+                    onChange={(e) => setForm({ ...form, orderId: e.target.value })}
+                  >
+                    <option value="">— Ohne Auftrag —</option>
+                    {filteredOrders.map((o) => (
+                      <option key={o.id} value={o.id}>
+                        {o.orderNumber}
+                        {o.customer?.lastName ? ` · ${o.customer.lastName}` : ""}
+                        {o.title ? ` · ${o.title}` : ""}
+                      </option>
+                    ))}
+                  </select>
+                  {filteredOrders.length === 0 && (
+                    <p className="text-xs text-slate-400 mt-1">Keine Treffer für die Suche.</p>
+                  )}
+                </>
+              )}
+            </div>
+
+            <div>
+              <label className="text-sm font-medium">
+                Tätigkeit {!form.orderId && "*"}
+              </label>
               <select
                 className="w-full mt-1 h-10 rounded-lg border border-slate-300 px-3 text-sm"
-                value={form.orderId}
-                onChange={(e) => setForm({ ...form, orderId: e.target.value })}
-                required
+                value={form.activity}
+                onChange={(e) => setForm({ ...form, activity: e.target.value })}
               >
-                <option value="">— Auftrag wählen —</option>
-                {orders.map((o) => (
-                  <option key={o.id} value={o.id}>
-                    {o.orderNumber} · {o.customer?.lastName ?? ""}
+                <option value="">— wählen —</option>
+                {TIME_ENTRY_ACTIVITIES.map((a) => (
+                  <option key={a} value={a}>
+                    {a}
                   </option>
                 ))}
               </select>
             </div>
+
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
                 <label className="text-sm font-medium">Beginn *</label>
@@ -228,15 +370,17 @@ export function StundenzettelView({ title = "Stundenzettel" }: { title?: string 
                 />
               </div>
               <div>
-                <label className="text-sm font-medium">Ende (optional)</label>
+                <label className="text-sm font-medium">Ende *</label>
                 <input
                   type="datetime-local"
                   className="w-full mt-1 h-10 rounded-lg border border-slate-300 px-3 text-sm"
                   value={form.endTime}
                   onChange={(e) => setForm({ ...form, endTime: e.target.value })}
+                  required
                 />
               </div>
             </div>
+
             <Input
               label="Pause (Minuten)"
               type="number"
@@ -244,17 +388,34 @@ export function StundenzettelView({ title = "Stundenzettel" }: { title?: string 
               value={form.breakMinutes}
               onChange={(e) => setForm({ ...form, breakMinutes: e.target.value })}
             />
+
+            {previewHours != null && (
+              <p className="text-sm text-slate-600">
+                Berechnete Arbeitszeit:{" "}
+                <span className="font-semibold text-[#0d5c63]">{previewHours.toFixed(2)} h</span>
+              </p>
+            )}
+
             <Textarea
-              label="Notiz (optional)"
+              label={form.orderId ? "Notiz (optional)" : "Notiz (oder Tätigkeit)"}
               rows={2}
               value={form.notes}
               onChange={(e) => setForm({ ...form, notes: e.target.value })}
             />
+
             {formMsg && (
-              <p className={`text-sm ${formMsg.includes("erfasst") ? "text-green-700" : "text-red-600"}`}>
+              <p
+                className={`text-sm ${
+                  formMsg.toLowerCase().includes("gespeichert") ||
+                  formMsg.toLowerCase().includes("erfasst")
+                    ? "text-green-700"
+                    : "text-red-600"
+                }`}
+              >
                 {formMsg}
               </p>
             )}
+
             <div className="flex gap-2">
               <Button type="submit" variant="action" disabled={saving}>
                 {saving ? "Speichern…" : "Speichern"}
@@ -267,7 +428,12 @@ export function StundenzettelView({ title = "Stundenzettel" }: { title?: string 
         </Card>
       )}
 
-      {error && <p className="text-sm text-red-600 bg-red-50 rounded-lg px-3 py-2">{error}</p>}
+      {error && (
+        <p className="text-sm text-red-600 bg-red-50 rounded-lg px-3 py-2">{error}</p>
+      )}
+      {formMsg && !showForm && (
+        <p className="text-sm text-red-600 bg-red-50 rounded-lg px-3 py-2">{formMsg}</p>
+      )}
 
       <Card>
         {entries.length === 0 ? (
@@ -278,9 +444,40 @@ export function StundenzettelView({ title = "Stundenzettel" }: { title?: string 
               <div key={e.id} className="py-3">
                 {editingId === e.id ? (
                   <div className="space-y-3">
-                    <p className="font-medium text-sm">
-                      {e.order.orderNumber} · {e.order.customer.lastName}
-                    </p>
+                    <div>
+                      <label className="text-xs font-medium">Auftrag</label>
+                      <select
+                        className="w-full mt-1 h-9 rounded-lg border border-slate-300 px-2 text-sm"
+                        value={editForm.orderId}
+                        onChange={(ev) =>
+                          setEditForm({ ...editForm, orderId: ev.target.value })
+                        }
+                      >
+                        <option value="">— Ohne Auftrag —</option>
+                        {orders.map((o) => (
+                          <option key={o.id} value={o.id}>
+                            {o.orderNumber} · {o.customer?.lastName ?? ""}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div>
+                      <label className="text-xs font-medium">Tätigkeit</label>
+                      <select
+                        className="w-full mt-1 h-9 rounded-lg border border-slate-300 px-2 text-sm"
+                        value={editForm.activity}
+                        onChange={(ev) =>
+                          setEditForm({ ...editForm, activity: ev.target.value })
+                        }
+                      >
+                        <option value="">—</option>
+                        {TIME_ENTRY_ACTIVITIES.map((a) => (
+                          <option key={a} value={a}>
+                            {a}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div>
                         <label className="text-xs font-medium">Beginn</label>
@@ -288,7 +485,9 @@ export function StundenzettelView({ title = "Stundenzettel" }: { title?: string 
                           type="datetime-local"
                           className="w-full mt-1 h-9 rounded-lg border border-slate-300 px-2 text-sm"
                           value={editForm.startTime}
-                          onChange={(ev) => setEditForm({ ...editForm, startTime: ev.target.value })}
+                          onChange={(ev) =>
+                            setEditForm({ ...editForm, startTime: ev.target.value })
+                          }
                         />
                       </div>
                       <div>
@@ -297,7 +496,9 @@ export function StundenzettelView({ title = "Stundenzettel" }: { title?: string 
                           type="datetime-local"
                           className="w-full mt-1 h-9 rounded-lg border border-slate-300 px-2 text-sm"
                           value={editForm.endTime}
-                          onChange={(ev) => setEditForm({ ...editForm, endTime: ev.target.value })}
+                          onChange={(ev) =>
+                            setEditForm({ ...editForm, endTime: ev.target.value })
+                          }
                         />
                       </div>
                     </div>
@@ -306,58 +507,81 @@ export function StundenzettelView({ title = "Stundenzettel" }: { title?: string 
                       type="number"
                       min={0}
                       value={editForm.breakMinutes}
-                      onChange={(ev) => setEditForm({ ...editForm, breakMinutes: ev.target.value })}
+                      onChange={(ev) =>
+                        setEditForm({ ...editForm, breakMinutes: ev.target.value })
+                      }
                     />
                     <Textarea
                       label="Notiz"
                       rows={2}
                       value={editForm.notes}
-                      onChange={(ev) => setEditForm({ ...editForm, notes: ev.target.value })}
+                      onChange={(ev) =>
+                        setEditForm({ ...editForm, notes: ev.target.value })
+                      }
                     />
                     <div className="flex gap-2">
-                      <Button type="button" size="sm" variant="action" disabled={saving} onClick={() => saveEdit(e.id)}>
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="action"
+                        disabled={saving}
+                        onClick={() => saveEdit(e.id)}
+                      >
                         Speichern
                       </Button>
-                      <Button type="button" size="sm" variant="outline" onClick={() => setEditingId(null)}>
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="outline"
+                        onClick={() => setEditingId(null)}
+                      >
                         Abbrechen
                       </Button>
                     </div>
                   </div>
                 ) : (
-                  <>
-                    <div className="flex items-start justify-between gap-2">
-                      <div>
-                        <p className="font-medium text-sm">
-                          {e.order.orderNumber} · {e.order.customer.lastName}
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="min-w-0">
+                      <p className="font-medium text-sm">{entryLabel(e)}</p>
+                      {e.activity && e.order && (
+                        <p className="text-xs text-slate-500">{e.activity}</p>
+                      )}
+                      <p className="text-xs text-slate-500 mt-0.5">
+                        {formatDateTime(e.startTime)}
+                        {e.endTime ? ` – ${formatDateTime(e.endTime)}` : " (offen)"}
+                        {(e.breakMinutes ?? 0) > 0 && ` · ${e.breakMinutes} Min. Pause`}
+                      </p>
+                      {e.notes && (
+                        <p className="text-xs text-slate-400 italic">{e.notes}</p>
+                      )}
+                      <div className="flex flex-wrap items-center gap-2 mt-1">
+                        <p className="text-sm font-semibold text-[#0d5c63]">
+                          {entryHours(e)}
                         </p>
-                        <p className="text-xs text-slate-500 mt-0.5">
-                          {formatDateTime(e.startTime)}
-                          {e.endTime ? ` – ${formatDateTime(e.endTime)}` : " (offen)"}
-                          {(e.breakMinutes ?? 0) > 0 && ` · ${e.breakMinutes} Min. Pause`}
-                        </p>
-                        {e.notes && <p className="text-xs text-slate-400 italic">{e.notes}</p>}
-                        <p className="text-sm font-semibold text-[#0d5c63] mt-1">{entryHours(e)}</p>
-                      </div>
-                      <div className="flex gap-1 shrink-0">
-                        <button
-                          type="button"
-                          onClick={() => startEdit(e)}
-                          className="p-2 text-slate-400 hover:text-[#0d5c63]"
-                          aria-label="Bearbeiten"
-                        >
-                          <Pencil className="h-4 w-4" />
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => deleteEntry(e.id)}
-                          className="p-2 text-slate-400 hover:text-red-600"
-                          aria-label="Löschen"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </button>
+                        <Badge variant="outline" className="text-[10px]">
+                          {TIME_ENTRY_STATUS_LABELS[e.status] ?? e.status ?? "Offen"}
+                        </Badge>
                       </div>
                     </div>
-                  </>
+                    <div className="flex gap-1 shrink-0">
+                      <button
+                        type="button"
+                        onClick={() => startEdit(e)}
+                        className="p-2 text-slate-400 hover:text-[#0d5c63]"
+                        aria-label="Bearbeiten"
+                      >
+                        <Pencil className="h-4 w-4" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => deleteEntry(e.id)}
+                        className="p-2 text-slate-400 hover:text-red-600"
+                        aria-label="Löschen"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </div>
                 )}
               </div>
             ))}

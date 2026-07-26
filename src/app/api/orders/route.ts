@@ -15,26 +15,49 @@ export async function GET(request: NextRequest) {
   const status = searchParams.get("status");
   const search = searchParams.get("search");
 
-  const orders = await prisma.order.findMany({
-    where: {
-      tenantId: auth.tenantId,
-      ...(status ? { status: status as never } : {}),
-      ...(search
-        ? {
-            OR: [
-              { orderNumber: { contains: search, mode: "insensitive" } },
-              { customer: { firstName: { contains: search, mode: "insensitive" } } },
-              { customer: { lastName: { contains: search, mode: "insensitive" } } },
-            ],
-          }
-        : {}),
-    },
-    include: ORDER_LIST_INCLUDE,
-    orderBy: { createdAt: "desc" },
-    take: 100,
-  });
+  const where = {
+    tenantId: auth.tenantId,
+    ...(status ? { status: status as never } : {}),
+    ...(search
+      ? {
+          OR: [
+            { orderNumber: { contains: search, mode: "insensitive" as const } },
+            { customer: { firstName: { contains: search, mode: "insensitive" as const } } },
+            { customer: { lastName: { contains: search, mode: "insensitive" as const } } },
+          ],
+        }
+      : {}),
+  };
 
-  return apiSuccess(orders);
+  try {
+    const orders = await prisma.order.findMany({
+      where,
+      include: ORDER_LIST_INCLUDE,
+      orderBy: { createdAt: "desc" },
+      take: 100,
+    });
+    return apiSuccess(orders);
+  } catch (err) {
+    // Fallback falls orderTypeDefinition im laufenden Prisma-Client noch fehlt
+    const message = err instanceof Error ? err.message : String(err);
+    if (!/orderTypeDefinition|orderTypeLabel|orderTypeId/i.test(message)) {
+      console.error("[orders GET]", err);
+      return apiError("Aufträge konnten nicht geladen werden", 500);
+    }
+    console.warn(
+      "[orders GET] Fallback ohne orderTypeDefinition — bitte prisma generate / Dev-Server neu starten:",
+      message
+    );
+    const { orderTypeDefinition: _ignored, ...legacyInclude } = ORDER_LIST_INCLUDE;
+    void _ignored;
+    const orders = await prisma.order.findMany({
+      where,
+      include: legacyInclude,
+      orderBy: { createdAt: "desc" },
+      take: 100,
+    });
+    return apiSuccess(orders);
+  }
 }
 
 export async function POST(request: NextRequest) {

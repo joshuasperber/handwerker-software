@@ -97,6 +97,18 @@ enum QuestionType {
   NUMBER
 }
 
+enum CustomerType {
+  PRIVAT
+  GEWERBLICH
+}
+
+enum TaxTreatmentType {
+  STANDARD_VAT
+  REVERSE_CHARGE
+  BUILDING_EXEMPTION
+  MANUAL_REVIEW
+}
+
 model Tenant {
   id              String   @id @default(cuid())
   slug            String   @unique
@@ -118,6 +130,7 @@ model Tenant {
   customers          Customer[]
   properties         Property[]
   services           Service[]
+  orderTypeDefinitions OrderTypeDefinition[]
   employees          Employee[]
   orders             Order[]
   appointments       Appointment[]
@@ -149,13 +162,21 @@ model Tenant {
   inAppNotifications    Notification[]
   notificationSettings NotificationSettings?
   jobRuns              JobRun[]
+  financeSettings      FinanceSettings?
+  expenses             Expense[]
+  plannedInvestments   PlannedInvestment[]
+  aiChatSessions       AiChatSession[]
+  projects             Project[]
 }
 
 model User {
   id           String   @id @default(cuid())
   tenantId     String
   email        String
-  passwordHash String
+  /// Legacy bcrypt hash — optional nach Umstellung auf Supabase Auth.
+  passwordHash String?
+  /// Supabase Auth user id (auth.users.id).
+  supabaseUserId String? @unique
   firstName    String
   lastName     String
   phone        String?
@@ -182,9 +203,16 @@ model User {
   orderSharesReceived OrderShare[] @relation("ShareRecipient")
   orderSharesCreated  OrderShare[] @relation("ShareCreator")
   notifications       Notification[]
+  expensesCreated     Expense[]
+  aiChatSessions      AiChatSession[]
+  stockMovementsCreated StockMovement[]
+  projectNotesCreated   ProjectNote[]
+  projectFilesUploaded  ProjectFile[]
+  projectCostsCreated   ProjectCost[]
 
   @@unique([tenantId, email])
   @@index([tenantId, role])
+  @@index([supabaseUserId])
 }
 
 model Customer {
@@ -196,6 +224,14 @@ model Customer {
   email       String
   phone       String?
   company     String?
+  customerType CustomerType @default(PRIVAT)
+  contactPerson String?
+  vatId       String?
+  taxNumber   String?
+  billingStreet String?
+  billingZipCode String?
+  billingCity String?
+  taxNotes    String?
   notes       String?
   gdprConsent Boolean  @default(false)
   gdprConsentAt DateTime?
@@ -209,9 +245,30 @@ model Customer {
   properties Property[]
   orders        Order[]
   calculations  Calculation[]
+  taxExemptionCertificate TaxExemptionCertificate?
+  expenses Expense[]
+  stockMovements StockMovement[]
+  projects Project[]
 
   @@unique([tenantId, email])
   @@index([tenantId])
+}
+
+model TaxExemptionCertificate {
+  id              String   @id @default(cuid())
+  customerId      String   @unique
+  hasCertificate  Boolean  @default(false)
+  issuingTaxOffice String?
+  validFrom       DateTime?
+  validTo         DateTime?
+  certificateNumber String?
+  documentStorageKey String?
+  documentFileName   String?
+  notes           String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
 }
 
 model Property {
@@ -305,6 +362,8 @@ model Employee {
   staffRequests   StaffAssignmentRequest[]
   orderPhases     OrderPhase[]
   assignedVehicles Vehicle[]              @relation("EmployeeVehicle")
+  stockMovements  StockMovement[]
+  projectMemberships ProjectMember[]
 }
 
 model EmployeeQualification {
@@ -353,6 +412,27 @@ model ServiceArea {
   @@index([tenantId])
 }
 
+model OrderTypeDefinition {
+  id        String   @id @default(cuid())
+  tenantId  String
+  name      String
+  sortOrder Int      @default(0)
+  isActive  Boolean  @default(true)
+  /// „Sonstiges“: beim Auftrag erscheint ein Freitextfeld.
+  isOther   Boolean  @default(false)
+  /// Mapping auf das frühere OrderType-Enum (Migration / Kompatibilität).
+  legacyKey String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  tenant Tenant  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  orders Order[]
+
+  @@unique([tenantId, name])
+  @@index([tenantId, isActive, sortOrder])
+  @@index([tenantId, legacyKey])
+}
+
 model Order {
   id              String      @id @default(cuid())
   tenantId        String
@@ -360,7 +440,13 @@ model Order {
   propertyId      String
   orderNumber     String
   title           String?
+  /// Legacy-Enum – wird weitergeschrieben, wenn der Katalog-Typ ein legacyKey hat.
   orderType       OrderType   @default(REPARATUR)
+  orderTypeId     String?
+  /// Anzeige-Snapshot beim Speichern (bleibt bei Umbenennung im Katalog erhalten).
+  orderTypeLabel  String?
+  /// Freitext, wenn Auftragstyp „Sonstiges“ (isOther) gewählt wurde.
+  orderTypeCustom String?
   status          OrderStatus   @default(NEUE_ANFRAGE)
   priority        OrderPriority @default(NORMAL)
   materialStatus  MaterialOrderStatus @default(NOT_CHECKED)
@@ -377,12 +463,14 @@ model Order {
   invoicedAt      DateTime?
   teamId          String?
   vehicleId       String?
+  projectId       String?
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
 
   tenant        Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   customer      Customer        @relation(fields: [customerId], references: [id])
   property      Property        @relation(fields: [propertyId], references: [id])
+  orderTypeDefinition OrderTypeDefinition? @relation(fields: [orderTypeId], references: [id], onDelete: SetNull)
   services      OrderService[]
   appointments  Appointment[]
   files         FileUpload[]
@@ -399,14 +487,21 @@ model Order {
   planMarkers   PlanMarker[]
   team          Team?           @relation(fields: [teamId], references: [id])
   vehicle       Vehicle?        @relation(fields: [vehicleId], references: [id])
+  project       Project?        @relation(fields: [projectId], references: [id], onDelete: SetNull)
   staffRequests StaffAssignmentRequest[]
   shares        OrderShare[]
+  expenses      Expense[]
+  projectNotes  ProjectNote[]
+  projectFiles  ProjectFile[]
+  projectCosts  ProjectCost[]
 
   @@unique([tenantId, orderNumber])
   @@index([tenantId, status])
   @@index([tenantId, createdAt])
   @@index([tenantId, materialStatus])
   @@index([tenantId, scheduledStart, status])
+  @@index([projectId])
+  @@index([orderTypeId])
 }
 
 model OrderService {
@@ -510,20 +605,32 @@ model FileUpload {
   @@index([orderPhaseId])
 }
 
-model TimeEntry {
-  id          String    @id @default(cuid())
-  orderId     String
-  employeeId  String
-  startTime   DateTime
-  endTime     DateTime?
-  breakMinutes Int      @default(0)
-  notes       String?
-  createdAt   DateTime  @default(now())
+enum TimeEntryStatus {
+  OPEN
+  REVIEWED
+  APPROVED
+}
 
-  order    Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+model TimeEntry {
+  id           String          @id @default(cuid())
+  orderId      String?
+  employeeId   String
+  startTime    DateTime
+  endTime      DateTime?
+  breakMinutes Int             @default(0)
+  /** Tätigkeit, z. B. Lagerarbeit, Werkstatt — Pflicht wenn kein Auftrag */
+  activity     String?
+  notes        String?
+  status       TimeEntryStatus @default(OPEN)
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+
+  order    Order?   @relation(fields: [orderId], references: [id], onDelete: SetNull)
   employee Employee @relation(fields: [employeeId], references: [id])
 
   @@index([orderId])
+  @@index([employeeId, startTime])
+  @@index([status])
 }
 
 model MaterialUsage {
@@ -900,6 +1007,7 @@ model Calculation {
   tenantId    String
   customerId  String?
   orderId     String?
+  projectId   String?
   title       String?
   status      CalculationStatus @default(DRAFT)
   currentStep Int               @default(0)
@@ -928,6 +1036,11 @@ model Calculation {
   totalBillableHours      Float @default(0)
   profitabilityStatus     String @default("unknown")
 
+  /// Kundenausgabe: Festpreis statt Einzelpositionen (interne Kalkulation bleibt erhalten)
+  useFixedPrice           Boolean @default(false)
+  fixedPriceNet           Float?
+  fixedPriceLabel         String?
+
   snapshotJson Json?
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
@@ -935,6 +1048,7 @@ model Calculation {
   tenant           Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   customer         Customer?           @relation(fields: [customerId], references: [id])
   order            Order?              @relation(fields: [orderId], references: [id])
+  project          Project?            @relation(fields: [projectId], references: [id], onDelete: SetNull)
   laborItems       LaborItem[]
   materialItems    MaterialItem[]
   machineUsages    MachineUsageItem[]
@@ -949,6 +1063,7 @@ model Calculation {
 
   @@index([tenantId, status])
   @@index([tenantId, createdAt])
+  @@index([projectId])
 }
 
 model LaborItem {
@@ -970,6 +1085,7 @@ model LaborItem {
 model MaterialItem {
   id                   String   @id @default(cuid())
   calculationId        String
+  articleId            String?
   name                 String
   description          String?
   quantity             Float
@@ -986,6 +1102,7 @@ model MaterialItem {
   updatedAt            DateTime @updatedAt
 
   calculation Calculation @relation(fields: [calculationId], references: [id], onDelete: Cascade)
+  article     Article?    @relation(fields: [articleId], references: [id], onDelete: SetNull)
 }
 
 model MachineUsageItem {
@@ -1109,7 +1226,10 @@ model VATSettings {
   id             String   @id @default(cuid())
   calculationId  String   @unique
   vatRatePercent Float    @default(19)
+  taxTreatment   TaxTreatmentType @default(STANDARD_VAT)
   reverseCharge  Boolean  @default(false)
+  reverseChargeConfirmed Boolean @default(false)
+  includeSection13bNote  Boolean @default(true)
   taxExempt      Boolean  @default(false)
   vatNote        String?
   createdAt      DateTime @default(now())
@@ -1325,6 +1445,7 @@ model Article {
   sku              String?
   unit             String          @default("Stk")
   category         String?
+  description      String?
   articleType      ArticleType     @default(MATERIAL)
   minimumStock     Float           @default(0)
   targetStock      Float           @default(0)
@@ -1333,6 +1454,7 @@ model Article {
   reorderStrategy  ReorderStrategy @default(MANUELL)
   supplierName     String?
   purchasePriceNet Float?
+  salesPriceNet    Float?
   isActive         Boolean         @default(true)
   createdAt        DateTime        @default(now())
   updatedAt        DateTime        @updatedAt
@@ -1346,6 +1468,8 @@ model Article {
   purchaseOrderLines PurchaseOrderLine[]
   planMarkers        PlanMarker[]
   manualReorderSuggestions ManualReorderSuggestion[]
+  materialItems    MaterialItem[]
+  projectCosts     ProjectCost[]
 
   @@index([tenantId, isActive])
   @@index([tenantId, category])
@@ -1391,18 +1515,38 @@ model StockMovement {
   articleId         String
   storageLocationId String
   orderId           String?
+  customerId        String?
+  employeeId        String?
   movementType      StockMovementType
+  /** Entnahme-/Zugangsgrund, z. B. VERKAUF, AUFTRAG, EINKAUF */
+  reason            String?
   quantity          Float
+  /** Einkaufspreis je Einheit zum Buchungszeitpunkt (Dokumentation) */
+  purchasePriceNet  Float?
+  /** Verkaufs-/Weitergabepreis je Einheit (Dokumentation, keine Steuerbewertung) */
+  salePriceNet      Float?
+  supplierName      String?
   notes             String?
+  receiptFileName   String?
+  receiptMimeType   String?
+  receiptStorageKey String?
+  receiptSizeBytes  Int?
+  occurredAt        DateTime          @default(now())
   createdById       String?
   createdAt         DateTime          @default(now())
 
   article         Article         @relation(fields: [articleId], references: [id], onDelete: Cascade)
   storageLocation StorageLocation @relation(fields: [storageLocationId], references: [id], onDelete: Cascade)
   order           Order?          @relation(fields: [orderId], references: [id])
+  customer        Customer?       @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  employee        Employee?       @relation(fields: [employeeId], references: [id], onDelete: SetNull)
+  createdBy       User?           @relation(fields: [createdById], references: [id], onDelete: SetNull)
 
   @@index([tenantId, createdAt])
+  @@index([tenantId, occurredAt])
   @@index([articleId])
+  @@index([customerId])
+  @@index([employeeId])
 }
 
 model Reservation {
@@ -1480,6 +1624,9 @@ model OrderMaterialLine {
   quantityRequired  Float
   quantityConsumed  Float               @default(0)
   unit              String              @default("Stk")
+  /// Einkaufs-/Kalkulationspreis netto je Einheit (Override oder freies Material)
+  unitPriceNet      Float?
+  notes             String?
   isTool            Boolean             @default(false)
   isPacked          Boolean             @default(false)
   lineStatus        MaterialOrderStatus @default(NOT_CHECKED)
@@ -1613,6 +1760,7 @@ model Team {
   members TeamMember[]
   orders  Order[]
   orderPhases OrderPhase[]
+  projects Project[]
 
   @@index([tenantId])
 }
@@ -1769,6 +1917,129 @@ model OrderShare {
   @@index([tenantId])
 }
 
+// ─── Finanzübersicht (Belege, Ausgaben, Steuer-Radar) ───
+
+enum ExpenseCategory {
+  MATERIAL
+  MACHINERY
+  TOOLS
+  FUEL
+  VEHICLES
+  RENT
+  SUBCONTRACTOR
+  INSURANCE
+  SOFTWARE
+  TELECOM
+  OTHER
+}
+
+enum ExpensePaymentStatus {
+  OFFEN
+  BEZAHLT
+}
+
+enum FinanceRevenueBasis {
+  ISSUE_DATE
+  PAYMENT_DATE
+}
+
+enum PlannedInvestmentCategory {
+  MACHINE
+  TOOL
+  VEHICLE
+  SOFTWARE
+  MATERIAL_BULK
+  OTHER
+}
+
+enum PlannedInvestmentStatus {
+  PLANNED
+  PURCHASED
+  POSTPONED
+  CANCELLED
+}
+
+model FinanceSettings {
+  id                           String              @id @default(cuid())
+  tenantId                     String              @unique
+  /** Geschätzter Steuersatz in % (unverbindlich) */
+  estimatedTaxRate             Float               @default(30)
+  revenueBasis                 FinanceRevenueBasis @default(ISSUE_DATE)
+  includeUnpaidInvoices        Boolean             @default(false)
+  /** Standard-Betrachtungszeitraum: current_month | last_quarter | current_year */
+  defaultPeriodPreset          String              @default("current_month")
+  /** Zielwert für geplanten Monatsgewinn / steuerliche Orientierung (netto, optional) */
+  monthlyProfitTargetNet       Float?
+  /** Warnschwelle: geschätzter Gewinn darüber gilt als „hoch“ (optional, Standard 5000) */
+  highProfitWarningThreshold   Float?              @default(5000)
+  /** Faktor für Gewinnsprung ggü. Vormonat (Standard 1.5 = +50 %) */
+  profitSpikeFactor            Float               @default(1.5)
+  /** Ausgabenanteil unter diesem Wert bei hohen Einnahmen → Beleghinweis (0–1, Standard 0.15) */
+  lowExpenseRatioThreshold     Float               @default(0.15)
+  /** Mindest-Einnahmen netto, ab denen der niedrige Ausgabenanteil greift */
+  highRevenueThreshold         Float               @default(3000)
+  /** Optionale Warnschwelle für niedrige Liquidität (offene Forderungen vs. Orientierung) */
+  lowLiquidityWarningThreshold Float?
+  createdAt                    DateTime            @default(now())
+  updatedAt                    DateTime            @updatedAt
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+}
+
+model Expense {
+  id                String               @id @default(cuid())
+  tenantId          String
+  category          ExpenseCategory
+  description       String
+  netAmount         Float
+  vatAmount         Float                @default(0)
+  grossAmount       Float
+  expenseDate       DateTime
+  paymentStatus     ExpensePaymentStatus @default(BEZAHLT)
+  supplier          String?
+  orderId           String?
+  customerId        String?
+  projectId         String?
+  internalNote      String?
+  receiptFileName   String?
+  receiptMimeType   String?
+  receiptStorageKey String?
+  receiptSizeBytes  Int?
+  isInvestment      Boolean              @default(false)
+  createdById       String?
+  createdAt         DateTime             @default(now())
+  updatedAt         DateTime             @updatedAt
+
+  tenant   Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  order    Order?    @relation(fields: [orderId], references: [id], onDelete: SetNull)
+  customer Customer? @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  project  Project?  @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  createdBy User?    @relation(fields: [createdById], references: [id], onDelete: SetNull)
+  projectCosts ProjectCost[]
+
+  @@index([tenantId, expenseDate])
+  @@index([tenantId, category])
+  @@index([orderId])
+  @@index([projectId])
+}
+
+model PlannedInvestment {
+  id            String                    @id @default(cuid())
+  tenantId      String
+  title         String
+  plannedAmount Float
+  plannedDate   DateTime?
+  category      PlannedInvestmentCategory
+  note          String?
+  status        PlannedInvestmentStatus   @default(PLANNED)
+  createdAt     DateTime                  @default(now())
+  updatedAt     DateTime                  @updatedAt
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, status])
+}
+
 // ─── Betrieb: Jobs & Auth-Sicherheit ───
 
 enum JobRunStatus {
@@ -1815,4 +2086,170 @@ model LoginAttempt {
 
   @@index([email, createdAt])
   @@index([ip, createdAt])
+}
+
+// ─── KI-Assistent ───────────────────────────────────────────────────────────
+
+model AiChatSession {
+  id        String   @id @default(cuid())
+  tenantId  String
+  userId    String
+  title     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  tenant   Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  user     User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages AiChatMessage[]
+
+  @@index([tenantId, userId, updatedAt])
+}
+
+model AiChatMessage {
+  id        String   @id @default(cuid())
+  sessionId String
+  role      String
+  content   String   @db.Text
+  metadata  Json?
+  createdAt DateTime @default(now())
+
+  session AiChatSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId, createdAt])
+}
+
+// ─── Projekte (größere Vorhaben mit mehreren Aufträgen) ─────────────────────
+
+enum ProjectStatus {
+  GEPLANT
+  AKTIV
+  PAUSIERT
+  ABGESCHLOSSEN
+  ABGERECHNET
+  STORNIERT
+}
+
+enum ProjectCostSource {
+  MANUAL
+  INVENTORY
+  EXPENSE
+  ORDER_MATERIAL
+  RECEIPT
+  INVOICE
+  ORDER
+}
+
+model Project {
+  id            String        @id @default(cuid())
+  tenantId      String
+  name          String
+  customerId    String
+  addressStreet String?
+  addressZip    String?
+  addressCity   String?
+  startDate     DateTime?
+  endDate       DateTime?
+  status        ProjectStatus @default(GEPLANT)
+  description   String?
+  notes         String?
+  teamId        String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  tenant       Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  customer     Customer        @relation(fields: [customerId], references: [id])
+  team         Team?           @relation(fields: [teamId], references: [id], onDelete: SetNull)
+  orders       Order[]
+  members      ProjectMember[]
+  notesEntries ProjectNote[]
+  files        ProjectFile[]
+  costs        ProjectCost[]
+  calculations Calculation[]
+  expenses     Expense[]
+
+  @@index([tenantId, status])
+  @@index([tenantId, createdAt])
+  @@index([customerId])
+}
+
+model ProjectMember {
+  id         String   @id @default(cuid())
+  projectId  String
+  employeeId String
+  createdAt  DateTime @default(now())
+
+  project  Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  employee Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+
+  @@unique([projectId, employeeId])
+  @@index([employeeId])
+}
+
+model ProjectNote {
+  id          String   @id @default(cuid())
+  projectId   String
+  orderId     String?
+  body        String   @db.Text
+  createdById String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  order     Order?  @relation(fields: [orderId], references: [id], onDelete: SetNull)
+  createdBy User?   @relation(fields: [createdById], references: [id], onDelete: SetNull)
+
+  @@index([projectId, createdAt])
+  @@index([orderId])
+}
+
+model ProjectFile {
+  id           String       @id @default(cuid())
+  projectId    String
+  orderId      String?
+  uploadedById String?
+  fileName     String
+  mimeType     String
+  sizeBytes    Int
+  storageKey   String
+  category     FileCategory @default(BAUSTELLE)
+  description  String?
+  createdAt    DateTime     @default(now())
+
+  project    Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  order      Order?  @relation(fields: [orderId], references: [id], onDelete: SetNull)
+  uploadedBy User?   @relation(fields: [uploadedById], references: [id], onDelete: SetNull)
+
+  @@index([projectId, createdAt])
+  @@index([orderId])
+}
+
+model ProjectCost {
+  id             String            @id @default(cuid())
+  projectId      String
+  orderId        String?
+  source         ProjectCostSource @default(MANUAL)
+  description    String
+  quantity       Float             @default(1)
+  unit           String?
+  netAmount      Float
+  vatAmount      Float             @default(0)
+  grossAmount    Float
+  paidAmount     Float             @default(0)
+  isReimbursable Boolean           @default(false)
+  isBillable     Boolean           @default(true)
+  expenseId      String?
+  articleId      String?
+  createdById    String?
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  order     Order?   @relation(fields: [orderId], references: [id], onDelete: SetNull)
+  expense   Expense? @relation(fields: [expenseId], references: [id], onDelete: SetNull)
+  article   Article? @relation(fields: [articleId], references: [id], onDelete: SetNull)
+  createdBy User?    @relation(fields: [createdById], references: [id], onDelete: SetNull)
+
+  @@index([projectId, createdAt])
+  @@index([orderId])
+  @@index([expenseId])
 }

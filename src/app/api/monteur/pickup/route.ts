@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAuth, apiSuccess } from "@/lib/api";
-import { format, startOfDay, endOfDay } from "date-fns";
+import { format, startOfDay, endOfDay, parseISO } from "date-fns";
 import { buildPickupList } from "@/lib/monteur/pickup-list";
 
 export async function GET(request: NextRequest) {
@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
 
   const { searchParams } = new URL(request.url);
   const dateStr = searchParams.get("date") ?? format(new Date(), "yyyy-MM-dd");
-  const date = new Date(dateStr);
+  const date = parseISO(dateStr);
 
   const employee = await prisma.employee.findFirst({
     where: { userId: auth.id, tenantId: auth.tenantId },

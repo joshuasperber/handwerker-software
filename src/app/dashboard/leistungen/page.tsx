@@ -11,7 +11,8 @@ import { formatCurrency } from "@/lib/utils";
 import { CanAccess } from "@/components/auth/can-access";
 import { AddButton } from "@/components/ui/add-button";
 import { saveJson } from "@/lib/save-toast";
-import { Clock } from "lucide-react";
+import { Clock, Trash2, RotateCcw } from "lucide-react";
+import { toast } from "sonner";
 
 interface Service {
   id: string;
@@ -27,6 +28,7 @@ interface Service {
 export default function LeistungenPage() {
   const [services, setServices] = useState<Service[]>([]);
   const [showForm, setShowForm] = useState(false);
+  const [busyId, setBusyId] = useState<string | null>(null);
   const [form, setForm] = useState({
     name: "",
     description: "",
@@ -36,12 +38,16 @@ export default function LeistungenPage() {
   });
 
   function load() {
-    fetch("/api/services").then((r) => r.json()).then((d) => {
-      if (d.success) setServices(d.data.filter((s: Service) => s.isActive));
-    });
+    fetch("/api/services?includeInactive=1")
+      .then((r) => r.json())
+      .then((d) => {
+        if (d.success) setServices(d.data);
+      });
   }
 
-  useEffect(() => { load(); }, []);
+  useEffect(() => {
+    load();
+  }, []);
 
   async function createService(e: React.FormEvent) {
     e.preventDefault();
@@ -63,62 +69,208 @@ export default function LeistungenPage() {
     }
   }
 
+  async function removeService(service: Service) {
+    if (!confirm("Möchtest du diese Leistung wirklich löschen?")) return;
+
+    setBusyId(service.id);
+    const res = await fetch(`/api/services/${service.id}`, { method: "DELETE" });
+    const d = await res.json();
+    setBusyId(null);
+
+    if (!d.success) {
+      toast.error(d.error ?? "Löschen fehlgeschlagen");
+      return;
+    }
+
+    if (d.data.action === "deleted") {
+      toast.success(d.data.message ?? "Leistung gelöscht");
+    } else {
+      toast.success(d.data.message ?? "Leistung deaktiviert");
+    }
+    load();
+  }
+
+  async function reactivateService(service: Service) {
+    setBusyId(service.id);
+    const res = await fetch(`/api/services/${service.id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ isActive: true }),
+    });
+    const d = await res.json();
+    setBusyId(null);
+    if (d.success) {
+      toast.success("Leistung wieder aktiviert");
+      load();
+    } else {
+      toast.error(d.error ?? "Aktivieren fehlgeschlagen");
+    }
+  }
+
+  const active = services.filter((s) => s.isActive);
+  const inactive = services.filter((s) => !s.isActive);
+
+  function ServiceCard({ s }: { s: Service }) {
+    return (
+      <Card className={`hover:shadow-md transition-shadow ${!s.isActive ? "opacity-80" : ""}`}>
+        <div className="flex items-start justify-between gap-3">
+          <Link href={`/dashboard/leistungen/${s.id}`} className="min-w-0 flex-1">
+            <h3 className="font-semibold text-slate-900 hover:text-[#0d5c63]">{s.name}</h3>
+            {s.description && <p className="text-sm text-slate-500 mt-1">{s.description}</p>}
+          </Link>
+          <div className="flex items-center gap-2 shrink-0">
+            <span
+              className={`text-xs px-2 py-0.5 rounded-full ${
+                s.isActive ? "bg-green-100 text-green-700" : "bg-slate-100 text-slate-600"
+              }`}
+            >
+              {s.isActive ? "Aktiv" : "Deaktiviert"}
+            </span>
+            <CanAccess permission="services.write">
+              {s.isActive ? (
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className="text-red-600 border-red-200 hover:bg-red-50"
+                  disabled={busyId === s.id}
+                  aria-label={`${s.name} löschen`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    removeService(s);
+                  }}
+                >
+                  <Trash2 className="h-4 w-4 sm:mr-1" />
+                  <span className="hidden sm:inline">Löschen</span>
+                </Button>
+              ) : (
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  disabled={busyId === s.id}
+                  aria-label={`${s.name} wieder aktivieren`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    reactivateService(s);
+                  }}
+                >
+                  <RotateCcw className="h-4 w-4 sm:mr-1" />
+                  <span className="hidden sm:inline">Aktivieren</span>
+                </Button>
+              )}
+            </CanAccess>
+          </div>
+        </div>
+        <Link href={`/dashboard/leistungen/${s.id}`} className="block">
+          <div className="mt-3 flex flex-wrap gap-4 text-sm text-slate-500">
+            <span className="flex items-center gap-1">
+              <Clock className="h-3.5 w-3.5" /> {s.durationMinutes} Min.
+            </span>
+            {s.priceCents != null && <span>{formatCurrency(s.priceCents)}</span>}
+            {s.bufferMinutes > 0 && <span>Puffer: {s.bufferMinutes} Min.</span>}
+          </div>
+          <p className="text-xs text-[#0d5c63] mt-2">Stückliste bearbeiten →</p>
+        </Link>
+      </Card>
+    );
+  }
+
   return (
     <div>
       <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
         <div>
           <h1 className="text-2xl font-bold text-slate-900">Leistungskatalog</h1>
-          <p className="text-sm text-slate-500 mt-1">Leistungen mit Dauer, Preis und Stückliste für Aufträge</p>
+          <p className="text-sm text-slate-500 mt-1">
+            Leistungen mit Dauer, Preis und Stückliste für Aufträge
+          </p>
         </div>
         <CanAccess permission="services.write">
-          <AddButton onClick={() => setShowForm(!showForm)}>
-            Leistung hinzufügen
-          </AddButton>
+          <AddButton onClick={() => setShowForm(!showForm)}>Leistung hinzufügen</AddButton>
         </CanAccess>
       </div>
 
       <CanAccess permission="services.write">
-      {showForm && (
-        <Card title="Neue Leistung" className="mb-6">
-          <form onSubmit={createService} className="grid gap-3 sm:grid-cols-2">
-            <Input label="Bezeichnung *" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required className="sm:col-span-2" />
-            <Textarea label="Beschreibung" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={2} className="sm:col-span-2" />
-            <NumberInput label="Dauer (Min.)" required allowDecimal={false} min={0} value={form.durationMinutes} onValueChange={(v) => setForm({ ...form, durationMinutes: v })} />
-            <NumberInput label="Puffer (Min.)" allowDecimal={false} min={0} value={form.bufferMinutes} onValueChange={(v) => setForm({ ...form, bufferMinutes: v })} />
-            <NumberInput label="Listenpreis" suffix="€" value={form.priceEuro} onValueChange={(v) => setForm({ ...form, priceEuro: v })} />
-            <div className="sm:col-span-2 flex gap-2">
-              <Button type="submit" variant="action">Speichern</Button>
-              <Button type="button" variant="outline" onClick={() => setShowForm(false)}>Abbrechen</Button>
-            </div>
-          </form>
-        </Card>
-      )}
+        {showForm && (
+          <Card title="Neue Leistung" className="mb-6">
+            <form onSubmit={createService} className="grid gap-3 sm:grid-cols-2">
+              <Input
+                label="Bezeichnung *"
+                value={form.name}
+                onChange={(e) => setForm({ ...form, name: e.target.value })}
+                required
+                className="sm:col-span-2"
+              />
+              <Textarea
+                label="Beschreibung"
+                value={form.description}
+                onChange={(e) => setForm({ ...form, description: e.target.value })}
+                rows={2}
+                className="sm:col-span-2"
+              />
+              <NumberInput
+                label="Dauer (Min.)"
+                required
+                allowDecimal={false}
+                min={0}
+                value={form.durationMinutes}
+                onValueChange={(v) => setForm({ ...form, durationMinutes: v })}
+              />
+              <NumberInput
+                label="Puffer (Min.)"
+                allowDecimal={false}
+                min={0}
+                value={form.bufferMinutes}
+                onValueChange={(v) => setForm({ ...form, bufferMinutes: v })}
+              />
+              <NumberInput
+                label="Listenpreis"
+                suffix="€"
+                value={form.priceEuro}
+                onValueChange={(v) => setForm({ ...form, priceEuro: v })}
+              />
+              <div className="sm:col-span-2 flex gap-2">
+                <Button type="submit" variant="action">
+                  Speichern
+                </Button>
+                <Button type="button" variant="outline" onClick={() => setShowForm(false)}>
+                  Abbrechen
+                </Button>
+              </div>
+            </form>
+          </Card>
+        )}
       </CanAccess>
 
       <div className="grid gap-4">
-        {services.map((s) => (
-          <Link key={s.id} href={`/dashboard/leistungen/${s.id}`}>
-            <Card className="hover:shadow-md transition-shadow cursor-pointer">
-              <div className="flex items-start justify-between">
-                <div>
-                  <h3 className="font-semibold text-slate-900">{s.name}</h3>
-                  {s.description && <p className="text-sm text-slate-500 mt-1">{s.description}</p>}
-                </div>
-                <span className="text-xs px-2 py-0.5 rounded-full bg-green-100 text-green-700">Aktiv</span>
-              </div>
-              <div className="mt-3 flex flex-wrap gap-4 text-sm text-slate-500">
-                <span className="flex items-center gap-1"><Clock className="h-3.5 w-3.5" /> {s.durationMinutes} Min.</span>
-                {s.priceCents != null && <span>{formatCurrency(s.priceCents)}</span>}
-                {s.bufferMinutes > 0 && <span>Puffer: {s.bufferMinutes} Min.</span>}
-              </div>
-              <p className="text-xs text-[#0d5c63] mt-2">Stückliste bearbeiten →</p>
-            </Card>
-          </Link>
+        {active.map((s) => (
+          <ServiceCard key={s.id} s={s} />
         ))}
-        {!services.length && (
-          <Card><p className="text-center text-slate-500 py-8">Noch keine Leistungen. Legen Sie die erste an.</p></Card>
+        {!active.length && (
+          <Card>
+            <p className="text-center text-slate-500 py-8">
+              Noch keine aktiven Leistungen. Legen Sie die erste an.
+            </p>
+          </Card>
         )}
       </div>
+
+      {inactive.length > 0 && (
+        <div className="mt-10">
+          <h2 className="text-lg font-semibold text-slate-800 mb-1">Deaktiviert</h2>
+          <p className="text-sm text-slate-500 mb-4">
+            Diese Leistungen erscheinen nicht in neuen Aufträgen. Bestehende Aufträge und Belege
+            bleiben unverändert.
+          </p>
+          <div className="grid gap-4">
+            {inactive.map((s) => (
+              <ServiceCard key={s.id} s={s} />
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

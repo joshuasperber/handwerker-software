@@ -7,8 +7,11 @@ export function apiSuccess<T>(data: T, status = 200) {
   return NextResponse.json({ success: true, data }, { status });
 }
 
-export function apiError(message: string, status = 400) {
-  return NextResponse.json({ success: false, error: message }, { status });
+export function apiError(message: string, status = 400, data?: unknown) {
+  return NextResponse.json(
+    { success: false, error: message, ...(data !== undefined ? { data } : {}) },
+    { status }
+  );
 }
 
 export async function requireAuth(

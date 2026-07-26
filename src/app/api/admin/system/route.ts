@@ -9,6 +9,9 @@ export async function GET() {
   const health = await getSystemHealth(true);
 
   const recentRuns = await prisma.jobRun.findMany({
+    where: {
+      OR: [{ tenantId: auth.tenantId }, { tenantId: null }],
+    },
     orderBy: { startedAt: "desc" },
     take: 20,
     select: {

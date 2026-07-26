@@ -107,6 +107,10 @@ export interface IncomeTaxInput {
 
 export interface VATInput {
   vatRatePercent: number;
+  taxTreatment?: import("@/lib/tax/treatment").TaxTreatment;
+  reverseCharge?: boolean;
+  taxExempt?: boolean;
+  includeSection13bNote?: boolean;
 }
 
 export interface CalculationInput {

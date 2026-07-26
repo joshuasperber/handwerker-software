@@ -17,6 +17,9 @@ interface PriceCompositionProps {
     riskAmount?: number;
     profitAmount?: number;
     vatAmount?: number;
+    useFixedPrice?: boolean;
+    fixedPriceNet?: number | null;
+    fixedPriceLabel?: string | null;
     laborItems?: { totalNet: number; isVisibleToCustomer: boolean }[];
     materialItems?: { totalSalesNet: number; isVisibleToCustomer: boolean }[];
     travelCost?: { totalNet: number; isVisibleToCustomer: boolean } | null;
@@ -38,15 +41,22 @@ export function PriceCompositionPanel({ calc, onPreviewInvoice, onPreviewBreakdo
   if (calc.travelCost?.isVisibleToCustomer) visibleSum += calc.travelCost.totalNet;
 
   const hiddenAmount = Math.max(0, (calc.netSalesPrice ?? 0) - visibleSum);
+  const useFixedPrice = Boolean(calc.useFixedPrice);
+  const fixedNet =
+    useFixedPrice && calc.fixedPriceNet != null ? Number(calc.fixedPriceNet) : null;
+  const fixedLabel = calc.fixedPriceLabel?.trim() || "Festpreis";
 
   const steps = [
     { label: "Direkte Kosten", value: calc.directCosts ?? 0, hint: "Arbeit + Material + Maschinen + Beschaffung + Fahrt + Zusatz" },
     { label: "+ Gemeinkosten", value: calc.overheadAmount ?? 0 },
     { label: "+ Wagnis", value: calc.riskAmount ?? 0 },
     { label: "+ Gewinn", value: calc.profitAmount ?? 0, bold: true },
-    { label: "= Netto (Kundenpreis)", value: calc.netSalesPrice ?? 0, bold: true, accent: true },
+    { label: "= Netto kalkuliert", value: calc.netSalesPrice ?? 0, bold: true, accent: !useFixedPrice },
+    ...(useFixedPrice && fixedNet != null
+      ? [{ label: `= ${fixedLabel} (Kunde)`, value: fixedNet, bold: true, accent: true }]
+      : []),
     { label: "+ USt", value: calc.vatAmount ?? 0 },
-    { label: "= Brutto", value: calc.grossSalesPrice ?? 0, bold: true, accent: true },
+    { label: "= Brutto", value: calc.grossSalesPrice ?? 0, bold: true, accent: !useFixedPrice },
   ];
 
   return (
@@ -54,8 +64,9 @@ export function PriceCompositionPanel({ calc, onPreviewInvoice, onPreviewBreakdo
       <div>
         <h3 className="font-semibold text-slate-900">Wie entsteht die Summe?</h3>
         <p className="text-xs text-slate-500 mt-1 leading-relaxed">
-          Maschinen, Beschaffung, Gemeinkosten, Wagnis und Gewinn erscheinen nicht einzeln auf der Kundenrechnung,
-          fließen aber in den Nettopreis ein.
+          {useFixedPrice
+            ? "Die interne Kalkulation bleibt gespeichert. Am Kunden erscheint nur der gewählte Festpreis."
+            : "Maschinen, Beschaffung, Gemeinkosten, Wagnis und Gewinn erscheinen nicht einzeln auf der Kundenrechnung, fließen aber in den Nettopreis ein."}
         </p>
       </div>
 
@@ -71,16 +82,29 @@ export function PriceCompositionPanel({ calc, onPreviewInvoice, onPreviewBreakdo
         ))}
       </div>
 
-      <div className="grid grid-cols-2 gap-2 text-xs">
-        <div className="rounded-lg border border-green-200 bg-green-50 p-2">
-          <p className="text-green-800 font-medium">Sichtbar für Kunde</p>
-          <p className="text-green-900 font-semibold mt-0.5">{formatEuro(visibleSum)}</p>
+      {useFixedPrice && fixedNet != null ? (
+        <div className="rounded-lg border border-[#0d5c63]/30 bg-[#0d5c63]/5 p-2 text-xs">
+          <p className="font-medium text-[#0d5c63]">Kundenposition</p>
+          <p className="text-slate-800 mt-0.5">
+            {fixedLabel} – {formatEuro(fixedNet)}
+          </p>
+          <p className="text-slate-500 mt-1">
+            Differenz zur Kalkulation: {fixedNet - (calc.netSalesPrice ?? 0) >= 0 ? "+" : ""}
+            {formatEuro(fixedNet - (calc.netSalesPrice ?? 0))}
+          </p>
         </div>
-        <div className="rounded-lg border border-amber-200 bg-amber-50 p-2">
-          <p className="text-amber-800 font-medium">In Pauschale enthalten</p>
-          <p className="text-amber-900 font-semibold mt-0.5">{formatEuro(hiddenAmount)}</p>
+      ) : (
+        <div className="grid grid-cols-2 gap-2 text-xs">
+          <div className="rounded-lg border border-green-200 bg-green-50 p-2">
+            <p className="text-green-800 font-medium">Sichtbar für Kunde</p>
+            <p className="text-green-900 font-semibold mt-0.5">{formatEuro(visibleSum)}</p>
+          </div>
+          <div className="rounded-lg border border-amber-200 bg-amber-50 p-2">
+            <p className="text-amber-800 font-medium">In Pauschale enthalten</p>
+            <p className="text-amber-900 font-semibold mt-0.5">{formatEuro(hiddenAmount)}</p>
+          </div>
         </div>
-      </div>
+      )}
 
       <details className="text-xs text-slate-500">
         <summary className="cursor-pointer font-medium text-slate-700">Kostenblöcke im Detail</summary>

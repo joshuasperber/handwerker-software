@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAuth, apiSuccess } from "@/lib/api";
-import { format, startOfDay, endOfDay, startOfWeek, endOfWeek } from "date-fns";
+import { format, startOfDay, endOfDay, startOfWeek, endOfWeek, parseISO } from "date-fns";
 import type { ReservationStatus } from "@/generated/prisma/client";
 
 const OPEN_RESERVATION: ReservationStatus[] = ["VORGESCHLAGEN", "RESERVIERT"];
@@ -35,6 +35,10 @@ type ScheduleEntry = Awaited<
   ReturnType<typeof prisma.appointment.findMany<{ include: { order: { include: typeof orderInclude } } }>>
 >[number];
 
+function parseDateParam(dateStr: string): Date {
+  return parseISO(dateStr);
+}
+
 export async function GET(request: NextRequest) {
   const auth = await requireAuth("monteur.own");
   if (auth instanceof Response) return auth;
@@ -53,21 +57,30 @@ export async function GET(request: NextRequest) {
   let rangeEnd: Date;
 
   if (weekStartStr) {
-    const ws = startOfWeek(new Date(weekStartStr), { weekStartsOn: 1 });
+    const ws = startOfWeek(parseDateParam(weekStartStr), { weekStartsOn: 1 });
     rangeStart = startOfDay(ws);
     rangeEnd = endOfWeek(ws, { weekStartsOn: 1 });
   } else {
-    const date = new Date(dateStr);
+    const date = parseDateParam(dateStr);
     rangeStart = startOfDay(date);
     rangeEnd = endOfDay(date);
   }
 
+  const teamMemberships = await prisma.teamMember.findMany({
+    where: { employeeId: employee.id },
+    select: { teamId: true },
+  });
+  const teamIds = teamMemberships.map((m) => m.teamId);
+
   const appointments = await prisma.appointment.findMany({
     where: {
       tenantId: auth.tenantId,
-      employeeId: employee.id,
-      startTime: { gte: rangeStart, lte: rangeEnd },
       status: { not: "STORNIERT" },
+      startTime: { gte: rangeStart, lte: rangeEnd },
+      OR: [
+        { employeeId: employee.id },
+        ...(teamIds.length > 0 ? [{ order: { teamId: { in: teamIds } } }] : []),
+      ],
     },
     include: {
       order: { include: orderInclude },
@@ -76,13 +89,18 @@ export async function GET(request: NextRequest) {
     orderBy: { startTime: "asc" },
   });
 
+  const seenIds = new Set(appointments.map((a) => a.id));
+
   const phaseOnly = await prisma.orderPhase.findMany({
     where: {
-      assignedEmployeeId: employee.id,
       isEnabled: true,
       status: { notIn: ["ABGESCHLOSSEN", "STORNIERT", "UEBERSPRUNGEN"] },
       plannedStart: { gte: rangeStart, lte: rangeEnd },
       order: { tenantId: auth.tenantId },
+      OR: [
+        { assignedEmployeeId: employee.id },
+        ...(teamIds.length > 0 ? [{ assignedTeamId: { in: teamIds } }] : []),
+      ],
     },
     include: {
       order: { include: orderInclude },
@@ -102,7 +120,7 @@ export async function GET(request: NextRequest) {
       tenantId: auth.tenantId,
       orderId: p.orderId,
       orderPhaseId: p.id,
-      employeeId: employee.id,
+      employeeId: p.assignedEmployeeId ?? employee.id,
       startTime: p.plannedStart!,
       endTime: p.plannedEnd!,
       status: p.status === "IN_ARBEIT" ? "IN_ARBEIT" : "GEPLANT",
@@ -115,9 +133,9 @@ export async function GET(request: NextRequest) {
       orderPhase: { id: p.id, name: p.name },
     })) as ScheduleEntry[];
 
-  const merged = [...appointments, ...synthetic].sort(
-    (a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime()
-  );
+  const merged = [...appointments, ...synthetic]
+    .filter((a, i, arr) => arr.findIndex((x) => x.id === a.id) === i)
+    .sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime());
 
   if (weekStartStr) {
     const days: Record<string, typeof merged> = {};

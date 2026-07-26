@@ -1,8 +1,9 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -16,7 +17,9 @@ import {
 import { getCurrentPhase } from "@/lib/phase-status";
 import { CanAccess } from "@/components/auth/can-access";
 import { AddButton } from "@/components/ui/add-button";
+import { swrKeys, useApiSWR } from "@/lib/swr";
 import { Search } from "lucide-react";
+import { toast } from "sonner";
 
 interface Order {
   id: string;
@@ -33,7 +36,6 @@ interface Order {
 export default function AuftraegePage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [orders, setOrders] = useState<Order[]>([]);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState(searchParams.get("status") ?? "");
   const [tab, setTab] = useState<"aktiv" | "erledigt">(
@@ -41,7 +43,6 @@ export default function AuftraegePage() {
   );
 
   useEffect(() => {
-    // Filterzustand bewusst mit den URL-Parametern synchronisieren.
     const urlStatus = searchParams.get("status");
     if (urlStatus && urlStatus !== statusFilter) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -54,29 +55,44 @@ export default function AuftraegePage() {
     }
   }, [searchParams, statusFilter]);
 
+  const queryString = useMemo(() => {
+    const params = new URLSearchParams();
+    if (search) params.set("search", search);
+    if (statusFilter) params.set("status", statusFilter);
+    return params.toString();
+  }, [search, statusFilter]);
+
+  const { data: orders = [], error, isLoading } = useApiSWR<Order[]>(
+    swrKeys.orders(queryString)
+  );
+
+  useEffect(() => {
+    if (error) toast.error(error.message || "Aufträge konnten nicht geladen werden");
+  }, [error]);
+
   const visibleOrders = orders.filter((o) =>
     tab === "erledigt" ? isOrderDone(o.status) : !isOrderDone(o.status)
   );
   const activeCount = orders.filter((o) => !isOrderDone(o.status)).length;
   const doneCount = orders.filter((o) => isOrderDone(o.status)).length;
 
-  useEffect(() => {
-    const params = new URLSearchParams();
-    if (search) params.set("search", search);
-    if (statusFilter) params.set("status", statusFilter);
-
-    fetch(`/api/orders?${params}`)
-      .then((r) => r.json())
-      .then((data) => { if (data.success) setOrders(data.data); });
-  }, [search, statusFilter]);
-
   return (
     <div>
       <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
         <h1 className="text-2xl font-bold text-slate-900">Aufträge</h1>
-        <CanAccess permission="orders.write">
-          <AddButton href="/dashboard/auftraege/neu">Neuer Auftrag</AddButton>
-        </CanAccess>
+        <div className="flex flex-wrap items-center gap-2">
+          <CanAccess permission="orders.write">
+            <Link
+              href="/dashboard/auftraege/typen"
+              className="text-sm text-[#0d5c63] font-medium hover:underline px-2"
+            >
+              Auftragstypen
+            </Link>
+          </CanAccess>
+          <CanAccess permission="orders.write">
+            <AddButton href="/dashboard/auftraege/neu">Neuer Auftrag</AddButton>
+          </CanAccess>
+        </div>
       </div>
 
       <div className="flex flex-wrap gap-4 mb-6">
@@ -193,7 +209,10 @@ export default function AuftraegePage() {
               })}
             </tbody>
           </table>
-          {visibleOrders.length === 0 && (
+          {isLoading && visibleOrders.length === 0 && (
+            <p className="text-center text-slate-500 py-8">Aufträge werden geladen…</p>
+          )}
+          {!isLoading && visibleOrders.length === 0 && (
             <p className="text-center text-slate-500 py-8">
               {tab === "erledigt"
                 ? "Keine erledigten Aufträge."

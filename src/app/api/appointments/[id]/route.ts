@@ -3,6 +3,8 @@ import { prisma } from "@/lib/prisma";
 import { requireAuth, apiSuccess, apiError, getClientIp } from "@/lib/api";
 import { auditEntityChange, auditOrderStatusChange } from "@/lib/audit";
 import { findEmployeeScheduleConflict } from "@/lib/disposition/schedule-conflicts";
+import { requireTenantEmployee } from "@/lib/tenant-scope";
+import { areOrderChecklistsComplete } from "@/lib/orders/checklist";
 
 export async function PATCH(
   request: NextRequest,
@@ -43,6 +45,11 @@ export async function PATCH(
     if (conflict) return apiError(conflict.message, 409);
   }
 
+  if (employeeId !== undefined && employeeId !== null) {
+    const employee = await requireTenantEmployee(auth.tenantId, employeeId);
+    if (!employee) return apiError("Mitarbeiter nicht gefunden", 404);
+  }
+
   const appointment = await prisma.appointment.update({
     where: { id },
     data: {
@@ -80,11 +87,7 @@ export async function PATCH(
     let newOrderStatus = orderStatusMap[status];
 
     if (status === "ABGESCHLOSSEN") {
-      const checklists = existing.order.checklists;
-      const allRequiredDone =
-        checklists.length === 0 ||
-        checklists.filter((c) => c.label).every((c) => c.isChecked);
-      if (allRequiredDone) {
+      if (areOrderChecklistsComplete(existing.order.checklists)) {
         newOrderStatus = "ABRECHNUNGSBEREIT";
       }
     }

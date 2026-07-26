@@ -39,6 +39,7 @@ export type UserMinAggregateOutputType = {
   tenantId: string | null
   email: string | null
   passwordHash: string | null
+  supabaseUserId: string | null
   firstName: string | null
   lastName: string | null
   phone: string | null
@@ -58,6 +59,7 @@ export type UserMaxAggregateOutputType = {
   tenantId: string | null
   email: string | null
   passwordHash: string | null
+  supabaseUserId: string | null
   firstName: string | null
   lastName: string | null
   phone: string | null
@@ -77,6 +79,7 @@ export type UserCountAggregateOutputType = {
   tenantId: number
   email: number
   passwordHash: number
+  supabaseUserId: number
   firstName: number
   lastName: number
   phone: number
@@ -106,6 +109,7 @@ export type UserMinAggregateInputType = {
   tenantId?: true
   email?: true
   passwordHash?: true
+  supabaseUserId?: true
   firstName?: true
   lastName?: true
   phone?: true
@@ -125,6 +129,7 @@ export type UserMaxAggregateInputType = {
   tenantId?: true
   email?: true
   passwordHash?: true
+  supabaseUserId?: true
   firstName?: true
   lastName?: true
   phone?: true
@@ -144,6 +149,7 @@ export type UserCountAggregateInputType = {
   tenantId?: true
   email?: true
   passwordHash?: true
+  supabaseUserId?: true
   firstName?: true
   lastName?: true
   phone?: true
@@ -249,7 +255,8 @@ export type UserGroupByOutputType = {
   id: string
   tenantId: string
   email: string
-  passwordHash: string
+  passwordHash: string | null
+  supabaseUserId: string | null
   firstName: string
   lastName: string
   phone: string | null
@@ -291,7 +298,8 @@ export type UserWhereInput = {
   id?: Prisma.StringFilter<"User"> | string
   tenantId?: Prisma.StringFilter<"User"> | string
   email?: Prisma.StringFilter<"User"> | string
-  passwordHash?: Prisma.StringFilter<"User"> | string
+  passwordHash?: Prisma.StringNullableFilter<"User"> | string | null
+  supabaseUserId?: Prisma.StringNullableFilter<"User"> | string | null
   firstName?: Prisma.StringFilter<"User"> | string
   lastName?: Prisma.StringFilter<"User"> | string
   phone?: Prisma.StringNullableFilter<"User"> | string | null
@@ -317,13 +325,20 @@ export type UserWhereInput = {
   orderSharesReceived?: Prisma.OrderShareListRelationFilter
   orderSharesCreated?: Prisma.OrderShareListRelationFilter
   notifications?: Prisma.NotificationListRelationFilter
+  expensesCreated?: Prisma.ExpenseListRelationFilter
+  aiChatSessions?: Prisma.AiChatSessionListRelationFilter
+  stockMovementsCreated?: Prisma.StockMovementListRelationFilter
+  projectNotesCreated?: Prisma.ProjectNoteListRelationFilter
+  projectFilesUploaded?: Prisma.ProjectFileListRelationFilter
+  projectCostsCreated?: Prisma.ProjectCostListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   tenantId?: Prisma.SortOrder
   email?: Prisma.SortOrder
-  passwordHash?: Prisma.SortOrder
+  passwordHash?: Prisma.SortOrderInput | Prisma.SortOrder
+  supabaseUserId?: Prisma.SortOrderInput | Prisma.SortOrder
   firstName?: Prisma.SortOrder
   lastName?: Prisma.SortOrder
   phone?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -349,17 +364,24 @@ export type UserOrderByWithRelationInput = {
   orderSharesReceived?: Prisma.OrderShareOrderByRelationAggregateInput
   orderSharesCreated?: Prisma.OrderShareOrderByRelationAggregateInput
   notifications?: Prisma.NotificationOrderByRelationAggregateInput
+  expensesCreated?: Prisma.ExpenseOrderByRelationAggregateInput
+  aiChatSessions?: Prisma.AiChatSessionOrderByRelationAggregateInput
+  stockMovementsCreated?: Prisma.StockMovementOrderByRelationAggregateInput
+  projectNotesCreated?: Prisma.ProjectNoteOrderByRelationAggregateInput
+  projectFilesUploaded?: Prisma.ProjectFileOrderByRelationAggregateInput
+  projectCostsCreated?: Prisma.ProjectCostOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  supabaseUserId?: string
   tenantId_email?: Prisma.UserTenantIdEmailCompoundUniqueInput
   AND?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   OR?: Prisma.UserWhereInput[]
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   tenantId?: Prisma.StringFilter<"User"> | string
   email?: Prisma.StringFilter<"User"> | string
-  passwordHash?: Prisma.StringFilter<"User"> | string
+  passwordHash?: Prisma.StringNullableFilter<"User"> | string | null
   firstName?: Prisma.StringFilter<"User"> | string
   lastName?: Prisma.StringFilter<"User"> | string
   phone?: Prisma.StringNullableFilter<"User"> | string | null
@@ -385,13 +407,20 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   orderSharesReceived?: Prisma.OrderShareListRelationFilter
   orderSharesCreated?: Prisma.OrderShareListRelationFilter
   notifications?: Prisma.NotificationListRelationFilter
-}, "id" | "tenantId_email">
+  expensesCreated?: Prisma.ExpenseListRelationFilter
+  aiChatSessions?: Prisma.AiChatSessionListRelationFilter
+  stockMovementsCreated?: Prisma.StockMovementListRelationFilter
+  projectNotesCreated?: Prisma.ProjectNoteListRelationFilter
+  projectFilesUploaded?: Prisma.ProjectFileListRelationFilter
+  projectCostsCreated?: Prisma.ProjectCostListRelationFilter
+}, "id" | "supabaseUserId" | "tenantId_email">
 
 export type UserOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   tenantId?: Prisma.SortOrder
   email?: Prisma.SortOrder
-  passwordHash?: Prisma.SortOrder
+  passwordHash?: Prisma.SortOrderInput | Prisma.SortOrder
+  supabaseUserId?: Prisma.SortOrderInput | Prisma.SortOrder
   firstName?: Prisma.SortOrder
   lastName?: Prisma.SortOrder
   phone?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -418,7 +447,8 @@ export type UserScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"User"> | string
   tenantId?: Prisma.StringWithAggregatesFilter<"User"> | string
   email?: Prisma.StringWithAggregatesFilter<"User"> | string
-  passwordHash?: Prisma.StringWithAggregatesFilter<"User"> | string
+  passwordHash?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  supabaseUserId?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   firstName?: Prisma.StringWithAggregatesFilter<"User"> | string
   lastName?: Prisma.StringWithAggregatesFilter<"User"> | string
   phone?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
@@ -436,7 +466,8 @@ export type UserScalarWhereWithAggregatesInput = {
 export type UserCreateInput = {
   id?: string
   email: string
-  passwordHash: string
+  passwordHash?: string | null
+  supabaseUserId?: string | null
   firstName: string
   lastName: string
   phone?: string | null
@@ -462,13 +493,20 @@ export type UserCreateInput = {
   orderSharesReceived?: Prisma.OrderShareCreateNestedManyWithoutSharedWithInput
   orderSharesCreated?: Prisma.OrderShareCreateNestedManyWithoutSharedByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  expensesCreated?: Prisma.ExpenseCreateNestedManyWithoutCreatedByInput
+  aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutUserInput
+  stockMovementsCreated?: Prisma.StockMovementCreateNestedManyWithoutCreatedByInput
+  projectNotesCreated?: Prisma.ProjectNoteCreateNestedManyWithoutCreatedByInput
+  projectFilesUploaded?: Prisma.ProjectFileCreateNestedManyWithoutUploadedByInput
+  projectCostsCreated?: Prisma.ProjectCostCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateInput = {
   id?: string
   tenantId: string
   email: string
-  passwordHash: string
+  passwordHash?: string | null
+  supabaseUserId?: string | null
   firstName: string
   lastName: string
   phone?: string | null
@@ -493,12 +531,19 @@ export type UserUncheckedCreateInput = {
   orderSharesReceived?: Prisma.OrderShareUncheckedCreateNestedManyWithoutSharedWithInput
   orderSharesCreated?: Prisma.OrderShareUncheckedCreateNestedManyWithoutSharedByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  expensesCreated?: Prisma.ExpenseUncheckedCreateNestedManyWithoutCreatedByInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutUserInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedCreateNestedManyWithoutCreatedByInput
+  projectNotesCreated?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutCreatedByInput
+  projectFilesUploaded?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutUploadedByInput
+  projectCostsCreated?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supabaseUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -524,13 +569,20 @@ export type UserUpdateInput = {
   orderSharesReceived?: Prisma.OrderShareUpdateManyWithoutSharedWithNestedInput
   orderSharesCreated?: Prisma.OrderShareUpdateManyWithoutSharedByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  expensesCreated?: Prisma.ExpenseUpdateManyWithoutCreatedByNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutUserNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUpdateManyWithoutCreatedByNestedInput
+  projectNotesCreated?: Prisma.ProjectNoteUpdateManyWithoutCreatedByNestedInput
+  projectFilesUploaded?: Prisma.ProjectFileUpdateManyWithoutUploadedByNestedInput
+  projectCostsCreated?: Prisma.ProjectCostUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supabaseUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -555,13 +607,20 @@ export type UserUncheckedUpdateInput = {
   orderSharesReceived?: Prisma.OrderShareUncheckedUpdateManyWithoutSharedWithNestedInput
   orderSharesCreated?: Prisma.OrderShareUncheckedUpdateManyWithoutSharedByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  expensesCreated?: Prisma.ExpenseUncheckedUpdateManyWithoutCreatedByNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutUserNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedUpdateManyWithoutCreatedByNestedInput
+  projectNotesCreated?: Prisma.ProjectNoteUncheckedUpdateManyWithoutCreatedByNestedInput
+  projectFilesUploaded?: Prisma.ProjectFileUncheckedUpdateManyWithoutUploadedByNestedInput
+  projectCostsCreated?: Prisma.ProjectCostUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserCreateManyInput = {
   id?: string
   tenantId: string
   email: string
-  passwordHash: string
+  passwordHash?: string | null
+  supabaseUserId?: string | null
   firstName: string
   lastName: string
   phone?: string | null
@@ -579,7 +638,8 @@ export type UserCreateManyInput = {
 export type UserUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supabaseUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -598,7 +658,8 @@ export type UserUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supabaseUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -633,6 +694,7 @@ export type UserCountOrderByAggregateInput = {
   tenantId?: Prisma.SortOrder
   email?: Prisma.SortOrder
   passwordHash?: Prisma.SortOrder
+  supabaseUserId?: Prisma.SortOrder
   firstName?: Prisma.SortOrder
   lastName?: Prisma.SortOrder
   phone?: Prisma.SortOrder
@@ -656,6 +718,7 @@ export type UserMaxOrderByAggregateInput = {
   tenantId?: Prisma.SortOrder
   email?: Prisma.SortOrder
   passwordHash?: Prisma.SortOrder
+  supabaseUserId?: Prisma.SortOrder
   firstName?: Prisma.SortOrder
   lastName?: Prisma.SortOrder
   phone?: Prisma.SortOrder
@@ -675,6 +738,7 @@ export type UserMinOrderByAggregateInput = {
   tenantId?: Prisma.SortOrder
   email?: Prisma.SortOrder
   passwordHash?: Prisma.SortOrder
+  supabaseUserId?: Prisma.SortOrder
   firstName?: Prisma.SortOrder
   lastName?: Prisma.SortOrder
   phone?: Prisma.SortOrder
@@ -865,6 +929,22 @@ export type UserUpdateOneRequiredWithoutNotificationsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutNotificationsInput, Prisma.UserUpdateWithoutNotificationsInput>, Prisma.UserUncheckedUpdateWithoutNotificationsInput>
 }
 
+export type UserCreateNestedOneWithoutStockMovementsCreatedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutStockMovementsCreatedInput, Prisma.UserUncheckedCreateWithoutStockMovementsCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutStockMovementsCreatedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutStockMovementsCreatedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutStockMovementsCreatedInput, Prisma.UserUncheckedCreateWithoutStockMovementsCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutStockMovementsCreatedInput
+  upsert?: Prisma.UserUpsertWithoutStockMovementsCreatedInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutStockMovementsCreatedInput, Prisma.UserUpdateWithoutStockMovementsCreatedInput>, Prisma.UserUncheckedUpdateWithoutStockMovementsCreatedInput>
+}
+
 export type UserCreateNestedOneWithoutStaffRequestsSentInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutStaffRequestsSentInput, Prisma.UserUncheckedCreateWithoutStaffRequestsSentInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutStaffRequestsSentInput
@@ -941,10 +1021,89 @@ export type UserUpdateOneWithoutOrderSharesCreatedNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutOrderSharesCreatedInput, Prisma.UserUpdateWithoutOrderSharesCreatedInput>, Prisma.UserUncheckedUpdateWithoutOrderSharesCreatedInput>
 }
 
+export type UserCreateNestedOneWithoutExpensesCreatedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutExpensesCreatedInput, Prisma.UserUncheckedCreateWithoutExpensesCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutExpensesCreatedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutExpensesCreatedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutExpensesCreatedInput, Prisma.UserUncheckedCreateWithoutExpensesCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutExpensesCreatedInput
+  upsert?: Prisma.UserUpsertWithoutExpensesCreatedInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutExpensesCreatedInput, Prisma.UserUpdateWithoutExpensesCreatedInput>, Prisma.UserUncheckedUpdateWithoutExpensesCreatedInput>
+}
+
+export type UserCreateNestedOneWithoutAiChatSessionsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAiChatSessionsInput, Prisma.UserUncheckedCreateWithoutAiChatSessionsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAiChatSessionsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutAiChatSessionsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAiChatSessionsInput, Prisma.UserUncheckedCreateWithoutAiChatSessionsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAiChatSessionsInput
+  upsert?: Prisma.UserUpsertWithoutAiChatSessionsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAiChatSessionsInput, Prisma.UserUpdateWithoutAiChatSessionsInput>, Prisma.UserUncheckedUpdateWithoutAiChatSessionsInput>
+}
+
+export type UserCreateNestedOneWithoutProjectNotesCreatedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutProjectNotesCreatedInput, Prisma.UserUncheckedCreateWithoutProjectNotesCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutProjectNotesCreatedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutProjectNotesCreatedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutProjectNotesCreatedInput, Prisma.UserUncheckedCreateWithoutProjectNotesCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutProjectNotesCreatedInput
+  upsert?: Prisma.UserUpsertWithoutProjectNotesCreatedInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutProjectNotesCreatedInput, Prisma.UserUpdateWithoutProjectNotesCreatedInput>, Prisma.UserUncheckedUpdateWithoutProjectNotesCreatedInput>
+}
+
+export type UserCreateNestedOneWithoutProjectFilesUploadedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutProjectFilesUploadedInput, Prisma.UserUncheckedCreateWithoutProjectFilesUploadedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutProjectFilesUploadedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutProjectFilesUploadedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutProjectFilesUploadedInput, Prisma.UserUncheckedCreateWithoutProjectFilesUploadedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutProjectFilesUploadedInput
+  upsert?: Prisma.UserUpsertWithoutProjectFilesUploadedInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutProjectFilesUploadedInput, Prisma.UserUpdateWithoutProjectFilesUploadedInput>, Prisma.UserUncheckedUpdateWithoutProjectFilesUploadedInput>
+}
+
+export type UserCreateNestedOneWithoutProjectCostsCreatedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutProjectCostsCreatedInput, Prisma.UserUncheckedCreateWithoutProjectCostsCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutProjectCostsCreatedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutProjectCostsCreatedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutProjectCostsCreatedInput, Prisma.UserUncheckedCreateWithoutProjectCostsCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutProjectCostsCreatedInput
+  upsert?: Prisma.UserUpsertWithoutProjectCostsCreatedInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutProjectCostsCreatedInput, Prisma.UserUpdateWithoutProjectCostsCreatedInput>, Prisma.UserUncheckedUpdateWithoutProjectCostsCreatedInput>
+}
+
 export type UserCreateWithoutTenantInput = {
   id?: string
   email: string
-  passwordHash: string
+  passwordHash?: string | null
+  supabaseUserId?: string | null
   firstName: string
   lastName: string
   phone?: string | null
@@ -969,12 +1128,19 @@ export type UserCreateWithoutTenantInput = {
   orderSharesReceived?: Prisma.OrderShareCreateNestedManyWithoutSharedWithInput
   orderSharesCreated?: Prisma.OrderShareCreateNestedManyWithoutSharedByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  expensesCreated?: Prisma.ExpenseCreateNestedManyWithoutCreatedByInput
+  aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutUserInput
+  stockMovementsCreated?: Prisma.StockMovementCreateNestedManyWithoutCreatedByInput
+  projectNotesCreated?: Prisma.ProjectNoteCreateNestedManyWithoutCreatedByInput
+  projectFilesUploaded?: Prisma.ProjectFileCreateNestedManyWithoutUploadedByInput
+  projectCostsCreated?: Prisma.ProjectCostCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutTenantInput = {
   id?: string
   email: string
-  passwordHash: string
+  passwordHash?: string | null
+  supabaseUserId?: string | null
   firstName: string
   lastName: string
   phone?: string | null
@@ -999,6 +1165,12 @@ export type UserUncheckedCreateWithoutTenantInput = {
   orderSharesReceived?: Prisma.OrderShareUncheckedCreateNestedManyWithoutSharedWithInput
   orderSharesCreated?: Prisma.OrderShareUncheckedCreateNestedManyWithoutSharedByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  expensesCreated?: Prisma.ExpenseUncheckedCreateNestedManyWithoutCreatedByInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutUserInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedCreateNestedManyWithoutCreatedByInput
+  projectNotesCreated?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutCreatedByInput
+  projectFilesUploaded?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutUploadedByInput
+  projectCostsCreated?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutTenantInput = {
@@ -1034,7 +1206,8 @@ export type UserScalarWhereInput = {
   id?: Prisma.StringFilter<"User"> | string
   tenantId?: Prisma.StringFilter<"User"> | string
   email?: Prisma.StringFilter<"User"> | string
-  passwordHash?: Prisma.StringFilter<"User"> | string
+  passwordHash?: Prisma.StringNullableFilter<"User"> | string | null
+  supabaseUserId?: Prisma.StringNullableFilter<"User"> | string | null
   firstName?: Prisma.StringFilter<"User"> | string
   lastName?: Prisma.StringFilter<"User"> | string
   phone?: Prisma.StringNullableFilter<"User"> | string | null
@@ -1052,7 +1225,8 @@ export type UserScalarWhereInput = {
 export type UserCreateWithoutCustomerInput = {
   id?: string
   email: string
-  passwordHash: string
+  passwordHash?: string | null
+  supabaseUserId?: string | null
   firstName: string
   lastName: string
   phone?: string | null
@@ -1077,13 +1251,20 @@ export type UserCreateWithoutCustomerInput = {
   orderSharesReceived?: Prisma.OrderShareCreateNestedManyWithoutSharedWithInput
   orderSharesCreated?: Prisma.OrderShareCreateNestedManyWithoutSharedByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  expensesCreated?: Prisma.ExpenseCreateNestedManyWithoutCreatedByInput
+  aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutUserInput
+  stockMovementsCreated?: Prisma.StockMovementCreateNestedManyWithoutCreatedByInput
+  projectNotesCreated?: Prisma.ProjectNoteCreateNestedManyWithoutCreatedByInput
+  projectFilesUploaded?: Prisma.ProjectFileCreateNestedManyWithoutUploadedByInput
+  projectCostsCreated?: Prisma.ProjectCostCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutCustomerInput = {
   id?: string
   tenantId: string
   email: string
-  passwordHash: string
+  passwordHash?: string | null
+  supabaseUserId?: string | null
   firstName: string
   lastName: string
   phone?: string | null
@@ -1107,6 +1288,12 @@ export type UserUncheckedCreateWithoutCustomerInput = {
   orderSharesReceived?: Prisma.OrderShareUncheckedCreateNestedManyWithoutSharedWithInput
   orderSharesCreated?: Prisma.OrderShareUncheckedCreateNestedManyWithoutSharedByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  expensesCreated?: Prisma.ExpenseUncheckedCreateNestedManyWithoutCreatedByInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutUserInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedCreateNestedManyWithoutCreatedByInput
+  projectNotesCreated?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutCreatedByInput
+  projectFilesUploaded?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutUploadedByInput
+  projectCostsCreated?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutCustomerInput = {
@@ -1128,7 +1315,8 @@ export type UserUpdateToOneWithWhereWithoutCustomerInput = {
 export type UserUpdateWithoutCustomerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supabaseUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1153,13 +1341,20 @@ export type UserUpdateWithoutCustomerInput = {
   orderSharesReceived?: Prisma.OrderShareUpdateManyWithoutSharedWithNestedInput
   orderSharesCreated?: Prisma.OrderShareUpdateManyWithoutSharedByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  expensesCreated?: Prisma.ExpenseUpdateManyWithoutCreatedByNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutUserNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUpdateManyWithoutCreatedByNestedInput
+  projectNotesCreated?: Prisma.ProjectNoteUpdateManyWithoutCreatedByNestedInput
+  projectFilesUploaded?: Prisma.ProjectFileUpdateManyWithoutUploadedByNestedInput
+  projectCostsCreated?: Prisma.ProjectCostUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCustomerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supabaseUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1183,12 +1378,19 @@ export type UserUncheckedUpdateWithoutCustomerInput = {
   orderSharesReceived?: Prisma.OrderShareUncheckedUpdateManyWithoutSharedWithNestedInput
   orderSharesCreated?: Prisma.OrderShareUncheckedUpdateManyWithoutSharedByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  expensesCreated?: Prisma.ExpenseUncheckedUpdateManyWithoutCreatedByNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutUserNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedUpdateManyWithoutCreatedByNestedInput
+  projectNotesCreated?: Prisma.ProjectNoteUncheckedUpdateManyWithoutCreatedByNestedInput
+  projectFilesUploaded?: Prisma.ProjectFileUncheckedUpdateManyWithoutUploadedByNestedInput
+  projectCostsCreated?: Prisma.ProjectCostUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserCreateWithoutEmployeeInput = {
   id?: string
   email: string
-  passwordHash: string
+  passwordHash?: string | null
+  supabaseUserId?: string | null
   firstName: string
   lastName: string
   phone?: string | null
@@ -1213,13 +1415,20 @@ export type UserCreateWithoutEmployeeInput = {
   orderSharesReceived?: Prisma.OrderShareCreateNestedManyWithoutSharedWithInput
   orderSharesCreated?: Prisma.OrderShareCreateNestedManyWithoutSharedByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  expensesCreated?: Prisma.ExpenseCreateNestedManyWithoutCreatedByInput
+  aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutUserInput
+  stockMovementsCreated?: Prisma.StockMovementCreateNestedManyWithoutCreatedByInput
+  projectNotesCreated?: Prisma.ProjectNoteCreateNestedManyWithoutCreatedByInput
+  projectFilesUploaded?: Prisma.ProjectFileCreateNestedManyWithoutUploadedByInput
+  projectCostsCreated?: Prisma.ProjectCostCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutEmployeeInput = {
   id?: string
   tenantId: string
   email: string
-  passwordHash: string
+  passwordHash?: string | null
+  supabaseUserId?: string | null
   firstName: string
   lastName: string
   phone?: string | null
@@ -1243,6 +1452,12 @@ export type UserUncheckedCreateWithoutEmployeeInput = {
   orderSharesReceived?: Prisma.OrderShareUncheckedCreateNestedManyWithoutSharedWithInput
   orderSharesCreated?: Prisma.OrderShareUncheckedCreateNestedManyWithoutSharedByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  expensesCreated?: Prisma.ExpenseUncheckedCreateNestedManyWithoutCreatedByInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutUserInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedCreateNestedManyWithoutCreatedByInput
+  projectNotesCreated?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutCreatedByInput
+  projectFilesUploaded?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutUploadedByInput
+  projectCostsCreated?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutEmployeeInput = {
@@ -1264,7 +1479,8 @@ export type UserUpdateToOneWithWhereWithoutEmployeeInput = {
 export type UserUpdateWithoutEmployeeInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supabaseUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1289,13 +1505,20 @@ export type UserUpdateWithoutEmployeeInput = {
   orderSharesReceived?: Prisma.OrderShareUpdateManyWithoutSharedWithNestedInput
   orderSharesCreated?: Prisma.OrderShareUpdateManyWithoutSharedByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  expensesCreated?: Prisma.ExpenseUpdateManyWithoutCreatedByNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutUserNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUpdateManyWithoutCreatedByNestedInput
+  projectNotesCreated?: Prisma.ProjectNoteUpdateManyWithoutCreatedByNestedInput
+  projectFilesUploaded?: Prisma.ProjectFileUpdateManyWithoutUploadedByNestedInput
+  projectCostsCreated?: Prisma.ProjectCostUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutEmployeeInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supabaseUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1319,12 +1542,19 @@ export type UserUncheckedUpdateWithoutEmployeeInput = {
   orderSharesReceived?: Prisma.OrderShareUncheckedUpdateManyWithoutSharedWithNestedInput
   orderSharesCreated?: Prisma.OrderShareUncheckedUpdateManyWithoutSharedByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  expensesCreated?: Prisma.ExpenseUncheckedUpdateManyWithoutCreatedByNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutUserNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedUpdateManyWithoutCreatedByNestedInput
+  projectNotesCreated?: Prisma.ProjectNoteUncheckedUpdateManyWithoutCreatedByNestedInput
+  projectFilesUploaded?: Prisma.ProjectFileUncheckedUpdateManyWithoutUploadedByNestedInput
+  projectCostsCreated?: Prisma.ProjectCostUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserCreateWithoutFileUploadsInput = {
   id?: string
   email: string
-  passwordHash: string
+  passwordHash?: string | null
+  supabaseUserId?: string | null
   firstName: string
   lastName: string
   phone?: string | null
@@ -1349,13 +1579,20 @@ export type UserCreateWithoutFileUploadsInput = {
   orderSharesReceived?: Prisma.OrderShareCreateNestedManyWithoutSharedWithInput
   orderSharesCreated?: Prisma.OrderShareCreateNestedManyWithoutSharedByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  expensesCreated?: Prisma.ExpenseCreateNestedManyWithoutCreatedByInput
+  aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutUserInput
+  stockMovementsCreated?: Prisma.StockMovementCreateNestedManyWithoutCreatedByInput
+  projectNotesCreated?: Prisma.ProjectNoteCreateNestedManyWithoutCreatedByInput
+  projectFilesUploaded?: Prisma.ProjectFileCreateNestedManyWithoutUploadedByInput
+  projectCostsCreated?: Prisma.ProjectCostCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutFileUploadsInput = {
   id?: string
   tenantId: string
   email: string
-  passwordHash: string
+  passwordHash?: string | null
+  supabaseUserId?: string | null
   firstName: string
   lastName: string
   phone?: string | null
@@ -1379,6 +1616,12 @@ export type UserUncheckedCreateWithoutFileUploadsInput = {
   orderSharesReceived?: Prisma.OrderShareUncheckedCreateNestedManyWithoutSharedWithInput
   orderSharesCreated?: Prisma.OrderShareUncheckedCreateNestedManyWithoutSharedByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  expensesCreated?: Prisma.ExpenseUncheckedCreateNestedManyWithoutCreatedByInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutUserInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedCreateNestedManyWithoutCreatedByInput
+  projectNotesCreated?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutCreatedByInput
+  projectFilesUploaded?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutUploadedByInput
+  projectCostsCreated?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutFileUploadsInput = {
@@ -1400,7 +1643,8 @@ export type UserUpdateToOneWithWhereWithoutFileUploadsInput = {
 export type UserUpdateWithoutFileUploadsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supabaseUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1425,13 +1669,20 @@ export type UserUpdateWithoutFileUploadsInput = {
   orderSharesReceived?: Prisma.OrderShareUpdateManyWithoutSharedWithNestedInput
   orderSharesCreated?: Prisma.OrderShareUpdateManyWithoutSharedByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  expensesCreated?: Prisma.ExpenseUpdateManyWithoutCreatedByNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutUserNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUpdateManyWithoutCreatedByNestedInput
+  projectNotesCreated?: Prisma.ProjectNoteUpdateManyWithoutCreatedByNestedInput
+  projectFilesUploaded?: Prisma.ProjectFileUpdateManyWithoutUploadedByNestedInput
+  projectCostsCreated?: Prisma.ProjectCostUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFileUploadsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supabaseUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1455,12 +1706,19 @@ export type UserUncheckedUpdateWithoutFileUploadsInput = {
   orderSharesReceived?: Prisma.OrderShareUncheckedUpdateManyWithoutSharedWithNestedInput
   orderSharesCreated?: Prisma.OrderShareUncheckedUpdateManyWithoutSharedByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  expensesCreated?: Prisma.ExpenseUncheckedUpdateManyWithoutCreatedByNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutUserNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedUpdateManyWithoutCreatedByNestedInput
+  projectNotesCreated?: Prisma.ProjectNoteUncheckedUpdateManyWithoutCreatedByNestedInput
+  projectFilesUploaded?: Prisma.ProjectFileUncheckedUpdateManyWithoutUploadedByNestedInput
+  projectCostsCreated?: Prisma.ProjectCostUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserCreateWithoutSentMessagesInput = {
   id?: string
   email: string
-  passwordHash: string
+  passwordHash?: string | null
+  supabaseUserId?: string | null
   firstName: string
   lastName: string
   phone?: string | null
@@ -1485,13 +1743,20 @@ export type UserCreateWithoutSentMessagesInput = {
   orderSharesReceived?: Prisma.OrderShareCreateNestedManyWithoutSharedWithInput
   orderSharesCreated?: Prisma.OrderShareCreateNestedManyWithoutSharedByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  expensesCreated?: Prisma.ExpenseCreateNestedManyWithoutCreatedByInput
+  aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutUserInput
+  stockMovementsCreated?: Prisma.StockMovementCreateNestedManyWithoutCreatedByInput
+  projectNotesCreated?: Prisma.ProjectNoteCreateNestedManyWithoutCreatedByInput
+  projectFilesUploaded?: Prisma.ProjectFileCreateNestedManyWithoutUploadedByInput
+  projectCostsCreated?: Prisma.ProjectCostCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutSentMessagesInput = {
   id?: string
   tenantId: string
   email: string
-  passwordHash: string
+  passwordHash?: string | null
+  supabaseUserId?: string | null
   firstName: string
   lastName: string
   phone?: string | null
@@ -1515,6 +1780,12 @@ export type UserUncheckedCreateWithoutSentMessagesInput = {
   orderSharesReceived?: Prisma.OrderShareUncheckedCreateNestedManyWithoutSharedWithInput
   orderSharesCreated?: Prisma.OrderShareUncheckedCreateNestedManyWithoutSharedByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  expensesCreated?: Prisma.ExpenseUncheckedCreateNestedManyWithoutCreatedByInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutUserInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedCreateNestedManyWithoutCreatedByInput
+  projectNotesCreated?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutCreatedByInput
+  projectFilesUploaded?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutUploadedByInput
+  projectCostsCreated?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutSentMessagesInput = {
@@ -1525,7 +1796,8 @@ export type UserCreateOrConnectWithoutSentMessagesInput = {
 export type UserCreateWithoutReceivedMessagesInput = {
   id?: string
   email: string
-  passwordHash: string
+  passwordHash?: string | null
+  supabaseUserId?: string | null
   firstName: string
   lastName: string
   phone?: string | null
@@ -1550,13 +1822,20 @@ export type UserCreateWithoutReceivedMessagesInput = {
   orderSharesReceived?: Prisma.OrderShareCreateNestedManyWithoutSharedWithInput
   orderSharesCreated?: Prisma.OrderShareCreateNestedManyWithoutSharedByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  expensesCreated?: Prisma.ExpenseCreateNestedManyWithoutCreatedByInput
+  aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutUserInput
+  stockMovementsCreated?: Prisma.StockMovementCreateNestedManyWithoutCreatedByInput
+  projectNotesCreated?: Prisma.ProjectNoteCreateNestedManyWithoutCreatedByInput
+  projectFilesUploaded?: Prisma.ProjectFileCreateNestedManyWithoutUploadedByInput
+  projectCostsCreated?: Prisma.ProjectCostCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutReceivedMessagesInput = {
   id?: string
   tenantId: string
   email: string
-  passwordHash: string
+  passwordHash?: string | null
+  supabaseUserId?: string | null
   firstName: string
   lastName: string
   phone?: string | null
@@ -1580,6 +1859,12 @@ export type UserUncheckedCreateWithoutReceivedMessagesInput = {
   orderSharesReceived?: Prisma.OrderShareUncheckedCreateNestedManyWithoutSharedWithInput
   orderSharesCreated?: Prisma.OrderShareUncheckedCreateNestedManyWithoutSharedByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  expensesCreated?: Prisma.ExpenseUncheckedCreateNestedManyWithoutCreatedByInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutUserInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedCreateNestedManyWithoutCreatedByInput
+  projectNotesCreated?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutCreatedByInput
+  projectFilesUploaded?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutUploadedByInput
+  projectCostsCreated?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutReceivedMessagesInput = {
@@ -1601,7 +1886,8 @@ export type UserUpdateToOneWithWhereWithoutSentMessagesInput = {
 export type UserUpdateWithoutSentMessagesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supabaseUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1626,13 +1912,20 @@ export type UserUpdateWithoutSentMessagesInput = {
   orderSharesReceived?: Prisma.OrderShareUpdateManyWithoutSharedWithNestedInput
   orderSharesCreated?: Prisma.OrderShareUpdateManyWithoutSharedByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  expensesCreated?: Prisma.ExpenseUpdateManyWithoutCreatedByNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutUserNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUpdateManyWithoutCreatedByNestedInput
+  projectNotesCreated?: Prisma.ProjectNoteUpdateManyWithoutCreatedByNestedInput
+  projectFilesUploaded?: Prisma.ProjectFileUpdateManyWithoutUploadedByNestedInput
+  projectCostsCreated?: Prisma.ProjectCostUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSentMessagesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supabaseUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1656,6 +1949,12 @@ export type UserUncheckedUpdateWithoutSentMessagesInput = {
   orderSharesReceived?: Prisma.OrderShareUncheckedUpdateManyWithoutSharedWithNestedInput
   orderSharesCreated?: Prisma.OrderShareUncheckedUpdateManyWithoutSharedByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  expensesCreated?: Prisma.ExpenseUncheckedUpdateManyWithoutCreatedByNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutUserNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedUpdateManyWithoutCreatedByNestedInput
+  projectNotesCreated?: Prisma.ProjectNoteUncheckedUpdateManyWithoutCreatedByNestedInput
+  projectFilesUploaded?: Prisma.ProjectFileUncheckedUpdateManyWithoutUploadedByNestedInput
+  projectCostsCreated?: Prisma.ProjectCostUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUpsertWithoutReceivedMessagesInput = {
@@ -1672,7 +1971,8 @@ export type UserUpdateToOneWithWhereWithoutReceivedMessagesInput = {
 export type UserUpdateWithoutReceivedMessagesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supabaseUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1697,13 +1997,20 @@ export type UserUpdateWithoutReceivedMessagesInput = {
   orderSharesReceived?: Prisma.OrderShareUpdateManyWithoutSharedWithNestedInput
   orderSharesCreated?: Prisma.OrderShareUpdateManyWithoutSharedByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  expensesCreated?: Prisma.ExpenseUpdateManyWithoutCreatedByNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutUserNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUpdateManyWithoutCreatedByNestedInput
+  projectNotesCreated?: Prisma.ProjectNoteUpdateManyWithoutCreatedByNestedInput
+  projectFilesUploaded?: Prisma.ProjectFileUpdateManyWithoutUploadedByNestedInput
+  projectCostsCreated?: Prisma.ProjectCostUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReceivedMessagesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supabaseUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1727,12 +2034,19 @@ export type UserUncheckedUpdateWithoutReceivedMessagesInput = {
   orderSharesReceived?: Prisma.OrderShareUncheckedUpdateManyWithoutSharedWithNestedInput
   orderSharesCreated?: Prisma.OrderShareUncheckedUpdateManyWithoutSharedByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  expensesCreated?: Prisma.ExpenseUncheckedUpdateManyWithoutCreatedByNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutUserNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedUpdateManyWithoutCreatedByNestedInput
+  projectNotesCreated?: Prisma.ProjectNoteUncheckedUpdateManyWithoutCreatedByNestedInput
+  projectFilesUploaded?: Prisma.ProjectFileUncheckedUpdateManyWithoutUploadedByNestedInput
+  projectCostsCreated?: Prisma.ProjectCostUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserCreateWithoutAuditLogsInput = {
   id?: string
   email: string
-  passwordHash: string
+  passwordHash?: string | null
+  supabaseUserId?: string | null
   firstName: string
   lastName: string
   phone?: string | null
@@ -1757,13 +2071,20 @@ export type UserCreateWithoutAuditLogsInput = {
   orderSharesReceived?: Prisma.OrderShareCreateNestedManyWithoutSharedWithInput
   orderSharesCreated?: Prisma.OrderShareCreateNestedManyWithoutSharedByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  expensesCreated?: Prisma.ExpenseCreateNestedManyWithoutCreatedByInput
+  aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutUserInput
+  stockMovementsCreated?: Prisma.StockMovementCreateNestedManyWithoutCreatedByInput
+  projectNotesCreated?: Prisma.ProjectNoteCreateNestedManyWithoutCreatedByInput
+  projectFilesUploaded?: Prisma.ProjectFileCreateNestedManyWithoutUploadedByInput
+  projectCostsCreated?: Prisma.ProjectCostCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutAuditLogsInput = {
   id?: string
   tenantId: string
   email: string
-  passwordHash: string
+  passwordHash?: string | null
+  supabaseUserId?: string | null
   firstName: string
   lastName: string
   phone?: string | null
@@ -1787,6 +2108,12 @@ export type UserUncheckedCreateWithoutAuditLogsInput = {
   orderSharesReceived?: Prisma.OrderShareUncheckedCreateNestedManyWithoutSharedWithInput
   orderSharesCreated?: Prisma.OrderShareUncheckedCreateNestedManyWithoutSharedByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  expensesCreated?: Prisma.ExpenseUncheckedCreateNestedManyWithoutCreatedByInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutUserInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedCreateNestedManyWithoutCreatedByInput
+  projectNotesCreated?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutCreatedByInput
+  projectFilesUploaded?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutUploadedByInput
+  projectCostsCreated?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutAuditLogsInput = {
@@ -1808,7 +2135,8 @@ export type UserUpdateToOneWithWhereWithoutAuditLogsInput = {
 export type UserUpdateWithoutAuditLogsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supabaseUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1833,13 +2161,20 @@ export type UserUpdateWithoutAuditLogsInput = {
   orderSharesReceived?: Prisma.OrderShareUpdateManyWithoutSharedWithNestedInput
   orderSharesCreated?: Prisma.OrderShareUpdateManyWithoutSharedByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  expensesCreated?: Prisma.ExpenseUpdateManyWithoutCreatedByNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutUserNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUpdateManyWithoutCreatedByNestedInput
+  projectNotesCreated?: Prisma.ProjectNoteUpdateManyWithoutCreatedByNestedInput
+  projectFilesUploaded?: Prisma.ProjectFileUpdateManyWithoutUploadedByNestedInput
+  projectCostsCreated?: Prisma.ProjectCostUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAuditLogsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supabaseUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1863,12 +2198,19 @@ export type UserUncheckedUpdateWithoutAuditLogsInput = {
   orderSharesReceived?: Prisma.OrderShareUncheckedUpdateManyWithoutSharedWithNestedInput
   orderSharesCreated?: Prisma.OrderShareUncheckedUpdateManyWithoutSharedByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  expensesCreated?: Prisma.ExpenseUncheckedUpdateManyWithoutCreatedByNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutUserNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedUpdateManyWithoutCreatedByNestedInput
+  projectNotesCreated?: Prisma.ProjectNoteUncheckedUpdateManyWithoutCreatedByNestedInput
+  projectFilesUploaded?: Prisma.ProjectFileUncheckedUpdateManyWithoutUploadedByNestedInput
+  projectCostsCreated?: Prisma.ProjectCostUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserCreateWithoutNotificationsInput = {
   id?: string
   email: string
-  passwordHash: string
+  passwordHash?: string | null
+  supabaseUserId?: string | null
   firstName: string
   lastName: string
   phone?: string | null
@@ -1893,13 +2235,20 @@ export type UserCreateWithoutNotificationsInput = {
   invitationsAccepted?: Prisma.InvitationCreateNestedManyWithoutAcceptedUserInput
   orderSharesReceived?: Prisma.OrderShareCreateNestedManyWithoutSharedWithInput
   orderSharesCreated?: Prisma.OrderShareCreateNestedManyWithoutSharedByInput
+  expensesCreated?: Prisma.ExpenseCreateNestedManyWithoutCreatedByInput
+  aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutUserInput
+  stockMovementsCreated?: Prisma.StockMovementCreateNestedManyWithoutCreatedByInput
+  projectNotesCreated?: Prisma.ProjectNoteCreateNestedManyWithoutCreatedByInput
+  projectFilesUploaded?: Prisma.ProjectFileCreateNestedManyWithoutUploadedByInput
+  projectCostsCreated?: Prisma.ProjectCostCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutNotificationsInput = {
   id?: string
   tenantId: string
   email: string
-  passwordHash: string
+  passwordHash?: string | null
+  supabaseUserId?: string | null
   firstName: string
   lastName: string
   phone?: string | null
@@ -1923,6 +2272,12 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   invitationsAccepted?: Prisma.InvitationUncheckedCreateNestedManyWithoutAcceptedUserInput
   orderSharesReceived?: Prisma.OrderShareUncheckedCreateNestedManyWithoutSharedWithInput
   orderSharesCreated?: Prisma.OrderShareUncheckedCreateNestedManyWithoutSharedByInput
+  expensesCreated?: Prisma.ExpenseUncheckedCreateNestedManyWithoutCreatedByInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutUserInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedCreateNestedManyWithoutCreatedByInput
+  projectNotesCreated?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutCreatedByInput
+  projectFilesUploaded?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutUploadedByInput
+  projectCostsCreated?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutNotificationsInput = {
@@ -1944,7 +2299,8 @@ export type UserUpdateToOneWithWhereWithoutNotificationsInput = {
 export type UserUpdateWithoutNotificationsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supabaseUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1969,13 +2325,20 @@ export type UserUpdateWithoutNotificationsInput = {
   invitationsAccepted?: Prisma.InvitationUpdateManyWithoutAcceptedUserNestedInput
   orderSharesReceived?: Prisma.OrderShareUpdateManyWithoutSharedWithNestedInput
   orderSharesCreated?: Prisma.OrderShareUpdateManyWithoutSharedByNestedInput
+  expensesCreated?: Prisma.ExpenseUpdateManyWithoutCreatedByNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutUserNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUpdateManyWithoutCreatedByNestedInput
+  projectNotesCreated?: Prisma.ProjectNoteUpdateManyWithoutCreatedByNestedInput
+  projectFilesUploaded?: Prisma.ProjectFileUpdateManyWithoutUploadedByNestedInput
+  projectCostsCreated?: Prisma.ProjectCostUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutNotificationsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supabaseUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1999,12 +2362,183 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   invitationsAccepted?: Prisma.InvitationUncheckedUpdateManyWithoutAcceptedUserNestedInput
   orderSharesReceived?: Prisma.OrderShareUncheckedUpdateManyWithoutSharedWithNestedInput
   orderSharesCreated?: Prisma.OrderShareUncheckedUpdateManyWithoutSharedByNestedInput
+  expensesCreated?: Prisma.ExpenseUncheckedUpdateManyWithoutCreatedByNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutUserNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedUpdateManyWithoutCreatedByNestedInput
+  projectNotesCreated?: Prisma.ProjectNoteUncheckedUpdateManyWithoutCreatedByNestedInput
+  projectFilesUploaded?: Prisma.ProjectFileUncheckedUpdateManyWithoutUploadedByNestedInput
+  projectCostsCreated?: Prisma.ProjectCostUncheckedUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserCreateWithoutStockMovementsCreatedInput = {
+  id?: string
+  email: string
+  passwordHash?: string | null
+  supabaseUserId?: string | null
+  firstName: string
+  lastName: string
+  phone?: string | null
+  address?: string | null
+  avatarUrl?: string | null
+  role: $Enums.UserRole
+  isActive?: boolean
+  mustChangePassword?: boolean
+  sessionVersion?: number
+  lastLoginAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tenant: Prisma.TenantCreateNestedOneWithoutUsersInput
+  employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
+  customer?: Prisma.CustomerCreateNestedOneWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.MessageCreateNestedManyWithoutRecipientUserInput
+  staffRequestsSent?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutRequestedByInput
+  fileUploads?: Prisma.FileUploadCreateNestedManyWithoutUploadedByInput
+  invitationsSent?: Prisma.InvitationCreateNestedManyWithoutInvitedByInput
+  invitationsAccepted?: Prisma.InvitationCreateNestedManyWithoutAcceptedUserInput
+  orderSharesReceived?: Prisma.OrderShareCreateNestedManyWithoutSharedWithInput
+  orderSharesCreated?: Prisma.OrderShareCreateNestedManyWithoutSharedByInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  expensesCreated?: Prisma.ExpenseCreateNestedManyWithoutCreatedByInput
+  aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutUserInput
+  projectNotesCreated?: Prisma.ProjectNoteCreateNestedManyWithoutCreatedByInput
+  projectFilesUploaded?: Prisma.ProjectFileCreateNestedManyWithoutUploadedByInput
+  projectCostsCreated?: Prisma.ProjectCostCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserUncheckedCreateWithoutStockMovementsCreatedInput = {
+  id?: string
+  tenantId: string
+  email: string
+  passwordHash?: string | null
+  supabaseUserId?: string | null
+  firstName: string
+  lastName: string
+  phone?: string | null
+  address?: string | null
+  avatarUrl?: string | null
+  role: $Enums.UserRole
+  isActive?: boolean
+  mustChangePassword?: boolean
+  sessionVersion?: number
+  lastLoginAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
+  customer?: Prisma.CustomerUncheckedCreateNestedOneWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutRecipientUserInput
+  staffRequestsSent?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  fileUploads?: Prisma.FileUploadUncheckedCreateNestedManyWithoutUploadedByInput
+  invitationsSent?: Prisma.InvitationUncheckedCreateNestedManyWithoutInvitedByInput
+  invitationsAccepted?: Prisma.InvitationUncheckedCreateNestedManyWithoutAcceptedUserInput
+  orderSharesReceived?: Prisma.OrderShareUncheckedCreateNestedManyWithoutSharedWithInput
+  orderSharesCreated?: Prisma.OrderShareUncheckedCreateNestedManyWithoutSharedByInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  expensesCreated?: Prisma.ExpenseUncheckedCreateNestedManyWithoutCreatedByInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutUserInput
+  projectNotesCreated?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutCreatedByInput
+  projectFilesUploaded?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutUploadedByInput
+  projectCostsCreated?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserCreateOrConnectWithoutStockMovementsCreatedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutStockMovementsCreatedInput, Prisma.UserUncheckedCreateWithoutStockMovementsCreatedInput>
+}
+
+export type UserUpsertWithoutStockMovementsCreatedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutStockMovementsCreatedInput, Prisma.UserUncheckedUpdateWithoutStockMovementsCreatedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutStockMovementsCreatedInput, Prisma.UserUncheckedCreateWithoutStockMovementsCreatedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutStockMovementsCreatedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutStockMovementsCreatedInput, Prisma.UserUncheckedUpdateWithoutStockMovementsCreatedInput>
+}
+
+export type UserUpdateWithoutStockMovementsCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supabaseUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutUsersNestedInput
+  employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
+  customer?: Prisma.CustomerUpdateOneWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.MessageUpdateManyWithoutRecipientUserNestedInput
+  staffRequestsSent?: Prisma.StaffAssignmentRequestUpdateManyWithoutRequestedByNestedInput
+  fileUploads?: Prisma.FileUploadUpdateManyWithoutUploadedByNestedInput
+  invitationsSent?: Prisma.InvitationUpdateManyWithoutInvitedByNestedInput
+  invitationsAccepted?: Prisma.InvitationUpdateManyWithoutAcceptedUserNestedInput
+  orderSharesReceived?: Prisma.OrderShareUpdateManyWithoutSharedWithNestedInput
+  orderSharesCreated?: Prisma.OrderShareUpdateManyWithoutSharedByNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  expensesCreated?: Prisma.ExpenseUpdateManyWithoutCreatedByNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutUserNestedInput
+  projectNotesCreated?: Prisma.ProjectNoteUpdateManyWithoutCreatedByNestedInput
+  projectFilesUploaded?: Prisma.ProjectFileUpdateManyWithoutUploadedByNestedInput
+  projectCostsCreated?: Prisma.ProjectCostUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutStockMovementsCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supabaseUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
+  customer?: Prisma.CustomerUncheckedUpdateOneWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.MessageUncheckedUpdateManyWithoutRecipientUserNestedInput
+  staffRequestsSent?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  fileUploads?: Prisma.FileUploadUncheckedUpdateManyWithoutUploadedByNestedInput
+  invitationsSent?: Prisma.InvitationUncheckedUpdateManyWithoutInvitedByNestedInput
+  invitationsAccepted?: Prisma.InvitationUncheckedUpdateManyWithoutAcceptedUserNestedInput
+  orderSharesReceived?: Prisma.OrderShareUncheckedUpdateManyWithoutSharedWithNestedInput
+  orderSharesCreated?: Prisma.OrderShareUncheckedUpdateManyWithoutSharedByNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  expensesCreated?: Prisma.ExpenseUncheckedUpdateManyWithoutCreatedByNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutUserNestedInput
+  projectNotesCreated?: Prisma.ProjectNoteUncheckedUpdateManyWithoutCreatedByNestedInput
+  projectFilesUploaded?: Prisma.ProjectFileUncheckedUpdateManyWithoutUploadedByNestedInput
+  projectCostsCreated?: Prisma.ProjectCostUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserCreateWithoutStaffRequestsSentInput = {
   id?: string
   email: string
-  passwordHash: string
+  passwordHash?: string | null
+  supabaseUserId?: string | null
   firstName: string
   lastName: string
   phone?: string | null
@@ -2029,13 +2563,20 @@ export type UserCreateWithoutStaffRequestsSentInput = {
   orderSharesReceived?: Prisma.OrderShareCreateNestedManyWithoutSharedWithInput
   orderSharesCreated?: Prisma.OrderShareCreateNestedManyWithoutSharedByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  expensesCreated?: Prisma.ExpenseCreateNestedManyWithoutCreatedByInput
+  aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutUserInput
+  stockMovementsCreated?: Prisma.StockMovementCreateNestedManyWithoutCreatedByInput
+  projectNotesCreated?: Prisma.ProjectNoteCreateNestedManyWithoutCreatedByInput
+  projectFilesUploaded?: Prisma.ProjectFileCreateNestedManyWithoutUploadedByInput
+  projectCostsCreated?: Prisma.ProjectCostCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutStaffRequestsSentInput = {
   id?: string
   tenantId: string
   email: string
-  passwordHash: string
+  passwordHash?: string | null
+  supabaseUserId?: string | null
   firstName: string
   lastName: string
   phone?: string | null
@@ -2059,6 +2600,12 @@ export type UserUncheckedCreateWithoutStaffRequestsSentInput = {
   orderSharesReceived?: Prisma.OrderShareUncheckedCreateNestedManyWithoutSharedWithInput
   orderSharesCreated?: Prisma.OrderShareUncheckedCreateNestedManyWithoutSharedByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  expensesCreated?: Prisma.ExpenseUncheckedCreateNestedManyWithoutCreatedByInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutUserInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedCreateNestedManyWithoutCreatedByInput
+  projectNotesCreated?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutCreatedByInput
+  projectFilesUploaded?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutUploadedByInput
+  projectCostsCreated?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutStaffRequestsSentInput = {
@@ -2080,7 +2627,8 @@ export type UserUpdateToOneWithWhereWithoutStaffRequestsSentInput = {
 export type UserUpdateWithoutStaffRequestsSentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supabaseUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2105,13 +2653,20 @@ export type UserUpdateWithoutStaffRequestsSentInput = {
   orderSharesReceived?: Prisma.OrderShareUpdateManyWithoutSharedWithNestedInput
   orderSharesCreated?: Prisma.OrderShareUpdateManyWithoutSharedByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  expensesCreated?: Prisma.ExpenseUpdateManyWithoutCreatedByNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutUserNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUpdateManyWithoutCreatedByNestedInput
+  projectNotesCreated?: Prisma.ProjectNoteUpdateManyWithoutCreatedByNestedInput
+  projectFilesUploaded?: Prisma.ProjectFileUpdateManyWithoutUploadedByNestedInput
+  projectCostsCreated?: Prisma.ProjectCostUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutStaffRequestsSentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supabaseUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2135,12 +2690,19 @@ export type UserUncheckedUpdateWithoutStaffRequestsSentInput = {
   orderSharesReceived?: Prisma.OrderShareUncheckedUpdateManyWithoutSharedWithNestedInput
   orderSharesCreated?: Prisma.OrderShareUncheckedUpdateManyWithoutSharedByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  expensesCreated?: Prisma.ExpenseUncheckedUpdateManyWithoutCreatedByNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutUserNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedUpdateManyWithoutCreatedByNestedInput
+  projectNotesCreated?: Prisma.ProjectNoteUncheckedUpdateManyWithoutCreatedByNestedInput
+  projectFilesUploaded?: Prisma.ProjectFileUncheckedUpdateManyWithoutUploadedByNestedInput
+  projectCostsCreated?: Prisma.ProjectCostUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserCreateWithoutInvitationsSentInput = {
   id?: string
   email: string
-  passwordHash: string
+  passwordHash?: string | null
+  supabaseUserId?: string | null
   firstName: string
   lastName: string
   phone?: string | null
@@ -2165,13 +2727,20 @@ export type UserCreateWithoutInvitationsSentInput = {
   orderSharesReceived?: Prisma.OrderShareCreateNestedManyWithoutSharedWithInput
   orderSharesCreated?: Prisma.OrderShareCreateNestedManyWithoutSharedByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  expensesCreated?: Prisma.ExpenseCreateNestedManyWithoutCreatedByInput
+  aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutUserInput
+  stockMovementsCreated?: Prisma.StockMovementCreateNestedManyWithoutCreatedByInput
+  projectNotesCreated?: Prisma.ProjectNoteCreateNestedManyWithoutCreatedByInput
+  projectFilesUploaded?: Prisma.ProjectFileCreateNestedManyWithoutUploadedByInput
+  projectCostsCreated?: Prisma.ProjectCostCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutInvitationsSentInput = {
   id?: string
   tenantId: string
   email: string
-  passwordHash: string
+  passwordHash?: string | null
+  supabaseUserId?: string | null
   firstName: string
   lastName: string
   phone?: string | null
@@ -2195,6 +2764,12 @@ export type UserUncheckedCreateWithoutInvitationsSentInput = {
   orderSharesReceived?: Prisma.OrderShareUncheckedCreateNestedManyWithoutSharedWithInput
   orderSharesCreated?: Prisma.OrderShareUncheckedCreateNestedManyWithoutSharedByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  expensesCreated?: Prisma.ExpenseUncheckedCreateNestedManyWithoutCreatedByInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutUserInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedCreateNestedManyWithoutCreatedByInput
+  projectNotesCreated?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutCreatedByInput
+  projectFilesUploaded?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutUploadedByInput
+  projectCostsCreated?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutInvitationsSentInput = {
@@ -2205,7 +2780,8 @@ export type UserCreateOrConnectWithoutInvitationsSentInput = {
 export type UserCreateWithoutInvitationsAcceptedInput = {
   id?: string
   email: string
-  passwordHash: string
+  passwordHash?: string | null
+  supabaseUserId?: string | null
   firstName: string
   lastName: string
   phone?: string | null
@@ -2230,13 +2806,20 @@ export type UserCreateWithoutInvitationsAcceptedInput = {
   orderSharesReceived?: Prisma.OrderShareCreateNestedManyWithoutSharedWithInput
   orderSharesCreated?: Prisma.OrderShareCreateNestedManyWithoutSharedByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  expensesCreated?: Prisma.ExpenseCreateNestedManyWithoutCreatedByInput
+  aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutUserInput
+  stockMovementsCreated?: Prisma.StockMovementCreateNestedManyWithoutCreatedByInput
+  projectNotesCreated?: Prisma.ProjectNoteCreateNestedManyWithoutCreatedByInput
+  projectFilesUploaded?: Prisma.ProjectFileCreateNestedManyWithoutUploadedByInput
+  projectCostsCreated?: Prisma.ProjectCostCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutInvitationsAcceptedInput = {
   id?: string
   tenantId: string
   email: string
-  passwordHash: string
+  passwordHash?: string | null
+  supabaseUserId?: string | null
   firstName: string
   lastName: string
   phone?: string | null
@@ -2260,6 +2843,12 @@ export type UserUncheckedCreateWithoutInvitationsAcceptedInput = {
   orderSharesReceived?: Prisma.OrderShareUncheckedCreateNestedManyWithoutSharedWithInput
   orderSharesCreated?: Prisma.OrderShareUncheckedCreateNestedManyWithoutSharedByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  expensesCreated?: Prisma.ExpenseUncheckedCreateNestedManyWithoutCreatedByInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutUserInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedCreateNestedManyWithoutCreatedByInput
+  projectNotesCreated?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutCreatedByInput
+  projectFilesUploaded?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutUploadedByInput
+  projectCostsCreated?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutInvitationsAcceptedInput = {
@@ -2281,7 +2870,8 @@ export type UserUpdateToOneWithWhereWithoutInvitationsSentInput = {
 export type UserUpdateWithoutInvitationsSentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supabaseUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2306,13 +2896,20 @@ export type UserUpdateWithoutInvitationsSentInput = {
   orderSharesReceived?: Prisma.OrderShareUpdateManyWithoutSharedWithNestedInput
   orderSharesCreated?: Prisma.OrderShareUpdateManyWithoutSharedByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  expensesCreated?: Prisma.ExpenseUpdateManyWithoutCreatedByNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutUserNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUpdateManyWithoutCreatedByNestedInput
+  projectNotesCreated?: Prisma.ProjectNoteUpdateManyWithoutCreatedByNestedInput
+  projectFilesUploaded?: Prisma.ProjectFileUpdateManyWithoutUploadedByNestedInput
+  projectCostsCreated?: Prisma.ProjectCostUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutInvitationsSentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supabaseUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2336,6 +2933,12 @@ export type UserUncheckedUpdateWithoutInvitationsSentInput = {
   orderSharesReceived?: Prisma.OrderShareUncheckedUpdateManyWithoutSharedWithNestedInput
   orderSharesCreated?: Prisma.OrderShareUncheckedUpdateManyWithoutSharedByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  expensesCreated?: Prisma.ExpenseUncheckedUpdateManyWithoutCreatedByNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutUserNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedUpdateManyWithoutCreatedByNestedInput
+  projectNotesCreated?: Prisma.ProjectNoteUncheckedUpdateManyWithoutCreatedByNestedInput
+  projectFilesUploaded?: Prisma.ProjectFileUncheckedUpdateManyWithoutUploadedByNestedInput
+  projectCostsCreated?: Prisma.ProjectCostUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUpsertWithoutInvitationsAcceptedInput = {
@@ -2352,7 +2955,8 @@ export type UserUpdateToOneWithWhereWithoutInvitationsAcceptedInput = {
 export type UserUpdateWithoutInvitationsAcceptedInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supabaseUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2377,13 +2981,20 @@ export type UserUpdateWithoutInvitationsAcceptedInput = {
   orderSharesReceived?: Prisma.OrderShareUpdateManyWithoutSharedWithNestedInput
   orderSharesCreated?: Prisma.OrderShareUpdateManyWithoutSharedByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  expensesCreated?: Prisma.ExpenseUpdateManyWithoutCreatedByNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutUserNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUpdateManyWithoutCreatedByNestedInput
+  projectNotesCreated?: Prisma.ProjectNoteUpdateManyWithoutCreatedByNestedInput
+  projectFilesUploaded?: Prisma.ProjectFileUpdateManyWithoutUploadedByNestedInput
+  projectCostsCreated?: Prisma.ProjectCostUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutInvitationsAcceptedInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supabaseUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2407,12 +3018,19 @@ export type UserUncheckedUpdateWithoutInvitationsAcceptedInput = {
   orderSharesReceived?: Prisma.OrderShareUncheckedUpdateManyWithoutSharedWithNestedInput
   orderSharesCreated?: Prisma.OrderShareUncheckedUpdateManyWithoutSharedByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  expensesCreated?: Prisma.ExpenseUncheckedUpdateManyWithoutCreatedByNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutUserNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedUpdateManyWithoutCreatedByNestedInput
+  projectNotesCreated?: Prisma.ProjectNoteUncheckedUpdateManyWithoutCreatedByNestedInput
+  projectFilesUploaded?: Prisma.ProjectFileUncheckedUpdateManyWithoutUploadedByNestedInput
+  projectCostsCreated?: Prisma.ProjectCostUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserCreateWithoutOrderSharesReceivedInput = {
   id?: string
   email: string
-  passwordHash: string
+  passwordHash?: string | null
+  supabaseUserId?: string | null
   firstName: string
   lastName: string
   phone?: string | null
@@ -2437,13 +3055,20 @@ export type UserCreateWithoutOrderSharesReceivedInput = {
   invitationsAccepted?: Prisma.InvitationCreateNestedManyWithoutAcceptedUserInput
   orderSharesCreated?: Prisma.OrderShareCreateNestedManyWithoutSharedByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  expensesCreated?: Prisma.ExpenseCreateNestedManyWithoutCreatedByInput
+  aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutUserInput
+  stockMovementsCreated?: Prisma.StockMovementCreateNestedManyWithoutCreatedByInput
+  projectNotesCreated?: Prisma.ProjectNoteCreateNestedManyWithoutCreatedByInput
+  projectFilesUploaded?: Prisma.ProjectFileCreateNestedManyWithoutUploadedByInput
+  projectCostsCreated?: Prisma.ProjectCostCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutOrderSharesReceivedInput = {
   id?: string
   tenantId: string
   email: string
-  passwordHash: string
+  passwordHash?: string | null
+  supabaseUserId?: string | null
   firstName: string
   lastName: string
   phone?: string | null
@@ -2467,6 +3092,12 @@ export type UserUncheckedCreateWithoutOrderSharesReceivedInput = {
   invitationsAccepted?: Prisma.InvitationUncheckedCreateNestedManyWithoutAcceptedUserInput
   orderSharesCreated?: Prisma.OrderShareUncheckedCreateNestedManyWithoutSharedByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  expensesCreated?: Prisma.ExpenseUncheckedCreateNestedManyWithoutCreatedByInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutUserInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedCreateNestedManyWithoutCreatedByInput
+  projectNotesCreated?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutCreatedByInput
+  projectFilesUploaded?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutUploadedByInput
+  projectCostsCreated?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutOrderSharesReceivedInput = {
@@ -2477,7 +3108,8 @@ export type UserCreateOrConnectWithoutOrderSharesReceivedInput = {
 export type UserCreateWithoutOrderSharesCreatedInput = {
   id?: string
   email: string
-  passwordHash: string
+  passwordHash?: string | null
+  supabaseUserId?: string | null
   firstName: string
   lastName: string
   phone?: string | null
@@ -2502,13 +3134,20 @@ export type UserCreateWithoutOrderSharesCreatedInput = {
   invitationsAccepted?: Prisma.InvitationCreateNestedManyWithoutAcceptedUserInput
   orderSharesReceived?: Prisma.OrderShareCreateNestedManyWithoutSharedWithInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  expensesCreated?: Prisma.ExpenseCreateNestedManyWithoutCreatedByInput
+  aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutUserInput
+  stockMovementsCreated?: Prisma.StockMovementCreateNestedManyWithoutCreatedByInput
+  projectNotesCreated?: Prisma.ProjectNoteCreateNestedManyWithoutCreatedByInput
+  projectFilesUploaded?: Prisma.ProjectFileCreateNestedManyWithoutUploadedByInput
+  projectCostsCreated?: Prisma.ProjectCostCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutOrderSharesCreatedInput = {
   id?: string
   tenantId: string
   email: string
-  passwordHash: string
+  passwordHash?: string | null
+  supabaseUserId?: string | null
   firstName: string
   lastName: string
   phone?: string | null
@@ -2532,6 +3171,12 @@ export type UserUncheckedCreateWithoutOrderSharesCreatedInput = {
   invitationsAccepted?: Prisma.InvitationUncheckedCreateNestedManyWithoutAcceptedUserInput
   orderSharesReceived?: Prisma.OrderShareUncheckedCreateNestedManyWithoutSharedWithInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  expensesCreated?: Prisma.ExpenseUncheckedCreateNestedManyWithoutCreatedByInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutUserInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedCreateNestedManyWithoutCreatedByInput
+  projectNotesCreated?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutCreatedByInput
+  projectFilesUploaded?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutUploadedByInput
+  projectCostsCreated?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutOrderSharesCreatedInput = {
@@ -2553,7 +3198,8 @@ export type UserUpdateToOneWithWhereWithoutOrderSharesReceivedInput = {
 export type UserUpdateWithoutOrderSharesReceivedInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supabaseUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2578,13 +3224,20 @@ export type UserUpdateWithoutOrderSharesReceivedInput = {
   invitationsAccepted?: Prisma.InvitationUpdateManyWithoutAcceptedUserNestedInput
   orderSharesCreated?: Prisma.OrderShareUpdateManyWithoutSharedByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  expensesCreated?: Prisma.ExpenseUpdateManyWithoutCreatedByNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutUserNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUpdateManyWithoutCreatedByNestedInput
+  projectNotesCreated?: Prisma.ProjectNoteUpdateManyWithoutCreatedByNestedInput
+  projectFilesUploaded?: Prisma.ProjectFileUpdateManyWithoutUploadedByNestedInput
+  projectCostsCreated?: Prisma.ProjectCostUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutOrderSharesReceivedInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supabaseUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2608,6 +3261,12 @@ export type UserUncheckedUpdateWithoutOrderSharesReceivedInput = {
   invitationsAccepted?: Prisma.InvitationUncheckedUpdateManyWithoutAcceptedUserNestedInput
   orderSharesCreated?: Prisma.OrderShareUncheckedUpdateManyWithoutSharedByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  expensesCreated?: Prisma.ExpenseUncheckedUpdateManyWithoutCreatedByNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutUserNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedUpdateManyWithoutCreatedByNestedInput
+  projectNotesCreated?: Prisma.ProjectNoteUncheckedUpdateManyWithoutCreatedByNestedInput
+  projectFilesUploaded?: Prisma.ProjectFileUncheckedUpdateManyWithoutUploadedByNestedInput
+  projectCostsCreated?: Prisma.ProjectCostUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUpsertWithoutOrderSharesCreatedInput = {
@@ -2624,7 +3283,8 @@ export type UserUpdateToOneWithWhereWithoutOrderSharesCreatedInput = {
 export type UserUpdateWithoutOrderSharesCreatedInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supabaseUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2649,13 +3309,20 @@ export type UserUpdateWithoutOrderSharesCreatedInput = {
   invitationsAccepted?: Prisma.InvitationUpdateManyWithoutAcceptedUserNestedInput
   orderSharesReceived?: Prisma.OrderShareUpdateManyWithoutSharedWithNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  expensesCreated?: Prisma.ExpenseUpdateManyWithoutCreatedByNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutUserNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUpdateManyWithoutCreatedByNestedInput
+  projectNotesCreated?: Prisma.ProjectNoteUpdateManyWithoutCreatedByNestedInput
+  projectFilesUploaded?: Prisma.ProjectFileUpdateManyWithoutUploadedByNestedInput
+  projectCostsCreated?: Prisma.ProjectCostUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutOrderSharesCreatedInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supabaseUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2679,12 +3346,839 @@ export type UserUncheckedUpdateWithoutOrderSharesCreatedInput = {
   invitationsAccepted?: Prisma.InvitationUncheckedUpdateManyWithoutAcceptedUserNestedInput
   orderSharesReceived?: Prisma.OrderShareUncheckedUpdateManyWithoutSharedWithNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  expensesCreated?: Prisma.ExpenseUncheckedUpdateManyWithoutCreatedByNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutUserNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedUpdateManyWithoutCreatedByNestedInput
+  projectNotesCreated?: Prisma.ProjectNoteUncheckedUpdateManyWithoutCreatedByNestedInput
+  projectFilesUploaded?: Prisma.ProjectFileUncheckedUpdateManyWithoutUploadedByNestedInput
+  projectCostsCreated?: Prisma.ProjectCostUncheckedUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserCreateWithoutExpensesCreatedInput = {
+  id?: string
+  email: string
+  passwordHash?: string | null
+  supabaseUserId?: string | null
+  firstName: string
+  lastName: string
+  phone?: string | null
+  address?: string | null
+  avatarUrl?: string | null
+  role: $Enums.UserRole
+  isActive?: boolean
+  mustChangePassword?: boolean
+  sessionVersion?: number
+  lastLoginAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tenant: Prisma.TenantCreateNestedOneWithoutUsersInput
+  employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
+  customer?: Prisma.CustomerCreateNestedOneWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.MessageCreateNestedManyWithoutRecipientUserInput
+  staffRequestsSent?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutRequestedByInput
+  fileUploads?: Prisma.FileUploadCreateNestedManyWithoutUploadedByInput
+  invitationsSent?: Prisma.InvitationCreateNestedManyWithoutInvitedByInput
+  invitationsAccepted?: Prisma.InvitationCreateNestedManyWithoutAcceptedUserInput
+  orderSharesReceived?: Prisma.OrderShareCreateNestedManyWithoutSharedWithInput
+  orderSharesCreated?: Prisma.OrderShareCreateNestedManyWithoutSharedByInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutUserInput
+  stockMovementsCreated?: Prisma.StockMovementCreateNestedManyWithoutCreatedByInput
+  projectNotesCreated?: Prisma.ProjectNoteCreateNestedManyWithoutCreatedByInput
+  projectFilesUploaded?: Prisma.ProjectFileCreateNestedManyWithoutUploadedByInput
+  projectCostsCreated?: Prisma.ProjectCostCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserUncheckedCreateWithoutExpensesCreatedInput = {
+  id?: string
+  tenantId: string
+  email: string
+  passwordHash?: string | null
+  supabaseUserId?: string | null
+  firstName: string
+  lastName: string
+  phone?: string | null
+  address?: string | null
+  avatarUrl?: string | null
+  role: $Enums.UserRole
+  isActive?: boolean
+  mustChangePassword?: boolean
+  sessionVersion?: number
+  lastLoginAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
+  customer?: Prisma.CustomerUncheckedCreateNestedOneWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutRecipientUserInput
+  staffRequestsSent?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  fileUploads?: Prisma.FileUploadUncheckedCreateNestedManyWithoutUploadedByInput
+  invitationsSent?: Prisma.InvitationUncheckedCreateNestedManyWithoutInvitedByInput
+  invitationsAccepted?: Prisma.InvitationUncheckedCreateNestedManyWithoutAcceptedUserInput
+  orderSharesReceived?: Prisma.OrderShareUncheckedCreateNestedManyWithoutSharedWithInput
+  orderSharesCreated?: Prisma.OrderShareUncheckedCreateNestedManyWithoutSharedByInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutUserInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedCreateNestedManyWithoutCreatedByInput
+  projectNotesCreated?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutCreatedByInput
+  projectFilesUploaded?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutUploadedByInput
+  projectCostsCreated?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserCreateOrConnectWithoutExpensesCreatedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutExpensesCreatedInput, Prisma.UserUncheckedCreateWithoutExpensesCreatedInput>
+}
+
+export type UserUpsertWithoutExpensesCreatedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutExpensesCreatedInput, Prisma.UserUncheckedUpdateWithoutExpensesCreatedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutExpensesCreatedInput, Prisma.UserUncheckedCreateWithoutExpensesCreatedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutExpensesCreatedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutExpensesCreatedInput, Prisma.UserUncheckedUpdateWithoutExpensesCreatedInput>
+}
+
+export type UserUpdateWithoutExpensesCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supabaseUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutUsersNestedInput
+  employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
+  customer?: Prisma.CustomerUpdateOneWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.MessageUpdateManyWithoutRecipientUserNestedInput
+  staffRequestsSent?: Prisma.StaffAssignmentRequestUpdateManyWithoutRequestedByNestedInput
+  fileUploads?: Prisma.FileUploadUpdateManyWithoutUploadedByNestedInput
+  invitationsSent?: Prisma.InvitationUpdateManyWithoutInvitedByNestedInput
+  invitationsAccepted?: Prisma.InvitationUpdateManyWithoutAcceptedUserNestedInput
+  orderSharesReceived?: Prisma.OrderShareUpdateManyWithoutSharedWithNestedInput
+  orderSharesCreated?: Prisma.OrderShareUpdateManyWithoutSharedByNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutUserNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUpdateManyWithoutCreatedByNestedInput
+  projectNotesCreated?: Prisma.ProjectNoteUpdateManyWithoutCreatedByNestedInput
+  projectFilesUploaded?: Prisma.ProjectFileUpdateManyWithoutUploadedByNestedInput
+  projectCostsCreated?: Prisma.ProjectCostUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutExpensesCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supabaseUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
+  customer?: Prisma.CustomerUncheckedUpdateOneWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.MessageUncheckedUpdateManyWithoutRecipientUserNestedInput
+  staffRequestsSent?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  fileUploads?: Prisma.FileUploadUncheckedUpdateManyWithoutUploadedByNestedInput
+  invitationsSent?: Prisma.InvitationUncheckedUpdateManyWithoutInvitedByNestedInput
+  invitationsAccepted?: Prisma.InvitationUncheckedUpdateManyWithoutAcceptedUserNestedInput
+  orderSharesReceived?: Prisma.OrderShareUncheckedUpdateManyWithoutSharedWithNestedInput
+  orderSharesCreated?: Prisma.OrderShareUncheckedUpdateManyWithoutSharedByNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutUserNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedUpdateManyWithoutCreatedByNestedInput
+  projectNotesCreated?: Prisma.ProjectNoteUncheckedUpdateManyWithoutCreatedByNestedInput
+  projectFilesUploaded?: Prisma.ProjectFileUncheckedUpdateManyWithoutUploadedByNestedInput
+  projectCostsCreated?: Prisma.ProjectCostUncheckedUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserCreateWithoutAiChatSessionsInput = {
+  id?: string
+  email: string
+  passwordHash?: string | null
+  supabaseUserId?: string | null
+  firstName: string
+  lastName: string
+  phone?: string | null
+  address?: string | null
+  avatarUrl?: string | null
+  role: $Enums.UserRole
+  isActive?: boolean
+  mustChangePassword?: boolean
+  sessionVersion?: number
+  lastLoginAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tenant: Prisma.TenantCreateNestedOneWithoutUsersInput
+  employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
+  customer?: Prisma.CustomerCreateNestedOneWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.MessageCreateNestedManyWithoutRecipientUserInput
+  staffRequestsSent?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutRequestedByInput
+  fileUploads?: Prisma.FileUploadCreateNestedManyWithoutUploadedByInput
+  invitationsSent?: Prisma.InvitationCreateNestedManyWithoutInvitedByInput
+  invitationsAccepted?: Prisma.InvitationCreateNestedManyWithoutAcceptedUserInput
+  orderSharesReceived?: Prisma.OrderShareCreateNestedManyWithoutSharedWithInput
+  orderSharesCreated?: Prisma.OrderShareCreateNestedManyWithoutSharedByInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  expensesCreated?: Prisma.ExpenseCreateNestedManyWithoutCreatedByInput
+  stockMovementsCreated?: Prisma.StockMovementCreateNestedManyWithoutCreatedByInput
+  projectNotesCreated?: Prisma.ProjectNoteCreateNestedManyWithoutCreatedByInput
+  projectFilesUploaded?: Prisma.ProjectFileCreateNestedManyWithoutUploadedByInput
+  projectCostsCreated?: Prisma.ProjectCostCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserUncheckedCreateWithoutAiChatSessionsInput = {
+  id?: string
+  tenantId: string
+  email: string
+  passwordHash?: string | null
+  supabaseUserId?: string | null
+  firstName: string
+  lastName: string
+  phone?: string | null
+  address?: string | null
+  avatarUrl?: string | null
+  role: $Enums.UserRole
+  isActive?: boolean
+  mustChangePassword?: boolean
+  sessionVersion?: number
+  lastLoginAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
+  customer?: Prisma.CustomerUncheckedCreateNestedOneWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutRecipientUserInput
+  staffRequestsSent?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  fileUploads?: Prisma.FileUploadUncheckedCreateNestedManyWithoutUploadedByInput
+  invitationsSent?: Prisma.InvitationUncheckedCreateNestedManyWithoutInvitedByInput
+  invitationsAccepted?: Prisma.InvitationUncheckedCreateNestedManyWithoutAcceptedUserInput
+  orderSharesReceived?: Prisma.OrderShareUncheckedCreateNestedManyWithoutSharedWithInput
+  orderSharesCreated?: Prisma.OrderShareUncheckedCreateNestedManyWithoutSharedByInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  expensesCreated?: Prisma.ExpenseUncheckedCreateNestedManyWithoutCreatedByInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedCreateNestedManyWithoutCreatedByInput
+  projectNotesCreated?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutCreatedByInput
+  projectFilesUploaded?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutUploadedByInput
+  projectCostsCreated?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserCreateOrConnectWithoutAiChatSessionsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutAiChatSessionsInput, Prisma.UserUncheckedCreateWithoutAiChatSessionsInput>
+}
+
+export type UserUpsertWithoutAiChatSessionsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutAiChatSessionsInput, Prisma.UserUncheckedUpdateWithoutAiChatSessionsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutAiChatSessionsInput, Prisma.UserUncheckedCreateWithoutAiChatSessionsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutAiChatSessionsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutAiChatSessionsInput, Prisma.UserUncheckedUpdateWithoutAiChatSessionsInput>
+}
+
+export type UserUpdateWithoutAiChatSessionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supabaseUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutUsersNestedInput
+  employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
+  customer?: Prisma.CustomerUpdateOneWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.MessageUpdateManyWithoutRecipientUserNestedInput
+  staffRequestsSent?: Prisma.StaffAssignmentRequestUpdateManyWithoutRequestedByNestedInput
+  fileUploads?: Prisma.FileUploadUpdateManyWithoutUploadedByNestedInput
+  invitationsSent?: Prisma.InvitationUpdateManyWithoutInvitedByNestedInput
+  invitationsAccepted?: Prisma.InvitationUpdateManyWithoutAcceptedUserNestedInput
+  orderSharesReceived?: Prisma.OrderShareUpdateManyWithoutSharedWithNestedInput
+  orderSharesCreated?: Prisma.OrderShareUpdateManyWithoutSharedByNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  expensesCreated?: Prisma.ExpenseUpdateManyWithoutCreatedByNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUpdateManyWithoutCreatedByNestedInput
+  projectNotesCreated?: Prisma.ProjectNoteUpdateManyWithoutCreatedByNestedInput
+  projectFilesUploaded?: Prisma.ProjectFileUpdateManyWithoutUploadedByNestedInput
+  projectCostsCreated?: Prisma.ProjectCostUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutAiChatSessionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supabaseUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
+  customer?: Prisma.CustomerUncheckedUpdateOneWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.MessageUncheckedUpdateManyWithoutRecipientUserNestedInput
+  staffRequestsSent?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  fileUploads?: Prisma.FileUploadUncheckedUpdateManyWithoutUploadedByNestedInput
+  invitationsSent?: Prisma.InvitationUncheckedUpdateManyWithoutInvitedByNestedInput
+  invitationsAccepted?: Prisma.InvitationUncheckedUpdateManyWithoutAcceptedUserNestedInput
+  orderSharesReceived?: Prisma.OrderShareUncheckedUpdateManyWithoutSharedWithNestedInput
+  orderSharesCreated?: Prisma.OrderShareUncheckedUpdateManyWithoutSharedByNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  expensesCreated?: Prisma.ExpenseUncheckedUpdateManyWithoutCreatedByNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedUpdateManyWithoutCreatedByNestedInput
+  projectNotesCreated?: Prisma.ProjectNoteUncheckedUpdateManyWithoutCreatedByNestedInput
+  projectFilesUploaded?: Prisma.ProjectFileUncheckedUpdateManyWithoutUploadedByNestedInput
+  projectCostsCreated?: Prisma.ProjectCostUncheckedUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserCreateWithoutProjectNotesCreatedInput = {
+  id?: string
+  email: string
+  passwordHash?: string | null
+  supabaseUserId?: string | null
+  firstName: string
+  lastName: string
+  phone?: string | null
+  address?: string | null
+  avatarUrl?: string | null
+  role: $Enums.UserRole
+  isActive?: boolean
+  mustChangePassword?: boolean
+  sessionVersion?: number
+  lastLoginAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tenant: Prisma.TenantCreateNestedOneWithoutUsersInput
+  employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
+  customer?: Prisma.CustomerCreateNestedOneWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.MessageCreateNestedManyWithoutRecipientUserInput
+  staffRequestsSent?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutRequestedByInput
+  fileUploads?: Prisma.FileUploadCreateNestedManyWithoutUploadedByInput
+  invitationsSent?: Prisma.InvitationCreateNestedManyWithoutInvitedByInput
+  invitationsAccepted?: Prisma.InvitationCreateNestedManyWithoutAcceptedUserInput
+  orderSharesReceived?: Prisma.OrderShareCreateNestedManyWithoutSharedWithInput
+  orderSharesCreated?: Prisma.OrderShareCreateNestedManyWithoutSharedByInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  expensesCreated?: Prisma.ExpenseCreateNestedManyWithoutCreatedByInput
+  aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutUserInput
+  stockMovementsCreated?: Prisma.StockMovementCreateNestedManyWithoutCreatedByInput
+  projectFilesUploaded?: Prisma.ProjectFileCreateNestedManyWithoutUploadedByInput
+  projectCostsCreated?: Prisma.ProjectCostCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserUncheckedCreateWithoutProjectNotesCreatedInput = {
+  id?: string
+  tenantId: string
+  email: string
+  passwordHash?: string | null
+  supabaseUserId?: string | null
+  firstName: string
+  lastName: string
+  phone?: string | null
+  address?: string | null
+  avatarUrl?: string | null
+  role: $Enums.UserRole
+  isActive?: boolean
+  mustChangePassword?: boolean
+  sessionVersion?: number
+  lastLoginAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
+  customer?: Prisma.CustomerUncheckedCreateNestedOneWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutRecipientUserInput
+  staffRequestsSent?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  fileUploads?: Prisma.FileUploadUncheckedCreateNestedManyWithoutUploadedByInput
+  invitationsSent?: Prisma.InvitationUncheckedCreateNestedManyWithoutInvitedByInput
+  invitationsAccepted?: Prisma.InvitationUncheckedCreateNestedManyWithoutAcceptedUserInput
+  orderSharesReceived?: Prisma.OrderShareUncheckedCreateNestedManyWithoutSharedWithInput
+  orderSharesCreated?: Prisma.OrderShareUncheckedCreateNestedManyWithoutSharedByInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  expensesCreated?: Prisma.ExpenseUncheckedCreateNestedManyWithoutCreatedByInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutUserInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedCreateNestedManyWithoutCreatedByInput
+  projectFilesUploaded?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutUploadedByInput
+  projectCostsCreated?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserCreateOrConnectWithoutProjectNotesCreatedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutProjectNotesCreatedInput, Prisma.UserUncheckedCreateWithoutProjectNotesCreatedInput>
+}
+
+export type UserUpsertWithoutProjectNotesCreatedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutProjectNotesCreatedInput, Prisma.UserUncheckedUpdateWithoutProjectNotesCreatedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutProjectNotesCreatedInput, Prisma.UserUncheckedCreateWithoutProjectNotesCreatedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutProjectNotesCreatedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutProjectNotesCreatedInput, Prisma.UserUncheckedUpdateWithoutProjectNotesCreatedInput>
+}
+
+export type UserUpdateWithoutProjectNotesCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supabaseUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutUsersNestedInput
+  employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
+  customer?: Prisma.CustomerUpdateOneWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.MessageUpdateManyWithoutRecipientUserNestedInput
+  staffRequestsSent?: Prisma.StaffAssignmentRequestUpdateManyWithoutRequestedByNestedInput
+  fileUploads?: Prisma.FileUploadUpdateManyWithoutUploadedByNestedInput
+  invitationsSent?: Prisma.InvitationUpdateManyWithoutInvitedByNestedInput
+  invitationsAccepted?: Prisma.InvitationUpdateManyWithoutAcceptedUserNestedInput
+  orderSharesReceived?: Prisma.OrderShareUpdateManyWithoutSharedWithNestedInput
+  orderSharesCreated?: Prisma.OrderShareUpdateManyWithoutSharedByNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  expensesCreated?: Prisma.ExpenseUpdateManyWithoutCreatedByNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutUserNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUpdateManyWithoutCreatedByNestedInput
+  projectFilesUploaded?: Prisma.ProjectFileUpdateManyWithoutUploadedByNestedInput
+  projectCostsCreated?: Prisma.ProjectCostUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutProjectNotesCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supabaseUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
+  customer?: Prisma.CustomerUncheckedUpdateOneWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.MessageUncheckedUpdateManyWithoutRecipientUserNestedInput
+  staffRequestsSent?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  fileUploads?: Prisma.FileUploadUncheckedUpdateManyWithoutUploadedByNestedInput
+  invitationsSent?: Prisma.InvitationUncheckedUpdateManyWithoutInvitedByNestedInput
+  invitationsAccepted?: Prisma.InvitationUncheckedUpdateManyWithoutAcceptedUserNestedInput
+  orderSharesReceived?: Prisma.OrderShareUncheckedUpdateManyWithoutSharedWithNestedInput
+  orderSharesCreated?: Prisma.OrderShareUncheckedUpdateManyWithoutSharedByNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  expensesCreated?: Prisma.ExpenseUncheckedUpdateManyWithoutCreatedByNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutUserNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedUpdateManyWithoutCreatedByNestedInput
+  projectFilesUploaded?: Prisma.ProjectFileUncheckedUpdateManyWithoutUploadedByNestedInput
+  projectCostsCreated?: Prisma.ProjectCostUncheckedUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserCreateWithoutProjectFilesUploadedInput = {
+  id?: string
+  email: string
+  passwordHash?: string | null
+  supabaseUserId?: string | null
+  firstName: string
+  lastName: string
+  phone?: string | null
+  address?: string | null
+  avatarUrl?: string | null
+  role: $Enums.UserRole
+  isActive?: boolean
+  mustChangePassword?: boolean
+  sessionVersion?: number
+  lastLoginAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tenant: Prisma.TenantCreateNestedOneWithoutUsersInput
+  employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
+  customer?: Prisma.CustomerCreateNestedOneWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.MessageCreateNestedManyWithoutRecipientUserInput
+  staffRequestsSent?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutRequestedByInput
+  fileUploads?: Prisma.FileUploadCreateNestedManyWithoutUploadedByInput
+  invitationsSent?: Prisma.InvitationCreateNestedManyWithoutInvitedByInput
+  invitationsAccepted?: Prisma.InvitationCreateNestedManyWithoutAcceptedUserInput
+  orderSharesReceived?: Prisma.OrderShareCreateNestedManyWithoutSharedWithInput
+  orderSharesCreated?: Prisma.OrderShareCreateNestedManyWithoutSharedByInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  expensesCreated?: Prisma.ExpenseCreateNestedManyWithoutCreatedByInput
+  aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutUserInput
+  stockMovementsCreated?: Prisma.StockMovementCreateNestedManyWithoutCreatedByInput
+  projectNotesCreated?: Prisma.ProjectNoteCreateNestedManyWithoutCreatedByInput
+  projectCostsCreated?: Prisma.ProjectCostCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserUncheckedCreateWithoutProjectFilesUploadedInput = {
+  id?: string
+  tenantId: string
+  email: string
+  passwordHash?: string | null
+  supabaseUserId?: string | null
+  firstName: string
+  lastName: string
+  phone?: string | null
+  address?: string | null
+  avatarUrl?: string | null
+  role: $Enums.UserRole
+  isActive?: boolean
+  mustChangePassword?: boolean
+  sessionVersion?: number
+  lastLoginAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
+  customer?: Prisma.CustomerUncheckedCreateNestedOneWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutRecipientUserInput
+  staffRequestsSent?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  fileUploads?: Prisma.FileUploadUncheckedCreateNestedManyWithoutUploadedByInput
+  invitationsSent?: Prisma.InvitationUncheckedCreateNestedManyWithoutInvitedByInput
+  invitationsAccepted?: Prisma.InvitationUncheckedCreateNestedManyWithoutAcceptedUserInput
+  orderSharesReceived?: Prisma.OrderShareUncheckedCreateNestedManyWithoutSharedWithInput
+  orderSharesCreated?: Prisma.OrderShareUncheckedCreateNestedManyWithoutSharedByInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  expensesCreated?: Prisma.ExpenseUncheckedCreateNestedManyWithoutCreatedByInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutUserInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedCreateNestedManyWithoutCreatedByInput
+  projectNotesCreated?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutCreatedByInput
+  projectCostsCreated?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserCreateOrConnectWithoutProjectFilesUploadedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutProjectFilesUploadedInput, Prisma.UserUncheckedCreateWithoutProjectFilesUploadedInput>
+}
+
+export type UserUpsertWithoutProjectFilesUploadedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutProjectFilesUploadedInput, Prisma.UserUncheckedUpdateWithoutProjectFilesUploadedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutProjectFilesUploadedInput, Prisma.UserUncheckedCreateWithoutProjectFilesUploadedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutProjectFilesUploadedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutProjectFilesUploadedInput, Prisma.UserUncheckedUpdateWithoutProjectFilesUploadedInput>
+}
+
+export type UserUpdateWithoutProjectFilesUploadedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supabaseUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutUsersNestedInput
+  employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
+  customer?: Prisma.CustomerUpdateOneWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.MessageUpdateManyWithoutRecipientUserNestedInput
+  staffRequestsSent?: Prisma.StaffAssignmentRequestUpdateManyWithoutRequestedByNestedInput
+  fileUploads?: Prisma.FileUploadUpdateManyWithoutUploadedByNestedInput
+  invitationsSent?: Prisma.InvitationUpdateManyWithoutInvitedByNestedInput
+  invitationsAccepted?: Prisma.InvitationUpdateManyWithoutAcceptedUserNestedInput
+  orderSharesReceived?: Prisma.OrderShareUpdateManyWithoutSharedWithNestedInput
+  orderSharesCreated?: Prisma.OrderShareUpdateManyWithoutSharedByNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  expensesCreated?: Prisma.ExpenseUpdateManyWithoutCreatedByNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutUserNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUpdateManyWithoutCreatedByNestedInput
+  projectNotesCreated?: Prisma.ProjectNoteUpdateManyWithoutCreatedByNestedInput
+  projectCostsCreated?: Prisma.ProjectCostUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutProjectFilesUploadedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supabaseUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
+  customer?: Prisma.CustomerUncheckedUpdateOneWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.MessageUncheckedUpdateManyWithoutRecipientUserNestedInput
+  staffRequestsSent?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  fileUploads?: Prisma.FileUploadUncheckedUpdateManyWithoutUploadedByNestedInput
+  invitationsSent?: Prisma.InvitationUncheckedUpdateManyWithoutInvitedByNestedInput
+  invitationsAccepted?: Prisma.InvitationUncheckedUpdateManyWithoutAcceptedUserNestedInput
+  orderSharesReceived?: Prisma.OrderShareUncheckedUpdateManyWithoutSharedWithNestedInput
+  orderSharesCreated?: Prisma.OrderShareUncheckedUpdateManyWithoutSharedByNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  expensesCreated?: Prisma.ExpenseUncheckedUpdateManyWithoutCreatedByNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutUserNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedUpdateManyWithoutCreatedByNestedInput
+  projectNotesCreated?: Prisma.ProjectNoteUncheckedUpdateManyWithoutCreatedByNestedInput
+  projectCostsCreated?: Prisma.ProjectCostUncheckedUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserCreateWithoutProjectCostsCreatedInput = {
+  id?: string
+  email: string
+  passwordHash?: string | null
+  supabaseUserId?: string | null
+  firstName: string
+  lastName: string
+  phone?: string | null
+  address?: string | null
+  avatarUrl?: string | null
+  role: $Enums.UserRole
+  isActive?: boolean
+  mustChangePassword?: boolean
+  sessionVersion?: number
+  lastLoginAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tenant: Prisma.TenantCreateNestedOneWithoutUsersInput
+  employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
+  customer?: Prisma.CustomerCreateNestedOneWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.MessageCreateNestedManyWithoutRecipientUserInput
+  staffRequestsSent?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutRequestedByInput
+  fileUploads?: Prisma.FileUploadCreateNestedManyWithoutUploadedByInput
+  invitationsSent?: Prisma.InvitationCreateNestedManyWithoutInvitedByInput
+  invitationsAccepted?: Prisma.InvitationCreateNestedManyWithoutAcceptedUserInput
+  orderSharesReceived?: Prisma.OrderShareCreateNestedManyWithoutSharedWithInput
+  orderSharesCreated?: Prisma.OrderShareCreateNestedManyWithoutSharedByInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  expensesCreated?: Prisma.ExpenseCreateNestedManyWithoutCreatedByInput
+  aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutUserInput
+  stockMovementsCreated?: Prisma.StockMovementCreateNestedManyWithoutCreatedByInput
+  projectNotesCreated?: Prisma.ProjectNoteCreateNestedManyWithoutCreatedByInput
+  projectFilesUploaded?: Prisma.ProjectFileCreateNestedManyWithoutUploadedByInput
+}
+
+export type UserUncheckedCreateWithoutProjectCostsCreatedInput = {
+  id?: string
+  tenantId: string
+  email: string
+  passwordHash?: string | null
+  supabaseUserId?: string | null
+  firstName: string
+  lastName: string
+  phone?: string | null
+  address?: string | null
+  avatarUrl?: string | null
+  role: $Enums.UserRole
+  isActive?: boolean
+  mustChangePassword?: boolean
+  sessionVersion?: number
+  lastLoginAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
+  customer?: Prisma.CustomerUncheckedCreateNestedOneWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutRecipientUserInput
+  staffRequestsSent?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  fileUploads?: Prisma.FileUploadUncheckedCreateNestedManyWithoutUploadedByInput
+  invitationsSent?: Prisma.InvitationUncheckedCreateNestedManyWithoutInvitedByInput
+  invitationsAccepted?: Prisma.InvitationUncheckedCreateNestedManyWithoutAcceptedUserInput
+  orderSharesReceived?: Prisma.OrderShareUncheckedCreateNestedManyWithoutSharedWithInput
+  orderSharesCreated?: Prisma.OrderShareUncheckedCreateNestedManyWithoutSharedByInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  expensesCreated?: Prisma.ExpenseUncheckedCreateNestedManyWithoutCreatedByInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutUserInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedCreateNestedManyWithoutCreatedByInput
+  projectNotesCreated?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutCreatedByInput
+  projectFilesUploaded?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutUploadedByInput
+}
+
+export type UserCreateOrConnectWithoutProjectCostsCreatedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutProjectCostsCreatedInput, Prisma.UserUncheckedCreateWithoutProjectCostsCreatedInput>
+}
+
+export type UserUpsertWithoutProjectCostsCreatedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutProjectCostsCreatedInput, Prisma.UserUncheckedUpdateWithoutProjectCostsCreatedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutProjectCostsCreatedInput, Prisma.UserUncheckedCreateWithoutProjectCostsCreatedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutProjectCostsCreatedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutProjectCostsCreatedInput, Prisma.UserUncheckedUpdateWithoutProjectCostsCreatedInput>
+}
+
+export type UserUpdateWithoutProjectCostsCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supabaseUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutUsersNestedInput
+  employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
+  customer?: Prisma.CustomerUpdateOneWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.MessageUpdateManyWithoutRecipientUserNestedInput
+  staffRequestsSent?: Prisma.StaffAssignmentRequestUpdateManyWithoutRequestedByNestedInput
+  fileUploads?: Prisma.FileUploadUpdateManyWithoutUploadedByNestedInput
+  invitationsSent?: Prisma.InvitationUpdateManyWithoutInvitedByNestedInput
+  invitationsAccepted?: Prisma.InvitationUpdateManyWithoutAcceptedUserNestedInput
+  orderSharesReceived?: Prisma.OrderShareUpdateManyWithoutSharedWithNestedInput
+  orderSharesCreated?: Prisma.OrderShareUpdateManyWithoutSharedByNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  expensesCreated?: Prisma.ExpenseUpdateManyWithoutCreatedByNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutUserNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUpdateManyWithoutCreatedByNestedInput
+  projectNotesCreated?: Prisma.ProjectNoteUpdateManyWithoutCreatedByNestedInput
+  projectFilesUploaded?: Prisma.ProjectFileUpdateManyWithoutUploadedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutProjectCostsCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supabaseUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
+  customer?: Prisma.CustomerUncheckedUpdateOneWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.MessageUncheckedUpdateManyWithoutRecipientUserNestedInput
+  staffRequestsSent?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  fileUploads?: Prisma.FileUploadUncheckedUpdateManyWithoutUploadedByNestedInput
+  invitationsSent?: Prisma.InvitationUncheckedUpdateManyWithoutInvitedByNestedInput
+  invitationsAccepted?: Prisma.InvitationUncheckedUpdateManyWithoutAcceptedUserNestedInput
+  orderSharesReceived?: Prisma.OrderShareUncheckedUpdateManyWithoutSharedWithNestedInput
+  orderSharesCreated?: Prisma.OrderShareUncheckedUpdateManyWithoutSharedByNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  expensesCreated?: Prisma.ExpenseUncheckedUpdateManyWithoutCreatedByNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutUserNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedUpdateManyWithoutCreatedByNestedInput
+  projectNotesCreated?: Prisma.ProjectNoteUncheckedUpdateManyWithoutCreatedByNestedInput
+  projectFilesUploaded?: Prisma.ProjectFileUncheckedUpdateManyWithoutUploadedByNestedInput
 }
 
 export type UserCreateManyTenantInput = {
   id?: string
   email: string
-  passwordHash: string
+  passwordHash?: string | null
+  supabaseUserId?: string | null
   firstName: string
   lastName: string
   phone?: string | null
@@ -2702,7 +4196,8 @@ export type UserCreateManyTenantInput = {
 export type UserUpdateWithoutTenantInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supabaseUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2727,12 +4222,19 @@ export type UserUpdateWithoutTenantInput = {
   orderSharesReceived?: Prisma.OrderShareUpdateManyWithoutSharedWithNestedInput
   orderSharesCreated?: Prisma.OrderShareUpdateManyWithoutSharedByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  expensesCreated?: Prisma.ExpenseUpdateManyWithoutCreatedByNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutUserNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUpdateManyWithoutCreatedByNestedInput
+  projectNotesCreated?: Prisma.ProjectNoteUpdateManyWithoutCreatedByNestedInput
+  projectFilesUploaded?: Prisma.ProjectFileUpdateManyWithoutUploadedByNestedInput
+  projectCostsCreated?: Prisma.ProjectCostUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTenantInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supabaseUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2757,12 +4259,19 @@ export type UserUncheckedUpdateWithoutTenantInput = {
   orderSharesReceived?: Prisma.OrderShareUncheckedUpdateManyWithoutSharedWithNestedInput
   orderSharesCreated?: Prisma.OrderShareUncheckedUpdateManyWithoutSharedByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  expensesCreated?: Prisma.ExpenseUncheckedUpdateManyWithoutCreatedByNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutUserNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedUpdateManyWithoutCreatedByNestedInput
+  projectNotesCreated?: Prisma.ProjectNoteUncheckedUpdateManyWithoutCreatedByNestedInput
+  projectFilesUploaded?: Prisma.ProjectFileUncheckedUpdateManyWithoutUploadedByNestedInput
+  projectCostsCreated?: Prisma.ProjectCostUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateManyWithoutTenantInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  supabaseUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2793,6 +4302,12 @@ export type UserCountOutputType = {
   orderSharesReceived: number
   orderSharesCreated: number
   notifications: number
+  expensesCreated: number
+  aiChatSessions: number
+  stockMovementsCreated: number
+  projectNotesCreated: number
+  projectFilesUploaded: number
+  projectCostsCreated: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2806,6 +4321,12 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   orderSharesReceived?: boolean | UserCountOutputTypeCountOrderSharesReceivedArgs
   orderSharesCreated?: boolean | UserCountOutputTypeCountOrderSharesCreatedArgs
   notifications?: boolean | UserCountOutputTypeCountNotificationsArgs
+  expensesCreated?: boolean | UserCountOutputTypeCountExpensesCreatedArgs
+  aiChatSessions?: boolean | UserCountOutputTypeCountAiChatSessionsArgs
+  stockMovementsCreated?: boolean | UserCountOutputTypeCountStockMovementsCreatedArgs
+  projectNotesCreated?: boolean | UserCountOutputTypeCountProjectNotesCreatedArgs
+  projectFilesUploaded?: boolean | UserCountOutputTypeCountProjectFilesUploadedArgs
+  projectCostsCreated?: boolean | UserCountOutputTypeCountProjectCostsCreatedArgs
 }
 
 /**
@@ -2888,12 +4409,55 @@ export type UserCountOutputTypeCountNotificationsArgs<ExtArgs extends runtime.Ty
   where?: Prisma.NotificationWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountExpensesCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ExpenseWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountAiChatSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AiChatSessionWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountStockMovementsCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.StockMovementWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountProjectNotesCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ProjectNoteWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountProjectFilesUploadedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ProjectFileWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountProjectCostsCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ProjectCostWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   tenantId?: boolean
   email?: boolean
   passwordHash?: boolean
+  supabaseUserId?: boolean
   firstName?: boolean
   lastName?: boolean
   phone?: boolean
@@ -2919,6 +4483,12 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   orderSharesReceived?: boolean | Prisma.User$orderSharesReceivedArgs<ExtArgs>
   orderSharesCreated?: boolean | Prisma.User$orderSharesCreatedArgs<ExtArgs>
   notifications?: boolean | Prisma.User$notificationsArgs<ExtArgs>
+  expensesCreated?: boolean | Prisma.User$expensesCreatedArgs<ExtArgs>
+  aiChatSessions?: boolean | Prisma.User$aiChatSessionsArgs<ExtArgs>
+  stockMovementsCreated?: boolean | Prisma.User$stockMovementsCreatedArgs<ExtArgs>
+  projectNotesCreated?: boolean | Prisma.User$projectNotesCreatedArgs<ExtArgs>
+  projectFilesUploaded?: boolean | Prisma.User$projectFilesUploadedArgs<ExtArgs>
+  projectCostsCreated?: boolean | Prisma.User$projectCostsCreatedArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -2927,6 +4497,7 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   tenantId?: boolean
   email?: boolean
   passwordHash?: boolean
+  supabaseUserId?: boolean
   firstName?: boolean
   lastName?: boolean
   phone?: boolean
@@ -2947,6 +4518,7 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   tenantId?: boolean
   email?: boolean
   passwordHash?: boolean
+  supabaseUserId?: boolean
   firstName?: boolean
   lastName?: boolean
   phone?: boolean
@@ -2967,6 +4539,7 @@ export type UserSelectScalar = {
   tenantId?: boolean
   email?: boolean
   passwordHash?: boolean
+  supabaseUserId?: boolean
   firstName?: boolean
   lastName?: boolean
   phone?: boolean
@@ -2981,7 +4554,7 @@ export type UserSelectScalar = {
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "email" | "passwordHash" | "firstName" | "lastName" | "phone" | "address" | "avatarUrl" | "role" | "isActive" | "mustChangePassword" | "sessionVersion" | "lastLoginAt" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "email" | "passwordHash" | "supabaseUserId" | "firstName" | "lastName" | "phone" | "address" | "avatarUrl" | "role" | "isActive" | "mustChangePassword" | "sessionVersion" | "lastLoginAt" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   employee?: boolean | Prisma.User$employeeArgs<ExtArgs>
@@ -2996,6 +4569,12 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   orderSharesReceived?: boolean | Prisma.User$orderSharesReceivedArgs<ExtArgs>
   orderSharesCreated?: boolean | Prisma.User$orderSharesCreatedArgs<ExtArgs>
   notifications?: boolean | Prisma.User$notificationsArgs<ExtArgs>
+  expensesCreated?: boolean | Prisma.User$expensesCreatedArgs<ExtArgs>
+  aiChatSessions?: boolean | Prisma.User$aiChatSessionsArgs<ExtArgs>
+  stockMovementsCreated?: boolean | Prisma.User$stockMovementsCreatedArgs<ExtArgs>
+  projectNotesCreated?: boolean | Prisma.User$projectNotesCreatedArgs<ExtArgs>
+  projectFilesUploaded?: boolean | Prisma.User$projectFilesUploadedArgs<ExtArgs>
+  projectCostsCreated?: boolean | Prisma.User$projectCostsCreatedArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -3021,12 +4600,25 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     orderSharesReceived: Prisma.$OrderSharePayload<ExtArgs>[]
     orderSharesCreated: Prisma.$OrderSharePayload<ExtArgs>[]
     notifications: Prisma.$NotificationPayload<ExtArgs>[]
+    expensesCreated: Prisma.$ExpensePayload<ExtArgs>[]
+    aiChatSessions: Prisma.$AiChatSessionPayload<ExtArgs>[]
+    stockMovementsCreated: Prisma.$StockMovementPayload<ExtArgs>[]
+    projectNotesCreated: Prisma.$ProjectNotePayload<ExtArgs>[]
+    projectFilesUploaded: Prisma.$ProjectFilePayload<ExtArgs>[]
+    projectCostsCreated: Prisma.$ProjectCostPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     tenantId: string
     email: string
-    passwordHash: string
+    /**
+     * Legacy bcrypt hash — optional nach Umstellung auf Supabase Auth.
+     */
+    passwordHash: string | null
+    /**
+     * Supabase Auth user id (auth.users.id).
+     */
+    supabaseUserId: string | null
     firstName: string
     lastName: string
     phone: string | null
@@ -3446,6 +5038,12 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   orderSharesReceived<T extends Prisma.User$orderSharesReceivedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$orderSharesReceivedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderSharePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   orderSharesCreated<T extends Prisma.User$orderSharesCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$orderSharesCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderSharePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   notifications<T extends Prisma.User$notificationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  expensesCreated<T extends Prisma.User$expensesCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$expensesCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExpensePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  aiChatSessions<T extends Prisma.User$aiChatSessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$aiChatSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AiChatSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  stockMovementsCreated<T extends Prisma.User$stockMovementsCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$stockMovementsCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StockMovementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  projectNotesCreated<T extends Prisma.User$projectNotesCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$projectNotesCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectNotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  projectFilesUploaded<T extends Prisma.User$projectFilesUploadedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$projectFilesUploadedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectFilePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  projectCostsCreated<T extends Prisma.User$projectCostsCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$projectCostsCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectCostPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3479,6 +5077,7 @@ export interface UserFieldRefs {
   readonly tenantId: Prisma.FieldRef<"User", 'String'>
   readonly email: Prisma.FieldRef<"User", 'String'>
   readonly passwordHash: Prisma.FieldRef<"User", 'String'>
+  readonly supabaseUserId: Prisma.FieldRef<"User", 'String'>
   readonly firstName: Prisma.FieldRef<"User", 'String'>
   readonly lastName: Prisma.FieldRef<"User", 'String'>
   readonly phone: Prisma.FieldRef<"User", 'String'>
@@ -4167,6 +5766,150 @@ export type User$notificationsArgs<ExtArgs extends runtime.Types.Extensions.Inte
   take?: number
   skip?: number
   distinct?: Prisma.NotificationScalarFieldEnum | Prisma.NotificationScalarFieldEnum[]
+}
+
+/**
+ * User.expensesCreated
+ */
+export type User$expensesCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Expense
+   */
+  select?: Prisma.ExpenseSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Expense
+   */
+  omit?: Prisma.ExpenseOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ExpenseInclude<ExtArgs> | null
+  where?: Prisma.ExpenseWhereInput
+  orderBy?: Prisma.ExpenseOrderByWithRelationInput | Prisma.ExpenseOrderByWithRelationInput[]
+  cursor?: Prisma.ExpenseWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ExpenseScalarFieldEnum | Prisma.ExpenseScalarFieldEnum[]
+}
+
+/**
+ * User.aiChatSessions
+ */
+export type User$aiChatSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AiChatSession
+   */
+  select?: Prisma.AiChatSessionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AiChatSession
+   */
+  omit?: Prisma.AiChatSessionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AiChatSessionInclude<ExtArgs> | null
+  where?: Prisma.AiChatSessionWhereInput
+  orderBy?: Prisma.AiChatSessionOrderByWithRelationInput | Prisma.AiChatSessionOrderByWithRelationInput[]
+  cursor?: Prisma.AiChatSessionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AiChatSessionScalarFieldEnum | Prisma.AiChatSessionScalarFieldEnum[]
+}
+
+/**
+ * User.stockMovementsCreated
+ */
+export type User$stockMovementsCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StockMovement
+   */
+  select?: Prisma.StockMovementSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the StockMovement
+   */
+  omit?: Prisma.StockMovementOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StockMovementInclude<ExtArgs> | null
+  where?: Prisma.StockMovementWhereInput
+  orderBy?: Prisma.StockMovementOrderByWithRelationInput | Prisma.StockMovementOrderByWithRelationInput[]
+  cursor?: Prisma.StockMovementWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.StockMovementScalarFieldEnum | Prisma.StockMovementScalarFieldEnum[]
+}
+
+/**
+ * User.projectNotesCreated
+ */
+export type User$projectNotesCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ProjectNote
+   */
+  select?: Prisma.ProjectNoteSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ProjectNote
+   */
+  omit?: Prisma.ProjectNoteOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ProjectNoteInclude<ExtArgs> | null
+  where?: Prisma.ProjectNoteWhereInput
+  orderBy?: Prisma.ProjectNoteOrderByWithRelationInput | Prisma.ProjectNoteOrderByWithRelationInput[]
+  cursor?: Prisma.ProjectNoteWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ProjectNoteScalarFieldEnum | Prisma.ProjectNoteScalarFieldEnum[]
+}
+
+/**
+ * User.projectFilesUploaded
+ */
+export type User$projectFilesUploadedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ProjectFile
+   */
+  select?: Prisma.ProjectFileSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ProjectFile
+   */
+  omit?: Prisma.ProjectFileOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ProjectFileInclude<ExtArgs> | null
+  where?: Prisma.ProjectFileWhereInput
+  orderBy?: Prisma.ProjectFileOrderByWithRelationInput | Prisma.ProjectFileOrderByWithRelationInput[]
+  cursor?: Prisma.ProjectFileWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ProjectFileScalarFieldEnum | Prisma.ProjectFileScalarFieldEnum[]
+}
+
+/**
+ * User.projectCostsCreated
+ */
+export type User$projectCostsCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ProjectCost
+   */
+  select?: Prisma.ProjectCostSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ProjectCost
+   */
+  omit?: Prisma.ProjectCostOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ProjectCostInclude<ExtArgs> | null
+  where?: Prisma.ProjectCostWhereInput
+  orderBy?: Prisma.ProjectCostOrderByWithRelationInput | Prisma.ProjectCostOrderByWithRelationInput[]
+  cursor?: Prisma.ProjectCostWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ProjectCostScalarFieldEnum | Prisma.ProjectCostScalarFieldEnum[]
 }
 
 /**

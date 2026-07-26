@@ -1,6 +1,6 @@
 import { Inngest } from "inngest";
 
-export const inngest = new Inngest({ id: "handwerker-app" });
+export const inngest = new Inngest({ id: "jomaster" });
 
 export function isInngestEnabled(): boolean {
   return Boolean(

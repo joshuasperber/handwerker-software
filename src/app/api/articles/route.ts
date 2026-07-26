@@ -39,8 +39,9 @@ export async function POST(request: NextRequest) {
       tenantId: auth.tenantId,
       name: body.name,
       sku: body.sku,
-      unit: body.unit ?? "Stk",
+      unit: body.unit ?? "Stück",
       category: body.category,
+      description: body.description || undefined,
       articleType: body.articleType ?? "MATERIAL",
       minimumStock: Number(body.minimumStock ?? 0),
       targetStock: Number(body.targetStock ?? 0),
@@ -49,6 +50,7 @@ export async function POST(request: NextRequest) {
       reorderStrategy: body.reorderStrategy ?? "MANUELL",
       supplierName: body.supplierName,
       purchasePriceNet: body.purchasePriceNet != null ? Number(body.purchasePriceNet) : undefined,
+      salesPriceNet: body.salesPriceNet != null ? Number(body.salesPriceNet) : undefined,
     },
   });
 

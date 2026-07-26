@@ -17,6 +17,7 @@ import { format } from "date-fns";
 import { de } from "date-fns/locale";
 import { toast } from "sonner";
 import { compressImage } from "@/lib/image-compression";
+import { swrKeys, useApiSWR } from "@/lib/swr";
 
 interface MaterialLine {
   id: string;
@@ -59,9 +60,13 @@ const TAB_ACTIVE = "bg-slate-200 text-slate-900";
 const TAB_INACTIVE = "text-slate-500 hover:bg-slate-100";
 
 function MonteurTagesplanViewContent() {
-  const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [selectedDate, setSelectedDate] = useState(format(new Date(), "yyyy-MM-dd"));
-  const [scheduleError, setScheduleError] = useState("");
+  const {
+    data: appointments = [],
+    error: scheduleSwrError,
+    mutate: mutateSchedule,
+  } = useApiSWR<Appointment[]>(swrKeys.monteurSchedule(selectedDate));
+  const scheduleError = scheduleSwrError?.message ?? "";
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [teamFilter, setTeamFilter] = useState<string>("all");
   const [vehicleFilter, setVehicleFilter] = useState<string>("all");
@@ -89,20 +94,8 @@ function MonteurTagesplanViewContent() {
   const [ownSaving, setOwnSaving] = useState(false);
 
   const loadSchedule = useCallback(() => {
-    setScheduleError("");
-    fetch(`/api/monteur/schedule?date=${selectedDate}`)
-      .then((r) => r.json())
-      .then((d) => {
-        if (d.success) setAppointments(d.data);
-        else setScheduleError(d.error ?? "Termine konnten nicht geladen werden");
-      })
-      .catch(() => setScheduleError("Verbindungsfehler beim Laden der Termine"));
-  }, [selectedDate]);
-
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- Tagesplan neu laden bei Datumswechsel
-    loadSchedule();
-  }, [loadSchedule]);
+    void mutateSchedule();
+  }, [mutateSchedule]);
 
   const loadRequests = useCallback(() => {
     fetch(`/api/staff-requests?mine=1&date=${selectedDate}`)

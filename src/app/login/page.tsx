@@ -16,7 +16,7 @@ export default async function LoginPage({
           <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-600 text-white mb-4">
             <Wrench className="h-6 w-6" />
           </div>
-          <h1 className="text-2xl font-bold text-slate-900">Handwerker App</h1>
+          <h1 className="text-2xl font-bold text-slate-900">JoMaster</h1>
           <p className="text-sm text-slate-500 mt-1">Melden Sie sich an</p>
         </div>
 

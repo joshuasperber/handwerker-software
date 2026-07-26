@@ -4,6 +4,8 @@ import { requireAuth, apiSuccess, apiError } from "@/lib/api";
 import { hashPassword } from "@/lib/auth";
 import type { UserRole } from "@/generated/prisma/client";
 import { pickDistinctEmployeeColor } from "@/lib/employee-colors";
+import { createSupabaseAuthUser } from "@/lib/supabase/auth-users";
+import { isSupabaseAuthConfigured } from "@/lib/supabase/env";
 
 const ALLOWED_ROLES: UserRole[] = ["ADMIN", "MEISTER", "BUERO", "MONTEUR"];
 
@@ -40,21 +42,35 @@ export async function POST(request: NextRequest) {
     return apiError("Ungültige Rolle", 400);
   }
 
+  const normalizedEmail = String(email).toLowerCase().trim();
+  const startPassword = password || DEFAULT_EMPLOYEE_PASSWORD;
+
   const existing = await prisma.user.findFirst({
-    where: { tenantId: auth.tenantId, email: email.toLowerCase() },
+    where: { tenantId: auth.tenantId, email: normalizedEmail },
   });
   if (existing) return apiError("E-Mail bereits vergeben", 400);
 
-  // Ohne explizites Passwort wird das Initialpasswort (admin1234) gesetzt.
-  // Der Mitarbeiter wird beim ersten Login aufgefordert, es zu ändern.
-  const passwordHash = await hashPassword(password || DEFAULT_EMPLOYEE_PASSWORD);
+  let supabaseUserId: string | null = null;
+  if (isSupabaseAuthConfigured()) {
+    const created = await createSupabaseAuthUser({
+      email: normalizedEmail,
+      password: startPassword,
+      firstName,
+      lastName,
+    });
+    if (!created.ok) return apiError(created.error, 400);
+    supabaseUserId = created.supabaseUserId;
+  }
+
+  const passwordHash = await hashPassword(startPassword);
   const employeeColor = color ?? (await pickDistinctEmployeeColor(auth.tenantId));
 
   const user = await prisma.user.create({
     data: {
       tenantId: auth.tenantId,
-      email: email.toLowerCase(),
+      email: normalizedEmail,
       passwordHash,
+      supabaseUserId,
       firstName,
       lastName,
       phone: phone || null,

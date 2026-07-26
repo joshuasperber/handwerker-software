@@ -300,6 +300,7 @@ export type TenantWhereInput = {
   customers?: Prisma.CustomerListRelationFilter
   properties?: Prisma.PropertyListRelationFilter
   services?: Prisma.ServiceListRelationFilter
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionListRelationFilter
   employees?: Prisma.EmployeeListRelationFilter
   orders?: Prisma.OrderListRelationFilter
   appointments?: Prisma.AppointmentListRelationFilter
@@ -331,6 +332,11 @@ export type TenantWhereInput = {
   inAppNotifications?: Prisma.NotificationListRelationFilter
   notificationSettings?: Prisma.XOR<Prisma.NotificationSettingsNullableScalarRelationFilter, Prisma.NotificationSettingsWhereInput> | null
   jobRuns?: Prisma.JobRunListRelationFilter
+  financeSettings?: Prisma.XOR<Prisma.FinanceSettingsNullableScalarRelationFilter, Prisma.FinanceSettingsWhereInput> | null
+  expenses?: Prisma.ExpenseListRelationFilter
+  plannedInvestments?: Prisma.PlannedInvestmentListRelationFilter
+  aiChatSessions?: Prisma.AiChatSessionListRelationFilter
+  projects?: Prisma.ProjectListRelationFilter
 }
 
 export type TenantOrderByWithRelationInput = {
@@ -353,6 +359,7 @@ export type TenantOrderByWithRelationInput = {
   customers?: Prisma.CustomerOrderByRelationAggregateInput
   properties?: Prisma.PropertyOrderByRelationAggregateInput
   services?: Prisma.ServiceOrderByRelationAggregateInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionOrderByRelationAggregateInput
   employees?: Prisma.EmployeeOrderByRelationAggregateInput
   orders?: Prisma.OrderOrderByRelationAggregateInput
   appointments?: Prisma.AppointmentOrderByRelationAggregateInput
@@ -384,6 +391,11 @@ export type TenantOrderByWithRelationInput = {
   inAppNotifications?: Prisma.NotificationOrderByRelationAggregateInput
   notificationSettings?: Prisma.NotificationSettingsOrderByWithRelationInput
   jobRuns?: Prisma.JobRunOrderByRelationAggregateInput
+  financeSettings?: Prisma.FinanceSettingsOrderByWithRelationInput
+  expenses?: Prisma.ExpenseOrderByRelationAggregateInput
+  plannedInvestments?: Prisma.PlannedInvestmentOrderByRelationAggregateInput
+  aiChatSessions?: Prisma.AiChatSessionOrderByRelationAggregateInput
+  projects?: Prisma.ProjectOrderByRelationAggregateInput
 }
 
 export type TenantWhereUniqueInput = Prisma.AtLeast<{
@@ -409,6 +421,7 @@ export type TenantWhereUniqueInput = Prisma.AtLeast<{
   customers?: Prisma.CustomerListRelationFilter
   properties?: Prisma.PropertyListRelationFilter
   services?: Prisma.ServiceListRelationFilter
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionListRelationFilter
   employees?: Prisma.EmployeeListRelationFilter
   orders?: Prisma.OrderListRelationFilter
   appointments?: Prisma.AppointmentListRelationFilter
@@ -440,6 +453,11 @@ export type TenantWhereUniqueInput = Prisma.AtLeast<{
   inAppNotifications?: Prisma.NotificationListRelationFilter
   notificationSettings?: Prisma.XOR<Prisma.NotificationSettingsNullableScalarRelationFilter, Prisma.NotificationSettingsWhereInput> | null
   jobRuns?: Prisma.JobRunListRelationFilter
+  financeSettings?: Prisma.XOR<Prisma.FinanceSettingsNullableScalarRelationFilter, Prisma.FinanceSettingsWhereInput> | null
+  expenses?: Prisma.ExpenseListRelationFilter
+  plannedInvestments?: Prisma.PlannedInvestmentListRelationFilter
+  aiChatSessions?: Prisma.AiChatSessionListRelationFilter
+  projects?: Prisma.ProjectListRelationFilter
 }, "id" | "slug">
 
 export type TenantOrderByWithAggregationInput = {
@@ -506,6 +524,7 @@ export type TenantCreateInput = {
   customers?: Prisma.CustomerCreateNestedManyWithoutTenantInput
   properties?: Prisma.PropertyCreateNestedManyWithoutTenantInput
   services?: Prisma.ServiceCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionCreateNestedManyWithoutTenantInput
   employees?: Prisma.EmployeeCreateNestedManyWithoutTenantInput
   orders?: Prisma.OrderCreateNestedManyWithoutTenantInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutTenantInput
@@ -537,6 +556,11 @@ export type TenantCreateInput = {
   inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
   jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateInput = {
@@ -559,6 +583,7 @@ export type TenantUncheckedCreateInput = {
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutTenantInput
   properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutTenantInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedCreateNestedManyWithoutTenantInput
   employees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutTenantInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutTenantInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutTenantInput
@@ -590,6 +615,11 @@ export type TenantUncheckedCreateInput = {
   inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
   jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUpdateInput = {
@@ -612,6 +642,7 @@ export type TenantUpdateInput = {
   customers?: Prisma.CustomerUpdateManyWithoutTenantNestedInput
   properties?: Prisma.PropertyUpdateManyWithoutTenantNestedInput
   services?: Prisma.ServiceUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUpdateManyWithoutTenantNestedInput
   employees?: Prisma.EmployeeUpdateManyWithoutTenantNestedInput
   orders?: Prisma.OrderUpdateManyWithoutTenantNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutTenantNestedInput
@@ -643,6 +674,11 @@ export type TenantUpdateInput = {
   inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
   jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateInput = {
@@ -665,6 +701,7 @@ export type TenantUncheckedUpdateInput = {
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutTenantNestedInput
   properties?: Prisma.PropertyUncheckedUpdateManyWithoutTenantNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedUpdateManyWithoutTenantNestedInput
   employees?: Prisma.EmployeeUncheckedUpdateManyWithoutTenantNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutTenantNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutTenantNestedInput
@@ -696,6 +733,11 @@ export type TenantUncheckedUpdateInput = {
   inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
   jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateManyInput = {
@@ -940,6 +982,20 @@ export type TenantUpdateOneRequiredWithoutServiceAreasNestedInput = {
   upsert?: Prisma.TenantUpsertWithoutServiceAreasInput
   connect?: Prisma.TenantWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.TenantUpdateToOneWithWhereWithoutServiceAreasInput, Prisma.TenantUpdateWithoutServiceAreasInput>, Prisma.TenantUncheckedUpdateWithoutServiceAreasInput>
+}
+
+export type TenantCreateNestedOneWithoutOrderTypeDefinitionsInput = {
+  create?: Prisma.XOR<Prisma.TenantCreateWithoutOrderTypeDefinitionsInput, Prisma.TenantUncheckedCreateWithoutOrderTypeDefinitionsInput>
+  connectOrCreate?: Prisma.TenantCreateOrConnectWithoutOrderTypeDefinitionsInput
+  connect?: Prisma.TenantWhereUniqueInput
+}
+
+export type TenantUpdateOneRequiredWithoutOrderTypeDefinitionsNestedInput = {
+  create?: Prisma.XOR<Prisma.TenantCreateWithoutOrderTypeDefinitionsInput, Prisma.TenantUncheckedCreateWithoutOrderTypeDefinitionsInput>
+  connectOrCreate?: Prisma.TenantCreateOrConnectWithoutOrderTypeDefinitionsInput
+  upsert?: Prisma.TenantUpsertWithoutOrderTypeDefinitionsInput
+  connect?: Prisma.TenantWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TenantUpdateToOneWithWhereWithoutOrderTypeDefinitionsInput, Prisma.TenantUpdateWithoutOrderTypeDefinitionsInput>, Prisma.TenantUncheckedUpdateWithoutOrderTypeDefinitionsInput>
 }
 
 export type TenantCreateNestedOneWithoutOrdersInput = {
@@ -1320,6 +1376,48 @@ export type TenantUpdateOneRequiredWithoutOrderSharesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.TenantUpdateToOneWithWhereWithoutOrderSharesInput, Prisma.TenantUpdateWithoutOrderSharesInput>, Prisma.TenantUncheckedUpdateWithoutOrderSharesInput>
 }
 
+export type TenantCreateNestedOneWithoutFinanceSettingsInput = {
+  create?: Prisma.XOR<Prisma.TenantCreateWithoutFinanceSettingsInput, Prisma.TenantUncheckedCreateWithoutFinanceSettingsInput>
+  connectOrCreate?: Prisma.TenantCreateOrConnectWithoutFinanceSettingsInput
+  connect?: Prisma.TenantWhereUniqueInput
+}
+
+export type TenantUpdateOneRequiredWithoutFinanceSettingsNestedInput = {
+  create?: Prisma.XOR<Prisma.TenantCreateWithoutFinanceSettingsInput, Prisma.TenantUncheckedCreateWithoutFinanceSettingsInput>
+  connectOrCreate?: Prisma.TenantCreateOrConnectWithoutFinanceSettingsInput
+  upsert?: Prisma.TenantUpsertWithoutFinanceSettingsInput
+  connect?: Prisma.TenantWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TenantUpdateToOneWithWhereWithoutFinanceSettingsInput, Prisma.TenantUpdateWithoutFinanceSettingsInput>, Prisma.TenantUncheckedUpdateWithoutFinanceSettingsInput>
+}
+
+export type TenantCreateNestedOneWithoutExpensesInput = {
+  create?: Prisma.XOR<Prisma.TenantCreateWithoutExpensesInput, Prisma.TenantUncheckedCreateWithoutExpensesInput>
+  connectOrCreate?: Prisma.TenantCreateOrConnectWithoutExpensesInput
+  connect?: Prisma.TenantWhereUniqueInput
+}
+
+export type TenantUpdateOneRequiredWithoutExpensesNestedInput = {
+  create?: Prisma.XOR<Prisma.TenantCreateWithoutExpensesInput, Prisma.TenantUncheckedCreateWithoutExpensesInput>
+  connectOrCreate?: Prisma.TenantCreateOrConnectWithoutExpensesInput
+  upsert?: Prisma.TenantUpsertWithoutExpensesInput
+  connect?: Prisma.TenantWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TenantUpdateToOneWithWhereWithoutExpensesInput, Prisma.TenantUpdateWithoutExpensesInput>, Prisma.TenantUncheckedUpdateWithoutExpensesInput>
+}
+
+export type TenantCreateNestedOneWithoutPlannedInvestmentsInput = {
+  create?: Prisma.XOR<Prisma.TenantCreateWithoutPlannedInvestmentsInput, Prisma.TenantUncheckedCreateWithoutPlannedInvestmentsInput>
+  connectOrCreate?: Prisma.TenantCreateOrConnectWithoutPlannedInvestmentsInput
+  connect?: Prisma.TenantWhereUniqueInput
+}
+
+export type TenantUpdateOneRequiredWithoutPlannedInvestmentsNestedInput = {
+  create?: Prisma.XOR<Prisma.TenantCreateWithoutPlannedInvestmentsInput, Prisma.TenantUncheckedCreateWithoutPlannedInvestmentsInput>
+  connectOrCreate?: Prisma.TenantCreateOrConnectWithoutPlannedInvestmentsInput
+  upsert?: Prisma.TenantUpsertWithoutPlannedInvestmentsInput
+  connect?: Prisma.TenantWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TenantUpdateToOneWithWhereWithoutPlannedInvestmentsInput, Prisma.TenantUpdateWithoutPlannedInvestmentsInput>, Prisma.TenantUncheckedUpdateWithoutPlannedInvestmentsInput>
+}
+
 export type TenantCreateNestedOneWithoutJobRunsInput = {
   create?: Prisma.XOR<Prisma.TenantCreateWithoutJobRunsInput, Prisma.TenantUncheckedCreateWithoutJobRunsInput>
   connectOrCreate?: Prisma.TenantCreateOrConnectWithoutJobRunsInput
@@ -1334,6 +1432,34 @@ export type TenantUpdateOneWithoutJobRunsNestedInput = {
   delete?: Prisma.TenantWhereInput | boolean
   connect?: Prisma.TenantWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.TenantUpdateToOneWithWhereWithoutJobRunsInput, Prisma.TenantUpdateWithoutJobRunsInput>, Prisma.TenantUncheckedUpdateWithoutJobRunsInput>
+}
+
+export type TenantCreateNestedOneWithoutAiChatSessionsInput = {
+  create?: Prisma.XOR<Prisma.TenantCreateWithoutAiChatSessionsInput, Prisma.TenantUncheckedCreateWithoutAiChatSessionsInput>
+  connectOrCreate?: Prisma.TenantCreateOrConnectWithoutAiChatSessionsInput
+  connect?: Prisma.TenantWhereUniqueInput
+}
+
+export type TenantUpdateOneRequiredWithoutAiChatSessionsNestedInput = {
+  create?: Prisma.XOR<Prisma.TenantCreateWithoutAiChatSessionsInput, Prisma.TenantUncheckedCreateWithoutAiChatSessionsInput>
+  connectOrCreate?: Prisma.TenantCreateOrConnectWithoutAiChatSessionsInput
+  upsert?: Prisma.TenantUpsertWithoutAiChatSessionsInput
+  connect?: Prisma.TenantWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TenantUpdateToOneWithWhereWithoutAiChatSessionsInput, Prisma.TenantUpdateWithoutAiChatSessionsInput>, Prisma.TenantUncheckedUpdateWithoutAiChatSessionsInput>
+}
+
+export type TenantCreateNestedOneWithoutProjectsInput = {
+  create?: Prisma.XOR<Prisma.TenantCreateWithoutProjectsInput, Prisma.TenantUncheckedCreateWithoutProjectsInput>
+  connectOrCreate?: Prisma.TenantCreateOrConnectWithoutProjectsInput
+  connect?: Prisma.TenantWhereUniqueInput
+}
+
+export type TenantUpdateOneRequiredWithoutProjectsNestedInput = {
+  create?: Prisma.XOR<Prisma.TenantCreateWithoutProjectsInput, Prisma.TenantUncheckedCreateWithoutProjectsInput>
+  connectOrCreate?: Prisma.TenantCreateOrConnectWithoutProjectsInput
+  upsert?: Prisma.TenantUpsertWithoutProjectsInput
+  connect?: Prisma.TenantWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TenantUpdateToOneWithWhereWithoutProjectsInput, Prisma.TenantUpdateWithoutProjectsInput>, Prisma.TenantUncheckedUpdateWithoutProjectsInput>
 }
 
 export type TenantCreateWithoutUsersInput = {
@@ -1355,6 +1481,7 @@ export type TenantCreateWithoutUsersInput = {
   customers?: Prisma.CustomerCreateNestedManyWithoutTenantInput
   properties?: Prisma.PropertyCreateNestedManyWithoutTenantInput
   services?: Prisma.ServiceCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionCreateNestedManyWithoutTenantInput
   employees?: Prisma.EmployeeCreateNestedManyWithoutTenantInput
   orders?: Prisma.OrderCreateNestedManyWithoutTenantInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutTenantInput
@@ -1386,6 +1513,11 @@ export type TenantCreateWithoutUsersInput = {
   inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
   jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutUsersInput = {
@@ -1407,6 +1539,7 @@ export type TenantUncheckedCreateWithoutUsersInput = {
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutTenantInput
   properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutTenantInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedCreateNestedManyWithoutTenantInput
   employees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutTenantInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutTenantInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutTenantInput
@@ -1438,6 +1571,11 @@ export type TenantUncheckedCreateWithoutUsersInput = {
   inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
   jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutUsersInput = {
@@ -1475,6 +1613,7 @@ export type TenantUpdateWithoutUsersInput = {
   customers?: Prisma.CustomerUpdateManyWithoutTenantNestedInput
   properties?: Prisma.PropertyUpdateManyWithoutTenantNestedInput
   services?: Prisma.ServiceUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUpdateManyWithoutTenantNestedInput
   employees?: Prisma.EmployeeUpdateManyWithoutTenantNestedInput
   orders?: Prisma.OrderUpdateManyWithoutTenantNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutTenantNestedInput
@@ -1506,6 +1645,11 @@ export type TenantUpdateWithoutUsersInput = {
   inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
   jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutUsersInput = {
@@ -1527,6 +1671,7 @@ export type TenantUncheckedUpdateWithoutUsersInput = {
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutTenantNestedInput
   properties?: Prisma.PropertyUncheckedUpdateManyWithoutTenantNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedUpdateManyWithoutTenantNestedInput
   employees?: Prisma.EmployeeUncheckedUpdateManyWithoutTenantNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutTenantNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutTenantNestedInput
@@ -1558,6 +1703,11 @@ export type TenantUncheckedUpdateWithoutUsersInput = {
   inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
   jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutCustomersInput = {
@@ -1579,6 +1729,7 @@ export type TenantCreateWithoutCustomersInput = {
   users?: Prisma.UserCreateNestedManyWithoutTenantInput
   properties?: Prisma.PropertyCreateNestedManyWithoutTenantInput
   services?: Prisma.ServiceCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionCreateNestedManyWithoutTenantInput
   employees?: Prisma.EmployeeCreateNestedManyWithoutTenantInput
   orders?: Prisma.OrderCreateNestedManyWithoutTenantInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutTenantInput
@@ -1610,6 +1761,11 @@ export type TenantCreateWithoutCustomersInput = {
   inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
   jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutCustomersInput = {
@@ -1631,6 +1787,7 @@ export type TenantUncheckedCreateWithoutCustomersInput = {
   users?: Prisma.UserUncheckedCreateNestedManyWithoutTenantInput
   properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutTenantInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedCreateNestedManyWithoutTenantInput
   employees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutTenantInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutTenantInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutTenantInput
@@ -1662,6 +1819,11 @@ export type TenantUncheckedCreateWithoutCustomersInput = {
   inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
   jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutCustomersInput = {
@@ -1699,6 +1861,7 @@ export type TenantUpdateWithoutCustomersInput = {
   users?: Prisma.UserUpdateManyWithoutTenantNestedInput
   properties?: Prisma.PropertyUpdateManyWithoutTenantNestedInput
   services?: Prisma.ServiceUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUpdateManyWithoutTenantNestedInput
   employees?: Prisma.EmployeeUpdateManyWithoutTenantNestedInput
   orders?: Prisma.OrderUpdateManyWithoutTenantNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutTenantNestedInput
@@ -1730,6 +1893,11 @@ export type TenantUpdateWithoutCustomersInput = {
   inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
   jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutCustomersInput = {
@@ -1751,6 +1919,7 @@ export type TenantUncheckedUpdateWithoutCustomersInput = {
   users?: Prisma.UserUncheckedUpdateManyWithoutTenantNestedInput
   properties?: Prisma.PropertyUncheckedUpdateManyWithoutTenantNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedUpdateManyWithoutTenantNestedInput
   employees?: Prisma.EmployeeUncheckedUpdateManyWithoutTenantNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutTenantNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutTenantNestedInput
@@ -1782,6 +1951,11 @@ export type TenantUncheckedUpdateWithoutCustomersInput = {
   inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
   jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutPropertiesInput = {
@@ -1803,6 +1977,7 @@ export type TenantCreateWithoutPropertiesInput = {
   users?: Prisma.UserCreateNestedManyWithoutTenantInput
   customers?: Prisma.CustomerCreateNestedManyWithoutTenantInput
   services?: Prisma.ServiceCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionCreateNestedManyWithoutTenantInput
   employees?: Prisma.EmployeeCreateNestedManyWithoutTenantInput
   orders?: Prisma.OrderCreateNestedManyWithoutTenantInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutTenantInput
@@ -1834,6 +2009,11 @@ export type TenantCreateWithoutPropertiesInput = {
   inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
   jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutPropertiesInput = {
@@ -1855,6 +2035,7 @@ export type TenantUncheckedCreateWithoutPropertiesInput = {
   users?: Prisma.UserUncheckedCreateNestedManyWithoutTenantInput
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutTenantInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedCreateNestedManyWithoutTenantInput
   employees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutTenantInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutTenantInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutTenantInput
@@ -1886,6 +2067,11 @@ export type TenantUncheckedCreateWithoutPropertiesInput = {
   inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
   jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutPropertiesInput = {
@@ -1923,6 +2109,7 @@ export type TenantUpdateWithoutPropertiesInput = {
   users?: Prisma.UserUpdateManyWithoutTenantNestedInput
   customers?: Prisma.CustomerUpdateManyWithoutTenantNestedInput
   services?: Prisma.ServiceUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUpdateManyWithoutTenantNestedInput
   employees?: Prisma.EmployeeUpdateManyWithoutTenantNestedInput
   orders?: Prisma.OrderUpdateManyWithoutTenantNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutTenantNestedInput
@@ -1954,6 +2141,11 @@ export type TenantUpdateWithoutPropertiesInput = {
   inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
   jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutPropertiesInput = {
@@ -1975,6 +2167,7 @@ export type TenantUncheckedUpdateWithoutPropertiesInput = {
   users?: Prisma.UserUncheckedUpdateManyWithoutTenantNestedInput
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutTenantNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedUpdateManyWithoutTenantNestedInput
   employees?: Prisma.EmployeeUncheckedUpdateManyWithoutTenantNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutTenantNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutTenantNestedInput
@@ -2006,6 +2199,11 @@ export type TenantUncheckedUpdateWithoutPropertiesInput = {
   inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
   jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutServicesInput = {
@@ -2027,6 +2225,7 @@ export type TenantCreateWithoutServicesInput = {
   users?: Prisma.UserCreateNestedManyWithoutTenantInput
   customers?: Prisma.CustomerCreateNestedManyWithoutTenantInput
   properties?: Prisma.PropertyCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionCreateNestedManyWithoutTenantInput
   employees?: Prisma.EmployeeCreateNestedManyWithoutTenantInput
   orders?: Prisma.OrderCreateNestedManyWithoutTenantInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutTenantInput
@@ -2058,6 +2257,11 @@ export type TenantCreateWithoutServicesInput = {
   inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
   jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutServicesInput = {
@@ -2079,6 +2283,7 @@ export type TenantUncheckedCreateWithoutServicesInput = {
   users?: Prisma.UserUncheckedCreateNestedManyWithoutTenantInput
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutTenantInput
   properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedCreateNestedManyWithoutTenantInput
   employees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutTenantInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutTenantInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutTenantInput
@@ -2110,6 +2315,11 @@ export type TenantUncheckedCreateWithoutServicesInput = {
   inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
   jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutServicesInput = {
@@ -2147,6 +2357,7 @@ export type TenantUpdateWithoutServicesInput = {
   users?: Prisma.UserUpdateManyWithoutTenantNestedInput
   customers?: Prisma.CustomerUpdateManyWithoutTenantNestedInput
   properties?: Prisma.PropertyUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUpdateManyWithoutTenantNestedInput
   employees?: Prisma.EmployeeUpdateManyWithoutTenantNestedInput
   orders?: Prisma.OrderUpdateManyWithoutTenantNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutTenantNestedInput
@@ -2178,6 +2389,11 @@ export type TenantUpdateWithoutServicesInput = {
   inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
   jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutServicesInput = {
@@ -2199,6 +2415,7 @@ export type TenantUncheckedUpdateWithoutServicesInput = {
   users?: Prisma.UserUncheckedUpdateManyWithoutTenantNestedInput
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutTenantNestedInput
   properties?: Prisma.PropertyUncheckedUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedUpdateManyWithoutTenantNestedInput
   employees?: Prisma.EmployeeUncheckedUpdateManyWithoutTenantNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutTenantNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutTenantNestedInput
@@ -2230,6 +2447,11 @@ export type TenantUncheckedUpdateWithoutServicesInput = {
   inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
   jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutEmployeesInput = {
@@ -2252,6 +2474,7 @@ export type TenantCreateWithoutEmployeesInput = {
   customers?: Prisma.CustomerCreateNestedManyWithoutTenantInput
   properties?: Prisma.PropertyCreateNestedManyWithoutTenantInput
   services?: Prisma.ServiceCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionCreateNestedManyWithoutTenantInput
   orders?: Prisma.OrderCreateNestedManyWithoutTenantInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutTenantInput
   checklistTemplates?: Prisma.ChecklistTemplateCreateNestedManyWithoutTenantInput
@@ -2282,6 +2505,11 @@ export type TenantCreateWithoutEmployeesInput = {
   inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
   jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutEmployeesInput = {
@@ -2304,6 +2532,7 @@ export type TenantUncheckedCreateWithoutEmployeesInput = {
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutTenantInput
   properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutTenantInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedCreateNestedManyWithoutTenantInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutTenantInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutTenantInput
   checklistTemplates?: Prisma.ChecklistTemplateUncheckedCreateNestedManyWithoutTenantInput
@@ -2334,6 +2563,11 @@ export type TenantUncheckedCreateWithoutEmployeesInput = {
   inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
   jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutEmployeesInput = {
@@ -2372,6 +2606,7 @@ export type TenantUpdateWithoutEmployeesInput = {
   customers?: Prisma.CustomerUpdateManyWithoutTenantNestedInput
   properties?: Prisma.PropertyUpdateManyWithoutTenantNestedInput
   services?: Prisma.ServiceUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUpdateManyWithoutTenantNestedInput
   orders?: Prisma.OrderUpdateManyWithoutTenantNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutTenantNestedInput
   checklistTemplates?: Prisma.ChecklistTemplateUpdateManyWithoutTenantNestedInput
@@ -2402,6 +2637,11 @@ export type TenantUpdateWithoutEmployeesInput = {
   inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
   jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutEmployeesInput = {
@@ -2424,6 +2664,7 @@ export type TenantUncheckedUpdateWithoutEmployeesInput = {
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutTenantNestedInput
   properties?: Prisma.PropertyUncheckedUpdateManyWithoutTenantNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedUpdateManyWithoutTenantNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutTenantNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutTenantNestedInput
   checklistTemplates?: Prisma.ChecklistTemplateUncheckedUpdateManyWithoutTenantNestedInput
@@ -2454,6 +2695,11 @@ export type TenantUncheckedUpdateWithoutEmployeesInput = {
   inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
   jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutWorkingHoursInput = {
@@ -2476,6 +2722,7 @@ export type TenantCreateWithoutWorkingHoursInput = {
   customers?: Prisma.CustomerCreateNestedManyWithoutTenantInput
   properties?: Prisma.PropertyCreateNestedManyWithoutTenantInput
   services?: Prisma.ServiceCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionCreateNestedManyWithoutTenantInput
   employees?: Prisma.EmployeeCreateNestedManyWithoutTenantInput
   orders?: Prisma.OrderCreateNestedManyWithoutTenantInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutTenantInput
@@ -2506,6 +2753,11 @@ export type TenantCreateWithoutWorkingHoursInput = {
   inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
   jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutWorkingHoursInput = {
@@ -2528,6 +2780,7 @@ export type TenantUncheckedCreateWithoutWorkingHoursInput = {
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutTenantInput
   properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutTenantInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedCreateNestedManyWithoutTenantInput
   employees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutTenantInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutTenantInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutTenantInput
@@ -2558,6 +2811,11 @@ export type TenantUncheckedCreateWithoutWorkingHoursInput = {
   inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
   jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutWorkingHoursInput = {
@@ -2596,6 +2854,7 @@ export type TenantUpdateWithoutWorkingHoursInput = {
   customers?: Prisma.CustomerUpdateManyWithoutTenantNestedInput
   properties?: Prisma.PropertyUpdateManyWithoutTenantNestedInput
   services?: Prisma.ServiceUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUpdateManyWithoutTenantNestedInput
   employees?: Prisma.EmployeeUpdateManyWithoutTenantNestedInput
   orders?: Prisma.OrderUpdateManyWithoutTenantNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutTenantNestedInput
@@ -2626,6 +2885,11 @@ export type TenantUpdateWithoutWorkingHoursInput = {
   inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
   jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutWorkingHoursInput = {
@@ -2648,6 +2912,7 @@ export type TenantUncheckedUpdateWithoutWorkingHoursInput = {
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutTenantNestedInput
   properties?: Prisma.PropertyUncheckedUpdateManyWithoutTenantNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedUpdateManyWithoutTenantNestedInput
   employees?: Prisma.EmployeeUncheckedUpdateManyWithoutTenantNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutTenantNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutTenantNestedInput
@@ -2678,6 +2943,11 @@ export type TenantUncheckedUpdateWithoutWorkingHoursInput = {
   inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
   jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutServiceAreasInput = {
@@ -2700,6 +2970,7 @@ export type TenantCreateWithoutServiceAreasInput = {
   customers?: Prisma.CustomerCreateNestedManyWithoutTenantInput
   properties?: Prisma.PropertyCreateNestedManyWithoutTenantInput
   services?: Prisma.ServiceCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionCreateNestedManyWithoutTenantInput
   employees?: Prisma.EmployeeCreateNestedManyWithoutTenantInput
   orders?: Prisma.OrderCreateNestedManyWithoutTenantInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutTenantInput
@@ -2730,6 +3001,11 @@ export type TenantCreateWithoutServiceAreasInput = {
   inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
   jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutServiceAreasInput = {
@@ -2752,6 +3028,7 @@ export type TenantUncheckedCreateWithoutServiceAreasInput = {
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutTenantInput
   properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutTenantInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedCreateNestedManyWithoutTenantInput
   employees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutTenantInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutTenantInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutTenantInput
@@ -2782,6 +3059,11 @@ export type TenantUncheckedCreateWithoutServiceAreasInput = {
   inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
   jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutServiceAreasInput = {
@@ -2820,6 +3102,7 @@ export type TenantUpdateWithoutServiceAreasInput = {
   customers?: Prisma.CustomerUpdateManyWithoutTenantNestedInput
   properties?: Prisma.PropertyUpdateManyWithoutTenantNestedInput
   services?: Prisma.ServiceUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUpdateManyWithoutTenantNestedInput
   employees?: Prisma.EmployeeUpdateManyWithoutTenantNestedInput
   orders?: Prisma.OrderUpdateManyWithoutTenantNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutTenantNestedInput
@@ -2850,6 +3133,11 @@ export type TenantUpdateWithoutServiceAreasInput = {
   inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
   jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutServiceAreasInput = {
@@ -2872,6 +3160,7 @@ export type TenantUncheckedUpdateWithoutServiceAreasInput = {
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutTenantNestedInput
   properties?: Prisma.PropertyUncheckedUpdateManyWithoutTenantNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedUpdateManyWithoutTenantNestedInput
   employees?: Prisma.EmployeeUncheckedUpdateManyWithoutTenantNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutTenantNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutTenantNestedInput
@@ -2902,6 +3191,259 @@ export type TenantUncheckedUpdateWithoutServiceAreasInput = {
   inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
   jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
+}
+
+export type TenantCreateWithoutOrderTypeDefinitionsInput = {
+  id?: string
+  slug: string
+  name: string
+  email: string
+  phone?: string | null
+  address?: string | null
+  city?: string | null
+  zipCode?: string | null
+  logoUrl?: string | null
+  primaryColor?: string
+  privacyPolicyUrl?: string | null
+  imprintUrl?: string | null
+  bufferMinutes?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserCreateNestedManyWithoutTenantInput
+  customers?: Prisma.CustomerCreateNestedManyWithoutTenantInput
+  properties?: Prisma.PropertyCreateNestedManyWithoutTenantInput
+  services?: Prisma.ServiceCreateNestedManyWithoutTenantInput
+  employees?: Prisma.EmployeeCreateNestedManyWithoutTenantInput
+  orders?: Prisma.OrderCreateNestedManyWithoutTenantInput
+  appointments?: Prisma.AppointmentCreateNestedManyWithoutTenantInput
+  checklistTemplates?: Prisma.ChecklistTemplateCreateNestedManyWithoutTenantInput
+  messages?: Prisma.MessageCreateNestedManyWithoutTenantInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutTenantInput
+  serviceAreas?: Prisma.ServiceAreaCreateNestedManyWithoutTenantInput
+  workingHours?: Prisma.WorkingHoursCreateNestedManyWithoutTenantInput
+  notifications?: Prisma.NotificationLogCreateNestedManyWithoutTenantInput
+  companySettings?: Prisma.CompanySettingsCreateNestedOneWithoutTenantInput
+  monthlyFixedCosts?: Prisma.MonthlyFixedCostCreateNestedManyWithoutTenantInput
+  overheadSettings?: Prisma.OverheadSettingsCreateNestedOneWithoutTenantInput
+  machines?: Prisma.MachineCreateNestedManyWithoutTenantInput
+  travelZones?: Prisma.TravelZoneCreateNestedManyWithoutTenantInput
+  calculations?: Prisma.CalculationCreateNestedManyWithoutTenantInput
+  articles?: Prisma.ArticleCreateNestedManyWithoutTenantInput
+  storageLocations?: Prisma.StorageLocationCreateNestedManyWithoutTenantInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutTenantInput
+  staffAssignmentRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutTenantInput
+  deliveries?: Prisma.DeliveryCreateNestedManyWithoutTenantInput
+  manualReorderSuggestions?: Prisma.ManualReorderSuggestionCreateNestedManyWithoutTenantInput
+  teams?: Prisma.TeamCreateNestedManyWithoutTenantInput
+  vehicles?: Prisma.VehicleCreateNestedManyWithoutTenantInput
+  invitations?: Prisma.InvitationCreateNestedManyWithoutTenantInput
+  orderShares?: Prisma.OrderShareCreateNestedManyWithoutTenantInput
+  documentSequences?: Prisma.DocumentSequenceCreateNestedManyWithoutTenantInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutTenantInput
+  dunningNotices?: Prisma.DunningNoticeCreateNestedManyWithoutTenantInput
+  inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
+  notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
+}
+
+export type TenantUncheckedCreateWithoutOrderTypeDefinitionsInput = {
+  id?: string
+  slug: string
+  name: string
+  email: string
+  phone?: string | null
+  address?: string | null
+  city?: string | null
+  zipCode?: string | null
+  logoUrl?: string | null
+  primaryColor?: string
+  privacyPolicyUrl?: string | null
+  imprintUrl?: string | null
+  bufferMinutes?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutTenantInput
+  customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutTenantInput
+  properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutTenantInput
+  services?: Prisma.ServiceUncheckedCreateNestedManyWithoutTenantInput
+  employees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutTenantInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutTenantInput
+  appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutTenantInput
+  checklistTemplates?: Prisma.ChecklistTemplateUncheckedCreateNestedManyWithoutTenantInput
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutTenantInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutTenantInput
+  serviceAreas?: Prisma.ServiceAreaUncheckedCreateNestedManyWithoutTenantInput
+  workingHours?: Prisma.WorkingHoursUncheckedCreateNestedManyWithoutTenantInput
+  notifications?: Prisma.NotificationLogUncheckedCreateNestedManyWithoutTenantInput
+  companySettings?: Prisma.CompanySettingsUncheckedCreateNestedOneWithoutTenantInput
+  monthlyFixedCosts?: Prisma.MonthlyFixedCostUncheckedCreateNestedManyWithoutTenantInput
+  overheadSettings?: Prisma.OverheadSettingsUncheckedCreateNestedOneWithoutTenantInput
+  machines?: Prisma.MachineUncheckedCreateNestedManyWithoutTenantInput
+  travelZones?: Prisma.TravelZoneUncheckedCreateNestedManyWithoutTenantInput
+  calculations?: Prisma.CalculationUncheckedCreateNestedManyWithoutTenantInput
+  articles?: Prisma.ArticleUncheckedCreateNestedManyWithoutTenantInput
+  storageLocations?: Prisma.StorageLocationUncheckedCreateNestedManyWithoutTenantInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutTenantInput
+  staffAssignmentRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutTenantInput
+  deliveries?: Prisma.DeliveryUncheckedCreateNestedManyWithoutTenantInput
+  manualReorderSuggestions?: Prisma.ManualReorderSuggestionUncheckedCreateNestedManyWithoutTenantInput
+  teams?: Prisma.TeamUncheckedCreateNestedManyWithoutTenantInput
+  vehicles?: Prisma.VehicleUncheckedCreateNestedManyWithoutTenantInput
+  invitations?: Prisma.InvitationUncheckedCreateNestedManyWithoutTenantInput
+  orderShares?: Prisma.OrderShareUncheckedCreateNestedManyWithoutTenantInput
+  documentSequences?: Prisma.DocumentSequenceUncheckedCreateNestedManyWithoutTenantInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutTenantInput
+  dunningNotices?: Prisma.DunningNoticeUncheckedCreateNestedManyWithoutTenantInput
+  inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
+  notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
+}
+
+export type TenantCreateOrConnectWithoutOrderTypeDefinitionsInput = {
+  where: Prisma.TenantWhereUniqueInput
+  create: Prisma.XOR<Prisma.TenantCreateWithoutOrderTypeDefinitionsInput, Prisma.TenantUncheckedCreateWithoutOrderTypeDefinitionsInput>
+}
+
+export type TenantUpsertWithoutOrderTypeDefinitionsInput = {
+  update: Prisma.XOR<Prisma.TenantUpdateWithoutOrderTypeDefinitionsInput, Prisma.TenantUncheckedUpdateWithoutOrderTypeDefinitionsInput>
+  create: Prisma.XOR<Prisma.TenantCreateWithoutOrderTypeDefinitionsInput, Prisma.TenantUncheckedCreateWithoutOrderTypeDefinitionsInput>
+  where?: Prisma.TenantWhereInput
+}
+
+export type TenantUpdateToOneWithWhereWithoutOrderTypeDefinitionsInput = {
+  where?: Prisma.TenantWhereInput
+  data: Prisma.XOR<Prisma.TenantUpdateWithoutOrderTypeDefinitionsInput, Prisma.TenantUncheckedUpdateWithoutOrderTypeDefinitionsInput>
+}
+
+export type TenantUpdateWithoutOrderTypeDefinitionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUpdateManyWithoutTenantNestedInput
+  customers?: Prisma.CustomerUpdateManyWithoutTenantNestedInput
+  properties?: Prisma.PropertyUpdateManyWithoutTenantNestedInput
+  services?: Prisma.ServiceUpdateManyWithoutTenantNestedInput
+  employees?: Prisma.EmployeeUpdateManyWithoutTenantNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutTenantNestedInput
+  appointments?: Prisma.AppointmentUpdateManyWithoutTenantNestedInput
+  checklistTemplates?: Prisma.ChecklistTemplateUpdateManyWithoutTenantNestedInput
+  messages?: Prisma.MessageUpdateManyWithoutTenantNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutTenantNestedInput
+  serviceAreas?: Prisma.ServiceAreaUpdateManyWithoutTenantNestedInput
+  workingHours?: Prisma.WorkingHoursUpdateManyWithoutTenantNestedInput
+  notifications?: Prisma.NotificationLogUpdateManyWithoutTenantNestedInput
+  companySettings?: Prisma.CompanySettingsUpdateOneWithoutTenantNestedInput
+  monthlyFixedCosts?: Prisma.MonthlyFixedCostUpdateManyWithoutTenantNestedInput
+  overheadSettings?: Prisma.OverheadSettingsUpdateOneWithoutTenantNestedInput
+  machines?: Prisma.MachineUpdateManyWithoutTenantNestedInput
+  travelZones?: Prisma.TravelZoneUpdateManyWithoutTenantNestedInput
+  calculations?: Prisma.CalculationUpdateManyWithoutTenantNestedInput
+  articles?: Prisma.ArticleUpdateManyWithoutTenantNestedInput
+  storageLocations?: Prisma.StorageLocationUpdateManyWithoutTenantNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutTenantNestedInput
+  staffAssignmentRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutTenantNestedInput
+  deliveries?: Prisma.DeliveryUpdateManyWithoutTenantNestedInput
+  manualReorderSuggestions?: Prisma.ManualReorderSuggestionUpdateManyWithoutTenantNestedInput
+  teams?: Prisma.TeamUpdateManyWithoutTenantNestedInput
+  vehicles?: Prisma.VehicleUpdateManyWithoutTenantNestedInput
+  invitations?: Prisma.InvitationUpdateManyWithoutTenantNestedInput
+  orderShares?: Prisma.OrderShareUpdateManyWithoutTenantNestedInput
+  documentSequences?: Prisma.DocumentSequenceUpdateManyWithoutTenantNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutTenantNestedInput
+  dunningNotices?: Prisma.DunningNoticeUpdateManyWithoutTenantNestedInput
+  inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
+  notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
+}
+
+export type TenantUncheckedUpdateWithoutOrderTypeDefinitionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUncheckedUpdateManyWithoutTenantNestedInput
+  customers?: Prisma.CustomerUncheckedUpdateManyWithoutTenantNestedInput
+  properties?: Prisma.PropertyUncheckedUpdateManyWithoutTenantNestedInput
+  services?: Prisma.ServiceUncheckedUpdateManyWithoutTenantNestedInput
+  employees?: Prisma.EmployeeUncheckedUpdateManyWithoutTenantNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutTenantNestedInput
+  appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutTenantNestedInput
+  checklistTemplates?: Prisma.ChecklistTemplateUncheckedUpdateManyWithoutTenantNestedInput
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutTenantNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutTenantNestedInput
+  serviceAreas?: Prisma.ServiceAreaUncheckedUpdateManyWithoutTenantNestedInput
+  workingHours?: Prisma.WorkingHoursUncheckedUpdateManyWithoutTenantNestedInput
+  notifications?: Prisma.NotificationLogUncheckedUpdateManyWithoutTenantNestedInput
+  companySettings?: Prisma.CompanySettingsUncheckedUpdateOneWithoutTenantNestedInput
+  monthlyFixedCosts?: Prisma.MonthlyFixedCostUncheckedUpdateManyWithoutTenantNestedInput
+  overheadSettings?: Prisma.OverheadSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  machines?: Prisma.MachineUncheckedUpdateManyWithoutTenantNestedInput
+  travelZones?: Prisma.TravelZoneUncheckedUpdateManyWithoutTenantNestedInput
+  calculations?: Prisma.CalculationUncheckedUpdateManyWithoutTenantNestedInput
+  articles?: Prisma.ArticleUncheckedUpdateManyWithoutTenantNestedInput
+  storageLocations?: Prisma.StorageLocationUncheckedUpdateManyWithoutTenantNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutTenantNestedInput
+  staffAssignmentRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutTenantNestedInput
+  deliveries?: Prisma.DeliveryUncheckedUpdateManyWithoutTenantNestedInput
+  manualReorderSuggestions?: Prisma.ManualReorderSuggestionUncheckedUpdateManyWithoutTenantNestedInput
+  teams?: Prisma.TeamUncheckedUpdateManyWithoutTenantNestedInput
+  vehicles?: Prisma.VehicleUncheckedUpdateManyWithoutTenantNestedInput
+  invitations?: Prisma.InvitationUncheckedUpdateManyWithoutTenantNestedInput
+  orderShares?: Prisma.OrderShareUncheckedUpdateManyWithoutTenantNestedInput
+  documentSequences?: Prisma.DocumentSequenceUncheckedUpdateManyWithoutTenantNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutTenantNestedInput
+  dunningNotices?: Prisma.DunningNoticeUncheckedUpdateManyWithoutTenantNestedInput
+  inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
+  notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutOrdersInput = {
@@ -2924,6 +3466,7 @@ export type TenantCreateWithoutOrdersInput = {
   customers?: Prisma.CustomerCreateNestedManyWithoutTenantInput
   properties?: Prisma.PropertyCreateNestedManyWithoutTenantInput
   services?: Prisma.ServiceCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionCreateNestedManyWithoutTenantInput
   employees?: Prisma.EmployeeCreateNestedManyWithoutTenantInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutTenantInput
   checklistTemplates?: Prisma.ChecklistTemplateCreateNestedManyWithoutTenantInput
@@ -2954,6 +3497,11 @@ export type TenantCreateWithoutOrdersInput = {
   inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
   jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutOrdersInput = {
@@ -2976,6 +3524,7 @@ export type TenantUncheckedCreateWithoutOrdersInput = {
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutTenantInput
   properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutTenantInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedCreateNestedManyWithoutTenantInput
   employees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutTenantInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutTenantInput
   checklistTemplates?: Prisma.ChecklistTemplateUncheckedCreateNestedManyWithoutTenantInput
@@ -3006,6 +3555,11 @@ export type TenantUncheckedCreateWithoutOrdersInput = {
   inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
   jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutOrdersInput = {
@@ -3044,6 +3598,7 @@ export type TenantUpdateWithoutOrdersInput = {
   customers?: Prisma.CustomerUpdateManyWithoutTenantNestedInput
   properties?: Prisma.PropertyUpdateManyWithoutTenantNestedInput
   services?: Prisma.ServiceUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUpdateManyWithoutTenantNestedInput
   employees?: Prisma.EmployeeUpdateManyWithoutTenantNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutTenantNestedInput
   checklistTemplates?: Prisma.ChecklistTemplateUpdateManyWithoutTenantNestedInput
@@ -3074,6 +3629,11 @@ export type TenantUpdateWithoutOrdersInput = {
   inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
   jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutOrdersInput = {
@@ -3096,6 +3656,7 @@ export type TenantUncheckedUpdateWithoutOrdersInput = {
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutTenantNestedInput
   properties?: Prisma.PropertyUncheckedUpdateManyWithoutTenantNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedUpdateManyWithoutTenantNestedInput
   employees?: Prisma.EmployeeUncheckedUpdateManyWithoutTenantNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutTenantNestedInput
   checklistTemplates?: Prisma.ChecklistTemplateUncheckedUpdateManyWithoutTenantNestedInput
@@ -3126,6 +3687,11 @@ export type TenantUncheckedUpdateWithoutOrdersInput = {
   inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
   jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutAppointmentsInput = {
@@ -3148,6 +3714,7 @@ export type TenantCreateWithoutAppointmentsInput = {
   customers?: Prisma.CustomerCreateNestedManyWithoutTenantInput
   properties?: Prisma.PropertyCreateNestedManyWithoutTenantInput
   services?: Prisma.ServiceCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionCreateNestedManyWithoutTenantInput
   employees?: Prisma.EmployeeCreateNestedManyWithoutTenantInput
   orders?: Prisma.OrderCreateNestedManyWithoutTenantInput
   checklistTemplates?: Prisma.ChecklistTemplateCreateNestedManyWithoutTenantInput
@@ -3178,6 +3745,11 @@ export type TenantCreateWithoutAppointmentsInput = {
   inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
   jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutAppointmentsInput = {
@@ -3200,6 +3772,7 @@ export type TenantUncheckedCreateWithoutAppointmentsInput = {
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutTenantInput
   properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutTenantInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedCreateNestedManyWithoutTenantInput
   employees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutTenantInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutTenantInput
   checklistTemplates?: Prisma.ChecklistTemplateUncheckedCreateNestedManyWithoutTenantInput
@@ -3230,6 +3803,11 @@ export type TenantUncheckedCreateWithoutAppointmentsInput = {
   inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
   jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutAppointmentsInput = {
@@ -3268,6 +3846,7 @@ export type TenantUpdateWithoutAppointmentsInput = {
   customers?: Prisma.CustomerUpdateManyWithoutTenantNestedInput
   properties?: Prisma.PropertyUpdateManyWithoutTenantNestedInput
   services?: Prisma.ServiceUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUpdateManyWithoutTenantNestedInput
   employees?: Prisma.EmployeeUpdateManyWithoutTenantNestedInput
   orders?: Prisma.OrderUpdateManyWithoutTenantNestedInput
   checklistTemplates?: Prisma.ChecklistTemplateUpdateManyWithoutTenantNestedInput
@@ -3298,6 +3877,11 @@ export type TenantUpdateWithoutAppointmentsInput = {
   inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
   jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutAppointmentsInput = {
@@ -3320,6 +3904,7 @@ export type TenantUncheckedUpdateWithoutAppointmentsInput = {
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutTenantNestedInput
   properties?: Prisma.PropertyUncheckedUpdateManyWithoutTenantNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedUpdateManyWithoutTenantNestedInput
   employees?: Prisma.EmployeeUncheckedUpdateManyWithoutTenantNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutTenantNestedInput
   checklistTemplates?: Prisma.ChecklistTemplateUncheckedUpdateManyWithoutTenantNestedInput
@@ -3350,6 +3935,11 @@ export type TenantUncheckedUpdateWithoutAppointmentsInput = {
   inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
   jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutChecklistTemplatesInput = {
@@ -3372,6 +3962,7 @@ export type TenantCreateWithoutChecklistTemplatesInput = {
   customers?: Prisma.CustomerCreateNestedManyWithoutTenantInput
   properties?: Prisma.PropertyCreateNestedManyWithoutTenantInput
   services?: Prisma.ServiceCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionCreateNestedManyWithoutTenantInput
   employees?: Prisma.EmployeeCreateNestedManyWithoutTenantInput
   orders?: Prisma.OrderCreateNestedManyWithoutTenantInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutTenantInput
@@ -3402,6 +3993,11 @@ export type TenantCreateWithoutChecklistTemplatesInput = {
   inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
   jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutChecklistTemplatesInput = {
@@ -3424,6 +4020,7 @@ export type TenantUncheckedCreateWithoutChecklistTemplatesInput = {
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutTenantInput
   properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutTenantInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedCreateNestedManyWithoutTenantInput
   employees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutTenantInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutTenantInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutTenantInput
@@ -3454,6 +4051,11 @@ export type TenantUncheckedCreateWithoutChecklistTemplatesInput = {
   inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
   jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutChecklistTemplatesInput = {
@@ -3492,6 +4094,7 @@ export type TenantUpdateWithoutChecklistTemplatesInput = {
   customers?: Prisma.CustomerUpdateManyWithoutTenantNestedInput
   properties?: Prisma.PropertyUpdateManyWithoutTenantNestedInput
   services?: Prisma.ServiceUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUpdateManyWithoutTenantNestedInput
   employees?: Prisma.EmployeeUpdateManyWithoutTenantNestedInput
   orders?: Prisma.OrderUpdateManyWithoutTenantNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutTenantNestedInput
@@ -3522,6 +4125,11 @@ export type TenantUpdateWithoutChecklistTemplatesInput = {
   inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
   jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutChecklistTemplatesInput = {
@@ -3544,6 +4152,7 @@ export type TenantUncheckedUpdateWithoutChecklistTemplatesInput = {
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutTenantNestedInput
   properties?: Prisma.PropertyUncheckedUpdateManyWithoutTenantNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedUpdateManyWithoutTenantNestedInput
   employees?: Prisma.EmployeeUncheckedUpdateManyWithoutTenantNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutTenantNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutTenantNestedInput
@@ -3574,6 +4183,11 @@ export type TenantUncheckedUpdateWithoutChecklistTemplatesInput = {
   inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
   jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutMessagesInput = {
@@ -3596,6 +4210,7 @@ export type TenantCreateWithoutMessagesInput = {
   customers?: Prisma.CustomerCreateNestedManyWithoutTenantInput
   properties?: Prisma.PropertyCreateNestedManyWithoutTenantInput
   services?: Prisma.ServiceCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionCreateNestedManyWithoutTenantInput
   employees?: Prisma.EmployeeCreateNestedManyWithoutTenantInput
   orders?: Prisma.OrderCreateNestedManyWithoutTenantInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutTenantInput
@@ -3626,6 +4241,11 @@ export type TenantCreateWithoutMessagesInput = {
   inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
   jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutMessagesInput = {
@@ -3648,6 +4268,7 @@ export type TenantUncheckedCreateWithoutMessagesInput = {
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutTenantInput
   properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutTenantInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedCreateNestedManyWithoutTenantInput
   employees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutTenantInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutTenantInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutTenantInput
@@ -3678,6 +4299,11 @@ export type TenantUncheckedCreateWithoutMessagesInput = {
   inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
   jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutMessagesInput = {
@@ -3716,6 +4342,7 @@ export type TenantUpdateWithoutMessagesInput = {
   customers?: Prisma.CustomerUpdateManyWithoutTenantNestedInput
   properties?: Prisma.PropertyUpdateManyWithoutTenantNestedInput
   services?: Prisma.ServiceUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUpdateManyWithoutTenantNestedInput
   employees?: Prisma.EmployeeUpdateManyWithoutTenantNestedInput
   orders?: Prisma.OrderUpdateManyWithoutTenantNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutTenantNestedInput
@@ -3746,6 +4373,11 @@ export type TenantUpdateWithoutMessagesInput = {
   inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
   jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutMessagesInput = {
@@ -3768,6 +4400,7 @@ export type TenantUncheckedUpdateWithoutMessagesInput = {
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutTenantNestedInput
   properties?: Prisma.PropertyUncheckedUpdateManyWithoutTenantNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedUpdateManyWithoutTenantNestedInput
   employees?: Prisma.EmployeeUncheckedUpdateManyWithoutTenantNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutTenantNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutTenantNestedInput
@@ -3798,6 +4431,11 @@ export type TenantUncheckedUpdateWithoutMessagesInput = {
   inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
   jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutAuditLogsInput = {
@@ -3820,6 +4458,7 @@ export type TenantCreateWithoutAuditLogsInput = {
   customers?: Prisma.CustomerCreateNestedManyWithoutTenantInput
   properties?: Prisma.PropertyCreateNestedManyWithoutTenantInput
   services?: Prisma.ServiceCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionCreateNestedManyWithoutTenantInput
   employees?: Prisma.EmployeeCreateNestedManyWithoutTenantInput
   orders?: Prisma.OrderCreateNestedManyWithoutTenantInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutTenantInput
@@ -3850,6 +4489,11 @@ export type TenantCreateWithoutAuditLogsInput = {
   inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
   jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutAuditLogsInput = {
@@ -3872,6 +4516,7 @@ export type TenantUncheckedCreateWithoutAuditLogsInput = {
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutTenantInput
   properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutTenantInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedCreateNestedManyWithoutTenantInput
   employees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutTenantInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutTenantInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutTenantInput
@@ -3902,6 +4547,11 @@ export type TenantUncheckedCreateWithoutAuditLogsInput = {
   inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
   jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutAuditLogsInput = {
@@ -3940,6 +4590,7 @@ export type TenantUpdateWithoutAuditLogsInput = {
   customers?: Prisma.CustomerUpdateManyWithoutTenantNestedInput
   properties?: Prisma.PropertyUpdateManyWithoutTenantNestedInput
   services?: Prisma.ServiceUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUpdateManyWithoutTenantNestedInput
   employees?: Prisma.EmployeeUpdateManyWithoutTenantNestedInput
   orders?: Prisma.OrderUpdateManyWithoutTenantNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutTenantNestedInput
@@ -3970,6 +4621,11 @@ export type TenantUpdateWithoutAuditLogsInput = {
   inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
   jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutAuditLogsInput = {
@@ -3992,6 +4648,7 @@ export type TenantUncheckedUpdateWithoutAuditLogsInput = {
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutTenantNestedInput
   properties?: Prisma.PropertyUncheckedUpdateManyWithoutTenantNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedUpdateManyWithoutTenantNestedInput
   employees?: Prisma.EmployeeUncheckedUpdateManyWithoutTenantNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutTenantNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutTenantNestedInput
@@ -4022,6 +4679,11 @@ export type TenantUncheckedUpdateWithoutAuditLogsInput = {
   inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
   jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutNotificationsInput = {
@@ -4044,6 +4706,7 @@ export type TenantCreateWithoutNotificationsInput = {
   customers?: Prisma.CustomerCreateNestedManyWithoutTenantInput
   properties?: Prisma.PropertyCreateNestedManyWithoutTenantInput
   services?: Prisma.ServiceCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionCreateNestedManyWithoutTenantInput
   employees?: Prisma.EmployeeCreateNestedManyWithoutTenantInput
   orders?: Prisma.OrderCreateNestedManyWithoutTenantInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutTenantInput
@@ -4074,6 +4737,11 @@ export type TenantCreateWithoutNotificationsInput = {
   inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
   jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutNotificationsInput = {
@@ -4096,6 +4764,7 @@ export type TenantUncheckedCreateWithoutNotificationsInput = {
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutTenantInput
   properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutTenantInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedCreateNestedManyWithoutTenantInput
   employees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutTenantInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutTenantInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutTenantInput
@@ -4126,6 +4795,11 @@ export type TenantUncheckedCreateWithoutNotificationsInput = {
   inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
   jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutNotificationsInput = {
@@ -4164,6 +4838,7 @@ export type TenantUpdateWithoutNotificationsInput = {
   customers?: Prisma.CustomerUpdateManyWithoutTenantNestedInput
   properties?: Prisma.PropertyUpdateManyWithoutTenantNestedInput
   services?: Prisma.ServiceUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUpdateManyWithoutTenantNestedInput
   employees?: Prisma.EmployeeUpdateManyWithoutTenantNestedInput
   orders?: Prisma.OrderUpdateManyWithoutTenantNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutTenantNestedInput
@@ -4194,6 +4869,11 @@ export type TenantUpdateWithoutNotificationsInput = {
   inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
   jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutNotificationsInput = {
@@ -4216,6 +4896,7 @@ export type TenantUncheckedUpdateWithoutNotificationsInput = {
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutTenantNestedInput
   properties?: Prisma.PropertyUncheckedUpdateManyWithoutTenantNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedUpdateManyWithoutTenantNestedInput
   employees?: Prisma.EmployeeUncheckedUpdateManyWithoutTenantNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutTenantNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutTenantNestedInput
@@ -4246,6 +4927,11 @@ export type TenantUncheckedUpdateWithoutNotificationsInput = {
   inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
   jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutInAppNotificationsInput = {
@@ -4268,6 +4954,7 @@ export type TenantCreateWithoutInAppNotificationsInput = {
   customers?: Prisma.CustomerCreateNestedManyWithoutTenantInput
   properties?: Prisma.PropertyCreateNestedManyWithoutTenantInput
   services?: Prisma.ServiceCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionCreateNestedManyWithoutTenantInput
   employees?: Prisma.EmployeeCreateNestedManyWithoutTenantInput
   orders?: Prisma.OrderCreateNestedManyWithoutTenantInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutTenantInput
@@ -4298,6 +4985,11 @@ export type TenantCreateWithoutInAppNotificationsInput = {
   dunningNotices?: Prisma.DunningNoticeCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
   jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutInAppNotificationsInput = {
@@ -4320,6 +5012,7 @@ export type TenantUncheckedCreateWithoutInAppNotificationsInput = {
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutTenantInput
   properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutTenantInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedCreateNestedManyWithoutTenantInput
   employees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutTenantInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutTenantInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutTenantInput
@@ -4350,6 +5043,11 @@ export type TenantUncheckedCreateWithoutInAppNotificationsInput = {
   dunningNotices?: Prisma.DunningNoticeUncheckedCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
   jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutInAppNotificationsInput = {
@@ -4388,6 +5086,7 @@ export type TenantUpdateWithoutInAppNotificationsInput = {
   customers?: Prisma.CustomerUpdateManyWithoutTenantNestedInput
   properties?: Prisma.PropertyUpdateManyWithoutTenantNestedInput
   services?: Prisma.ServiceUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUpdateManyWithoutTenantNestedInput
   employees?: Prisma.EmployeeUpdateManyWithoutTenantNestedInput
   orders?: Prisma.OrderUpdateManyWithoutTenantNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutTenantNestedInput
@@ -4418,6 +5117,11 @@ export type TenantUpdateWithoutInAppNotificationsInput = {
   dunningNotices?: Prisma.DunningNoticeUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
   jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutInAppNotificationsInput = {
@@ -4440,6 +5144,7 @@ export type TenantUncheckedUpdateWithoutInAppNotificationsInput = {
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutTenantNestedInput
   properties?: Prisma.PropertyUncheckedUpdateManyWithoutTenantNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedUpdateManyWithoutTenantNestedInput
   employees?: Prisma.EmployeeUncheckedUpdateManyWithoutTenantNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutTenantNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutTenantNestedInput
@@ -4470,6 +5175,11 @@ export type TenantUncheckedUpdateWithoutInAppNotificationsInput = {
   dunningNotices?: Prisma.DunningNoticeUncheckedUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
   jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutNotificationSettingsInput = {
@@ -4492,6 +5202,7 @@ export type TenantCreateWithoutNotificationSettingsInput = {
   customers?: Prisma.CustomerCreateNestedManyWithoutTenantInput
   properties?: Prisma.PropertyCreateNestedManyWithoutTenantInput
   services?: Prisma.ServiceCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionCreateNestedManyWithoutTenantInput
   employees?: Prisma.EmployeeCreateNestedManyWithoutTenantInput
   orders?: Prisma.OrderCreateNestedManyWithoutTenantInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutTenantInput
@@ -4522,6 +5233,11 @@ export type TenantCreateWithoutNotificationSettingsInput = {
   dunningNotices?: Prisma.DunningNoticeCreateNestedManyWithoutTenantInput
   inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
   jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutNotificationSettingsInput = {
@@ -4544,6 +5260,7 @@ export type TenantUncheckedCreateWithoutNotificationSettingsInput = {
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutTenantInput
   properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutTenantInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedCreateNestedManyWithoutTenantInput
   employees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutTenantInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutTenantInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutTenantInput
@@ -4574,6 +5291,11 @@ export type TenantUncheckedCreateWithoutNotificationSettingsInput = {
   dunningNotices?: Prisma.DunningNoticeUncheckedCreateNestedManyWithoutTenantInput
   inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
   jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutNotificationSettingsInput = {
@@ -4612,6 +5334,7 @@ export type TenantUpdateWithoutNotificationSettingsInput = {
   customers?: Prisma.CustomerUpdateManyWithoutTenantNestedInput
   properties?: Prisma.PropertyUpdateManyWithoutTenantNestedInput
   services?: Prisma.ServiceUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUpdateManyWithoutTenantNestedInput
   employees?: Prisma.EmployeeUpdateManyWithoutTenantNestedInput
   orders?: Prisma.OrderUpdateManyWithoutTenantNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutTenantNestedInput
@@ -4642,6 +5365,11 @@ export type TenantUpdateWithoutNotificationSettingsInput = {
   dunningNotices?: Prisma.DunningNoticeUpdateManyWithoutTenantNestedInput
   inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
   jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutNotificationSettingsInput = {
@@ -4664,6 +5392,7 @@ export type TenantUncheckedUpdateWithoutNotificationSettingsInput = {
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutTenantNestedInput
   properties?: Prisma.PropertyUncheckedUpdateManyWithoutTenantNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedUpdateManyWithoutTenantNestedInput
   employees?: Prisma.EmployeeUncheckedUpdateManyWithoutTenantNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutTenantNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutTenantNestedInput
@@ -4694,6 +5423,11 @@ export type TenantUncheckedUpdateWithoutNotificationSettingsInput = {
   dunningNotices?: Prisma.DunningNoticeUncheckedUpdateManyWithoutTenantNestedInput
   inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
   jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutCompanySettingsInput = {
@@ -4716,6 +5450,7 @@ export type TenantCreateWithoutCompanySettingsInput = {
   customers?: Prisma.CustomerCreateNestedManyWithoutTenantInput
   properties?: Prisma.PropertyCreateNestedManyWithoutTenantInput
   services?: Prisma.ServiceCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionCreateNestedManyWithoutTenantInput
   employees?: Prisma.EmployeeCreateNestedManyWithoutTenantInput
   orders?: Prisma.OrderCreateNestedManyWithoutTenantInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutTenantInput
@@ -4746,6 +5481,11 @@ export type TenantCreateWithoutCompanySettingsInput = {
   inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
   jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutCompanySettingsInput = {
@@ -4768,6 +5508,7 @@ export type TenantUncheckedCreateWithoutCompanySettingsInput = {
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutTenantInput
   properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutTenantInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedCreateNestedManyWithoutTenantInput
   employees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutTenantInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutTenantInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutTenantInput
@@ -4798,6 +5539,11 @@ export type TenantUncheckedCreateWithoutCompanySettingsInput = {
   inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
   jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutCompanySettingsInput = {
@@ -4836,6 +5582,7 @@ export type TenantUpdateWithoutCompanySettingsInput = {
   customers?: Prisma.CustomerUpdateManyWithoutTenantNestedInput
   properties?: Prisma.PropertyUpdateManyWithoutTenantNestedInput
   services?: Prisma.ServiceUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUpdateManyWithoutTenantNestedInput
   employees?: Prisma.EmployeeUpdateManyWithoutTenantNestedInput
   orders?: Prisma.OrderUpdateManyWithoutTenantNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutTenantNestedInput
@@ -4866,6 +5613,11 @@ export type TenantUpdateWithoutCompanySettingsInput = {
   inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
   jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutCompanySettingsInput = {
@@ -4888,6 +5640,7 @@ export type TenantUncheckedUpdateWithoutCompanySettingsInput = {
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutTenantNestedInput
   properties?: Prisma.PropertyUncheckedUpdateManyWithoutTenantNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedUpdateManyWithoutTenantNestedInput
   employees?: Prisma.EmployeeUncheckedUpdateManyWithoutTenantNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutTenantNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutTenantNestedInput
@@ -4918,6 +5671,11 @@ export type TenantUncheckedUpdateWithoutCompanySettingsInput = {
   inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
   jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutMonthlyFixedCostsInput = {
@@ -4940,6 +5698,7 @@ export type TenantCreateWithoutMonthlyFixedCostsInput = {
   customers?: Prisma.CustomerCreateNestedManyWithoutTenantInput
   properties?: Prisma.PropertyCreateNestedManyWithoutTenantInput
   services?: Prisma.ServiceCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionCreateNestedManyWithoutTenantInput
   employees?: Prisma.EmployeeCreateNestedManyWithoutTenantInput
   orders?: Prisma.OrderCreateNestedManyWithoutTenantInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutTenantInput
@@ -4970,6 +5729,11 @@ export type TenantCreateWithoutMonthlyFixedCostsInput = {
   inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
   jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutMonthlyFixedCostsInput = {
@@ -4992,6 +5756,7 @@ export type TenantUncheckedCreateWithoutMonthlyFixedCostsInput = {
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutTenantInput
   properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutTenantInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedCreateNestedManyWithoutTenantInput
   employees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutTenantInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutTenantInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutTenantInput
@@ -5022,6 +5787,11 @@ export type TenantUncheckedCreateWithoutMonthlyFixedCostsInput = {
   inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
   jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutMonthlyFixedCostsInput = {
@@ -5060,6 +5830,7 @@ export type TenantUpdateWithoutMonthlyFixedCostsInput = {
   customers?: Prisma.CustomerUpdateManyWithoutTenantNestedInput
   properties?: Prisma.PropertyUpdateManyWithoutTenantNestedInput
   services?: Prisma.ServiceUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUpdateManyWithoutTenantNestedInput
   employees?: Prisma.EmployeeUpdateManyWithoutTenantNestedInput
   orders?: Prisma.OrderUpdateManyWithoutTenantNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutTenantNestedInput
@@ -5090,6 +5861,11 @@ export type TenantUpdateWithoutMonthlyFixedCostsInput = {
   inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
   jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutMonthlyFixedCostsInput = {
@@ -5112,6 +5888,7 @@ export type TenantUncheckedUpdateWithoutMonthlyFixedCostsInput = {
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutTenantNestedInput
   properties?: Prisma.PropertyUncheckedUpdateManyWithoutTenantNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedUpdateManyWithoutTenantNestedInput
   employees?: Prisma.EmployeeUncheckedUpdateManyWithoutTenantNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutTenantNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutTenantNestedInput
@@ -5142,6 +5919,11 @@ export type TenantUncheckedUpdateWithoutMonthlyFixedCostsInput = {
   inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
   jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutOverheadSettingsInput = {
@@ -5164,6 +5946,7 @@ export type TenantCreateWithoutOverheadSettingsInput = {
   customers?: Prisma.CustomerCreateNestedManyWithoutTenantInput
   properties?: Prisma.PropertyCreateNestedManyWithoutTenantInput
   services?: Prisma.ServiceCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionCreateNestedManyWithoutTenantInput
   employees?: Prisma.EmployeeCreateNestedManyWithoutTenantInput
   orders?: Prisma.OrderCreateNestedManyWithoutTenantInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutTenantInput
@@ -5194,6 +5977,11 @@ export type TenantCreateWithoutOverheadSettingsInput = {
   inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
   jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutOverheadSettingsInput = {
@@ -5216,6 +6004,7 @@ export type TenantUncheckedCreateWithoutOverheadSettingsInput = {
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutTenantInput
   properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutTenantInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedCreateNestedManyWithoutTenantInput
   employees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutTenantInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutTenantInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutTenantInput
@@ -5246,6 +6035,11 @@ export type TenantUncheckedCreateWithoutOverheadSettingsInput = {
   inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
   jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutOverheadSettingsInput = {
@@ -5284,6 +6078,7 @@ export type TenantUpdateWithoutOverheadSettingsInput = {
   customers?: Prisma.CustomerUpdateManyWithoutTenantNestedInput
   properties?: Prisma.PropertyUpdateManyWithoutTenantNestedInput
   services?: Prisma.ServiceUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUpdateManyWithoutTenantNestedInput
   employees?: Prisma.EmployeeUpdateManyWithoutTenantNestedInput
   orders?: Prisma.OrderUpdateManyWithoutTenantNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutTenantNestedInput
@@ -5314,6 +6109,11 @@ export type TenantUpdateWithoutOverheadSettingsInput = {
   inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
   jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutOverheadSettingsInput = {
@@ -5336,6 +6136,7 @@ export type TenantUncheckedUpdateWithoutOverheadSettingsInput = {
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutTenantNestedInput
   properties?: Prisma.PropertyUncheckedUpdateManyWithoutTenantNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedUpdateManyWithoutTenantNestedInput
   employees?: Prisma.EmployeeUncheckedUpdateManyWithoutTenantNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutTenantNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutTenantNestedInput
@@ -5366,6 +6167,11 @@ export type TenantUncheckedUpdateWithoutOverheadSettingsInput = {
   inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
   jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutMachinesInput = {
@@ -5388,6 +6194,7 @@ export type TenantCreateWithoutMachinesInput = {
   customers?: Prisma.CustomerCreateNestedManyWithoutTenantInput
   properties?: Prisma.PropertyCreateNestedManyWithoutTenantInput
   services?: Prisma.ServiceCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionCreateNestedManyWithoutTenantInput
   employees?: Prisma.EmployeeCreateNestedManyWithoutTenantInput
   orders?: Prisma.OrderCreateNestedManyWithoutTenantInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutTenantInput
@@ -5418,6 +6225,11 @@ export type TenantCreateWithoutMachinesInput = {
   inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
   jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutMachinesInput = {
@@ -5440,6 +6252,7 @@ export type TenantUncheckedCreateWithoutMachinesInput = {
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutTenantInput
   properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutTenantInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedCreateNestedManyWithoutTenantInput
   employees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutTenantInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutTenantInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutTenantInput
@@ -5470,6 +6283,11 @@ export type TenantUncheckedCreateWithoutMachinesInput = {
   inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
   jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutMachinesInput = {
@@ -5508,6 +6326,7 @@ export type TenantUpdateWithoutMachinesInput = {
   customers?: Prisma.CustomerUpdateManyWithoutTenantNestedInput
   properties?: Prisma.PropertyUpdateManyWithoutTenantNestedInput
   services?: Prisma.ServiceUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUpdateManyWithoutTenantNestedInput
   employees?: Prisma.EmployeeUpdateManyWithoutTenantNestedInput
   orders?: Prisma.OrderUpdateManyWithoutTenantNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutTenantNestedInput
@@ -5538,6 +6357,11 @@ export type TenantUpdateWithoutMachinesInput = {
   inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
   jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutMachinesInput = {
@@ -5560,6 +6384,7 @@ export type TenantUncheckedUpdateWithoutMachinesInput = {
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutTenantNestedInput
   properties?: Prisma.PropertyUncheckedUpdateManyWithoutTenantNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedUpdateManyWithoutTenantNestedInput
   employees?: Prisma.EmployeeUncheckedUpdateManyWithoutTenantNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutTenantNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutTenantNestedInput
@@ -5590,6 +6415,11 @@ export type TenantUncheckedUpdateWithoutMachinesInput = {
   inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
   jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutTravelZonesInput = {
@@ -5612,6 +6442,7 @@ export type TenantCreateWithoutTravelZonesInput = {
   customers?: Prisma.CustomerCreateNestedManyWithoutTenantInput
   properties?: Prisma.PropertyCreateNestedManyWithoutTenantInput
   services?: Prisma.ServiceCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionCreateNestedManyWithoutTenantInput
   employees?: Prisma.EmployeeCreateNestedManyWithoutTenantInput
   orders?: Prisma.OrderCreateNestedManyWithoutTenantInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutTenantInput
@@ -5642,6 +6473,11 @@ export type TenantCreateWithoutTravelZonesInput = {
   inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
   jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutTravelZonesInput = {
@@ -5664,6 +6500,7 @@ export type TenantUncheckedCreateWithoutTravelZonesInput = {
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutTenantInput
   properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutTenantInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedCreateNestedManyWithoutTenantInput
   employees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutTenantInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutTenantInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutTenantInput
@@ -5694,6 +6531,11 @@ export type TenantUncheckedCreateWithoutTravelZonesInput = {
   inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
   jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutTravelZonesInput = {
@@ -5732,6 +6574,7 @@ export type TenantUpdateWithoutTravelZonesInput = {
   customers?: Prisma.CustomerUpdateManyWithoutTenantNestedInput
   properties?: Prisma.PropertyUpdateManyWithoutTenantNestedInput
   services?: Prisma.ServiceUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUpdateManyWithoutTenantNestedInput
   employees?: Prisma.EmployeeUpdateManyWithoutTenantNestedInput
   orders?: Prisma.OrderUpdateManyWithoutTenantNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutTenantNestedInput
@@ -5762,6 +6605,11 @@ export type TenantUpdateWithoutTravelZonesInput = {
   inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
   jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutTravelZonesInput = {
@@ -5784,6 +6632,7 @@ export type TenantUncheckedUpdateWithoutTravelZonesInput = {
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutTenantNestedInput
   properties?: Prisma.PropertyUncheckedUpdateManyWithoutTenantNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedUpdateManyWithoutTenantNestedInput
   employees?: Prisma.EmployeeUncheckedUpdateManyWithoutTenantNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutTenantNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutTenantNestedInput
@@ -5814,6 +6663,11 @@ export type TenantUncheckedUpdateWithoutTravelZonesInput = {
   inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
   jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutCalculationsInput = {
@@ -5836,6 +6690,7 @@ export type TenantCreateWithoutCalculationsInput = {
   customers?: Prisma.CustomerCreateNestedManyWithoutTenantInput
   properties?: Prisma.PropertyCreateNestedManyWithoutTenantInput
   services?: Prisma.ServiceCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionCreateNestedManyWithoutTenantInput
   employees?: Prisma.EmployeeCreateNestedManyWithoutTenantInput
   orders?: Prisma.OrderCreateNestedManyWithoutTenantInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutTenantInput
@@ -5866,6 +6721,11 @@ export type TenantCreateWithoutCalculationsInput = {
   inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
   jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutCalculationsInput = {
@@ -5888,6 +6748,7 @@ export type TenantUncheckedCreateWithoutCalculationsInput = {
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutTenantInput
   properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutTenantInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedCreateNestedManyWithoutTenantInput
   employees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutTenantInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutTenantInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutTenantInput
@@ -5918,6 +6779,11 @@ export type TenantUncheckedCreateWithoutCalculationsInput = {
   inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
   jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutCalculationsInput = {
@@ -5956,6 +6822,7 @@ export type TenantUpdateWithoutCalculationsInput = {
   customers?: Prisma.CustomerUpdateManyWithoutTenantNestedInput
   properties?: Prisma.PropertyUpdateManyWithoutTenantNestedInput
   services?: Prisma.ServiceUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUpdateManyWithoutTenantNestedInput
   employees?: Prisma.EmployeeUpdateManyWithoutTenantNestedInput
   orders?: Prisma.OrderUpdateManyWithoutTenantNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutTenantNestedInput
@@ -5986,6 +6853,11 @@ export type TenantUpdateWithoutCalculationsInput = {
   inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
   jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutCalculationsInput = {
@@ -6008,6 +6880,7 @@ export type TenantUncheckedUpdateWithoutCalculationsInput = {
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutTenantNestedInput
   properties?: Prisma.PropertyUncheckedUpdateManyWithoutTenantNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedUpdateManyWithoutTenantNestedInput
   employees?: Prisma.EmployeeUncheckedUpdateManyWithoutTenantNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutTenantNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutTenantNestedInput
@@ -6038,6 +6911,11 @@ export type TenantUncheckedUpdateWithoutCalculationsInput = {
   inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
   jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutDocumentSequencesInput = {
@@ -6060,6 +6938,7 @@ export type TenantCreateWithoutDocumentSequencesInput = {
   customers?: Prisma.CustomerCreateNestedManyWithoutTenantInput
   properties?: Prisma.PropertyCreateNestedManyWithoutTenantInput
   services?: Prisma.ServiceCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionCreateNestedManyWithoutTenantInput
   employees?: Prisma.EmployeeCreateNestedManyWithoutTenantInput
   orders?: Prisma.OrderCreateNestedManyWithoutTenantInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutTenantInput
@@ -6090,6 +6969,11 @@ export type TenantCreateWithoutDocumentSequencesInput = {
   inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
   jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutDocumentSequencesInput = {
@@ -6112,6 +6996,7 @@ export type TenantUncheckedCreateWithoutDocumentSequencesInput = {
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutTenantInput
   properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutTenantInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedCreateNestedManyWithoutTenantInput
   employees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutTenantInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutTenantInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutTenantInput
@@ -6142,6 +7027,11 @@ export type TenantUncheckedCreateWithoutDocumentSequencesInput = {
   inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
   jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutDocumentSequencesInput = {
@@ -6180,6 +7070,7 @@ export type TenantUpdateWithoutDocumentSequencesInput = {
   customers?: Prisma.CustomerUpdateManyWithoutTenantNestedInput
   properties?: Prisma.PropertyUpdateManyWithoutTenantNestedInput
   services?: Prisma.ServiceUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUpdateManyWithoutTenantNestedInput
   employees?: Prisma.EmployeeUpdateManyWithoutTenantNestedInput
   orders?: Prisma.OrderUpdateManyWithoutTenantNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutTenantNestedInput
@@ -6210,6 +7101,11 @@ export type TenantUpdateWithoutDocumentSequencesInput = {
   inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
   jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutDocumentSequencesInput = {
@@ -6232,6 +7128,7 @@ export type TenantUncheckedUpdateWithoutDocumentSequencesInput = {
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutTenantNestedInput
   properties?: Prisma.PropertyUncheckedUpdateManyWithoutTenantNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedUpdateManyWithoutTenantNestedInput
   employees?: Prisma.EmployeeUncheckedUpdateManyWithoutTenantNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutTenantNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutTenantNestedInput
@@ -6262,6 +7159,11 @@ export type TenantUncheckedUpdateWithoutDocumentSequencesInput = {
   inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
   jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutPaymentsInput = {
@@ -6284,6 +7186,7 @@ export type TenantCreateWithoutPaymentsInput = {
   customers?: Prisma.CustomerCreateNestedManyWithoutTenantInput
   properties?: Prisma.PropertyCreateNestedManyWithoutTenantInput
   services?: Prisma.ServiceCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionCreateNestedManyWithoutTenantInput
   employees?: Prisma.EmployeeCreateNestedManyWithoutTenantInput
   orders?: Prisma.OrderCreateNestedManyWithoutTenantInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutTenantInput
@@ -6314,6 +7217,11 @@ export type TenantCreateWithoutPaymentsInput = {
   inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
   jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutPaymentsInput = {
@@ -6336,6 +7244,7 @@ export type TenantUncheckedCreateWithoutPaymentsInput = {
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutTenantInput
   properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutTenantInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedCreateNestedManyWithoutTenantInput
   employees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutTenantInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutTenantInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutTenantInput
@@ -6366,6 +7275,11 @@ export type TenantUncheckedCreateWithoutPaymentsInput = {
   inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
   jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutPaymentsInput = {
@@ -6404,6 +7318,7 @@ export type TenantUpdateWithoutPaymentsInput = {
   customers?: Prisma.CustomerUpdateManyWithoutTenantNestedInput
   properties?: Prisma.PropertyUpdateManyWithoutTenantNestedInput
   services?: Prisma.ServiceUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUpdateManyWithoutTenantNestedInput
   employees?: Prisma.EmployeeUpdateManyWithoutTenantNestedInput
   orders?: Prisma.OrderUpdateManyWithoutTenantNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutTenantNestedInput
@@ -6434,6 +7349,11 @@ export type TenantUpdateWithoutPaymentsInput = {
   inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
   jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutPaymentsInput = {
@@ -6456,6 +7376,7 @@ export type TenantUncheckedUpdateWithoutPaymentsInput = {
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutTenantNestedInput
   properties?: Prisma.PropertyUncheckedUpdateManyWithoutTenantNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedUpdateManyWithoutTenantNestedInput
   employees?: Prisma.EmployeeUncheckedUpdateManyWithoutTenantNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutTenantNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutTenantNestedInput
@@ -6486,6 +7407,11 @@ export type TenantUncheckedUpdateWithoutPaymentsInput = {
   inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
   jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutDunningNoticesInput = {
@@ -6508,6 +7434,7 @@ export type TenantCreateWithoutDunningNoticesInput = {
   customers?: Prisma.CustomerCreateNestedManyWithoutTenantInput
   properties?: Prisma.PropertyCreateNestedManyWithoutTenantInput
   services?: Prisma.ServiceCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionCreateNestedManyWithoutTenantInput
   employees?: Prisma.EmployeeCreateNestedManyWithoutTenantInput
   orders?: Prisma.OrderCreateNestedManyWithoutTenantInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutTenantInput
@@ -6538,6 +7465,11 @@ export type TenantCreateWithoutDunningNoticesInput = {
   inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
   jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutDunningNoticesInput = {
@@ -6560,6 +7492,7 @@ export type TenantUncheckedCreateWithoutDunningNoticesInput = {
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutTenantInput
   properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutTenantInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedCreateNestedManyWithoutTenantInput
   employees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutTenantInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutTenantInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutTenantInput
@@ -6590,6 +7523,11 @@ export type TenantUncheckedCreateWithoutDunningNoticesInput = {
   inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
   jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutDunningNoticesInput = {
@@ -6628,6 +7566,7 @@ export type TenantUpdateWithoutDunningNoticesInput = {
   customers?: Prisma.CustomerUpdateManyWithoutTenantNestedInput
   properties?: Prisma.PropertyUpdateManyWithoutTenantNestedInput
   services?: Prisma.ServiceUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUpdateManyWithoutTenantNestedInput
   employees?: Prisma.EmployeeUpdateManyWithoutTenantNestedInput
   orders?: Prisma.OrderUpdateManyWithoutTenantNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutTenantNestedInput
@@ -6658,6 +7597,11 @@ export type TenantUpdateWithoutDunningNoticesInput = {
   inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
   jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutDunningNoticesInput = {
@@ -6680,6 +7624,7 @@ export type TenantUncheckedUpdateWithoutDunningNoticesInput = {
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutTenantNestedInput
   properties?: Prisma.PropertyUncheckedUpdateManyWithoutTenantNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedUpdateManyWithoutTenantNestedInput
   employees?: Prisma.EmployeeUncheckedUpdateManyWithoutTenantNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutTenantNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutTenantNestedInput
@@ -6710,6 +7655,11 @@ export type TenantUncheckedUpdateWithoutDunningNoticesInput = {
   inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
   jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutArticlesInput = {
@@ -6732,6 +7682,7 @@ export type TenantCreateWithoutArticlesInput = {
   customers?: Prisma.CustomerCreateNestedManyWithoutTenantInput
   properties?: Prisma.PropertyCreateNestedManyWithoutTenantInput
   services?: Prisma.ServiceCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionCreateNestedManyWithoutTenantInput
   employees?: Prisma.EmployeeCreateNestedManyWithoutTenantInput
   orders?: Prisma.OrderCreateNestedManyWithoutTenantInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutTenantInput
@@ -6762,6 +7713,11 @@ export type TenantCreateWithoutArticlesInput = {
   inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
   jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutArticlesInput = {
@@ -6784,6 +7740,7 @@ export type TenantUncheckedCreateWithoutArticlesInput = {
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutTenantInput
   properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutTenantInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedCreateNestedManyWithoutTenantInput
   employees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutTenantInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutTenantInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutTenantInput
@@ -6814,6 +7771,11 @@ export type TenantUncheckedCreateWithoutArticlesInput = {
   inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
   jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutArticlesInput = {
@@ -6852,6 +7814,7 @@ export type TenantUpdateWithoutArticlesInput = {
   customers?: Prisma.CustomerUpdateManyWithoutTenantNestedInput
   properties?: Prisma.PropertyUpdateManyWithoutTenantNestedInput
   services?: Prisma.ServiceUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUpdateManyWithoutTenantNestedInput
   employees?: Prisma.EmployeeUpdateManyWithoutTenantNestedInput
   orders?: Prisma.OrderUpdateManyWithoutTenantNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutTenantNestedInput
@@ -6882,6 +7845,11 @@ export type TenantUpdateWithoutArticlesInput = {
   inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
   jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutArticlesInput = {
@@ -6904,6 +7872,7 @@ export type TenantUncheckedUpdateWithoutArticlesInput = {
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutTenantNestedInput
   properties?: Prisma.PropertyUncheckedUpdateManyWithoutTenantNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedUpdateManyWithoutTenantNestedInput
   employees?: Prisma.EmployeeUncheckedUpdateManyWithoutTenantNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutTenantNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutTenantNestedInput
@@ -6934,6 +7903,11 @@ export type TenantUncheckedUpdateWithoutArticlesInput = {
   inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
   jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutStorageLocationsInput = {
@@ -6956,6 +7930,7 @@ export type TenantCreateWithoutStorageLocationsInput = {
   customers?: Prisma.CustomerCreateNestedManyWithoutTenantInput
   properties?: Prisma.PropertyCreateNestedManyWithoutTenantInput
   services?: Prisma.ServiceCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionCreateNestedManyWithoutTenantInput
   employees?: Prisma.EmployeeCreateNestedManyWithoutTenantInput
   orders?: Prisma.OrderCreateNestedManyWithoutTenantInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutTenantInput
@@ -6986,6 +7961,11 @@ export type TenantCreateWithoutStorageLocationsInput = {
   inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
   jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutStorageLocationsInput = {
@@ -7008,6 +7988,7 @@ export type TenantUncheckedCreateWithoutStorageLocationsInput = {
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutTenantInput
   properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutTenantInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedCreateNestedManyWithoutTenantInput
   employees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutTenantInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutTenantInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutTenantInput
@@ -7038,6 +8019,11 @@ export type TenantUncheckedCreateWithoutStorageLocationsInput = {
   inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
   jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutStorageLocationsInput = {
@@ -7076,6 +8062,7 @@ export type TenantUpdateWithoutStorageLocationsInput = {
   customers?: Prisma.CustomerUpdateManyWithoutTenantNestedInput
   properties?: Prisma.PropertyUpdateManyWithoutTenantNestedInput
   services?: Prisma.ServiceUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUpdateManyWithoutTenantNestedInput
   employees?: Prisma.EmployeeUpdateManyWithoutTenantNestedInput
   orders?: Prisma.OrderUpdateManyWithoutTenantNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutTenantNestedInput
@@ -7106,6 +8093,11 @@ export type TenantUpdateWithoutStorageLocationsInput = {
   inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
   jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutStorageLocationsInput = {
@@ -7128,6 +8120,7 @@ export type TenantUncheckedUpdateWithoutStorageLocationsInput = {
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutTenantNestedInput
   properties?: Prisma.PropertyUncheckedUpdateManyWithoutTenantNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedUpdateManyWithoutTenantNestedInput
   employees?: Prisma.EmployeeUncheckedUpdateManyWithoutTenantNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutTenantNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutTenantNestedInput
@@ -7158,6 +8151,11 @@ export type TenantUncheckedUpdateWithoutStorageLocationsInput = {
   inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
   jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutPurchaseOrdersInput = {
@@ -7180,6 +8178,7 @@ export type TenantCreateWithoutPurchaseOrdersInput = {
   customers?: Prisma.CustomerCreateNestedManyWithoutTenantInput
   properties?: Prisma.PropertyCreateNestedManyWithoutTenantInput
   services?: Prisma.ServiceCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionCreateNestedManyWithoutTenantInput
   employees?: Prisma.EmployeeCreateNestedManyWithoutTenantInput
   orders?: Prisma.OrderCreateNestedManyWithoutTenantInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutTenantInput
@@ -7210,6 +8209,11 @@ export type TenantCreateWithoutPurchaseOrdersInput = {
   inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
   jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutPurchaseOrdersInput = {
@@ -7232,6 +8236,7 @@ export type TenantUncheckedCreateWithoutPurchaseOrdersInput = {
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutTenantInput
   properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutTenantInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedCreateNestedManyWithoutTenantInput
   employees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutTenantInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutTenantInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutTenantInput
@@ -7262,6 +8267,11 @@ export type TenantUncheckedCreateWithoutPurchaseOrdersInput = {
   inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
   jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutPurchaseOrdersInput = {
@@ -7300,6 +8310,7 @@ export type TenantUpdateWithoutPurchaseOrdersInput = {
   customers?: Prisma.CustomerUpdateManyWithoutTenantNestedInput
   properties?: Prisma.PropertyUpdateManyWithoutTenantNestedInput
   services?: Prisma.ServiceUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUpdateManyWithoutTenantNestedInput
   employees?: Prisma.EmployeeUpdateManyWithoutTenantNestedInput
   orders?: Prisma.OrderUpdateManyWithoutTenantNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutTenantNestedInput
@@ -7330,6 +8341,11 @@ export type TenantUpdateWithoutPurchaseOrdersInput = {
   inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
   jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutPurchaseOrdersInput = {
@@ -7352,6 +8368,7 @@ export type TenantUncheckedUpdateWithoutPurchaseOrdersInput = {
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutTenantNestedInput
   properties?: Prisma.PropertyUncheckedUpdateManyWithoutTenantNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedUpdateManyWithoutTenantNestedInput
   employees?: Prisma.EmployeeUncheckedUpdateManyWithoutTenantNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutTenantNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutTenantNestedInput
@@ -7382,6 +8399,11 @@ export type TenantUncheckedUpdateWithoutPurchaseOrdersInput = {
   inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
   jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutDeliveriesInput = {
@@ -7404,6 +8426,7 @@ export type TenantCreateWithoutDeliveriesInput = {
   customers?: Prisma.CustomerCreateNestedManyWithoutTenantInput
   properties?: Prisma.PropertyCreateNestedManyWithoutTenantInput
   services?: Prisma.ServiceCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionCreateNestedManyWithoutTenantInput
   employees?: Prisma.EmployeeCreateNestedManyWithoutTenantInput
   orders?: Prisma.OrderCreateNestedManyWithoutTenantInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutTenantInput
@@ -7434,6 +8457,11 @@ export type TenantCreateWithoutDeliveriesInput = {
   inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
   jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutDeliveriesInput = {
@@ -7456,6 +8484,7 @@ export type TenantUncheckedCreateWithoutDeliveriesInput = {
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutTenantInput
   properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutTenantInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedCreateNestedManyWithoutTenantInput
   employees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutTenantInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutTenantInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutTenantInput
@@ -7486,6 +8515,11 @@ export type TenantUncheckedCreateWithoutDeliveriesInput = {
   inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
   jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutDeliveriesInput = {
@@ -7524,6 +8558,7 @@ export type TenantUpdateWithoutDeliveriesInput = {
   customers?: Prisma.CustomerUpdateManyWithoutTenantNestedInput
   properties?: Prisma.PropertyUpdateManyWithoutTenantNestedInput
   services?: Prisma.ServiceUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUpdateManyWithoutTenantNestedInput
   employees?: Prisma.EmployeeUpdateManyWithoutTenantNestedInput
   orders?: Prisma.OrderUpdateManyWithoutTenantNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutTenantNestedInput
@@ -7554,6 +8589,11 @@ export type TenantUpdateWithoutDeliveriesInput = {
   inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
   jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutDeliveriesInput = {
@@ -7576,6 +8616,7 @@ export type TenantUncheckedUpdateWithoutDeliveriesInput = {
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutTenantNestedInput
   properties?: Prisma.PropertyUncheckedUpdateManyWithoutTenantNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedUpdateManyWithoutTenantNestedInput
   employees?: Prisma.EmployeeUncheckedUpdateManyWithoutTenantNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutTenantNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutTenantNestedInput
@@ -7606,6 +8647,11 @@ export type TenantUncheckedUpdateWithoutDeliveriesInput = {
   inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
   jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutManualReorderSuggestionsInput = {
@@ -7628,6 +8674,7 @@ export type TenantCreateWithoutManualReorderSuggestionsInput = {
   customers?: Prisma.CustomerCreateNestedManyWithoutTenantInput
   properties?: Prisma.PropertyCreateNestedManyWithoutTenantInput
   services?: Prisma.ServiceCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionCreateNestedManyWithoutTenantInput
   employees?: Prisma.EmployeeCreateNestedManyWithoutTenantInput
   orders?: Prisma.OrderCreateNestedManyWithoutTenantInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutTenantInput
@@ -7658,6 +8705,11 @@ export type TenantCreateWithoutManualReorderSuggestionsInput = {
   inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
   jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutManualReorderSuggestionsInput = {
@@ -7680,6 +8732,7 @@ export type TenantUncheckedCreateWithoutManualReorderSuggestionsInput = {
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutTenantInput
   properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutTenantInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedCreateNestedManyWithoutTenantInput
   employees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutTenantInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutTenantInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutTenantInput
@@ -7710,6 +8763,11 @@ export type TenantUncheckedCreateWithoutManualReorderSuggestionsInput = {
   inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
   jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutManualReorderSuggestionsInput = {
@@ -7748,6 +8806,7 @@ export type TenantUpdateWithoutManualReorderSuggestionsInput = {
   customers?: Prisma.CustomerUpdateManyWithoutTenantNestedInput
   properties?: Prisma.PropertyUpdateManyWithoutTenantNestedInput
   services?: Prisma.ServiceUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUpdateManyWithoutTenantNestedInput
   employees?: Prisma.EmployeeUpdateManyWithoutTenantNestedInput
   orders?: Prisma.OrderUpdateManyWithoutTenantNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutTenantNestedInput
@@ -7778,6 +8837,11 @@ export type TenantUpdateWithoutManualReorderSuggestionsInput = {
   inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
   jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutManualReorderSuggestionsInput = {
@@ -7800,6 +8864,7 @@ export type TenantUncheckedUpdateWithoutManualReorderSuggestionsInput = {
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutTenantNestedInput
   properties?: Prisma.PropertyUncheckedUpdateManyWithoutTenantNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedUpdateManyWithoutTenantNestedInput
   employees?: Prisma.EmployeeUncheckedUpdateManyWithoutTenantNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutTenantNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutTenantNestedInput
@@ -7830,6 +8895,11 @@ export type TenantUncheckedUpdateWithoutManualReorderSuggestionsInput = {
   inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
   jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutTeamsInput = {
@@ -7852,6 +8922,7 @@ export type TenantCreateWithoutTeamsInput = {
   customers?: Prisma.CustomerCreateNestedManyWithoutTenantInput
   properties?: Prisma.PropertyCreateNestedManyWithoutTenantInput
   services?: Prisma.ServiceCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionCreateNestedManyWithoutTenantInput
   employees?: Prisma.EmployeeCreateNestedManyWithoutTenantInput
   orders?: Prisma.OrderCreateNestedManyWithoutTenantInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutTenantInput
@@ -7882,6 +8953,11 @@ export type TenantCreateWithoutTeamsInput = {
   inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
   jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutTeamsInput = {
@@ -7904,6 +8980,7 @@ export type TenantUncheckedCreateWithoutTeamsInput = {
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutTenantInput
   properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutTenantInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedCreateNestedManyWithoutTenantInput
   employees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutTenantInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutTenantInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutTenantInput
@@ -7934,6 +9011,11 @@ export type TenantUncheckedCreateWithoutTeamsInput = {
   inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
   jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutTeamsInput = {
@@ -7972,6 +9054,7 @@ export type TenantUpdateWithoutTeamsInput = {
   customers?: Prisma.CustomerUpdateManyWithoutTenantNestedInput
   properties?: Prisma.PropertyUpdateManyWithoutTenantNestedInput
   services?: Prisma.ServiceUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUpdateManyWithoutTenantNestedInput
   employees?: Prisma.EmployeeUpdateManyWithoutTenantNestedInput
   orders?: Prisma.OrderUpdateManyWithoutTenantNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutTenantNestedInput
@@ -8002,6 +9085,11 @@ export type TenantUpdateWithoutTeamsInput = {
   inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
   jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutTeamsInput = {
@@ -8024,6 +9112,7 @@ export type TenantUncheckedUpdateWithoutTeamsInput = {
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutTenantNestedInput
   properties?: Prisma.PropertyUncheckedUpdateManyWithoutTenantNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedUpdateManyWithoutTenantNestedInput
   employees?: Prisma.EmployeeUncheckedUpdateManyWithoutTenantNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutTenantNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutTenantNestedInput
@@ -8054,6 +9143,11 @@ export type TenantUncheckedUpdateWithoutTeamsInput = {
   inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
   jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutVehiclesInput = {
@@ -8076,6 +9170,7 @@ export type TenantCreateWithoutVehiclesInput = {
   customers?: Prisma.CustomerCreateNestedManyWithoutTenantInput
   properties?: Prisma.PropertyCreateNestedManyWithoutTenantInput
   services?: Prisma.ServiceCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionCreateNestedManyWithoutTenantInput
   employees?: Prisma.EmployeeCreateNestedManyWithoutTenantInput
   orders?: Prisma.OrderCreateNestedManyWithoutTenantInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutTenantInput
@@ -8106,6 +9201,11 @@ export type TenantCreateWithoutVehiclesInput = {
   inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
   jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutVehiclesInput = {
@@ -8128,6 +9228,7 @@ export type TenantUncheckedCreateWithoutVehiclesInput = {
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutTenantInput
   properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutTenantInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedCreateNestedManyWithoutTenantInput
   employees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutTenantInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutTenantInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutTenantInput
@@ -8158,6 +9259,11 @@ export type TenantUncheckedCreateWithoutVehiclesInput = {
   inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
   jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutVehiclesInput = {
@@ -8196,6 +9302,7 @@ export type TenantUpdateWithoutVehiclesInput = {
   customers?: Prisma.CustomerUpdateManyWithoutTenantNestedInput
   properties?: Prisma.PropertyUpdateManyWithoutTenantNestedInput
   services?: Prisma.ServiceUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUpdateManyWithoutTenantNestedInput
   employees?: Prisma.EmployeeUpdateManyWithoutTenantNestedInput
   orders?: Prisma.OrderUpdateManyWithoutTenantNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutTenantNestedInput
@@ -8226,6 +9333,11 @@ export type TenantUpdateWithoutVehiclesInput = {
   inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
   jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutVehiclesInput = {
@@ -8248,6 +9360,7 @@ export type TenantUncheckedUpdateWithoutVehiclesInput = {
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutTenantNestedInput
   properties?: Prisma.PropertyUncheckedUpdateManyWithoutTenantNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedUpdateManyWithoutTenantNestedInput
   employees?: Prisma.EmployeeUncheckedUpdateManyWithoutTenantNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutTenantNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutTenantNestedInput
@@ -8278,6 +9391,11 @@ export type TenantUncheckedUpdateWithoutVehiclesInput = {
   inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
   jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutStaffAssignmentRequestsInput = {
@@ -8300,6 +9418,7 @@ export type TenantCreateWithoutStaffAssignmentRequestsInput = {
   customers?: Prisma.CustomerCreateNestedManyWithoutTenantInput
   properties?: Prisma.PropertyCreateNestedManyWithoutTenantInput
   services?: Prisma.ServiceCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionCreateNestedManyWithoutTenantInput
   employees?: Prisma.EmployeeCreateNestedManyWithoutTenantInput
   orders?: Prisma.OrderCreateNestedManyWithoutTenantInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutTenantInput
@@ -8330,6 +9449,11 @@ export type TenantCreateWithoutStaffAssignmentRequestsInput = {
   inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
   jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutStaffAssignmentRequestsInput = {
@@ -8352,6 +9476,7 @@ export type TenantUncheckedCreateWithoutStaffAssignmentRequestsInput = {
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutTenantInput
   properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutTenantInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedCreateNestedManyWithoutTenantInput
   employees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutTenantInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutTenantInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutTenantInput
@@ -8382,6 +9507,11 @@ export type TenantUncheckedCreateWithoutStaffAssignmentRequestsInput = {
   inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
   jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutStaffAssignmentRequestsInput = {
@@ -8420,6 +9550,7 @@ export type TenantUpdateWithoutStaffAssignmentRequestsInput = {
   customers?: Prisma.CustomerUpdateManyWithoutTenantNestedInput
   properties?: Prisma.PropertyUpdateManyWithoutTenantNestedInput
   services?: Prisma.ServiceUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUpdateManyWithoutTenantNestedInput
   employees?: Prisma.EmployeeUpdateManyWithoutTenantNestedInput
   orders?: Prisma.OrderUpdateManyWithoutTenantNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutTenantNestedInput
@@ -8450,6 +9581,11 @@ export type TenantUpdateWithoutStaffAssignmentRequestsInput = {
   inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
   jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutStaffAssignmentRequestsInput = {
@@ -8472,6 +9608,7 @@ export type TenantUncheckedUpdateWithoutStaffAssignmentRequestsInput = {
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutTenantNestedInput
   properties?: Prisma.PropertyUncheckedUpdateManyWithoutTenantNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedUpdateManyWithoutTenantNestedInput
   employees?: Prisma.EmployeeUncheckedUpdateManyWithoutTenantNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutTenantNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutTenantNestedInput
@@ -8502,6 +9639,11 @@ export type TenantUncheckedUpdateWithoutStaffAssignmentRequestsInput = {
   inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
   jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutInvitationsInput = {
@@ -8524,6 +9666,7 @@ export type TenantCreateWithoutInvitationsInput = {
   customers?: Prisma.CustomerCreateNestedManyWithoutTenantInput
   properties?: Prisma.PropertyCreateNestedManyWithoutTenantInput
   services?: Prisma.ServiceCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionCreateNestedManyWithoutTenantInput
   employees?: Prisma.EmployeeCreateNestedManyWithoutTenantInput
   orders?: Prisma.OrderCreateNestedManyWithoutTenantInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutTenantInput
@@ -8554,6 +9697,11 @@ export type TenantCreateWithoutInvitationsInput = {
   inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
   jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutInvitationsInput = {
@@ -8576,6 +9724,7 @@ export type TenantUncheckedCreateWithoutInvitationsInput = {
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutTenantInput
   properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutTenantInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedCreateNestedManyWithoutTenantInput
   employees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutTenantInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutTenantInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutTenantInput
@@ -8606,6 +9755,11 @@ export type TenantUncheckedCreateWithoutInvitationsInput = {
   inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
   jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutInvitationsInput = {
@@ -8644,6 +9798,7 @@ export type TenantUpdateWithoutInvitationsInput = {
   customers?: Prisma.CustomerUpdateManyWithoutTenantNestedInput
   properties?: Prisma.PropertyUpdateManyWithoutTenantNestedInput
   services?: Prisma.ServiceUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUpdateManyWithoutTenantNestedInput
   employees?: Prisma.EmployeeUpdateManyWithoutTenantNestedInput
   orders?: Prisma.OrderUpdateManyWithoutTenantNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutTenantNestedInput
@@ -8674,6 +9829,11 @@ export type TenantUpdateWithoutInvitationsInput = {
   inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
   jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutInvitationsInput = {
@@ -8696,6 +9856,7 @@ export type TenantUncheckedUpdateWithoutInvitationsInput = {
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutTenantNestedInput
   properties?: Prisma.PropertyUncheckedUpdateManyWithoutTenantNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedUpdateManyWithoutTenantNestedInput
   employees?: Prisma.EmployeeUncheckedUpdateManyWithoutTenantNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutTenantNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutTenantNestedInput
@@ -8726,6 +9887,11 @@ export type TenantUncheckedUpdateWithoutInvitationsInput = {
   inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
   jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutOrderSharesInput = {
@@ -8748,6 +9914,7 @@ export type TenantCreateWithoutOrderSharesInput = {
   customers?: Prisma.CustomerCreateNestedManyWithoutTenantInput
   properties?: Prisma.PropertyCreateNestedManyWithoutTenantInput
   services?: Prisma.ServiceCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionCreateNestedManyWithoutTenantInput
   employees?: Prisma.EmployeeCreateNestedManyWithoutTenantInput
   orders?: Prisma.OrderCreateNestedManyWithoutTenantInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutTenantInput
@@ -8778,6 +9945,11 @@ export type TenantCreateWithoutOrderSharesInput = {
   inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
   jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutOrderSharesInput = {
@@ -8800,6 +9972,7 @@ export type TenantUncheckedCreateWithoutOrderSharesInput = {
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutTenantInput
   properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutTenantInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedCreateNestedManyWithoutTenantInput
   employees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutTenantInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutTenantInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutTenantInput
@@ -8830,6 +10003,11 @@ export type TenantUncheckedCreateWithoutOrderSharesInput = {
   inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
   jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutOrderSharesInput = {
@@ -8868,6 +10046,7 @@ export type TenantUpdateWithoutOrderSharesInput = {
   customers?: Prisma.CustomerUpdateManyWithoutTenantNestedInput
   properties?: Prisma.PropertyUpdateManyWithoutTenantNestedInput
   services?: Prisma.ServiceUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUpdateManyWithoutTenantNestedInput
   employees?: Prisma.EmployeeUpdateManyWithoutTenantNestedInput
   orders?: Prisma.OrderUpdateManyWithoutTenantNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutTenantNestedInput
@@ -8898,6 +10077,11 @@ export type TenantUpdateWithoutOrderSharesInput = {
   inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
   jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutOrderSharesInput = {
@@ -8920,6 +10104,7 @@ export type TenantUncheckedUpdateWithoutOrderSharesInput = {
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutTenantNestedInput
   properties?: Prisma.PropertyUncheckedUpdateManyWithoutTenantNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedUpdateManyWithoutTenantNestedInput
   employees?: Prisma.EmployeeUncheckedUpdateManyWithoutTenantNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutTenantNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutTenantNestedInput
@@ -8950,9 +10135,14 @@ export type TenantUncheckedUpdateWithoutOrderSharesInput = {
   inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
   jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
 }
 
-export type TenantCreateWithoutJobRunsInput = {
+export type TenantCreateWithoutFinanceSettingsInput = {
   id?: string
   slug: string
   name: string
@@ -8972,6 +10162,7 @@ export type TenantCreateWithoutJobRunsInput = {
   customers?: Prisma.CustomerCreateNestedManyWithoutTenantInput
   properties?: Prisma.PropertyCreateNestedManyWithoutTenantInput
   services?: Prisma.ServiceCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionCreateNestedManyWithoutTenantInput
   employees?: Prisma.EmployeeCreateNestedManyWithoutTenantInput
   orders?: Prisma.OrderCreateNestedManyWithoutTenantInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutTenantInput
@@ -9002,9 +10193,14 @@ export type TenantCreateWithoutJobRunsInput = {
   dunningNotices?: Prisma.DunningNoticeCreateNestedManyWithoutTenantInput
   inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
 }
 
-export type TenantUncheckedCreateWithoutJobRunsInput = {
+export type TenantUncheckedCreateWithoutFinanceSettingsInput = {
   id?: string
   slug: string
   name: string
@@ -9024,6 +10220,7 @@ export type TenantUncheckedCreateWithoutJobRunsInput = {
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutTenantInput
   properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutTenantInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedCreateNestedManyWithoutTenantInput
   employees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutTenantInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutTenantInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutTenantInput
@@ -9054,6 +10251,755 @@ export type TenantUncheckedCreateWithoutJobRunsInput = {
   dunningNotices?: Prisma.DunningNoticeUncheckedCreateNestedManyWithoutTenantInput
   inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
+}
+
+export type TenantCreateOrConnectWithoutFinanceSettingsInput = {
+  where: Prisma.TenantWhereUniqueInput
+  create: Prisma.XOR<Prisma.TenantCreateWithoutFinanceSettingsInput, Prisma.TenantUncheckedCreateWithoutFinanceSettingsInput>
+}
+
+export type TenantUpsertWithoutFinanceSettingsInput = {
+  update: Prisma.XOR<Prisma.TenantUpdateWithoutFinanceSettingsInput, Prisma.TenantUncheckedUpdateWithoutFinanceSettingsInput>
+  create: Prisma.XOR<Prisma.TenantCreateWithoutFinanceSettingsInput, Prisma.TenantUncheckedCreateWithoutFinanceSettingsInput>
+  where?: Prisma.TenantWhereInput
+}
+
+export type TenantUpdateToOneWithWhereWithoutFinanceSettingsInput = {
+  where?: Prisma.TenantWhereInput
+  data: Prisma.XOR<Prisma.TenantUpdateWithoutFinanceSettingsInput, Prisma.TenantUncheckedUpdateWithoutFinanceSettingsInput>
+}
+
+export type TenantUpdateWithoutFinanceSettingsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUpdateManyWithoutTenantNestedInput
+  customers?: Prisma.CustomerUpdateManyWithoutTenantNestedInput
+  properties?: Prisma.PropertyUpdateManyWithoutTenantNestedInput
+  services?: Prisma.ServiceUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUpdateManyWithoutTenantNestedInput
+  employees?: Prisma.EmployeeUpdateManyWithoutTenantNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutTenantNestedInput
+  appointments?: Prisma.AppointmentUpdateManyWithoutTenantNestedInput
+  checklistTemplates?: Prisma.ChecklistTemplateUpdateManyWithoutTenantNestedInput
+  messages?: Prisma.MessageUpdateManyWithoutTenantNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutTenantNestedInput
+  serviceAreas?: Prisma.ServiceAreaUpdateManyWithoutTenantNestedInput
+  workingHours?: Prisma.WorkingHoursUpdateManyWithoutTenantNestedInput
+  notifications?: Prisma.NotificationLogUpdateManyWithoutTenantNestedInput
+  companySettings?: Prisma.CompanySettingsUpdateOneWithoutTenantNestedInput
+  monthlyFixedCosts?: Prisma.MonthlyFixedCostUpdateManyWithoutTenantNestedInput
+  overheadSettings?: Prisma.OverheadSettingsUpdateOneWithoutTenantNestedInput
+  machines?: Prisma.MachineUpdateManyWithoutTenantNestedInput
+  travelZones?: Prisma.TravelZoneUpdateManyWithoutTenantNestedInput
+  calculations?: Prisma.CalculationUpdateManyWithoutTenantNestedInput
+  articles?: Prisma.ArticleUpdateManyWithoutTenantNestedInput
+  storageLocations?: Prisma.StorageLocationUpdateManyWithoutTenantNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutTenantNestedInput
+  staffAssignmentRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutTenantNestedInput
+  deliveries?: Prisma.DeliveryUpdateManyWithoutTenantNestedInput
+  manualReorderSuggestions?: Prisma.ManualReorderSuggestionUpdateManyWithoutTenantNestedInput
+  teams?: Prisma.TeamUpdateManyWithoutTenantNestedInput
+  vehicles?: Prisma.VehicleUpdateManyWithoutTenantNestedInput
+  invitations?: Prisma.InvitationUpdateManyWithoutTenantNestedInput
+  orderShares?: Prisma.OrderShareUpdateManyWithoutTenantNestedInput
+  documentSequences?: Prisma.DocumentSequenceUpdateManyWithoutTenantNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutTenantNestedInput
+  dunningNotices?: Prisma.DunningNoticeUpdateManyWithoutTenantNestedInput
+  inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
+  notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
+}
+
+export type TenantUncheckedUpdateWithoutFinanceSettingsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUncheckedUpdateManyWithoutTenantNestedInput
+  customers?: Prisma.CustomerUncheckedUpdateManyWithoutTenantNestedInput
+  properties?: Prisma.PropertyUncheckedUpdateManyWithoutTenantNestedInput
+  services?: Prisma.ServiceUncheckedUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedUpdateManyWithoutTenantNestedInput
+  employees?: Prisma.EmployeeUncheckedUpdateManyWithoutTenantNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutTenantNestedInput
+  appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutTenantNestedInput
+  checklistTemplates?: Prisma.ChecklistTemplateUncheckedUpdateManyWithoutTenantNestedInput
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutTenantNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutTenantNestedInput
+  serviceAreas?: Prisma.ServiceAreaUncheckedUpdateManyWithoutTenantNestedInput
+  workingHours?: Prisma.WorkingHoursUncheckedUpdateManyWithoutTenantNestedInput
+  notifications?: Prisma.NotificationLogUncheckedUpdateManyWithoutTenantNestedInput
+  companySettings?: Prisma.CompanySettingsUncheckedUpdateOneWithoutTenantNestedInput
+  monthlyFixedCosts?: Prisma.MonthlyFixedCostUncheckedUpdateManyWithoutTenantNestedInput
+  overheadSettings?: Prisma.OverheadSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  machines?: Prisma.MachineUncheckedUpdateManyWithoutTenantNestedInput
+  travelZones?: Prisma.TravelZoneUncheckedUpdateManyWithoutTenantNestedInput
+  calculations?: Prisma.CalculationUncheckedUpdateManyWithoutTenantNestedInput
+  articles?: Prisma.ArticleUncheckedUpdateManyWithoutTenantNestedInput
+  storageLocations?: Prisma.StorageLocationUncheckedUpdateManyWithoutTenantNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutTenantNestedInput
+  staffAssignmentRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutTenantNestedInput
+  deliveries?: Prisma.DeliveryUncheckedUpdateManyWithoutTenantNestedInput
+  manualReorderSuggestions?: Prisma.ManualReorderSuggestionUncheckedUpdateManyWithoutTenantNestedInput
+  teams?: Prisma.TeamUncheckedUpdateManyWithoutTenantNestedInput
+  vehicles?: Prisma.VehicleUncheckedUpdateManyWithoutTenantNestedInput
+  invitations?: Prisma.InvitationUncheckedUpdateManyWithoutTenantNestedInput
+  orderShares?: Prisma.OrderShareUncheckedUpdateManyWithoutTenantNestedInput
+  documentSequences?: Prisma.DocumentSequenceUncheckedUpdateManyWithoutTenantNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutTenantNestedInput
+  dunningNotices?: Prisma.DunningNoticeUncheckedUpdateManyWithoutTenantNestedInput
+  inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
+  notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
+}
+
+export type TenantCreateWithoutExpensesInput = {
+  id?: string
+  slug: string
+  name: string
+  email: string
+  phone?: string | null
+  address?: string | null
+  city?: string | null
+  zipCode?: string | null
+  logoUrl?: string | null
+  primaryColor?: string
+  privacyPolicyUrl?: string | null
+  imprintUrl?: string | null
+  bufferMinutes?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserCreateNestedManyWithoutTenantInput
+  customers?: Prisma.CustomerCreateNestedManyWithoutTenantInput
+  properties?: Prisma.PropertyCreateNestedManyWithoutTenantInput
+  services?: Prisma.ServiceCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionCreateNestedManyWithoutTenantInput
+  employees?: Prisma.EmployeeCreateNestedManyWithoutTenantInput
+  orders?: Prisma.OrderCreateNestedManyWithoutTenantInput
+  appointments?: Prisma.AppointmentCreateNestedManyWithoutTenantInput
+  checklistTemplates?: Prisma.ChecklistTemplateCreateNestedManyWithoutTenantInput
+  messages?: Prisma.MessageCreateNestedManyWithoutTenantInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutTenantInput
+  serviceAreas?: Prisma.ServiceAreaCreateNestedManyWithoutTenantInput
+  workingHours?: Prisma.WorkingHoursCreateNestedManyWithoutTenantInput
+  notifications?: Prisma.NotificationLogCreateNestedManyWithoutTenantInput
+  companySettings?: Prisma.CompanySettingsCreateNestedOneWithoutTenantInput
+  monthlyFixedCosts?: Prisma.MonthlyFixedCostCreateNestedManyWithoutTenantInput
+  overheadSettings?: Prisma.OverheadSettingsCreateNestedOneWithoutTenantInput
+  machines?: Prisma.MachineCreateNestedManyWithoutTenantInput
+  travelZones?: Prisma.TravelZoneCreateNestedManyWithoutTenantInput
+  calculations?: Prisma.CalculationCreateNestedManyWithoutTenantInput
+  articles?: Prisma.ArticleCreateNestedManyWithoutTenantInput
+  storageLocations?: Prisma.StorageLocationCreateNestedManyWithoutTenantInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutTenantInput
+  staffAssignmentRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutTenantInput
+  deliveries?: Prisma.DeliveryCreateNestedManyWithoutTenantInput
+  manualReorderSuggestions?: Prisma.ManualReorderSuggestionCreateNestedManyWithoutTenantInput
+  teams?: Prisma.TeamCreateNestedManyWithoutTenantInput
+  vehicles?: Prisma.VehicleCreateNestedManyWithoutTenantInput
+  invitations?: Prisma.InvitationCreateNestedManyWithoutTenantInput
+  orderShares?: Prisma.OrderShareCreateNestedManyWithoutTenantInput
+  documentSequences?: Prisma.DocumentSequenceCreateNestedManyWithoutTenantInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutTenantInput
+  dunningNotices?: Prisma.DunningNoticeCreateNestedManyWithoutTenantInput
+  inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
+  notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsCreateNestedOneWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
+}
+
+export type TenantUncheckedCreateWithoutExpensesInput = {
+  id?: string
+  slug: string
+  name: string
+  email: string
+  phone?: string | null
+  address?: string | null
+  city?: string | null
+  zipCode?: string | null
+  logoUrl?: string | null
+  primaryColor?: string
+  privacyPolicyUrl?: string | null
+  imprintUrl?: string | null
+  bufferMinutes?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutTenantInput
+  customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutTenantInput
+  properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutTenantInput
+  services?: Prisma.ServiceUncheckedCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedCreateNestedManyWithoutTenantInput
+  employees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutTenantInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutTenantInput
+  appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutTenantInput
+  checklistTemplates?: Prisma.ChecklistTemplateUncheckedCreateNestedManyWithoutTenantInput
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutTenantInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutTenantInput
+  serviceAreas?: Prisma.ServiceAreaUncheckedCreateNestedManyWithoutTenantInput
+  workingHours?: Prisma.WorkingHoursUncheckedCreateNestedManyWithoutTenantInput
+  notifications?: Prisma.NotificationLogUncheckedCreateNestedManyWithoutTenantInput
+  companySettings?: Prisma.CompanySettingsUncheckedCreateNestedOneWithoutTenantInput
+  monthlyFixedCosts?: Prisma.MonthlyFixedCostUncheckedCreateNestedManyWithoutTenantInput
+  overheadSettings?: Prisma.OverheadSettingsUncheckedCreateNestedOneWithoutTenantInput
+  machines?: Prisma.MachineUncheckedCreateNestedManyWithoutTenantInput
+  travelZones?: Prisma.TravelZoneUncheckedCreateNestedManyWithoutTenantInput
+  calculations?: Prisma.CalculationUncheckedCreateNestedManyWithoutTenantInput
+  articles?: Prisma.ArticleUncheckedCreateNestedManyWithoutTenantInput
+  storageLocations?: Prisma.StorageLocationUncheckedCreateNestedManyWithoutTenantInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutTenantInput
+  staffAssignmentRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutTenantInput
+  deliveries?: Prisma.DeliveryUncheckedCreateNestedManyWithoutTenantInput
+  manualReorderSuggestions?: Prisma.ManualReorderSuggestionUncheckedCreateNestedManyWithoutTenantInput
+  teams?: Prisma.TeamUncheckedCreateNestedManyWithoutTenantInput
+  vehicles?: Prisma.VehicleUncheckedCreateNestedManyWithoutTenantInput
+  invitations?: Prisma.InvitationUncheckedCreateNestedManyWithoutTenantInput
+  orderShares?: Prisma.OrderShareUncheckedCreateNestedManyWithoutTenantInput
+  documentSequences?: Prisma.DocumentSequenceUncheckedCreateNestedManyWithoutTenantInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutTenantInput
+  dunningNotices?: Prisma.DunningNoticeUncheckedCreateNestedManyWithoutTenantInput
+  inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
+  notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedCreateNestedOneWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
+}
+
+export type TenantCreateOrConnectWithoutExpensesInput = {
+  where: Prisma.TenantWhereUniqueInput
+  create: Prisma.XOR<Prisma.TenantCreateWithoutExpensesInput, Prisma.TenantUncheckedCreateWithoutExpensesInput>
+}
+
+export type TenantUpsertWithoutExpensesInput = {
+  update: Prisma.XOR<Prisma.TenantUpdateWithoutExpensesInput, Prisma.TenantUncheckedUpdateWithoutExpensesInput>
+  create: Prisma.XOR<Prisma.TenantCreateWithoutExpensesInput, Prisma.TenantUncheckedCreateWithoutExpensesInput>
+  where?: Prisma.TenantWhereInput
+}
+
+export type TenantUpdateToOneWithWhereWithoutExpensesInput = {
+  where?: Prisma.TenantWhereInput
+  data: Prisma.XOR<Prisma.TenantUpdateWithoutExpensesInput, Prisma.TenantUncheckedUpdateWithoutExpensesInput>
+}
+
+export type TenantUpdateWithoutExpensesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUpdateManyWithoutTenantNestedInput
+  customers?: Prisma.CustomerUpdateManyWithoutTenantNestedInput
+  properties?: Prisma.PropertyUpdateManyWithoutTenantNestedInput
+  services?: Prisma.ServiceUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUpdateManyWithoutTenantNestedInput
+  employees?: Prisma.EmployeeUpdateManyWithoutTenantNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutTenantNestedInput
+  appointments?: Prisma.AppointmentUpdateManyWithoutTenantNestedInput
+  checklistTemplates?: Prisma.ChecklistTemplateUpdateManyWithoutTenantNestedInput
+  messages?: Prisma.MessageUpdateManyWithoutTenantNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutTenantNestedInput
+  serviceAreas?: Prisma.ServiceAreaUpdateManyWithoutTenantNestedInput
+  workingHours?: Prisma.WorkingHoursUpdateManyWithoutTenantNestedInput
+  notifications?: Prisma.NotificationLogUpdateManyWithoutTenantNestedInput
+  companySettings?: Prisma.CompanySettingsUpdateOneWithoutTenantNestedInput
+  monthlyFixedCosts?: Prisma.MonthlyFixedCostUpdateManyWithoutTenantNestedInput
+  overheadSettings?: Prisma.OverheadSettingsUpdateOneWithoutTenantNestedInput
+  machines?: Prisma.MachineUpdateManyWithoutTenantNestedInput
+  travelZones?: Prisma.TravelZoneUpdateManyWithoutTenantNestedInput
+  calculations?: Prisma.CalculationUpdateManyWithoutTenantNestedInput
+  articles?: Prisma.ArticleUpdateManyWithoutTenantNestedInput
+  storageLocations?: Prisma.StorageLocationUpdateManyWithoutTenantNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutTenantNestedInput
+  staffAssignmentRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutTenantNestedInput
+  deliveries?: Prisma.DeliveryUpdateManyWithoutTenantNestedInput
+  manualReorderSuggestions?: Prisma.ManualReorderSuggestionUpdateManyWithoutTenantNestedInput
+  teams?: Prisma.TeamUpdateManyWithoutTenantNestedInput
+  vehicles?: Prisma.VehicleUpdateManyWithoutTenantNestedInput
+  invitations?: Prisma.InvitationUpdateManyWithoutTenantNestedInput
+  orderShares?: Prisma.OrderShareUpdateManyWithoutTenantNestedInput
+  documentSequences?: Prisma.DocumentSequenceUpdateManyWithoutTenantNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutTenantNestedInput
+  dunningNotices?: Prisma.DunningNoticeUpdateManyWithoutTenantNestedInput
+  inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
+  notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUpdateOneWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
+}
+
+export type TenantUncheckedUpdateWithoutExpensesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUncheckedUpdateManyWithoutTenantNestedInput
+  customers?: Prisma.CustomerUncheckedUpdateManyWithoutTenantNestedInput
+  properties?: Prisma.PropertyUncheckedUpdateManyWithoutTenantNestedInput
+  services?: Prisma.ServiceUncheckedUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedUpdateManyWithoutTenantNestedInput
+  employees?: Prisma.EmployeeUncheckedUpdateManyWithoutTenantNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutTenantNestedInput
+  appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutTenantNestedInput
+  checklistTemplates?: Prisma.ChecklistTemplateUncheckedUpdateManyWithoutTenantNestedInput
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutTenantNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutTenantNestedInput
+  serviceAreas?: Prisma.ServiceAreaUncheckedUpdateManyWithoutTenantNestedInput
+  workingHours?: Prisma.WorkingHoursUncheckedUpdateManyWithoutTenantNestedInput
+  notifications?: Prisma.NotificationLogUncheckedUpdateManyWithoutTenantNestedInput
+  companySettings?: Prisma.CompanySettingsUncheckedUpdateOneWithoutTenantNestedInput
+  monthlyFixedCosts?: Prisma.MonthlyFixedCostUncheckedUpdateManyWithoutTenantNestedInput
+  overheadSettings?: Prisma.OverheadSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  machines?: Prisma.MachineUncheckedUpdateManyWithoutTenantNestedInput
+  travelZones?: Prisma.TravelZoneUncheckedUpdateManyWithoutTenantNestedInput
+  calculations?: Prisma.CalculationUncheckedUpdateManyWithoutTenantNestedInput
+  articles?: Prisma.ArticleUncheckedUpdateManyWithoutTenantNestedInput
+  storageLocations?: Prisma.StorageLocationUncheckedUpdateManyWithoutTenantNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutTenantNestedInput
+  staffAssignmentRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutTenantNestedInput
+  deliveries?: Prisma.DeliveryUncheckedUpdateManyWithoutTenantNestedInput
+  manualReorderSuggestions?: Prisma.ManualReorderSuggestionUncheckedUpdateManyWithoutTenantNestedInput
+  teams?: Prisma.TeamUncheckedUpdateManyWithoutTenantNestedInput
+  vehicles?: Prisma.VehicleUncheckedUpdateManyWithoutTenantNestedInput
+  invitations?: Prisma.InvitationUncheckedUpdateManyWithoutTenantNestedInput
+  orderShares?: Prisma.OrderShareUncheckedUpdateManyWithoutTenantNestedInput
+  documentSequences?: Prisma.DocumentSequenceUncheckedUpdateManyWithoutTenantNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutTenantNestedInput
+  dunningNotices?: Prisma.DunningNoticeUncheckedUpdateManyWithoutTenantNestedInput
+  inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
+  notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
+}
+
+export type TenantCreateWithoutPlannedInvestmentsInput = {
+  id?: string
+  slug: string
+  name: string
+  email: string
+  phone?: string | null
+  address?: string | null
+  city?: string | null
+  zipCode?: string | null
+  logoUrl?: string | null
+  primaryColor?: string
+  privacyPolicyUrl?: string | null
+  imprintUrl?: string | null
+  bufferMinutes?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserCreateNestedManyWithoutTenantInput
+  customers?: Prisma.CustomerCreateNestedManyWithoutTenantInput
+  properties?: Prisma.PropertyCreateNestedManyWithoutTenantInput
+  services?: Prisma.ServiceCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionCreateNestedManyWithoutTenantInput
+  employees?: Prisma.EmployeeCreateNestedManyWithoutTenantInput
+  orders?: Prisma.OrderCreateNestedManyWithoutTenantInput
+  appointments?: Prisma.AppointmentCreateNestedManyWithoutTenantInput
+  checklistTemplates?: Prisma.ChecklistTemplateCreateNestedManyWithoutTenantInput
+  messages?: Prisma.MessageCreateNestedManyWithoutTenantInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutTenantInput
+  serviceAreas?: Prisma.ServiceAreaCreateNestedManyWithoutTenantInput
+  workingHours?: Prisma.WorkingHoursCreateNestedManyWithoutTenantInput
+  notifications?: Prisma.NotificationLogCreateNestedManyWithoutTenantInput
+  companySettings?: Prisma.CompanySettingsCreateNestedOneWithoutTenantInput
+  monthlyFixedCosts?: Prisma.MonthlyFixedCostCreateNestedManyWithoutTenantInput
+  overheadSettings?: Prisma.OverheadSettingsCreateNestedOneWithoutTenantInput
+  machines?: Prisma.MachineCreateNestedManyWithoutTenantInput
+  travelZones?: Prisma.TravelZoneCreateNestedManyWithoutTenantInput
+  calculations?: Prisma.CalculationCreateNestedManyWithoutTenantInput
+  articles?: Prisma.ArticleCreateNestedManyWithoutTenantInput
+  storageLocations?: Prisma.StorageLocationCreateNestedManyWithoutTenantInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutTenantInput
+  staffAssignmentRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutTenantInput
+  deliveries?: Prisma.DeliveryCreateNestedManyWithoutTenantInput
+  manualReorderSuggestions?: Prisma.ManualReorderSuggestionCreateNestedManyWithoutTenantInput
+  teams?: Prisma.TeamCreateNestedManyWithoutTenantInput
+  vehicles?: Prisma.VehicleCreateNestedManyWithoutTenantInput
+  invitations?: Prisma.InvitationCreateNestedManyWithoutTenantInput
+  orderShares?: Prisma.OrderShareCreateNestedManyWithoutTenantInput
+  documentSequences?: Prisma.DocumentSequenceCreateNestedManyWithoutTenantInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutTenantInput
+  dunningNotices?: Prisma.DunningNoticeCreateNestedManyWithoutTenantInput
+  inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
+  notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
+}
+
+export type TenantUncheckedCreateWithoutPlannedInvestmentsInput = {
+  id?: string
+  slug: string
+  name: string
+  email: string
+  phone?: string | null
+  address?: string | null
+  city?: string | null
+  zipCode?: string | null
+  logoUrl?: string | null
+  primaryColor?: string
+  privacyPolicyUrl?: string | null
+  imprintUrl?: string | null
+  bufferMinutes?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutTenantInput
+  customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutTenantInput
+  properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutTenantInput
+  services?: Prisma.ServiceUncheckedCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedCreateNestedManyWithoutTenantInput
+  employees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutTenantInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutTenantInput
+  appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutTenantInput
+  checklistTemplates?: Prisma.ChecklistTemplateUncheckedCreateNestedManyWithoutTenantInput
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutTenantInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutTenantInput
+  serviceAreas?: Prisma.ServiceAreaUncheckedCreateNestedManyWithoutTenantInput
+  workingHours?: Prisma.WorkingHoursUncheckedCreateNestedManyWithoutTenantInput
+  notifications?: Prisma.NotificationLogUncheckedCreateNestedManyWithoutTenantInput
+  companySettings?: Prisma.CompanySettingsUncheckedCreateNestedOneWithoutTenantInput
+  monthlyFixedCosts?: Prisma.MonthlyFixedCostUncheckedCreateNestedManyWithoutTenantInput
+  overheadSettings?: Prisma.OverheadSettingsUncheckedCreateNestedOneWithoutTenantInput
+  machines?: Prisma.MachineUncheckedCreateNestedManyWithoutTenantInput
+  travelZones?: Prisma.TravelZoneUncheckedCreateNestedManyWithoutTenantInput
+  calculations?: Prisma.CalculationUncheckedCreateNestedManyWithoutTenantInput
+  articles?: Prisma.ArticleUncheckedCreateNestedManyWithoutTenantInput
+  storageLocations?: Prisma.StorageLocationUncheckedCreateNestedManyWithoutTenantInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutTenantInput
+  staffAssignmentRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutTenantInput
+  deliveries?: Prisma.DeliveryUncheckedCreateNestedManyWithoutTenantInput
+  manualReorderSuggestions?: Prisma.ManualReorderSuggestionUncheckedCreateNestedManyWithoutTenantInput
+  teams?: Prisma.TeamUncheckedCreateNestedManyWithoutTenantInput
+  vehicles?: Prisma.VehicleUncheckedCreateNestedManyWithoutTenantInput
+  invitations?: Prisma.InvitationUncheckedCreateNestedManyWithoutTenantInput
+  orderShares?: Prisma.OrderShareUncheckedCreateNestedManyWithoutTenantInput
+  documentSequences?: Prisma.DocumentSequenceUncheckedCreateNestedManyWithoutTenantInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutTenantInput
+  dunningNotices?: Prisma.DunningNoticeUncheckedCreateNestedManyWithoutTenantInput
+  inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
+  notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
+}
+
+export type TenantCreateOrConnectWithoutPlannedInvestmentsInput = {
+  where: Prisma.TenantWhereUniqueInput
+  create: Prisma.XOR<Prisma.TenantCreateWithoutPlannedInvestmentsInput, Prisma.TenantUncheckedCreateWithoutPlannedInvestmentsInput>
+}
+
+export type TenantUpsertWithoutPlannedInvestmentsInput = {
+  update: Prisma.XOR<Prisma.TenantUpdateWithoutPlannedInvestmentsInput, Prisma.TenantUncheckedUpdateWithoutPlannedInvestmentsInput>
+  create: Prisma.XOR<Prisma.TenantCreateWithoutPlannedInvestmentsInput, Prisma.TenantUncheckedCreateWithoutPlannedInvestmentsInput>
+  where?: Prisma.TenantWhereInput
+}
+
+export type TenantUpdateToOneWithWhereWithoutPlannedInvestmentsInput = {
+  where?: Prisma.TenantWhereInput
+  data: Prisma.XOR<Prisma.TenantUpdateWithoutPlannedInvestmentsInput, Prisma.TenantUncheckedUpdateWithoutPlannedInvestmentsInput>
+}
+
+export type TenantUpdateWithoutPlannedInvestmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUpdateManyWithoutTenantNestedInput
+  customers?: Prisma.CustomerUpdateManyWithoutTenantNestedInput
+  properties?: Prisma.PropertyUpdateManyWithoutTenantNestedInput
+  services?: Prisma.ServiceUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUpdateManyWithoutTenantNestedInput
+  employees?: Prisma.EmployeeUpdateManyWithoutTenantNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutTenantNestedInput
+  appointments?: Prisma.AppointmentUpdateManyWithoutTenantNestedInput
+  checklistTemplates?: Prisma.ChecklistTemplateUpdateManyWithoutTenantNestedInput
+  messages?: Prisma.MessageUpdateManyWithoutTenantNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutTenantNestedInput
+  serviceAreas?: Prisma.ServiceAreaUpdateManyWithoutTenantNestedInput
+  workingHours?: Prisma.WorkingHoursUpdateManyWithoutTenantNestedInput
+  notifications?: Prisma.NotificationLogUpdateManyWithoutTenantNestedInput
+  companySettings?: Prisma.CompanySettingsUpdateOneWithoutTenantNestedInput
+  monthlyFixedCosts?: Prisma.MonthlyFixedCostUpdateManyWithoutTenantNestedInput
+  overheadSettings?: Prisma.OverheadSettingsUpdateOneWithoutTenantNestedInput
+  machines?: Prisma.MachineUpdateManyWithoutTenantNestedInput
+  travelZones?: Prisma.TravelZoneUpdateManyWithoutTenantNestedInput
+  calculations?: Prisma.CalculationUpdateManyWithoutTenantNestedInput
+  articles?: Prisma.ArticleUpdateManyWithoutTenantNestedInput
+  storageLocations?: Prisma.StorageLocationUpdateManyWithoutTenantNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutTenantNestedInput
+  staffAssignmentRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutTenantNestedInput
+  deliveries?: Prisma.DeliveryUpdateManyWithoutTenantNestedInput
+  manualReorderSuggestions?: Prisma.ManualReorderSuggestionUpdateManyWithoutTenantNestedInput
+  teams?: Prisma.TeamUpdateManyWithoutTenantNestedInput
+  vehicles?: Prisma.VehicleUpdateManyWithoutTenantNestedInput
+  invitations?: Prisma.InvitationUpdateManyWithoutTenantNestedInput
+  orderShares?: Prisma.OrderShareUpdateManyWithoutTenantNestedInput
+  documentSequences?: Prisma.DocumentSequenceUpdateManyWithoutTenantNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutTenantNestedInput
+  dunningNotices?: Prisma.DunningNoticeUpdateManyWithoutTenantNestedInput
+  inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
+  notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
+}
+
+export type TenantUncheckedUpdateWithoutPlannedInvestmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUncheckedUpdateManyWithoutTenantNestedInput
+  customers?: Prisma.CustomerUncheckedUpdateManyWithoutTenantNestedInput
+  properties?: Prisma.PropertyUncheckedUpdateManyWithoutTenantNestedInput
+  services?: Prisma.ServiceUncheckedUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedUpdateManyWithoutTenantNestedInput
+  employees?: Prisma.EmployeeUncheckedUpdateManyWithoutTenantNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutTenantNestedInput
+  appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutTenantNestedInput
+  checklistTemplates?: Prisma.ChecklistTemplateUncheckedUpdateManyWithoutTenantNestedInput
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutTenantNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutTenantNestedInput
+  serviceAreas?: Prisma.ServiceAreaUncheckedUpdateManyWithoutTenantNestedInput
+  workingHours?: Prisma.WorkingHoursUncheckedUpdateManyWithoutTenantNestedInput
+  notifications?: Prisma.NotificationLogUncheckedUpdateManyWithoutTenantNestedInput
+  companySettings?: Prisma.CompanySettingsUncheckedUpdateOneWithoutTenantNestedInput
+  monthlyFixedCosts?: Prisma.MonthlyFixedCostUncheckedUpdateManyWithoutTenantNestedInput
+  overheadSettings?: Prisma.OverheadSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  machines?: Prisma.MachineUncheckedUpdateManyWithoutTenantNestedInput
+  travelZones?: Prisma.TravelZoneUncheckedUpdateManyWithoutTenantNestedInput
+  calculations?: Prisma.CalculationUncheckedUpdateManyWithoutTenantNestedInput
+  articles?: Prisma.ArticleUncheckedUpdateManyWithoutTenantNestedInput
+  storageLocations?: Prisma.StorageLocationUncheckedUpdateManyWithoutTenantNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutTenantNestedInput
+  staffAssignmentRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutTenantNestedInput
+  deliveries?: Prisma.DeliveryUncheckedUpdateManyWithoutTenantNestedInput
+  manualReorderSuggestions?: Prisma.ManualReorderSuggestionUncheckedUpdateManyWithoutTenantNestedInput
+  teams?: Prisma.TeamUncheckedUpdateManyWithoutTenantNestedInput
+  vehicles?: Prisma.VehicleUncheckedUpdateManyWithoutTenantNestedInput
+  invitations?: Prisma.InvitationUncheckedUpdateManyWithoutTenantNestedInput
+  orderShares?: Prisma.OrderShareUncheckedUpdateManyWithoutTenantNestedInput
+  documentSequences?: Prisma.DocumentSequenceUncheckedUpdateManyWithoutTenantNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutTenantNestedInput
+  dunningNotices?: Prisma.DunningNoticeUncheckedUpdateManyWithoutTenantNestedInput
+  inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
+  notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
+}
+
+export type TenantCreateWithoutJobRunsInput = {
+  id?: string
+  slug: string
+  name: string
+  email: string
+  phone?: string | null
+  address?: string | null
+  city?: string | null
+  zipCode?: string | null
+  logoUrl?: string | null
+  primaryColor?: string
+  privacyPolicyUrl?: string | null
+  imprintUrl?: string | null
+  bufferMinutes?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserCreateNestedManyWithoutTenantInput
+  customers?: Prisma.CustomerCreateNestedManyWithoutTenantInput
+  properties?: Prisma.PropertyCreateNestedManyWithoutTenantInput
+  services?: Prisma.ServiceCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionCreateNestedManyWithoutTenantInput
+  employees?: Prisma.EmployeeCreateNestedManyWithoutTenantInput
+  orders?: Prisma.OrderCreateNestedManyWithoutTenantInput
+  appointments?: Prisma.AppointmentCreateNestedManyWithoutTenantInput
+  checklistTemplates?: Prisma.ChecklistTemplateCreateNestedManyWithoutTenantInput
+  messages?: Prisma.MessageCreateNestedManyWithoutTenantInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutTenantInput
+  serviceAreas?: Prisma.ServiceAreaCreateNestedManyWithoutTenantInput
+  workingHours?: Prisma.WorkingHoursCreateNestedManyWithoutTenantInput
+  notifications?: Prisma.NotificationLogCreateNestedManyWithoutTenantInput
+  companySettings?: Prisma.CompanySettingsCreateNestedOneWithoutTenantInput
+  monthlyFixedCosts?: Prisma.MonthlyFixedCostCreateNestedManyWithoutTenantInput
+  overheadSettings?: Prisma.OverheadSettingsCreateNestedOneWithoutTenantInput
+  machines?: Prisma.MachineCreateNestedManyWithoutTenantInput
+  travelZones?: Prisma.TravelZoneCreateNestedManyWithoutTenantInput
+  calculations?: Prisma.CalculationCreateNestedManyWithoutTenantInput
+  articles?: Prisma.ArticleCreateNestedManyWithoutTenantInput
+  storageLocations?: Prisma.StorageLocationCreateNestedManyWithoutTenantInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutTenantInput
+  staffAssignmentRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutTenantInput
+  deliveries?: Prisma.DeliveryCreateNestedManyWithoutTenantInput
+  manualReorderSuggestions?: Prisma.ManualReorderSuggestionCreateNestedManyWithoutTenantInput
+  teams?: Prisma.TeamCreateNestedManyWithoutTenantInput
+  vehicles?: Prisma.VehicleCreateNestedManyWithoutTenantInput
+  invitations?: Prisma.InvitationCreateNestedManyWithoutTenantInput
+  orderShares?: Prisma.OrderShareCreateNestedManyWithoutTenantInput
+  documentSequences?: Prisma.DocumentSequenceCreateNestedManyWithoutTenantInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutTenantInput
+  dunningNotices?: Prisma.DunningNoticeCreateNestedManyWithoutTenantInput
+  inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
+  notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
+}
+
+export type TenantUncheckedCreateWithoutJobRunsInput = {
+  id?: string
+  slug: string
+  name: string
+  email: string
+  phone?: string | null
+  address?: string | null
+  city?: string | null
+  zipCode?: string | null
+  logoUrl?: string | null
+  primaryColor?: string
+  privacyPolicyUrl?: string | null
+  imprintUrl?: string | null
+  bufferMinutes?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutTenantInput
+  customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutTenantInput
+  properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutTenantInput
+  services?: Prisma.ServiceUncheckedCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedCreateNestedManyWithoutTenantInput
+  employees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutTenantInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutTenantInput
+  appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutTenantInput
+  checklistTemplates?: Prisma.ChecklistTemplateUncheckedCreateNestedManyWithoutTenantInput
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutTenantInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutTenantInput
+  serviceAreas?: Prisma.ServiceAreaUncheckedCreateNestedManyWithoutTenantInput
+  workingHours?: Prisma.WorkingHoursUncheckedCreateNestedManyWithoutTenantInput
+  notifications?: Prisma.NotificationLogUncheckedCreateNestedManyWithoutTenantInput
+  companySettings?: Prisma.CompanySettingsUncheckedCreateNestedOneWithoutTenantInput
+  monthlyFixedCosts?: Prisma.MonthlyFixedCostUncheckedCreateNestedManyWithoutTenantInput
+  overheadSettings?: Prisma.OverheadSettingsUncheckedCreateNestedOneWithoutTenantInput
+  machines?: Prisma.MachineUncheckedCreateNestedManyWithoutTenantInput
+  travelZones?: Prisma.TravelZoneUncheckedCreateNestedManyWithoutTenantInput
+  calculations?: Prisma.CalculationUncheckedCreateNestedManyWithoutTenantInput
+  articles?: Prisma.ArticleUncheckedCreateNestedManyWithoutTenantInput
+  storageLocations?: Prisma.StorageLocationUncheckedCreateNestedManyWithoutTenantInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutTenantInput
+  staffAssignmentRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutTenantInput
+  deliveries?: Prisma.DeliveryUncheckedCreateNestedManyWithoutTenantInput
+  manualReorderSuggestions?: Prisma.ManualReorderSuggestionUncheckedCreateNestedManyWithoutTenantInput
+  teams?: Prisma.TeamUncheckedCreateNestedManyWithoutTenantInput
+  vehicles?: Prisma.VehicleUncheckedCreateNestedManyWithoutTenantInput
+  invitations?: Prisma.InvitationUncheckedCreateNestedManyWithoutTenantInput
+  orderShares?: Prisma.OrderShareUncheckedCreateNestedManyWithoutTenantInput
+  documentSequences?: Prisma.DocumentSequenceUncheckedCreateNestedManyWithoutTenantInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutTenantInput
+  dunningNotices?: Prisma.DunningNoticeUncheckedCreateNestedManyWithoutTenantInput
+  inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
+  notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutJobRunsInput = {
@@ -9092,6 +11038,7 @@ export type TenantUpdateWithoutJobRunsInput = {
   customers?: Prisma.CustomerUpdateManyWithoutTenantNestedInput
   properties?: Prisma.PropertyUpdateManyWithoutTenantNestedInput
   services?: Prisma.ServiceUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUpdateManyWithoutTenantNestedInput
   employees?: Prisma.EmployeeUpdateManyWithoutTenantNestedInput
   orders?: Prisma.OrderUpdateManyWithoutTenantNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutTenantNestedInput
@@ -9122,6 +11069,11 @@ export type TenantUpdateWithoutJobRunsInput = {
   dunningNotices?: Prisma.DunningNoticeUpdateManyWithoutTenantNestedInput
   inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutJobRunsInput = {
@@ -9144,6 +11096,7 @@ export type TenantUncheckedUpdateWithoutJobRunsInput = {
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutTenantNestedInput
   properties?: Prisma.PropertyUncheckedUpdateManyWithoutTenantNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedUpdateManyWithoutTenantNestedInput
   employees?: Prisma.EmployeeUncheckedUpdateManyWithoutTenantNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutTenantNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutTenantNestedInput
@@ -9174,6 +11127,507 @@ export type TenantUncheckedUpdateWithoutJobRunsInput = {
   dunningNotices?: Prisma.DunningNoticeUncheckedUpdateManyWithoutTenantNestedInput
   inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
   notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
+}
+
+export type TenantCreateWithoutAiChatSessionsInput = {
+  id?: string
+  slug: string
+  name: string
+  email: string
+  phone?: string | null
+  address?: string | null
+  city?: string | null
+  zipCode?: string | null
+  logoUrl?: string | null
+  primaryColor?: string
+  privacyPolicyUrl?: string | null
+  imprintUrl?: string | null
+  bufferMinutes?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserCreateNestedManyWithoutTenantInput
+  customers?: Prisma.CustomerCreateNestedManyWithoutTenantInput
+  properties?: Prisma.PropertyCreateNestedManyWithoutTenantInput
+  services?: Prisma.ServiceCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionCreateNestedManyWithoutTenantInput
+  employees?: Prisma.EmployeeCreateNestedManyWithoutTenantInput
+  orders?: Prisma.OrderCreateNestedManyWithoutTenantInput
+  appointments?: Prisma.AppointmentCreateNestedManyWithoutTenantInput
+  checklistTemplates?: Prisma.ChecklistTemplateCreateNestedManyWithoutTenantInput
+  messages?: Prisma.MessageCreateNestedManyWithoutTenantInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutTenantInput
+  serviceAreas?: Prisma.ServiceAreaCreateNestedManyWithoutTenantInput
+  workingHours?: Prisma.WorkingHoursCreateNestedManyWithoutTenantInput
+  notifications?: Prisma.NotificationLogCreateNestedManyWithoutTenantInput
+  companySettings?: Prisma.CompanySettingsCreateNestedOneWithoutTenantInput
+  monthlyFixedCosts?: Prisma.MonthlyFixedCostCreateNestedManyWithoutTenantInput
+  overheadSettings?: Prisma.OverheadSettingsCreateNestedOneWithoutTenantInput
+  machines?: Prisma.MachineCreateNestedManyWithoutTenantInput
+  travelZones?: Prisma.TravelZoneCreateNestedManyWithoutTenantInput
+  calculations?: Prisma.CalculationCreateNestedManyWithoutTenantInput
+  articles?: Prisma.ArticleCreateNestedManyWithoutTenantInput
+  storageLocations?: Prisma.StorageLocationCreateNestedManyWithoutTenantInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutTenantInput
+  staffAssignmentRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutTenantInput
+  deliveries?: Prisma.DeliveryCreateNestedManyWithoutTenantInput
+  manualReorderSuggestions?: Prisma.ManualReorderSuggestionCreateNestedManyWithoutTenantInput
+  teams?: Prisma.TeamCreateNestedManyWithoutTenantInput
+  vehicles?: Prisma.VehicleCreateNestedManyWithoutTenantInput
+  invitations?: Prisma.InvitationCreateNestedManyWithoutTenantInput
+  orderShares?: Prisma.OrderShareCreateNestedManyWithoutTenantInput
+  documentSequences?: Prisma.DocumentSequenceCreateNestedManyWithoutTenantInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutTenantInput
+  dunningNotices?: Prisma.DunningNoticeCreateNestedManyWithoutTenantInput
+  inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
+  notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
+}
+
+export type TenantUncheckedCreateWithoutAiChatSessionsInput = {
+  id?: string
+  slug: string
+  name: string
+  email: string
+  phone?: string | null
+  address?: string | null
+  city?: string | null
+  zipCode?: string | null
+  logoUrl?: string | null
+  primaryColor?: string
+  privacyPolicyUrl?: string | null
+  imprintUrl?: string | null
+  bufferMinutes?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutTenantInput
+  customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutTenantInput
+  properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutTenantInput
+  services?: Prisma.ServiceUncheckedCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedCreateNestedManyWithoutTenantInput
+  employees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutTenantInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutTenantInput
+  appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutTenantInput
+  checklistTemplates?: Prisma.ChecklistTemplateUncheckedCreateNestedManyWithoutTenantInput
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutTenantInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutTenantInput
+  serviceAreas?: Prisma.ServiceAreaUncheckedCreateNestedManyWithoutTenantInput
+  workingHours?: Prisma.WorkingHoursUncheckedCreateNestedManyWithoutTenantInput
+  notifications?: Prisma.NotificationLogUncheckedCreateNestedManyWithoutTenantInput
+  companySettings?: Prisma.CompanySettingsUncheckedCreateNestedOneWithoutTenantInput
+  monthlyFixedCosts?: Prisma.MonthlyFixedCostUncheckedCreateNestedManyWithoutTenantInput
+  overheadSettings?: Prisma.OverheadSettingsUncheckedCreateNestedOneWithoutTenantInput
+  machines?: Prisma.MachineUncheckedCreateNestedManyWithoutTenantInput
+  travelZones?: Prisma.TravelZoneUncheckedCreateNestedManyWithoutTenantInput
+  calculations?: Prisma.CalculationUncheckedCreateNestedManyWithoutTenantInput
+  articles?: Prisma.ArticleUncheckedCreateNestedManyWithoutTenantInput
+  storageLocations?: Prisma.StorageLocationUncheckedCreateNestedManyWithoutTenantInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutTenantInput
+  staffAssignmentRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutTenantInput
+  deliveries?: Prisma.DeliveryUncheckedCreateNestedManyWithoutTenantInput
+  manualReorderSuggestions?: Prisma.ManualReorderSuggestionUncheckedCreateNestedManyWithoutTenantInput
+  teams?: Prisma.TeamUncheckedCreateNestedManyWithoutTenantInput
+  vehicles?: Prisma.VehicleUncheckedCreateNestedManyWithoutTenantInput
+  invitations?: Prisma.InvitationUncheckedCreateNestedManyWithoutTenantInput
+  orderShares?: Prisma.OrderShareUncheckedCreateNestedManyWithoutTenantInput
+  documentSequences?: Prisma.DocumentSequenceUncheckedCreateNestedManyWithoutTenantInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutTenantInput
+  dunningNotices?: Prisma.DunningNoticeUncheckedCreateNestedManyWithoutTenantInput
+  inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
+  notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
+}
+
+export type TenantCreateOrConnectWithoutAiChatSessionsInput = {
+  where: Prisma.TenantWhereUniqueInput
+  create: Prisma.XOR<Prisma.TenantCreateWithoutAiChatSessionsInput, Prisma.TenantUncheckedCreateWithoutAiChatSessionsInput>
+}
+
+export type TenantUpsertWithoutAiChatSessionsInput = {
+  update: Prisma.XOR<Prisma.TenantUpdateWithoutAiChatSessionsInput, Prisma.TenantUncheckedUpdateWithoutAiChatSessionsInput>
+  create: Prisma.XOR<Prisma.TenantCreateWithoutAiChatSessionsInput, Prisma.TenantUncheckedCreateWithoutAiChatSessionsInput>
+  where?: Prisma.TenantWhereInput
+}
+
+export type TenantUpdateToOneWithWhereWithoutAiChatSessionsInput = {
+  where?: Prisma.TenantWhereInput
+  data: Prisma.XOR<Prisma.TenantUpdateWithoutAiChatSessionsInput, Prisma.TenantUncheckedUpdateWithoutAiChatSessionsInput>
+}
+
+export type TenantUpdateWithoutAiChatSessionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUpdateManyWithoutTenantNestedInput
+  customers?: Prisma.CustomerUpdateManyWithoutTenantNestedInput
+  properties?: Prisma.PropertyUpdateManyWithoutTenantNestedInput
+  services?: Prisma.ServiceUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUpdateManyWithoutTenantNestedInput
+  employees?: Prisma.EmployeeUpdateManyWithoutTenantNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutTenantNestedInput
+  appointments?: Prisma.AppointmentUpdateManyWithoutTenantNestedInput
+  checklistTemplates?: Prisma.ChecklistTemplateUpdateManyWithoutTenantNestedInput
+  messages?: Prisma.MessageUpdateManyWithoutTenantNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutTenantNestedInput
+  serviceAreas?: Prisma.ServiceAreaUpdateManyWithoutTenantNestedInput
+  workingHours?: Prisma.WorkingHoursUpdateManyWithoutTenantNestedInput
+  notifications?: Prisma.NotificationLogUpdateManyWithoutTenantNestedInput
+  companySettings?: Prisma.CompanySettingsUpdateOneWithoutTenantNestedInput
+  monthlyFixedCosts?: Prisma.MonthlyFixedCostUpdateManyWithoutTenantNestedInput
+  overheadSettings?: Prisma.OverheadSettingsUpdateOneWithoutTenantNestedInput
+  machines?: Prisma.MachineUpdateManyWithoutTenantNestedInput
+  travelZones?: Prisma.TravelZoneUpdateManyWithoutTenantNestedInput
+  calculations?: Prisma.CalculationUpdateManyWithoutTenantNestedInput
+  articles?: Prisma.ArticleUpdateManyWithoutTenantNestedInput
+  storageLocations?: Prisma.StorageLocationUpdateManyWithoutTenantNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutTenantNestedInput
+  staffAssignmentRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutTenantNestedInput
+  deliveries?: Prisma.DeliveryUpdateManyWithoutTenantNestedInput
+  manualReorderSuggestions?: Prisma.ManualReorderSuggestionUpdateManyWithoutTenantNestedInput
+  teams?: Prisma.TeamUpdateManyWithoutTenantNestedInput
+  vehicles?: Prisma.VehicleUpdateManyWithoutTenantNestedInput
+  invitations?: Prisma.InvitationUpdateManyWithoutTenantNestedInput
+  orderShares?: Prisma.OrderShareUpdateManyWithoutTenantNestedInput
+  documentSequences?: Prisma.DocumentSequenceUpdateManyWithoutTenantNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutTenantNestedInput
+  dunningNotices?: Prisma.DunningNoticeUpdateManyWithoutTenantNestedInput
+  inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
+  notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
+}
+
+export type TenantUncheckedUpdateWithoutAiChatSessionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUncheckedUpdateManyWithoutTenantNestedInput
+  customers?: Prisma.CustomerUncheckedUpdateManyWithoutTenantNestedInput
+  properties?: Prisma.PropertyUncheckedUpdateManyWithoutTenantNestedInput
+  services?: Prisma.ServiceUncheckedUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedUpdateManyWithoutTenantNestedInput
+  employees?: Prisma.EmployeeUncheckedUpdateManyWithoutTenantNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutTenantNestedInput
+  appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutTenantNestedInput
+  checklistTemplates?: Prisma.ChecklistTemplateUncheckedUpdateManyWithoutTenantNestedInput
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutTenantNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutTenantNestedInput
+  serviceAreas?: Prisma.ServiceAreaUncheckedUpdateManyWithoutTenantNestedInput
+  workingHours?: Prisma.WorkingHoursUncheckedUpdateManyWithoutTenantNestedInput
+  notifications?: Prisma.NotificationLogUncheckedUpdateManyWithoutTenantNestedInput
+  companySettings?: Prisma.CompanySettingsUncheckedUpdateOneWithoutTenantNestedInput
+  monthlyFixedCosts?: Prisma.MonthlyFixedCostUncheckedUpdateManyWithoutTenantNestedInput
+  overheadSettings?: Prisma.OverheadSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  machines?: Prisma.MachineUncheckedUpdateManyWithoutTenantNestedInput
+  travelZones?: Prisma.TravelZoneUncheckedUpdateManyWithoutTenantNestedInput
+  calculations?: Prisma.CalculationUncheckedUpdateManyWithoutTenantNestedInput
+  articles?: Prisma.ArticleUncheckedUpdateManyWithoutTenantNestedInput
+  storageLocations?: Prisma.StorageLocationUncheckedUpdateManyWithoutTenantNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutTenantNestedInput
+  staffAssignmentRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutTenantNestedInput
+  deliveries?: Prisma.DeliveryUncheckedUpdateManyWithoutTenantNestedInput
+  manualReorderSuggestions?: Prisma.ManualReorderSuggestionUncheckedUpdateManyWithoutTenantNestedInput
+  teams?: Prisma.TeamUncheckedUpdateManyWithoutTenantNestedInput
+  vehicles?: Prisma.VehicleUncheckedUpdateManyWithoutTenantNestedInput
+  invitations?: Prisma.InvitationUncheckedUpdateManyWithoutTenantNestedInput
+  orderShares?: Prisma.OrderShareUncheckedUpdateManyWithoutTenantNestedInput
+  documentSequences?: Prisma.DocumentSequenceUncheckedUpdateManyWithoutTenantNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutTenantNestedInput
+  dunningNotices?: Prisma.DunningNoticeUncheckedUpdateManyWithoutTenantNestedInput
+  inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
+  notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
+}
+
+export type TenantCreateWithoutProjectsInput = {
+  id?: string
+  slug: string
+  name: string
+  email: string
+  phone?: string | null
+  address?: string | null
+  city?: string | null
+  zipCode?: string | null
+  logoUrl?: string | null
+  primaryColor?: string
+  privacyPolicyUrl?: string | null
+  imprintUrl?: string | null
+  bufferMinutes?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserCreateNestedManyWithoutTenantInput
+  customers?: Prisma.CustomerCreateNestedManyWithoutTenantInput
+  properties?: Prisma.PropertyCreateNestedManyWithoutTenantInput
+  services?: Prisma.ServiceCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionCreateNestedManyWithoutTenantInput
+  employees?: Prisma.EmployeeCreateNestedManyWithoutTenantInput
+  orders?: Prisma.OrderCreateNestedManyWithoutTenantInput
+  appointments?: Prisma.AppointmentCreateNestedManyWithoutTenantInput
+  checklistTemplates?: Prisma.ChecklistTemplateCreateNestedManyWithoutTenantInput
+  messages?: Prisma.MessageCreateNestedManyWithoutTenantInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutTenantInput
+  serviceAreas?: Prisma.ServiceAreaCreateNestedManyWithoutTenantInput
+  workingHours?: Prisma.WorkingHoursCreateNestedManyWithoutTenantInput
+  notifications?: Prisma.NotificationLogCreateNestedManyWithoutTenantInput
+  companySettings?: Prisma.CompanySettingsCreateNestedOneWithoutTenantInput
+  monthlyFixedCosts?: Prisma.MonthlyFixedCostCreateNestedManyWithoutTenantInput
+  overheadSettings?: Prisma.OverheadSettingsCreateNestedOneWithoutTenantInput
+  machines?: Prisma.MachineCreateNestedManyWithoutTenantInput
+  travelZones?: Prisma.TravelZoneCreateNestedManyWithoutTenantInput
+  calculations?: Prisma.CalculationCreateNestedManyWithoutTenantInput
+  articles?: Prisma.ArticleCreateNestedManyWithoutTenantInput
+  storageLocations?: Prisma.StorageLocationCreateNestedManyWithoutTenantInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutTenantInput
+  staffAssignmentRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutTenantInput
+  deliveries?: Prisma.DeliveryCreateNestedManyWithoutTenantInput
+  manualReorderSuggestions?: Prisma.ManualReorderSuggestionCreateNestedManyWithoutTenantInput
+  teams?: Prisma.TeamCreateNestedManyWithoutTenantInput
+  vehicles?: Prisma.VehicleCreateNestedManyWithoutTenantInput
+  invitations?: Prisma.InvitationCreateNestedManyWithoutTenantInput
+  orderShares?: Prisma.OrderShareCreateNestedManyWithoutTenantInput
+  documentSequences?: Prisma.DocumentSequenceCreateNestedManyWithoutTenantInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutTenantInput
+  dunningNotices?: Prisma.DunningNoticeCreateNestedManyWithoutTenantInput
+  inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
+  notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
+}
+
+export type TenantUncheckedCreateWithoutProjectsInput = {
+  id?: string
+  slug: string
+  name: string
+  email: string
+  phone?: string | null
+  address?: string | null
+  city?: string | null
+  zipCode?: string | null
+  logoUrl?: string | null
+  primaryColor?: string
+  privacyPolicyUrl?: string | null
+  imprintUrl?: string | null
+  bufferMinutes?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutTenantInput
+  customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutTenantInput
+  properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutTenantInput
+  services?: Prisma.ServiceUncheckedCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedCreateNestedManyWithoutTenantInput
+  employees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutTenantInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutTenantInput
+  appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutTenantInput
+  checklistTemplates?: Prisma.ChecklistTemplateUncheckedCreateNestedManyWithoutTenantInput
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutTenantInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutTenantInput
+  serviceAreas?: Prisma.ServiceAreaUncheckedCreateNestedManyWithoutTenantInput
+  workingHours?: Prisma.WorkingHoursUncheckedCreateNestedManyWithoutTenantInput
+  notifications?: Prisma.NotificationLogUncheckedCreateNestedManyWithoutTenantInput
+  companySettings?: Prisma.CompanySettingsUncheckedCreateNestedOneWithoutTenantInput
+  monthlyFixedCosts?: Prisma.MonthlyFixedCostUncheckedCreateNestedManyWithoutTenantInput
+  overheadSettings?: Prisma.OverheadSettingsUncheckedCreateNestedOneWithoutTenantInput
+  machines?: Prisma.MachineUncheckedCreateNestedManyWithoutTenantInput
+  travelZones?: Prisma.TravelZoneUncheckedCreateNestedManyWithoutTenantInput
+  calculations?: Prisma.CalculationUncheckedCreateNestedManyWithoutTenantInput
+  articles?: Prisma.ArticleUncheckedCreateNestedManyWithoutTenantInput
+  storageLocations?: Prisma.StorageLocationUncheckedCreateNestedManyWithoutTenantInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutTenantInput
+  staffAssignmentRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutTenantInput
+  deliveries?: Prisma.DeliveryUncheckedCreateNestedManyWithoutTenantInput
+  manualReorderSuggestions?: Prisma.ManualReorderSuggestionUncheckedCreateNestedManyWithoutTenantInput
+  teams?: Prisma.TeamUncheckedCreateNestedManyWithoutTenantInput
+  vehicles?: Prisma.VehicleUncheckedCreateNestedManyWithoutTenantInput
+  invitations?: Prisma.InvitationUncheckedCreateNestedManyWithoutTenantInput
+  orderShares?: Prisma.OrderShareUncheckedCreateNestedManyWithoutTenantInput
+  documentSequences?: Prisma.DocumentSequenceUncheckedCreateNestedManyWithoutTenantInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutTenantInput
+  dunningNotices?: Prisma.DunningNoticeUncheckedCreateNestedManyWithoutTenantInput
+  inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
+  notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
+}
+
+export type TenantCreateOrConnectWithoutProjectsInput = {
+  where: Prisma.TenantWhereUniqueInput
+  create: Prisma.XOR<Prisma.TenantCreateWithoutProjectsInput, Prisma.TenantUncheckedCreateWithoutProjectsInput>
+}
+
+export type TenantUpsertWithoutProjectsInput = {
+  update: Prisma.XOR<Prisma.TenantUpdateWithoutProjectsInput, Prisma.TenantUncheckedUpdateWithoutProjectsInput>
+  create: Prisma.XOR<Prisma.TenantCreateWithoutProjectsInput, Prisma.TenantUncheckedCreateWithoutProjectsInput>
+  where?: Prisma.TenantWhereInput
+}
+
+export type TenantUpdateToOneWithWhereWithoutProjectsInput = {
+  where?: Prisma.TenantWhereInput
+  data: Prisma.XOR<Prisma.TenantUpdateWithoutProjectsInput, Prisma.TenantUncheckedUpdateWithoutProjectsInput>
+}
+
+export type TenantUpdateWithoutProjectsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUpdateManyWithoutTenantNestedInput
+  customers?: Prisma.CustomerUpdateManyWithoutTenantNestedInput
+  properties?: Prisma.PropertyUpdateManyWithoutTenantNestedInput
+  services?: Prisma.ServiceUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUpdateManyWithoutTenantNestedInput
+  employees?: Prisma.EmployeeUpdateManyWithoutTenantNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutTenantNestedInput
+  appointments?: Prisma.AppointmentUpdateManyWithoutTenantNestedInput
+  checklistTemplates?: Prisma.ChecklistTemplateUpdateManyWithoutTenantNestedInput
+  messages?: Prisma.MessageUpdateManyWithoutTenantNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutTenantNestedInput
+  serviceAreas?: Prisma.ServiceAreaUpdateManyWithoutTenantNestedInput
+  workingHours?: Prisma.WorkingHoursUpdateManyWithoutTenantNestedInput
+  notifications?: Prisma.NotificationLogUpdateManyWithoutTenantNestedInput
+  companySettings?: Prisma.CompanySettingsUpdateOneWithoutTenantNestedInput
+  monthlyFixedCosts?: Prisma.MonthlyFixedCostUpdateManyWithoutTenantNestedInput
+  overheadSettings?: Prisma.OverheadSettingsUpdateOneWithoutTenantNestedInput
+  machines?: Prisma.MachineUpdateManyWithoutTenantNestedInput
+  travelZones?: Prisma.TravelZoneUpdateManyWithoutTenantNestedInput
+  calculations?: Prisma.CalculationUpdateManyWithoutTenantNestedInput
+  articles?: Prisma.ArticleUpdateManyWithoutTenantNestedInput
+  storageLocations?: Prisma.StorageLocationUpdateManyWithoutTenantNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutTenantNestedInput
+  staffAssignmentRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutTenantNestedInput
+  deliveries?: Prisma.DeliveryUpdateManyWithoutTenantNestedInput
+  manualReorderSuggestions?: Prisma.ManualReorderSuggestionUpdateManyWithoutTenantNestedInput
+  teams?: Prisma.TeamUpdateManyWithoutTenantNestedInput
+  vehicles?: Prisma.VehicleUpdateManyWithoutTenantNestedInput
+  invitations?: Prisma.InvitationUpdateManyWithoutTenantNestedInput
+  orderShares?: Prisma.OrderShareUpdateManyWithoutTenantNestedInput
+  documentSequences?: Prisma.DocumentSequenceUpdateManyWithoutTenantNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutTenantNestedInput
+  dunningNotices?: Prisma.DunningNoticeUpdateManyWithoutTenantNestedInput
+  inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
+  notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
+}
+
+export type TenantUncheckedUpdateWithoutProjectsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUncheckedUpdateManyWithoutTenantNestedInput
+  customers?: Prisma.CustomerUncheckedUpdateManyWithoutTenantNestedInput
+  properties?: Prisma.PropertyUncheckedUpdateManyWithoutTenantNestedInput
+  services?: Prisma.ServiceUncheckedUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedUpdateManyWithoutTenantNestedInput
+  employees?: Prisma.EmployeeUncheckedUpdateManyWithoutTenantNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutTenantNestedInput
+  appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutTenantNestedInput
+  checklistTemplates?: Prisma.ChecklistTemplateUncheckedUpdateManyWithoutTenantNestedInput
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutTenantNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutTenantNestedInput
+  serviceAreas?: Prisma.ServiceAreaUncheckedUpdateManyWithoutTenantNestedInput
+  workingHours?: Prisma.WorkingHoursUncheckedUpdateManyWithoutTenantNestedInput
+  notifications?: Prisma.NotificationLogUncheckedUpdateManyWithoutTenantNestedInput
+  companySettings?: Prisma.CompanySettingsUncheckedUpdateOneWithoutTenantNestedInput
+  monthlyFixedCosts?: Prisma.MonthlyFixedCostUncheckedUpdateManyWithoutTenantNestedInput
+  overheadSettings?: Prisma.OverheadSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  machines?: Prisma.MachineUncheckedUpdateManyWithoutTenantNestedInput
+  travelZones?: Prisma.TravelZoneUncheckedUpdateManyWithoutTenantNestedInput
+  calculations?: Prisma.CalculationUncheckedUpdateManyWithoutTenantNestedInput
+  articles?: Prisma.ArticleUncheckedUpdateManyWithoutTenantNestedInput
+  storageLocations?: Prisma.StorageLocationUncheckedUpdateManyWithoutTenantNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutTenantNestedInput
+  staffAssignmentRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutTenantNestedInput
+  deliveries?: Prisma.DeliveryUncheckedUpdateManyWithoutTenantNestedInput
+  manualReorderSuggestions?: Prisma.ManualReorderSuggestionUncheckedUpdateManyWithoutTenantNestedInput
+  teams?: Prisma.TeamUncheckedUpdateManyWithoutTenantNestedInput
+  vehicles?: Prisma.VehicleUncheckedUpdateManyWithoutTenantNestedInput
+  invitations?: Prisma.InvitationUncheckedUpdateManyWithoutTenantNestedInput
+  orderShares?: Prisma.OrderShareUncheckedUpdateManyWithoutTenantNestedInput
+  documentSequences?: Prisma.DocumentSequenceUncheckedUpdateManyWithoutTenantNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutTenantNestedInput
+  dunningNotices?: Prisma.DunningNoticeUncheckedUpdateManyWithoutTenantNestedInput
+  inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
+  notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 
@@ -9186,6 +11640,7 @@ export type TenantCountOutputType = {
   customers: number
   properties: number
   services: number
+  orderTypeDefinitions: number
   employees: number
   orders: number
   appointments: number
@@ -9214,6 +11669,10 @@ export type TenantCountOutputType = {
   dunningNotices: number
   inAppNotifications: number
   jobRuns: number
+  expenses: number
+  plannedInvestments: number
+  aiChatSessions: number
+  projects: number
 }
 
 export type TenantCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -9221,6 +11680,7 @@ export type TenantCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions
   customers?: boolean | TenantCountOutputTypeCountCustomersArgs
   properties?: boolean | TenantCountOutputTypeCountPropertiesArgs
   services?: boolean | TenantCountOutputTypeCountServicesArgs
+  orderTypeDefinitions?: boolean | TenantCountOutputTypeCountOrderTypeDefinitionsArgs
   employees?: boolean | TenantCountOutputTypeCountEmployeesArgs
   orders?: boolean | TenantCountOutputTypeCountOrdersArgs
   appointments?: boolean | TenantCountOutputTypeCountAppointmentsArgs
@@ -9249,6 +11709,10 @@ export type TenantCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions
   dunningNotices?: boolean | TenantCountOutputTypeCountDunningNoticesArgs
   inAppNotifications?: boolean | TenantCountOutputTypeCountInAppNotificationsArgs
   jobRuns?: boolean | TenantCountOutputTypeCountJobRunsArgs
+  expenses?: boolean | TenantCountOutputTypeCountExpensesArgs
+  plannedInvestments?: boolean | TenantCountOutputTypeCountPlannedInvestmentsArgs
+  aiChatSessions?: boolean | TenantCountOutputTypeCountAiChatSessionsArgs
+  projects?: boolean | TenantCountOutputTypeCountProjectsArgs
 }
 
 /**
@@ -9287,6 +11751,13 @@ export type TenantCountOutputTypeCountPropertiesArgs<ExtArgs extends runtime.Typ
  */
 export type TenantCountOutputTypeCountServicesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.ServiceWhereInput
+}
+
+/**
+ * TenantCountOutputType without action
+ */
+export type TenantCountOutputTypeCountOrderTypeDefinitionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.OrderTypeDefinitionWhereInput
 }
 
 /**
@@ -9485,6 +11956,34 @@ export type TenantCountOutputTypeCountJobRunsArgs<ExtArgs extends runtime.Types.
   where?: Prisma.JobRunWhereInput
 }
 
+/**
+ * TenantCountOutputType without action
+ */
+export type TenantCountOutputTypeCountExpensesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ExpenseWhereInput
+}
+
+/**
+ * TenantCountOutputType without action
+ */
+export type TenantCountOutputTypeCountPlannedInvestmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PlannedInvestmentWhereInput
+}
+
+/**
+ * TenantCountOutputType without action
+ */
+export type TenantCountOutputTypeCountAiChatSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AiChatSessionWhereInput
+}
+
+/**
+ * TenantCountOutputType without action
+ */
+export type TenantCountOutputTypeCountProjectsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ProjectWhereInput
+}
+
 
 export type TenantSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -9506,6 +12005,7 @@ export type TenantSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   customers?: boolean | Prisma.Tenant$customersArgs<ExtArgs>
   properties?: boolean | Prisma.Tenant$propertiesArgs<ExtArgs>
   services?: boolean | Prisma.Tenant$servicesArgs<ExtArgs>
+  orderTypeDefinitions?: boolean | Prisma.Tenant$orderTypeDefinitionsArgs<ExtArgs>
   employees?: boolean | Prisma.Tenant$employeesArgs<ExtArgs>
   orders?: boolean | Prisma.Tenant$ordersArgs<ExtArgs>
   appointments?: boolean | Prisma.Tenant$appointmentsArgs<ExtArgs>
@@ -9537,6 +12037,11 @@ export type TenantSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   inAppNotifications?: boolean | Prisma.Tenant$inAppNotificationsArgs<ExtArgs>
   notificationSettings?: boolean | Prisma.Tenant$notificationSettingsArgs<ExtArgs>
   jobRuns?: boolean | Prisma.Tenant$jobRunsArgs<ExtArgs>
+  financeSettings?: boolean | Prisma.Tenant$financeSettingsArgs<ExtArgs>
+  expenses?: boolean | Prisma.Tenant$expensesArgs<ExtArgs>
+  plannedInvestments?: boolean | Prisma.Tenant$plannedInvestmentsArgs<ExtArgs>
+  aiChatSessions?: boolean | Prisma.Tenant$aiChatSessionsArgs<ExtArgs>
+  projects?: boolean | Prisma.Tenant$projectsArgs<ExtArgs>
   _count?: boolean | Prisma.TenantCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["tenant"]>
 
@@ -9600,6 +12105,7 @@ export type TenantInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   customers?: boolean | Prisma.Tenant$customersArgs<ExtArgs>
   properties?: boolean | Prisma.Tenant$propertiesArgs<ExtArgs>
   services?: boolean | Prisma.Tenant$servicesArgs<ExtArgs>
+  orderTypeDefinitions?: boolean | Prisma.Tenant$orderTypeDefinitionsArgs<ExtArgs>
   employees?: boolean | Prisma.Tenant$employeesArgs<ExtArgs>
   orders?: boolean | Prisma.Tenant$ordersArgs<ExtArgs>
   appointments?: boolean | Prisma.Tenant$appointmentsArgs<ExtArgs>
@@ -9631,6 +12137,11 @@ export type TenantInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   inAppNotifications?: boolean | Prisma.Tenant$inAppNotificationsArgs<ExtArgs>
   notificationSettings?: boolean | Prisma.Tenant$notificationSettingsArgs<ExtArgs>
   jobRuns?: boolean | Prisma.Tenant$jobRunsArgs<ExtArgs>
+  financeSettings?: boolean | Prisma.Tenant$financeSettingsArgs<ExtArgs>
+  expenses?: boolean | Prisma.Tenant$expensesArgs<ExtArgs>
+  plannedInvestments?: boolean | Prisma.Tenant$plannedInvestmentsArgs<ExtArgs>
+  aiChatSessions?: boolean | Prisma.Tenant$aiChatSessionsArgs<ExtArgs>
+  projects?: boolean | Prisma.Tenant$projectsArgs<ExtArgs>
   _count?: boolean | Prisma.TenantCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type TenantIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -9643,6 +12154,7 @@ export type $TenantPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     customers: Prisma.$CustomerPayload<ExtArgs>[]
     properties: Prisma.$PropertyPayload<ExtArgs>[]
     services: Prisma.$ServicePayload<ExtArgs>[]
+    orderTypeDefinitions: Prisma.$OrderTypeDefinitionPayload<ExtArgs>[]
     employees: Prisma.$EmployeePayload<ExtArgs>[]
     orders: Prisma.$OrderPayload<ExtArgs>[]
     appointments: Prisma.$AppointmentPayload<ExtArgs>[]
@@ -9674,6 +12186,11 @@ export type $TenantPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     inAppNotifications: Prisma.$NotificationPayload<ExtArgs>[]
     notificationSettings: Prisma.$NotificationSettingsPayload<ExtArgs> | null
     jobRuns: Prisma.$JobRunPayload<ExtArgs>[]
+    financeSettings: Prisma.$FinanceSettingsPayload<ExtArgs> | null
+    expenses: Prisma.$ExpensePayload<ExtArgs>[]
+    plannedInvestments: Prisma.$PlannedInvestmentPayload<ExtArgs>[]
+    aiChatSessions: Prisma.$AiChatSessionPayload<ExtArgs>[]
+    projects: Prisma.$ProjectPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -10089,6 +12606,7 @@ export interface Prisma__TenantClient<T, Null = never, ExtArgs extends runtime.T
   customers<T extends Prisma.Tenant$customersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tenant$customersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   properties<T extends Prisma.Tenant$propertiesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tenant$propertiesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PropertyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   services<T extends Prisma.Tenant$servicesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tenant$servicesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ServicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  orderTypeDefinitions<T extends Prisma.Tenant$orderTypeDefinitionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tenant$orderTypeDefinitionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderTypeDefinitionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   employees<T extends Prisma.Tenant$employeesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tenant$employeesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmployeePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   orders<T extends Prisma.Tenant$ordersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tenant$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   appointments<T extends Prisma.Tenant$appointmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tenant$appointmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AppointmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -10120,6 +12638,11 @@ export interface Prisma__TenantClient<T, Null = never, ExtArgs extends runtime.T
   inAppNotifications<T extends Prisma.Tenant$inAppNotificationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tenant$inAppNotificationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   notificationSettings<T extends Prisma.Tenant$notificationSettingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tenant$notificationSettingsArgs<ExtArgs>>): Prisma.Prisma__NotificationSettingsClient<runtime.Types.Result.GetResult<Prisma.$NotificationSettingsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   jobRuns<T extends Prisma.Tenant$jobRunsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tenant$jobRunsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$JobRunPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  financeSettings<T extends Prisma.Tenant$financeSettingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tenant$financeSettingsArgs<ExtArgs>>): Prisma.Prisma__FinanceSettingsClient<runtime.Types.Result.GetResult<Prisma.$FinanceSettingsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  expenses<T extends Prisma.Tenant$expensesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tenant$expensesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExpensePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  plannedInvestments<T extends Prisma.Tenant$plannedInvestmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tenant$plannedInvestmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PlannedInvestmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  aiChatSessions<T extends Prisma.Tenant$aiChatSessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tenant$aiChatSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AiChatSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  projects<T extends Prisma.Tenant$projectsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tenant$projectsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -10650,6 +13173,30 @@ export type Tenant$servicesArgs<ExtArgs extends runtime.Types.Extensions.Interna
   take?: number
   skip?: number
   distinct?: Prisma.ServiceScalarFieldEnum | Prisma.ServiceScalarFieldEnum[]
+}
+
+/**
+ * Tenant.orderTypeDefinitions
+ */
+export type Tenant$orderTypeDefinitionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the OrderTypeDefinition
+   */
+  select?: Prisma.OrderTypeDefinitionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the OrderTypeDefinition
+   */
+  omit?: Prisma.OrderTypeDefinitionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OrderTypeDefinitionInclude<ExtArgs> | null
+  where?: Prisma.OrderTypeDefinitionWhereInput
+  orderBy?: Prisma.OrderTypeDefinitionOrderByWithRelationInput | Prisma.OrderTypeDefinitionOrderByWithRelationInput[]
+  cursor?: Prisma.OrderTypeDefinitionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.OrderTypeDefinitionScalarFieldEnum | Prisma.OrderTypeDefinitionScalarFieldEnum[]
 }
 
 /**
@@ -11379,6 +13926,121 @@ export type Tenant$jobRunsArgs<ExtArgs extends runtime.Types.Extensions.Internal
   take?: number
   skip?: number
   distinct?: Prisma.JobRunScalarFieldEnum | Prisma.JobRunScalarFieldEnum[]
+}
+
+/**
+ * Tenant.financeSettings
+ */
+export type Tenant$financeSettingsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the FinanceSettings
+   */
+  select?: Prisma.FinanceSettingsSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the FinanceSettings
+   */
+  omit?: Prisma.FinanceSettingsOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FinanceSettingsInclude<ExtArgs> | null
+  where?: Prisma.FinanceSettingsWhereInput
+}
+
+/**
+ * Tenant.expenses
+ */
+export type Tenant$expensesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Expense
+   */
+  select?: Prisma.ExpenseSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Expense
+   */
+  omit?: Prisma.ExpenseOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ExpenseInclude<ExtArgs> | null
+  where?: Prisma.ExpenseWhereInput
+  orderBy?: Prisma.ExpenseOrderByWithRelationInput | Prisma.ExpenseOrderByWithRelationInput[]
+  cursor?: Prisma.ExpenseWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ExpenseScalarFieldEnum | Prisma.ExpenseScalarFieldEnum[]
+}
+
+/**
+ * Tenant.plannedInvestments
+ */
+export type Tenant$plannedInvestmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PlannedInvestment
+   */
+  select?: Prisma.PlannedInvestmentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PlannedInvestment
+   */
+  omit?: Prisma.PlannedInvestmentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PlannedInvestmentInclude<ExtArgs> | null
+  where?: Prisma.PlannedInvestmentWhereInput
+  orderBy?: Prisma.PlannedInvestmentOrderByWithRelationInput | Prisma.PlannedInvestmentOrderByWithRelationInput[]
+  cursor?: Prisma.PlannedInvestmentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PlannedInvestmentScalarFieldEnum | Prisma.PlannedInvestmentScalarFieldEnum[]
+}
+
+/**
+ * Tenant.aiChatSessions
+ */
+export type Tenant$aiChatSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AiChatSession
+   */
+  select?: Prisma.AiChatSessionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AiChatSession
+   */
+  omit?: Prisma.AiChatSessionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AiChatSessionInclude<ExtArgs> | null
+  where?: Prisma.AiChatSessionWhereInput
+  orderBy?: Prisma.AiChatSessionOrderByWithRelationInput | Prisma.AiChatSessionOrderByWithRelationInput[]
+  cursor?: Prisma.AiChatSessionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AiChatSessionScalarFieldEnum | Prisma.AiChatSessionScalarFieldEnum[]
+}
+
+/**
+ * Tenant.projects
+ */
+export type Tenant$projectsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Project
+   */
+  select?: Prisma.ProjectSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Project
+   */
+  omit?: Prisma.ProjectOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ProjectInclude<ExtArgs> | null
+  where?: Prisma.ProjectWhereInput
+  orderBy?: Prisma.ProjectOrderByWithRelationInput | Prisma.ProjectOrderByWithRelationInput[]
+  cursor?: Prisma.ProjectWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ProjectScalarFieldEnum | Prisma.ProjectScalarFieldEnum[]
 }
 
 /**

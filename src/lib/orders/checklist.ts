@@ -31,3 +31,11 @@ export async function toggleOrderChecklistItem(input: ToggleChecklistInput) {
     },
   });
 }
+
+/** Checklisten mit leerem Label zählen nicht als Pflichtpunkt. */
+export function areOrderChecklistsComplete(
+  checklists: { label: string | null; isChecked: boolean }[]
+) {
+  const required = checklists.filter((c) => c.label?.trim());
+  return required.length === 0 || required.every((c) => c.isChecked);
+}

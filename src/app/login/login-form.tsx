@@ -4,11 +4,10 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-const DEFAULT_TENANT = process.env.NEXT_PUBLIC_DEFAULT_TENANT_SLUG ?? "demo";
-
 const ERROR_MESSAGES: Record<string, string> = {
-  invalid: "E-Mail, Passwort oder Betriebs-Kürzel ist falsch.",
+  invalid: "E-Mail oder Passwort ist falsch.",
   server: "Anmeldung vorübergehend nicht möglich. Bitte später erneut versuchen.",
+  rate: "Zu viele Versuche. Bitte kurz warten.",
 };
 
 export function LoginForm({ errorCode }: { errorCode?: string }) {
@@ -30,7 +29,6 @@ export function LoginForm({ errorCode }: { errorCode?: string }) {
         required
         autoComplete="current-password"
       />
-      <input type="hidden" name="tenantSlug" value={DEFAULT_TENANT} />
 
       {error && (
         <p className="text-sm text-red-600 bg-red-50 rounded-lg px-3 py-2">
@@ -45,9 +43,10 @@ export function LoginForm({ errorCode }: { errorCode?: string }) {
       <p className="text-center text-xs text-slate-400">
         Demo: admin@demo.de / demo1234
       </p>
-      <p className="text-center">
-        <Link href="/docs/betriebssystem" className="text-xs text-[#0d5c63] hover:underline">
-          Produktkonzept v1.0 lesen →
+      <p className="text-center text-sm text-slate-600">
+        Noch keinen Betrieb?{" "}
+        <Link href="/registrieren" className="text-[#0d5c63] font-medium hover:underline">
+          JoMaster starten
         </Link>
       </p>
     </form>

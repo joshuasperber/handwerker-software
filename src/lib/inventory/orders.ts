@@ -1,7 +1,10 @@
 import { prisma } from "@/lib/prisma";
 import { calcAvailableQuantity } from "./formulas";
+import { articlePriceForCalculation } from "./units";
 import { standardPhaseCreateData } from "@/lib/orders/phases";
 import type { MaterialOrderStatus, OrderType, ReservationStatus } from "@/generated/prisma/client";
+import type { OrderMaterialLineInput } from "@/lib/orders/material-lines";
+import { resolveOrderTypeAssignment } from "@/lib/orders/order-types";
 
 export async function getArticleAvailability(tenantId: string, articleId: string) {
   const balances = await prisma.stockBalance.findMany({
@@ -42,6 +45,7 @@ export async function generateMaterialLinesFromServices(orderId: string, service
     name: string;
     quantityRequired: number;
     unit: string;
+    unitPriceNet: number | null;
     isTool: boolean;
     lineStatus: MaterialOrderStatus;
   }[] = [];
@@ -54,6 +58,7 @@ export async function generateMaterialLinesFromServices(orderId: string, service
       name: t.article?.name ?? t.name,
       quantityRequired: t.defaultQuantity,
       unit: t.unit,
+      unitPriceNet: t.article ? articlePriceForCalculation(t.article) : null,
       isTool: t.isTool,
       lineStatus: "NOT_CHECKED",
     });
@@ -180,7 +185,7 @@ export async function confirmReservationsForOrder(orderId: string, tenantId: str
  * unterschiedliche Phasensätze genutzt – die Phasen lassen sich pro Auftrag
  * individuell aktivieren, deaktivieren und sortieren.
  */
-export function defaultPhasesForOrderType(_orderType?: OrderType) {
+export function defaultPhasesForOrderType(_orderType?: OrderType | string | null) {
   void _orderType;
   return standardPhaseCreateData();
 }
@@ -191,7 +196,10 @@ export async function createOrderWithWizardData(
     customerId: string;
     propertyId: string;
     title: string;
-    orderType: OrderType;
+    orderTypeId?: string | null;
+    orderTypeCustom?: string | null;
+    /** Legacy-Fallback (Enum-Key). */
+    orderType?: string | null;
     description?: string;
     internalNotes?: string;
     serviceIds: string[];
@@ -207,9 +215,20 @@ export async function createOrderWithWizardData(
     scheduledEnd?: string;
     priority?: string;
     confirmMaterial?: boolean;
+    /** Wenn gesetzt (auch leeres Array): ersetzt die automatische Stücklisten-Erzeugung. */
+    materialLines?: OrderMaterialLineInput[];
   }
 ) {
   const { generateOrderNumber } = await import("@/lib/utils");
+
+  const typeAssignment = await resolveOrderTypeAssignment(tenantId, {
+    orderTypeId: data.orderTypeId,
+    orderTypeCustom: data.orderTypeCustom,
+    orderType: data.orderType,
+  });
+  if ("error" in typeAssignment) {
+    throw new Error(typeAssignment.error);
+  }
 
   const customServiceCreates = (data.customServices ?? [])
     .filter((c) => c.name?.trim())
@@ -231,7 +250,10 @@ export async function createOrderWithWizardData(
       propertyId: data.propertyId,
       orderNumber: generateOrderNumber(),
       title: data.title,
-      orderType: data.orderType,
+      orderType: typeAssignment.orderType,
+      orderTypeId: typeAssignment.orderTypeId,
+      orderTypeLabel: typeAssignment.orderTypeLabel,
+      orderTypeCustom: typeAssignment.orderTypeCustom,
       description: data.description,
       internalNotes: data.internalNotes,
       priority: (data.priority as never) ?? "NORMAL",
@@ -245,7 +267,7 @@ export async function createOrderWithWizardData(
         ],
       },
       phases: {
-        create: defaultPhasesForOrderType(data.orderType),
+        create: defaultPhasesForOrderType(typeAssignment.orderType),
       },
     },
     include: {
@@ -253,10 +275,52 @@ export async function createOrderWithWizardData(
       property: true,
       phases: true,
       services: { include: { service: true } },
+      orderTypeDefinition: true,
     },
   });
 
-  await generateMaterialLinesFromServices(order.id, data.serviceIds);
+  if (data.materialLines) {
+    const creates = data.materialLines
+      .filter((l) => l.name?.trim() && l.quantityRequired > 0)
+      .map((l) => ({
+        orderId: order.id,
+        articleId: l.articleId || null,
+        sourceServiceId: l.sourceServiceId || null,
+        name: l.name.trim(),
+        quantityRequired: l.quantityRequired,
+        unit: l.unit?.trim() || "Stück",
+        unitPriceNet: l.unitPriceNet ?? null,
+        notes: l.notes ?? null,
+        isTool: l.isTool === true,
+        lineStatus: "NOT_CHECKED" as MaterialOrderStatus,
+      }));
+    if (creates.length) {
+      await prisma.orderMaterialLine.createMany({ data: creates });
+    }
+    // Werkzeuge aus Leistungsverzeichnis weiterhin automatisch übernehmen
+    const toolTemplates = await prisma.serviceMaterialTemplate.findMany({
+      where: { serviceId: { in: data.serviceIds }, isTool: true },
+      include: { article: true },
+    });
+    if (toolTemplates.length) {
+      await prisma.orderMaterialLine.createMany({
+        data: toolTemplates.map((t) => ({
+          orderId: order.id,
+          articleId: t.articleId,
+          sourceServiceId: t.serviceId,
+          name: t.article?.name ?? t.name,
+          quantityRequired: t.defaultQuantity,
+          unit: t.unit,
+          unitPriceNet: null,
+          isTool: true,
+          lineStatus: "NOT_CHECKED" as MaterialOrderStatus,
+        })),
+      });
+    }
+  } else {
+    await generateMaterialLinesFromServices(order.id, data.serviceIds);
+  }
+
   await checkOrderMaterialStatus(order.id, tenantId);
 
   if (data.confirmMaterial) {

@@ -119,6 +119,10 @@ export function buildCalculationInputFromRecord(
     },
     vat: {
       vatRatePercent: calc.vatSettings?.vatRatePercent ?? 19,
+      taxTreatment: calc.vatSettings?.taxTreatment ?? undefined,
+      reverseCharge: calc.vatSettings?.reverseCharge ?? false,
+      taxExempt: calc.vatSettings?.taxExempt ?? false,
+      includeSection13bNote: calc.vatSettings?.includeSection13bNote ?? true,
     },
   };
 }

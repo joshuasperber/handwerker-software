@@ -6,6 +6,8 @@ export const ORDER_LIST_INCLUDE = {
   property: true,
   services: { include: { service: true } },
   phases: { orderBy: { sortOrder: "asc" as const } },
+  project: { select: { id: true, name: true } },
+  orderTypeDefinition: { select: { id: true, name: true, isOther: true, isActive: true } },
 } satisfies Prisma.OrderInclude;
 
 /** Vollständige Includes für Auftragsdetail. */
@@ -35,4 +37,6 @@ export const ORDER_DETAIL_INCLUDE = {
   },
   vehicle: true,
   planMarkers: { include: { article: true, file: true } },
+  project: { select: { id: true, name: true, status: true } },
+  orderTypeDefinition: true,
 } satisfies Prisma.OrderInclude;

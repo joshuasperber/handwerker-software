@@ -12,6 +12,7 @@ import {
   PRIORITY_COLORS,
   isOverdue,
 } from "@/lib/utils";
+import { formatOrderTypeLabel } from "@/lib/orders/order-type-label";
 
 const CONFIRMATION_LABELS: Record<string, string> = {
   OFFEN: "Kunde offen",
@@ -30,6 +31,11 @@ export interface OrderDetailHeaderProps {
     scheduledStart: string | null;
     customerConfirmationStatus?: string;
     team?: { id: string; name: string } | null;
+    project?: { id: string; name: string } | null;
+    orderTypeLabel?: string | null;
+    orderTypeCustom?: string | null;
+    orderType?: string | null;
+    orderTypeDefinition?: { name: string; isOther: boolean } | null;
   };
   calculation: { id: string } | null;
   canPlanTeam: boolean;
@@ -59,6 +65,22 @@ export function OrderDetailHeader({
           {order.title ?? order.orderNumber}
         </h1>
         <p className="text-sm text-slate-400">{order.orderNumber}</p>
+        <p className="text-sm text-slate-600 mt-1">
+          Auftragstyp:{" "}
+          <span className="font-medium text-slate-800">
+            {formatOrderTypeLabel(order)}
+          </span>
+        </p>
+        {order.project && (
+          <p className="mt-1 text-sm">
+            <Link
+              href={`/dashboard/projekte/${order.project.id}`}
+              className="text-[#0d5c63] hover:underline"
+            >
+              Projekt: {order.project.name}
+            </Link>
+          </p>
+        )}
         {isOverdue(order.scheduledStart, order.status) && (
           <Badge status="UEBERFAELLIG" label="Überfällig" className="mt-2 mr-2" />
         )}

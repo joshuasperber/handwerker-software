@@ -54,6 +54,7 @@ export const ModelName = {
   Tenant: 'Tenant',
   User: 'User',
   Customer: 'Customer',
+  TaxExemptionCertificate: 'TaxExemptionCertificate',
   Property: 'Property',
   Service: 'Service',
   ServiceQuestion: 'ServiceQuestion',
@@ -63,6 +64,7 @@ export const ModelName = {
   WorkingHours: 'WorkingHours',
   EmployeeWorkingHours: 'EmployeeWorkingHours',
   ServiceArea: 'ServiceArea',
+  OrderTypeDefinition: 'OrderTypeDefinition',
   Order: 'Order',
   OrderService: 'OrderService',
   Appointment: 'Appointment',
@@ -117,8 +119,18 @@ export const ModelName = {
   StaffAssignmentRequest: 'StaffAssignmentRequest',
   Invitation: 'Invitation',
   OrderShare: 'OrderShare',
+  FinanceSettings: 'FinanceSettings',
+  Expense: 'Expense',
+  PlannedInvestment: 'PlannedInvestment',
   JobRun: 'JobRun',
-  LoginAttempt: 'LoginAttempt'
+  LoginAttempt: 'LoginAttempt',
+  AiChatSession: 'AiChatSession',
+  AiChatMessage: 'AiChatMessage',
+  Project: 'Project',
+  ProjectMember: 'ProjectMember',
+  ProjectNote: 'ProjectNote',
+  ProjectFile: 'ProjectFile',
+  ProjectCost: 'ProjectCost'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -163,6 +175,7 @@ export const UserScalarFieldEnum = {
   tenantId: 'tenantId',
   email: 'email',
   passwordHash: 'passwordHash',
+  supabaseUserId: 'supabaseUserId',
   firstName: 'firstName',
   lastName: 'lastName',
   phone: 'phone',
@@ -189,6 +202,14 @@ export const CustomerScalarFieldEnum = {
   email: 'email',
   phone: 'phone',
   company: 'company',
+  customerType: 'customerType',
+  contactPerson: 'contactPerson',
+  vatId: 'vatId',
+  taxNumber: 'taxNumber',
+  billingStreet: 'billingStreet',
+  billingZipCode: 'billingZipCode',
+  billingCity: 'billingCity',
+  taxNotes: 'taxNotes',
   notes: 'notes',
   gdprConsent: 'gdprConsent',
   gdprConsentAt: 'gdprConsentAt',
@@ -198,6 +219,24 @@ export const CustomerScalarFieldEnum = {
 } as const
 
 export type CustomerScalarFieldEnum = (typeof CustomerScalarFieldEnum)[keyof typeof CustomerScalarFieldEnum]
+
+
+export const TaxExemptionCertificateScalarFieldEnum = {
+  id: 'id',
+  customerId: 'customerId',
+  hasCertificate: 'hasCertificate',
+  issuingTaxOffice: 'issuingTaxOffice',
+  validFrom: 'validFrom',
+  validTo: 'validTo',
+  certificateNumber: 'certificateNumber',
+  documentStorageKey: 'documentStorageKey',
+  documentFileName: 'documentFileName',
+  notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TaxExemptionCertificateScalarFieldEnum = (typeof TaxExemptionCertificateScalarFieldEnum)[keyof typeof TaxExemptionCertificateScalarFieldEnum]
 
 
 export const PropertyScalarFieldEnum = {
@@ -317,6 +356,21 @@ export const ServiceAreaScalarFieldEnum = {
 export type ServiceAreaScalarFieldEnum = (typeof ServiceAreaScalarFieldEnum)[keyof typeof ServiceAreaScalarFieldEnum]
 
 
+export const OrderTypeDefinitionScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  name: 'name',
+  sortOrder: 'sortOrder',
+  isActive: 'isActive',
+  isOther: 'isOther',
+  legacyKey: 'legacyKey',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type OrderTypeDefinitionScalarFieldEnum = (typeof OrderTypeDefinitionScalarFieldEnum)[keyof typeof OrderTypeDefinitionScalarFieldEnum]
+
+
 export const OrderScalarFieldEnum = {
   id: 'id',
   tenantId: 'tenantId',
@@ -325,6 +379,9 @@ export const OrderScalarFieldEnum = {
   orderNumber: 'orderNumber',
   title: 'title',
   orderType: 'orderType',
+  orderTypeId: 'orderTypeId',
+  orderTypeLabel: 'orderTypeLabel',
+  orderTypeCustom: 'orderTypeCustom',
   status: 'status',
   priority: 'priority',
   materialStatus: 'materialStatus',
@@ -341,6 +398,7 @@ export const OrderScalarFieldEnum = {
   invoicedAt: 'invoicedAt',
   teamId: 'teamId',
   vehicleId: 'vehicleId',
+  projectId: 'projectId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -441,8 +499,11 @@ export const TimeEntryScalarFieldEnum = {
   startTime: 'startTime',
   endTime: 'endTime',
   breakMinutes: 'breakMinutes',
+  activity: 'activity',
   notes: 'notes',
-  createdAt: 'createdAt'
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type TimeEntryScalarFieldEnum = (typeof TimeEntryScalarFieldEnum)[keyof typeof TimeEntryScalarFieldEnum]
@@ -671,6 +732,7 @@ export const CalculationScalarFieldEnum = {
   tenantId: 'tenantId',
   customerId: 'customerId',
   orderId: 'orderId',
+  projectId: 'projectId',
   title: 'title',
   status: 'status',
   currentStep: 'currentStep',
@@ -697,6 +759,9 @@ export const CalculationScalarFieldEnum = {
   profitAfterTaxEstimate: 'profitAfterTaxEstimate',
   totalBillableHours: 'totalBillableHours',
   profitabilityStatus: 'profitabilityStatus',
+  useFixedPrice: 'useFixedPrice',
+  fixedPriceNet: 'fixedPriceNet',
+  fixedPriceLabel: 'fixedPriceLabel',
   snapshotJson: 'snapshotJson',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -725,6 +790,7 @@ export type LaborItemScalarFieldEnum = (typeof LaborItemScalarFieldEnum)[keyof t
 export const MaterialItemScalarFieldEnum = {
   id: 'id',
   calculationId: 'calculationId',
+  articleId: 'articleId',
   name: 'name',
   description: 'description',
   quantity: 'quantity',
@@ -871,7 +937,10 @@ export const VATSettingsScalarFieldEnum = {
   id: 'id',
   calculationId: 'calculationId',
   vatRatePercent: 'vatRatePercent',
+  taxTreatment: 'taxTreatment',
   reverseCharge: 'reverseCharge',
+  reverseChargeConfirmed: 'reverseChargeConfirmed',
+  includeSection13bNote: 'includeSection13bNote',
   taxExempt: 'taxExempt',
   vatNote: 'vatNote',
   createdAt: 'createdAt',
@@ -961,6 +1030,7 @@ export const ArticleScalarFieldEnum = {
   sku: 'sku',
   unit: 'unit',
   category: 'category',
+  description: 'description',
   articleType: 'articleType',
   minimumStock: 'minimumStock',
   targetStock: 'targetStock',
@@ -969,6 +1039,7 @@ export const ArticleScalarFieldEnum = {
   reorderStrategy: 'reorderStrategy',
   supplierName: 'supplierName',
   purchasePriceNet: 'purchasePriceNet',
+  salesPriceNet: 'salesPriceNet',
   isActive: 'isActive',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -1010,9 +1081,20 @@ export const StockMovementScalarFieldEnum = {
   articleId: 'articleId',
   storageLocationId: 'storageLocationId',
   orderId: 'orderId',
+  customerId: 'customerId',
+  employeeId: 'employeeId',
   movementType: 'movementType',
+  reason: 'reason',
   quantity: 'quantity',
+  purchasePriceNet: 'purchasePriceNet',
+  salePriceNet: 'salePriceNet',
+  supplierName: 'supplierName',
   notes: 'notes',
+  receiptFileName: 'receiptFileName',
+  receiptMimeType: 'receiptMimeType',
+  receiptStorageKey: 'receiptStorageKey',
+  receiptSizeBytes: 'receiptSizeBytes',
+  occurredAt: 'occurredAt',
   createdById: 'createdById',
   createdAt: 'createdAt'
 } as const
@@ -1081,6 +1163,8 @@ export const OrderMaterialLineScalarFieldEnum = {
   quantityRequired: 'quantityRequired',
   quantityConsumed: 'quantityConsumed',
   unit: 'unit',
+  unitPriceNet: 'unitPriceNet',
+  notes: 'notes',
   isTool: 'isTool',
   isPacked: 'isPacked',
   lineStatus: 'lineStatus',
@@ -1267,6 +1351,70 @@ export const OrderShareScalarFieldEnum = {
 export type OrderShareScalarFieldEnum = (typeof OrderShareScalarFieldEnum)[keyof typeof OrderShareScalarFieldEnum]
 
 
+export const FinanceSettingsScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  estimatedTaxRate: 'estimatedTaxRate',
+  revenueBasis: 'revenueBasis',
+  includeUnpaidInvoices: 'includeUnpaidInvoices',
+  defaultPeriodPreset: 'defaultPeriodPreset',
+  monthlyProfitTargetNet: 'monthlyProfitTargetNet',
+  highProfitWarningThreshold: 'highProfitWarningThreshold',
+  profitSpikeFactor: 'profitSpikeFactor',
+  lowExpenseRatioThreshold: 'lowExpenseRatioThreshold',
+  highRevenueThreshold: 'highRevenueThreshold',
+  lowLiquidityWarningThreshold: 'lowLiquidityWarningThreshold',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type FinanceSettingsScalarFieldEnum = (typeof FinanceSettingsScalarFieldEnum)[keyof typeof FinanceSettingsScalarFieldEnum]
+
+
+export const ExpenseScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  category: 'category',
+  description: 'description',
+  netAmount: 'netAmount',
+  vatAmount: 'vatAmount',
+  grossAmount: 'grossAmount',
+  expenseDate: 'expenseDate',
+  paymentStatus: 'paymentStatus',
+  supplier: 'supplier',
+  orderId: 'orderId',
+  customerId: 'customerId',
+  projectId: 'projectId',
+  internalNote: 'internalNote',
+  receiptFileName: 'receiptFileName',
+  receiptMimeType: 'receiptMimeType',
+  receiptStorageKey: 'receiptStorageKey',
+  receiptSizeBytes: 'receiptSizeBytes',
+  isInvestment: 'isInvestment',
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ExpenseScalarFieldEnum = (typeof ExpenseScalarFieldEnum)[keyof typeof ExpenseScalarFieldEnum]
+
+
+export const PlannedInvestmentScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  title: 'title',
+  plannedAmount: 'plannedAmount',
+  plannedDate: 'plannedDate',
+  category: 'category',
+  note: 'note',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PlannedInvestmentScalarFieldEnum = (typeof PlannedInvestmentScalarFieldEnum)[keyof typeof PlannedInvestmentScalarFieldEnum]
+
+
 export const JobRunScalarFieldEnum = {
   id: 'id',
   tenantId: 'tenantId',
@@ -1296,6 +1444,115 @@ export const LoginAttemptScalarFieldEnum = {
 } as const
 
 export type LoginAttemptScalarFieldEnum = (typeof LoginAttemptScalarFieldEnum)[keyof typeof LoginAttemptScalarFieldEnum]
+
+
+export const AiChatSessionScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  userId: 'userId',
+  title: 'title',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AiChatSessionScalarFieldEnum = (typeof AiChatSessionScalarFieldEnum)[keyof typeof AiChatSessionScalarFieldEnum]
+
+
+export const AiChatMessageScalarFieldEnum = {
+  id: 'id',
+  sessionId: 'sessionId',
+  role: 'role',
+  content: 'content',
+  metadata: 'metadata',
+  createdAt: 'createdAt'
+} as const
+
+export type AiChatMessageScalarFieldEnum = (typeof AiChatMessageScalarFieldEnum)[keyof typeof AiChatMessageScalarFieldEnum]
+
+
+export const ProjectScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  name: 'name',
+  customerId: 'customerId',
+  addressStreet: 'addressStreet',
+  addressZip: 'addressZip',
+  addressCity: 'addressCity',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  status: 'status',
+  description: 'description',
+  notes: 'notes',
+  teamId: 'teamId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ProjectScalarFieldEnum = (typeof ProjectScalarFieldEnum)[keyof typeof ProjectScalarFieldEnum]
+
+
+export const ProjectMemberScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  employeeId: 'employeeId',
+  createdAt: 'createdAt'
+} as const
+
+export type ProjectMemberScalarFieldEnum = (typeof ProjectMemberScalarFieldEnum)[keyof typeof ProjectMemberScalarFieldEnum]
+
+
+export const ProjectNoteScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  orderId: 'orderId',
+  body: 'body',
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ProjectNoteScalarFieldEnum = (typeof ProjectNoteScalarFieldEnum)[keyof typeof ProjectNoteScalarFieldEnum]
+
+
+export const ProjectFileScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  orderId: 'orderId',
+  uploadedById: 'uploadedById',
+  fileName: 'fileName',
+  mimeType: 'mimeType',
+  sizeBytes: 'sizeBytes',
+  storageKey: 'storageKey',
+  category: 'category',
+  description: 'description',
+  createdAt: 'createdAt'
+} as const
+
+export type ProjectFileScalarFieldEnum = (typeof ProjectFileScalarFieldEnum)[keyof typeof ProjectFileScalarFieldEnum]
+
+
+export const ProjectCostScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  orderId: 'orderId',
+  source: 'source',
+  description: 'description',
+  quantity: 'quantity',
+  unit: 'unit',
+  netAmount: 'netAmount',
+  vatAmount: 'vatAmount',
+  grossAmount: 'grossAmount',
+  paidAmount: 'paidAmount',
+  isReimbursable: 'isReimbursable',
+  isBillable: 'isBillable',
+  expenseId: 'expenseId',
+  articleId: 'articleId',
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ProjectCostScalarFieldEnum = (typeof ProjectCostScalarFieldEnum)[keyof typeof ProjectCostScalarFieldEnum]
 
 
 export const SortOrder = {

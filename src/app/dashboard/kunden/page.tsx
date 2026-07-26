@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { CanAccess } from "@/components/auth/can-access";
 import { AddButton } from "@/components/ui/add-button";
 import { MapPin, Mail, Phone } from "lucide-react";
+import { swrKeys, useApiSWR } from "@/lib/swr";
 
 interface Customer {
   id: string;
@@ -19,13 +19,7 @@ interface Customer {
 }
 
 export default function KundenPage() {
-  const [customers, setCustomers] = useState<Customer[]>([]);
-
-  useEffect(() => {
-    fetch("/api/customers").then((r) => r.json()).then((d) => {
-      if (d.success) setCustomers(d.data);
-    });
-  }, []);
+  const { data: customers = [], isLoading } = useApiSWR<Customer[]>(swrKeys.customers());
 
   return (
     <div>
@@ -35,30 +29,36 @@ export default function KundenPage() {
           <AddButton href="/dashboard/kunden/neu">Neuer Kunde</AddButton>
         </CanAccess>
       </div>
+      {isLoading && customers.length === 0 && (
+        <p className="text-sm text-slate-500 mb-4">Kunden werden geladen…</p>
+      )}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {customers.map((c) => (
           <Link key={c.id} href={`/dashboard/kunden/${c.id}`}>
             <Card className="hover:shadow-md transition-shadow h-full">
-            <h3 className="font-semibold text-slate-900">{c.firstName} {c.lastName}</h3>
-            {c.company && <p className="text-sm text-slate-500">{c.company}</p>}
-            <div className="mt-3 space-y-1">
-              <div className="flex items-center gap-2 text-sm text-slate-500">
-                <Mail className="h-3.5 w-3.5" /> {c.email}
+              <h3 className="font-semibold text-slate-900">
+                {c.firstName} {c.lastName}
+              </h3>
+              {c.company && <p className="text-sm text-slate-500">{c.company}</p>}
+              <div className="mt-3 space-y-1">
+                <div className="flex items-center gap-2 text-sm text-slate-500">
+                  <Mail className="h-3.5 w-3.5" /> {c.email}
+                </div>
+                {c.phone && (
+                  <div className="flex items-center gap-2 text-sm text-slate-500">
+                    <Phone className="h-3.5 w-3.5" /> {c.phone}
+                  </div>
+                )}
+                {c.properties[0] && (
+                  <div className="flex items-center gap-2 text-sm text-slate-500">
+                    <MapPin className="h-3.5 w-3.5" />
+                    {c.properties[0].street}, {c.properties[0].zipCode}{" "}
+                    {c.properties[0].city}
+                  </div>
+                )}
               </div>
-              {c.phone && (
-                <div className="flex items-center gap-2 text-sm text-slate-500">
-                  <Phone className="h-3.5 w-3.5" /> {c.phone}
-                </div>
-              )}
-              {c.properties[0] && (
-                <div className="flex items-center gap-2 text-sm text-slate-500">
-                  <MapPin className="h-3.5 w-3.5" />
-                  {c.properties[0].city}
-                </div>
-              )}
-            </div>
-            <p className="mt-3 text-xs text-slate-400">{c._count.orders} Auftrag/Aufträge</p>
-          </Card>
+              <p className="mt-3 text-xs text-slate-400">{c._count.orders} Aufträge</p>
+            </Card>
           </Link>
         ))}
       </div>

@@ -1,6 +1,12 @@
 import { PDFDocument, StandardFonts, rgb, type PDFFont, type PDFPage } from "pdf-lib";
 import type { DocumentSnapshot } from "./snapshot";
 import { getVisibleLineItems } from "./line-items";
+import {
+  formatBillingAddressLines,
+  formatSiteAddressLines,
+  hasBillingAddress,
+  siteDiffersFromBilling,
+} from "@/lib/addresses/billing-vs-site";
 
 const TEAL = rgb(13 / 255, 92 / 255, 99 / 255);
 const GREY = rgb(0.4, 0.45, 0.5);
@@ -155,19 +161,40 @@ export async function buildDocumentPdf(snapshot: DocumentSnapshot): Promise<Uint
     leftY -= 13;
   }
 
-  text("Rechnungsempfänger", colRightX, rightY, { size: 9, font: bold, color: TEAL });
+  text(isInvoice ? "Rechnungsempfänger" : "Kunde", colRightX, rightY, { size: 9, font: bold, color: TEAL });
   rightY -= 14;
   const customerName = calc.customer
     ? `${calc.customer.firstName} ${calc.customer.lastName}`
     : "Kunde";
   const customerLines = [customerName];
-  const prop = calc.order?.property;
-  if (prop) {
-    customerLines.push(prop.street, `${prop.zipCode} ${prop.city}`);
+  const billingLines = formatBillingAddressLines(calc.customer);
+  const siteLines = formatSiteAddressLines(calc.order?.property);
+  if (billingLines.length) {
+    customerLines.push(...billingLines);
+  } else if (siteLines.length) {
+    customerLines.push(...siteLines);
   }
   for (const l of customerLines) {
     text(l, colRightX, rightY, { size: 10 });
     rightY -= 13;
+  }
+
+  const showSite =
+    siteLines.length > 0 &&
+    (siteDiffersFromBilling(calc.customer, calc.order?.property) ||
+      (!isInvoice && hasBillingAddress(calc.customer)));
+  if (showSite) {
+    rightY -= 6;
+    text(isInvoice ? "Leistungsort" : "Leistungsort / Baustelle", colRightX, rightY, {
+      size: 9,
+      font: bold,
+      color: TEAL,
+    });
+    rightY -= 14;
+    for (const l of siteLines) {
+      text(l, colRightX, rightY, { size: 10 });
+      rightY -= 13;
+    }
   }
 
   y = Math.min(leftY, rightY) - 16;

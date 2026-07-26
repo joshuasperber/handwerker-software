@@ -59,7 +59,7 @@ export async function sendNotification(params: SendNotificationParams) {
   let sent = false;
 
   if (channel === "EMAIL") {
-    sent = await sendEmail(recipient, subject ?? "Handwerker App", body, attachments);
+    sent = await sendEmail(recipient, subject ?? "JoMaster", body, attachments);
   } else if (channel === "SMS") {
     sent = await sendSms(recipient, body);
   }
@@ -122,7 +122,7 @@ async function sendEmail(
     });
 
     await transporter.sendMail({
-      from: process.env.SMTP_FROM ?? process.env.SMTP_USER ?? "no-reply@handwerker.app",
+      from: process.env.SMTP_FROM ?? process.env.SMTP_USER ?? "no-reply@jomaster.app",
       to,
       subject,
       text: body,

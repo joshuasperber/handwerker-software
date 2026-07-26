@@ -41,8 +41,11 @@ export type TimeEntryMinAggregateOutputType = {
   startTime: Date | null
   endTime: Date | null
   breakMinutes: number | null
+  activity: string | null
   notes: string | null
+  status: $Enums.TimeEntryStatus | null
   createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type TimeEntryMaxAggregateOutputType = {
@@ -52,8 +55,11 @@ export type TimeEntryMaxAggregateOutputType = {
   startTime: Date | null
   endTime: Date | null
   breakMinutes: number | null
+  activity: string | null
   notes: string | null
+  status: $Enums.TimeEntryStatus | null
   createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type TimeEntryCountAggregateOutputType = {
@@ -63,8 +69,11 @@ export type TimeEntryCountAggregateOutputType = {
   startTime: number
   endTime: number
   breakMinutes: number
+  activity: number
   notes: number
+  status: number
   createdAt: number
+  updatedAt: number
   _all: number
 }
 
@@ -84,8 +93,11 @@ export type TimeEntryMinAggregateInputType = {
   startTime?: true
   endTime?: true
   breakMinutes?: true
+  activity?: true
   notes?: true
+  status?: true
   createdAt?: true
+  updatedAt?: true
 }
 
 export type TimeEntryMaxAggregateInputType = {
@@ -95,8 +107,11 @@ export type TimeEntryMaxAggregateInputType = {
   startTime?: true
   endTime?: true
   breakMinutes?: true
+  activity?: true
   notes?: true
+  status?: true
   createdAt?: true
+  updatedAt?: true
 }
 
 export type TimeEntryCountAggregateInputType = {
@@ -106,8 +121,11 @@ export type TimeEntryCountAggregateInputType = {
   startTime?: true
   endTime?: true
   breakMinutes?: true
+  activity?: true
   notes?: true
+  status?: true
   createdAt?: true
+  updatedAt?: true
   _all?: true
 }
 
@@ -199,13 +217,16 @@ export type TimeEntryGroupByArgs<ExtArgs extends runtime.Types.Extensions.Intern
 
 export type TimeEntryGroupByOutputType = {
   id: string
-  orderId: string
+  orderId: string | null
   employeeId: string
   startTime: Date
   endTime: Date | null
   breakMinutes: number
+  activity: string | null
   notes: string | null
+  status: $Enums.TimeEntryStatus
   createdAt: Date
+  updatedAt: Date
   _count: TimeEntryCountAggregateOutputType | null
   _avg: TimeEntryAvgAggregateOutputType | null
   _sum: TimeEntrySumAggregateOutputType | null
@@ -233,26 +254,32 @@ export type TimeEntryWhereInput = {
   OR?: Prisma.TimeEntryWhereInput[]
   NOT?: Prisma.TimeEntryWhereInput | Prisma.TimeEntryWhereInput[]
   id?: Prisma.StringFilter<"TimeEntry"> | string
-  orderId?: Prisma.StringFilter<"TimeEntry"> | string
+  orderId?: Prisma.StringNullableFilter<"TimeEntry"> | string | null
   employeeId?: Prisma.StringFilter<"TimeEntry"> | string
   startTime?: Prisma.DateTimeFilter<"TimeEntry"> | Date | string
   endTime?: Prisma.DateTimeNullableFilter<"TimeEntry"> | Date | string | null
   breakMinutes?: Prisma.IntFilter<"TimeEntry"> | number
+  activity?: Prisma.StringNullableFilter<"TimeEntry"> | string | null
   notes?: Prisma.StringNullableFilter<"TimeEntry"> | string | null
+  status?: Prisma.EnumTimeEntryStatusFilter<"TimeEntry"> | $Enums.TimeEntryStatus
   createdAt?: Prisma.DateTimeFilter<"TimeEntry"> | Date | string
-  order?: Prisma.XOR<Prisma.OrderScalarRelationFilter, Prisma.OrderWhereInput>
+  updatedAt?: Prisma.DateTimeFilter<"TimeEntry"> | Date | string
+  order?: Prisma.XOR<Prisma.OrderNullableScalarRelationFilter, Prisma.OrderWhereInput> | null
   employee?: Prisma.XOR<Prisma.EmployeeScalarRelationFilter, Prisma.EmployeeWhereInput>
 }
 
 export type TimeEntryOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  orderId?: Prisma.SortOrder
+  orderId?: Prisma.SortOrderInput | Prisma.SortOrder
   employeeId?: Prisma.SortOrder
   startTime?: Prisma.SortOrder
   endTime?: Prisma.SortOrderInput | Prisma.SortOrder
   breakMinutes?: Prisma.SortOrder
+  activity?: Prisma.SortOrderInput | Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
+  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   order?: Prisma.OrderOrderByWithRelationInput
   employee?: Prisma.EmployeeOrderByWithRelationInput
 }
@@ -262,26 +289,32 @@ export type TimeEntryWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.TimeEntryWhereInput | Prisma.TimeEntryWhereInput[]
   OR?: Prisma.TimeEntryWhereInput[]
   NOT?: Prisma.TimeEntryWhereInput | Prisma.TimeEntryWhereInput[]
-  orderId?: Prisma.StringFilter<"TimeEntry"> | string
+  orderId?: Prisma.StringNullableFilter<"TimeEntry"> | string | null
   employeeId?: Prisma.StringFilter<"TimeEntry"> | string
   startTime?: Prisma.DateTimeFilter<"TimeEntry"> | Date | string
   endTime?: Prisma.DateTimeNullableFilter<"TimeEntry"> | Date | string | null
   breakMinutes?: Prisma.IntFilter<"TimeEntry"> | number
+  activity?: Prisma.StringNullableFilter<"TimeEntry"> | string | null
   notes?: Prisma.StringNullableFilter<"TimeEntry"> | string | null
+  status?: Prisma.EnumTimeEntryStatusFilter<"TimeEntry"> | $Enums.TimeEntryStatus
   createdAt?: Prisma.DateTimeFilter<"TimeEntry"> | Date | string
-  order?: Prisma.XOR<Prisma.OrderScalarRelationFilter, Prisma.OrderWhereInput>
+  updatedAt?: Prisma.DateTimeFilter<"TimeEntry"> | Date | string
+  order?: Prisma.XOR<Prisma.OrderNullableScalarRelationFilter, Prisma.OrderWhereInput> | null
   employee?: Prisma.XOR<Prisma.EmployeeScalarRelationFilter, Prisma.EmployeeWhereInput>
 }, "id">
 
 export type TimeEntryOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  orderId?: Prisma.SortOrder
+  orderId?: Prisma.SortOrderInput | Prisma.SortOrder
   employeeId?: Prisma.SortOrder
   startTime?: Prisma.SortOrder
   endTime?: Prisma.SortOrderInput | Prisma.SortOrder
   breakMinutes?: Prisma.SortOrder
+  activity?: Prisma.SortOrderInput | Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
+  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   _count?: Prisma.TimeEntryCountOrderByAggregateInput
   _avg?: Prisma.TimeEntryAvgOrderByAggregateInput
   _max?: Prisma.TimeEntryMaxOrderByAggregateInput
@@ -294,13 +327,16 @@ export type TimeEntryScalarWhereWithAggregatesInput = {
   OR?: Prisma.TimeEntryScalarWhereWithAggregatesInput[]
   NOT?: Prisma.TimeEntryScalarWhereWithAggregatesInput | Prisma.TimeEntryScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"TimeEntry"> | string
-  orderId?: Prisma.StringWithAggregatesFilter<"TimeEntry"> | string
+  orderId?: Prisma.StringNullableWithAggregatesFilter<"TimeEntry"> | string | null
   employeeId?: Prisma.StringWithAggregatesFilter<"TimeEntry"> | string
   startTime?: Prisma.DateTimeWithAggregatesFilter<"TimeEntry"> | Date | string
   endTime?: Prisma.DateTimeNullableWithAggregatesFilter<"TimeEntry"> | Date | string | null
   breakMinutes?: Prisma.IntWithAggregatesFilter<"TimeEntry"> | number
+  activity?: Prisma.StringNullableWithAggregatesFilter<"TimeEntry"> | string | null
   notes?: Prisma.StringNullableWithAggregatesFilter<"TimeEntry"> | string | null
+  status?: Prisma.EnumTimeEntryStatusWithAggregatesFilter<"TimeEntry"> | $Enums.TimeEntryStatus
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"TimeEntry"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"TimeEntry"> | Date | string
 }
 
 export type TimeEntryCreateInput = {
@@ -308,21 +344,27 @@ export type TimeEntryCreateInput = {
   startTime: Date | string
   endTime?: Date | string | null
   breakMinutes?: number
+  activity?: string | null
   notes?: string | null
+  status?: $Enums.TimeEntryStatus
   createdAt?: Date | string
-  order: Prisma.OrderCreateNestedOneWithoutTimeEntriesInput
+  updatedAt?: Date | string
+  order?: Prisma.OrderCreateNestedOneWithoutTimeEntriesInput
   employee: Prisma.EmployeeCreateNestedOneWithoutTimeEntriesInput
 }
 
 export type TimeEntryUncheckedCreateInput = {
   id?: string
-  orderId: string
+  orderId?: string | null
   employeeId: string
   startTime: Date | string
   endTime?: Date | string | null
   breakMinutes?: number
+  activity?: string | null
   notes?: string | null
+  status?: $Enums.TimeEntryStatus
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type TimeEntryUpdateInput = {
@@ -330,32 +372,41 @@ export type TimeEntryUpdateInput = {
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   breakMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  activity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumTimeEntryStatusFieldUpdateOperationsInput | $Enums.TimeEntryStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  order?: Prisma.OrderUpdateOneRequiredWithoutTimeEntriesNestedInput
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  order?: Prisma.OrderUpdateOneWithoutTimeEntriesNestedInput
   employee?: Prisma.EmployeeUpdateOneRequiredWithoutTimeEntriesNestedInput
 }
 
 export type TimeEntryUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  orderId?: Prisma.StringFieldUpdateOperationsInput | string
+  orderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employeeId?: Prisma.StringFieldUpdateOperationsInput | string
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   breakMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  activity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumTimeEntryStatusFieldUpdateOperationsInput | $Enums.TimeEntryStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type TimeEntryCreateManyInput = {
   id?: string
-  orderId: string
+  orderId?: string | null
   employeeId: string
   startTime: Date | string
   endTime?: Date | string | null
   breakMinutes?: number
+  activity?: string | null
   notes?: string | null
+  status?: $Enums.TimeEntryStatus
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type TimeEntryUpdateManyMutationInput = {
@@ -363,19 +414,25 @@ export type TimeEntryUpdateManyMutationInput = {
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   breakMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  activity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumTimeEntryStatusFieldUpdateOperationsInput | $Enums.TimeEntryStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type TimeEntryUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  orderId?: Prisma.StringFieldUpdateOperationsInput | string
+  orderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employeeId?: Prisma.StringFieldUpdateOperationsInput | string
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   breakMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  activity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumTimeEntryStatusFieldUpdateOperationsInput | $Enums.TimeEntryStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type TimeEntryListRelationFilter = {
@@ -395,8 +452,11 @@ export type TimeEntryCountOrderByAggregateInput = {
   startTime?: Prisma.SortOrder
   endTime?: Prisma.SortOrder
   breakMinutes?: Prisma.SortOrder
+  activity?: Prisma.SortOrder
   notes?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type TimeEntryAvgOrderByAggregateInput = {
@@ -410,8 +470,11 @@ export type TimeEntryMaxOrderByAggregateInput = {
   startTime?: Prisma.SortOrder
   endTime?: Prisma.SortOrder
   breakMinutes?: Prisma.SortOrder
+  activity?: Prisma.SortOrder
   notes?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type TimeEntryMinOrderByAggregateInput = {
@@ -421,8 +484,11 @@ export type TimeEntryMinOrderByAggregateInput = {
   startTime?: Prisma.SortOrder
   endTime?: Prisma.SortOrder
   breakMinutes?: Prisma.SortOrder
+  activity?: Prisma.SortOrder
   notes?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type TimeEntrySumOrderByAggregateInput = {
@@ -513,24 +579,34 @@ export type TimeEntryUncheckedUpdateManyWithoutOrderNestedInput = {
   deleteMany?: Prisma.TimeEntryScalarWhereInput | Prisma.TimeEntryScalarWhereInput[]
 }
 
+export type EnumTimeEntryStatusFieldUpdateOperationsInput = {
+  set?: $Enums.TimeEntryStatus
+}
+
 export type TimeEntryCreateWithoutEmployeeInput = {
   id?: string
   startTime: Date | string
   endTime?: Date | string | null
   breakMinutes?: number
+  activity?: string | null
   notes?: string | null
+  status?: $Enums.TimeEntryStatus
   createdAt?: Date | string
-  order: Prisma.OrderCreateNestedOneWithoutTimeEntriesInput
+  updatedAt?: Date | string
+  order?: Prisma.OrderCreateNestedOneWithoutTimeEntriesInput
 }
 
 export type TimeEntryUncheckedCreateWithoutEmployeeInput = {
   id?: string
-  orderId: string
+  orderId?: string | null
   startTime: Date | string
   endTime?: Date | string | null
   breakMinutes?: number
+  activity?: string | null
   notes?: string | null
+  status?: $Enums.TimeEntryStatus
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type TimeEntryCreateOrConnectWithoutEmployeeInput = {
@@ -564,13 +640,16 @@ export type TimeEntryScalarWhereInput = {
   OR?: Prisma.TimeEntryScalarWhereInput[]
   NOT?: Prisma.TimeEntryScalarWhereInput | Prisma.TimeEntryScalarWhereInput[]
   id?: Prisma.StringFilter<"TimeEntry"> | string
-  orderId?: Prisma.StringFilter<"TimeEntry"> | string
+  orderId?: Prisma.StringNullableFilter<"TimeEntry"> | string | null
   employeeId?: Prisma.StringFilter<"TimeEntry"> | string
   startTime?: Prisma.DateTimeFilter<"TimeEntry"> | Date | string
   endTime?: Prisma.DateTimeNullableFilter<"TimeEntry"> | Date | string | null
   breakMinutes?: Prisma.IntFilter<"TimeEntry"> | number
+  activity?: Prisma.StringNullableFilter<"TimeEntry"> | string | null
   notes?: Prisma.StringNullableFilter<"TimeEntry"> | string | null
+  status?: Prisma.EnumTimeEntryStatusFilter<"TimeEntry"> | $Enums.TimeEntryStatus
   createdAt?: Prisma.DateTimeFilter<"TimeEntry"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"TimeEntry"> | Date | string
 }
 
 export type TimeEntryCreateWithoutOrderInput = {
@@ -578,8 +657,11 @@ export type TimeEntryCreateWithoutOrderInput = {
   startTime: Date | string
   endTime?: Date | string | null
   breakMinutes?: number
+  activity?: string | null
   notes?: string | null
+  status?: $Enums.TimeEntryStatus
   createdAt?: Date | string
+  updatedAt?: Date | string
   employee: Prisma.EmployeeCreateNestedOneWithoutTimeEntriesInput
 }
 
@@ -589,8 +671,11 @@ export type TimeEntryUncheckedCreateWithoutOrderInput = {
   startTime: Date | string
   endTime?: Date | string | null
   breakMinutes?: number
+  activity?: string | null
   notes?: string | null
+  status?: $Enums.TimeEntryStatus
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type TimeEntryCreateOrConnectWithoutOrderInput = {
@@ -621,12 +706,15 @@ export type TimeEntryUpdateManyWithWhereWithoutOrderInput = {
 
 export type TimeEntryCreateManyEmployeeInput = {
   id?: string
-  orderId: string
+  orderId?: string | null
   startTime: Date | string
   endTime?: Date | string | null
   breakMinutes?: number
+  activity?: string | null
   notes?: string | null
+  status?: $Enums.TimeEntryStatus
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type TimeEntryUpdateWithoutEmployeeInput = {
@@ -634,29 +722,38 @@ export type TimeEntryUpdateWithoutEmployeeInput = {
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   breakMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  activity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumTimeEntryStatusFieldUpdateOperationsInput | $Enums.TimeEntryStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  order?: Prisma.OrderUpdateOneRequiredWithoutTimeEntriesNestedInput
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  order?: Prisma.OrderUpdateOneWithoutTimeEntriesNestedInput
 }
 
 export type TimeEntryUncheckedUpdateWithoutEmployeeInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  orderId?: Prisma.StringFieldUpdateOperationsInput | string
+  orderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   breakMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  activity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumTimeEntryStatusFieldUpdateOperationsInput | $Enums.TimeEntryStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type TimeEntryUncheckedUpdateManyWithoutEmployeeInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  orderId?: Prisma.StringFieldUpdateOperationsInput | string
+  orderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   breakMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  activity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumTimeEntryStatusFieldUpdateOperationsInput | $Enums.TimeEntryStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type TimeEntryCreateManyOrderInput = {
@@ -665,8 +762,11 @@ export type TimeEntryCreateManyOrderInput = {
   startTime: Date | string
   endTime?: Date | string | null
   breakMinutes?: number
+  activity?: string | null
   notes?: string | null
+  status?: $Enums.TimeEntryStatus
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type TimeEntryUpdateWithoutOrderInput = {
@@ -674,8 +774,11 @@ export type TimeEntryUpdateWithoutOrderInput = {
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   breakMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  activity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumTimeEntryStatusFieldUpdateOperationsInput | $Enums.TimeEntryStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   employee?: Prisma.EmployeeUpdateOneRequiredWithoutTimeEntriesNestedInput
 }
 
@@ -685,8 +788,11 @@ export type TimeEntryUncheckedUpdateWithoutOrderInput = {
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   breakMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  activity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumTimeEntryStatusFieldUpdateOperationsInput | $Enums.TimeEntryStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type TimeEntryUncheckedUpdateManyWithoutOrderInput = {
@@ -695,8 +801,11 @@ export type TimeEntryUncheckedUpdateManyWithoutOrderInput = {
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   breakMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  activity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumTimeEntryStatusFieldUpdateOperationsInput | $Enums.TimeEntryStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -708,9 +817,12 @@ export type TimeEntrySelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   startTime?: boolean
   endTime?: boolean
   breakMinutes?: boolean
+  activity?: boolean
   notes?: boolean
+  status?: boolean
   createdAt?: boolean
-  order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
+  updatedAt?: boolean
+  order?: boolean | Prisma.TimeEntry$orderArgs<ExtArgs>
   employee?: boolean | Prisma.EmployeeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["timeEntry"]>
 
@@ -721,9 +833,12 @@ export type TimeEntrySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ext
   startTime?: boolean
   endTime?: boolean
   breakMinutes?: boolean
+  activity?: boolean
   notes?: boolean
+  status?: boolean
   createdAt?: boolean
-  order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
+  updatedAt?: boolean
+  order?: boolean | Prisma.TimeEntry$orderArgs<ExtArgs>
   employee?: boolean | Prisma.EmployeeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["timeEntry"]>
 
@@ -734,9 +849,12 @@ export type TimeEntrySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
   startTime?: boolean
   endTime?: boolean
   breakMinutes?: boolean
+  activity?: boolean
   notes?: boolean
+  status?: boolean
   createdAt?: boolean
-  order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
+  updatedAt?: boolean
+  order?: boolean | Prisma.TimeEntry$orderArgs<ExtArgs>
   employee?: boolean | Prisma.EmployeeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["timeEntry"]>
 
@@ -747,39 +865,48 @@ export type TimeEntrySelectScalar = {
   startTime?: boolean
   endTime?: boolean
   breakMinutes?: boolean
+  activity?: boolean
   notes?: boolean
+  status?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
 }
 
-export type TimeEntryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "orderId" | "employeeId" | "startTime" | "endTime" | "breakMinutes" | "notes" | "createdAt", ExtArgs["result"]["timeEntry"]>
+export type TimeEntryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "orderId" | "employeeId" | "startTime" | "endTime" | "breakMinutes" | "activity" | "notes" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["timeEntry"]>
 export type TimeEntryInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
+  order?: boolean | Prisma.TimeEntry$orderArgs<ExtArgs>
   employee?: boolean | Prisma.EmployeeDefaultArgs<ExtArgs>
 }
 export type TimeEntryIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
+  order?: boolean | Prisma.TimeEntry$orderArgs<ExtArgs>
   employee?: boolean | Prisma.EmployeeDefaultArgs<ExtArgs>
 }
 export type TimeEntryIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
+  order?: boolean | Prisma.TimeEntry$orderArgs<ExtArgs>
   employee?: boolean | Prisma.EmployeeDefaultArgs<ExtArgs>
 }
 
 export type $TimeEntryPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "TimeEntry"
   objects: {
-    order: Prisma.$OrderPayload<ExtArgs>
+    order: Prisma.$OrderPayload<ExtArgs> | null
     employee: Prisma.$EmployeePayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    orderId: string
+    orderId: string | null
     employeeId: string
     startTime: Date
     endTime: Date | null
     breakMinutes: number
+    /**
+     * * Tätigkeit, z. B. Lagerarbeit, Werkstatt — Pflicht wenn kein Auftrag
+     */
+    activity: string | null
     notes: string | null
+    status: $Enums.TimeEntryStatus
     createdAt: Date
+    updatedAt: Date
   }, ExtArgs["result"]["timeEntry"]>
   composites: {}
 }
@@ -1174,7 +1301,7 @@ readonly fields: TimeEntryFieldRefs;
  */
 export interface Prisma__TimeEntryClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  order<T extends Prisma.OrderDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OrderDefaultArgs<ExtArgs>>): Prisma.Prisma__OrderClient<runtime.Types.Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  order<T extends Prisma.TimeEntry$orderArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TimeEntry$orderArgs<ExtArgs>>): Prisma.Prisma__OrderClient<runtime.Types.Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   employee<T extends Prisma.EmployeeDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EmployeeDefaultArgs<ExtArgs>>): Prisma.Prisma__EmployeeClient<runtime.Types.Result.GetResult<Prisma.$EmployeePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1211,8 +1338,11 @@ export interface TimeEntryFieldRefs {
   readonly startTime: Prisma.FieldRef<"TimeEntry", 'DateTime'>
   readonly endTime: Prisma.FieldRef<"TimeEntry", 'DateTime'>
   readonly breakMinutes: Prisma.FieldRef<"TimeEntry", 'Int'>
+  readonly activity: Prisma.FieldRef<"TimeEntry", 'String'>
   readonly notes: Prisma.FieldRef<"TimeEntry", 'String'>
+  readonly status: Prisma.FieldRef<"TimeEntry", 'TimeEntryStatus'>
   readonly createdAt: Prisma.FieldRef<"TimeEntry", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"TimeEntry", 'DateTime'>
 }
     
 
@@ -1611,6 +1741,25 @@ export type TimeEntryDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Int
    * Limit how many TimeEntries to delete.
    */
   limit?: number
+}
+
+/**
+ * TimeEntry.order
+ */
+export type TimeEntry$orderArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Order
+   */
+  select?: Prisma.OrderSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Order
+   */
+  omit?: Prisma.OrderOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OrderInclude<ExtArgs> | null
+  where?: Prisma.OrderWhereInput
 }
 
 /**

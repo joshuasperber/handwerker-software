@@ -33,6 +33,14 @@ export type CustomerMinAggregateOutputType = {
   email: string | null
   phone: string | null
   company: string | null
+  customerType: $Enums.CustomerType | null
+  contactPerson: string | null
+  vatId: string | null
+  taxNumber: string | null
+  billingStreet: string | null
+  billingZipCode: string | null
+  billingCity: string | null
+  taxNotes: string | null
   notes: string | null
   gdprConsent: boolean | null
   gdprConsentAt: Date | null
@@ -50,6 +58,14 @@ export type CustomerMaxAggregateOutputType = {
   email: string | null
   phone: string | null
   company: string | null
+  customerType: $Enums.CustomerType | null
+  contactPerson: string | null
+  vatId: string | null
+  taxNumber: string | null
+  billingStreet: string | null
+  billingZipCode: string | null
+  billingCity: string | null
+  taxNotes: string | null
   notes: string | null
   gdprConsent: boolean | null
   gdprConsentAt: Date | null
@@ -67,6 +83,14 @@ export type CustomerCountAggregateOutputType = {
   email: number
   phone: number
   company: number
+  customerType: number
+  contactPerson: number
+  vatId: number
+  taxNumber: number
+  billingStreet: number
+  billingZipCode: number
+  billingCity: number
+  taxNotes: number
   notes: number
   gdprConsent: number
   gdprConsentAt: number
@@ -86,6 +110,14 @@ export type CustomerMinAggregateInputType = {
   email?: true
   phone?: true
   company?: true
+  customerType?: true
+  contactPerson?: true
+  vatId?: true
+  taxNumber?: true
+  billingStreet?: true
+  billingZipCode?: true
+  billingCity?: true
+  taxNotes?: true
   notes?: true
   gdprConsent?: true
   gdprConsentAt?: true
@@ -103,6 +135,14 @@ export type CustomerMaxAggregateInputType = {
   email?: true
   phone?: true
   company?: true
+  customerType?: true
+  contactPerson?: true
+  vatId?: true
+  taxNumber?: true
+  billingStreet?: true
+  billingZipCode?: true
+  billingCity?: true
+  taxNotes?: true
   notes?: true
   gdprConsent?: true
   gdprConsentAt?: true
@@ -120,6 +160,14 @@ export type CustomerCountAggregateInputType = {
   email?: true
   phone?: true
   company?: true
+  customerType?: true
+  contactPerson?: true
+  vatId?: true
+  taxNumber?: true
+  billingStreet?: true
+  billingZipCode?: true
+  billingCity?: true
+  taxNotes?: true
   notes?: true
   gdprConsent?: true
   gdprConsentAt?: true
@@ -210,6 +258,14 @@ export type CustomerGroupByOutputType = {
   email: string
   phone: string | null
   company: string | null
+  customerType: $Enums.CustomerType
+  contactPerson: string | null
+  vatId: string | null
+  taxNumber: string | null
+  billingStreet: string | null
+  billingZipCode: string | null
+  billingCity: string | null
+  taxNotes: string | null
   notes: string | null
   gdprConsent: boolean
   gdprConsentAt: Date | null
@@ -248,6 +304,14 @@ export type CustomerWhereInput = {
   email?: Prisma.StringFilter<"Customer"> | string
   phone?: Prisma.StringNullableFilter<"Customer"> | string | null
   company?: Prisma.StringNullableFilter<"Customer"> | string | null
+  customerType?: Prisma.EnumCustomerTypeFilter<"Customer"> | $Enums.CustomerType
+  contactPerson?: Prisma.StringNullableFilter<"Customer"> | string | null
+  vatId?: Prisma.StringNullableFilter<"Customer"> | string | null
+  taxNumber?: Prisma.StringNullableFilter<"Customer"> | string | null
+  billingStreet?: Prisma.StringNullableFilter<"Customer"> | string | null
+  billingZipCode?: Prisma.StringNullableFilter<"Customer"> | string | null
+  billingCity?: Prisma.StringNullableFilter<"Customer"> | string | null
+  taxNotes?: Prisma.StringNullableFilter<"Customer"> | string | null
   notes?: Prisma.StringNullableFilter<"Customer"> | string | null
   gdprConsent?: Prisma.BoolFilter<"Customer"> | boolean
   gdprConsentAt?: Prisma.DateTimeNullableFilter<"Customer"> | Date | string | null
@@ -259,6 +323,10 @@ export type CustomerWhereInput = {
   properties?: Prisma.PropertyListRelationFilter
   orders?: Prisma.OrderListRelationFilter
   calculations?: Prisma.CalculationListRelationFilter
+  taxExemptionCertificate?: Prisma.XOR<Prisma.TaxExemptionCertificateNullableScalarRelationFilter, Prisma.TaxExemptionCertificateWhereInput> | null
+  expenses?: Prisma.ExpenseListRelationFilter
+  stockMovements?: Prisma.StockMovementListRelationFilter
+  projects?: Prisma.ProjectListRelationFilter
 }
 
 export type CustomerOrderByWithRelationInput = {
@@ -270,6 +338,14 @@ export type CustomerOrderByWithRelationInput = {
   email?: Prisma.SortOrder
   phone?: Prisma.SortOrderInput | Prisma.SortOrder
   company?: Prisma.SortOrderInput | Prisma.SortOrder
+  customerType?: Prisma.SortOrder
+  contactPerson?: Prisma.SortOrderInput | Prisma.SortOrder
+  vatId?: Prisma.SortOrderInput | Prisma.SortOrder
+  taxNumber?: Prisma.SortOrderInput | Prisma.SortOrder
+  billingStreet?: Prisma.SortOrderInput | Prisma.SortOrder
+  billingZipCode?: Prisma.SortOrderInput | Prisma.SortOrder
+  billingCity?: Prisma.SortOrderInput | Prisma.SortOrder
+  taxNotes?: Prisma.SortOrderInput | Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   gdprConsent?: Prisma.SortOrder
   gdprConsentAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -281,6 +357,10 @@ export type CustomerOrderByWithRelationInput = {
   properties?: Prisma.PropertyOrderByRelationAggregateInput
   orders?: Prisma.OrderOrderByRelationAggregateInput
   calculations?: Prisma.CalculationOrderByRelationAggregateInput
+  taxExemptionCertificate?: Prisma.TaxExemptionCertificateOrderByWithRelationInput
+  expenses?: Prisma.ExpenseOrderByRelationAggregateInput
+  stockMovements?: Prisma.StockMovementOrderByRelationAggregateInput
+  projects?: Prisma.ProjectOrderByRelationAggregateInput
 }
 
 export type CustomerWhereUniqueInput = Prisma.AtLeast<{
@@ -296,6 +376,14 @@ export type CustomerWhereUniqueInput = Prisma.AtLeast<{
   email?: Prisma.StringFilter<"Customer"> | string
   phone?: Prisma.StringNullableFilter<"Customer"> | string | null
   company?: Prisma.StringNullableFilter<"Customer"> | string | null
+  customerType?: Prisma.EnumCustomerTypeFilter<"Customer"> | $Enums.CustomerType
+  contactPerson?: Prisma.StringNullableFilter<"Customer"> | string | null
+  vatId?: Prisma.StringNullableFilter<"Customer"> | string | null
+  taxNumber?: Prisma.StringNullableFilter<"Customer"> | string | null
+  billingStreet?: Prisma.StringNullableFilter<"Customer"> | string | null
+  billingZipCode?: Prisma.StringNullableFilter<"Customer"> | string | null
+  billingCity?: Prisma.StringNullableFilter<"Customer"> | string | null
+  taxNotes?: Prisma.StringNullableFilter<"Customer"> | string | null
   notes?: Prisma.StringNullableFilter<"Customer"> | string | null
   gdprConsent?: Prisma.BoolFilter<"Customer"> | boolean
   gdprConsentAt?: Prisma.DateTimeNullableFilter<"Customer"> | Date | string | null
@@ -307,6 +395,10 @@ export type CustomerWhereUniqueInput = Prisma.AtLeast<{
   properties?: Prisma.PropertyListRelationFilter
   orders?: Prisma.OrderListRelationFilter
   calculations?: Prisma.CalculationListRelationFilter
+  taxExemptionCertificate?: Prisma.XOR<Prisma.TaxExemptionCertificateNullableScalarRelationFilter, Prisma.TaxExemptionCertificateWhereInput> | null
+  expenses?: Prisma.ExpenseListRelationFilter
+  stockMovements?: Prisma.StockMovementListRelationFilter
+  projects?: Prisma.ProjectListRelationFilter
 }, "id" | "userId" | "tenantId_email">
 
 export type CustomerOrderByWithAggregationInput = {
@@ -318,6 +410,14 @@ export type CustomerOrderByWithAggregationInput = {
   email?: Prisma.SortOrder
   phone?: Prisma.SortOrderInput | Prisma.SortOrder
   company?: Prisma.SortOrderInput | Prisma.SortOrder
+  customerType?: Prisma.SortOrder
+  contactPerson?: Prisma.SortOrderInput | Prisma.SortOrder
+  vatId?: Prisma.SortOrderInput | Prisma.SortOrder
+  taxNumber?: Prisma.SortOrderInput | Prisma.SortOrder
+  billingStreet?: Prisma.SortOrderInput | Prisma.SortOrder
+  billingZipCode?: Prisma.SortOrderInput | Prisma.SortOrder
+  billingCity?: Prisma.SortOrderInput | Prisma.SortOrder
+  taxNotes?: Prisma.SortOrderInput | Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   gdprConsent?: Prisma.SortOrder
   gdprConsentAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -341,6 +441,14 @@ export type CustomerScalarWhereWithAggregatesInput = {
   email?: Prisma.StringWithAggregatesFilter<"Customer"> | string
   phone?: Prisma.StringNullableWithAggregatesFilter<"Customer"> | string | null
   company?: Prisma.StringNullableWithAggregatesFilter<"Customer"> | string | null
+  customerType?: Prisma.EnumCustomerTypeWithAggregatesFilter<"Customer"> | $Enums.CustomerType
+  contactPerson?: Prisma.StringNullableWithAggregatesFilter<"Customer"> | string | null
+  vatId?: Prisma.StringNullableWithAggregatesFilter<"Customer"> | string | null
+  taxNumber?: Prisma.StringNullableWithAggregatesFilter<"Customer"> | string | null
+  billingStreet?: Prisma.StringNullableWithAggregatesFilter<"Customer"> | string | null
+  billingZipCode?: Prisma.StringNullableWithAggregatesFilter<"Customer"> | string | null
+  billingCity?: Prisma.StringNullableWithAggregatesFilter<"Customer"> | string | null
+  taxNotes?: Prisma.StringNullableWithAggregatesFilter<"Customer"> | string | null
   notes?: Prisma.StringNullableWithAggregatesFilter<"Customer"> | string | null
   gdprConsent?: Prisma.BoolWithAggregatesFilter<"Customer"> | boolean
   gdprConsentAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Customer"> | Date | string | null
@@ -356,6 +464,14 @@ export type CustomerCreateInput = {
   email: string
   phone?: string | null
   company?: string | null
+  customerType?: $Enums.CustomerType
+  contactPerson?: string | null
+  vatId?: string | null
+  taxNumber?: string | null
+  billingStreet?: string | null
+  billingZipCode?: string | null
+  billingCity?: string | null
+  taxNotes?: string | null
   notes?: string | null
   gdprConsent?: boolean
   gdprConsentAt?: Date | string | null
@@ -367,6 +483,10 @@ export type CustomerCreateInput = {
   properties?: Prisma.PropertyCreateNestedManyWithoutCustomerInput
   orders?: Prisma.OrderCreateNestedManyWithoutCustomerInput
   calculations?: Prisma.CalculationCreateNestedManyWithoutCustomerInput
+  taxExemptionCertificate?: Prisma.TaxExemptionCertificateCreateNestedOneWithoutCustomerInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutCustomerInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutCustomerInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutCustomerInput
 }
 
 export type CustomerUncheckedCreateInput = {
@@ -378,6 +498,14 @@ export type CustomerUncheckedCreateInput = {
   email: string
   phone?: string | null
   company?: string | null
+  customerType?: $Enums.CustomerType
+  contactPerson?: string | null
+  vatId?: string | null
+  taxNumber?: string | null
+  billingStreet?: string | null
+  billingZipCode?: string | null
+  billingCity?: string | null
+  taxNotes?: string | null
   notes?: string | null
   gdprConsent?: boolean
   gdprConsentAt?: Date | string | null
@@ -387,6 +515,10 @@ export type CustomerUncheckedCreateInput = {
   properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutCustomerInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutCustomerInput
   calculations?: Prisma.CalculationUncheckedCreateNestedManyWithoutCustomerInput
+  taxExemptionCertificate?: Prisma.TaxExemptionCertificateUncheckedCreateNestedOneWithoutCustomerInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutCustomerInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutCustomerInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCustomerInput
 }
 
 export type CustomerUpdateInput = {
@@ -396,6 +528,14 @@ export type CustomerUpdateInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   company?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerType?: Prisma.EnumCustomerTypeFieldUpdateOperationsInput | $Enums.CustomerType
+  contactPerson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingStreet?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingZipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gdprConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gdprConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -407,6 +547,10 @@ export type CustomerUpdateInput = {
   properties?: Prisma.PropertyUpdateManyWithoutCustomerNestedInput
   orders?: Prisma.OrderUpdateManyWithoutCustomerNestedInput
   calculations?: Prisma.CalculationUpdateManyWithoutCustomerNestedInput
+  taxExemptionCertificate?: Prisma.TaxExemptionCertificateUpdateOneWithoutCustomerNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutCustomerNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutCustomerNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutCustomerNestedInput
 }
 
 export type CustomerUncheckedUpdateInput = {
@@ -418,6 +562,14 @@ export type CustomerUncheckedUpdateInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   company?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerType?: Prisma.EnumCustomerTypeFieldUpdateOperationsInput | $Enums.CustomerType
+  contactPerson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingStreet?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingZipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gdprConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gdprConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -427,6 +579,10 @@ export type CustomerUncheckedUpdateInput = {
   properties?: Prisma.PropertyUncheckedUpdateManyWithoutCustomerNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutCustomerNestedInput
   calculations?: Prisma.CalculationUncheckedUpdateManyWithoutCustomerNestedInput
+  taxExemptionCertificate?: Prisma.TaxExemptionCertificateUncheckedUpdateOneWithoutCustomerNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutCustomerNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutCustomerNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutCustomerNestedInput
 }
 
 export type CustomerCreateManyInput = {
@@ -438,6 +594,14 @@ export type CustomerCreateManyInput = {
   email: string
   phone?: string | null
   company?: string | null
+  customerType?: $Enums.CustomerType
+  contactPerson?: string | null
+  vatId?: string | null
+  taxNumber?: string | null
+  billingStreet?: string | null
+  billingZipCode?: string | null
+  billingCity?: string | null
+  taxNotes?: string | null
   notes?: string | null
   gdprConsent?: boolean
   gdprConsentAt?: Date | string | null
@@ -453,6 +617,14 @@ export type CustomerUpdateManyMutationInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   company?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerType?: Prisma.EnumCustomerTypeFieldUpdateOperationsInput | $Enums.CustomerType
+  contactPerson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingStreet?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingZipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gdprConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gdprConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -470,6 +642,14 @@ export type CustomerUncheckedUpdateManyInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   company?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerType?: Prisma.EnumCustomerTypeFieldUpdateOperationsInput | $Enums.CustomerType
+  contactPerson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingStreet?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingZipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gdprConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gdprConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -507,6 +687,14 @@ export type CustomerCountOrderByAggregateInput = {
   email?: Prisma.SortOrder
   phone?: Prisma.SortOrder
   company?: Prisma.SortOrder
+  customerType?: Prisma.SortOrder
+  contactPerson?: Prisma.SortOrder
+  vatId?: Prisma.SortOrder
+  taxNumber?: Prisma.SortOrder
+  billingStreet?: Prisma.SortOrder
+  billingZipCode?: Prisma.SortOrder
+  billingCity?: Prisma.SortOrder
+  taxNotes?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   gdprConsent?: Prisma.SortOrder
   gdprConsentAt?: Prisma.SortOrder
@@ -524,6 +712,14 @@ export type CustomerMaxOrderByAggregateInput = {
   email?: Prisma.SortOrder
   phone?: Prisma.SortOrder
   company?: Prisma.SortOrder
+  customerType?: Prisma.SortOrder
+  contactPerson?: Prisma.SortOrder
+  vatId?: Prisma.SortOrder
+  taxNumber?: Prisma.SortOrder
+  billingStreet?: Prisma.SortOrder
+  billingZipCode?: Prisma.SortOrder
+  billingCity?: Prisma.SortOrder
+  taxNotes?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   gdprConsent?: Prisma.SortOrder
   gdprConsentAt?: Prisma.SortOrder
@@ -541,6 +737,14 @@ export type CustomerMinOrderByAggregateInput = {
   email?: Prisma.SortOrder
   phone?: Prisma.SortOrder
   company?: Prisma.SortOrder
+  customerType?: Prisma.SortOrder
+  contactPerson?: Prisma.SortOrder
+  vatId?: Prisma.SortOrder
+  taxNumber?: Prisma.SortOrder
+  billingStreet?: Prisma.SortOrder
+  billingZipCode?: Prisma.SortOrder
+  billingCity?: Prisma.SortOrder
+  taxNotes?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   gdprConsent?: Prisma.SortOrder
   gdprConsentAt?: Prisma.SortOrder
@@ -628,6 +832,24 @@ export type CustomerUncheckedUpdateOneWithoutUserNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.CustomerUpdateToOneWithWhereWithoutUserInput, Prisma.CustomerUpdateWithoutUserInput>, Prisma.CustomerUncheckedUpdateWithoutUserInput>
 }
 
+export type EnumCustomerTypeFieldUpdateOperationsInput = {
+  set?: $Enums.CustomerType
+}
+
+export type CustomerCreateNestedOneWithoutTaxExemptionCertificateInput = {
+  create?: Prisma.XOR<Prisma.CustomerCreateWithoutTaxExemptionCertificateInput, Prisma.CustomerUncheckedCreateWithoutTaxExemptionCertificateInput>
+  connectOrCreate?: Prisma.CustomerCreateOrConnectWithoutTaxExemptionCertificateInput
+  connect?: Prisma.CustomerWhereUniqueInput
+}
+
+export type CustomerUpdateOneRequiredWithoutTaxExemptionCertificateNestedInput = {
+  create?: Prisma.XOR<Prisma.CustomerCreateWithoutTaxExemptionCertificateInput, Prisma.CustomerUncheckedCreateWithoutTaxExemptionCertificateInput>
+  connectOrCreate?: Prisma.CustomerCreateOrConnectWithoutTaxExemptionCertificateInput
+  upsert?: Prisma.CustomerUpsertWithoutTaxExemptionCertificateInput
+  connect?: Prisma.CustomerWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CustomerUpdateToOneWithWhereWithoutTaxExemptionCertificateInput, Prisma.CustomerUpdateWithoutTaxExemptionCertificateInput>, Prisma.CustomerUncheckedUpdateWithoutTaxExemptionCertificateInput>
+}
+
 export type CustomerCreateNestedOneWithoutPropertiesInput = {
   create?: Prisma.XOR<Prisma.CustomerCreateWithoutPropertiesInput, Prisma.CustomerUncheckedCreateWithoutPropertiesInput>
   connectOrCreate?: Prisma.CustomerCreateOrConnectWithoutPropertiesInput
@@ -672,6 +894,52 @@ export type CustomerUpdateOneWithoutCalculationsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.CustomerUpdateToOneWithWhereWithoutCalculationsInput, Prisma.CustomerUpdateWithoutCalculationsInput>, Prisma.CustomerUncheckedUpdateWithoutCalculationsInput>
 }
 
+export type CustomerCreateNestedOneWithoutStockMovementsInput = {
+  create?: Prisma.XOR<Prisma.CustomerCreateWithoutStockMovementsInput, Prisma.CustomerUncheckedCreateWithoutStockMovementsInput>
+  connectOrCreate?: Prisma.CustomerCreateOrConnectWithoutStockMovementsInput
+  connect?: Prisma.CustomerWhereUniqueInput
+}
+
+export type CustomerUpdateOneWithoutStockMovementsNestedInput = {
+  create?: Prisma.XOR<Prisma.CustomerCreateWithoutStockMovementsInput, Prisma.CustomerUncheckedCreateWithoutStockMovementsInput>
+  connectOrCreate?: Prisma.CustomerCreateOrConnectWithoutStockMovementsInput
+  upsert?: Prisma.CustomerUpsertWithoutStockMovementsInput
+  disconnect?: Prisma.CustomerWhereInput | boolean
+  delete?: Prisma.CustomerWhereInput | boolean
+  connect?: Prisma.CustomerWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CustomerUpdateToOneWithWhereWithoutStockMovementsInput, Prisma.CustomerUpdateWithoutStockMovementsInput>, Prisma.CustomerUncheckedUpdateWithoutStockMovementsInput>
+}
+
+export type CustomerCreateNestedOneWithoutExpensesInput = {
+  create?: Prisma.XOR<Prisma.CustomerCreateWithoutExpensesInput, Prisma.CustomerUncheckedCreateWithoutExpensesInput>
+  connectOrCreate?: Prisma.CustomerCreateOrConnectWithoutExpensesInput
+  connect?: Prisma.CustomerWhereUniqueInput
+}
+
+export type CustomerUpdateOneWithoutExpensesNestedInput = {
+  create?: Prisma.XOR<Prisma.CustomerCreateWithoutExpensesInput, Prisma.CustomerUncheckedCreateWithoutExpensesInput>
+  connectOrCreate?: Prisma.CustomerCreateOrConnectWithoutExpensesInput
+  upsert?: Prisma.CustomerUpsertWithoutExpensesInput
+  disconnect?: Prisma.CustomerWhereInput | boolean
+  delete?: Prisma.CustomerWhereInput | boolean
+  connect?: Prisma.CustomerWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CustomerUpdateToOneWithWhereWithoutExpensesInput, Prisma.CustomerUpdateWithoutExpensesInput>, Prisma.CustomerUncheckedUpdateWithoutExpensesInput>
+}
+
+export type CustomerCreateNestedOneWithoutProjectsInput = {
+  create?: Prisma.XOR<Prisma.CustomerCreateWithoutProjectsInput, Prisma.CustomerUncheckedCreateWithoutProjectsInput>
+  connectOrCreate?: Prisma.CustomerCreateOrConnectWithoutProjectsInput
+  connect?: Prisma.CustomerWhereUniqueInput
+}
+
+export type CustomerUpdateOneRequiredWithoutProjectsNestedInput = {
+  create?: Prisma.XOR<Prisma.CustomerCreateWithoutProjectsInput, Prisma.CustomerUncheckedCreateWithoutProjectsInput>
+  connectOrCreate?: Prisma.CustomerCreateOrConnectWithoutProjectsInput
+  upsert?: Prisma.CustomerUpsertWithoutProjectsInput
+  connect?: Prisma.CustomerWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CustomerUpdateToOneWithWhereWithoutProjectsInput, Prisma.CustomerUpdateWithoutProjectsInput>, Prisma.CustomerUncheckedUpdateWithoutProjectsInput>
+}
+
 export type CustomerCreateWithoutTenantInput = {
   id?: string
   firstName: string
@@ -679,6 +947,14 @@ export type CustomerCreateWithoutTenantInput = {
   email: string
   phone?: string | null
   company?: string | null
+  customerType?: $Enums.CustomerType
+  contactPerson?: string | null
+  vatId?: string | null
+  taxNumber?: string | null
+  billingStreet?: string | null
+  billingZipCode?: string | null
+  billingCity?: string | null
+  taxNotes?: string | null
   notes?: string | null
   gdprConsent?: boolean
   gdprConsentAt?: Date | string | null
@@ -689,6 +965,10 @@ export type CustomerCreateWithoutTenantInput = {
   properties?: Prisma.PropertyCreateNestedManyWithoutCustomerInput
   orders?: Prisma.OrderCreateNestedManyWithoutCustomerInput
   calculations?: Prisma.CalculationCreateNestedManyWithoutCustomerInput
+  taxExemptionCertificate?: Prisma.TaxExemptionCertificateCreateNestedOneWithoutCustomerInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutCustomerInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutCustomerInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutCustomerInput
 }
 
 export type CustomerUncheckedCreateWithoutTenantInput = {
@@ -699,6 +979,14 @@ export type CustomerUncheckedCreateWithoutTenantInput = {
   email: string
   phone?: string | null
   company?: string | null
+  customerType?: $Enums.CustomerType
+  contactPerson?: string | null
+  vatId?: string | null
+  taxNumber?: string | null
+  billingStreet?: string | null
+  billingZipCode?: string | null
+  billingCity?: string | null
+  taxNotes?: string | null
   notes?: string | null
   gdprConsent?: boolean
   gdprConsentAt?: Date | string | null
@@ -708,6 +996,10 @@ export type CustomerUncheckedCreateWithoutTenantInput = {
   properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutCustomerInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutCustomerInput
   calculations?: Prisma.CalculationUncheckedCreateNestedManyWithoutCustomerInput
+  taxExemptionCertificate?: Prisma.TaxExemptionCertificateUncheckedCreateNestedOneWithoutCustomerInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutCustomerInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutCustomerInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCustomerInput
 }
 
 export type CustomerCreateOrConnectWithoutTenantInput = {
@@ -748,6 +1040,14 @@ export type CustomerScalarWhereInput = {
   email?: Prisma.StringFilter<"Customer"> | string
   phone?: Prisma.StringNullableFilter<"Customer"> | string | null
   company?: Prisma.StringNullableFilter<"Customer"> | string | null
+  customerType?: Prisma.EnumCustomerTypeFilter<"Customer"> | $Enums.CustomerType
+  contactPerson?: Prisma.StringNullableFilter<"Customer"> | string | null
+  vatId?: Prisma.StringNullableFilter<"Customer"> | string | null
+  taxNumber?: Prisma.StringNullableFilter<"Customer"> | string | null
+  billingStreet?: Prisma.StringNullableFilter<"Customer"> | string | null
+  billingZipCode?: Prisma.StringNullableFilter<"Customer"> | string | null
+  billingCity?: Prisma.StringNullableFilter<"Customer"> | string | null
+  taxNotes?: Prisma.StringNullableFilter<"Customer"> | string | null
   notes?: Prisma.StringNullableFilter<"Customer"> | string | null
   gdprConsent?: Prisma.BoolFilter<"Customer"> | boolean
   gdprConsentAt?: Prisma.DateTimeNullableFilter<"Customer"> | Date | string | null
@@ -763,6 +1063,14 @@ export type CustomerCreateWithoutUserInput = {
   email: string
   phone?: string | null
   company?: string | null
+  customerType?: $Enums.CustomerType
+  contactPerson?: string | null
+  vatId?: string | null
+  taxNumber?: string | null
+  billingStreet?: string | null
+  billingZipCode?: string | null
+  billingCity?: string | null
+  taxNotes?: string | null
   notes?: string | null
   gdprConsent?: boolean
   gdprConsentAt?: Date | string | null
@@ -773,6 +1081,10 @@ export type CustomerCreateWithoutUserInput = {
   properties?: Prisma.PropertyCreateNestedManyWithoutCustomerInput
   orders?: Prisma.OrderCreateNestedManyWithoutCustomerInput
   calculations?: Prisma.CalculationCreateNestedManyWithoutCustomerInput
+  taxExemptionCertificate?: Prisma.TaxExemptionCertificateCreateNestedOneWithoutCustomerInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutCustomerInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutCustomerInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutCustomerInput
 }
 
 export type CustomerUncheckedCreateWithoutUserInput = {
@@ -783,6 +1095,14 @@ export type CustomerUncheckedCreateWithoutUserInput = {
   email: string
   phone?: string | null
   company?: string | null
+  customerType?: $Enums.CustomerType
+  contactPerson?: string | null
+  vatId?: string | null
+  taxNumber?: string | null
+  billingStreet?: string | null
+  billingZipCode?: string | null
+  billingCity?: string | null
+  taxNotes?: string | null
   notes?: string | null
   gdprConsent?: boolean
   gdprConsentAt?: Date | string | null
@@ -792,6 +1112,10 @@ export type CustomerUncheckedCreateWithoutUserInput = {
   properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutCustomerInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutCustomerInput
   calculations?: Prisma.CalculationUncheckedCreateNestedManyWithoutCustomerInput
+  taxExemptionCertificate?: Prisma.TaxExemptionCertificateUncheckedCreateNestedOneWithoutCustomerInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutCustomerInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutCustomerInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCustomerInput
 }
 
 export type CustomerCreateOrConnectWithoutUserInput = {
@@ -817,6 +1141,14 @@ export type CustomerUpdateWithoutUserInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   company?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerType?: Prisma.EnumCustomerTypeFieldUpdateOperationsInput | $Enums.CustomerType
+  contactPerson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingStreet?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingZipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gdprConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gdprConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -827,6 +1159,10 @@ export type CustomerUpdateWithoutUserInput = {
   properties?: Prisma.PropertyUpdateManyWithoutCustomerNestedInput
   orders?: Prisma.OrderUpdateManyWithoutCustomerNestedInput
   calculations?: Prisma.CalculationUpdateManyWithoutCustomerNestedInput
+  taxExemptionCertificate?: Prisma.TaxExemptionCertificateUpdateOneWithoutCustomerNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutCustomerNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutCustomerNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutCustomerNestedInput
 }
 
 export type CustomerUncheckedUpdateWithoutUserInput = {
@@ -837,6 +1173,14 @@ export type CustomerUncheckedUpdateWithoutUserInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   company?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerType?: Prisma.EnumCustomerTypeFieldUpdateOperationsInput | $Enums.CustomerType
+  contactPerson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingStreet?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingZipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gdprConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gdprConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -846,6 +1190,150 @@ export type CustomerUncheckedUpdateWithoutUserInput = {
   properties?: Prisma.PropertyUncheckedUpdateManyWithoutCustomerNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutCustomerNestedInput
   calculations?: Prisma.CalculationUncheckedUpdateManyWithoutCustomerNestedInput
+  taxExemptionCertificate?: Prisma.TaxExemptionCertificateUncheckedUpdateOneWithoutCustomerNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutCustomerNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutCustomerNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutCustomerNestedInput
+}
+
+export type CustomerCreateWithoutTaxExemptionCertificateInput = {
+  id?: string
+  firstName: string
+  lastName: string
+  email: string
+  phone?: string | null
+  company?: string | null
+  customerType?: $Enums.CustomerType
+  contactPerson?: string | null
+  vatId?: string | null
+  taxNumber?: string | null
+  billingStreet?: string | null
+  billingZipCode?: string | null
+  billingCity?: string | null
+  taxNotes?: string | null
+  notes?: string | null
+  gdprConsent?: boolean
+  gdprConsentAt?: Date | string | null
+  bookingConfirmationEmailTemplate?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tenant: Prisma.TenantCreateNestedOneWithoutCustomersInput
+  user?: Prisma.UserCreateNestedOneWithoutCustomerInput
+  properties?: Prisma.PropertyCreateNestedManyWithoutCustomerInput
+  orders?: Prisma.OrderCreateNestedManyWithoutCustomerInput
+  calculations?: Prisma.CalculationCreateNestedManyWithoutCustomerInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutCustomerInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutCustomerInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutCustomerInput
+}
+
+export type CustomerUncheckedCreateWithoutTaxExemptionCertificateInput = {
+  id?: string
+  tenantId: string
+  userId?: string | null
+  firstName: string
+  lastName: string
+  email: string
+  phone?: string | null
+  company?: string | null
+  customerType?: $Enums.CustomerType
+  contactPerson?: string | null
+  vatId?: string | null
+  taxNumber?: string | null
+  billingStreet?: string | null
+  billingZipCode?: string | null
+  billingCity?: string | null
+  taxNotes?: string | null
+  notes?: string | null
+  gdprConsent?: boolean
+  gdprConsentAt?: Date | string | null
+  bookingConfirmationEmailTemplate?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutCustomerInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutCustomerInput
+  calculations?: Prisma.CalculationUncheckedCreateNestedManyWithoutCustomerInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutCustomerInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutCustomerInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCustomerInput
+}
+
+export type CustomerCreateOrConnectWithoutTaxExemptionCertificateInput = {
+  where: Prisma.CustomerWhereUniqueInput
+  create: Prisma.XOR<Prisma.CustomerCreateWithoutTaxExemptionCertificateInput, Prisma.CustomerUncheckedCreateWithoutTaxExemptionCertificateInput>
+}
+
+export type CustomerUpsertWithoutTaxExemptionCertificateInput = {
+  update: Prisma.XOR<Prisma.CustomerUpdateWithoutTaxExemptionCertificateInput, Prisma.CustomerUncheckedUpdateWithoutTaxExemptionCertificateInput>
+  create: Prisma.XOR<Prisma.CustomerCreateWithoutTaxExemptionCertificateInput, Prisma.CustomerUncheckedCreateWithoutTaxExemptionCertificateInput>
+  where?: Prisma.CustomerWhereInput
+}
+
+export type CustomerUpdateToOneWithWhereWithoutTaxExemptionCertificateInput = {
+  where?: Prisma.CustomerWhereInput
+  data: Prisma.XOR<Prisma.CustomerUpdateWithoutTaxExemptionCertificateInput, Prisma.CustomerUncheckedUpdateWithoutTaxExemptionCertificateInput>
+}
+
+export type CustomerUpdateWithoutTaxExemptionCertificateInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  company?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerType?: Prisma.EnumCustomerTypeFieldUpdateOperationsInput | $Enums.CustomerType
+  contactPerson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingStreet?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingZipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gdprConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  gdprConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationEmailTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutCustomersNestedInput
+  user?: Prisma.UserUpdateOneWithoutCustomerNestedInput
+  properties?: Prisma.PropertyUpdateManyWithoutCustomerNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutCustomerNestedInput
+  calculations?: Prisma.CalculationUpdateManyWithoutCustomerNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutCustomerNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutCustomerNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutCustomerNestedInput
+}
+
+export type CustomerUncheckedUpdateWithoutTaxExemptionCertificateInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  company?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerType?: Prisma.EnumCustomerTypeFieldUpdateOperationsInput | $Enums.CustomerType
+  contactPerson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingStreet?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingZipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gdprConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  gdprConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationEmailTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  properties?: Prisma.PropertyUncheckedUpdateManyWithoutCustomerNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutCustomerNestedInput
+  calculations?: Prisma.CalculationUncheckedUpdateManyWithoutCustomerNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutCustomerNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutCustomerNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutCustomerNestedInput
 }
 
 export type CustomerCreateWithoutPropertiesInput = {
@@ -855,6 +1343,14 @@ export type CustomerCreateWithoutPropertiesInput = {
   email: string
   phone?: string | null
   company?: string | null
+  customerType?: $Enums.CustomerType
+  contactPerson?: string | null
+  vatId?: string | null
+  taxNumber?: string | null
+  billingStreet?: string | null
+  billingZipCode?: string | null
+  billingCity?: string | null
+  taxNotes?: string | null
   notes?: string | null
   gdprConsent?: boolean
   gdprConsentAt?: Date | string | null
@@ -865,6 +1361,10 @@ export type CustomerCreateWithoutPropertiesInput = {
   user?: Prisma.UserCreateNestedOneWithoutCustomerInput
   orders?: Prisma.OrderCreateNestedManyWithoutCustomerInput
   calculations?: Prisma.CalculationCreateNestedManyWithoutCustomerInput
+  taxExemptionCertificate?: Prisma.TaxExemptionCertificateCreateNestedOneWithoutCustomerInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutCustomerInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutCustomerInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutCustomerInput
 }
 
 export type CustomerUncheckedCreateWithoutPropertiesInput = {
@@ -876,6 +1376,14 @@ export type CustomerUncheckedCreateWithoutPropertiesInput = {
   email: string
   phone?: string | null
   company?: string | null
+  customerType?: $Enums.CustomerType
+  contactPerson?: string | null
+  vatId?: string | null
+  taxNumber?: string | null
+  billingStreet?: string | null
+  billingZipCode?: string | null
+  billingCity?: string | null
+  taxNotes?: string | null
   notes?: string | null
   gdprConsent?: boolean
   gdprConsentAt?: Date | string | null
@@ -884,6 +1392,10 @@ export type CustomerUncheckedCreateWithoutPropertiesInput = {
   updatedAt?: Date | string
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutCustomerInput
   calculations?: Prisma.CalculationUncheckedCreateNestedManyWithoutCustomerInput
+  taxExemptionCertificate?: Prisma.TaxExemptionCertificateUncheckedCreateNestedOneWithoutCustomerInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutCustomerInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutCustomerInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCustomerInput
 }
 
 export type CustomerCreateOrConnectWithoutPropertiesInput = {
@@ -909,6 +1421,14 @@ export type CustomerUpdateWithoutPropertiesInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   company?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerType?: Prisma.EnumCustomerTypeFieldUpdateOperationsInput | $Enums.CustomerType
+  contactPerson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingStreet?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingZipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gdprConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gdprConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -919,6 +1439,10 @@ export type CustomerUpdateWithoutPropertiesInput = {
   user?: Prisma.UserUpdateOneWithoutCustomerNestedInput
   orders?: Prisma.OrderUpdateManyWithoutCustomerNestedInput
   calculations?: Prisma.CalculationUpdateManyWithoutCustomerNestedInput
+  taxExemptionCertificate?: Prisma.TaxExemptionCertificateUpdateOneWithoutCustomerNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutCustomerNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutCustomerNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutCustomerNestedInput
 }
 
 export type CustomerUncheckedUpdateWithoutPropertiesInput = {
@@ -930,6 +1454,14 @@ export type CustomerUncheckedUpdateWithoutPropertiesInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   company?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerType?: Prisma.EnumCustomerTypeFieldUpdateOperationsInput | $Enums.CustomerType
+  contactPerson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingStreet?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingZipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gdprConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gdprConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -938,6 +1470,10 @@ export type CustomerUncheckedUpdateWithoutPropertiesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   orders?: Prisma.OrderUncheckedUpdateManyWithoutCustomerNestedInput
   calculations?: Prisma.CalculationUncheckedUpdateManyWithoutCustomerNestedInput
+  taxExemptionCertificate?: Prisma.TaxExemptionCertificateUncheckedUpdateOneWithoutCustomerNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutCustomerNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutCustomerNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutCustomerNestedInput
 }
 
 export type CustomerCreateWithoutOrdersInput = {
@@ -947,6 +1483,14 @@ export type CustomerCreateWithoutOrdersInput = {
   email: string
   phone?: string | null
   company?: string | null
+  customerType?: $Enums.CustomerType
+  contactPerson?: string | null
+  vatId?: string | null
+  taxNumber?: string | null
+  billingStreet?: string | null
+  billingZipCode?: string | null
+  billingCity?: string | null
+  taxNotes?: string | null
   notes?: string | null
   gdprConsent?: boolean
   gdprConsentAt?: Date | string | null
@@ -957,6 +1501,10 @@ export type CustomerCreateWithoutOrdersInput = {
   user?: Prisma.UserCreateNestedOneWithoutCustomerInput
   properties?: Prisma.PropertyCreateNestedManyWithoutCustomerInput
   calculations?: Prisma.CalculationCreateNestedManyWithoutCustomerInput
+  taxExemptionCertificate?: Prisma.TaxExemptionCertificateCreateNestedOneWithoutCustomerInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutCustomerInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutCustomerInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutCustomerInput
 }
 
 export type CustomerUncheckedCreateWithoutOrdersInput = {
@@ -968,6 +1516,14 @@ export type CustomerUncheckedCreateWithoutOrdersInput = {
   email: string
   phone?: string | null
   company?: string | null
+  customerType?: $Enums.CustomerType
+  contactPerson?: string | null
+  vatId?: string | null
+  taxNumber?: string | null
+  billingStreet?: string | null
+  billingZipCode?: string | null
+  billingCity?: string | null
+  taxNotes?: string | null
   notes?: string | null
   gdprConsent?: boolean
   gdprConsentAt?: Date | string | null
@@ -976,6 +1532,10 @@ export type CustomerUncheckedCreateWithoutOrdersInput = {
   updatedAt?: Date | string
   properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutCustomerInput
   calculations?: Prisma.CalculationUncheckedCreateNestedManyWithoutCustomerInput
+  taxExemptionCertificate?: Prisma.TaxExemptionCertificateUncheckedCreateNestedOneWithoutCustomerInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutCustomerInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutCustomerInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCustomerInput
 }
 
 export type CustomerCreateOrConnectWithoutOrdersInput = {
@@ -1001,6 +1561,14 @@ export type CustomerUpdateWithoutOrdersInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   company?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerType?: Prisma.EnumCustomerTypeFieldUpdateOperationsInput | $Enums.CustomerType
+  contactPerson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingStreet?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingZipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gdprConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gdprConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1011,6 +1579,10 @@ export type CustomerUpdateWithoutOrdersInput = {
   user?: Prisma.UserUpdateOneWithoutCustomerNestedInput
   properties?: Prisma.PropertyUpdateManyWithoutCustomerNestedInput
   calculations?: Prisma.CalculationUpdateManyWithoutCustomerNestedInput
+  taxExemptionCertificate?: Prisma.TaxExemptionCertificateUpdateOneWithoutCustomerNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutCustomerNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutCustomerNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutCustomerNestedInput
 }
 
 export type CustomerUncheckedUpdateWithoutOrdersInput = {
@@ -1022,6 +1594,14 @@ export type CustomerUncheckedUpdateWithoutOrdersInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   company?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerType?: Prisma.EnumCustomerTypeFieldUpdateOperationsInput | $Enums.CustomerType
+  contactPerson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingStreet?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingZipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gdprConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gdprConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1030,6 +1610,10 @@ export type CustomerUncheckedUpdateWithoutOrdersInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   properties?: Prisma.PropertyUncheckedUpdateManyWithoutCustomerNestedInput
   calculations?: Prisma.CalculationUncheckedUpdateManyWithoutCustomerNestedInput
+  taxExemptionCertificate?: Prisma.TaxExemptionCertificateUncheckedUpdateOneWithoutCustomerNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutCustomerNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutCustomerNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutCustomerNestedInput
 }
 
 export type CustomerCreateWithoutCalculationsInput = {
@@ -1039,6 +1623,14 @@ export type CustomerCreateWithoutCalculationsInput = {
   email: string
   phone?: string | null
   company?: string | null
+  customerType?: $Enums.CustomerType
+  contactPerson?: string | null
+  vatId?: string | null
+  taxNumber?: string | null
+  billingStreet?: string | null
+  billingZipCode?: string | null
+  billingCity?: string | null
+  taxNotes?: string | null
   notes?: string | null
   gdprConsent?: boolean
   gdprConsentAt?: Date | string | null
@@ -1049,6 +1641,10 @@ export type CustomerCreateWithoutCalculationsInput = {
   user?: Prisma.UserCreateNestedOneWithoutCustomerInput
   properties?: Prisma.PropertyCreateNestedManyWithoutCustomerInput
   orders?: Prisma.OrderCreateNestedManyWithoutCustomerInput
+  taxExemptionCertificate?: Prisma.TaxExemptionCertificateCreateNestedOneWithoutCustomerInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutCustomerInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutCustomerInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutCustomerInput
 }
 
 export type CustomerUncheckedCreateWithoutCalculationsInput = {
@@ -1060,6 +1656,14 @@ export type CustomerUncheckedCreateWithoutCalculationsInput = {
   email: string
   phone?: string | null
   company?: string | null
+  customerType?: $Enums.CustomerType
+  contactPerson?: string | null
+  vatId?: string | null
+  taxNumber?: string | null
+  billingStreet?: string | null
+  billingZipCode?: string | null
+  billingCity?: string | null
+  taxNotes?: string | null
   notes?: string | null
   gdprConsent?: boolean
   gdprConsentAt?: Date | string | null
@@ -1068,6 +1672,10 @@ export type CustomerUncheckedCreateWithoutCalculationsInput = {
   updatedAt?: Date | string
   properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutCustomerInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutCustomerInput
+  taxExemptionCertificate?: Prisma.TaxExemptionCertificateUncheckedCreateNestedOneWithoutCustomerInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutCustomerInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutCustomerInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCustomerInput
 }
 
 export type CustomerCreateOrConnectWithoutCalculationsInput = {
@@ -1093,6 +1701,14 @@ export type CustomerUpdateWithoutCalculationsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   company?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerType?: Prisma.EnumCustomerTypeFieldUpdateOperationsInput | $Enums.CustomerType
+  contactPerson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingStreet?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingZipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gdprConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gdprConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1103,6 +1719,10 @@ export type CustomerUpdateWithoutCalculationsInput = {
   user?: Prisma.UserUpdateOneWithoutCustomerNestedInput
   properties?: Prisma.PropertyUpdateManyWithoutCustomerNestedInput
   orders?: Prisma.OrderUpdateManyWithoutCustomerNestedInput
+  taxExemptionCertificate?: Prisma.TaxExemptionCertificateUpdateOneWithoutCustomerNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutCustomerNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutCustomerNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutCustomerNestedInput
 }
 
 export type CustomerUncheckedUpdateWithoutCalculationsInput = {
@@ -1114,6 +1734,14 @@ export type CustomerUncheckedUpdateWithoutCalculationsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   company?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerType?: Prisma.EnumCustomerTypeFieldUpdateOperationsInput | $Enums.CustomerType
+  contactPerson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingStreet?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingZipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gdprConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gdprConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1122,6 +1750,430 @@ export type CustomerUncheckedUpdateWithoutCalculationsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   properties?: Prisma.PropertyUncheckedUpdateManyWithoutCustomerNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutCustomerNestedInput
+  taxExemptionCertificate?: Prisma.TaxExemptionCertificateUncheckedUpdateOneWithoutCustomerNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutCustomerNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutCustomerNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutCustomerNestedInput
+}
+
+export type CustomerCreateWithoutStockMovementsInput = {
+  id?: string
+  firstName: string
+  lastName: string
+  email: string
+  phone?: string | null
+  company?: string | null
+  customerType?: $Enums.CustomerType
+  contactPerson?: string | null
+  vatId?: string | null
+  taxNumber?: string | null
+  billingStreet?: string | null
+  billingZipCode?: string | null
+  billingCity?: string | null
+  taxNotes?: string | null
+  notes?: string | null
+  gdprConsent?: boolean
+  gdprConsentAt?: Date | string | null
+  bookingConfirmationEmailTemplate?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tenant: Prisma.TenantCreateNestedOneWithoutCustomersInput
+  user?: Prisma.UserCreateNestedOneWithoutCustomerInput
+  properties?: Prisma.PropertyCreateNestedManyWithoutCustomerInput
+  orders?: Prisma.OrderCreateNestedManyWithoutCustomerInput
+  calculations?: Prisma.CalculationCreateNestedManyWithoutCustomerInput
+  taxExemptionCertificate?: Prisma.TaxExemptionCertificateCreateNestedOneWithoutCustomerInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutCustomerInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutCustomerInput
+}
+
+export type CustomerUncheckedCreateWithoutStockMovementsInput = {
+  id?: string
+  tenantId: string
+  userId?: string | null
+  firstName: string
+  lastName: string
+  email: string
+  phone?: string | null
+  company?: string | null
+  customerType?: $Enums.CustomerType
+  contactPerson?: string | null
+  vatId?: string | null
+  taxNumber?: string | null
+  billingStreet?: string | null
+  billingZipCode?: string | null
+  billingCity?: string | null
+  taxNotes?: string | null
+  notes?: string | null
+  gdprConsent?: boolean
+  gdprConsentAt?: Date | string | null
+  bookingConfirmationEmailTemplate?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutCustomerInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutCustomerInput
+  calculations?: Prisma.CalculationUncheckedCreateNestedManyWithoutCustomerInput
+  taxExemptionCertificate?: Prisma.TaxExemptionCertificateUncheckedCreateNestedOneWithoutCustomerInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutCustomerInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCustomerInput
+}
+
+export type CustomerCreateOrConnectWithoutStockMovementsInput = {
+  where: Prisma.CustomerWhereUniqueInput
+  create: Prisma.XOR<Prisma.CustomerCreateWithoutStockMovementsInput, Prisma.CustomerUncheckedCreateWithoutStockMovementsInput>
+}
+
+export type CustomerUpsertWithoutStockMovementsInput = {
+  update: Prisma.XOR<Prisma.CustomerUpdateWithoutStockMovementsInput, Prisma.CustomerUncheckedUpdateWithoutStockMovementsInput>
+  create: Prisma.XOR<Prisma.CustomerCreateWithoutStockMovementsInput, Prisma.CustomerUncheckedCreateWithoutStockMovementsInput>
+  where?: Prisma.CustomerWhereInput
+}
+
+export type CustomerUpdateToOneWithWhereWithoutStockMovementsInput = {
+  where?: Prisma.CustomerWhereInput
+  data: Prisma.XOR<Prisma.CustomerUpdateWithoutStockMovementsInput, Prisma.CustomerUncheckedUpdateWithoutStockMovementsInput>
+}
+
+export type CustomerUpdateWithoutStockMovementsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  company?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerType?: Prisma.EnumCustomerTypeFieldUpdateOperationsInput | $Enums.CustomerType
+  contactPerson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingStreet?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingZipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gdprConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  gdprConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationEmailTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutCustomersNestedInput
+  user?: Prisma.UserUpdateOneWithoutCustomerNestedInput
+  properties?: Prisma.PropertyUpdateManyWithoutCustomerNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutCustomerNestedInput
+  calculations?: Prisma.CalculationUpdateManyWithoutCustomerNestedInput
+  taxExemptionCertificate?: Prisma.TaxExemptionCertificateUpdateOneWithoutCustomerNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutCustomerNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutCustomerNestedInput
+}
+
+export type CustomerUncheckedUpdateWithoutStockMovementsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  company?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerType?: Prisma.EnumCustomerTypeFieldUpdateOperationsInput | $Enums.CustomerType
+  contactPerson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingStreet?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingZipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gdprConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  gdprConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationEmailTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  properties?: Prisma.PropertyUncheckedUpdateManyWithoutCustomerNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutCustomerNestedInput
+  calculations?: Prisma.CalculationUncheckedUpdateManyWithoutCustomerNestedInput
+  taxExemptionCertificate?: Prisma.TaxExemptionCertificateUncheckedUpdateOneWithoutCustomerNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutCustomerNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutCustomerNestedInput
+}
+
+export type CustomerCreateWithoutExpensesInput = {
+  id?: string
+  firstName: string
+  lastName: string
+  email: string
+  phone?: string | null
+  company?: string | null
+  customerType?: $Enums.CustomerType
+  contactPerson?: string | null
+  vatId?: string | null
+  taxNumber?: string | null
+  billingStreet?: string | null
+  billingZipCode?: string | null
+  billingCity?: string | null
+  taxNotes?: string | null
+  notes?: string | null
+  gdprConsent?: boolean
+  gdprConsentAt?: Date | string | null
+  bookingConfirmationEmailTemplate?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tenant: Prisma.TenantCreateNestedOneWithoutCustomersInput
+  user?: Prisma.UserCreateNestedOneWithoutCustomerInput
+  properties?: Prisma.PropertyCreateNestedManyWithoutCustomerInput
+  orders?: Prisma.OrderCreateNestedManyWithoutCustomerInput
+  calculations?: Prisma.CalculationCreateNestedManyWithoutCustomerInput
+  taxExemptionCertificate?: Prisma.TaxExemptionCertificateCreateNestedOneWithoutCustomerInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutCustomerInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutCustomerInput
+}
+
+export type CustomerUncheckedCreateWithoutExpensesInput = {
+  id?: string
+  tenantId: string
+  userId?: string | null
+  firstName: string
+  lastName: string
+  email: string
+  phone?: string | null
+  company?: string | null
+  customerType?: $Enums.CustomerType
+  contactPerson?: string | null
+  vatId?: string | null
+  taxNumber?: string | null
+  billingStreet?: string | null
+  billingZipCode?: string | null
+  billingCity?: string | null
+  taxNotes?: string | null
+  notes?: string | null
+  gdprConsent?: boolean
+  gdprConsentAt?: Date | string | null
+  bookingConfirmationEmailTemplate?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutCustomerInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutCustomerInput
+  calculations?: Prisma.CalculationUncheckedCreateNestedManyWithoutCustomerInput
+  taxExemptionCertificate?: Prisma.TaxExemptionCertificateUncheckedCreateNestedOneWithoutCustomerInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutCustomerInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCustomerInput
+}
+
+export type CustomerCreateOrConnectWithoutExpensesInput = {
+  where: Prisma.CustomerWhereUniqueInput
+  create: Prisma.XOR<Prisma.CustomerCreateWithoutExpensesInput, Prisma.CustomerUncheckedCreateWithoutExpensesInput>
+}
+
+export type CustomerUpsertWithoutExpensesInput = {
+  update: Prisma.XOR<Prisma.CustomerUpdateWithoutExpensesInput, Prisma.CustomerUncheckedUpdateWithoutExpensesInput>
+  create: Prisma.XOR<Prisma.CustomerCreateWithoutExpensesInput, Prisma.CustomerUncheckedCreateWithoutExpensesInput>
+  where?: Prisma.CustomerWhereInput
+}
+
+export type CustomerUpdateToOneWithWhereWithoutExpensesInput = {
+  where?: Prisma.CustomerWhereInput
+  data: Prisma.XOR<Prisma.CustomerUpdateWithoutExpensesInput, Prisma.CustomerUncheckedUpdateWithoutExpensesInput>
+}
+
+export type CustomerUpdateWithoutExpensesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  company?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerType?: Prisma.EnumCustomerTypeFieldUpdateOperationsInput | $Enums.CustomerType
+  contactPerson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingStreet?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingZipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gdprConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  gdprConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationEmailTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutCustomersNestedInput
+  user?: Prisma.UserUpdateOneWithoutCustomerNestedInput
+  properties?: Prisma.PropertyUpdateManyWithoutCustomerNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutCustomerNestedInput
+  calculations?: Prisma.CalculationUpdateManyWithoutCustomerNestedInput
+  taxExemptionCertificate?: Prisma.TaxExemptionCertificateUpdateOneWithoutCustomerNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutCustomerNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutCustomerNestedInput
+}
+
+export type CustomerUncheckedUpdateWithoutExpensesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  company?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerType?: Prisma.EnumCustomerTypeFieldUpdateOperationsInput | $Enums.CustomerType
+  contactPerson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingStreet?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingZipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gdprConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  gdprConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationEmailTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  properties?: Prisma.PropertyUncheckedUpdateManyWithoutCustomerNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutCustomerNestedInput
+  calculations?: Prisma.CalculationUncheckedUpdateManyWithoutCustomerNestedInput
+  taxExemptionCertificate?: Prisma.TaxExemptionCertificateUncheckedUpdateOneWithoutCustomerNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutCustomerNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutCustomerNestedInput
+}
+
+export type CustomerCreateWithoutProjectsInput = {
+  id?: string
+  firstName: string
+  lastName: string
+  email: string
+  phone?: string | null
+  company?: string | null
+  customerType?: $Enums.CustomerType
+  contactPerson?: string | null
+  vatId?: string | null
+  taxNumber?: string | null
+  billingStreet?: string | null
+  billingZipCode?: string | null
+  billingCity?: string | null
+  taxNotes?: string | null
+  notes?: string | null
+  gdprConsent?: boolean
+  gdprConsentAt?: Date | string | null
+  bookingConfirmationEmailTemplate?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tenant: Prisma.TenantCreateNestedOneWithoutCustomersInput
+  user?: Prisma.UserCreateNestedOneWithoutCustomerInput
+  properties?: Prisma.PropertyCreateNestedManyWithoutCustomerInput
+  orders?: Prisma.OrderCreateNestedManyWithoutCustomerInput
+  calculations?: Prisma.CalculationCreateNestedManyWithoutCustomerInput
+  taxExemptionCertificate?: Prisma.TaxExemptionCertificateCreateNestedOneWithoutCustomerInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutCustomerInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutCustomerInput
+}
+
+export type CustomerUncheckedCreateWithoutProjectsInput = {
+  id?: string
+  tenantId: string
+  userId?: string | null
+  firstName: string
+  lastName: string
+  email: string
+  phone?: string | null
+  company?: string | null
+  customerType?: $Enums.CustomerType
+  contactPerson?: string | null
+  vatId?: string | null
+  taxNumber?: string | null
+  billingStreet?: string | null
+  billingZipCode?: string | null
+  billingCity?: string | null
+  taxNotes?: string | null
+  notes?: string | null
+  gdprConsent?: boolean
+  gdprConsentAt?: Date | string | null
+  bookingConfirmationEmailTemplate?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutCustomerInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutCustomerInput
+  calculations?: Prisma.CalculationUncheckedCreateNestedManyWithoutCustomerInput
+  taxExemptionCertificate?: Prisma.TaxExemptionCertificateUncheckedCreateNestedOneWithoutCustomerInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutCustomerInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutCustomerInput
+}
+
+export type CustomerCreateOrConnectWithoutProjectsInput = {
+  where: Prisma.CustomerWhereUniqueInput
+  create: Prisma.XOR<Prisma.CustomerCreateWithoutProjectsInput, Prisma.CustomerUncheckedCreateWithoutProjectsInput>
+}
+
+export type CustomerUpsertWithoutProjectsInput = {
+  update: Prisma.XOR<Prisma.CustomerUpdateWithoutProjectsInput, Prisma.CustomerUncheckedUpdateWithoutProjectsInput>
+  create: Prisma.XOR<Prisma.CustomerCreateWithoutProjectsInput, Prisma.CustomerUncheckedCreateWithoutProjectsInput>
+  where?: Prisma.CustomerWhereInput
+}
+
+export type CustomerUpdateToOneWithWhereWithoutProjectsInput = {
+  where?: Prisma.CustomerWhereInput
+  data: Prisma.XOR<Prisma.CustomerUpdateWithoutProjectsInput, Prisma.CustomerUncheckedUpdateWithoutProjectsInput>
+}
+
+export type CustomerUpdateWithoutProjectsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  company?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerType?: Prisma.EnumCustomerTypeFieldUpdateOperationsInput | $Enums.CustomerType
+  contactPerson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingStreet?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingZipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gdprConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  gdprConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationEmailTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutCustomersNestedInput
+  user?: Prisma.UserUpdateOneWithoutCustomerNestedInput
+  properties?: Prisma.PropertyUpdateManyWithoutCustomerNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutCustomerNestedInput
+  calculations?: Prisma.CalculationUpdateManyWithoutCustomerNestedInput
+  taxExemptionCertificate?: Prisma.TaxExemptionCertificateUpdateOneWithoutCustomerNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutCustomerNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutCustomerNestedInput
+}
+
+export type CustomerUncheckedUpdateWithoutProjectsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  company?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerType?: Prisma.EnumCustomerTypeFieldUpdateOperationsInput | $Enums.CustomerType
+  contactPerson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingStreet?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingZipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gdprConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  gdprConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationEmailTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  properties?: Prisma.PropertyUncheckedUpdateManyWithoutCustomerNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutCustomerNestedInput
+  calculations?: Prisma.CalculationUncheckedUpdateManyWithoutCustomerNestedInput
+  taxExemptionCertificate?: Prisma.TaxExemptionCertificateUncheckedUpdateOneWithoutCustomerNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutCustomerNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutCustomerNestedInput
 }
 
 export type CustomerCreateManyTenantInput = {
@@ -1132,6 +2184,14 @@ export type CustomerCreateManyTenantInput = {
   email: string
   phone?: string | null
   company?: string | null
+  customerType?: $Enums.CustomerType
+  contactPerson?: string | null
+  vatId?: string | null
+  taxNumber?: string | null
+  billingStreet?: string | null
+  billingZipCode?: string | null
+  billingCity?: string | null
+  taxNotes?: string | null
   notes?: string | null
   gdprConsent?: boolean
   gdprConsentAt?: Date | string | null
@@ -1147,6 +2207,14 @@ export type CustomerUpdateWithoutTenantInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   company?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerType?: Prisma.EnumCustomerTypeFieldUpdateOperationsInput | $Enums.CustomerType
+  contactPerson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingStreet?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingZipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gdprConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gdprConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1157,6 +2225,10 @@ export type CustomerUpdateWithoutTenantInput = {
   properties?: Prisma.PropertyUpdateManyWithoutCustomerNestedInput
   orders?: Prisma.OrderUpdateManyWithoutCustomerNestedInput
   calculations?: Prisma.CalculationUpdateManyWithoutCustomerNestedInput
+  taxExemptionCertificate?: Prisma.TaxExemptionCertificateUpdateOneWithoutCustomerNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutCustomerNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutCustomerNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutCustomerNestedInput
 }
 
 export type CustomerUncheckedUpdateWithoutTenantInput = {
@@ -1167,6 +2239,14 @@ export type CustomerUncheckedUpdateWithoutTenantInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   company?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerType?: Prisma.EnumCustomerTypeFieldUpdateOperationsInput | $Enums.CustomerType
+  contactPerson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingStreet?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingZipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gdprConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gdprConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1176,6 +2256,10 @@ export type CustomerUncheckedUpdateWithoutTenantInput = {
   properties?: Prisma.PropertyUncheckedUpdateManyWithoutCustomerNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutCustomerNestedInput
   calculations?: Prisma.CalculationUncheckedUpdateManyWithoutCustomerNestedInput
+  taxExemptionCertificate?: Prisma.TaxExemptionCertificateUncheckedUpdateOneWithoutCustomerNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutCustomerNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutCustomerNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutCustomerNestedInput
 }
 
 export type CustomerUncheckedUpdateManyWithoutTenantInput = {
@@ -1186,6 +2270,14 @@ export type CustomerUncheckedUpdateManyWithoutTenantInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   company?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerType?: Prisma.EnumCustomerTypeFieldUpdateOperationsInput | $Enums.CustomerType
+  contactPerson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingStreet?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingZipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gdprConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gdprConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1203,12 +2295,18 @@ export type CustomerCountOutputType = {
   properties: number
   orders: number
   calculations: number
+  expenses: number
+  stockMovements: number
+  projects: number
 }
 
 export type CustomerCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   properties?: boolean | CustomerCountOutputTypeCountPropertiesArgs
   orders?: boolean | CustomerCountOutputTypeCountOrdersArgs
   calculations?: boolean | CustomerCountOutputTypeCountCalculationsArgs
+  expenses?: boolean | CustomerCountOutputTypeCountExpensesArgs
+  stockMovements?: boolean | CustomerCountOutputTypeCountStockMovementsArgs
+  projects?: boolean | CustomerCountOutputTypeCountProjectsArgs
 }
 
 /**
@@ -1242,6 +2340,27 @@ export type CustomerCountOutputTypeCountCalculationsArgs<ExtArgs extends runtime
   where?: Prisma.CalculationWhereInput
 }
 
+/**
+ * CustomerCountOutputType without action
+ */
+export type CustomerCountOutputTypeCountExpensesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ExpenseWhereInput
+}
+
+/**
+ * CustomerCountOutputType without action
+ */
+export type CustomerCountOutputTypeCountStockMovementsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.StockMovementWhereInput
+}
+
+/**
+ * CustomerCountOutputType without action
+ */
+export type CustomerCountOutputTypeCountProjectsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ProjectWhereInput
+}
+
 
 export type CustomerSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1252,6 +2371,14 @@ export type CustomerSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   email?: boolean
   phone?: boolean
   company?: boolean
+  customerType?: boolean
+  contactPerson?: boolean
+  vatId?: boolean
+  taxNumber?: boolean
+  billingStreet?: boolean
+  billingZipCode?: boolean
+  billingCity?: boolean
+  taxNotes?: boolean
   notes?: boolean
   gdprConsent?: boolean
   gdprConsentAt?: boolean
@@ -1263,6 +2390,10 @@ export type CustomerSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   properties?: boolean | Prisma.Customer$propertiesArgs<ExtArgs>
   orders?: boolean | Prisma.Customer$ordersArgs<ExtArgs>
   calculations?: boolean | Prisma.Customer$calculationsArgs<ExtArgs>
+  taxExemptionCertificate?: boolean | Prisma.Customer$taxExemptionCertificateArgs<ExtArgs>
+  expenses?: boolean | Prisma.Customer$expensesArgs<ExtArgs>
+  stockMovements?: boolean | Prisma.Customer$stockMovementsArgs<ExtArgs>
+  projects?: boolean | Prisma.Customer$projectsArgs<ExtArgs>
   _count?: boolean | Prisma.CustomerCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["customer"]>
 
@@ -1275,6 +2406,14 @@ export type CustomerSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   email?: boolean
   phone?: boolean
   company?: boolean
+  customerType?: boolean
+  contactPerson?: boolean
+  vatId?: boolean
+  taxNumber?: boolean
+  billingStreet?: boolean
+  billingZipCode?: boolean
+  billingCity?: boolean
+  taxNotes?: boolean
   notes?: boolean
   gdprConsent?: boolean
   gdprConsentAt?: boolean
@@ -1294,6 +2433,14 @@ export type CustomerSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   email?: boolean
   phone?: boolean
   company?: boolean
+  customerType?: boolean
+  contactPerson?: boolean
+  vatId?: boolean
+  taxNumber?: boolean
+  billingStreet?: boolean
+  billingZipCode?: boolean
+  billingCity?: boolean
+  taxNotes?: boolean
   notes?: boolean
   gdprConsent?: boolean
   gdprConsentAt?: boolean
@@ -1313,6 +2460,14 @@ export type CustomerSelectScalar = {
   email?: boolean
   phone?: boolean
   company?: boolean
+  customerType?: boolean
+  contactPerson?: boolean
+  vatId?: boolean
+  taxNumber?: boolean
+  billingStreet?: boolean
+  billingZipCode?: boolean
+  billingCity?: boolean
+  taxNotes?: boolean
   notes?: boolean
   gdprConsent?: boolean
   gdprConsentAt?: boolean
@@ -1321,13 +2476,17 @@ export type CustomerSelectScalar = {
   updatedAt?: boolean
 }
 
-export type CustomerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "userId" | "firstName" | "lastName" | "email" | "phone" | "company" | "notes" | "gdprConsent" | "gdprConsentAt" | "bookingConfirmationEmailTemplate" | "createdAt" | "updatedAt", ExtArgs["result"]["customer"]>
+export type CustomerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "userId" | "firstName" | "lastName" | "email" | "phone" | "company" | "customerType" | "contactPerson" | "vatId" | "taxNumber" | "billingStreet" | "billingZipCode" | "billingCity" | "taxNotes" | "notes" | "gdprConsent" | "gdprConsentAt" | "bookingConfirmationEmailTemplate" | "createdAt" | "updatedAt", ExtArgs["result"]["customer"]>
 export type CustomerInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   user?: boolean | Prisma.Customer$userArgs<ExtArgs>
   properties?: boolean | Prisma.Customer$propertiesArgs<ExtArgs>
   orders?: boolean | Prisma.Customer$ordersArgs<ExtArgs>
   calculations?: boolean | Prisma.Customer$calculationsArgs<ExtArgs>
+  taxExemptionCertificate?: boolean | Prisma.Customer$taxExemptionCertificateArgs<ExtArgs>
+  expenses?: boolean | Prisma.Customer$expensesArgs<ExtArgs>
+  stockMovements?: boolean | Prisma.Customer$stockMovementsArgs<ExtArgs>
+  projects?: boolean | Prisma.Customer$projectsArgs<ExtArgs>
   _count?: boolean | Prisma.CustomerCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type CustomerIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1347,6 +2506,10 @@ export type $CustomerPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     properties: Prisma.$PropertyPayload<ExtArgs>[]
     orders: Prisma.$OrderPayload<ExtArgs>[]
     calculations: Prisma.$CalculationPayload<ExtArgs>[]
+    taxExemptionCertificate: Prisma.$TaxExemptionCertificatePayload<ExtArgs> | null
+    expenses: Prisma.$ExpensePayload<ExtArgs>[]
+    stockMovements: Prisma.$StockMovementPayload<ExtArgs>[]
+    projects: Prisma.$ProjectPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1357,6 +2520,14 @@ export type $CustomerPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     email: string
     phone: string | null
     company: string | null
+    customerType: $Enums.CustomerType
+    contactPerson: string | null
+    vatId: string | null
+    taxNumber: string | null
+    billingStreet: string | null
+    billingZipCode: string | null
+    billingCity: string | null
+    taxNotes: string | null
     notes: string | null
     gdprConsent: boolean
     gdprConsentAt: Date | null
@@ -1765,6 +2936,10 @@ export interface Prisma__CustomerClient<T, Null = never, ExtArgs extends runtime
   properties<T extends Prisma.Customer$propertiesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Customer$propertiesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PropertyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   orders<T extends Prisma.Customer$ordersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Customer$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   calculations<T extends Prisma.Customer$calculationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Customer$calculationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CalculationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  taxExemptionCertificate<T extends Prisma.Customer$taxExemptionCertificateArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Customer$taxExemptionCertificateArgs<ExtArgs>>): Prisma.Prisma__TaxExemptionCertificateClient<runtime.Types.Result.GetResult<Prisma.$TaxExemptionCertificatePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  expenses<T extends Prisma.Customer$expensesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Customer$expensesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExpensePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  stockMovements<T extends Prisma.Customer$stockMovementsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Customer$stockMovementsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StockMovementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  projects<T extends Prisma.Customer$projectsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Customer$projectsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1802,6 +2977,14 @@ export interface CustomerFieldRefs {
   readonly email: Prisma.FieldRef<"Customer", 'String'>
   readonly phone: Prisma.FieldRef<"Customer", 'String'>
   readonly company: Prisma.FieldRef<"Customer", 'String'>
+  readonly customerType: Prisma.FieldRef<"Customer", 'CustomerType'>
+  readonly contactPerson: Prisma.FieldRef<"Customer", 'String'>
+  readonly vatId: Prisma.FieldRef<"Customer", 'String'>
+  readonly taxNumber: Prisma.FieldRef<"Customer", 'String'>
+  readonly billingStreet: Prisma.FieldRef<"Customer", 'String'>
+  readonly billingZipCode: Prisma.FieldRef<"Customer", 'String'>
+  readonly billingCity: Prisma.FieldRef<"Customer", 'String'>
+  readonly taxNotes: Prisma.FieldRef<"Customer", 'String'>
   readonly notes: Prisma.FieldRef<"Customer", 'String'>
   readonly gdprConsent: Prisma.FieldRef<"Customer", 'Boolean'>
   readonly gdprConsentAt: Prisma.FieldRef<"Customer", 'DateTime'>
@@ -2297,6 +3480,97 @@ export type Customer$calculationsArgs<ExtArgs extends runtime.Types.Extensions.I
   take?: number
   skip?: number
   distinct?: Prisma.CalculationScalarFieldEnum | Prisma.CalculationScalarFieldEnum[]
+}
+
+/**
+ * Customer.taxExemptionCertificate
+ */
+export type Customer$taxExemptionCertificateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TaxExemptionCertificate
+   */
+  select?: Prisma.TaxExemptionCertificateSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TaxExemptionCertificate
+   */
+  omit?: Prisma.TaxExemptionCertificateOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TaxExemptionCertificateInclude<ExtArgs> | null
+  where?: Prisma.TaxExemptionCertificateWhereInput
+}
+
+/**
+ * Customer.expenses
+ */
+export type Customer$expensesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Expense
+   */
+  select?: Prisma.ExpenseSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Expense
+   */
+  omit?: Prisma.ExpenseOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ExpenseInclude<ExtArgs> | null
+  where?: Prisma.ExpenseWhereInput
+  orderBy?: Prisma.ExpenseOrderByWithRelationInput | Prisma.ExpenseOrderByWithRelationInput[]
+  cursor?: Prisma.ExpenseWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ExpenseScalarFieldEnum | Prisma.ExpenseScalarFieldEnum[]
+}
+
+/**
+ * Customer.stockMovements
+ */
+export type Customer$stockMovementsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StockMovement
+   */
+  select?: Prisma.StockMovementSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the StockMovement
+   */
+  omit?: Prisma.StockMovementOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StockMovementInclude<ExtArgs> | null
+  where?: Prisma.StockMovementWhereInput
+  orderBy?: Prisma.StockMovementOrderByWithRelationInput | Prisma.StockMovementOrderByWithRelationInput[]
+  cursor?: Prisma.StockMovementWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.StockMovementScalarFieldEnum | Prisma.StockMovementScalarFieldEnum[]
+}
+
+/**
+ * Customer.projects
+ */
+export type Customer$projectsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Project
+   */
+  select?: Prisma.ProjectSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Project
+   */
+  omit?: Prisma.ProjectOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ProjectInclude<ExtArgs> | null
+  where?: Prisma.ProjectWhereInput
+  orderBy?: Prisma.ProjectOrderByWithRelationInput | Prisma.ProjectOrderByWithRelationInput[]
+  cursor?: Prisma.ProjectWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ProjectScalarFieldEnum | Prisma.ProjectScalarFieldEnum[]
 }
 
 /**

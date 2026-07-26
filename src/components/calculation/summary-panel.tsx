@@ -2,6 +2,7 @@
 
 import { formatEuro } from "@/lib/utils";
 import { cn } from "@/lib/utils";
+import { TAX_TREATMENT_SHORT, type TaxTreatment } from "@/lib/tax/treatment";
 
 interface SummaryPanelProps {
   breakdown?: {
@@ -12,6 +13,15 @@ interface SummaryPanelProps {
     marginPercent?: number;
     directCosts?: number;
     profitabilityStatus?: string;
+    vatAmount?: number;
+    taxTreatment?: string;
+    isReverseCharge?: boolean;
+    useFixedPrice?: boolean;
+    fixedPriceLabel?: string;
+    fixedPriceNet?: number;
+    fixedDifference?: number;
+    fixedEstimatedProfit?: number;
+    fixedMarginPercent?: number | null;
   } | null;
 }
 
@@ -35,14 +45,26 @@ export function SummaryPanel({ breakdown }: SummaryPanelProps) {
         )}
       </div>
       <div className="space-y-2 text-sm">
+        {breakdown?.taxTreatment && (
+          <div className="text-xs font-medium text-slate-600 bg-slate-50 rounded px-2 py-1 text-center">
+            {TAX_TREATMENT_SHORT[breakdown.taxTreatment as TaxTreatment] ?? breakdown.taxTreatment}
+          </div>
+        )}
         <div className="flex justify-between">
           <span className="text-slate-500">Netto</span>
           <span className="font-semibold">{formatEuro(breakdown?.netSalesPrice ?? 0)}</span>
         </div>
-        <div className="flex justify-between">
-          <span className="text-slate-500">Brutto</span>
-          <span className="font-semibold text-[#0d5c63]">{formatEuro(breakdown?.grossSalesPrice ?? 0)}</span>
-        </div>
+        {breakdown?.isReverseCharge || breakdown?.taxTreatment === "REVERSE_CHARGE" ? (
+          <div className="flex justify-between">
+            <span className="text-slate-500">Rechnungsbetrag</span>
+            <span className="font-semibold text-[#0d5c63]">{formatEuro(breakdown?.netSalesPrice ?? 0)}</span>
+          </div>
+        ) : (
+          <div className="flex justify-between">
+            <span className="text-slate-500">Brutto</span>
+            <span className="font-semibold text-[#0d5c63]">{formatEuro(breakdown?.grossSalesPrice ?? 0)}</span>
+          </div>
+        )}
         <div className="flex justify-between text-xs text-slate-400 pt-2 border-t">
           <span>Wagnis (intern)</span>
           <span>{formatEuro(breakdown?.riskAmount ?? 0)}</span>
@@ -55,9 +77,39 @@ export function SummaryPanel({ breakdown }: SummaryPanelProps) {
           <span>Direkte Kosten</span>
           <span>{formatEuro(breakdown?.directCosts ?? 0)}</span>
         </div>
+        {breakdown?.useFixedPrice && (
+          <div className="text-xs pt-2 border-t space-y-1.5">
+            <p className="font-medium text-slate-600">Festpreis an Kunde</p>
+            <div className="flex justify-between">
+              <span className="text-slate-500">{breakdown.fixedPriceLabel ?? "Festpreis"}</span>
+              <span className="font-semibold text-[#0d5c63]">
+                {formatEuro(breakdown.fixedPriceNet ?? 0)}
+              </span>
+            </div>
+            <div className="flex justify-between text-slate-400">
+              <span>vs. Kalkulation</span>
+              <span>
+                {(breakdown.fixedDifference ?? 0) >= 0 ? "+" : ""}
+                {formatEuro(breakdown.fixedDifference ?? 0)}
+              </span>
+            </div>
+            <div className="flex justify-between text-slate-400">
+              <span>Geschätzter Gewinn</span>
+              <span>{formatEuro(breakdown.fixedEstimatedProfit ?? 0)}</span>
+            </div>
+            {breakdown.fixedMarginPercent != null && (
+              <div className="flex justify-between text-slate-400">
+                <span>Marge (Festpreis)</span>
+                <span>{breakdown.fixedMarginPercent.toFixed(1)} %</span>
+              </div>
+            )}
+          </div>
+        )}
       </div>
       <p className="text-xs text-slate-400 leading-relaxed">
-        Gemeinkosten, Wagnis, Gewinn und Steuerbedarf sind im Endpreis enthalten, werden dem Kunden aber nicht einzeln ausgewiesen.
+        {breakdown?.useFixedPrice
+          ? "Festpreis steuert nur Angebot/Rechnung. Die interne Kalkulation bleibt unverändert gespeichert."
+          : "Gemeinkosten, Wagnis, Gewinn und Steuerbedarf sind im Endpreis enthalten, werden dem Kunden aber nicht einzeln ausgewiesen."}
       </p>
     </div>
   );

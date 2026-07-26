@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { recalculateCalculationRecord } from "@/lib/calculation/recalculate-db";
 import { orderServiceLabel } from "@/lib/utils";
+import { resolveMaterialLineUnitPrice } from "@/lib/orders/material-lines";
 
 export async function createCalculationFromOrder(tenantId: string, orderId: string) {
   const existing = await prisma.calculation.findFirst({
@@ -89,11 +90,14 @@ export async function createCalculationFromOrder(tenantId: string, orderId: stri
   const materialCreates = order.materialLines
     .filter((l) => !l.isTool)
     .map((line) => ({
+      articleId: line.articleId ?? undefined,
       name: line.name,
+      description: line.notes ?? undefined,
       quantity: line.quantityRequired,
       unit: line.unit,
-      purchasePriceNet: line.article?.purchasePriceNet ?? 0,
+      purchasePriceNet: resolveMaterialLineUnitPrice(line),
       markupPercent: markup,
+      supplierName: line.article?.supplierName ?? undefined,
     }));
 
   const startAddress = company

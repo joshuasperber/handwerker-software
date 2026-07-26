@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { formatDateTime } from "@/lib/utils";
 import { MATERIAL_STATUS_LABELS } from "@/lib/inventory/formulas";
-import { Clock, CheckSquare, Upload, History, CheckCircle } from "lucide-react";
+import { Clock, CheckSquare, Upload, History, CheckCircle, Package } from "lucide-react";
 import { PlanViewer } from "@/components/orders/plan-viewer";
 import { PhotoGallery } from "@/components/orders/photo-gallery";
 import { OrderBillingSection } from "@/components/orders/billing-section";
@@ -16,6 +16,12 @@ import { OrderDetailHeader } from "@/components/orders/order-detail-header";
 import { OrderCustomerSection } from "@/components/orders/order-customer-section";
 import { OrderPhases, type OrderPhaseData } from "@/components/orders/order-phases";
 import { OrderSharePanel } from "@/components/orders/order-share-panel";
+import { OrderTypeSelect } from "@/components/orders/order-type-select";
+import {
+  OrderMaterialEditor,
+  type EditableMaterialLine,
+  type InventoryArticleOption,
+} from "@/components/orders/order-material-editor";
 import { usePermission } from "@/components/auth/can-access";
 import { fetchJson } from "@/lib/fetch-json";
 import { saveJson } from "@/lib/save-toast";
@@ -33,8 +39,17 @@ interface OrderDetail {
   internalNotes: string | null;
   scheduledStart: string | null;
   scheduledEnd: string | null;
-  customer: { firstName: string; lastName: string; email: string; phone: string | null };
-  property: { street: string; zipCode: string; city: string };
+  customer: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string | null;
+    company?: string | null;
+    billingStreet?: string | null;
+    billingZipCode?: string | null;
+    billingCity?: string | null;
+  };
+  property: { street: string; zipCode: string; city: string; label?: string | null };
   services: {
     service: { name: string; durationMinutes: number } | null;
     customName?: string | null;
@@ -53,13 +68,22 @@ interface OrderDetail {
   timeEntries: { startTime: string; endTime: string | null; breakMinutes: number }[];
   materialUsages: { name: string; quantity: number; unit: string }[];
   title?: string | null;
+  orderType?: string;
+  orderTypeId?: string | null;
+  orderTypeLabel?: string | null;
+  orderTypeCustom?: string | null;
+  orderTypeDefinition?: { id: string; name: string; isOther: boolean; isActive: boolean } | null;
   materialStatus?: string;
   phases?: OrderPhaseData[];
   materialLines?: {
     id: string;
     name: string;
     quantityRequired: number;
+    quantityConsumed?: number;
     unit: string;
+    unitPriceNet?: number | null;
+    notes?: string | null;
+    articleId?: string | null;
     lineStatus: string;
     isTool: boolean;
     reservations?: { status: string; quantity: number; storageLocation?: { name: string } }[];
@@ -93,6 +117,18 @@ export default function AuftragDetailPage() {
   const [availabilityWarning, setAvailabilityWarning] = useState("");
   const [actionMsg, setActionMsg] = useState("");
   const [confirmComplete, setConfirmComplete] = useState(false);
+  const [confirmConsume, setConfirmConsume] = useState(false);
+  const [consuming, setConsuming] = useState(false);
+  const [editingMaterial, setEditingMaterial] = useState(false);
+  const [materialEditLines, setMaterialEditLines] = useState<EditableMaterialLine[]>([]);
+  const [articles, setArticles] = useState<InventoryArticleOption[]>([]);
+  const [typeDraft, setTypeDraft] = useState({
+    orderTypeId: "",
+    orderTypeCustom: "",
+    isOther: false,
+  });
+  const [savingType, setSavingType] = useState(false);
+  const [savingMaterial, setSavingMaterial] = useState(false);
   const [completing, setCompleting] = useState(false);
   const [calculation, setCalculation] = useState<{ id: string; title: string | null; netSalesPrice: number } | null>(null);
   const [timeline, setTimeline] = useState<{ id: string; at: string; label: string; detail?: string; user?: string }[]>([]);
@@ -104,6 +140,11 @@ export default function AuftragDetailPage() {
       if (data.success && data.data) {
         setOrder(data.data);
         setNotes(data.data.internalNotes ?? "");
+        setTypeDraft({
+          orderTypeId: data.data.orderTypeId ?? "",
+          orderTypeCustom: data.data.orderTypeCustom ?? "",
+          isOther: Boolean(data.data.orderTypeDefinition?.isOther),
+        });
         if (data.data.scheduledStart) {
           setAssignStart((prev) => prev || data.data!.scheduledStart!.slice(0, 16));
         }
@@ -167,6 +208,32 @@ export default function AuftragDetailPage() {
     loadOrder();
   }
 
+  async function saveOrderType() {
+    if (!typeDraft.orderTypeId) {
+      toast.error("Bitte einen Auftragstyp wählen");
+      return;
+    }
+    if (typeDraft.isOther && !typeDraft.orderTypeCustom.trim()) {
+      toast.error("Bitte den Auftragstyp unter „Sonstiges“ beschreiben");
+      return;
+    }
+    setSavingType(true);
+    await saveJson(
+      `/api/orders/${id}`,
+      {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          orderTypeId: typeDraft.orderTypeId,
+          orderTypeCustom: typeDraft.isOther ? typeDraft.orderTypeCustom : null,
+        }),
+      },
+      { success: "Auftragstyp aktualisiert" }
+    );
+    setSavingType(false);
+    loadOrder();
+  }
+
   async function updateStatus(status: string) {
     await saveJson(
       `/api/orders/${id}`,
@@ -204,6 +271,93 @@ export default function AuftragDetailPage() {
       { success: "Material reserviert" }
     );
     loadOrder();
+  }
+
+  async function consumeMaterial() {
+    if (!order?.materialLines?.length) return;
+    const lines = order.materialLines
+      .filter((m) => !m.isTool)
+      .map((m) => {
+        const already = m.quantityConsumed ?? 0;
+        const open = Math.max(0, m.quantityRequired - already);
+        return { lineId: m.id, quantityConsumed: open };
+      })
+      .filter((l) => l.quantityConsumed > 0);
+
+    if (!lines.length) {
+      toast.message("Kein offenes Material zum Entnehmen.");
+      setConfirmConsume(false);
+      return;
+    }
+
+    setConsuming(true);
+    const res = await saveJson(
+      `/api/orders/${id}/consumption`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ lines }),
+      },
+      { success: "Material aus Inventar entnommen" }
+    );
+    setConsuming(false);
+    setConfirmConsume(false);
+    if (res.success) loadOrder();
+  }
+
+  function startEditMaterial() {
+    const lines = (order?.materialLines ?? [])
+      .filter((m) => !m.isTool)
+      .map((m) => ({
+        key: m.id,
+        articleId: m.articleId ?? null,
+        name: m.name,
+        quantityRequired: m.quantityRequired,
+        unit: m.unit,
+        unitPriceNet: m.unitPriceNet ?? null,
+        notes: m.notes ?? "",
+      }));
+    setMaterialEditLines(lines);
+    if (!articles.length) {
+      fetch("/api/articles")
+        .then((r) => r.json())
+        .then((d) => {
+          if (d.success) setArticles(d.data);
+        })
+        .catch(() => {});
+    }
+    setEditingMaterial(true);
+  }
+
+  async function saveMaterialEdit() {
+    if (!id || typeof id !== "string") return;
+    setSavingMaterial(true);
+    const res = await saveJson(
+      `/api/orders/${id}/material-lines`,
+      {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          keepTools: true,
+          lines: materialEditLines
+            .filter((l) => l.name.trim())
+            .map((l) => ({
+              articleId: l.articleId,
+              name: l.name,
+              quantityRequired: l.quantityRequired,
+              unit: l.unit,
+              unitPriceNet: l.unitPriceNet,
+              notes: l.notes || null,
+            })),
+        }),
+      },
+      { success: "Material gespeichert" }
+    );
+    setSavingMaterial(false);
+    if (res.success) {
+      setEditingMaterial(false);
+      loadOrder();
+    }
   }
 
   async function assignTeam(teamId: string) {
@@ -381,6 +535,16 @@ export default function AuftragDetailPage() {
         loading={completing}
         onConfirm={completeOrderOffice}
       />
+      <ConfirmDialog
+        open={confirmConsume}
+        onOpenChange={setConfirmConsume}
+        title="Material aus Inventar entnehmen?"
+        description="Der offene Packlisten-Bedarf wird als Verbrauch gebucht und der Lagerbestand reduziert. Kalkulation und Angebot bleiben unverändert."
+        confirmLabel="Jetzt entnehmen"
+        icon={<Package className="h-5 w-5" />}
+        loading={consuming}
+        onConfirm={consumeMaterial}
+      />
       <OrderDetailHeader
         order={order}
         calculation={calculation}
@@ -413,6 +577,28 @@ export default function AuftragDetailPage() {
             description={order.description}
           />
 
+          <CanAccess permission="orders.write">
+            <Card title="Auftragstyp">
+              <OrderTypeSelect
+                valueId={typeDraft.orderTypeId}
+                customValue={typeDraft.orderTypeCustom}
+                includeInactiveIds={order.orderTypeId ? [order.orderTypeId] : []}
+                onChange={({ orderTypeId, orderTypeCustom, isOther }) =>
+                  setTypeDraft({ orderTypeId, orderTypeCustom, isOther })
+                }
+              />
+              <Button
+                className="mt-4"
+                size="sm"
+                variant="action"
+                disabled={savingType}
+                onClick={saveOrderType}
+              >
+                {savingType ? "Speichern…" : "Auftragstyp speichern"}
+              </Button>
+            </Card>
+          </CanAccess>
+
           <OrderPhases
             orderId={order.id}
             phases={order.phases ?? []}
@@ -435,39 +621,98 @@ export default function AuftragDetailPage() {
             />
           </Card>
 
-          {order.materialLines && order.materialLines.length > 0 && (
-            <Card title="Packliste / Material">
+          <Card title="Packliste / Material">
               <p className="text-xs text-slate-400 mb-2">
                 Materialstatus: {MATERIAL_STATUS_LABELS[order.materialStatus ?? "NOT_CHECKED"] ?? order.materialStatus}
               </p>
-              {order.materialLines.map((m) => {
-                const reserved = m.reservations?.some((r) =>
-                  ["VORGESCHLAGEN", "RESERVIERT"].includes(r.status)
-                );
-                const loc = m.reservations?.find((r) =>
-                  ["VORGESCHLAGEN", "RESERVIERT"].includes(r.status)
-                )?.storageLocation?.name;
-                return (
-                <div key={m.id} className="flex justify-between items-center gap-2 py-2 border-b border-slate-50 last:border-0 text-sm">
-                  <span>{m.name}{m.isTool ? " (Werkzeug)" : ""}{loc ? ` · ${loc}` : ""}</span>
-                  <div className="flex items-center gap-2 shrink-0">
-                    <span className="text-slate-500">{m.quantityRequired} {m.unit}</span>
-                    {reserved ? (
-                      <span className="text-xs font-medium text-green-700 bg-green-100 px-2 py-0.5 rounded-full">Reserviert</span>
-                    ) : (
-                      <span className="text-xs font-medium text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full">Offen</span>
-                    )}
+              {editingMaterial ? (
+                <div className="space-y-3">
+                  <OrderMaterialEditor
+                    compact
+                    lines={materialEditLines}
+                    articles={articles}
+                    onChange={setMaterialEditLines}
+                  />
+                  <div className="flex flex-wrap gap-2">
+                    <Button
+                      type="button"
+                      variant="action"
+                      size="sm"
+                      disabled={savingMaterial}
+                      onClick={saveMaterialEdit}
+                    >
+                      {savingMaterial ? "Speichern…" : "Material speichern"}
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setEditingMaterial(false)}
+                    >
+                      Abbrechen
+                    </Button>
                   </div>
                 </div>
-                );
-              })}
-              <CanAccess permission="inventory.reserve">
-                <Button size="sm" className="mt-3" variant="outline" onClick={reserveMaterial}>
-                  Material reservieren
-                </Button>
-              </CanAccess>
+              ) : (
+                <>
+                  {(order.materialLines ?? []).map((m) => {
+                    const reserved = m.reservations?.some((r) =>
+                      ["VORGESCHLAGEN", "RESERVIERT"].includes(r.status)
+                    );
+                    const loc = m.reservations?.find((r) =>
+                      ["VORGESCHLAGEN", "RESERVIERT"].includes(r.status)
+                    )?.storageLocation?.name;
+                    const consumed = m.quantityConsumed ?? 0;
+                    return (
+                    <div key={m.id} className="flex justify-between items-center gap-2 py-2 border-b border-slate-50 last:border-0 text-sm">
+                      <span>
+                        {m.name}{m.isTool ? " (Werkzeug)" : ""}{loc ? ` · ${loc}` : ""}
+                        {m.unitPriceNet != null ? (
+                          <span className="block text-xs text-slate-400">
+                            {m.unitPriceNet.toLocaleString("de-DE", { style: "currency", currency: "EUR" })} / {m.unit}
+                          </span>
+                        ) : null}
+                      </span>
+                      <div className="flex items-center gap-2 shrink-0">
+                        <span className="text-slate-500">
+                          {m.quantityRequired} {m.unit}
+                          {consumed > 0 ? ` · entnommen ${consumed}` : ""}
+                        </span>
+                        {reserved ? (
+                          <span className="text-xs font-medium text-green-700 bg-green-100 px-2 py-0.5 rounded-full">Reserviert</span>
+                        ) : (
+                          <span className="text-xs font-medium text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full">Offen</span>
+                        )}
+                      </div>
+                    </div>
+                    );
+                  })}
+                  {!(order.materialLines ?? []).length && (
+                    <p className="text-sm text-slate-500 py-2">Noch kein Material hinterlegt.</p>
+                  )}
+                  <div className="flex flex-wrap gap-2 mt-3">
+                    {canEditPhases && (
+                      <Button size="sm" variant="outline" onClick={startEditMaterial}>
+                        Material bearbeiten
+                      </Button>
+                    )}
+                    <CanAccess permission="inventory.reserve">
+                      <Button size="sm" variant="outline" onClick={reserveMaterial}>
+                        Material reservieren
+                      </Button>
+                    </CanAccess>
+                    <CanAccess permission="inventory.write">
+                      <Button size="sm" variant="action" onClick={() => setConfirmConsume(true)}>
+                        Material aus Inventar entnehmen
+                      </Button>
+                    </CanAccess>
+                  </div>
+                  <p className="text-xs text-slate-400 mt-2">
+                    Reservierung plant nur — Bestand sinkt erst nach bewusster Entnahme.
+                  </p>
+                </>
+              )}
             </Card>
-          )}
 
           {order.checklists.length > 0 && (
             <Card title="Checkliste">

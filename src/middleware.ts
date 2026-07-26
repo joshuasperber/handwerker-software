@@ -19,6 +19,7 @@ function getDashboardPermission(
   if (pathname === "/dashboard/auftraege/neu") return "orders.write";
   if (pathname === "/dashboard/kunden/neu") return "customers.write";
   if (pathname.startsWith("/dashboard/auftraege")) return "orders.read";
+  if (pathname.startsWith("/dashboard/projekte")) return "orders.read";
   if (pathname.startsWith("/dashboard/termine")) return "appointments.read";
   if (pathname.startsWith("/dashboard/inventar")) return "inventory.read";
   if (pathname.startsWith("/dashboard/einkauf")) return "inventory.read";
@@ -28,6 +29,8 @@ function getDashboardPermission(
   if (pathname.startsWith("/dashboard/kalkulation/zonen")) return "calculations.settings";
   if (pathname.startsWith("/dashboard/kalkulation")) return "calculations.read";
   if (pathname.startsWith("/dashboard/rechnungen")) return "invoices.read";
+  if (pathname.startsWith("/dashboard/umsatz")) return "invoices.read";
+  if (pathname.startsWith("/dashboard/finanzuebersicht")) return "invoices.read";
   if (pathname.startsWith("/dashboard/kunden")) return "customers.read";
   if (pathname.startsWith("/dashboard/mitarbeiter")) return "employees.read";
   if (pathname.startsWith("/dashboard/leistungen")) return "services.read";
@@ -37,13 +40,16 @@ function getDashboardPermission(
   if (pathname.startsWith("/dashboard/einstellungen/system")) return "notifications.manage";
   if (pathname.startsWith("/dashboard/einstellungen")) return "tenant.manage";
   if (pathname.startsWith("/dashboard/nachrichten")) return "messages.read";
+  if (pathname.startsWith("/dashboard/ki-assistent")) return "ai.chat";
   if (pathname.startsWith("/dashboard/stundenzettel")) return "monteur.own";
   return "deny";
 }
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const token = request.cookies.get("handwerker-session")?.value;
+  const token =
+    request.cookies.get("jomaster-session")?.value ??
+    request.cookies.get("handwerker-session")?.value;
   let session = null;
   if (token) {
     try {

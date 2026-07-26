@@ -29,11 +29,13 @@ export type AggregateOrderMaterialLine = {
 export type OrderMaterialLineAvgAggregateOutputType = {
   quantityRequired: number | null
   quantityConsumed: number | null
+  unitPriceNet: number | null
 }
 
 export type OrderMaterialLineSumAggregateOutputType = {
   quantityRequired: number | null
   quantityConsumed: number | null
+  unitPriceNet: number | null
 }
 
 export type OrderMaterialLineMinAggregateOutputType = {
@@ -45,6 +47,8 @@ export type OrderMaterialLineMinAggregateOutputType = {
   quantityRequired: number | null
   quantityConsumed: number | null
   unit: string | null
+  unitPriceNet: number | null
+  notes: string | null
   isTool: boolean | null
   isPacked: boolean | null
   lineStatus: $Enums.MaterialOrderStatus | null
@@ -61,6 +65,8 @@ export type OrderMaterialLineMaxAggregateOutputType = {
   quantityRequired: number | null
   quantityConsumed: number | null
   unit: string | null
+  unitPriceNet: number | null
+  notes: string | null
   isTool: boolean | null
   isPacked: boolean | null
   lineStatus: $Enums.MaterialOrderStatus | null
@@ -77,6 +83,8 @@ export type OrderMaterialLineCountAggregateOutputType = {
   quantityRequired: number
   quantityConsumed: number
   unit: number
+  unitPriceNet: number
+  notes: number
   isTool: number
   isPacked: number
   lineStatus: number
@@ -89,11 +97,13 @@ export type OrderMaterialLineCountAggregateOutputType = {
 export type OrderMaterialLineAvgAggregateInputType = {
   quantityRequired?: true
   quantityConsumed?: true
+  unitPriceNet?: true
 }
 
 export type OrderMaterialLineSumAggregateInputType = {
   quantityRequired?: true
   quantityConsumed?: true
+  unitPriceNet?: true
 }
 
 export type OrderMaterialLineMinAggregateInputType = {
@@ -105,6 +115,8 @@ export type OrderMaterialLineMinAggregateInputType = {
   quantityRequired?: true
   quantityConsumed?: true
   unit?: true
+  unitPriceNet?: true
+  notes?: true
   isTool?: true
   isPacked?: true
   lineStatus?: true
@@ -121,6 +133,8 @@ export type OrderMaterialLineMaxAggregateInputType = {
   quantityRequired?: true
   quantityConsumed?: true
   unit?: true
+  unitPriceNet?: true
+  notes?: true
   isTool?: true
   isPacked?: true
   lineStatus?: true
@@ -137,6 +151,8 @@ export type OrderMaterialLineCountAggregateInputType = {
   quantityRequired?: true
   quantityConsumed?: true
   unit?: true
+  unitPriceNet?: true
+  notes?: true
   isTool?: true
   isPacked?: true
   lineStatus?: true
@@ -240,6 +256,8 @@ export type OrderMaterialLineGroupByOutputType = {
   quantityRequired: number
   quantityConsumed: number
   unit: string
+  unitPriceNet: number | null
+  notes: string | null
   isTool: boolean
   isPacked: boolean
   lineStatus: $Enums.MaterialOrderStatus
@@ -279,6 +297,8 @@ export type OrderMaterialLineWhereInput = {
   quantityRequired?: Prisma.FloatFilter<"OrderMaterialLine"> | number
   quantityConsumed?: Prisma.FloatFilter<"OrderMaterialLine"> | number
   unit?: Prisma.StringFilter<"OrderMaterialLine"> | string
+  unitPriceNet?: Prisma.FloatNullableFilter<"OrderMaterialLine"> | number | null
+  notes?: Prisma.StringNullableFilter<"OrderMaterialLine"> | string | null
   isTool?: Prisma.BoolFilter<"OrderMaterialLine"> | boolean
   isPacked?: Prisma.BoolFilter<"OrderMaterialLine"> | boolean
   lineStatus?: Prisma.EnumMaterialOrderStatusFilter<"OrderMaterialLine"> | $Enums.MaterialOrderStatus
@@ -298,6 +318,8 @@ export type OrderMaterialLineOrderByWithRelationInput = {
   quantityRequired?: Prisma.SortOrder
   quantityConsumed?: Prisma.SortOrder
   unit?: Prisma.SortOrder
+  unitPriceNet?: Prisma.SortOrderInput | Prisma.SortOrder
+  notes?: Prisma.SortOrderInput | Prisma.SortOrder
   isTool?: Prisma.SortOrder
   isPacked?: Prisma.SortOrder
   lineStatus?: Prisma.SortOrder
@@ -320,6 +342,8 @@ export type OrderMaterialLineWhereUniqueInput = Prisma.AtLeast<{
   quantityRequired?: Prisma.FloatFilter<"OrderMaterialLine"> | number
   quantityConsumed?: Prisma.FloatFilter<"OrderMaterialLine"> | number
   unit?: Prisma.StringFilter<"OrderMaterialLine"> | string
+  unitPriceNet?: Prisma.FloatNullableFilter<"OrderMaterialLine"> | number | null
+  notes?: Prisma.StringNullableFilter<"OrderMaterialLine"> | string | null
   isTool?: Prisma.BoolFilter<"OrderMaterialLine"> | boolean
   isPacked?: Prisma.BoolFilter<"OrderMaterialLine"> | boolean
   lineStatus?: Prisma.EnumMaterialOrderStatusFilter<"OrderMaterialLine"> | $Enums.MaterialOrderStatus
@@ -339,6 +363,8 @@ export type OrderMaterialLineOrderByWithAggregationInput = {
   quantityRequired?: Prisma.SortOrder
   quantityConsumed?: Prisma.SortOrder
   unit?: Prisma.SortOrder
+  unitPriceNet?: Prisma.SortOrderInput | Prisma.SortOrder
+  notes?: Prisma.SortOrderInput | Prisma.SortOrder
   isTool?: Prisma.SortOrder
   isPacked?: Prisma.SortOrder
   lineStatus?: Prisma.SortOrder
@@ -363,6 +389,8 @@ export type OrderMaterialLineScalarWhereWithAggregatesInput = {
   quantityRequired?: Prisma.FloatWithAggregatesFilter<"OrderMaterialLine"> | number
   quantityConsumed?: Prisma.FloatWithAggregatesFilter<"OrderMaterialLine"> | number
   unit?: Prisma.StringWithAggregatesFilter<"OrderMaterialLine"> | string
+  unitPriceNet?: Prisma.FloatNullableWithAggregatesFilter<"OrderMaterialLine"> | number | null
+  notes?: Prisma.StringNullableWithAggregatesFilter<"OrderMaterialLine"> | string | null
   isTool?: Prisma.BoolWithAggregatesFilter<"OrderMaterialLine"> | boolean
   isPacked?: Prisma.BoolWithAggregatesFilter<"OrderMaterialLine"> | boolean
   lineStatus?: Prisma.EnumMaterialOrderStatusWithAggregatesFilter<"OrderMaterialLine"> | $Enums.MaterialOrderStatus
@@ -377,6 +405,8 @@ export type OrderMaterialLineCreateInput = {
   quantityRequired: number
   quantityConsumed?: number
   unit?: string
+  unitPriceNet?: number | null
+  notes?: string | null
   isTool?: boolean
   isPacked?: boolean
   lineStatus?: $Enums.MaterialOrderStatus
@@ -396,6 +426,8 @@ export type OrderMaterialLineUncheckedCreateInput = {
   quantityRequired: number
   quantityConsumed?: number
   unit?: string
+  unitPriceNet?: number | null
+  notes?: string | null
   isTool?: boolean
   isPacked?: boolean
   lineStatus?: $Enums.MaterialOrderStatus
@@ -411,6 +443,8 @@ export type OrderMaterialLineUpdateInput = {
   quantityRequired?: Prisma.FloatFieldUpdateOperationsInput | number
   quantityConsumed?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
+  unitPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isTool?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isPacked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lineStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
@@ -430,6 +464,8 @@ export type OrderMaterialLineUncheckedUpdateInput = {
   quantityRequired?: Prisma.FloatFieldUpdateOperationsInput | number
   quantityConsumed?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
+  unitPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isTool?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isPacked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lineStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
@@ -447,6 +483,8 @@ export type OrderMaterialLineCreateManyInput = {
   quantityRequired: number
   quantityConsumed?: number
   unit?: string
+  unitPriceNet?: number | null
+  notes?: string | null
   isTool?: boolean
   isPacked?: boolean
   lineStatus?: $Enums.MaterialOrderStatus
@@ -461,6 +499,8 @@ export type OrderMaterialLineUpdateManyMutationInput = {
   quantityRequired?: Prisma.FloatFieldUpdateOperationsInput | number
   quantityConsumed?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
+  unitPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isTool?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isPacked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lineStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
@@ -477,6 +517,8 @@ export type OrderMaterialLineUncheckedUpdateManyInput = {
   quantityRequired?: Prisma.FloatFieldUpdateOperationsInput | number
   quantityConsumed?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
+  unitPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isTool?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isPacked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lineStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
@@ -508,6 +550,8 @@ export type OrderMaterialLineCountOrderByAggregateInput = {
   quantityRequired?: Prisma.SortOrder
   quantityConsumed?: Prisma.SortOrder
   unit?: Prisma.SortOrder
+  unitPriceNet?: Prisma.SortOrder
+  notes?: Prisma.SortOrder
   isTool?: Prisma.SortOrder
   isPacked?: Prisma.SortOrder
   lineStatus?: Prisma.SortOrder
@@ -518,6 +562,7 @@ export type OrderMaterialLineCountOrderByAggregateInput = {
 export type OrderMaterialLineAvgOrderByAggregateInput = {
   quantityRequired?: Prisma.SortOrder
   quantityConsumed?: Prisma.SortOrder
+  unitPriceNet?: Prisma.SortOrder
 }
 
 export type OrderMaterialLineMaxOrderByAggregateInput = {
@@ -529,6 +574,8 @@ export type OrderMaterialLineMaxOrderByAggregateInput = {
   quantityRequired?: Prisma.SortOrder
   quantityConsumed?: Prisma.SortOrder
   unit?: Prisma.SortOrder
+  unitPriceNet?: Prisma.SortOrder
+  notes?: Prisma.SortOrder
   isTool?: Prisma.SortOrder
   isPacked?: Prisma.SortOrder
   lineStatus?: Prisma.SortOrder
@@ -545,6 +592,8 @@ export type OrderMaterialLineMinOrderByAggregateInput = {
   quantityRequired?: Prisma.SortOrder
   quantityConsumed?: Prisma.SortOrder
   unit?: Prisma.SortOrder
+  unitPriceNet?: Prisma.SortOrder
+  notes?: Prisma.SortOrder
   isTool?: Prisma.SortOrder
   isPacked?: Prisma.SortOrder
   lineStatus?: Prisma.SortOrder
@@ -555,6 +604,7 @@ export type OrderMaterialLineMinOrderByAggregateInput = {
 export type OrderMaterialLineSumOrderByAggregateInput = {
   quantityRequired?: Prisma.SortOrder
   quantityConsumed?: Prisma.SortOrder
+  unitPriceNet?: Prisma.SortOrder
 }
 
 export type OrderMaterialLineCreateNestedManyWithoutOrderInput = {
@@ -664,6 +714,8 @@ export type OrderMaterialLineCreateWithoutOrderInput = {
   quantityRequired: number
   quantityConsumed?: number
   unit?: string
+  unitPriceNet?: number | null
+  notes?: string | null
   isTool?: boolean
   isPacked?: boolean
   lineStatus?: $Enums.MaterialOrderStatus
@@ -681,6 +733,8 @@ export type OrderMaterialLineUncheckedCreateWithoutOrderInput = {
   quantityRequired: number
   quantityConsumed?: number
   unit?: string
+  unitPriceNet?: number | null
+  notes?: string | null
   isTool?: boolean
   isPacked?: boolean
   lineStatus?: $Enums.MaterialOrderStatus
@@ -727,6 +781,8 @@ export type OrderMaterialLineScalarWhereInput = {
   quantityRequired?: Prisma.FloatFilter<"OrderMaterialLine"> | number
   quantityConsumed?: Prisma.FloatFilter<"OrderMaterialLine"> | number
   unit?: Prisma.StringFilter<"OrderMaterialLine"> | string
+  unitPriceNet?: Prisma.FloatNullableFilter<"OrderMaterialLine"> | number | null
+  notes?: Prisma.StringNullableFilter<"OrderMaterialLine"> | string | null
   isTool?: Prisma.BoolFilter<"OrderMaterialLine"> | boolean
   isPacked?: Prisma.BoolFilter<"OrderMaterialLine"> | boolean
   lineStatus?: Prisma.EnumMaterialOrderStatusFilter<"OrderMaterialLine"> | $Enums.MaterialOrderStatus
@@ -741,6 +797,8 @@ export type OrderMaterialLineCreateWithoutArticleInput = {
   quantityRequired: number
   quantityConsumed?: number
   unit?: string
+  unitPriceNet?: number | null
+  notes?: string | null
   isTool?: boolean
   isPacked?: boolean
   lineStatus?: $Enums.MaterialOrderStatus
@@ -758,6 +816,8 @@ export type OrderMaterialLineUncheckedCreateWithoutArticleInput = {
   quantityRequired: number
   quantityConsumed?: number
   unit?: string
+  unitPriceNet?: number | null
+  notes?: string | null
   isTool?: boolean
   isPacked?: boolean
   lineStatus?: $Enums.MaterialOrderStatus
@@ -799,6 +859,8 @@ export type OrderMaterialLineCreateWithoutReservationsInput = {
   quantityRequired: number
   quantityConsumed?: number
   unit?: string
+  unitPriceNet?: number | null
+  notes?: string | null
   isTool?: boolean
   isPacked?: boolean
   lineStatus?: $Enums.MaterialOrderStatus
@@ -817,6 +879,8 @@ export type OrderMaterialLineUncheckedCreateWithoutReservationsInput = {
   quantityRequired: number
   quantityConsumed?: number
   unit?: string
+  unitPriceNet?: number | null
+  notes?: string | null
   isTool?: boolean
   isPacked?: boolean
   lineStatus?: $Enums.MaterialOrderStatus
@@ -847,6 +911,8 @@ export type OrderMaterialLineUpdateWithoutReservationsInput = {
   quantityRequired?: Prisma.FloatFieldUpdateOperationsInput | number
   quantityConsumed?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
+  unitPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isTool?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isPacked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lineStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
@@ -865,6 +931,8 @@ export type OrderMaterialLineUncheckedUpdateWithoutReservationsInput = {
   quantityRequired?: Prisma.FloatFieldUpdateOperationsInput | number
   quantityConsumed?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
+  unitPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isTool?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isPacked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lineStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
@@ -880,6 +948,8 @@ export type OrderMaterialLineCreateManyOrderInput = {
   quantityRequired: number
   quantityConsumed?: number
   unit?: string
+  unitPriceNet?: number | null
+  notes?: string | null
   isTool?: boolean
   isPacked?: boolean
   lineStatus?: $Enums.MaterialOrderStatus
@@ -894,6 +964,8 @@ export type OrderMaterialLineUpdateWithoutOrderInput = {
   quantityRequired?: Prisma.FloatFieldUpdateOperationsInput | number
   quantityConsumed?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
+  unitPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isTool?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isPacked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lineStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
@@ -911,6 +983,8 @@ export type OrderMaterialLineUncheckedUpdateWithoutOrderInput = {
   quantityRequired?: Prisma.FloatFieldUpdateOperationsInput | number
   quantityConsumed?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
+  unitPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isTool?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isPacked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lineStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
@@ -927,6 +1001,8 @@ export type OrderMaterialLineUncheckedUpdateManyWithoutOrderInput = {
   quantityRequired?: Prisma.FloatFieldUpdateOperationsInput | number
   quantityConsumed?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
+  unitPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isTool?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isPacked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lineStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
@@ -942,6 +1018,8 @@ export type OrderMaterialLineCreateManyArticleInput = {
   quantityRequired: number
   quantityConsumed?: number
   unit?: string
+  unitPriceNet?: number | null
+  notes?: string | null
   isTool?: boolean
   isPacked?: boolean
   lineStatus?: $Enums.MaterialOrderStatus
@@ -956,6 +1034,8 @@ export type OrderMaterialLineUpdateWithoutArticleInput = {
   quantityRequired?: Prisma.FloatFieldUpdateOperationsInput | number
   quantityConsumed?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
+  unitPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isTool?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isPacked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lineStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
@@ -973,6 +1053,8 @@ export type OrderMaterialLineUncheckedUpdateWithoutArticleInput = {
   quantityRequired?: Prisma.FloatFieldUpdateOperationsInput | number
   quantityConsumed?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
+  unitPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isTool?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isPacked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lineStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
@@ -989,6 +1071,8 @@ export type OrderMaterialLineUncheckedUpdateManyWithoutArticleInput = {
   quantityRequired?: Prisma.FloatFieldUpdateOperationsInput | number
   quantityConsumed?: Prisma.FloatFieldUpdateOperationsInput | number
   unit?: Prisma.StringFieldUpdateOperationsInput | string
+  unitPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isTool?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isPacked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lineStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
@@ -1036,6 +1120,8 @@ export type OrderMaterialLineSelect<ExtArgs extends runtime.Types.Extensions.Int
   quantityRequired?: boolean
   quantityConsumed?: boolean
   unit?: boolean
+  unitPriceNet?: boolean
+  notes?: boolean
   isTool?: boolean
   isPacked?: boolean
   lineStatus?: boolean
@@ -1056,6 +1142,8 @@ export type OrderMaterialLineSelectCreateManyAndReturn<ExtArgs extends runtime.T
   quantityRequired?: boolean
   quantityConsumed?: boolean
   unit?: boolean
+  unitPriceNet?: boolean
+  notes?: boolean
   isTool?: boolean
   isPacked?: boolean
   lineStatus?: boolean
@@ -1074,6 +1162,8 @@ export type OrderMaterialLineSelectUpdateManyAndReturn<ExtArgs extends runtime.T
   quantityRequired?: boolean
   quantityConsumed?: boolean
   unit?: boolean
+  unitPriceNet?: boolean
+  notes?: boolean
   isTool?: boolean
   isPacked?: boolean
   lineStatus?: boolean
@@ -1092,6 +1182,8 @@ export type OrderMaterialLineSelectScalar = {
   quantityRequired?: boolean
   quantityConsumed?: boolean
   unit?: boolean
+  unitPriceNet?: boolean
+  notes?: boolean
   isTool?: boolean
   isPacked?: boolean
   lineStatus?: boolean
@@ -1099,7 +1191,7 @@ export type OrderMaterialLineSelectScalar = {
   updatedAt?: boolean
 }
 
-export type OrderMaterialLineOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "orderId" | "articleId" | "sourceServiceId" | "name" | "quantityRequired" | "quantityConsumed" | "unit" | "isTool" | "isPacked" | "lineStatus" | "createdAt" | "updatedAt", ExtArgs["result"]["orderMaterialLine"]>
+export type OrderMaterialLineOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "orderId" | "articleId" | "sourceServiceId" | "name" | "quantityRequired" | "quantityConsumed" | "unit" | "unitPriceNet" | "notes" | "isTool" | "isPacked" | "lineStatus" | "createdAt" | "updatedAt", ExtArgs["result"]["orderMaterialLine"]>
 export type OrderMaterialLineInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
   article?: boolean | Prisma.OrderMaterialLine$articleArgs<ExtArgs>
@@ -1131,6 +1223,11 @@ export type $OrderMaterialLinePayload<ExtArgs extends runtime.Types.Extensions.I
     quantityRequired: number
     quantityConsumed: number
     unit: string
+    /**
+     * Einkaufs-/Kalkulationspreis netto je Einheit (Override oder freies Material)
+     */
+    unitPriceNet: number | null
+    notes: string | null
     isTool: boolean
     isPacked: boolean
     lineStatus: $Enums.MaterialOrderStatus
@@ -1570,6 +1667,8 @@ export interface OrderMaterialLineFieldRefs {
   readonly quantityRequired: Prisma.FieldRef<"OrderMaterialLine", 'Float'>
   readonly quantityConsumed: Prisma.FieldRef<"OrderMaterialLine", 'Float'>
   readonly unit: Prisma.FieldRef<"OrderMaterialLine", 'String'>
+  readonly unitPriceNet: Prisma.FieldRef<"OrderMaterialLine", 'Float'>
+  readonly notes: Prisma.FieldRef<"OrderMaterialLine", 'String'>
   readonly isTool: Prisma.FieldRef<"OrderMaterialLine", 'Boolean'>
   readonly isPacked: Prisma.FieldRef<"OrderMaterialLine", 'Boolean'>
   readonly lineStatus: Prisma.FieldRef<"OrderMaterialLine", 'MaterialOrderStatus'>

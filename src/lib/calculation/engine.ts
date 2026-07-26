@@ -11,9 +11,9 @@ import {
   calcProfitability,
   calcRiskAmount,
   calcTravelTotal,
-  calcVAT,
   roundMoney,
 } from "./formulas";
+import { calcVatWithTreatment } from "@/lib/tax/treatment";
 
 export function runCalculation(input: CalculationInput): CalculationBreakdown {
   const laborTotal = calcLaborTotal(input.laborItems);
@@ -116,9 +116,15 @@ export function runCalculation(input: CalculationInput): CalculationBreakdown {
     targetMarginPercent: input.profit.targetMarginPercent,
   });
 
-  const { vatAmount, grossSalesPrice } = calcVAT(
-    netSalesPrice,
-    input.vat.vatRatePercent
+  const { vatAmount, grossSalesPrice } = calcVatWithTreatment(
+    {
+      netSalesPrice,
+      vatRatePercent: input.vat.vatRatePercent,
+      taxTreatment: input.vat.taxTreatment ?? "STANDARD_VAT",
+      reverseCharge: input.vat.reverseCharge,
+      taxExempt: input.vat.taxExempt,
+    },
+    { includeSection13bNote: input.vat.includeSection13bNote !== false }
   );
 
   const contributionMargin = roundMoney(netSalesPrice - directCosts);

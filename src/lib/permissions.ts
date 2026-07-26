@@ -33,7 +33,8 @@ export type Permission =
   | "inventory.reserve"
   | "monteur.own"
   | "monteur.create_own"
-  | "customer.own";
+  | "customer.own"
+  | "ai.chat";
 
 const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
   ADMIN: [
@@ -67,6 +68,7 @@ const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
     "inventory.write",
     "inventory.reserve",
     "monteur.own",
+    "ai.chat",
   ],
   MEISTER: [
     "customers.read",
@@ -97,6 +99,7 @@ const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
     "inventory.write",
     "inventory.reserve",
     "monteur.own",
+    "ai.chat",
   ],
   BUERO: [
     "customers.read",
@@ -125,6 +128,7 @@ const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
     "inventory.read",
     "inventory.write",
     "inventory.reserve",
+    "ai.chat",
   ],
   MONTEUR: [
     "monteur.own",
@@ -132,6 +136,7 @@ const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
     "messages.read",
     "messages.write",
     "inventory.read",
+    "ai.chat",
   ],
   KUNDE: ["customer.own"],
   GAST: ["shared.read", "messages.read", "messages.write"],
@@ -165,34 +170,56 @@ export function canManageOrders(role: UserRole): boolean {
 }
 
 /** Navigation: `permission: null` = für alle Dashboard-Rollen sichtbar */
+export type NavSection =
+  | "betrieb"
+  | "material"
+  | "finanzen"
+  | "stammdaten"
+  | "einstellungen"
+  | null;
+
+export const NAV_SECTION_LABELS: Record<Exclude<NavSection, null>, string> = {
+  betrieb: "Betrieb",
+  material: "Material",
+  finanzen: "Finanzen",
+  stammdaten: "Stammdaten",
+  einstellungen: "Einstellungen",
+};
+
 export const DASHBOARD_NAV_CONFIG: {
   href: string;
   label: string;
   permission: Permission | null;
+  section: NavSection;
 }[] = [
-  { href: "/dashboard", label: "Übersicht", permission: null },
-  { href: "/dashboard/auftraege", label: "Aufträge", permission: "orders.read" },
-  { href: "/dashboard/termine", label: "Termine", permission: "appointments.read" },
-  { href: "/dashboard/inventar", label: "Inventar", permission: "inventory.read" },
-  { href: "/dashboard/einkauf", label: "Einkauf", permission: "inventory.read" },
-  { href: "/dashboard/disposition", label: "Disposition", permission: "appointments.read" },
-  { href: "/dashboard/kalkulation", label: "Kalkulation", permission: "calculations.read" },
-  { href: "/dashboard/rechnungen", label: "Rechnungen", permission: "invoices.read" },
-  { href: "/dashboard/kunden", label: "Kunden", permission: "customers.read" },
-  { href: "/dashboard/mitarbeiter", label: "Mitarbeiter", permission: "employees.read" },
-  { href: "/dashboard/leistungen", label: "Leistungen", permission: "services.read" },
-  { href: "/dashboard/maschinen", label: "Maschinen", permission: "calculations.settings" },
-  { href: "/dashboard/einstellungen/rechnung", label: "Rechnungseinstellungen", permission: "calculations.settings" },
-  { href: "/dashboard/einstellungen/benachrichtigungen", label: "Benachrichtigungen", permission: "notifications.manage" },
-  { href: "/dashboard/einstellungen/system", label: "Systemstatus", permission: "notifications.manage" },
-  { href: "/dashboard/nachrichten", label: "Nachrichten", permission: "messages.read" },
-  { href: "/dashboard/stundenzettel", label: "Stundenzettel", permission: "monteur.own" },
-  { href: "/dashboard/profil", label: "Profil", permission: null },
+  { href: "/dashboard", label: "Übersicht", permission: null, section: "betrieb" },
+  { href: "/dashboard/auftraege", label: "Aufträge", permission: "orders.read", section: "betrieb" },
+  { href: "/dashboard/projekte", label: "Projekte", permission: "orders.read", section: "betrieb" },
+  { href: "/dashboard/termine", label: "Termine", permission: "appointments.read", section: "betrieb" },
+  { href: "/dashboard/disposition", label: "Disposition", permission: "appointments.read", section: "betrieb" },
+  { href: "/dashboard/inventar", label: "Inventar", permission: "inventory.read", section: "material" },
+  { href: "/dashboard/einkauf", label: "Einkauf", permission: "inventory.read", section: "material" },
+  { href: "/dashboard/kalkulation", label: "Kalkulation", permission: "calculations.read", section: "finanzen" },
+  { href: "/dashboard/rechnungen", label: "Rechnungen", permission: "invoices.read", section: "finanzen" },
+  { href: "/dashboard/umsatz", label: "Umsatzübersicht", permission: "invoices.read", section: "finanzen" },
+  { href: "/dashboard/finanzuebersicht", label: "Finanzübersicht", permission: "invoices.read", section: "finanzen" },
+  { href: "/dashboard/kunden", label: "Kunden", permission: "customers.read", section: "stammdaten" },
+  { href: "/dashboard/mitarbeiter", label: "Mitarbeiter", permission: "employees.read", section: "stammdaten" },
+  { href: "/dashboard/leistungen", label: "Leistungen", permission: "services.read", section: "stammdaten" },
+  { href: "/dashboard/maschinen", label: "Maschinen", permission: "calculations.settings", section: "stammdaten" },
+  { href: "/dashboard/einstellungen/rechnung", label: "Rechnungseinstellungen", permission: "calculations.settings", section: "einstellungen" },
+  { href: "/dashboard/einstellungen/benachrichtigungen", label: "Benachrichtigungen", permission: "notifications.manage", section: "einstellungen" },
+  { href: "/dashboard/einstellungen/system", label: "Systemstatus", permission: "notifications.manage", section: "einstellungen" },
+  { href: "/dashboard/ki-assistent", label: "Betriebsassistent", permission: "ai.chat", section: null },
+  { href: "/dashboard/stundenzettel", label: "Stundenzettel", permission: "monteur.own", section: null },
+  { href: "/dashboard/profil", label: "Profil", permission: null, section: null },
+  { href: "/dashboard/nachrichten", label: "Nachrichten", permission: "messages.read", section: null },
 ];
 
 /** Monteur: gleiche Dashboard-Ansicht wie Admin, ohne diese Bereiche */
 export const MONTEUR_EXCLUDED_DASHBOARD_PREFIXES = [
   "/dashboard/auftraege",
+  "/dashboard/projekte",
   "/dashboard/termine",
   "/dashboard/kunden",
   "/dashboard/mitarbeiter",
@@ -201,6 +228,8 @@ export const MONTEUR_EXCLUDED_DASHBOARD_PREFIXES = [
   "/dashboard/disposition",
   "/dashboard/kalkulation",
   "/dashboard/rechnungen",
+  "/dashboard/umsatz",
+  "/dashboard/finanzuebersicht",
   "/dashboard/maschinen",
   "/dashboard/leistungen",
   "/dashboard/einstellungen/rechnung",
@@ -218,6 +247,8 @@ export function isMonteurExcludedDashboardPath(pathname: string): boolean {
 export function getDashboardNavItems(role: UserRole) {
   return DASHBOARD_NAV_CONFIG.filter((item) => {
     if (role === "MONTEUR" && MONTEUR_EXCLUDED_NAV.has(item.href)) return false;
+    // Stundenzettel = eigene Zeiterfassung → nur für Monteure in der Sidebar
+    if (item.href === "/dashboard/stundenzettel" && role !== "MONTEUR") return false;
     return item.permission === null || hasPermission(role, item.permission);
   });
 }

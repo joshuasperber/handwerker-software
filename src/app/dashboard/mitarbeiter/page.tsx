@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,6 +8,7 @@ import { ROLE_LABELS } from "@/lib/utils";
 import { CanAccess } from "@/components/auth/can-access";
 import { AddButton } from "@/components/ui/add-button";
 import { saveJson } from "@/lib/save-toast";
+import { swrKeys, useApiSWR } from "@/lib/swr";
 import { Pencil, Search } from "lucide-react";
 
 interface Employee {
@@ -34,7 +35,7 @@ const EMPTY_FORM = {
 };
 
 export default function MitarbeiterPage() {
-  const [employees, setEmployees] = useState<Employee[]>([]);
+  const { data: employees = [], mutate } = useApiSWR<Employee[]>(swrKeys.employees());
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [error, setError] = useState("");
@@ -44,12 +45,8 @@ export default function MitarbeiterPage() {
   const [activeFilter, setActiveFilter] = useState<"all" | "active" | "inactive">("active");
 
   function load() {
-    fetch("/api/employees").then((r) => r.json()).then((d) => {
-      if (d.success) setEmployees(d.data);
-    });
+    void mutate();
   }
-
-  useEffect(() => { load(); }, []);
 
   function startCreate() {
     setEditingId(null);

@@ -23,12 +23,15 @@ export default function NeuerKundePage() {
     email: "",
     phone: "",
     company: "",
-    notes: "",
+    customerType: "PRIVAT" as "PRIVAT" | "GEWERBLICH",
+    contactPerson: "",
+    vatId: "",
     street: "",
     zipCode: "",
     city: "",
     propertyLabel: "Hauptadresse",
     travelZoneId: "",
+    notes: "",
   });
 
   useEffect(() => {
@@ -50,6 +53,9 @@ export default function NeuerKundePage() {
           email: form.email || undefined,
           phone: form.phone || undefined,
           company: form.company || undefined,
+          customerType: form.customerType,
+          contactPerson: form.contactPerson || undefined,
+          vatId: form.vatId || undefined,
           notes: form.notes || undefined,
           property: form.street
             ? {
@@ -79,11 +85,30 @@ export default function NeuerKundePage() {
       <form onSubmit={submit}>
         <Card title="Stammdaten" className="mb-6">
           <div className="grid gap-3 sm:grid-cols-2">
+            <div className="sm:col-span-2">
+              <label className="text-sm font-medium">Kundenart</label>
+              <select
+                className="w-full h-10 rounded-lg border mt-1 px-3 text-sm"
+                value={form.customerType}
+                onChange={(e) => setForm({ ...form, customerType: e.target.value as "PRIVAT" | "GEWERBLICH" })}
+              >
+                <option value="PRIVAT">Privatkunde</option>
+                <option value="GEWERBLICH">Gewerblicher Kunde / Unternehmen</option>
+              </select>
+            </div>
             <Input label="Vorname *" value={form.firstName} onChange={(e) => setForm({ ...form, firstName: e.target.value })} required />
             <Input label="Nachname *" value={form.lastName} onChange={(e) => setForm({ ...form, lastName: e.target.value })} required />
             <Input label="E-Mail" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
             <Input label="Telefon" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
-            <Input label="Firma" value={form.company} onChange={(e) => setForm({ ...form, company: e.target.value })} className="sm:col-span-2" />
+            {form.customerType === "GEWERBLICH" ? (
+              <>
+                <Input label="Firmenname" value={form.company} onChange={(e) => setForm({ ...form, company: e.target.value })} className="sm:col-span-2" />
+                <Input label="Ansprechpartner" value={form.contactPerson} onChange={(e) => setForm({ ...form, contactPerson: e.target.value })} />
+                <Input label="USt-IdNr." value={form.vatId} onChange={(e) => setForm({ ...form, vatId: e.target.value })} />
+              </>
+            ) : (
+              <Input label="Firma (optional)" value={form.company} onChange={(e) => setForm({ ...form, company: e.target.value })} className="sm:col-span-2" />
+            )}
             <Textarea label="Notizen" value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} rows={2} className="sm:col-span-2" />
           </div>
         </Card>

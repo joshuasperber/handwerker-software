@@ -48,7 +48,7 @@ export async function PATCH(
     await notifyInvitation(
       auth.tenantId,
       invitation.email,
-      tenant?.name ?? "Handwerker App",
+      tenant?.name ?? "JoMaster",
       acceptUrl,
       invitation.message
     );

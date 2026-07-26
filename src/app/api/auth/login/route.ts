@@ -16,12 +16,10 @@ import {
 } from "@/lib/auth/rate-limit";
 import { logger } from "@/lib/logger";
 
-const DEFAULT_TENANT = process.env.NEXT_PUBLIC_DEFAULT_TENANT_SLUG ?? "demo";
-
 const loginSchema = z.object({
   email: z.string().email(),
   password: z.string().min(6),
-  tenantSlug: z.string().min(1, "Betriebs-Kürzel fehlt"),
+  tenantSlug: z.string().optional(),
 });
 
 function wantsJsonResponse(request: NextRequest): boolean {
@@ -48,6 +46,12 @@ function mapLoginError(err: unknown) {
     if (message.includes("JWT_SECRET is not set")) {
       return apiError("Auth nicht konfiguriert. JWT_SECRET in Vercel setzen.", 503);
     }
+    if (message.includes("SUPABASE") || message.includes("Supabase")) {
+      return apiError(
+        `Supabase Auth nicht konfiguriert: ${message.slice(0, 160)}`,
+        503
+      );
+    }
     return apiError(`Anmeldung fehlgeschlagen: ${message.slice(0, 120)}`, 500);
   }
   return apiError(
@@ -64,11 +68,11 @@ async function parseLoginInput(request: NextRequest) {
   }
 
   const formData = await request.formData();
+  const tenantSlug = String(formData.get("tenantSlug") ?? "").trim();
   return loginSchema.safeParse({
     email: String(formData.get("email") ?? "").trim(),
     password: String(formData.get("password") ?? ""),
-    tenantSlug:
-      String(formData.get("tenantSlug") ?? "").trim() || DEFAULT_TENANT,
+    tenantSlug: tenantSlug || undefined,
   });
 }
 

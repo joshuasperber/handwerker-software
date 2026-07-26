@@ -1,11 +1,11 @@
 {
-  "name": "Handwerker App – Monteur",
-  "short_name": "Monteur",
+  "name": "JoMaster – Monteur",
+  "short_name": "JoMaster",
   "description": "Mobile Monteur-App für Handwerksbetriebe",
   "start_url": "/monteur",
   "display": "standalone",
   "background_color": "#f8fafc",
-  "theme_color": "#2563eb",
+  "theme_color": "#0d5c63",
   "orientation": "portrait",
   "icons": [
     {

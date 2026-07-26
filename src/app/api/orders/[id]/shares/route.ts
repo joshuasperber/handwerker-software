@@ -95,7 +95,7 @@ export async function POST(
   await notifyOrderShared(
     auth.tenantId,
     targetUser.email,
-    tenant?.name ?? "Handwerker App",
+    tenant?.name ?? "JoMaster",
     order.orderNumber,
     note
   );

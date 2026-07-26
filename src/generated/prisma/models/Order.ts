@@ -32,6 +32,9 @@ export type OrderMinAggregateOutputType = {
   orderNumber: string | null
   title: string | null
   orderType: $Enums.OrderType | null
+  orderTypeId: string | null
+  orderTypeLabel: string | null
+  orderTypeCustom: string | null
   status: $Enums.OrderStatus | null
   priority: $Enums.OrderPriority | null
   materialStatus: $Enums.MaterialOrderStatus | null
@@ -47,6 +50,7 @@ export type OrderMinAggregateOutputType = {
   invoicedAt: Date | null
   teamId: string | null
   vehicleId: string | null
+  projectId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -59,6 +63,9 @@ export type OrderMaxAggregateOutputType = {
   orderNumber: string | null
   title: string | null
   orderType: $Enums.OrderType | null
+  orderTypeId: string | null
+  orderTypeLabel: string | null
+  orderTypeCustom: string | null
   status: $Enums.OrderStatus | null
   priority: $Enums.OrderPriority | null
   materialStatus: $Enums.MaterialOrderStatus | null
@@ -74,6 +81,7 @@ export type OrderMaxAggregateOutputType = {
   invoicedAt: Date | null
   teamId: string | null
   vehicleId: string | null
+  projectId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -86,6 +94,9 @@ export type OrderCountAggregateOutputType = {
   orderNumber: number
   title: number
   orderType: number
+  orderTypeId: number
+  orderTypeLabel: number
+  orderTypeCustom: number
   status: number
   priority: number
   materialStatus: number
@@ -102,6 +113,7 @@ export type OrderCountAggregateOutputType = {
   invoicedAt: number
   teamId: number
   vehicleId: number
+  projectId: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -116,6 +128,9 @@ export type OrderMinAggregateInputType = {
   orderNumber?: true
   title?: true
   orderType?: true
+  orderTypeId?: true
+  orderTypeLabel?: true
+  orderTypeCustom?: true
   status?: true
   priority?: true
   materialStatus?: true
@@ -131,6 +146,7 @@ export type OrderMinAggregateInputType = {
   invoicedAt?: true
   teamId?: true
   vehicleId?: true
+  projectId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -143,6 +159,9 @@ export type OrderMaxAggregateInputType = {
   orderNumber?: true
   title?: true
   orderType?: true
+  orderTypeId?: true
+  orderTypeLabel?: true
+  orderTypeCustom?: true
   status?: true
   priority?: true
   materialStatus?: true
@@ -158,6 +177,7 @@ export type OrderMaxAggregateInputType = {
   invoicedAt?: true
   teamId?: true
   vehicleId?: true
+  projectId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -170,6 +190,9 @@ export type OrderCountAggregateInputType = {
   orderNumber?: true
   title?: true
   orderType?: true
+  orderTypeId?: true
+  orderTypeLabel?: true
+  orderTypeCustom?: true
   status?: true
   priority?: true
   materialStatus?: true
@@ -186,6 +209,7 @@ export type OrderCountAggregateInputType = {
   invoicedAt?: true
   teamId?: true
   vehicleId?: true
+  projectId?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -271,6 +295,9 @@ export type OrderGroupByOutputType = {
   orderNumber: string
   title: string | null
   orderType: $Enums.OrderType
+  orderTypeId: string | null
+  orderTypeLabel: string | null
+  orderTypeCustom: string | null
   status: $Enums.OrderStatus
   priority: $Enums.OrderPriority
   materialStatus: $Enums.MaterialOrderStatus
@@ -287,6 +314,7 @@ export type OrderGroupByOutputType = {
   invoicedAt: Date | null
   teamId: string | null
   vehicleId: string | null
+  projectId: string | null
   createdAt: Date
   updatedAt: Date
   _count: OrderCountAggregateOutputType | null
@@ -320,6 +348,9 @@ export type OrderWhereInput = {
   orderNumber?: Prisma.StringFilter<"Order"> | string
   title?: Prisma.StringNullableFilter<"Order"> | string | null
   orderType?: Prisma.EnumOrderTypeFilter<"Order"> | $Enums.OrderType
+  orderTypeId?: Prisma.StringNullableFilter<"Order"> | string | null
+  orderTypeLabel?: Prisma.StringNullableFilter<"Order"> | string | null
+  orderTypeCustom?: Prisma.StringNullableFilter<"Order"> | string | null
   status?: Prisma.EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
   priority?: Prisma.EnumOrderPriorityFilter<"Order"> | $Enums.OrderPriority
   materialStatus?: Prisma.EnumMaterialOrderStatusFilter<"Order"> | $Enums.MaterialOrderStatus
@@ -336,11 +367,13 @@ export type OrderWhereInput = {
   invoicedAt?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
   teamId?: Prisma.StringNullableFilter<"Order"> | string | null
   vehicleId?: Prisma.StringNullableFilter<"Order"> | string | null
+  projectId?: Prisma.StringNullableFilter<"Order"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Order"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Order"> | Date | string
   tenant?: Prisma.XOR<Prisma.TenantScalarRelationFilter, Prisma.TenantWhereInput>
   customer?: Prisma.XOR<Prisma.CustomerScalarRelationFilter, Prisma.CustomerWhereInput>
   property?: Prisma.XOR<Prisma.PropertyScalarRelationFilter, Prisma.PropertyWhereInput>
+  orderTypeDefinition?: Prisma.XOR<Prisma.OrderTypeDefinitionNullableScalarRelationFilter, Prisma.OrderTypeDefinitionWhereInput> | null
   services?: Prisma.OrderServiceListRelationFilter
   appointments?: Prisma.AppointmentListRelationFilter
   files?: Prisma.FileUploadListRelationFilter
@@ -357,8 +390,13 @@ export type OrderWhereInput = {
   planMarkers?: Prisma.PlanMarkerListRelationFilter
   team?: Prisma.XOR<Prisma.TeamNullableScalarRelationFilter, Prisma.TeamWhereInput> | null
   vehicle?: Prisma.XOR<Prisma.VehicleNullableScalarRelationFilter, Prisma.VehicleWhereInput> | null
+  project?: Prisma.XOR<Prisma.ProjectNullableScalarRelationFilter, Prisma.ProjectWhereInput> | null
   staffRequests?: Prisma.StaffAssignmentRequestListRelationFilter
   shares?: Prisma.OrderShareListRelationFilter
+  expenses?: Prisma.ExpenseListRelationFilter
+  projectNotes?: Prisma.ProjectNoteListRelationFilter
+  projectFiles?: Prisma.ProjectFileListRelationFilter
+  projectCosts?: Prisma.ProjectCostListRelationFilter
 }
 
 export type OrderOrderByWithRelationInput = {
@@ -369,6 +407,9 @@ export type OrderOrderByWithRelationInput = {
   orderNumber?: Prisma.SortOrder
   title?: Prisma.SortOrderInput | Prisma.SortOrder
   orderType?: Prisma.SortOrder
+  orderTypeId?: Prisma.SortOrderInput | Prisma.SortOrder
+  orderTypeLabel?: Prisma.SortOrderInput | Prisma.SortOrder
+  orderTypeCustom?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   priority?: Prisma.SortOrder
   materialStatus?: Prisma.SortOrder
@@ -385,11 +426,13 @@ export type OrderOrderByWithRelationInput = {
   invoicedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   teamId?: Prisma.SortOrderInput | Prisma.SortOrder
   vehicleId?: Prisma.SortOrderInput | Prisma.SortOrder
+  projectId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   tenant?: Prisma.TenantOrderByWithRelationInput
   customer?: Prisma.CustomerOrderByWithRelationInput
   property?: Prisma.PropertyOrderByWithRelationInput
+  orderTypeDefinition?: Prisma.OrderTypeDefinitionOrderByWithRelationInput
   services?: Prisma.OrderServiceOrderByRelationAggregateInput
   appointments?: Prisma.AppointmentOrderByRelationAggregateInput
   files?: Prisma.FileUploadOrderByRelationAggregateInput
@@ -406,8 +449,13 @@ export type OrderOrderByWithRelationInput = {
   planMarkers?: Prisma.PlanMarkerOrderByRelationAggregateInput
   team?: Prisma.TeamOrderByWithRelationInput
   vehicle?: Prisma.VehicleOrderByWithRelationInput
+  project?: Prisma.ProjectOrderByWithRelationInput
   staffRequests?: Prisma.StaffAssignmentRequestOrderByRelationAggregateInput
   shares?: Prisma.OrderShareOrderByRelationAggregateInput
+  expenses?: Prisma.ExpenseOrderByRelationAggregateInput
+  projectNotes?: Prisma.ProjectNoteOrderByRelationAggregateInput
+  projectFiles?: Prisma.ProjectFileOrderByRelationAggregateInput
+  projectCosts?: Prisma.ProjectCostOrderByRelationAggregateInput
 }
 
 export type OrderWhereUniqueInput = Prisma.AtLeast<{
@@ -422,6 +470,9 @@ export type OrderWhereUniqueInput = Prisma.AtLeast<{
   orderNumber?: Prisma.StringFilter<"Order"> | string
   title?: Prisma.StringNullableFilter<"Order"> | string | null
   orderType?: Prisma.EnumOrderTypeFilter<"Order"> | $Enums.OrderType
+  orderTypeId?: Prisma.StringNullableFilter<"Order"> | string | null
+  orderTypeLabel?: Prisma.StringNullableFilter<"Order"> | string | null
+  orderTypeCustom?: Prisma.StringNullableFilter<"Order"> | string | null
   status?: Prisma.EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
   priority?: Prisma.EnumOrderPriorityFilter<"Order"> | $Enums.OrderPriority
   materialStatus?: Prisma.EnumMaterialOrderStatusFilter<"Order"> | $Enums.MaterialOrderStatus
@@ -438,11 +489,13 @@ export type OrderWhereUniqueInput = Prisma.AtLeast<{
   invoicedAt?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
   teamId?: Prisma.StringNullableFilter<"Order"> | string | null
   vehicleId?: Prisma.StringNullableFilter<"Order"> | string | null
+  projectId?: Prisma.StringNullableFilter<"Order"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Order"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Order"> | Date | string
   tenant?: Prisma.XOR<Prisma.TenantScalarRelationFilter, Prisma.TenantWhereInput>
   customer?: Prisma.XOR<Prisma.CustomerScalarRelationFilter, Prisma.CustomerWhereInput>
   property?: Prisma.XOR<Prisma.PropertyScalarRelationFilter, Prisma.PropertyWhereInput>
+  orderTypeDefinition?: Prisma.XOR<Prisma.OrderTypeDefinitionNullableScalarRelationFilter, Prisma.OrderTypeDefinitionWhereInput> | null
   services?: Prisma.OrderServiceListRelationFilter
   appointments?: Prisma.AppointmentListRelationFilter
   files?: Prisma.FileUploadListRelationFilter
@@ -459,8 +512,13 @@ export type OrderWhereUniqueInput = Prisma.AtLeast<{
   planMarkers?: Prisma.PlanMarkerListRelationFilter
   team?: Prisma.XOR<Prisma.TeamNullableScalarRelationFilter, Prisma.TeamWhereInput> | null
   vehicle?: Prisma.XOR<Prisma.VehicleNullableScalarRelationFilter, Prisma.VehicleWhereInput> | null
+  project?: Prisma.XOR<Prisma.ProjectNullableScalarRelationFilter, Prisma.ProjectWhereInput> | null
   staffRequests?: Prisma.StaffAssignmentRequestListRelationFilter
   shares?: Prisma.OrderShareListRelationFilter
+  expenses?: Prisma.ExpenseListRelationFilter
+  projectNotes?: Prisma.ProjectNoteListRelationFilter
+  projectFiles?: Prisma.ProjectFileListRelationFilter
+  projectCosts?: Prisma.ProjectCostListRelationFilter
 }, "id" | "tenantId_orderNumber">
 
 export type OrderOrderByWithAggregationInput = {
@@ -471,6 +529,9 @@ export type OrderOrderByWithAggregationInput = {
   orderNumber?: Prisma.SortOrder
   title?: Prisma.SortOrderInput | Prisma.SortOrder
   orderType?: Prisma.SortOrder
+  orderTypeId?: Prisma.SortOrderInput | Prisma.SortOrder
+  orderTypeLabel?: Prisma.SortOrderInput | Prisma.SortOrder
+  orderTypeCustom?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   priority?: Prisma.SortOrder
   materialStatus?: Prisma.SortOrder
@@ -487,6 +548,7 @@ export type OrderOrderByWithAggregationInput = {
   invoicedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   teamId?: Prisma.SortOrderInput | Prisma.SortOrder
   vehicleId?: Prisma.SortOrderInput | Prisma.SortOrder
+  projectId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.OrderCountOrderByAggregateInput
@@ -505,6 +567,9 @@ export type OrderScalarWhereWithAggregatesInput = {
   orderNumber?: Prisma.StringWithAggregatesFilter<"Order"> | string
   title?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
   orderType?: Prisma.EnumOrderTypeWithAggregatesFilter<"Order"> | $Enums.OrderType
+  orderTypeId?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
+  orderTypeLabel?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
+  orderTypeCustom?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
   status?: Prisma.EnumOrderStatusWithAggregatesFilter<"Order"> | $Enums.OrderStatus
   priority?: Prisma.EnumOrderPriorityWithAggregatesFilter<"Order"> | $Enums.OrderPriority
   materialStatus?: Prisma.EnumMaterialOrderStatusWithAggregatesFilter<"Order"> | $Enums.MaterialOrderStatus
@@ -521,6 +586,7 @@ export type OrderScalarWhereWithAggregatesInput = {
   invoicedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Order"> | Date | string | null
   teamId?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
   vehicleId?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
+  projectId?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Order"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Order"> | Date | string
 }
@@ -530,6 +596,8 @@ export type OrderCreateInput = {
   orderNumber: string
   title?: string | null
   orderType?: $Enums.OrderType
+  orderTypeLabel?: string | null
+  orderTypeCustom?: string | null
   status?: $Enums.OrderStatus
   priority?: $Enums.OrderPriority
   materialStatus?: $Enums.MaterialOrderStatus
@@ -549,6 +617,7 @@ export type OrderCreateInput = {
   tenant: Prisma.TenantCreateNestedOneWithoutOrdersInput
   customer: Prisma.CustomerCreateNestedOneWithoutOrdersInput
   property: Prisma.PropertyCreateNestedOneWithoutOrdersInput
+  orderTypeDefinition?: Prisma.OrderTypeDefinitionCreateNestedOneWithoutOrdersInput
   services?: Prisma.OrderServiceCreateNestedManyWithoutOrderInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutOrderInput
   files?: Prisma.FileUploadCreateNestedManyWithoutOrderInput
@@ -565,8 +634,13 @@ export type OrderCreateInput = {
   planMarkers?: Prisma.PlanMarkerCreateNestedManyWithoutOrderInput
   team?: Prisma.TeamCreateNestedOneWithoutOrdersInput
   vehicle?: Prisma.VehicleCreateNestedOneWithoutOrdersInput
+  project?: Prisma.ProjectCreateNestedOneWithoutOrdersInput
   staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutOrderInput
   shares?: Prisma.OrderShareCreateNestedManyWithoutOrderInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutOrderInput
+  projectNotes?: Prisma.ProjectNoteCreateNestedManyWithoutOrderInput
+  projectFiles?: Prisma.ProjectFileCreateNestedManyWithoutOrderInput
+  projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateInput = {
@@ -577,6 +651,9 @@ export type OrderUncheckedCreateInput = {
   orderNumber: string
   title?: string | null
   orderType?: $Enums.OrderType
+  orderTypeId?: string | null
+  orderTypeLabel?: string | null
+  orderTypeCustom?: string | null
   status?: $Enums.OrderStatus
   priority?: $Enums.OrderPriority
   materialStatus?: $Enums.MaterialOrderStatus
@@ -593,6 +670,7 @@ export type OrderUncheckedCreateInput = {
   invoicedAt?: Date | string | null
   teamId?: string | null
   vehicleId?: string | null
+  projectId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   services?: Prisma.OrderServiceUncheckedCreateNestedManyWithoutOrderInput
@@ -611,6 +689,10 @@ export type OrderUncheckedCreateInput = {
   planMarkers?: Prisma.PlanMarkerUncheckedCreateNestedManyWithoutOrderInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutOrderInput
   shares?: Prisma.OrderShareUncheckedCreateNestedManyWithoutOrderInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrderInput
+  projectNotes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutOrderInput
+  projectFiles?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutOrderInput
+  projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUpdateInput = {
@@ -618,6 +700,8 @@ export type OrderUpdateInput = {
   orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  orderTypeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeCustom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   priority?: Prisma.EnumOrderPriorityFieldUpdateOperationsInput | $Enums.OrderPriority
   materialStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
@@ -637,6 +721,7 @@ export type OrderUpdateInput = {
   tenant?: Prisma.TenantUpdateOneRequiredWithoutOrdersNestedInput
   customer?: Prisma.CustomerUpdateOneRequiredWithoutOrdersNestedInput
   property?: Prisma.PropertyUpdateOneRequiredWithoutOrdersNestedInput
+  orderTypeDefinition?: Prisma.OrderTypeDefinitionUpdateOneWithoutOrdersNestedInput
   services?: Prisma.OrderServiceUpdateManyWithoutOrderNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutOrderNestedInput
   files?: Prisma.FileUploadUpdateManyWithoutOrderNestedInput
@@ -653,8 +738,13 @@ export type OrderUpdateInput = {
   planMarkers?: Prisma.PlanMarkerUpdateManyWithoutOrderNestedInput
   team?: Prisma.TeamUpdateOneWithoutOrdersNestedInput
   vehicle?: Prisma.VehicleUpdateOneWithoutOrdersNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutOrdersNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutOrderNestedInput
   shares?: Prisma.OrderShareUpdateManyWithoutOrderNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutOrderNestedInput
+  projectNotes?: Prisma.ProjectNoteUpdateManyWithoutOrderNestedInput
+  projectFiles?: Prisma.ProjectFileUpdateManyWithoutOrderNestedInput
+  projectCosts?: Prisma.ProjectCostUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateInput = {
@@ -665,6 +755,9 @@ export type OrderUncheckedUpdateInput = {
   orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  orderTypeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeCustom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   priority?: Prisma.EnumOrderPriorityFieldUpdateOperationsInput | $Enums.OrderPriority
   materialStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
@@ -681,6 +774,7 @@ export type OrderUncheckedUpdateInput = {
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   services?: Prisma.OrderServiceUncheckedUpdateManyWithoutOrderNestedInput
@@ -699,6 +793,10 @@ export type OrderUncheckedUpdateInput = {
   planMarkers?: Prisma.PlanMarkerUncheckedUpdateManyWithoutOrderNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutOrderNestedInput
   shares?: Prisma.OrderShareUncheckedUpdateManyWithoutOrderNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrderNestedInput
+  projectNotes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutOrderNestedInput
+  projectFiles?: Prisma.ProjectFileUncheckedUpdateManyWithoutOrderNestedInput
+  projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateManyInput = {
@@ -709,6 +807,9 @@ export type OrderCreateManyInput = {
   orderNumber: string
   title?: string | null
   orderType?: $Enums.OrderType
+  orderTypeId?: string | null
+  orderTypeLabel?: string | null
+  orderTypeCustom?: string | null
   status?: $Enums.OrderStatus
   priority?: $Enums.OrderPriority
   materialStatus?: $Enums.MaterialOrderStatus
@@ -725,6 +826,7 @@ export type OrderCreateManyInput = {
   invoicedAt?: Date | string | null
   teamId?: string | null
   vehicleId?: string | null
+  projectId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -734,6 +836,8 @@ export type OrderUpdateManyMutationInput = {
   orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  orderTypeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeCustom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   priority?: Prisma.EnumOrderPriorityFieldUpdateOperationsInput | $Enums.OrderPriority
   materialStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
@@ -760,6 +864,9 @@ export type OrderUncheckedUpdateManyInput = {
   orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  orderTypeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeCustom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   priority?: Prisma.EnumOrderPriorityFieldUpdateOperationsInput | $Enums.OrderPriority
   materialStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
@@ -776,6 +883,7 @@ export type OrderUncheckedUpdateManyInput = {
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -803,6 +911,9 @@ export type OrderCountOrderByAggregateInput = {
   orderNumber?: Prisma.SortOrder
   title?: Prisma.SortOrder
   orderType?: Prisma.SortOrder
+  orderTypeId?: Prisma.SortOrder
+  orderTypeLabel?: Prisma.SortOrder
+  orderTypeCustom?: Prisma.SortOrder
   status?: Prisma.SortOrder
   priority?: Prisma.SortOrder
   materialStatus?: Prisma.SortOrder
@@ -819,6 +930,7 @@ export type OrderCountOrderByAggregateInput = {
   invoicedAt?: Prisma.SortOrder
   teamId?: Prisma.SortOrder
   vehicleId?: Prisma.SortOrder
+  projectId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -831,6 +943,9 @@ export type OrderMaxOrderByAggregateInput = {
   orderNumber?: Prisma.SortOrder
   title?: Prisma.SortOrder
   orderType?: Prisma.SortOrder
+  orderTypeId?: Prisma.SortOrder
+  orderTypeLabel?: Prisma.SortOrder
+  orderTypeCustom?: Prisma.SortOrder
   status?: Prisma.SortOrder
   priority?: Prisma.SortOrder
   materialStatus?: Prisma.SortOrder
@@ -846,6 +961,7 @@ export type OrderMaxOrderByAggregateInput = {
   invoicedAt?: Prisma.SortOrder
   teamId?: Prisma.SortOrder
   vehicleId?: Prisma.SortOrder
+  projectId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -858,6 +974,9 @@ export type OrderMinOrderByAggregateInput = {
   orderNumber?: Prisma.SortOrder
   title?: Prisma.SortOrder
   orderType?: Prisma.SortOrder
+  orderTypeId?: Prisma.SortOrder
+  orderTypeLabel?: Prisma.SortOrder
+  orderTypeCustom?: Prisma.SortOrder
   status?: Prisma.SortOrder
   priority?: Prisma.SortOrder
   materialStatus?: Prisma.SortOrder
@@ -873,6 +992,7 @@ export type OrderMinOrderByAggregateInput = {
   invoicedAt?: Prisma.SortOrder
   teamId?: Prisma.SortOrder
   vehicleId?: Prisma.SortOrder
+  projectId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -1013,6 +1133,48 @@ export type OrderUncheckedUpdateManyWithoutPropertyNestedInput = {
   deleteMany?: Prisma.OrderScalarWhereInput | Prisma.OrderScalarWhereInput[]
 }
 
+export type OrderCreateNestedManyWithoutOrderTypeDefinitionInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutOrderTypeDefinitionInput, Prisma.OrderUncheckedCreateWithoutOrderTypeDefinitionInput> | Prisma.OrderCreateWithoutOrderTypeDefinitionInput[] | Prisma.OrderUncheckedCreateWithoutOrderTypeDefinitionInput[]
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutOrderTypeDefinitionInput | Prisma.OrderCreateOrConnectWithoutOrderTypeDefinitionInput[]
+  createMany?: Prisma.OrderCreateManyOrderTypeDefinitionInputEnvelope
+  connect?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+}
+
+export type OrderUncheckedCreateNestedManyWithoutOrderTypeDefinitionInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutOrderTypeDefinitionInput, Prisma.OrderUncheckedCreateWithoutOrderTypeDefinitionInput> | Prisma.OrderCreateWithoutOrderTypeDefinitionInput[] | Prisma.OrderUncheckedCreateWithoutOrderTypeDefinitionInput[]
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutOrderTypeDefinitionInput | Prisma.OrderCreateOrConnectWithoutOrderTypeDefinitionInput[]
+  createMany?: Prisma.OrderCreateManyOrderTypeDefinitionInputEnvelope
+  connect?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+}
+
+export type OrderUpdateManyWithoutOrderTypeDefinitionNestedInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutOrderTypeDefinitionInput, Prisma.OrderUncheckedCreateWithoutOrderTypeDefinitionInput> | Prisma.OrderCreateWithoutOrderTypeDefinitionInput[] | Prisma.OrderUncheckedCreateWithoutOrderTypeDefinitionInput[]
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutOrderTypeDefinitionInput | Prisma.OrderCreateOrConnectWithoutOrderTypeDefinitionInput[]
+  upsert?: Prisma.OrderUpsertWithWhereUniqueWithoutOrderTypeDefinitionInput | Prisma.OrderUpsertWithWhereUniqueWithoutOrderTypeDefinitionInput[]
+  createMany?: Prisma.OrderCreateManyOrderTypeDefinitionInputEnvelope
+  set?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+  disconnect?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+  delete?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+  connect?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+  update?: Prisma.OrderUpdateWithWhereUniqueWithoutOrderTypeDefinitionInput | Prisma.OrderUpdateWithWhereUniqueWithoutOrderTypeDefinitionInput[]
+  updateMany?: Prisma.OrderUpdateManyWithWhereWithoutOrderTypeDefinitionInput | Prisma.OrderUpdateManyWithWhereWithoutOrderTypeDefinitionInput[]
+  deleteMany?: Prisma.OrderScalarWhereInput | Prisma.OrderScalarWhereInput[]
+}
+
+export type OrderUncheckedUpdateManyWithoutOrderTypeDefinitionNestedInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutOrderTypeDefinitionInput, Prisma.OrderUncheckedCreateWithoutOrderTypeDefinitionInput> | Prisma.OrderCreateWithoutOrderTypeDefinitionInput[] | Prisma.OrderUncheckedCreateWithoutOrderTypeDefinitionInput[]
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutOrderTypeDefinitionInput | Prisma.OrderCreateOrConnectWithoutOrderTypeDefinitionInput[]
+  upsert?: Prisma.OrderUpsertWithWhereUniqueWithoutOrderTypeDefinitionInput | Prisma.OrderUpsertWithWhereUniqueWithoutOrderTypeDefinitionInput[]
+  createMany?: Prisma.OrderCreateManyOrderTypeDefinitionInputEnvelope
+  set?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+  disconnect?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+  delete?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+  connect?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+  update?: Prisma.OrderUpdateWithWhereUniqueWithoutOrderTypeDefinitionInput | Prisma.OrderUpdateWithWhereUniqueWithoutOrderTypeDefinitionInput[]
+  updateMany?: Prisma.OrderUpdateManyWithWhereWithoutOrderTypeDefinitionInput | Prisma.OrderUpdateManyWithWhereWithoutOrderTypeDefinitionInput[]
+  deleteMany?: Prisma.OrderScalarWhereInput | Prisma.OrderScalarWhereInput[]
+}
+
 export type EnumOrderTypeFieldUpdateOperationsInput = {
   set?: $Enums.OrderType
 }
@@ -1099,10 +1261,12 @@ export type OrderCreateNestedOneWithoutTimeEntriesInput = {
   connect?: Prisma.OrderWhereUniqueInput
 }
 
-export type OrderUpdateOneRequiredWithoutTimeEntriesNestedInput = {
+export type OrderUpdateOneWithoutTimeEntriesNestedInput = {
   create?: Prisma.XOR<Prisma.OrderCreateWithoutTimeEntriesInput, Prisma.OrderUncheckedCreateWithoutTimeEntriesInput>
   connectOrCreate?: Prisma.OrderCreateOrConnectWithoutTimeEntriesInput
   upsert?: Prisma.OrderUpsertWithoutTimeEntriesInput
+  disconnect?: Prisma.OrderWhereInput | boolean
+  delete?: Prisma.OrderWhereInput | boolean
   connect?: Prisma.OrderWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.OrderUpdateToOneWithWhereWithoutTimeEntriesInput, Prisma.OrderUpdateWithoutTimeEntriesInput>, Prisma.OrderUncheckedUpdateWithoutTimeEntriesInput>
 }
@@ -1353,11 +1517,119 @@ export type OrderUpdateOneRequiredWithoutSharesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.OrderUpdateToOneWithWhereWithoutSharesInput, Prisma.OrderUpdateWithoutSharesInput>, Prisma.OrderUncheckedUpdateWithoutSharesInput>
 }
 
+export type OrderCreateNestedOneWithoutExpensesInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutExpensesInput, Prisma.OrderUncheckedCreateWithoutExpensesInput>
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutExpensesInput
+  connect?: Prisma.OrderWhereUniqueInput
+}
+
+export type OrderUpdateOneWithoutExpensesNestedInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutExpensesInput, Prisma.OrderUncheckedCreateWithoutExpensesInput>
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutExpensesInput
+  upsert?: Prisma.OrderUpsertWithoutExpensesInput
+  disconnect?: Prisma.OrderWhereInput | boolean
+  delete?: Prisma.OrderWhereInput | boolean
+  connect?: Prisma.OrderWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OrderUpdateToOneWithWhereWithoutExpensesInput, Prisma.OrderUpdateWithoutExpensesInput>, Prisma.OrderUncheckedUpdateWithoutExpensesInput>
+}
+
+export type OrderCreateNestedManyWithoutProjectInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutProjectInput, Prisma.OrderUncheckedCreateWithoutProjectInput> | Prisma.OrderCreateWithoutProjectInput[] | Prisma.OrderUncheckedCreateWithoutProjectInput[]
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutProjectInput | Prisma.OrderCreateOrConnectWithoutProjectInput[]
+  createMany?: Prisma.OrderCreateManyProjectInputEnvelope
+  connect?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+}
+
+export type OrderUncheckedCreateNestedManyWithoutProjectInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutProjectInput, Prisma.OrderUncheckedCreateWithoutProjectInput> | Prisma.OrderCreateWithoutProjectInput[] | Prisma.OrderUncheckedCreateWithoutProjectInput[]
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutProjectInput | Prisma.OrderCreateOrConnectWithoutProjectInput[]
+  createMany?: Prisma.OrderCreateManyProjectInputEnvelope
+  connect?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+}
+
+export type OrderUpdateManyWithoutProjectNestedInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutProjectInput, Prisma.OrderUncheckedCreateWithoutProjectInput> | Prisma.OrderCreateWithoutProjectInput[] | Prisma.OrderUncheckedCreateWithoutProjectInput[]
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutProjectInput | Prisma.OrderCreateOrConnectWithoutProjectInput[]
+  upsert?: Prisma.OrderUpsertWithWhereUniqueWithoutProjectInput | Prisma.OrderUpsertWithWhereUniqueWithoutProjectInput[]
+  createMany?: Prisma.OrderCreateManyProjectInputEnvelope
+  set?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+  disconnect?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+  delete?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+  connect?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+  update?: Prisma.OrderUpdateWithWhereUniqueWithoutProjectInput | Prisma.OrderUpdateWithWhereUniqueWithoutProjectInput[]
+  updateMany?: Prisma.OrderUpdateManyWithWhereWithoutProjectInput | Prisma.OrderUpdateManyWithWhereWithoutProjectInput[]
+  deleteMany?: Prisma.OrderScalarWhereInput | Prisma.OrderScalarWhereInput[]
+}
+
+export type OrderUncheckedUpdateManyWithoutProjectNestedInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutProjectInput, Prisma.OrderUncheckedCreateWithoutProjectInput> | Prisma.OrderCreateWithoutProjectInput[] | Prisma.OrderUncheckedCreateWithoutProjectInput[]
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutProjectInput | Prisma.OrderCreateOrConnectWithoutProjectInput[]
+  upsert?: Prisma.OrderUpsertWithWhereUniqueWithoutProjectInput | Prisma.OrderUpsertWithWhereUniqueWithoutProjectInput[]
+  createMany?: Prisma.OrderCreateManyProjectInputEnvelope
+  set?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+  disconnect?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+  delete?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+  connect?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+  update?: Prisma.OrderUpdateWithWhereUniqueWithoutProjectInput | Prisma.OrderUpdateWithWhereUniqueWithoutProjectInput[]
+  updateMany?: Prisma.OrderUpdateManyWithWhereWithoutProjectInput | Prisma.OrderUpdateManyWithWhereWithoutProjectInput[]
+  deleteMany?: Prisma.OrderScalarWhereInput | Prisma.OrderScalarWhereInput[]
+}
+
+export type OrderCreateNestedOneWithoutProjectNotesInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutProjectNotesInput, Prisma.OrderUncheckedCreateWithoutProjectNotesInput>
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutProjectNotesInput
+  connect?: Prisma.OrderWhereUniqueInput
+}
+
+export type OrderUpdateOneWithoutProjectNotesNestedInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutProjectNotesInput, Prisma.OrderUncheckedCreateWithoutProjectNotesInput>
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutProjectNotesInput
+  upsert?: Prisma.OrderUpsertWithoutProjectNotesInput
+  disconnect?: Prisma.OrderWhereInput | boolean
+  delete?: Prisma.OrderWhereInput | boolean
+  connect?: Prisma.OrderWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OrderUpdateToOneWithWhereWithoutProjectNotesInput, Prisma.OrderUpdateWithoutProjectNotesInput>, Prisma.OrderUncheckedUpdateWithoutProjectNotesInput>
+}
+
+export type OrderCreateNestedOneWithoutProjectFilesInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutProjectFilesInput, Prisma.OrderUncheckedCreateWithoutProjectFilesInput>
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutProjectFilesInput
+  connect?: Prisma.OrderWhereUniqueInput
+}
+
+export type OrderUpdateOneWithoutProjectFilesNestedInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutProjectFilesInput, Prisma.OrderUncheckedCreateWithoutProjectFilesInput>
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutProjectFilesInput
+  upsert?: Prisma.OrderUpsertWithoutProjectFilesInput
+  disconnect?: Prisma.OrderWhereInput | boolean
+  delete?: Prisma.OrderWhereInput | boolean
+  connect?: Prisma.OrderWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OrderUpdateToOneWithWhereWithoutProjectFilesInput, Prisma.OrderUpdateWithoutProjectFilesInput>, Prisma.OrderUncheckedUpdateWithoutProjectFilesInput>
+}
+
+export type OrderCreateNestedOneWithoutProjectCostsInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutProjectCostsInput, Prisma.OrderUncheckedCreateWithoutProjectCostsInput>
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutProjectCostsInput
+  connect?: Prisma.OrderWhereUniqueInput
+}
+
+export type OrderUpdateOneWithoutProjectCostsNestedInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutProjectCostsInput, Prisma.OrderUncheckedCreateWithoutProjectCostsInput>
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutProjectCostsInput
+  upsert?: Prisma.OrderUpsertWithoutProjectCostsInput
+  disconnect?: Prisma.OrderWhereInput | boolean
+  delete?: Prisma.OrderWhereInput | boolean
+  connect?: Prisma.OrderWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OrderUpdateToOneWithWhereWithoutProjectCostsInput, Prisma.OrderUpdateWithoutProjectCostsInput>, Prisma.OrderUncheckedUpdateWithoutProjectCostsInput>
+}
+
 export type OrderCreateWithoutTenantInput = {
   id?: string
   orderNumber: string
   title?: string | null
   orderType?: $Enums.OrderType
+  orderTypeLabel?: string | null
+  orderTypeCustom?: string | null
   status?: $Enums.OrderStatus
   priority?: $Enums.OrderPriority
   materialStatus?: $Enums.MaterialOrderStatus
@@ -1376,6 +1648,7 @@ export type OrderCreateWithoutTenantInput = {
   updatedAt?: Date | string
   customer: Prisma.CustomerCreateNestedOneWithoutOrdersInput
   property: Prisma.PropertyCreateNestedOneWithoutOrdersInput
+  orderTypeDefinition?: Prisma.OrderTypeDefinitionCreateNestedOneWithoutOrdersInput
   services?: Prisma.OrderServiceCreateNestedManyWithoutOrderInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutOrderInput
   files?: Prisma.FileUploadCreateNestedManyWithoutOrderInput
@@ -1392,8 +1665,13 @@ export type OrderCreateWithoutTenantInput = {
   planMarkers?: Prisma.PlanMarkerCreateNestedManyWithoutOrderInput
   team?: Prisma.TeamCreateNestedOneWithoutOrdersInput
   vehicle?: Prisma.VehicleCreateNestedOneWithoutOrdersInput
+  project?: Prisma.ProjectCreateNestedOneWithoutOrdersInput
   staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutOrderInput
   shares?: Prisma.OrderShareCreateNestedManyWithoutOrderInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutOrderInput
+  projectNotes?: Prisma.ProjectNoteCreateNestedManyWithoutOrderInput
+  projectFiles?: Prisma.ProjectFileCreateNestedManyWithoutOrderInput
+  projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutTenantInput = {
@@ -1403,6 +1681,9 @@ export type OrderUncheckedCreateWithoutTenantInput = {
   orderNumber: string
   title?: string | null
   orderType?: $Enums.OrderType
+  orderTypeId?: string | null
+  orderTypeLabel?: string | null
+  orderTypeCustom?: string | null
   status?: $Enums.OrderStatus
   priority?: $Enums.OrderPriority
   materialStatus?: $Enums.MaterialOrderStatus
@@ -1419,6 +1700,7 @@ export type OrderUncheckedCreateWithoutTenantInput = {
   invoicedAt?: Date | string | null
   teamId?: string | null
   vehicleId?: string | null
+  projectId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   services?: Prisma.OrderServiceUncheckedCreateNestedManyWithoutOrderInput
@@ -1437,6 +1719,10 @@ export type OrderUncheckedCreateWithoutTenantInput = {
   planMarkers?: Prisma.PlanMarkerUncheckedCreateNestedManyWithoutOrderInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutOrderInput
   shares?: Prisma.OrderShareUncheckedCreateNestedManyWithoutOrderInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrderInput
+  projectNotes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutOrderInput
+  projectFiles?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutOrderInput
+  projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutTenantInput = {
@@ -1476,6 +1762,9 @@ export type OrderScalarWhereInput = {
   orderNumber?: Prisma.StringFilter<"Order"> | string
   title?: Prisma.StringNullableFilter<"Order"> | string | null
   orderType?: Prisma.EnumOrderTypeFilter<"Order"> | $Enums.OrderType
+  orderTypeId?: Prisma.StringNullableFilter<"Order"> | string | null
+  orderTypeLabel?: Prisma.StringNullableFilter<"Order"> | string | null
+  orderTypeCustom?: Prisma.StringNullableFilter<"Order"> | string | null
   status?: Prisma.EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
   priority?: Prisma.EnumOrderPriorityFilter<"Order"> | $Enums.OrderPriority
   materialStatus?: Prisma.EnumMaterialOrderStatusFilter<"Order"> | $Enums.MaterialOrderStatus
@@ -1492,6 +1781,7 @@ export type OrderScalarWhereInput = {
   invoicedAt?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
   teamId?: Prisma.StringNullableFilter<"Order"> | string | null
   vehicleId?: Prisma.StringNullableFilter<"Order"> | string | null
+  projectId?: Prisma.StringNullableFilter<"Order"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Order"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Order"> | Date | string
 }
@@ -1501,6 +1791,8 @@ export type OrderCreateWithoutCustomerInput = {
   orderNumber: string
   title?: string | null
   orderType?: $Enums.OrderType
+  orderTypeLabel?: string | null
+  orderTypeCustom?: string | null
   status?: $Enums.OrderStatus
   priority?: $Enums.OrderPriority
   materialStatus?: $Enums.MaterialOrderStatus
@@ -1519,6 +1811,7 @@ export type OrderCreateWithoutCustomerInput = {
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutOrdersInput
   property: Prisma.PropertyCreateNestedOneWithoutOrdersInput
+  orderTypeDefinition?: Prisma.OrderTypeDefinitionCreateNestedOneWithoutOrdersInput
   services?: Prisma.OrderServiceCreateNestedManyWithoutOrderInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutOrderInput
   files?: Prisma.FileUploadCreateNestedManyWithoutOrderInput
@@ -1535,8 +1828,13 @@ export type OrderCreateWithoutCustomerInput = {
   planMarkers?: Prisma.PlanMarkerCreateNestedManyWithoutOrderInput
   team?: Prisma.TeamCreateNestedOneWithoutOrdersInput
   vehicle?: Prisma.VehicleCreateNestedOneWithoutOrdersInput
+  project?: Prisma.ProjectCreateNestedOneWithoutOrdersInput
   staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutOrderInput
   shares?: Prisma.OrderShareCreateNestedManyWithoutOrderInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutOrderInput
+  projectNotes?: Prisma.ProjectNoteCreateNestedManyWithoutOrderInput
+  projectFiles?: Prisma.ProjectFileCreateNestedManyWithoutOrderInput
+  projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutCustomerInput = {
@@ -1546,6 +1844,9 @@ export type OrderUncheckedCreateWithoutCustomerInput = {
   orderNumber: string
   title?: string | null
   orderType?: $Enums.OrderType
+  orderTypeId?: string | null
+  orderTypeLabel?: string | null
+  orderTypeCustom?: string | null
   status?: $Enums.OrderStatus
   priority?: $Enums.OrderPriority
   materialStatus?: $Enums.MaterialOrderStatus
@@ -1562,6 +1863,7 @@ export type OrderUncheckedCreateWithoutCustomerInput = {
   invoicedAt?: Date | string | null
   teamId?: string | null
   vehicleId?: string | null
+  projectId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   services?: Prisma.OrderServiceUncheckedCreateNestedManyWithoutOrderInput
@@ -1580,6 +1882,10 @@ export type OrderUncheckedCreateWithoutCustomerInput = {
   planMarkers?: Prisma.PlanMarkerUncheckedCreateNestedManyWithoutOrderInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutOrderInput
   shares?: Prisma.OrderShareUncheckedCreateNestedManyWithoutOrderInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrderInput
+  projectNotes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutOrderInput
+  projectFiles?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutOrderInput
+  projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutCustomerInput = {
@@ -1613,6 +1919,8 @@ export type OrderCreateWithoutPropertyInput = {
   orderNumber: string
   title?: string | null
   orderType?: $Enums.OrderType
+  orderTypeLabel?: string | null
+  orderTypeCustom?: string | null
   status?: $Enums.OrderStatus
   priority?: $Enums.OrderPriority
   materialStatus?: $Enums.MaterialOrderStatus
@@ -1631,6 +1939,7 @@ export type OrderCreateWithoutPropertyInput = {
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutOrdersInput
   customer: Prisma.CustomerCreateNestedOneWithoutOrdersInput
+  orderTypeDefinition?: Prisma.OrderTypeDefinitionCreateNestedOneWithoutOrdersInput
   services?: Prisma.OrderServiceCreateNestedManyWithoutOrderInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutOrderInput
   files?: Prisma.FileUploadCreateNestedManyWithoutOrderInput
@@ -1647,8 +1956,13 @@ export type OrderCreateWithoutPropertyInput = {
   planMarkers?: Prisma.PlanMarkerCreateNestedManyWithoutOrderInput
   team?: Prisma.TeamCreateNestedOneWithoutOrdersInput
   vehicle?: Prisma.VehicleCreateNestedOneWithoutOrdersInput
+  project?: Prisma.ProjectCreateNestedOneWithoutOrdersInput
   staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutOrderInput
   shares?: Prisma.OrderShareCreateNestedManyWithoutOrderInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutOrderInput
+  projectNotes?: Prisma.ProjectNoteCreateNestedManyWithoutOrderInput
+  projectFiles?: Prisma.ProjectFileCreateNestedManyWithoutOrderInput
+  projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutPropertyInput = {
@@ -1658,6 +1972,9 @@ export type OrderUncheckedCreateWithoutPropertyInput = {
   orderNumber: string
   title?: string | null
   orderType?: $Enums.OrderType
+  orderTypeId?: string | null
+  orderTypeLabel?: string | null
+  orderTypeCustom?: string | null
   status?: $Enums.OrderStatus
   priority?: $Enums.OrderPriority
   materialStatus?: $Enums.MaterialOrderStatus
@@ -1674,6 +1991,7 @@ export type OrderUncheckedCreateWithoutPropertyInput = {
   invoicedAt?: Date | string | null
   teamId?: string | null
   vehicleId?: string | null
+  projectId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   services?: Prisma.OrderServiceUncheckedCreateNestedManyWithoutOrderInput
@@ -1692,6 +2010,10 @@ export type OrderUncheckedCreateWithoutPropertyInput = {
   planMarkers?: Prisma.PlanMarkerUncheckedCreateNestedManyWithoutOrderInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutOrderInput
   shares?: Prisma.OrderShareUncheckedCreateNestedManyWithoutOrderInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrderInput
+  projectNotes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutOrderInput
+  projectFiles?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutOrderInput
+  projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutPropertyInput = {
@@ -1720,11 +2042,13 @@ export type OrderUpdateManyWithWhereWithoutPropertyInput = {
   data: Prisma.XOR<Prisma.OrderUpdateManyMutationInput, Prisma.OrderUncheckedUpdateManyWithoutPropertyInput>
 }
 
-export type OrderCreateWithoutServicesInput = {
+export type OrderCreateWithoutOrderTypeDefinitionInput = {
   id?: string
   orderNumber: string
   title?: string | null
   orderType?: $Enums.OrderType
+  orderTypeLabel?: string | null
+  orderTypeCustom?: string | null
   status?: $Enums.OrderStatus
   priority?: $Enums.OrderPriority
   materialStatus?: $Enums.MaterialOrderStatus
@@ -1744,6 +2068,7 @@ export type OrderCreateWithoutServicesInput = {
   tenant: Prisma.TenantCreateNestedOneWithoutOrdersInput
   customer: Prisma.CustomerCreateNestedOneWithoutOrdersInput
   property: Prisma.PropertyCreateNestedOneWithoutOrdersInput
+  services?: Prisma.OrderServiceCreateNestedManyWithoutOrderInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutOrderInput
   files?: Prisma.FileUploadCreateNestedManyWithoutOrderInput
   checklists?: Prisma.OrderChecklistCreateNestedManyWithoutOrderInput
@@ -1759,11 +2084,16 @@ export type OrderCreateWithoutServicesInput = {
   planMarkers?: Prisma.PlanMarkerCreateNestedManyWithoutOrderInput
   team?: Prisma.TeamCreateNestedOneWithoutOrdersInput
   vehicle?: Prisma.VehicleCreateNestedOneWithoutOrdersInput
+  project?: Prisma.ProjectCreateNestedOneWithoutOrdersInput
   staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutOrderInput
   shares?: Prisma.OrderShareCreateNestedManyWithoutOrderInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutOrderInput
+  projectNotes?: Prisma.ProjectNoteCreateNestedManyWithoutOrderInput
+  projectFiles?: Prisma.ProjectFileCreateNestedManyWithoutOrderInput
+  projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutOrderInput
 }
 
-export type OrderUncheckedCreateWithoutServicesInput = {
+export type OrderUncheckedCreateWithoutOrderTypeDefinitionInput = {
   id?: string
   tenantId: string
   customerId: string
@@ -1771,6 +2101,8 @@ export type OrderUncheckedCreateWithoutServicesInput = {
   orderNumber: string
   title?: string | null
   orderType?: $Enums.OrderType
+  orderTypeLabel?: string | null
+  orderTypeCustom?: string | null
   status?: $Enums.OrderStatus
   priority?: $Enums.OrderPriority
   materialStatus?: $Enums.MaterialOrderStatus
@@ -1787,6 +2119,136 @@ export type OrderUncheckedCreateWithoutServicesInput = {
   invoicedAt?: Date | string | null
   teamId?: string | null
   vehicleId?: string | null
+  projectId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  services?: Prisma.OrderServiceUncheckedCreateNestedManyWithoutOrderInput
+  appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutOrderInput
+  files?: Prisma.FileUploadUncheckedCreateNestedManyWithoutOrderInput
+  checklists?: Prisma.OrderChecklistUncheckedCreateNestedManyWithoutOrderInput
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutOrderInput
+  timeEntries?: Prisma.TimeEntryUncheckedCreateNestedManyWithoutOrderInput
+  materialUsages?: Prisma.MaterialUsageUncheckedCreateNestedManyWithoutOrderInput
+  calculations?: Prisma.CalculationUncheckedCreateNestedManyWithoutOrderInput
+  phases?: Prisma.OrderPhaseUncheckedCreateNestedManyWithoutOrderInput
+  materialLines?: Prisma.OrderMaterialLineUncheckedCreateNestedManyWithoutOrderInput
+  reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutOrderInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutOrderInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutOrderInput
+  planMarkers?: Prisma.PlanMarkerUncheckedCreateNestedManyWithoutOrderInput
+  staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutOrderInput
+  shares?: Prisma.OrderShareUncheckedCreateNestedManyWithoutOrderInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrderInput
+  projectNotes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutOrderInput
+  projectFiles?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutOrderInput
+  projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutOrderInput
+}
+
+export type OrderCreateOrConnectWithoutOrderTypeDefinitionInput = {
+  where: Prisma.OrderWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrderCreateWithoutOrderTypeDefinitionInput, Prisma.OrderUncheckedCreateWithoutOrderTypeDefinitionInput>
+}
+
+export type OrderCreateManyOrderTypeDefinitionInputEnvelope = {
+  data: Prisma.OrderCreateManyOrderTypeDefinitionInput | Prisma.OrderCreateManyOrderTypeDefinitionInput[]
+  skipDuplicates?: boolean
+}
+
+export type OrderUpsertWithWhereUniqueWithoutOrderTypeDefinitionInput = {
+  where: Prisma.OrderWhereUniqueInput
+  update: Prisma.XOR<Prisma.OrderUpdateWithoutOrderTypeDefinitionInput, Prisma.OrderUncheckedUpdateWithoutOrderTypeDefinitionInput>
+  create: Prisma.XOR<Prisma.OrderCreateWithoutOrderTypeDefinitionInput, Prisma.OrderUncheckedCreateWithoutOrderTypeDefinitionInput>
+}
+
+export type OrderUpdateWithWhereUniqueWithoutOrderTypeDefinitionInput = {
+  where: Prisma.OrderWhereUniqueInput
+  data: Prisma.XOR<Prisma.OrderUpdateWithoutOrderTypeDefinitionInput, Prisma.OrderUncheckedUpdateWithoutOrderTypeDefinitionInput>
+}
+
+export type OrderUpdateManyWithWhereWithoutOrderTypeDefinitionInput = {
+  where: Prisma.OrderScalarWhereInput
+  data: Prisma.XOR<Prisma.OrderUpdateManyMutationInput, Prisma.OrderUncheckedUpdateManyWithoutOrderTypeDefinitionInput>
+}
+
+export type OrderCreateWithoutServicesInput = {
+  id?: string
+  orderNumber: string
+  title?: string | null
+  orderType?: $Enums.OrderType
+  orderTypeLabel?: string | null
+  orderTypeCustom?: string | null
+  status?: $Enums.OrderStatus
+  priority?: $Enums.OrderPriority
+  materialStatus?: $Enums.MaterialOrderStatus
+  completionResult?: $Enums.CompletionResult | null
+  customerConfirmationStatus?: $Enums.CustomerConfirmationStatus
+  description?: string | null
+  internalNotes?: string | null
+  customerNotes?: string | null
+  questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  scheduledStart?: Date | string | null
+  scheduledEnd?: Date | string | null
+  bookingConfirmationSentAt?: Date | string | null
+  completedAt?: Date | string | null
+  invoicedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tenant: Prisma.TenantCreateNestedOneWithoutOrdersInput
+  customer: Prisma.CustomerCreateNestedOneWithoutOrdersInput
+  property: Prisma.PropertyCreateNestedOneWithoutOrdersInput
+  orderTypeDefinition?: Prisma.OrderTypeDefinitionCreateNestedOneWithoutOrdersInput
+  appointments?: Prisma.AppointmentCreateNestedManyWithoutOrderInput
+  files?: Prisma.FileUploadCreateNestedManyWithoutOrderInput
+  checklists?: Prisma.OrderChecklistCreateNestedManyWithoutOrderInput
+  messages?: Prisma.MessageCreateNestedManyWithoutOrderInput
+  timeEntries?: Prisma.TimeEntryCreateNestedManyWithoutOrderInput
+  materialUsages?: Prisma.MaterialUsageCreateNestedManyWithoutOrderInput
+  calculations?: Prisma.CalculationCreateNestedManyWithoutOrderInput
+  phases?: Prisma.OrderPhaseCreateNestedManyWithoutOrderInput
+  materialLines?: Prisma.OrderMaterialLineCreateNestedManyWithoutOrderInput
+  reservations?: Prisma.ReservationCreateNestedManyWithoutOrderInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutOrderInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutOrderInput
+  planMarkers?: Prisma.PlanMarkerCreateNestedManyWithoutOrderInput
+  team?: Prisma.TeamCreateNestedOneWithoutOrdersInput
+  vehicle?: Prisma.VehicleCreateNestedOneWithoutOrdersInput
+  project?: Prisma.ProjectCreateNestedOneWithoutOrdersInput
+  staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutOrderInput
+  shares?: Prisma.OrderShareCreateNestedManyWithoutOrderInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutOrderInput
+  projectNotes?: Prisma.ProjectNoteCreateNestedManyWithoutOrderInput
+  projectFiles?: Prisma.ProjectFileCreateNestedManyWithoutOrderInput
+  projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutOrderInput
+}
+
+export type OrderUncheckedCreateWithoutServicesInput = {
+  id?: string
+  tenantId: string
+  customerId: string
+  propertyId: string
+  orderNumber: string
+  title?: string | null
+  orderType?: $Enums.OrderType
+  orderTypeId?: string | null
+  orderTypeLabel?: string | null
+  orderTypeCustom?: string | null
+  status?: $Enums.OrderStatus
+  priority?: $Enums.OrderPriority
+  materialStatus?: $Enums.MaterialOrderStatus
+  completionResult?: $Enums.CompletionResult | null
+  customerConfirmationStatus?: $Enums.CustomerConfirmationStatus
+  description?: string | null
+  internalNotes?: string | null
+  customerNotes?: string | null
+  questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  scheduledStart?: Date | string | null
+  scheduledEnd?: Date | string | null
+  bookingConfirmationSentAt?: Date | string | null
+  completedAt?: Date | string | null
+  invoicedAt?: Date | string | null
+  teamId?: string | null
+  vehicleId?: string | null
+  projectId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutOrderInput
@@ -1804,6 +2266,10 @@ export type OrderUncheckedCreateWithoutServicesInput = {
   planMarkers?: Prisma.PlanMarkerUncheckedCreateNestedManyWithoutOrderInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutOrderInput
   shares?: Prisma.OrderShareUncheckedCreateNestedManyWithoutOrderInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrderInput
+  projectNotes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutOrderInput
+  projectFiles?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutOrderInput
+  projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutServicesInput = {
@@ -1827,6 +2293,8 @@ export type OrderUpdateWithoutServicesInput = {
   orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  orderTypeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeCustom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   priority?: Prisma.EnumOrderPriorityFieldUpdateOperationsInput | $Enums.OrderPriority
   materialStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
@@ -1846,6 +2314,7 @@ export type OrderUpdateWithoutServicesInput = {
   tenant?: Prisma.TenantUpdateOneRequiredWithoutOrdersNestedInput
   customer?: Prisma.CustomerUpdateOneRequiredWithoutOrdersNestedInput
   property?: Prisma.PropertyUpdateOneRequiredWithoutOrdersNestedInput
+  orderTypeDefinition?: Prisma.OrderTypeDefinitionUpdateOneWithoutOrdersNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutOrderNestedInput
   files?: Prisma.FileUploadUpdateManyWithoutOrderNestedInput
   checklists?: Prisma.OrderChecklistUpdateManyWithoutOrderNestedInput
@@ -1861,8 +2330,13 @@ export type OrderUpdateWithoutServicesInput = {
   planMarkers?: Prisma.PlanMarkerUpdateManyWithoutOrderNestedInput
   team?: Prisma.TeamUpdateOneWithoutOrdersNestedInput
   vehicle?: Prisma.VehicleUpdateOneWithoutOrdersNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutOrdersNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutOrderNestedInput
   shares?: Prisma.OrderShareUpdateManyWithoutOrderNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutOrderNestedInput
+  projectNotes?: Prisma.ProjectNoteUpdateManyWithoutOrderNestedInput
+  projectFiles?: Prisma.ProjectFileUpdateManyWithoutOrderNestedInput
+  projectCosts?: Prisma.ProjectCostUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutServicesInput = {
@@ -1873,6 +2347,9 @@ export type OrderUncheckedUpdateWithoutServicesInput = {
   orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  orderTypeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeCustom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   priority?: Prisma.EnumOrderPriorityFieldUpdateOperationsInput | $Enums.OrderPriority
   materialStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
@@ -1889,6 +2366,7 @@ export type OrderUncheckedUpdateWithoutServicesInput = {
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutOrderNestedInput
@@ -1906,6 +2384,10 @@ export type OrderUncheckedUpdateWithoutServicesInput = {
   planMarkers?: Prisma.PlanMarkerUncheckedUpdateManyWithoutOrderNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutOrderNestedInput
   shares?: Prisma.OrderShareUncheckedUpdateManyWithoutOrderNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrderNestedInput
+  projectNotes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutOrderNestedInput
+  projectFiles?: Prisma.ProjectFileUncheckedUpdateManyWithoutOrderNestedInput
+  projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutAppointmentsInput = {
@@ -1913,6 +2395,8 @@ export type OrderCreateWithoutAppointmentsInput = {
   orderNumber: string
   title?: string | null
   orderType?: $Enums.OrderType
+  orderTypeLabel?: string | null
+  orderTypeCustom?: string | null
   status?: $Enums.OrderStatus
   priority?: $Enums.OrderPriority
   materialStatus?: $Enums.MaterialOrderStatus
@@ -1932,6 +2416,7 @@ export type OrderCreateWithoutAppointmentsInput = {
   tenant: Prisma.TenantCreateNestedOneWithoutOrdersInput
   customer: Prisma.CustomerCreateNestedOneWithoutOrdersInput
   property: Prisma.PropertyCreateNestedOneWithoutOrdersInput
+  orderTypeDefinition?: Prisma.OrderTypeDefinitionCreateNestedOneWithoutOrdersInput
   services?: Prisma.OrderServiceCreateNestedManyWithoutOrderInput
   files?: Prisma.FileUploadCreateNestedManyWithoutOrderInput
   checklists?: Prisma.OrderChecklistCreateNestedManyWithoutOrderInput
@@ -1947,8 +2432,13 @@ export type OrderCreateWithoutAppointmentsInput = {
   planMarkers?: Prisma.PlanMarkerCreateNestedManyWithoutOrderInput
   team?: Prisma.TeamCreateNestedOneWithoutOrdersInput
   vehicle?: Prisma.VehicleCreateNestedOneWithoutOrdersInput
+  project?: Prisma.ProjectCreateNestedOneWithoutOrdersInput
   staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutOrderInput
   shares?: Prisma.OrderShareCreateNestedManyWithoutOrderInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutOrderInput
+  projectNotes?: Prisma.ProjectNoteCreateNestedManyWithoutOrderInput
+  projectFiles?: Prisma.ProjectFileCreateNestedManyWithoutOrderInput
+  projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutAppointmentsInput = {
@@ -1959,6 +2449,9 @@ export type OrderUncheckedCreateWithoutAppointmentsInput = {
   orderNumber: string
   title?: string | null
   orderType?: $Enums.OrderType
+  orderTypeId?: string | null
+  orderTypeLabel?: string | null
+  orderTypeCustom?: string | null
   status?: $Enums.OrderStatus
   priority?: $Enums.OrderPriority
   materialStatus?: $Enums.MaterialOrderStatus
@@ -1975,6 +2468,7 @@ export type OrderUncheckedCreateWithoutAppointmentsInput = {
   invoicedAt?: Date | string | null
   teamId?: string | null
   vehicleId?: string | null
+  projectId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   services?: Prisma.OrderServiceUncheckedCreateNestedManyWithoutOrderInput
@@ -1992,6 +2486,10 @@ export type OrderUncheckedCreateWithoutAppointmentsInput = {
   planMarkers?: Prisma.PlanMarkerUncheckedCreateNestedManyWithoutOrderInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutOrderInput
   shares?: Prisma.OrderShareUncheckedCreateNestedManyWithoutOrderInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrderInput
+  projectNotes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutOrderInput
+  projectFiles?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutOrderInput
+  projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutAppointmentsInput = {
@@ -2015,6 +2513,8 @@ export type OrderUpdateWithoutAppointmentsInput = {
   orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  orderTypeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeCustom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   priority?: Prisma.EnumOrderPriorityFieldUpdateOperationsInput | $Enums.OrderPriority
   materialStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
@@ -2034,6 +2534,7 @@ export type OrderUpdateWithoutAppointmentsInput = {
   tenant?: Prisma.TenantUpdateOneRequiredWithoutOrdersNestedInput
   customer?: Prisma.CustomerUpdateOneRequiredWithoutOrdersNestedInput
   property?: Prisma.PropertyUpdateOneRequiredWithoutOrdersNestedInput
+  orderTypeDefinition?: Prisma.OrderTypeDefinitionUpdateOneWithoutOrdersNestedInput
   services?: Prisma.OrderServiceUpdateManyWithoutOrderNestedInput
   files?: Prisma.FileUploadUpdateManyWithoutOrderNestedInput
   checklists?: Prisma.OrderChecklistUpdateManyWithoutOrderNestedInput
@@ -2049,8 +2550,13 @@ export type OrderUpdateWithoutAppointmentsInput = {
   planMarkers?: Prisma.PlanMarkerUpdateManyWithoutOrderNestedInput
   team?: Prisma.TeamUpdateOneWithoutOrdersNestedInput
   vehicle?: Prisma.VehicleUpdateOneWithoutOrdersNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutOrdersNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutOrderNestedInput
   shares?: Prisma.OrderShareUpdateManyWithoutOrderNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutOrderNestedInput
+  projectNotes?: Prisma.ProjectNoteUpdateManyWithoutOrderNestedInput
+  projectFiles?: Prisma.ProjectFileUpdateManyWithoutOrderNestedInput
+  projectCosts?: Prisma.ProjectCostUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutAppointmentsInput = {
@@ -2061,6 +2567,9 @@ export type OrderUncheckedUpdateWithoutAppointmentsInput = {
   orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  orderTypeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeCustom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   priority?: Prisma.EnumOrderPriorityFieldUpdateOperationsInput | $Enums.OrderPriority
   materialStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
@@ -2077,6 +2586,7 @@ export type OrderUncheckedUpdateWithoutAppointmentsInput = {
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   services?: Prisma.OrderServiceUncheckedUpdateManyWithoutOrderNestedInput
@@ -2094,6 +2604,10 @@ export type OrderUncheckedUpdateWithoutAppointmentsInput = {
   planMarkers?: Prisma.PlanMarkerUncheckedUpdateManyWithoutOrderNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutOrderNestedInput
   shares?: Prisma.OrderShareUncheckedUpdateManyWithoutOrderNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrderNestedInput
+  projectNotes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutOrderNestedInput
+  projectFiles?: Prisma.ProjectFileUncheckedUpdateManyWithoutOrderNestedInput
+  projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutChecklistsInput = {
@@ -2101,6 +2615,8 @@ export type OrderCreateWithoutChecklistsInput = {
   orderNumber: string
   title?: string | null
   orderType?: $Enums.OrderType
+  orderTypeLabel?: string | null
+  orderTypeCustom?: string | null
   status?: $Enums.OrderStatus
   priority?: $Enums.OrderPriority
   materialStatus?: $Enums.MaterialOrderStatus
@@ -2120,6 +2636,7 @@ export type OrderCreateWithoutChecklistsInput = {
   tenant: Prisma.TenantCreateNestedOneWithoutOrdersInput
   customer: Prisma.CustomerCreateNestedOneWithoutOrdersInput
   property: Prisma.PropertyCreateNestedOneWithoutOrdersInput
+  orderTypeDefinition?: Prisma.OrderTypeDefinitionCreateNestedOneWithoutOrdersInput
   services?: Prisma.OrderServiceCreateNestedManyWithoutOrderInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutOrderInput
   files?: Prisma.FileUploadCreateNestedManyWithoutOrderInput
@@ -2135,8 +2652,13 @@ export type OrderCreateWithoutChecklistsInput = {
   planMarkers?: Prisma.PlanMarkerCreateNestedManyWithoutOrderInput
   team?: Prisma.TeamCreateNestedOneWithoutOrdersInput
   vehicle?: Prisma.VehicleCreateNestedOneWithoutOrdersInput
+  project?: Prisma.ProjectCreateNestedOneWithoutOrdersInput
   staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutOrderInput
   shares?: Prisma.OrderShareCreateNestedManyWithoutOrderInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutOrderInput
+  projectNotes?: Prisma.ProjectNoteCreateNestedManyWithoutOrderInput
+  projectFiles?: Prisma.ProjectFileCreateNestedManyWithoutOrderInput
+  projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutChecklistsInput = {
@@ -2147,6 +2669,9 @@ export type OrderUncheckedCreateWithoutChecklistsInput = {
   orderNumber: string
   title?: string | null
   orderType?: $Enums.OrderType
+  orderTypeId?: string | null
+  orderTypeLabel?: string | null
+  orderTypeCustom?: string | null
   status?: $Enums.OrderStatus
   priority?: $Enums.OrderPriority
   materialStatus?: $Enums.MaterialOrderStatus
@@ -2163,6 +2688,7 @@ export type OrderUncheckedCreateWithoutChecklistsInput = {
   invoicedAt?: Date | string | null
   teamId?: string | null
   vehicleId?: string | null
+  projectId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   services?: Prisma.OrderServiceUncheckedCreateNestedManyWithoutOrderInput
@@ -2180,6 +2706,10 @@ export type OrderUncheckedCreateWithoutChecklistsInput = {
   planMarkers?: Prisma.PlanMarkerUncheckedCreateNestedManyWithoutOrderInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutOrderInput
   shares?: Prisma.OrderShareUncheckedCreateNestedManyWithoutOrderInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrderInput
+  projectNotes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutOrderInput
+  projectFiles?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutOrderInput
+  projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutChecklistsInput = {
@@ -2203,6 +2733,8 @@ export type OrderUpdateWithoutChecklistsInput = {
   orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  orderTypeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeCustom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   priority?: Prisma.EnumOrderPriorityFieldUpdateOperationsInput | $Enums.OrderPriority
   materialStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
@@ -2222,6 +2754,7 @@ export type OrderUpdateWithoutChecklistsInput = {
   tenant?: Prisma.TenantUpdateOneRequiredWithoutOrdersNestedInput
   customer?: Prisma.CustomerUpdateOneRequiredWithoutOrdersNestedInput
   property?: Prisma.PropertyUpdateOneRequiredWithoutOrdersNestedInput
+  orderTypeDefinition?: Prisma.OrderTypeDefinitionUpdateOneWithoutOrdersNestedInput
   services?: Prisma.OrderServiceUpdateManyWithoutOrderNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutOrderNestedInput
   files?: Prisma.FileUploadUpdateManyWithoutOrderNestedInput
@@ -2237,8 +2770,13 @@ export type OrderUpdateWithoutChecklistsInput = {
   planMarkers?: Prisma.PlanMarkerUpdateManyWithoutOrderNestedInput
   team?: Prisma.TeamUpdateOneWithoutOrdersNestedInput
   vehicle?: Prisma.VehicleUpdateOneWithoutOrdersNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutOrdersNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutOrderNestedInput
   shares?: Prisma.OrderShareUpdateManyWithoutOrderNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutOrderNestedInput
+  projectNotes?: Prisma.ProjectNoteUpdateManyWithoutOrderNestedInput
+  projectFiles?: Prisma.ProjectFileUpdateManyWithoutOrderNestedInput
+  projectCosts?: Prisma.ProjectCostUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutChecklistsInput = {
@@ -2249,6 +2787,9 @@ export type OrderUncheckedUpdateWithoutChecklistsInput = {
   orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  orderTypeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeCustom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   priority?: Prisma.EnumOrderPriorityFieldUpdateOperationsInput | $Enums.OrderPriority
   materialStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
@@ -2265,6 +2806,7 @@ export type OrderUncheckedUpdateWithoutChecklistsInput = {
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   services?: Prisma.OrderServiceUncheckedUpdateManyWithoutOrderNestedInput
@@ -2282,6 +2824,10 @@ export type OrderUncheckedUpdateWithoutChecklistsInput = {
   planMarkers?: Prisma.PlanMarkerUncheckedUpdateManyWithoutOrderNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutOrderNestedInput
   shares?: Prisma.OrderShareUncheckedUpdateManyWithoutOrderNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrderNestedInput
+  projectNotes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutOrderNestedInput
+  projectFiles?: Prisma.ProjectFileUncheckedUpdateManyWithoutOrderNestedInput
+  projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutFilesInput = {
@@ -2289,6 +2835,8 @@ export type OrderCreateWithoutFilesInput = {
   orderNumber: string
   title?: string | null
   orderType?: $Enums.OrderType
+  orderTypeLabel?: string | null
+  orderTypeCustom?: string | null
   status?: $Enums.OrderStatus
   priority?: $Enums.OrderPriority
   materialStatus?: $Enums.MaterialOrderStatus
@@ -2308,6 +2856,7 @@ export type OrderCreateWithoutFilesInput = {
   tenant: Prisma.TenantCreateNestedOneWithoutOrdersInput
   customer: Prisma.CustomerCreateNestedOneWithoutOrdersInput
   property: Prisma.PropertyCreateNestedOneWithoutOrdersInput
+  orderTypeDefinition?: Prisma.OrderTypeDefinitionCreateNestedOneWithoutOrdersInput
   services?: Prisma.OrderServiceCreateNestedManyWithoutOrderInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutOrderInput
   checklists?: Prisma.OrderChecklistCreateNestedManyWithoutOrderInput
@@ -2323,8 +2872,13 @@ export type OrderCreateWithoutFilesInput = {
   planMarkers?: Prisma.PlanMarkerCreateNestedManyWithoutOrderInput
   team?: Prisma.TeamCreateNestedOneWithoutOrdersInput
   vehicle?: Prisma.VehicleCreateNestedOneWithoutOrdersInput
+  project?: Prisma.ProjectCreateNestedOneWithoutOrdersInput
   staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutOrderInput
   shares?: Prisma.OrderShareCreateNestedManyWithoutOrderInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutOrderInput
+  projectNotes?: Prisma.ProjectNoteCreateNestedManyWithoutOrderInput
+  projectFiles?: Prisma.ProjectFileCreateNestedManyWithoutOrderInput
+  projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutFilesInput = {
@@ -2335,6 +2889,9 @@ export type OrderUncheckedCreateWithoutFilesInput = {
   orderNumber: string
   title?: string | null
   orderType?: $Enums.OrderType
+  orderTypeId?: string | null
+  orderTypeLabel?: string | null
+  orderTypeCustom?: string | null
   status?: $Enums.OrderStatus
   priority?: $Enums.OrderPriority
   materialStatus?: $Enums.MaterialOrderStatus
@@ -2351,6 +2908,7 @@ export type OrderUncheckedCreateWithoutFilesInput = {
   invoicedAt?: Date | string | null
   teamId?: string | null
   vehicleId?: string | null
+  projectId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   services?: Prisma.OrderServiceUncheckedCreateNestedManyWithoutOrderInput
@@ -2368,6 +2926,10 @@ export type OrderUncheckedCreateWithoutFilesInput = {
   planMarkers?: Prisma.PlanMarkerUncheckedCreateNestedManyWithoutOrderInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutOrderInput
   shares?: Prisma.OrderShareUncheckedCreateNestedManyWithoutOrderInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrderInput
+  projectNotes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutOrderInput
+  projectFiles?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutOrderInput
+  projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutFilesInput = {
@@ -2391,6 +2953,8 @@ export type OrderUpdateWithoutFilesInput = {
   orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  orderTypeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeCustom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   priority?: Prisma.EnumOrderPriorityFieldUpdateOperationsInput | $Enums.OrderPriority
   materialStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
@@ -2410,6 +2974,7 @@ export type OrderUpdateWithoutFilesInput = {
   tenant?: Prisma.TenantUpdateOneRequiredWithoutOrdersNestedInput
   customer?: Prisma.CustomerUpdateOneRequiredWithoutOrdersNestedInput
   property?: Prisma.PropertyUpdateOneRequiredWithoutOrdersNestedInput
+  orderTypeDefinition?: Prisma.OrderTypeDefinitionUpdateOneWithoutOrdersNestedInput
   services?: Prisma.OrderServiceUpdateManyWithoutOrderNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutOrderNestedInput
   checklists?: Prisma.OrderChecklistUpdateManyWithoutOrderNestedInput
@@ -2425,8 +2990,13 @@ export type OrderUpdateWithoutFilesInput = {
   planMarkers?: Prisma.PlanMarkerUpdateManyWithoutOrderNestedInput
   team?: Prisma.TeamUpdateOneWithoutOrdersNestedInput
   vehicle?: Prisma.VehicleUpdateOneWithoutOrdersNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutOrdersNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutOrderNestedInput
   shares?: Prisma.OrderShareUpdateManyWithoutOrderNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutOrderNestedInput
+  projectNotes?: Prisma.ProjectNoteUpdateManyWithoutOrderNestedInput
+  projectFiles?: Prisma.ProjectFileUpdateManyWithoutOrderNestedInput
+  projectCosts?: Prisma.ProjectCostUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutFilesInput = {
@@ -2437,6 +3007,9 @@ export type OrderUncheckedUpdateWithoutFilesInput = {
   orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  orderTypeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeCustom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   priority?: Prisma.EnumOrderPriorityFieldUpdateOperationsInput | $Enums.OrderPriority
   materialStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
@@ -2453,6 +3026,7 @@ export type OrderUncheckedUpdateWithoutFilesInput = {
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   services?: Prisma.OrderServiceUncheckedUpdateManyWithoutOrderNestedInput
@@ -2470,6 +3044,10 @@ export type OrderUncheckedUpdateWithoutFilesInput = {
   planMarkers?: Prisma.PlanMarkerUncheckedUpdateManyWithoutOrderNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutOrderNestedInput
   shares?: Prisma.OrderShareUncheckedUpdateManyWithoutOrderNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrderNestedInput
+  projectNotes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutOrderNestedInput
+  projectFiles?: Prisma.ProjectFileUncheckedUpdateManyWithoutOrderNestedInput
+  projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutTimeEntriesInput = {
@@ -2477,6 +3055,8 @@ export type OrderCreateWithoutTimeEntriesInput = {
   orderNumber: string
   title?: string | null
   orderType?: $Enums.OrderType
+  orderTypeLabel?: string | null
+  orderTypeCustom?: string | null
   status?: $Enums.OrderStatus
   priority?: $Enums.OrderPriority
   materialStatus?: $Enums.MaterialOrderStatus
@@ -2496,6 +3076,7 @@ export type OrderCreateWithoutTimeEntriesInput = {
   tenant: Prisma.TenantCreateNestedOneWithoutOrdersInput
   customer: Prisma.CustomerCreateNestedOneWithoutOrdersInput
   property: Prisma.PropertyCreateNestedOneWithoutOrdersInput
+  orderTypeDefinition?: Prisma.OrderTypeDefinitionCreateNestedOneWithoutOrdersInput
   services?: Prisma.OrderServiceCreateNestedManyWithoutOrderInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutOrderInput
   files?: Prisma.FileUploadCreateNestedManyWithoutOrderInput
@@ -2511,8 +3092,13 @@ export type OrderCreateWithoutTimeEntriesInput = {
   planMarkers?: Prisma.PlanMarkerCreateNestedManyWithoutOrderInput
   team?: Prisma.TeamCreateNestedOneWithoutOrdersInput
   vehicle?: Prisma.VehicleCreateNestedOneWithoutOrdersInput
+  project?: Prisma.ProjectCreateNestedOneWithoutOrdersInput
   staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutOrderInput
   shares?: Prisma.OrderShareCreateNestedManyWithoutOrderInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutOrderInput
+  projectNotes?: Prisma.ProjectNoteCreateNestedManyWithoutOrderInput
+  projectFiles?: Prisma.ProjectFileCreateNestedManyWithoutOrderInput
+  projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutTimeEntriesInput = {
@@ -2523,6 +3109,9 @@ export type OrderUncheckedCreateWithoutTimeEntriesInput = {
   orderNumber: string
   title?: string | null
   orderType?: $Enums.OrderType
+  orderTypeId?: string | null
+  orderTypeLabel?: string | null
+  orderTypeCustom?: string | null
   status?: $Enums.OrderStatus
   priority?: $Enums.OrderPriority
   materialStatus?: $Enums.MaterialOrderStatus
@@ -2539,6 +3128,7 @@ export type OrderUncheckedCreateWithoutTimeEntriesInput = {
   invoicedAt?: Date | string | null
   teamId?: string | null
   vehicleId?: string | null
+  projectId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   services?: Prisma.OrderServiceUncheckedCreateNestedManyWithoutOrderInput
@@ -2556,6 +3146,10 @@ export type OrderUncheckedCreateWithoutTimeEntriesInput = {
   planMarkers?: Prisma.PlanMarkerUncheckedCreateNestedManyWithoutOrderInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutOrderInput
   shares?: Prisma.OrderShareUncheckedCreateNestedManyWithoutOrderInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrderInput
+  projectNotes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutOrderInput
+  projectFiles?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutOrderInput
+  projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutTimeEntriesInput = {
@@ -2579,6 +3173,8 @@ export type OrderUpdateWithoutTimeEntriesInput = {
   orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  orderTypeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeCustom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   priority?: Prisma.EnumOrderPriorityFieldUpdateOperationsInput | $Enums.OrderPriority
   materialStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
@@ -2598,6 +3194,7 @@ export type OrderUpdateWithoutTimeEntriesInput = {
   tenant?: Prisma.TenantUpdateOneRequiredWithoutOrdersNestedInput
   customer?: Prisma.CustomerUpdateOneRequiredWithoutOrdersNestedInput
   property?: Prisma.PropertyUpdateOneRequiredWithoutOrdersNestedInput
+  orderTypeDefinition?: Prisma.OrderTypeDefinitionUpdateOneWithoutOrdersNestedInput
   services?: Prisma.OrderServiceUpdateManyWithoutOrderNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutOrderNestedInput
   files?: Prisma.FileUploadUpdateManyWithoutOrderNestedInput
@@ -2613,8 +3210,13 @@ export type OrderUpdateWithoutTimeEntriesInput = {
   planMarkers?: Prisma.PlanMarkerUpdateManyWithoutOrderNestedInput
   team?: Prisma.TeamUpdateOneWithoutOrdersNestedInput
   vehicle?: Prisma.VehicleUpdateOneWithoutOrdersNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutOrdersNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutOrderNestedInput
   shares?: Prisma.OrderShareUpdateManyWithoutOrderNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutOrderNestedInput
+  projectNotes?: Prisma.ProjectNoteUpdateManyWithoutOrderNestedInput
+  projectFiles?: Prisma.ProjectFileUpdateManyWithoutOrderNestedInput
+  projectCosts?: Prisma.ProjectCostUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutTimeEntriesInput = {
@@ -2625,6 +3227,9 @@ export type OrderUncheckedUpdateWithoutTimeEntriesInput = {
   orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  orderTypeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeCustom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   priority?: Prisma.EnumOrderPriorityFieldUpdateOperationsInput | $Enums.OrderPriority
   materialStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
@@ -2641,6 +3246,7 @@ export type OrderUncheckedUpdateWithoutTimeEntriesInput = {
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   services?: Prisma.OrderServiceUncheckedUpdateManyWithoutOrderNestedInput
@@ -2658,6 +3264,10 @@ export type OrderUncheckedUpdateWithoutTimeEntriesInput = {
   planMarkers?: Prisma.PlanMarkerUncheckedUpdateManyWithoutOrderNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutOrderNestedInput
   shares?: Prisma.OrderShareUncheckedUpdateManyWithoutOrderNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrderNestedInput
+  projectNotes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutOrderNestedInput
+  projectFiles?: Prisma.ProjectFileUncheckedUpdateManyWithoutOrderNestedInput
+  projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutMaterialUsagesInput = {
@@ -2665,6 +3275,8 @@ export type OrderCreateWithoutMaterialUsagesInput = {
   orderNumber: string
   title?: string | null
   orderType?: $Enums.OrderType
+  orderTypeLabel?: string | null
+  orderTypeCustom?: string | null
   status?: $Enums.OrderStatus
   priority?: $Enums.OrderPriority
   materialStatus?: $Enums.MaterialOrderStatus
@@ -2684,6 +3296,7 @@ export type OrderCreateWithoutMaterialUsagesInput = {
   tenant: Prisma.TenantCreateNestedOneWithoutOrdersInput
   customer: Prisma.CustomerCreateNestedOneWithoutOrdersInput
   property: Prisma.PropertyCreateNestedOneWithoutOrdersInput
+  orderTypeDefinition?: Prisma.OrderTypeDefinitionCreateNestedOneWithoutOrdersInput
   services?: Prisma.OrderServiceCreateNestedManyWithoutOrderInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutOrderInput
   files?: Prisma.FileUploadCreateNestedManyWithoutOrderInput
@@ -2699,8 +3312,13 @@ export type OrderCreateWithoutMaterialUsagesInput = {
   planMarkers?: Prisma.PlanMarkerCreateNestedManyWithoutOrderInput
   team?: Prisma.TeamCreateNestedOneWithoutOrdersInput
   vehicle?: Prisma.VehicleCreateNestedOneWithoutOrdersInput
+  project?: Prisma.ProjectCreateNestedOneWithoutOrdersInput
   staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutOrderInput
   shares?: Prisma.OrderShareCreateNestedManyWithoutOrderInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutOrderInput
+  projectNotes?: Prisma.ProjectNoteCreateNestedManyWithoutOrderInput
+  projectFiles?: Prisma.ProjectFileCreateNestedManyWithoutOrderInput
+  projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutMaterialUsagesInput = {
@@ -2711,6 +3329,9 @@ export type OrderUncheckedCreateWithoutMaterialUsagesInput = {
   orderNumber: string
   title?: string | null
   orderType?: $Enums.OrderType
+  orderTypeId?: string | null
+  orderTypeLabel?: string | null
+  orderTypeCustom?: string | null
   status?: $Enums.OrderStatus
   priority?: $Enums.OrderPriority
   materialStatus?: $Enums.MaterialOrderStatus
@@ -2727,6 +3348,7 @@ export type OrderUncheckedCreateWithoutMaterialUsagesInput = {
   invoicedAt?: Date | string | null
   teamId?: string | null
   vehicleId?: string | null
+  projectId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   services?: Prisma.OrderServiceUncheckedCreateNestedManyWithoutOrderInput
@@ -2744,6 +3366,10 @@ export type OrderUncheckedCreateWithoutMaterialUsagesInput = {
   planMarkers?: Prisma.PlanMarkerUncheckedCreateNestedManyWithoutOrderInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutOrderInput
   shares?: Prisma.OrderShareUncheckedCreateNestedManyWithoutOrderInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrderInput
+  projectNotes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutOrderInput
+  projectFiles?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutOrderInput
+  projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutMaterialUsagesInput = {
@@ -2767,6 +3393,8 @@ export type OrderUpdateWithoutMaterialUsagesInput = {
   orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  orderTypeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeCustom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   priority?: Prisma.EnumOrderPriorityFieldUpdateOperationsInput | $Enums.OrderPriority
   materialStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
@@ -2786,6 +3414,7 @@ export type OrderUpdateWithoutMaterialUsagesInput = {
   tenant?: Prisma.TenantUpdateOneRequiredWithoutOrdersNestedInput
   customer?: Prisma.CustomerUpdateOneRequiredWithoutOrdersNestedInput
   property?: Prisma.PropertyUpdateOneRequiredWithoutOrdersNestedInput
+  orderTypeDefinition?: Prisma.OrderTypeDefinitionUpdateOneWithoutOrdersNestedInput
   services?: Prisma.OrderServiceUpdateManyWithoutOrderNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutOrderNestedInput
   files?: Prisma.FileUploadUpdateManyWithoutOrderNestedInput
@@ -2801,8 +3430,13 @@ export type OrderUpdateWithoutMaterialUsagesInput = {
   planMarkers?: Prisma.PlanMarkerUpdateManyWithoutOrderNestedInput
   team?: Prisma.TeamUpdateOneWithoutOrdersNestedInput
   vehicle?: Prisma.VehicleUpdateOneWithoutOrdersNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutOrdersNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutOrderNestedInput
   shares?: Prisma.OrderShareUpdateManyWithoutOrderNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutOrderNestedInput
+  projectNotes?: Prisma.ProjectNoteUpdateManyWithoutOrderNestedInput
+  projectFiles?: Prisma.ProjectFileUpdateManyWithoutOrderNestedInput
+  projectCosts?: Prisma.ProjectCostUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutMaterialUsagesInput = {
@@ -2813,6 +3447,9 @@ export type OrderUncheckedUpdateWithoutMaterialUsagesInput = {
   orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  orderTypeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeCustom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   priority?: Prisma.EnumOrderPriorityFieldUpdateOperationsInput | $Enums.OrderPriority
   materialStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
@@ -2829,6 +3466,7 @@ export type OrderUncheckedUpdateWithoutMaterialUsagesInput = {
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   services?: Prisma.OrderServiceUncheckedUpdateManyWithoutOrderNestedInput
@@ -2846,6 +3484,10 @@ export type OrderUncheckedUpdateWithoutMaterialUsagesInput = {
   planMarkers?: Prisma.PlanMarkerUncheckedUpdateManyWithoutOrderNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutOrderNestedInput
   shares?: Prisma.OrderShareUncheckedUpdateManyWithoutOrderNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrderNestedInput
+  projectNotes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutOrderNestedInput
+  projectFiles?: Prisma.ProjectFileUncheckedUpdateManyWithoutOrderNestedInput
+  projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutMessagesInput = {
@@ -2853,6 +3495,8 @@ export type OrderCreateWithoutMessagesInput = {
   orderNumber: string
   title?: string | null
   orderType?: $Enums.OrderType
+  orderTypeLabel?: string | null
+  orderTypeCustom?: string | null
   status?: $Enums.OrderStatus
   priority?: $Enums.OrderPriority
   materialStatus?: $Enums.MaterialOrderStatus
@@ -2872,6 +3516,7 @@ export type OrderCreateWithoutMessagesInput = {
   tenant: Prisma.TenantCreateNestedOneWithoutOrdersInput
   customer: Prisma.CustomerCreateNestedOneWithoutOrdersInput
   property: Prisma.PropertyCreateNestedOneWithoutOrdersInput
+  orderTypeDefinition?: Prisma.OrderTypeDefinitionCreateNestedOneWithoutOrdersInput
   services?: Prisma.OrderServiceCreateNestedManyWithoutOrderInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutOrderInput
   files?: Prisma.FileUploadCreateNestedManyWithoutOrderInput
@@ -2887,8 +3532,13 @@ export type OrderCreateWithoutMessagesInput = {
   planMarkers?: Prisma.PlanMarkerCreateNestedManyWithoutOrderInput
   team?: Prisma.TeamCreateNestedOneWithoutOrdersInput
   vehicle?: Prisma.VehicleCreateNestedOneWithoutOrdersInput
+  project?: Prisma.ProjectCreateNestedOneWithoutOrdersInput
   staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutOrderInput
   shares?: Prisma.OrderShareCreateNestedManyWithoutOrderInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutOrderInput
+  projectNotes?: Prisma.ProjectNoteCreateNestedManyWithoutOrderInput
+  projectFiles?: Prisma.ProjectFileCreateNestedManyWithoutOrderInput
+  projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutMessagesInput = {
@@ -2899,6 +3549,9 @@ export type OrderUncheckedCreateWithoutMessagesInput = {
   orderNumber: string
   title?: string | null
   orderType?: $Enums.OrderType
+  orderTypeId?: string | null
+  orderTypeLabel?: string | null
+  orderTypeCustom?: string | null
   status?: $Enums.OrderStatus
   priority?: $Enums.OrderPriority
   materialStatus?: $Enums.MaterialOrderStatus
@@ -2915,6 +3568,7 @@ export type OrderUncheckedCreateWithoutMessagesInput = {
   invoicedAt?: Date | string | null
   teamId?: string | null
   vehicleId?: string | null
+  projectId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   services?: Prisma.OrderServiceUncheckedCreateNestedManyWithoutOrderInput
@@ -2932,6 +3586,10 @@ export type OrderUncheckedCreateWithoutMessagesInput = {
   planMarkers?: Prisma.PlanMarkerUncheckedCreateNestedManyWithoutOrderInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutOrderInput
   shares?: Prisma.OrderShareUncheckedCreateNestedManyWithoutOrderInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrderInput
+  projectNotes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutOrderInput
+  projectFiles?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutOrderInput
+  projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutMessagesInput = {
@@ -2955,6 +3613,8 @@ export type OrderUpdateWithoutMessagesInput = {
   orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  orderTypeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeCustom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   priority?: Prisma.EnumOrderPriorityFieldUpdateOperationsInput | $Enums.OrderPriority
   materialStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
@@ -2974,6 +3634,7 @@ export type OrderUpdateWithoutMessagesInput = {
   tenant?: Prisma.TenantUpdateOneRequiredWithoutOrdersNestedInput
   customer?: Prisma.CustomerUpdateOneRequiredWithoutOrdersNestedInput
   property?: Prisma.PropertyUpdateOneRequiredWithoutOrdersNestedInput
+  orderTypeDefinition?: Prisma.OrderTypeDefinitionUpdateOneWithoutOrdersNestedInput
   services?: Prisma.OrderServiceUpdateManyWithoutOrderNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutOrderNestedInput
   files?: Prisma.FileUploadUpdateManyWithoutOrderNestedInput
@@ -2989,8 +3650,13 @@ export type OrderUpdateWithoutMessagesInput = {
   planMarkers?: Prisma.PlanMarkerUpdateManyWithoutOrderNestedInput
   team?: Prisma.TeamUpdateOneWithoutOrdersNestedInput
   vehicle?: Prisma.VehicleUpdateOneWithoutOrdersNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutOrdersNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutOrderNestedInput
   shares?: Prisma.OrderShareUpdateManyWithoutOrderNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutOrderNestedInput
+  projectNotes?: Prisma.ProjectNoteUpdateManyWithoutOrderNestedInput
+  projectFiles?: Prisma.ProjectFileUpdateManyWithoutOrderNestedInput
+  projectCosts?: Prisma.ProjectCostUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutMessagesInput = {
@@ -3001,6 +3667,9 @@ export type OrderUncheckedUpdateWithoutMessagesInput = {
   orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  orderTypeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeCustom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   priority?: Prisma.EnumOrderPriorityFieldUpdateOperationsInput | $Enums.OrderPriority
   materialStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
@@ -3017,6 +3686,7 @@ export type OrderUncheckedUpdateWithoutMessagesInput = {
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   services?: Prisma.OrderServiceUncheckedUpdateManyWithoutOrderNestedInput
@@ -3034,6 +3704,10 @@ export type OrderUncheckedUpdateWithoutMessagesInput = {
   planMarkers?: Prisma.PlanMarkerUncheckedUpdateManyWithoutOrderNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutOrderNestedInput
   shares?: Prisma.OrderShareUncheckedUpdateManyWithoutOrderNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrderNestedInput
+  projectNotes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutOrderNestedInput
+  projectFiles?: Prisma.ProjectFileUncheckedUpdateManyWithoutOrderNestedInput
+  projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutCalculationsInput = {
@@ -3041,6 +3715,8 @@ export type OrderCreateWithoutCalculationsInput = {
   orderNumber: string
   title?: string | null
   orderType?: $Enums.OrderType
+  orderTypeLabel?: string | null
+  orderTypeCustom?: string | null
   status?: $Enums.OrderStatus
   priority?: $Enums.OrderPriority
   materialStatus?: $Enums.MaterialOrderStatus
@@ -3060,6 +3736,7 @@ export type OrderCreateWithoutCalculationsInput = {
   tenant: Prisma.TenantCreateNestedOneWithoutOrdersInput
   customer: Prisma.CustomerCreateNestedOneWithoutOrdersInput
   property: Prisma.PropertyCreateNestedOneWithoutOrdersInput
+  orderTypeDefinition?: Prisma.OrderTypeDefinitionCreateNestedOneWithoutOrdersInput
   services?: Prisma.OrderServiceCreateNestedManyWithoutOrderInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutOrderInput
   files?: Prisma.FileUploadCreateNestedManyWithoutOrderInput
@@ -3075,8 +3752,13 @@ export type OrderCreateWithoutCalculationsInput = {
   planMarkers?: Prisma.PlanMarkerCreateNestedManyWithoutOrderInput
   team?: Prisma.TeamCreateNestedOneWithoutOrdersInput
   vehicle?: Prisma.VehicleCreateNestedOneWithoutOrdersInput
+  project?: Prisma.ProjectCreateNestedOneWithoutOrdersInput
   staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutOrderInput
   shares?: Prisma.OrderShareCreateNestedManyWithoutOrderInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutOrderInput
+  projectNotes?: Prisma.ProjectNoteCreateNestedManyWithoutOrderInput
+  projectFiles?: Prisma.ProjectFileCreateNestedManyWithoutOrderInput
+  projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutCalculationsInput = {
@@ -3087,6 +3769,9 @@ export type OrderUncheckedCreateWithoutCalculationsInput = {
   orderNumber: string
   title?: string | null
   orderType?: $Enums.OrderType
+  orderTypeId?: string | null
+  orderTypeLabel?: string | null
+  orderTypeCustom?: string | null
   status?: $Enums.OrderStatus
   priority?: $Enums.OrderPriority
   materialStatus?: $Enums.MaterialOrderStatus
@@ -3103,6 +3788,7 @@ export type OrderUncheckedCreateWithoutCalculationsInput = {
   invoicedAt?: Date | string | null
   teamId?: string | null
   vehicleId?: string | null
+  projectId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   services?: Prisma.OrderServiceUncheckedCreateNestedManyWithoutOrderInput
@@ -3120,6 +3806,10 @@ export type OrderUncheckedCreateWithoutCalculationsInput = {
   planMarkers?: Prisma.PlanMarkerUncheckedCreateNestedManyWithoutOrderInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutOrderInput
   shares?: Prisma.OrderShareUncheckedCreateNestedManyWithoutOrderInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrderInput
+  projectNotes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutOrderInput
+  projectFiles?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutOrderInput
+  projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutCalculationsInput = {
@@ -3143,6 +3833,8 @@ export type OrderUpdateWithoutCalculationsInput = {
   orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  orderTypeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeCustom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   priority?: Prisma.EnumOrderPriorityFieldUpdateOperationsInput | $Enums.OrderPriority
   materialStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
@@ -3162,6 +3854,7 @@ export type OrderUpdateWithoutCalculationsInput = {
   tenant?: Prisma.TenantUpdateOneRequiredWithoutOrdersNestedInput
   customer?: Prisma.CustomerUpdateOneRequiredWithoutOrdersNestedInput
   property?: Prisma.PropertyUpdateOneRequiredWithoutOrdersNestedInput
+  orderTypeDefinition?: Prisma.OrderTypeDefinitionUpdateOneWithoutOrdersNestedInput
   services?: Prisma.OrderServiceUpdateManyWithoutOrderNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutOrderNestedInput
   files?: Prisma.FileUploadUpdateManyWithoutOrderNestedInput
@@ -3177,8 +3870,13 @@ export type OrderUpdateWithoutCalculationsInput = {
   planMarkers?: Prisma.PlanMarkerUpdateManyWithoutOrderNestedInput
   team?: Prisma.TeamUpdateOneWithoutOrdersNestedInput
   vehicle?: Prisma.VehicleUpdateOneWithoutOrdersNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutOrdersNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutOrderNestedInput
   shares?: Prisma.OrderShareUpdateManyWithoutOrderNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutOrderNestedInput
+  projectNotes?: Prisma.ProjectNoteUpdateManyWithoutOrderNestedInput
+  projectFiles?: Prisma.ProjectFileUpdateManyWithoutOrderNestedInput
+  projectCosts?: Prisma.ProjectCostUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutCalculationsInput = {
@@ -3189,6 +3887,9 @@ export type OrderUncheckedUpdateWithoutCalculationsInput = {
   orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  orderTypeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeCustom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   priority?: Prisma.EnumOrderPriorityFieldUpdateOperationsInput | $Enums.OrderPriority
   materialStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
@@ -3205,6 +3906,7 @@ export type OrderUncheckedUpdateWithoutCalculationsInput = {
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   services?: Prisma.OrderServiceUncheckedUpdateManyWithoutOrderNestedInput
@@ -3222,6 +3924,10 @@ export type OrderUncheckedUpdateWithoutCalculationsInput = {
   planMarkers?: Prisma.PlanMarkerUncheckedUpdateManyWithoutOrderNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutOrderNestedInput
   shares?: Prisma.OrderShareUncheckedUpdateManyWithoutOrderNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrderNestedInput
+  projectNotes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutOrderNestedInput
+  projectFiles?: Prisma.ProjectFileUncheckedUpdateManyWithoutOrderNestedInput
+  projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutStockMovementsInput = {
@@ -3229,6 +3935,8 @@ export type OrderCreateWithoutStockMovementsInput = {
   orderNumber: string
   title?: string | null
   orderType?: $Enums.OrderType
+  orderTypeLabel?: string | null
+  orderTypeCustom?: string | null
   status?: $Enums.OrderStatus
   priority?: $Enums.OrderPriority
   materialStatus?: $Enums.MaterialOrderStatus
@@ -3248,6 +3956,7 @@ export type OrderCreateWithoutStockMovementsInput = {
   tenant: Prisma.TenantCreateNestedOneWithoutOrdersInput
   customer: Prisma.CustomerCreateNestedOneWithoutOrdersInput
   property: Prisma.PropertyCreateNestedOneWithoutOrdersInput
+  orderTypeDefinition?: Prisma.OrderTypeDefinitionCreateNestedOneWithoutOrdersInput
   services?: Prisma.OrderServiceCreateNestedManyWithoutOrderInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutOrderInput
   files?: Prisma.FileUploadCreateNestedManyWithoutOrderInput
@@ -3263,8 +3972,13 @@ export type OrderCreateWithoutStockMovementsInput = {
   planMarkers?: Prisma.PlanMarkerCreateNestedManyWithoutOrderInput
   team?: Prisma.TeamCreateNestedOneWithoutOrdersInput
   vehicle?: Prisma.VehicleCreateNestedOneWithoutOrdersInput
+  project?: Prisma.ProjectCreateNestedOneWithoutOrdersInput
   staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutOrderInput
   shares?: Prisma.OrderShareCreateNestedManyWithoutOrderInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutOrderInput
+  projectNotes?: Prisma.ProjectNoteCreateNestedManyWithoutOrderInput
+  projectFiles?: Prisma.ProjectFileCreateNestedManyWithoutOrderInput
+  projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutStockMovementsInput = {
@@ -3275,6 +3989,9 @@ export type OrderUncheckedCreateWithoutStockMovementsInput = {
   orderNumber: string
   title?: string | null
   orderType?: $Enums.OrderType
+  orderTypeId?: string | null
+  orderTypeLabel?: string | null
+  orderTypeCustom?: string | null
   status?: $Enums.OrderStatus
   priority?: $Enums.OrderPriority
   materialStatus?: $Enums.MaterialOrderStatus
@@ -3291,6 +4008,7 @@ export type OrderUncheckedCreateWithoutStockMovementsInput = {
   invoicedAt?: Date | string | null
   teamId?: string | null
   vehicleId?: string | null
+  projectId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   services?: Prisma.OrderServiceUncheckedCreateNestedManyWithoutOrderInput
@@ -3308,6 +4026,10 @@ export type OrderUncheckedCreateWithoutStockMovementsInput = {
   planMarkers?: Prisma.PlanMarkerUncheckedCreateNestedManyWithoutOrderInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutOrderInput
   shares?: Prisma.OrderShareUncheckedCreateNestedManyWithoutOrderInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrderInput
+  projectNotes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutOrderInput
+  projectFiles?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutOrderInput
+  projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutStockMovementsInput = {
@@ -3331,6 +4053,8 @@ export type OrderUpdateWithoutStockMovementsInput = {
   orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  orderTypeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeCustom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   priority?: Prisma.EnumOrderPriorityFieldUpdateOperationsInput | $Enums.OrderPriority
   materialStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
@@ -3350,6 +4074,7 @@ export type OrderUpdateWithoutStockMovementsInput = {
   tenant?: Prisma.TenantUpdateOneRequiredWithoutOrdersNestedInput
   customer?: Prisma.CustomerUpdateOneRequiredWithoutOrdersNestedInput
   property?: Prisma.PropertyUpdateOneRequiredWithoutOrdersNestedInput
+  orderTypeDefinition?: Prisma.OrderTypeDefinitionUpdateOneWithoutOrdersNestedInput
   services?: Prisma.OrderServiceUpdateManyWithoutOrderNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutOrderNestedInput
   files?: Prisma.FileUploadUpdateManyWithoutOrderNestedInput
@@ -3365,8 +4090,13 @@ export type OrderUpdateWithoutStockMovementsInput = {
   planMarkers?: Prisma.PlanMarkerUpdateManyWithoutOrderNestedInput
   team?: Prisma.TeamUpdateOneWithoutOrdersNestedInput
   vehicle?: Prisma.VehicleUpdateOneWithoutOrdersNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutOrdersNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutOrderNestedInput
   shares?: Prisma.OrderShareUpdateManyWithoutOrderNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutOrderNestedInput
+  projectNotes?: Prisma.ProjectNoteUpdateManyWithoutOrderNestedInput
+  projectFiles?: Prisma.ProjectFileUpdateManyWithoutOrderNestedInput
+  projectCosts?: Prisma.ProjectCostUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutStockMovementsInput = {
@@ -3377,6 +4107,9 @@ export type OrderUncheckedUpdateWithoutStockMovementsInput = {
   orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  orderTypeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeCustom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   priority?: Prisma.EnumOrderPriorityFieldUpdateOperationsInput | $Enums.OrderPriority
   materialStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
@@ -3393,6 +4126,7 @@ export type OrderUncheckedUpdateWithoutStockMovementsInput = {
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   services?: Prisma.OrderServiceUncheckedUpdateManyWithoutOrderNestedInput
@@ -3410,6 +4144,10 @@ export type OrderUncheckedUpdateWithoutStockMovementsInput = {
   planMarkers?: Prisma.PlanMarkerUncheckedUpdateManyWithoutOrderNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutOrderNestedInput
   shares?: Prisma.OrderShareUncheckedUpdateManyWithoutOrderNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrderNestedInput
+  projectNotes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutOrderNestedInput
+  projectFiles?: Prisma.ProjectFileUncheckedUpdateManyWithoutOrderNestedInput
+  projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutReservationsInput = {
@@ -3417,6 +4155,8 @@ export type OrderCreateWithoutReservationsInput = {
   orderNumber: string
   title?: string | null
   orderType?: $Enums.OrderType
+  orderTypeLabel?: string | null
+  orderTypeCustom?: string | null
   status?: $Enums.OrderStatus
   priority?: $Enums.OrderPriority
   materialStatus?: $Enums.MaterialOrderStatus
@@ -3436,6 +4176,7 @@ export type OrderCreateWithoutReservationsInput = {
   tenant: Prisma.TenantCreateNestedOneWithoutOrdersInput
   customer: Prisma.CustomerCreateNestedOneWithoutOrdersInput
   property: Prisma.PropertyCreateNestedOneWithoutOrdersInput
+  orderTypeDefinition?: Prisma.OrderTypeDefinitionCreateNestedOneWithoutOrdersInput
   services?: Prisma.OrderServiceCreateNestedManyWithoutOrderInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutOrderInput
   files?: Prisma.FileUploadCreateNestedManyWithoutOrderInput
@@ -3451,8 +4192,13 @@ export type OrderCreateWithoutReservationsInput = {
   planMarkers?: Prisma.PlanMarkerCreateNestedManyWithoutOrderInput
   team?: Prisma.TeamCreateNestedOneWithoutOrdersInput
   vehicle?: Prisma.VehicleCreateNestedOneWithoutOrdersInput
+  project?: Prisma.ProjectCreateNestedOneWithoutOrdersInput
   staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutOrderInput
   shares?: Prisma.OrderShareCreateNestedManyWithoutOrderInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutOrderInput
+  projectNotes?: Prisma.ProjectNoteCreateNestedManyWithoutOrderInput
+  projectFiles?: Prisma.ProjectFileCreateNestedManyWithoutOrderInput
+  projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutReservationsInput = {
@@ -3463,6 +4209,9 @@ export type OrderUncheckedCreateWithoutReservationsInput = {
   orderNumber: string
   title?: string | null
   orderType?: $Enums.OrderType
+  orderTypeId?: string | null
+  orderTypeLabel?: string | null
+  orderTypeCustom?: string | null
   status?: $Enums.OrderStatus
   priority?: $Enums.OrderPriority
   materialStatus?: $Enums.MaterialOrderStatus
@@ -3479,6 +4228,7 @@ export type OrderUncheckedCreateWithoutReservationsInput = {
   invoicedAt?: Date | string | null
   teamId?: string | null
   vehicleId?: string | null
+  projectId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   services?: Prisma.OrderServiceUncheckedCreateNestedManyWithoutOrderInput
@@ -3496,6 +4246,10 @@ export type OrderUncheckedCreateWithoutReservationsInput = {
   planMarkers?: Prisma.PlanMarkerUncheckedCreateNestedManyWithoutOrderInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutOrderInput
   shares?: Prisma.OrderShareUncheckedCreateNestedManyWithoutOrderInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrderInput
+  projectNotes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutOrderInput
+  projectFiles?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutOrderInput
+  projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutReservationsInput = {
@@ -3519,6 +4273,8 @@ export type OrderUpdateWithoutReservationsInput = {
   orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  orderTypeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeCustom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   priority?: Prisma.EnumOrderPriorityFieldUpdateOperationsInput | $Enums.OrderPriority
   materialStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
@@ -3538,6 +4294,7 @@ export type OrderUpdateWithoutReservationsInput = {
   tenant?: Prisma.TenantUpdateOneRequiredWithoutOrdersNestedInput
   customer?: Prisma.CustomerUpdateOneRequiredWithoutOrdersNestedInput
   property?: Prisma.PropertyUpdateOneRequiredWithoutOrdersNestedInput
+  orderTypeDefinition?: Prisma.OrderTypeDefinitionUpdateOneWithoutOrdersNestedInput
   services?: Prisma.OrderServiceUpdateManyWithoutOrderNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutOrderNestedInput
   files?: Prisma.FileUploadUpdateManyWithoutOrderNestedInput
@@ -3553,8 +4310,13 @@ export type OrderUpdateWithoutReservationsInput = {
   planMarkers?: Prisma.PlanMarkerUpdateManyWithoutOrderNestedInput
   team?: Prisma.TeamUpdateOneWithoutOrdersNestedInput
   vehicle?: Prisma.VehicleUpdateOneWithoutOrdersNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutOrdersNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutOrderNestedInput
   shares?: Prisma.OrderShareUpdateManyWithoutOrderNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutOrderNestedInput
+  projectNotes?: Prisma.ProjectNoteUpdateManyWithoutOrderNestedInput
+  projectFiles?: Prisma.ProjectFileUpdateManyWithoutOrderNestedInput
+  projectCosts?: Prisma.ProjectCostUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutReservationsInput = {
@@ -3565,6 +4327,9 @@ export type OrderUncheckedUpdateWithoutReservationsInput = {
   orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  orderTypeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeCustom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   priority?: Prisma.EnumOrderPriorityFieldUpdateOperationsInput | $Enums.OrderPriority
   materialStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
@@ -3581,6 +4346,7 @@ export type OrderUncheckedUpdateWithoutReservationsInput = {
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   services?: Prisma.OrderServiceUncheckedUpdateManyWithoutOrderNestedInput
@@ -3598,6 +4364,10 @@ export type OrderUncheckedUpdateWithoutReservationsInput = {
   planMarkers?: Prisma.PlanMarkerUncheckedUpdateManyWithoutOrderNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutOrderNestedInput
   shares?: Prisma.OrderShareUncheckedUpdateManyWithoutOrderNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrderNestedInput
+  projectNotes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutOrderNestedInput
+  projectFiles?: Prisma.ProjectFileUncheckedUpdateManyWithoutOrderNestedInput
+  projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutPhasesInput = {
@@ -3605,6 +4375,8 @@ export type OrderCreateWithoutPhasesInput = {
   orderNumber: string
   title?: string | null
   orderType?: $Enums.OrderType
+  orderTypeLabel?: string | null
+  orderTypeCustom?: string | null
   status?: $Enums.OrderStatus
   priority?: $Enums.OrderPriority
   materialStatus?: $Enums.MaterialOrderStatus
@@ -3624,6 +4396,7 @@ export type OrderCreateWithoutPhasesInput = {
   tenant: Prisma.TenantCreateNestedOneWithoutOrdersInput
   customer: Prisma.CustomerCreateNestedOneWithoutOrdersInput
   property: Prisma.PropertyCreateNestedOneWithoutOrdersInput
+  orderTypeDefinition?: Prisma.OrderTypeDefinitionCreateNestedOneWithoutOrdersInput
   services?: Prisma.OrderServiceCreateNestedManyWithoutOrderInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutOrderInput
   files?: Prisma.FileUploadCreateNestedManyWithoutOrderInput
@@ -3639,8 +4412,13 @@ export type OrderCreateWithoutPhasesInput = {
   planMarkers?: Prisma.PlanMarkerCreateNestedManyWithoutOrderInput
   team?: Prisma.TeamCreateNestedOneWithoutOrdersInput
   vehicle?: Prisma.VehicleCreateNestedOneWithoutOrdersInput
+  project?: Prisma.ProjectCreateNestedOneWithoutOrdersInput
   staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutOrderInput
   shares?: Prisma.OrderShareCreateNestedManyWithoutOrderInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutOrderInput
+  projectNotes?: Prisma.ProjectNoteCreateNestedManyWithoutOrderInput
+  projectFiles?: Prisma.ProjectFileCreateNestedManyWithoutOrderInput
+  projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutPhasesInput = {
@@ -3651,6 +4429,9 @@ export type OrderUncheckedCreateWithoutPhasesInput = {
   orderNumber: string
   title?: string | null
   orderType?: $Enums.OrderType
+  orderTypeId?: string | null
+  orderTypeLabel?: string | null
+  orderTypeCustom?: string | null
   status?: $Enums.OrderStatus
   priority?: $Enums.OrderPriority
   materialStatus?: $Enums.MaterialOrderStatus
@@ -3667,6 +4448,7 @@ export type OrderUncheckedCreateWithoutPhasesInput = {
   invoicedAt?: Date | string | null
   teamId?: string | null
   vehicleId?: string | null
+  projectId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   services?: Prisma.OrderServiceUncheckedCreateNestedManyWithoutOrderInput
@@ -3684,6 +4466,10 @@ export type OrderUncheckedCreateWithoutPhasesInput = {
   planMarkers?: Prisma.PlanMarkerUncheckedCreateNestedManyWithoutOrderInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutOrderInput
   shares?: Prisma.OrderShareUncheckedCreateNestedManyWithoutOrderInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrderInput
+  projectNotes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutOrderInput
+  projectFiles?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutOrderInput
+  projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutPhasesInput = {
@@ -3707,6 +4493,8 @@ export type OrderUpdateWithoutPhasesInput = {
   orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  orderTypeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeCustom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   priority?: Prisma.EnumOrderPriorityFieldUpdateOperationsInput | $Enums.OrderPriority
   materialStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
@@ -3726,6 +4514,7 @@ export type OrderUpdateWithoutPhasesInput = {
   tenant?: Prisma.TenantUpdateOneRequiredWithoutOrdersNestedInput
   customer?: Prisma.CustomerUpdateOneRequiredWithoutOrdersNestedInput
   property?: Prisma.PropertyUpdateOneRequiredWithoutOrdersNestedInput
+  orderTypeDefinition?: Prisma.OrderTypeDefinitionUpdateOneWithoutOrdersNestedInput
   services?: Prisma.OrderServiceUpdateManyWithoutOrderNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutOrderNestedInput
   files?: Prisma.FileUploadUpdateManyWithoutOrderNestedInput
@@ -3741,8 +4530,13 @@ export type OrderUpdateWithoutPhasesInput = {
   planMarkers?: Prisma.PlanMarkerUpdateManyWithoutOrderNestedInput
   team?: Prisma.TeamUpdateOneWithoutOrdersNestedInput
   vehicle?: Prisma.VehicleUpdateOneWithoutOrdersNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutOrdersNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutOrderNestedInput
   shares?: Prisma.OrderShareUpdateManyWithoutOrderNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutOrderNestedInput
+  projectNotes?: Prisma.ProjectNoteUpdateManyWithoutOrderNestedInput
+  projectFiles?: Prisma.ProjectFileUpdateManyWithoutOrderNestedInput
+  projectCosts?: Prisma.ProjectCostUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutPhasesInput = {
@@ -3753,6 +4547,9 @@ export type OrderUncheckedUpdateWithoutPhasesInput = {
   orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  orderTypeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeCustom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   priority?: Prisma.EnumOrderPriorityFieldUpdateOperationsInput | $Enums.OrderPriority
   materialStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
@@ -3769,6 +4566,7 @@ export type OrderUncheckedUpdateWithoutPhasesInput = {
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   services?: Prisma.OrderServiceUncheckedUpdateManyWithoutOrderNestedInput
@@ -3786,6 +4584,10 @@ export type OrderUncheckedUpdateWithoutPhasesInput = {
   planMarkers?: Prisma.PlanMarkerUncheckedUpdateManyWithoutOrderNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutOrderNestedInput
   shares?: Prisma.OrderShareUncheckedUpdateManyWithoutOrderNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrderNestedInput
+  projectNotes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutOrderNestedInput
+  projectFiles?: Prisma.ProjectFileUncheckedUpdateManyWithoutOrderNestedInput
+  projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutMaterialLinesInput = {
@@ -3793,6 +4595,8 @@ export type OrderCreateWithoutMaterialLinesInput = {
   orderNumber: string
   title?: string | null
   orderType?: $Enums.OrderType
+  orderTypeLabel?: string | null
+  orderTypeCustom?: string | null
   status?: $Enums.OrderStatus
   priority?: $Enums.OrderPriority
   materialStatus?: $Enums.MaterialOrderStatus
@@ -3812,6 +4616,7 @@ export type OrderCreateWithoutMaterialLinesInput = {
   tenant: Prisma.TenantCreateNestedOneWithoutOrdersInput
   customer: Prisma.CustomerCreateNestedOneWithoutOrdersInput
   property: Prisma.PropertyCreateNestedOneWithoutOrdersInput
+  orderTypeDefinition?: Prisma.OrderTypeDefinitionCreateNestedOneWithoutOrdersInput
   services?: Prisma.OrderServiceCreateNestedManyWithoutOrderInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutOrderInput
   files?: Prisma.FileUploadCreateNestedManyWithoutOrderInput
@@ -3827,8 +4632,13 @@ export type OrderCreateWithoutMaterialLinesInput = {
   planMarkers?: Prisma.PlanMarkerCreateNestedManyWithoutOrderInput
   team?: Prisma.TeamCreateNestedOneWithoutOrdersInput
   vehicle?: Prisma.VehicleCreateNestedOneWithoutOrdersInput
+  project?: Prisma.ProjectCreateNestedOneWithoutOrdersInput
   staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutOrderInput
   shares?: Prisma.OrderShareCreateNestedManyWithoutOrderInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutOrderInput
+  projectNotes?: Prisma.ProjectNoteCreateNestedManyWithoutOrderInput
+  projectFiles?: Prisma.ProjectFileCreateNestedManyWithoutOrderInput
+  projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutMaterialLinesInput = {
@@ -3839,6 +4649,9 @@ export type OrderUncheckedCreateWithoutMaterialLinesInput = {
   orderNumber: string
   title?: string | null
   orderType?: $Enums.OrderType
+  orderTypeId?: string | null
+  orderTypeLabel?: string | null
+  orderTypeCustom?: string | null
   status?: $Enums.OrderStatus
   priority?: $Enums.OrderPriority
   materialStatus?: $Enums.MaterialOrderStatus
@@ -3855,6 +4668,7 @@ export type OrderUncheckedCreateWithoutMaterialLinesInput = {
   invoicedAt?: Date | string | null
   teamId?: string | null
   vehicleId?: string | null
+  projectId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   services?: Prisma.OrderServiceUncheckedCreateNestedManyWithoutOrderInput
@@ -3872,6 +4686,10 @@ export type OrderUncheckedCreateWithoutMaterialLinesInput = {
   planMarkers?: Prisma.PlanMarkerUncheckedCreateNestedManyWithoutOrderInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutOrderInput
   shares?: Prisma.OrderShareUncheckedCreateNestedManyWithoutOrderInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrderInput
+  projectNotes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutOrderInput
+  projectFiles?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutOrderInput
+  projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutMaterialLinesInput = {
@@ -3895,6 +4713,8 @@ export type OrderUpdateWithoutMaterialLinesInput = {
   orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  orderTypeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeCustom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   priority?: Prisma.EnumOrderPriorityFieldUpdateOperationsInput | $Enums.OrderPriority
   materialStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
@@ -3914,6 +4734,7 @@ export type OrderUpdateWithoutMaterialLinesInput = {
   tenant?: Prisma.TenantUpdateOneRequiredWithoutOrdersNestedInput
   customer?: Prisma.CustomerUpdateOneRequiredWithoutOrdersNestedInput
   property?: Prisma.PropertyUpdateOneRequiredWithoutOrdersNestedInput
+  orderTypeDefinition?: Prisma.OrderTypeDefinitionUpdateOneWithoutOrdersNestedInput
   services?: Prisma.OrderServiceUpdateManyWithoutOrderNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutOrderNestedInput
   files?: Prisma.FileUploadUpdateManyWithoutOrderNestedInput
@@ -3929,8 +4750,13 @@ export type OrderUpdateWithoutMaterialLinesInput = {
   planMarkers?: Prisma.PlanMarkerUpdateManyWithoutOrderNestedInput
   team?: Prisma.TeamUpdateOneWithoutOrdersNestedInput
   vehicle?: Prisma.VehicleUpdateOneWithoutOrdersNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutOrdersNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutOrderNestedInput
   shares?: Prisma.OrderShareUpdateManyWithoutOrderNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutOrderNestedInput
+  projectNotes?: Prisma.ProjectNoteUpdateManyWithoutOrderNestedInput
+  projectFiles?: Prisma.ProjectFileUpdateManyWithoutOrderNestedInput
+  projectCosts?: Prisma.ProjectCostUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutMaterialLinesInput = {
@@ -3941,6 +4767,9 @@ export type OrderUncheckedUpdateWithoutMaterialLinesInput = {
   orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  orderTypeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeCustom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   priority?: Prisma.EnumOrderPriorityFieldUpdateOperationsInput | $Enums.OrderPriority
   materialStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
@@ -3957,6 +4786,7 @@ export type OrderUncheckedUpdateWithoutMaterialLinesInput = {
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   services?: Prisma.OrderServiceUncheckedUpdateManyWithoutOrderNestedInput
@@ -3974,6 +4804,10 @@ export type OrderUncheckedUpdateWithoutMaterialLinesInput = {
   planMarkers?: Prisma.PlanMarkerUncheckedUpdateManyWithoutOrderNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutOrderNestedInput
   shares?: Prisma.OrderShareUncheckedUpdateManyWithoutOrderNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrderNestedInput
+  projectNotes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutOrderNestedInput
+  projectFiles?: Prisma.ProjectFileUncheckedUpdateManyWithoutOrderNestedInput
+  projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutPurchaseOrdersInput = {
@@ -3981,6 +4815,8 @@ export type OrderCreateWithoutPurchaseOrdersInput = {
   orderNumber: string
   title?: string | null
   orderType?: $Enums.OrderType
+  orderTypeLabel?: string | null
+  orderTypeCustom?: string | null
   status?: $Enums.OrderStatus
   priority?: $Enums.OrderPriority
   materialStatus?: $Enums.MaterialOrderStatus
@@ -4000,6 +4836,7 @@ export type OrderCreateWithoutPurchaseOrdersInput = {
   tenant: Prisma.TenantCreateNestedOneWithoutOrdersInput
   customer: Prisma.CustomerCreateNestedOneWithoutOrdersInput
   property: Prisma.PropertyCreateNestedOneWithoutOrdersInput
+  orderTypeDefinition?: Prisma.OrderTypeDefinitionCreateNestedOneWithoutOrdersInput
   services?: Prisma.OrderServiceCreateNestedManyWithoutOrderInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutOrderInput
   files?: Prisma.FileUploadCreateNestedManyWithoutOrderInput
@@ -4015,8 +4852,13 @@ export type OrderCreateWithoutPurchaseOrdersInput = {
   planMarkers?: Prisma.PlanMarkerCreateNestedManyWithoutOrderInput
   team?: Prisma.TeamCreateNestedOneWithoutOrdersInput
   vehicle?: Prisma.VehicleCreateNestedOneWithoutOrdersInput
+  project?: Prisma.ProjectCreateNestedOneWithoutOrdersInput
   staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutOrderInput
   shares?: Prisma.OrderShareCreateNestedManyWithoutOrderInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutOrderInput
+  projectNotes?: Prisma.ProjectNoteCreateNestedManyWithoutOrderInput
+  projectFiles?: Prisma.ProjectFileCreateNestedManyWithoutOrderInput
+  projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutPurchaseOrdersInput = {
@@ -4027,6 +4869,9 @@ export type OrderUncheckedCreateWithoutPurchaseOrdersInput = {
   orderNumber: string
   title?: string | null
   orderType?: $Enums.OrderType
+  orderTypeId?: string | null
+  orderTypeLabel?: string | null
+  orderTypeCustom?: string | null
   status?: $Enums.OrderStatus
   priority?: $Enums.OrderPriority
   materialStatus?: $Enums.MaterialOrderStatus
@@ -4043,6 +4888,7 @@ export type OrderUncheckedCreateWithoutPurchaseOrdersInput = {
   invoicedAt?: Date | string | null
   teamId?: string | null
   vehicleId?: string | null
+  projectId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   services?: Prisma.OrderServiceUncheckedCreateNestedManyWithoutOrderInput
@@ -4060,6 +4906,10 @@ export type OrderUncheckedCreateWithoutPurchaseOrdersInput = {
   planMarkers?: Prisma.PlanMarkerUncheckedCreateNestedManyWithoutOrderInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutOrderInput
   shares?: Prisma.OrderShareUncheckedCreateNestedManyWithoutOrderInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrderInput
+  projectNotes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutOrderInput
+  projectFiles?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutOrderInput
+  projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutPurchaseOrdersInput = {
@@ -4083,6 +4933,8 @@ export type OrderUpdateWithoutPurchaseOrdersInput = {
   orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  orderTypeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeCustom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   priority?: Prisma.EnumOrderPriorityFieldUpdateOperationsInput | $Enums.OrderPriority
   materialStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
@@ -4102,6 +4954,7 @@ export type OrderUpdateWithoutPurchaseOrdersInput = {
   tenant?: Prisma.TenantUpdateOneRequiredWithoutOrdersNestedInput
   customer?: Prisma.CustomerUpdateOneRequiredWithoutOrdersNestedInput
   property?: Prisma.PropertyUpdateOneRequiredWithoutOrdersNestedInput
+  orderTypeDefinition?: Prisma.OrderTypeDefinitionUpdateOneWithoutOrdersNestedInput
   services?: Prisma.OrderServiceUpdateManyWithoutOrderNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutOrderNestedInput
   files?: Prisma.FileUploadUpdateManyWithoutOrderNestedInput
@@ -4117,8 +4970,13 @@ export type OrderUpdateWithoutPurchaseOrdersInput = {
   planMarkers?: Prisma.PlanMarkerUpdateManyWithoutOrderNestedInput
   team?: Prisma.TeamUpdateOneWithoutOrdersNestedInput
   vehicle?: Prisma.VehicleUpdateOneWithoutOrdersNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutOrdersNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutOrderNestedInput
   shares?: Prisma.OrderShareUpdateManyWithoutOrderNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutOrderNestedInput
+  projectNotes?: Prisma.ProjectNoteUpdateManyWithoutOrderNestedInput
+  projectFiles?: Prisma.ProjectFileUpdateManyWithoutOrderNestedInput
+  projectCosts?: Prisma.ProjectCostUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutPurchaseOrdersInput = {
@@ -4129,6 +4987,9 @@ export type OrderUncheckedUpdateWithoutPurchaseOrdersInput = {
   orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  orderTypeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeCustom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   priority?: Prisma.EnumOrderPriorityFieldUpdateOperationsInput | $Enums.OrderPriority
   materialStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
@@ -4145,6 +5006,7 @@ export type OrderUncheckedUpdateWithoutPurchaseOrdersInput = {
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   services?: Prisma.OrderServiceUncheckedUpdateManyWithoutOrderNestedInput
@@ -4162,6 +5024,10 @@ export type OrderUncheckedUpdateWithoutPurchaseOrdersInput = {
   planMarkers?: Prisma.PlanMarkerUncheckedUpdateManyWithoutOrderNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutOrderNestedInput
   shares?: Prisma.OrderShareUncheckedUpdateManyWithoutOrderNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrderNestedInput
+  projectNotes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutOrderNestedInput
+  projectFiles?: Prisma.ProjectFileUncheckedUpdateManyWithoutOrderNestedInput
+  projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutTeamInput = {
@@ -4169,6 +5035,8 @@ export type OrderCreateWithoutTeamInput = {
   orderNumber: string
   title?: string | null
   orderType?: $Enums.OrderType
+  orderTypeLabel?: string | null
+  orderTypeCustom?: string | null
   status?: $Enums.OrderStatus
   priority?: $Enums.OrderPriority
   materialStatus?: $Enums.MaterialOrderStatus
@@ -4188,6 +5056,7 @@ export type OrderCreateWithoutTeamInput = {
   tenant: Prisma.TenantCreateNestedOneWithoutOrdersInput
   customer: Prisma.CustomerCreateNestedOneWithoutOrdersInput
   property: Prisma.PropertyCreateNestedOneWithoutOrdersInput
+  orderTypeDefinition?: Prisma.OrderTypeDefinitionCreateNestedOneWithoutOrdersInput
   services?: Prisma.OrderServiceCreateNestedManyWithoutOrderInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutOrderInput
   files?: Prisma.FileUploadCreateNestedManyWithoutOrderInput
@@ -4203,8 +5072,13 @@ export type OrderCreateWithoutTeamInput = {
   purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutOrderInput
   planMarkers?: Prisma.PlanMarkerCreateNestedManyWithoutOrderInput
   vehicle?: Prisma.VehicleCreateNestedOneWithoutOrdersInput
+  project?: Prisma.ProjectCreateNestedOneWithoutOrdersInput
   staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutOrderInput
   shares?: Prisma.OrderShareCreateNestedManyWithoutOrderInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutOrderInput
+  projectNotes?: Prisma.ProjectNoteCreateNestedManyWithoutOrderInput
+  projectFiles?: Prisma.ProjectFileCreateNestedManyWithoutOrderInput
+  projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutTeamInput = {
@@ -4215,6 +5089,9 @@ export type OrderUncheckedCreateWithoutTeamInput = {
   orderNumber: string
   title?: string | null
   orderType?: $Enums.OrderType
+  orderTypeId?: string | null
+  orderTypeLabel?: string | null
+  orderTypeCustom?: string | null
   status?: $Enums.OrderStatus
   priority?: $Enums.OrderPriority
   materialStatus?: $Enums.MaterialOrderStatus
@@ -4230,6 +5107,7 @@ export type OrderUncheckedCreateWithoutTeamInput = {
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
   vehicleId?: string | null
+  projectId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   services?: Prisma.OrderServiceUncheckedCreateNestedManyWithoutOrderInput
@@ -4248,6 +5126,10 @@ export type OrderUncheckedCreateWithoutTeamInput = {
   planMarkers?: Prisma.PlanMarkerUncheckedCreateNestedManyWithoutOrderInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutOrderInput
   shares?: Prisma.OrderShareUncheckedCreateNestedManyWithoutOrderInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrderInput
+  projectNotes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutOrderInput
+  projectFiles?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutOrderInput
+  projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutTeamInput = {
@@ -4281,6 +5163,8 @@ export type OrderCreateWithoutVehicleInput = {
   orderNumber: string
   title?: string | null
   orderType?: $Enums.OrderType
+  orderTypeLabel?: string | null
+  orderTypeCustom?: string | null
   status?: $Enums.OrderStatus
   priority?: $Enums.OrderPriority
   materialStatus?: $Enums.MaterialOrderStatus
@@ -4300,6 +5184,7 @@ export type OrderCreateWithoutVehicleInput = {
   tenant: Prisma.TenantCreateNestedOneWithoutOrdersInput
   customer: Prisma.CustomerCreateNestedOneWithoutOrdersInput
   property: Prisma.PropertyCreateNestedOneWithoutOrdersInput
+  orderTypeDefinition?: Prisma.OrderTypeDefinitionCreateNestedOneWithoutOrdersInput
   services?: Prisma.OrderServiceCreateNestedManyWithoutOrderInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutOrderInput
   files?: Prisma.FileUploadCreateNestedManyWithoutOrderInput
@@ -4315,8 +5200,13 @@ export type OrderCreateWithoutVehicleInput = {
   purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutOrderInput
   planMarkers?: Prisma.PlanMarkerCreateNestedManyWithoutOrderInput
   team?: Prisma.TeamCreateNestedOneWithoutOrdersInput
+  project?: Prisma.ProjectCreateNestedOneWithoutOrdersInput
   staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutOrderInput
   shares?: Prisma.OrderShareCreateNestedManyWithoutOrderInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutOrderInput
+  projectNotes?: Prisma.ProjectNoteCreateNestedManyWithoutOrderInput
+  projectFiles?: Prisma.ProjectFileCreateNestedManyWithoutOrderInput
+  projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutVehicleInput = {
@@ -4327,6 +5217,9 @@ export type OrderUncheckedCreateWithoutVehicleInput = {
   orderNumber: string
   title?: string | null
   orderType?: $Enums.OrderType
+  orderTypeId?: string | null
+  orderTypeLabel?: string | null
+  orderTypeCustom?: string | null
   status?: $Enums.OrderStatus
   priority?: $Enums.OrderPriority
   materialStatus?: $Enums.MaterialOrderStatus
@@ -4342,6 +5235,7 @@ export type OrderUncheckedCreateWithoutVehicleInput = {
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
   teamId?: string | null
+  projectId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   services?: Prisma.OrderServiceUncheckedCreateNestedManyWithoutOrderInput
@@ -4360,6 +5254,10 @@ export type OrderUncheckedCreateWithoutVehicleInput = {
   planMarkers?: Prisma.PlanMarkerUncheckedCreateNestedManyWithoutOrderInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutOrderInput
   shares?: Prisma.OrderShareUncheckedCreateNestedManyWithoutOrderInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrderInput
+  projectNotes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutOrderInput
+  projectFiles?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutOrderInput
+  projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutVehicleInput = {
@@ -4393,6 +5291,8 @@ export type OrderCreateWithoutPlanMarkersInput = {
   orderNumber: string
   title?: string | null
   orderType?: $Enums.OrderType
+  orderTypeLabel?: string | null
+  orderTypeCustom?: string | null
   status?: $Enums.OrderStatus
   priority?: $Enums.OrderPriority
   materialStatus?: $Enums.MaterialOrderStatus
@@ -4412,6 +5312,7 @@ export type OrderCreateWithoutPlanMarkersInput = {
   tenant: Prisma.TenantCreateNestedOneWithoutOrdersInput
   customer: Prisma.CustomerCreateNestedOneWithoutOrdersInput
   property: Prisma.PropertyCreateNestedOneWithoutOrdersInput
+  orderTypeDefinition?: Prisma.OrderTypeDefinitionCreateNestedOneWithoutOrdersInput
   services?: Prisma.OrderServiceCreateNestedManyWithoutOrderInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutOrderInput
   files?: Prisma.FileUploadCreateNestedManyWithoutOrderInput
@@ -4427,8 +5328,13 @@ export type OrderCreateWithoutPlanMarkersInput = {
   purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutOrderInput
   team?: Prisma.TeamCreateNestedOneWithoutOrdersInput
   vehicle?: Prisma.VehicleCreateNestedOneWithoutOrdersInput
+  project?: Prisma.ProjectCreateNestedOneWithoutOrdersInput
   staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutOrderInput
   shares?: Prisma.OrderShareCreateNestedManyWithoutOrderInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutOrderInput
+  projectNotes?: Prisma.ProjectNoteCreateNestedManyWithoutOrderInput
+  projectFiles?: Prisma.ProjectFileCreateNestedManyWithoutOrderInput
+  projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutPlanMarkersInput = {
@@ -4439,6 +5345,9 @@ export type OrderUncheckedCreateWithoutPlanMarkersInput = {
   orderNumber: string
   title?: string | null
   orderType?: $Enums.OrderType
+  orderTypeId?: string | null
+  orderTypeLabel?: string | null
+  orderTypeCustom?: string | null
   status?: $Enums.OrderStatus
   priority?: $Enums.OrderPriority
   materialStatus?: $Enums.MaterialOrderStatus
@@ -4455,6 +5364,7 @@ export type OrderUncheckedCreateWithoutPlanMarkersInput = {
   invoicedAt?: Date | string | null
   teamId?: string | null
   vehicleId?: string | null
+  projectId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   services?: Prisma.OrderServiceUncheckedCreateNestedManyWithoutOrderInput
@@ -4472,6 +5382,10 @@ export type OrderUncheckedCreateWithoutPlanMarkersInput = {
   purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutOrderInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutOrderInput
   shares?: Prisma.OrderShareUncheckedCreateNestedManyWithoutOrderInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrderInput
+  projectNotes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutOrderInput
+  projectFiles?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutOrderInput
+  projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutPlanMarkersInput = {
@@ -4495,6 +5409,8 @@ export type OrderUpdateWithoutPlanMarkersInput = {
   orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  orderTypeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeCustom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   priority?: Prisma.EnumOrderPriorityFieldUpdateOperationsInput | $Enums.OrderPriority
   materialStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
@@ -4514,6 +5430,7 @@ export type OrderUpdateWithoutPlanMarkersInput = {
   tenant?: Prisma.TenantUpdateOneRequiredWithoutOrdersNestedInput
   customer?: Prisma.CustomerUpdateOneRequiredWithoutOrdersNestedInput
   property?: Prisma.PropertyUpdateOneRequiredWithoutOrdersNestedInput
+  orderTypeDefinition?: Prisma.OrderTypeDefinitionUpdateOneWithoutOrdersNestedInput
   services?: Prisma.OrderServiceUpdateManyWithoutOrderNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutOrderNestedInput
   files?: Prisma.FileUploadUpdateManyWithoutOrderNestedInput
@@ -4529,8 +5446,13 @@ export type OrderUpdateWithoutPlanMarkersInput = {
   purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutOrderNestedInput
   team?: Prisma.TeamUpdateOneWithoutOrdersNestedInput
   vehicle?: Prisma.VehicleUpdateOneWithoutOrdersNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutOrdersNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutOrderNestedInput
   shares?: Prisma.OrderShareUpdateManyWithoutOrderNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutOrderNestedInput
+  projectNotes?: Prisma.ProjectNoteUpdateManyWithoutOrderNestedInput
+  projectFiles?: Prisma.ProjectFileUpdateManyWithoutOrderNestedInput
+  projectCosts?: Prisma.ProjectCostUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutPlanMarkersInput = {
@@ -4541,6 +5463,9 @@ export type OrderUncheckedUpdateWithoutPlanMarkersInput = {
   orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  orderTypeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeCustom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   priority?: Prisma.EnumOrderPriorityFieldUpdateOperationsInput | $Enums.OrderPriority
   materialStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
@@ -4557,6 +5482,7 @@ export type OrderUncheckedUpdateWithoutPlanMarkersInput = {
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   services?: Prisma.OrderServiceUncheckedUpdateManyWithoutOrderNestedInput
@@ -4574,6 +5500,10 @@ export type OrderUncheckedUpdateWithoutPlanMarkersInput = {
   purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutOrderNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutOrderNestedInput
   shares?: Prisma.OrderShareUncheckedUpdateManyWithoutOrderNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrderNestedInput
+  projectNotes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutOrderNestedInput
+  projectFiles?: Prisma.ProjectFileUncheckedUpdateManyWithoutOrderNestedInput
+  projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutStaffRequestsInput = {
@@ -4581,6 +5511,8 @@ export type OrderCreateWithoutStaffRequestsInput = {
   orderNumber: string
   title?: string | null
   orderType?: $Enums.OrderType
+  orderTypeLabel?: string | null
+  orderTypeCustom?: string | null
   status?: $Enums.OrderStatus
   priority?: $Enums.OrderPriority
   materialStatus?: $Enums.MaterialOrderStatus
@@ -4600,6 +5532,7 @@ export type OrderCreateWithoutStaffRequestsInput = {
   tenant: Prisma.TenantCreateNestedOneWithoutOrdersInput
   customer: Prisma.CustomerCreateNestedOneWithoutOrdersInput
   property: Prisma.PropertyCreateNestedOneWithoutOrdersInput
+  orderTypeDefinition?: Prisma.OrderTypeDefinitionCreateNestedOneWithoutOrdersInput
   services?: Prisma.OrderServiceCreateNestedManyWithoutOrderInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutOrderInput
   files?: Prisma.FileUploadCreateNestedManyWithoutOrderInput
@@ -4616,7 +5549,12 @@ export type OrderCreateWithoutStaffRequestsInput = {
   planMarkers?: Prisma.PlanMarkerCreateNestedManyWithoutOrderInput
   team?: Prisma.TeamCreateNestedOneWithoutOrdersInput
   vehicle?: Prisma.VehicleCreateNestedOneWithoutOrdersInput
+  project?: Prisma.ProjectCreateNestedOneWithoutOrdersInput
   shares?: Prisma.OrderShareCreateNestedManyWithoutOrderInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutOrderInput
+  projectNotes?: Prisma.ProjectNoteCreateNestedManyWithoutOrderInput
+  projectFiles?: Prisma.ProjectFileCreateNestedManyWithoutOrderInput
+  projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutStaffRequestsInput = {
@@ -4627,6 +5565,9 @@ export type OrderUncheckedCreateWithoutStaffRequestsInput = {
   orderNumber: string
   title?: string | null
   orderType?: $Enums.OrderType
+  orderTypeId?: string | null
+  orderTypeLabel?: string | null
+  orderTypeCustom?: string | null
   status?: $Enums.OrderStatus
   priority?: $Enums.OrderPriority
   materialStatus?: $Enums.MaterialOrderStatus
@@ -4643,6 +5584,7 @@ export type OrderUncheckedCreateWithoutStaffRequestsInput = {
   invoicedAt?: Date | string | null
   teamId?: string | null
   vehicleId?: string | null
+  projectId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   services?: Prisma.OrderServiceUncheckedCreateNestedManyWithoutOrderInput
@@ -4660,6 +5602,10 @@ export type OrderUncheckedCreateWithoutStaffRequestsInput = {
   purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutOrderInput
   planMarkers?: Prisma.PlanMarkerUncheckedCreateNestedManyWithoutOrderInput
   shares?: Prisma.OrderShareUncheckedCreateNestedManyWithoutOrderInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrderInput
+  projectNotes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutOrderInput
+  projectFiles?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutOrderInput
+  projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutStaffRequestsInput = {
@@ -4683,6 +5629,8 @@ export type OrderUpdateWithoutStaffRequestsInput = {
   orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  orderTypeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeCustom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   priority?: Prisma.EnumOrderPriorityFieldUpdateOperationsInput | $Enums.OrderPriority
   materialStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
@@ -4702,6 +5650,7 @@ export type OrderUpdateWithoutStaffRequestsInput = {
   tenant?: Prisma.TenantUpdateOneRequiredWithoutOrdersNestedInput
   customer?: Prisma.CustomerUpdateOneRequiredWithoutOrdersNestedInput
   property?: Prisma.PropertyUpdateOneRequiredWithoutOrdersNestedInput
+  orderTypeDefinition?: Prisma.OrderTypeDefinitionUpdateOneWithoutOrdersNestedInput
   services?: Prisma.OrderServiceUpdateManyWithoutOrderNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutOrderNestedInput
   files?: Prisma.FileUploadUpdateManyWithoutOrderNestedInput
@@ -4718,7 +5667,12 @@ export type OrderUpdateWithoutStaffRequestsInput = {
   planMarkers?: Prisma.PlanMarkerUpdateManyWithoutOrderNestedInput
   team?: Prisma.TeamUpdateOneWithoutOrdersNestedInput
   vehicle?: Prisma.VehicleUpdateOneWithoutOrdersNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutOrdersNestedInput
   shares?: Prisma.OrderShareUpdateManyWithoutOrderNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutOrderNestedInput
+  projectNotes?: Prisma.ProjectNoteUpdateManyWithoutOrderNestedInput
+  projectFiles?: Prisma.ProjectFileUpdateManyWithoutOrderNestedInput
+  projectCosts?: Prisma.ProjectCostUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutStaffRequestsInput = {
@@ -4729,6 +5683,9 @@ export type OrderUncheckedUpdateWithoutStaffRequestsInput = {
   orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  orderTypeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeCustom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   priority?: Prisma.EnumOrderPriorityFieldUpdateOperationsInput | $Enums.OrderPriority
   materialStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
@@ -4745,6 +5702,7 @@ export type OrderUncheckedUpdateWithoutStaffRequestsInput = {
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   services?: Prisma.OrderServiceUncheckedUpdateManyWithoutOrderNestedInput
@@ -4762,6 +5720,10 @@ export type OrderUncheckedUpdateWithoutStaffRequestsInput = {
   purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutOrderNestedInput
   planMarkers?: Prisma.PlanMarkerUncheckedUpdateManyWithoutOrderNestedInput
   shares?: Prisma.OrderShareUncheckedUpdateManyWithoutOrderNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrderNestedInput
+  projectNotes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutOrderNestedInput
+  projectFiles?: Prisma.ProjectFileUncheckedUpdateManyWithoutOrderNestedInput
+  projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutSharesInput = {
@@ -4769,6 +5731,8 @@ export type OrderCreateWithoutSharesInput = {
   orderNumber: string
   title?: string | null
   orderType?: $Enums.OrderType
+  orderTypeLabel?: string | null
+  orderTypeCustom?: string | null
   status?: $Enums.OrderStatus
   priority?: $Enums.OrderPriority
   materialStatus?: $Enums.MaterialOrderStatus
@@ -4788,6 +5752,447 @@ export type OrderCreateWithoutSharesInput = {
   tenant: Prisma.TenantCreateNestedOneWithoutOrdersInput
   customer: Prisma.CustomerCreateNestedOneWithoutOrdersInput
   property: Prisma.PropertyCreateNestedOneWithoutOrdersInput
+  orderTypeDefinition?: Prisma.OrderTypeDefinitionCreateNestedOneWithoutOrdersInput
+  services?: Prisma.OrderServiceCreateNestedManyWithoutOrderInput
+  appointments?: Prisma.AppointmentCreateNestedManyWithoutOrderInput
+  files?: Prisma.FileUploadCreateNestedManyWithoutOrderInput
+  checklists?: Prisma.OrderChecklistCreateNestedManyWithoutOrderInput
+  messages?: Prisma.MessageCreateNestedManyWithoutOrderInput
+  timeEntries?: Prisma.TimeEntryCreateNestedManyWithoutOrderInput
+  materialUsages?: Prisma.MaterialUsageCreateNestedManyWithoutOrderInput
+  calculations?: Prisma.CalculationCreateNestedManyWithoutOrderInput
+  phases?: Prisma.OrderPhaseCreateNestedManyWithoutOrderInput
+  materialLines?: Prisma.OrderMaterialLineCreateNestedManyWithoutOrderInput
+  reservations?: Prisma.ReservationCreateNestedManyWithoutOrderInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutOrderInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutOrderInput
+  planMarkers?: Prisma.PlanMarkerCreateNestedManyWithoutOrderInput
+  team?: Prisma.TeamCreateNestedOneWithoutOrdersInput
+  vehicle?: Prisma.VehicleCreateNestedOneWithoutOrdersInput
+  project?: Prisma.ProjectCreateNestedOneWithoutOrdersInput
+  staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutOrderInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutOrderInput
+  projectNotes?: Prisma.ProjectNoteCreateNestedManyWithoutOrderInput
+  projectFiles?: Prisma.ProjectFileCreateNestedManyWithoutOrderInput
+  projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutOrderInput
+}
+
+export type OrderUncheckedCreateWithoutSharesInput = {
+  id?: string
+  tenantId: string
+  customerId: string
+  propertyId: string
+  orderNumber: string
+  title?: string | null
+  orderType?: $Enums.OrderType
+  orderTypeId?: string | null
+  orderTypeLabel?: string | null
+  orderTypeCustom?: string | null
+  status?: $Enums.OrderStatus
+  priority?: $Enums.OrderPriority
+  materialStatus?: $Enums.MaterialOrderStatus
+  completionResult?: $Enums.CompletionResult | null
+  customerConfirmationStatus?: $Enums.CustomerConfirmationStatus
+  description?: string | null
+  internalNotes?: string | null
+  customerNotes?: string | null
+  questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  scheduledStart?: Date | string | null
+  scheduledEnd?: Date | string | null
+  bookingConfirmationSentAt?: Date | string | null
+  completedAt?: Date | string | null
+  invoicedAt?: Date | string | null
+  teamId?: string | null
+  vehicleId?: string | null
+  projectId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  services?: Prisma.OrderServiceUncheckedCreateNestedManyWithoutOrderInput
+  appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutOrderInput
+  files?: Prisma.FileUploadUncheckedCreateNestedManyWithoutOrderInput
+  checklists?: Prisma.OrderChecklistUncheckedCreateNestedManyWithoutOrderInput
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutOrderInput
+  timeEntries?: Prisma.TimeEntryUncheckedCreateNestedManyWithoutOrderInput
+  materialUsages?: Prisma.MaterialUsageUncheckedCreateNestedManyWithoutOrderInput
+  calculations?: Prisma.CalculationUncheckedCreateNestedManyWithoutOrderInput
+  phases?: Prisma.OrderPhaseUncheckedCreateNestedManyWithoutOrderInput
+  materialLines?: Prisma.OrderMaterialLineUncheckedCreateNestedManyWithoutOrderInput
+  reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutOrderInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutOrderInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutOrderInput
+  planMarkers?: Prisma.PlanMarkerUncheckedCreateNestedManyWithoutOrderInput
+  staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutOrderInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrderInput
+  projectNotes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutOrderInput
+  projectFiles?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutOrderInput
+  projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutOrderInput
+}
+
+export type OrderCreateOrConnectWithoutSharesInput = {
+  where: Prisma.OrderWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrderCreateWithoutSharesInput, Prisma.OrderUncheckedCreateWithoutSharesInput>
+}
+
+export type OrderUpsertWithoutSharesInput = {
+  update: Prisma.XOR<Prisma.OrderUpdateWithoutSharesInput, Prisma.OrderUncheckedUpdateWithoutSharesInput>
+  create: Prisma.XOR<Prisma.OrderCreateWithoutSharesInput, Prisma.OrderUncheckedCreateWithoutSharesInput>
+  where?: Prisma.OrderWhereInput
+}
+
+export type OrderUpdateToOneWithWhereWithoutSharesInput = {
+  where?: Prisma.OrderWhereInput
+  data: Prisma.XOR<Prisma.OrderUpdateWithoutSharesInput, Prisma.OrderUncheckedUpdateWithoutSharesInput>
+}
+
+export type OrderUpdateWithoutSharesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  orderTypeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeCustom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+  priority?: Prisma.EnumOrderPriorityFieldUpdateOperationsInput | $Enums.OrderPriority
+  materialStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
+  completionResult?: Prisma.NullableEnumCompletionResultFieldUpdateOperationsInput | $Enums.CompletionResult | null
+  customerConfirmationStatus?: Prisma.EnumCustomerConfirmationStatusFieldUpdateOperationsInput | $Enums.CustomerConfirmationStatus
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  internalNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutOrdersNestedInput
+  customer?: Prisma.CustomerUpdateOneRequiredWithoutOrdersNestedInput
+  property?: Prisma.PropertyUpdateOneRequiredWithoutOrdersNestedInput
+  orderTypeDefinition?: Prisma.OrderTypeDefinitionUpdateOneWithoutOrdersNestedInput
+  services?: Prisma.OrderServiceUpdateManyWithoutOrderNestedInput
+  appointments?: Prisma.AppointmentUpdateManyWithoutOrderNestedInput
+  files?: Prisma.FileUploadUpdateManyWithoutOrderNestedInput
+  checklists?: Prisma.OrderChecklistUpdateManyWithoutOrderNestedInput
+  messages?: Prisma.MessageUpdateManyWithoutOrderNestedInput
+  timeEntries?: Prisma.TimeEntryUpdateManyWithoutOrderNestedInput
+  materialUsages?: Prisma.MaterialUsageUpdateManyWithoutOrderNestedInput
+  calculations?: Prisma.CalculationUpdateManyWithoutOrderNestedInput
+  phases?: Prisma.OrderPhaseUpdateManyWithoutOrderNestedInput
+  materialLines?: Prisma.OrderMaterialLineUpdateManyWithoutOrderNestedInput
+  reservations?: Prisma.ReservationUpdateManyWithoutOrderNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutOrderNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutOrderNestedInput
+  planMarkers?: Prisma.PlanMarkerUpdateManyWithoutOrderNestedInput
+  team?: Prisma.TeamUpdateOneWithoutOrdersNestedInput
+  vehicle?: Prisma.VehicleUpdateOneWithoutOrdersNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutOrdersNestedInput
+  staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutOrderNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutOrderNestedInput
+  projectNotes?: Prisma.ProjectNoteUpdateManyWithoutOrderNestedInput
+  projectFiles?: Prisma.ProjectFileUpdateManyWithoutOrderNestedInput
+  projectCosts?: Prisma.ProjectCostUpdateManyWithoutOrderNestedInput
+}
+
+export type OrderUncheckedUpdateWithoutSharesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.StringFieldUpdateOperationsInput | string
+  propertyId?: Prisma.StringFieldUpdateOperationsInput | string
+  orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  orderTypeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeCustom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+  priority?: Prisma.EnumOrderPriorityFieldUpdateOperationsInput | $Enums.OrderPriority
+  materialStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
+  completionResult?: Prisma.NullableEnumCompletionResultFieldUpdateOperationsInput | $Enums.CompletionResult | null
+  customerConfirmationStatus?: Prisma.EnumCustomerConfirmationStatusFieldUpdateOperationsInput | $Enums.CustomerConfirmationStatus
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  internalNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  services?: Prisma.OrderServiceUncheckedUpdateManyWithoutOrderNestedInput
+  appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutOrderNestedInput
+  files?: Prisma.FileUploadUncheckedUpdateManyWithoutOrderNestedInput
+  checklists?: Prisma.OrderChecklistUncheckedUpdateManyWithoutOrderNestedInput
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutOrderNestedInput
+  timeEntries?: Prisma.TimeEntryUncheckedUpdateManyWithoutOrderNestedInput
+  materialUsages?: Prisma.MaterialUsageUncheckedUpdateManyWithoutOrderNestedInput
+  calculations?: Prisma.CalculationUncheckedUpdateManyWithoutOrderNestedInput
+  phases?: Prisma.OrderPhaseUncheckedUpdateManyWithoutOrderNestedInput
+  materialLines?: Prisma.OrderMaterialLineUncheckedUpdateManyWithoutOrderNestedInput
+  reservations?: Prisma.ReservationUncheckedUpdateManyWithoutOrderNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutOrderNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutOrderNestedInput
+  planMarkers?: Prisma.PlanMarkerUncheckedUpdateManyWithoutOrderNestedInput
+  staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutOrderNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrderNestedInput
+  projectNotes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutOrderNestedInput
+  projectFiles?: Prisma.ProjectFileUncheckedUpdateManyWithoutOrderNestedInput
+  projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutOrderNestedInput
+}
+
+export type OrderCreateWithoutExpensesInput = {
+  id?: string
+  orderNumber: string
+  title?: string | null
+  orderType?: $Enums.OrderType
+  orderTypeLabel?: string | null
+  orderTypeCustom?: string | null
+  status?: $Enums.OrderStatus
+  priority?: $Enums.OrderPriority
+  materialStatus?: $Enums.MaterialOrderStatus
+  completionResult?: $Enums.CompletionResult | null
+  customerConfirmationStatus?: $Enums.CustomerConfirmationStatus
+  description?: string | null
+  internalNotes?: string | null
+  customerNotes?: string | null
+  questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  scheduledStart?: Date | string | null
+  scheduledEnd?: Date | string | null
+  bookingConfirmationSentAt?: Date | string | null
+  completedAt?: Date | string | null
+  invoicedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tenant: Prisma.TenantCreateNestedOneWithoutOrdersInput
+  customer: Prisma.CustomerCreateNestedOneWithoutOrdersInput
+  property: Prisma.PropertyCreateNestedOneWithoutOrdersInput
+  orderTypeDefinition?: Prisma.OrderTypeDefinitionCreateNestedOneWithoutOrdersInput
+  services?: Prisma.OrderServiceCreateNestedManyWithoutOrderInput
+  appointments?: Prisma.AppointmentCreateNestedManyWithoutOrderInput
+  files?: Prisma.FileUploadCreateNestedManyWithoutOrderInput
+  checklists?: Prisma.OrderChecklistCreateNestedManyWithoutOrderInput
+  messages?: Prisma.MessageCreateNestedManyWithoutOrderInput
+  timeEntries?: Prisma.TimeEntryCreateNestedManyWithoutOrderInput
+  materialUsages?: Prisma.MaterialUsageCreateNestedManyWithoutOrderInput
+  calculations?: Prisma.CalculationCreateNestedManyWithoutOrderInput
+  phases?: Prisma.OrderPhaseCreateNestedManyWithoutOrderInput
+  materialLines?: Prisma.OrderMaterialLineCreateNestedManyWithoutOrderInput
+  reservations?: Prisma.ReservationCreateNestedManyWithoutOrderInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutOrderInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutOrderInput
+  planMarkers?: Prisma.PlanMarkerCreateNestedManyWithoutOrderInput
+  team?: Prisma.TeamCreateNestedOneWithoutOrdersInput
+  vehicle?: Prisma.VehicleCreateNestedOneWithoutOrdersInput
+  project?: Prisma.ProjectCreateNestedOneWithoutOrdersInput
+  staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutOrderInput
+  shares?: Prisma.OrderShareCreateNestedManyWithoutOrderInput
+  projectNotes?: Prisma.ProjectNoteCreateNestedManyWithoutOrderInput
+  projectFiles?: Prisma.ProjectFileCreateNestedManyWithoutOrderInput
+  projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutOrderInput
+}
+
+export type OrderUncheckedCreateWithoutExpensesInput = {
+  id?: string
+  tenantId: string
+  customerId: string
+  propertyId: string
+  orderNumber: string
+  title?: string | null
+  orderType?: $Enums.OrderType
+  orderTypeId?: string | null
+  orderTypeLabel?: string | null
+  orderTypeCustom?: string | null
+  status?: $Enums.OrderStatus
+  priority?: $Enums.OrderPriority
+  materialStatus?: $Enums.MaterialOrderStatus
+  completionResult?: $Enums.CompletionResult | null
+  customerConfirmationStatus?: $Enums.CustomerConfirmationStatus
+  description?: string | null
+  internalNotes?: string | null
+  customerNotes?: string | null
+  questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  scheduledStart?: Date | string | null
+  scheduledEnd?: Date | string | null
+  bookingConfirmationSentAt?: Date | string | null
+  completedAt?: Date | string | null
+  invoicedAt?: Date | string | null
+  teamId?: string | null
+  vehicleId?: string | null
+  projectId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  services?: Prisma.OrderServiceUncheckedCreateNestedManyWithoutOrderInput
+  appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutOrderInput
+  files?: Prisma.FileUploadUncheckedCreateNestedManyWithoutOrderInput
+  checklists?: Prisma.OrderChecklistUncheckedCreateNestedManyWithoutOrderInput
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutOrderInput
+  timeEntries?: Prisma.TimeEntryUncheckedCreateNestedManyWithoutOrderInput
+  materialUsages?: Prisma.MaterialUsageUncheckedCreateNestedManyWithoutOrderInput
+  calculations?: Prisma.CalculationUncheckedCreateNestedManyWithoutOrderInput
+  phases?: Prisma.OrderPhaseUncheckedCreateNestedManyWithoutOrderInput
+  materialLines?: Prisma.OrderMaterialLineUncheckedCreateNestedManyWithoutOrderInput
+  reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutOrderInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutOrderInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutOrderInput
+  planMarkers?: Prisma.PlanMarkerUncheckedCreateNestedManyWithoutOrderInput
+  staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutOrderInput
+  shares?: Prisma.OrderShareUncheckedCreateNestedManyWithoutOrderInput
+  projectNotes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutOrderInput
+  projectFiles?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutOrderInput
+  projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutOrderInput
+}
+
+export type OrderCreateOrConnectWithoutExpensesInput = {
+  where: Prisma.OrderWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrderCreateWithoutExpensesInput, Prisma.OrderUncheckedCreateWithoutExpensesInput>
+}
+
+export type OrderUpsertWithoutExpensesInput = {
+  update: Prisma.XOR<Prisma.OrderUpdateWithoutExpensesInput, Prisma.OrderUncheckedUpdateWithoutExpensesInput>
+  create: Prisma.XOR<Prisma.OrderCreateWithoutExpensesInput, Prisma.OrderUncheckedCreateWithoutExpensesInput>
+  where?: Prisma.OrderWhereInput
+}
+
+export type OrderUpdateToOneWithWhereWithoutExpensesInput = {
+  where?: Prisma.OrderWhereInput
+  data: Prisma.XOR<Prisma.OrderUpdateWithoutExpensesInput, Prisma.OrderUncheckedUpdateWithoutExpensesInput>
+}
+
+export type OrderUpdateWithoutExpensesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  orderTypeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeCustom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+  priority?: Prisma.EnumOrderPriorityFieldUpdateOperationsInput | $Enums.OrderPriority
+  materialStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
+  completionResult?: Prisma.NullableEnumCompletionResultFieldUpdateOperationsInput | $Enums.CompletionResult | null
+  customerConfirmationStatus?: Prisma.EnumCustomerConfirmationStatusFieldUpdateOperationsInput | $Enums.CustomerConfirmationStatus
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  internalNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutOrdersNestedInput
+  customer?: Prisma.CustomerUpdateOneRequiredWithoutOrdersNestedInput
+  property?: Prisma.PropertyUpdateOneRequiredWithoutOrdersNestedInput
+  orderTypeDefinition?: Prisma.OrderTypeDefinitionUpdateOneWithoutOrdersNestedInput
+  services?: Prisma.OrderServiceUpdateManyWithoutOrderNestedInput
+  appointments?: Prisma.AppointmentUpdateManyWithoutOrderNestedInput
+  files?: Prisma.FileUploadUpdateManyWithoutOrderNestedInput
+  checklists?: Prisma.OrderChecklistUpdateManyWithoutOrderNestedInput
+  messages?: Prisma.MessageUpdateManyWithoutOrderNestedInput
+  timeEntries?: Prisma.TimeEntryUpdateManyWithoutOrderNestedInput
+  materialUsages?: Prisma.MaterialUsageUpdateManyWithoutOrderNestedInput
+  calculations?: Prisma.CalculationUpdateManyWithoutOrderNestedInput
+  phases?: Prisma.OrderPhaseUpdateManyWithoutOrderNestedInput
+  materialLines?: Prisma.OrderMaterialLineUpdateManyWithoutOrderNestedInput
+  reservations?: Prisma.ReservationUpdateManyWithoutOrderNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutOrderNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutOrderNestedInput
+  planMarkers?: Prisma.PlanMarkerUpdateManyWithoutOrderNestedInput
+  team?: Prisma.TeamUpdateOneWithoutOrdersNestedInput
+  vehicle?: Prisma.VehicleUpdateOneWithoutOrdersNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutOrdersNestedInput
+  staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutOrderNestedInput
+  shares?: Prisma.OrderShareUpdateManyWithoutOrderNestedInput
+  projectNotes?: Prisma.ProjectNoteUpdateManyWithoutOrderNestedInput
+  projectFiles?: Prisma.ProjectFileUpdateManyWithoutOrderNestedInput
+  projectCosts?: Prisma.ProjectCostUpdateManyWithoutOrderNestedInput
+}
+
+export type OrderUncheckedUpdateWithoutExpensesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.StringFieldUpdateOperationsInput | string
+  propertyId?: Prisma.StringFieldUpdateOperationsInput | string
+  orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  orderTypeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeCustom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+  priority?: Prisma.EnumOrderPriorityFieldUpdateOperationsInput | $Enums.OrderPriority
+  materialStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
+  completionResult?: Prisma.NullableEnumCompletionResultFieldUpdateOperationsInput | $Enums.CompletionResult | null
+  customerConfirmationStatus?: Prisma.EnumCustomerConfirmationStatusFieldUpdateOperationsInput | $Enums.CustomerConfirmationStatus
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  internalNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  services?: Prisma.OrderServiceUncheckedUpdateManyWithoutOrderNestedInput
+  appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutOrderNestedInput
+  files?: Prisma.FileUploadUncheckedUpdateManyWithoutOrderNestedInput
+  checklists?: Prisma.OrderChecklistUncheckedUpdateManyWithoutOrderNestedInput
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutOrderNestedInput
+  timeEntries?: Prisma.TimeEntryUncheckedUpdateManyWithoutOrderNestedInput
+  materialUsages?: Prisma.MaterialUsageUncheckedUpdateManyWithoutOrderNestedInput
+  calculations?: Prisma.CalculationUncheckedUpdateManyWithoutOrderNestedInput
+  phases?: Prisma.OrderPhaseUncheckedUpdateManyWithoutOrderNestedInput
+  materialLines?: Prisma.OrderMaterialLineUncheckedUpdateManyWithoutOrderNestedInput
+  reservations?: Prisma.ReservationUncheckedUpdateManyWithoutOrderNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutOrderNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutOrderNestedInput
+  planMarkers?: Prisma.PlanMarkerUncheckedUpdateManyWithoutOrderNestedInput
+  staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutOrderNestedInput
+  shares?: Prisma.OrderShareUncheckedUpdateManyWithoutOrderNestedInput
+  projectNotes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutOrderNestedInput
+  projectFiles?: Prisma.ProjectFileUncheckedUpdateManyWithoutOrderNestedInput
+  projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutOrderNestedInput
+}
+
+export type OrderCreateWithoutProjectInput = {
+  id?: string
+  orderNumber: string
+  title?: string | null
+  orderType?: $Enums.OrderType
+  orderTypeLabel?: string | null
+  orderTypeCustom?: string | null
+  status?: $Enums.OrderStatus
+  priority?: $Enums.OrderPriority
+  materialStatus?: $Enums.MaterialOrderStatus
+  completionResult?: $Enums.CompletionResult | null
+  customerConfirmationStatus?: $Enums.CustomerConfirmationStatus
+  description?: string | null
+  internalNotes?: string | null
+  customerNotes?: string | null
+  questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  scheduledStart?: Date | string | null
+  scheduledEnd?: Date | string | null
+  bookingConfirmationSentAt?: Date | string | null
+  completedAt?: Date | string | null
+  invoicedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tenant: Prisma.TenantCreateNestedOneWithoutOrdersInput
+  customer: Prisma.CustomerCreateNestedOneWithoutOrdersInput
+  property: Prisma.PropertyCreateNestedOneWithoutOrdersInput
+  orderTypeDefinition?: Prisma.OrderTypeDefinitionCreateNestedOneWithoutOrdersInput
   services?: Prisma.OrderServiceCreateNestedManyWithoutOrderInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutOrderInput
   files?: Prisma.FileUploadCreateNestedManyWithoutOrderInput
@@ -4805,9 +6210,14 @@ export type OrderCreateWithoutSharesInput = {
   team?: Prisma.TeamCreateNestedOneWithoutOrdersInput
   vehicle?: Prisma.VehicleCreateNestedOneWithoutOrdersInput
   staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutOrderInput
+  shares?: Prisma.OrderShareCreateNestedManyWithoutOrderInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutOrderInput
+  projectNotes?: Prisma.ProjectNoteCreateNestedManyWithoutOrderInput
+  projectFiles?: Prisma.ProjectFileCreateNestedManyWithoutOrderInput
+  projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutOrderInput
 }
 
-export type OrderUncheckedCreateWithoutSharesInput = {
+export type OrderUncheckedCreateWithoutProjectInput = {
   id?: string
   tenantId: string
   customerId: string
@@ -4815,6 +6225,9 @@ export type OrderUncheckedCreateWithoutSharesInput = {
   orderNumber: string
   title?: string | null
   orderType?: $Enums.OrderType
+  orderTypeId?: string | null
+  orderTypeLabel?: string | null
+  orderTypeCustom?: string | null
   status?: $Enums.OrderStatus
   priority?: $Enums.OrderPriority
   materialStatus?: $Enums.MaterialOrderStatus
@@ -4848,29 +6261,164 @@ export type OrderUncheckedCreateWithoutSharesInput = {
   purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutOrderInput
   planMarkers?: Prisma.PlanMarkerUncheckedCreateNestedManyWithoutOrderInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutOrderInput
+  shares?: Prisma.OrderShareUncheckedCreateNestedManyWithoutOrderInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrderInput
+  projectNotes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutOrderInput
+  projectFiles?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutOrderInput
+  projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutOrderInput
 }
 
-export type OrderCreateOrConnectWithoutSharesInput = {
+export type OrderCreateOrConnectWithoutProjectInput = {
   where: Prisma.OrderWhereUniqueInput
-  create: Prisma.XOR<Prisma.OrderCreateWithoutSharesInput, Prisma.OrderUncheckedCreateWithoutSharesInput>
+  create: Prisma.XOR<Prisma.OrderCreateWithoutProjectInput, Prisma.OrderUncheckedCreateWithoutProjectInput>
 }
 
-export type OrderUpsertWithoutSharesInput = {
-  update: Prisma.XOR<Prisma.OrderUpdateWithoutSharesInput, Prisma.OrderUncheckedUpdateWithoutSharesInput>
-  create: Prisma.XOR<Prisma.OrderCreateWithoutSharesInput, Prisma.OrderUncheckedCreateWithoutSharesInput>
+export type OrderCreateManyProjectInputEnvelope = {
+  data: Prisma.OrderCreateManyProjectInput | Prisma.OrderCreateManyProjectInput[]
+  skipDuplicates?: boolean
+}
+
+export type OrderUpsertWithWhereUniqueWithoutProjectInput = {
+  where: Prisma.OrderWhereUniqueInput
+  update: Prisma.XOR<Prisma.OrderUpdateWithoutProjectInput, Prisma.OrderUncheckedUpdateWithoutProjectInput>
+  create: Prisma.XOR<Prisma.OrderCreateWithoutProjectInput, Prisma.OrderUncheckedCreateWithoutProjectInput>
+}
+
+export type OrderUpdateWithWhereUniqueWithoutProjectInput = {
+  where: Prisma.OrderWhereUniqueInput
+  data: Prisma.XOR<Prisma.OrderUpdateWithoutProjectInput, Prisma.OrderUncheckedUpdateWithoutProjectInput>
+}
+
+export type OrderUpdateManyWithWhereWithoutProjectInput = {
+  where: Prisma.OrderScalarWhereInput
+  data: Prisma.XOR<Prisma.OrderUpdateManyMutationInput, Prisma.OrderUncheckedUpdateManyWithoutProjectInput>
+}
+
+export type OrderCreateWithoutProjectNotesInput = {
+  id?: string
+  orderNumber: string
+  title?: string | null
+  orderType?: $Enums.OrderType
+  orderTypeLabel?: string | null
+  orderTypeCustom?: string | null
+  status?: $Enums.OrderStatus
+  priority?: $Enums.OrderPriority
+  materialStatus?: $Enums.MaterialOrderStatus
+  completionResult?: $Enums.CompletionResult | null
+  customerConfirmationStatus?: $Enums.CustomerConfirmationStatus
+  description?: string | null
+  internalNotes?: string | null
+  customerNotes?: string | null
+  questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  scheduledStart?: Date | string | null
+  scheduledEnd?: Date | string | null
+  bookingConfirmationSentAt?: Date | string | null
+  completedAt?: Date | string | null
+  invoicedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tenant: Prisma.TenantCreateNestedOneWithoutOrdersInput
+  customer: Prisma.CustomerCreateNestedOneWithoutOrdersInput
+  property: Prisma.PropertyCreateNestedOneWithoutOrdersInput
+  orderTypeDefinition?: Prisma.OrderTypeDefinitionCreateNestedOneWithoutOrdersInput
+  services?: Prisma.OrderServiceCreateNestedManyWithoutOrderInput
+  appointments?: Prisma.AppointmentCreateNestedManyWithoutOrderInput
+  files?: Prisma.FileUploadCreateNestedManyWithoutOrderInput
+  checklists?: Prisma.OrderChecklistCreateNestedManyWithoutOrderInput
+  messages?: Prisma.MessageCreateNestedManyWithoutOrderInput
+  timeEntries?: Prisma.TimeEntryCreateNestedManyWithoutOrderInput
+  materialUsages?: Prisma.MaterialUsageCreateNestedManyWithoutOrderInput
+  calculations?: Prisma.CalculationCreateNestedManyWithoutOrderInput
+  phases?: Prisma.OrderPhaseCreateNestedManyWithoutOrderInput
+  materialLines?: Prisma.OrderMaterialLineCreateNestedManyWithoutOrderInput
+  reservations?: Prisma.ReservationCreateNestedManyWithoutOrderInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutOrderInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutOrderInput
+  planMarkers?: Prisma.PlanMarkerCreateNestedManyWithoutOrderInput
+  team?: Prisma.TeamCreateNestedOneWithoutOrdersInput
+  vehicle?: Prisma.VehicleCreateNestedOneWithoutOrdersInput
+  project?: Prisma.ProjectCreateNestedOneWithoutOrdersInput
+  staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutOrderInput
+  shares?: Prisma.OrderShareCreateNestedManyWithoutOrderInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutOrderInput
+  projectFiles?: Prisma.ProjectFileCreateNestedManyWithoutOrderInput
+  projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutOrderInput
+}
+
+export type OrderUncheckedCreateWithoutProjectNotesInput = {
+  id?: string
+  tenantId: string
+  customerId: string
+  propertyId: string
+  orderNumber: string
+  title?: string | null
+  orderType?: $Enums.OrderType
+  orderTypeId?: string | null
+  orderTypeLabel?: string | null
+  orderTypeCustom?: string | null
+  status?: $Enums.OrderStatus
+  priority?: $Enums.OrderPriority
+  materialStatus?: $Enums.MaterialOrderStatus
+  completionResult?: $Enums.CompletionResult | null
+  customerConfirmationStatus?: $Enums.CustomerConfirmationStatus
+  description?: string | null
+  internalNotes?: string | null
+  customerNotes?: string | null
+  questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  scheduledStart?: Date | string | null
+  scheduledEnd?: Date | string | null
+  bookingConfirmationSentAt?: Date | string | null
+  completedAt?: Date | string | null
+  invoicedAt?: Date | string | null
+  teamId?: string | null
+  vehicleId?: string | null
+  projectId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  services?: Prisma.OrderServiceUncheckedCreateNestedManyWithoutOrderInput
+  appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutOrderInput
+  files?: Prisma.FileUploadUncheckedCreateNestedManyWithoutOrderInput
+  checklists?: Prisma.OrderChecklistUncheckedCreateNestedManyWithoutOrderInput
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutOrderInput
+  timeEntries?: Prisma.TimeEntryUncheckedCreateNestedManyWithoutOrderInput
+  materialUsages?: Prisma.MaterialUsageUncheckedCreateNestedManyWithoutOrderInput
+  calculations?: Prisma.CalculationUncheckedCreateNestedManyWithoutOrderInput
+  phases?: Prisma.OrderPhaseUncheckedCreateNestedManyWithoutOrderInput
+  materialLines?: Prisma.OrderMaterialLineUncheckedCreateNestedManyWithoutOrderInput
+  reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutOrderInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutOrderInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutOrderInput
+  planMarkers?: Prisma.PlanMarkerUncheckedCreateNestedManyWithoutOrderInput
+  staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutOrderInput
+  shares?: Prisma.OrderShareUncheckedCreateNestedManyWithoutOrderInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrderInput
+  projectFiles?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutOrderInput
+  projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutOrderInput
+}
+
+export type OrderCreateOrConnectWithoutProjectNotesInput = {
+  where: Prisma.OrderWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrderCreateWithoutProjectNotesInput, Prisma.OrderUncheckedCreateWithoutProjectNotesInput>
+}
+
+export type OrderUpsertWithoutProjectNotesInput = {
+  update: Prisma.XOR<Prisma.OrderUpdateWithoutProjectNotesInput, Prisma.OrderUncheckedUpdateWithoutProjectNotesInput>
+  create: Prisma.XOR<Prisma.OrderCreateWithoutProjectNotesInput, Prisma.OrderUncheckedCreateWithoutProjectNotesInput>
   where?: Prisma.OrderWhereInput
 }
 
-export type OrderUpdateToOneWithWhereWithoutSharesInput = {
+export type OrderUpdateToOneWithWhereWithoutProjectNotesInput = {
   where?: Prisma.OrderWhereInput
-  data: Prisma.XOR<Prisma.OrderUpdateWithoutSharesInput, Prisma.OrderUncheckedUpdateWithoutSharesInput>
+  data: Prisma.XOR<Prisma.OrderUpdateWithoutProjectNotesInput, Prisma.OrderUncheckedUpdateWithoutProjectNotesInput>
 }
 
-export type OrderUpdateWithoutSharesInput = {
+export type OrderUpdateWithoutProjectNotesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  orderTypeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeCustom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   priority?: Prisma.EnumOrderPriorityFieldUpdateOperationsInput | $Enums.OrderPriority
   materialStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
@@ -4890,6 +6438,7 @@ export type OrderUpdateWithoutSharesInput = {
   tenant?: Prisma.TenantUpdateOneRequiredWithoutOrdersNestedInput
   customer?: Prisma.CustomerUpdateOneRequiredWithoutOrdersNestedInput
   property?: Prisma.PropertyUpdateOneRequiredWithoutOrdersNestedInput
+  orderTypeDefinition?: Prisma.OrderTypeDefinitionUpdateOneWithoutOrdersNestedInput
   services?: Prisma.OrderServiceUpdateManyWithoutOrderNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutOrderNestedInput
   files?: Prisma.FileUploadUpdateManyWithoutOrderNestedInput
@@ -4906,10 +6455,15 @@ export type OrderUpdateWithoutSharesInput = {
   planMarkers?: Prisma.PlanMarkerUpdateManyWithoutOrderNestedInput
   team?: Prisma.TeamUpdateOneWithoutOrdersNestedInput
   vehicle?: Prisma.VehicleUpdateOneWithoutOrdersNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutOrdersNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutOrderNestedInput
+  shares?: Prisma.OrderShareUpdateManyWithoutOrderNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutOrderNestedInput
+  projectFiles?: Prisma.ProjectFileUpdateManyWithoutOrderNestedInput
+  projectCosts?: Prisma.ProjectCostUpdateManyWithoutOrderNestedInput
 }
 
-export type OrderUncheckedUpdateWithoutSharesInput = {
+export type OrderUncheckedUpdateWithoutProjectNotesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -4917,6 +6471,9 @@ export type OrderUncheckedUpdateWithoutSharesInput = {
   orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  orderTypeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeCustom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   priority?: Prisma.EnumOrderPriorityFieldUpdateOperationsInput | $Enums.OrderPriority
   materialStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
@@ -4933,118 +6490,7 @@ export type OrderUncheckedUpdateWithoutSharesInput = {
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  services?: Prisma.OrderServiceUncheckedUpdateManyWithoutOrderNestedInput
-  appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutOrderNestedInput
-  files?: Prisma.FileUploadUncheckedUpdateManyWithoutOrderNestedInput
-  checklists?: Prisma.OrderChecklistUncheckedUpdateManyWithoutOrderNestedInput
-  messages?: Prisma.MessageUncheckedUpdateManyWithoutOrderNestedInput
-  timeEntries?: Prisma.TimeEntryUncheckedUpdateManyWithoutOrderNestedInput
-  materialUsages?: Prisma.MaterialUsageUncheckedUpdateManyWithoutOrderNestedInput
-  calculations?: Prisma.CalculationUncheckedUpdateManyWithoutOrderNestedInput
-  phases?: Prisma.OrderPhaseUncheckedUpdateManyWithoutOrderNestedInput
-  materialLines?: Prisma.OrderMaterialLineUncheckedUpdateManyWithoutOrderNestedInput
-  reservations?: Prisma.ReservationUncheckedUpdateManyWithoutOrderNestedInput
-  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutOrderNestedInput
-  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutOrderNestedInput
-  planMarkers?: Prisma.PlanMarkerUncheckedUpdateManyWithoutOrderNestedInput
-  staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutOrderNestedInput
-}
-
-export type OrderCreateManyTenantInput = {
-  id?: string
-  customerId: string
-  propertyId: string
-  orderNumber: string
-  title?: string | null
-  orderType?: $Enums.OrderType
-  status?: $Enums.OrderStatus
-  priority?: $Enums.OrderPriority
-  materialStatus?: $Enums.MaterialOrderStatus
-  completionResult?: $Enums.CompletionResult | null
-  customerConfirmationStatus?: $Enums.CustomerConfirmationStatus
-  description?: string | null
-  internalNotes?: string | null
-  customerNotes?: string | null
-  questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  scheduledStart?: Date | string | null
-  scheduledEnd?: Date | string | null
-  bookingConfirmationSentAt?: Date | string | null
-  completedAt?: Date | string | null
-  invoicedAt?: Date | string | null
-  teamId?: string | null
-  vehicleId?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-}
-
-export type OrderUpdateWithoutTenantInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  orderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
-  status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
-  priority?: Prisma.EnumOrderPriorityFieldUpdateOperationsInput | $Enums.OrderPriority
-  materialStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
-  completionResult?: Prisma.NullableEnumCompletionResultFieldUpdateOperationsInput | $Enums.CompletionResult | null
-  customerConfirmationStatus?: Prisma.EnumCustomerConfirmationStatusFieldUpdateOperationsInput | $Enums.CustomerConfirmationStatus
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  internalNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  customerNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  customer?: Prisma.CustomerUpdateOneRequiredWithoutOrdersNestedInput
-  property?: Prisma.PropertyUpdateOneRequiredWithoutOrdersNestedInput
-  services?: Prisma.OrderServiceUpdateManyWithoutOrderNestedInput
-  appointments?: Prisma.AppointmentUpdateManyWithoutOrderNestedInput
-  files?: Prisma.FileUploadUpdateManyWithoutOrderNestedInput
-  checklists?: Prisma.OrderChecklistUpdateManyWithoutOrderNestedInput
-  messages?: Prisma.MessageUpdateManyWithoutOrderNestedInput
-  timeEntries?: Prisma.TimeEntryUpdateManyWithoutOrderNestedInput
-  materialUsages?: Prisma.MaterialUsageUpdateManyWithoutOrderNestedInput
-  calculations?: Prisma.CalculationUpdateManyWithoutOrderNestedInput
-  phases?: Prisma.OrderPhaseUpdateManyWithoutOrderNestedInput
-  materialLines?: Prisma.OrderMaterialLineUpdateManyWithoutOrderNestedInput
-  reservations?: Prisma.ReservationUpdateManyWithoutOrderNestedInput
-  stockMovements?: Prisma.StockMovementUpdateManyWithoutOrderNestedInput
-  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutOrderNestedInput
-  planMarkers?: Prisma.PlanMarkerUpdateManyWithoutOrderNestedInput
-  team?: Prisma.TeamUpdateOneWithoutOrdersNestedInput
-  vehicle?: Prisma.VehicleUpdateOneWithoutOrdersNestedInput
-  staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutOrderNestedInput
-  shares?: Prisma.OrderShareUpdateManyWithoutOrderNestedInput
-}
-
-export type OrderUncheckedUpdateWithoutTenantInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  customerId?: Prisma.StringFieldUpdateOperationsInput | string
-  propertyId?: Prisma.StringFieldUpdateOperationsInput | string
-  orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  orderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
-  status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
-  priority?: Prisma.EnumOrderPriorityFieldUpdateOperationsInput | $Enums.OrderPriority
-  materialStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
-  completionResult?: Prisma.NullableEnumCompletionResultFieldUpdateOperationsInput | $Enums.CompletionResult | null
-  customerConfirmationStatus?: Prisma.EnumCustomerConfirmationStatusFieldUpdateOperationsInput | $Enums.CustomerConfirmationStatus
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  internalNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  customerNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   services?: Prisma.OrderServiceUncheckedUpdateManyWithoutOrderNestedInput
@@ -5063,15 +6509,191 @@ export type OrderUncheckedUpdateWithoutTenantInput = {
   planMarkers?: Prisma.PlanMarkerUncheckedUpdateManyWithoutOrderNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutOrderNestedInput
   shares?: Prisma.OrderShareUncheckedUpdateManyWithoutOrderNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrderNestedInput
+  projectFiles?: Prisma.ProjectFileUncheckedUpdateManyWithoutOrderNestedInput
+  projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutOrderNestedInput
 }
 
-export type OrderUncheckedUpdateManyWithoutTenantInput = {
+export type OrderCreateWithoutProjectFilesInput = {
+  id?: string
+  orderNumber: string
+  title?: string | null
+  orderType?: $Enums.OrderType
+  orderTypeLabel?: string | null
+  orderTypeCustom?: string | null
+  status?: $Enums.OrderStatus
+  priority?: $Enums.OrderPriority
+  materialStatus?: $Enums.MaterialOrderStatus
+  completionResult?: $Enums.CompletionResult | null
+  customerConfirmationStatus?: $Enums.CustomerConfirmationStatus
+  description?: string | null
+  internalNotes?: string | null
+  customerNotes?: string | null
+  questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  scheduledStart?: Date | string | null
+  scheduledEnd?: Date | string | null
+  bookingConfirmationSentAt?: Date | string | null
+  completedAt?: Date | string | null
+  invoicedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tenant: Prisma.TenantCreateNestedOneWithoutOrdersInput
+  customer: Prisma.CustomerCreateNestedOneWithoutOrdersInput
+  property: Prisma.PropertyCreateNestedOneWithoutOrdersInput
+  orderTypeDefinition?: Prisma.OrderTypeDefinitionCreateNestedOneWithoutOrdersInput
+  services?: Prisma.OrderServiceCreateNestedManyWithoutOrderInput
+  appointments?: Prisma.AppointmentCreateNestedManyWithoutOrderInput
+  files?: Prisma.FileUploadCreateNestedManyWithoutOrderInput
+  checklists?: Prisma.OrderChecklistCreateNestedManyWithoutOrderInput
+  messages?: Prisma.MessageCreateNestedManyWithoutOrderInput
+  timeEntries?: Prisma.TimeEntryCreateNestedManyWithoutOrderInput
+  materialUsages?: Prisma.MaterialUsageCreateNestedManyWithoutOrderInput
+  calculations?: Prisma.CalculationCreateNestedManyWithoutOrderInput
+  phases?: Prisma.OrderPhaseCreateNestedManyWithoutOrderInput
+  materialLines?: Prisma.OrderMaterialLineCreateNestedManyWithoutOrderInput
+  reservations?: Prisma.ReservationCreateNestedManyWithoutOrderInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutOrderInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutOrderInput
+  planMarkers?: Prisma.PlanMarkerCreateNestedManyWithoutOrderInput
+  team?: Prisma.TeamCreateNestedOneWithoutOrdersInput
+  vehicle?: Prisma.VehicleCreateNestedOneWithoutOrdersInput
+  project?: Prisma.ProjectCreateNestedOneWithoutOrdersInput
+  staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutOrderInput
+  shares?: Prisma.OrderShareCreateNestedManyWithoutOrderInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutOrderInput
+  projectNotes?: Prisma.ProjectNoteCreateNestedManyWithoutOrderInput
+  projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutOrderInput
+}
+
+export type OrderUncheckedCreateWithoutProjectFilesInput = {
+  id?: string
+  tenantId: string
+  customerId: string
+  propertyId: string
+  orderNumber: string
+  title?: string | null
+  orderType?: $Enums.OrderType
+  orderTypeId?: string | null
+  orderTypeLabel?: string | null
+  orderTypeCustom?: string | null
+  status?: $Enums.OrderStatus
+  priority?: $Enums.OrderPriority
+  materialStatus?: $Enums.MaterialOrderStatus
+  completionResult?: $Enums.CompletionResult | null
+  customerConfirmationStatus?: $Enums.CustomerConfirmationStatus
+  description?: string | null
+  internalNotes?: string | null
+  customerNotes?: string | null
+  questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  scheduledStart?: Date | string | null
+  scheduledEnd?: Date | string | null
+  bookingConfirmationSentAt?: Date | string | null
+  completedAt?: Date | string | null
+  invoicedAt?: Date | string | null
+  teamId?: string | null
+  vehicleId?: string | null
+  projectId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  services?: Prisma.OrderServiceUncheckedCreateNestedManyWithoutOrderInput
+  appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutOrderInput
+  files?: Prisma.FileUploadUncheckedCreateNestedManyWithoutOrderInput
+  checklists?: Prisma.OrderChecklistUncheckedCreateNestedManyWithoutOrderInput
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutOrderInput
+  timeEntries?: Prisma.TimeEntryUncheckedCreateNestedManyWithoutOrderInput
+  materialUsages?: Prisma.MaterialUsageUncheckedCreateNestedManyWithoutOrderInput
+  calculations?: Prisma.CalculationUncheckedCreateNestedManyWithoutOrderInput
+  phases?: Prisma.OrderPhaseUncheckedCreateNestedManyWithoutOrderInput
+  materialLines?: Prisma.OrderMaterialLineUncheckedCreateNestedManyWithoutOrderInput
+  reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutOrderInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutOrderInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutOrderInput
+  planMarkers?: Prisma.PlanMarkerUncheckedCreateNestedManyWithoutOrderInput
+  staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutOrderInput
+  shares?: Prisma.OrderShareUncheckedCreateNestedManyWithoutOrderInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrderInput
+  projectNotes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutOrderInput
+  projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutOrderInput
+}
+
+export type OrderCreateOrConnectWithoutProjectFilesInput = {
+  where: Prisma.OrderWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrderCreateWithoutProjectFilesInput, Prisma.OrderUncheckedCreateWithoutProjectFilesInput>
+}
+
+export type OrderUpsertWithoutProjectFilesInput = {
+  update: Prisma.XOR<Prisma.OrderUpdateWithoutProjectFilesInput, Prisma.OrderUncheckedUpdateWithoutProjectFilesInput>
+  create: Prisma.XOR<Prisma.OrderCreateWithoutProjectFilesInput, Prisma.OrderUncheckedCreateWithoutProjectFilesInput>
+  where?: Prisma.OrderWhereInput
+}
+
+export type OrderUpdateToOneWithWhereWithoutProjectFilesInput = {
+  where?: Prisma.OrderWhereInput
+  data: Prisma.XOR<Prisma.OrderUpdateWithoutProjectFilesInput, Prisma.OrderUncheckedUpdateWithoutProjectFilesInput>
+}
+
+export type OrderUpdateWithoutProjectFilesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  orderTypeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeCustom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+  priority?: Prisma.EnumOrderPriorityFieldUpdateOperationsInput | $Enums.OrderPriority
+  materialStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
+  completionResult?: Prisma.NullableEnumCompletionResultFieldUpdateOperationsInput | $Enums.CompletionResult | null
+  customerConfirmationStatus?: Prisma.EnumCustomerConfirmationStatusFieldUpdateOperationsInput | $Enums.CustomerConfirmationStatus
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  internalNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutOrdersNestedInput
+  customer?: Prisma.CustomerUpdateOneRequiredWithoutOrdersNestedInput
+  property?: Prisma.PropertyUpdateOneRequiredWithoutOrdersNestedInput
+  orderTypeDefinition?: Prisma.OrderTypeDefinitionUpdateOneWithoutOrdersNestedInput
+  services?: Prisma.OrderServiceUpdateManyWithoutOrderNestedInput
+  appointments?: Prisma.AppointmentUpdateManyWithoutOrderNestedInput
+  files?: Prisma.FileUploadUpdateManyWithoutOrderNestedInput
+  checklists?: Prisma.OrderChecklistUpdateManyWithoutOrderNestedInput
+  messages?: Prisma.MessageUpdateManyWithoutOrderNestedInput
+  timeEntries?: Prisma.TimeEntryUpdateManyWithoutOrderNestedInput
+  materialUsages?: Prisma.MaterialUsageUpdateManyWithoutOrderNestedInput
+  calculations?: Prisma.CalculationUpdateManyWithoutOrderNestedInput
+  phases?: Prisma.OrderPhaseUpdateManyWithoutOrderNestedInput
+  materialLines?: Prisma.OrderMaterialLineUpdateManyWithoutOrderNestedInput
+  reservations?: Prisma.ReservationUpdateManyWithoutOrderNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutOrderNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutOrderNestedInput
+  planMarkers?: Prisma.PlanMarkerUpdateManyWithoutOrderNestedInput
+  team?: Prisma.TeamUpdateOneWithoutOrdersNestedInput
+  vehicle?: Prisma.VehicleUpdateOneWithoutOrdersNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutOrdersNestedInput
+  staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutOrderNestedInput
+  shares?: Prisma.OrderShareUpdateManyWithoutOrderNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutOrderNestedInput
+  projectNotes?: Prisma.ProjectNoteUpdateManyWithoutOrderNestedInput
+  projectCosts?: Prisma.ProjectCostUpdateManyWithoutOrderNestedInput
+}
+
+export type OrderUncheckedUpdateWithoutProjectFilesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   propertyId?: Prisma.StringFieldUpdateOperationsInput | string
   orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  orderTypeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeCustom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   priority?: Prisma.EnumOrderPriorityFieldUpdateOperationsInput | $Enums.OrderPriority
   materialStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
@@ -5088,6 +6710,410 @@ export type OrderUncheckedUpdateManyWithoutTenantInput = {
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  services?: Prisma.OrderServiceUncheckedUpdateManyWithoutOrderNestedInput
+  appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutOrderNestedInput
+  files?: Prisma.FileUploadUncheckedUpdateManyWithoutOrderNestedInput
+  checklists?: Prisma.OrderChecklistUncheckedUpdateManyWithoutOrderNestedInput
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutOrderNestedInput
+  timeEntries?: Prisma.TimeEntryUncheckedUpdateManyWithoutOrderNestedInput
+  materialUsages?: Prisma.MaterialUsageUncheckedUpdateManyWithoutOrderNestedInput
+  calculations?: Prisma.CalculationUncheckedUpdateManyWithoutOrderNestedInput
+  phases?: Prisma.OrderPhaseUncheckedUpdateManyWithoutOrderNestedInput
+  materialLines?: Prisma.OrderMaterialLineUncheckedUpdateManyWithoutOrderNestedInput
+  reservations?: Prisma.ReservationUncheckedUpdateManyWithoutOrderNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutOrderNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutOrderNestedInput
+  planMarkers?: Prisma.PlanMarkerUncheckedUpdateManyWithoutOrderNestedInput
+  staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutOrderNestedInput
+  shares?: Prisma.OrderShareUncheckedUpdateManyWithoutOrderNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrderNestedInput
+  projectNotes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutOrderNestedInput
+  projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutOrderNestedInput
+}
+
+export type OrderCreateWithoutProjectCostsInput = {
+  id?: string
+  orderNumber: string
+  title?: string | null
+  orderType?: $Enums.OrderType
+  orderTypeLabel?: string | null
+  orderTypeCustom?: string | null
+  status?: $Enums.OrderStatus
+  priority?: $Enums.OrderPriority
+  materialStatus?: $Enums.MaterialOrderStatus
+  completionResult?: $Enums.CompletionResult | null
+  customerConfirmationStatus?: $Enums.CustomerConfirmationStatus
+  description?: string | null
+  internalNotes?: string | null
+  customerNotes?: string | null
+  questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  scheduledStart?: Date | string | null
+  scheduledEnd?: Date | string | null
+  bookingConfirmationSentAt?: Date | string | null
+  completedAt?: Date | string | null
+  invoicedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tenant: Prisma.TenantCreateNestedOneWithoutOrdersInput
+  customer: Prisma.CustomerCreateNestedOneWithoutOrdersInput
+  property: Prisma.PropertyCreateNestedOneWithoutOrdersInput
+  orderTypeDefinition?: Prisma.OrderTypeDefinitionCreateNestedOneWithoutOrdersInput
+  services?: Prisma.OrderServiceCreateNestedManyWithoutOrderInput
+  appointments?: Prisma.AppointmentCreateNestedManyWithoutOrderInput
+  files?: Prisma.FileUploadCreateNestedManyWithoutOrderInput
+  checklists?: Prisma.OrderChecklistCreateNestedManyWithoutOrderInput
+  messages?: Prisma.MessageCreateNestedManyWithoutOrderInput
+  timeEntries?: Prisma.TimeEntryCreateNestedManyWithoutOrderInput
+  materialUsages?: Prisma.MaterialUsageCreateNestedManyWithoutOrderInput
+  calculations?: Prisma.CalculationCreateNestedManyWithoutOrderInput
+  phases?: Prisma.OrderPhaseCreateNestedManyWithoutOrderInput
+  materialLines?: Prisma.OrderMaterialLineCreateNestedManyWithoutOrderInput
+  reservations?: Prisma.ReservationCreateNestedManyWithoutOrderInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutOrderInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutOrderInput
+  planMarkers?: Prisma.PlanMarkerCreateNestedManyWithoutOrderInput
+  team?: Prisma.TeamCreateNestedOneWithoutOrdersInput
+  vehicle?: Prisma.VehicleCreateNestedOneWithoutOrdersInput
+  project?: Prisma.ProjectCreateNestedOneWithoutOrdersInput
+  staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutOrderInput
+  shares?: Prisma.OrderShareCreateNestedManyWithoutOrderInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutOrderInput
+  projectNotes?: Prisma.ProjectNoteCreateNestedManyWithoutOrderInput
+  projectFiles?: Prisma.ProjectFileCreateNestedManyWithoutOrderInput
+}
+
+export type OrderUncheckedCreateWithoutProjectCostsInput = {
+  id?: string
+  tenantId: string
+  customerId: string
+  propertyId: string
+  orderNumber: string
+  title?: string | null
+  orderType?: $Enums.OrderType
+  orderTypeId?: string | null
+  orderTypeLabel?: string | null
+  orderTypeCustom?: string | null
+  status?: $Enums.OrderStatus
+  priority?: $Enums.OrderPriority
+  materialStatus?: $Enums.MaterialOrderStatus
+  completionResult?: $Enums.CompletionResult | null
+  customerConfirmationStatus?: $Enums.CustomerConfirmationStatus
+  description?: string | null
+  internalNotes?: string | null
+  customerNotes?: string | null
+  questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  scheduledStart?: Date | string | null
+  scheduledEnd?: Date | string | null
+  bookingConfirmationSentAt?: Date | string | null
+  completedAt?: Date | string | null
+  invoicedAt?: Date | string | null
+  teamId?: string | null
+  vehicleId?: string | null
+  projectId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  services?: Prisma.OrderServiceUncheckedCreateNestedManyWithoutOrderInput
+  appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutOrderInput
+  files?: Prisma.FileUploadUncheckedCreateNestedManyWithoutOrderInput
+  checklists?: Prisma.OrderChecklistUncheckedCreateNestedManyWithoutOrderInput
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutOrderInput
+  timeEntries?: Prisma.TimeEntryUncheckedCreateNestedManyWithoutOrderInput
+  materialUsages?: Prisma.MaterialUsageUncheckedCreateNestedManyWithoutOrderInput
+  calculations?: Prisma.CalculationUncheckedCreateNestedManyWithoutOrderInput
+  phases?: Prisma.OrderPhaseUncheckedCreateNestedManyWithoutOrderInput
+  materialLines?: Prisma.OrderMaterialLineUncheckedCreateNestedManyWithoutOrderInput
+  reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutOrderInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutOrderInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutOrderInput
+  planMarkers?: Prisma.PlanMarkerUncheckedCreateNestedManyWithoutOrderInput
+  staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutOrderInput
+  shares?: Prisma.OrderShareUncheckedCreateNestedManyWithoutOrderInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrderInput
+  projectNotes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutOrderInput
+  projectFiles?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutOrderInput
+}
+
+export type OrderCreateOrConnectWithoutProjectCostsInput = {
+  where: Prisma.OrderWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrderCreateWithoutProjectCostsInput, Prisma.OrderUncheckedCreateWithoutProjectCostsInput>
+}
+
+export type OrderUpsertWithoutProjectCostsInput = {
+  update: Prisma.XOR<Prisma.OrderUpdateWithoutProjectCostsInput, Prisma.OrderUncheckedUpdateWithoutProjectCostsInput>
+  create: Prisma.XOR<Prisma.OrderCreateWithoutProjectCostsInput, Prisma.OrderUncheckedCreateWithoutProjectCostsInput>
+  where?: Prisma.OrderWhereInput
+}
+
+export type OrderUpdateToOneWithWhereWithoutProjectCostsInput = {
+  where?: Prisma.OrderWhereInput
+  data: Prisma.XOR<Prisma.OrderUpdateWithoutProjectCostsInput, Prisma.OrderUncheckedUpdateWithoutProjectCostsInput>
+}
+
+export type OrderUpdateWithoutProjectCostsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  orderTypeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeCustom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+  priority?: Prisma.EnumOrderPriorityFieldUpdateOperationsInput | $Enums.OrderPriority
+  materialStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
+  completionResult?: Prisma.NullableEnumCompletionResultFieldUpdateOperationsInput | $Enums.CompletionResult | null
+  customerConfirmationStatus?: Prisma.EnumCustomerConfirmationStatusFieldUpdateOperationsInput | $Enums.CustomerConfirmationStatus
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  internalNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutOrdersNestedInput
+  customer?: Prisma.CustomerUpdateOneRequiredWithoutOrdersNestedInput
+  property?: Prisma.PropertyUpdateOneRequiredWithoutOrdersNestedInput
+  orderTypeDefinition?: Prisma.OrderTypeDefinitionUpdateOneWithoutOrdersNestedInput
+  services?: Prisma.OrderServiceUpdateManyWithoutOrderNestedInput
+  appointments?: Prisma.AppointmentUpdateManyWithoutOrderNestedInput
+  files?: Prisma.FileUploadUpdateManyWithoutOrderNestedInput
+  checklists?: Prisma.OrderChecklistUpdateManyWithoutOrderNestedInput
+  messages?: Prisma.MessageUpdateManyWithoutOrderNestedInput
+  timeEntries?: Prisma.TimeEntryUpdateManyWithoutOrderNestedInput
+  materialUsages?: Prisma.MaterialUsageUpdateManyWithoutOrderNestedInput
+  calculations?: Prisma.CalculationUpdateManyWithoutOrderNestedInput
+  phases?: Prisma.OrderPhaseUpdateManyWithoutOrderNestedInput
+  materialLines?: Prisma.OrderMaterialLineUpdateManyWithoutOrderNestedInput
+  reservations?: Prisma.ReservationUpdateManyWithoutOrderNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutOrderNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutOrderNestedInput
+  planMarkers?: Prisma.PlanMarkerUpdateManyWithoutOrderNestedInput
+  team?: Prisma.TeamUpdateOneWithoutOrdersNestedInput
+  vehicle?: Prisma.VehicleUpdateOneWithoutOrdersNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutOrdersNestedInput
+  staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutOrderNestedInput
+  shares?: Prisma.OrderShareUpdateManyWithoutOrderNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutOrderNestedInput
+  projectNotes?: Prisma.ProjectNoteUpdateManyWithoutOrderNestedInput
+  projectFiles?: Prisma.ProjectFileUpdateManyWithoutOrderNestedInput
+}
+
+export type OrderUncheckedUpdateWithoutProjectCostsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.StringFieldUpdateOperationsInput | string
+  propertyId?: Prisma.StringFieldUpdateOperationsInput | string
+  orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  orderTypeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeCustom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+  priority?: Prisma.EnumOrderPriorityFieldUpdateOperationsInput | $Enums.OrderPriority
+  materialStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
+  completionResult?: Prisma.NullableEnumCompletionResultFieldUpdateOperationsInput | $Enums.CompletionResult | null
+  customerConfirmationStatus?: Prisma.EnumCustomerConfirmationStatusFieldUpdateOperationsInput | $Enums.CustomerConfirmationStatus
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  internalNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  services?: Prisma.OrderServiceUncheckedUpdateManyWithoutOrderNestedInput
+  appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutOrderNestedInput
+  files?: Prisma.FileUploadUncheckedUpdateManyWithoutOrderNestedInput
+  checklists?: Prisma.OrderChecklistUncheckedUpdateManyWithoutOrderNestedInput
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutOrderNestedInput
+  timeEntries?: Prisma.TimeEntryUncheckedUpdateManyWithoutOrderNestedInput
+  materialUsages?: Prisma.MaterialUsageUncheckedUpdateManyWithoutOrderNestedInput
+  calculations?: Prisma.CalculationUncheckedUpdateManyWithoutOrderNestedInput
+  phases?: Prisma.OrderPhaseUncheckedUpdateManyWithoutOrderNestedInput
+  materialLines?: Prisma.OrderMaterialLineUncheckedUpdateManyWithoutOrderNestedInput
+  reservations?: Prisma.ReservationUncheckedUpdateManyWithoutOrderNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutOrderNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutOrderNestedInput
+  planMarkers?: Prisma.PlanMarkerUncheckedUpdateManyWithoutOrderNestedInput
+  staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutOrderNestedInput
+  shares?: Prisma.OrderShareUncheckedUpdateManyWithoutOrderNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrderNestedInput
+  projectNotes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutOrderNestedInput
+  projectFiles?: Prisma.ProjectFileUncheckedUpdateManyWithoutOrderNestedInput
+}
+
+export type OrderCreateManyTenantInput = {
+  id?: string
+  customerId: string
+  propertyId: string
+  orderNumber: string
+  title?: string | null
+  orderType?: $Enums.OrderType
+  orderTypeId?: string | null
+  orderTypeLabel?: string | null
+  orderTypeCustom?: string | null
+  status?: $Enums.OrderStatus
+  priority?: $Enums.OrderPriority
+  materialStatus?: $Enums.MaterialOrderStatus
+  completionResult?: $Enums.CompletionResult | null
+  customerConfirmationStatus?: $Enums.CustomerConfirmationStatus
+  description?: string | null
+  internalNotes?: string | null
+  customerNotes?: string | null
+  questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  scheduledStart?: Date | string | null
+  scheduledEnd?: Date | string | null
+  bookingConfirmationSentAt?: Date | string | null
+  completedAt?: Date | string | null
+  invoicedAt?: Date | string | null
+  teamId?: string | null
+  vehicleId?: string | null
+  projectId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type OrderUpdateWithoutTenantInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  orderTypeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeCustom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+  priority?: Prisma.EnumOrderPriorityFieldUpdateOperationsInput | $Enums.OrderPriority
+  materialStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
+  completionResult?: Prisma.NullableEnumCompletionResultFieldUpdateOperationsInput | $Enums.CompletionResult | null
+  customerConfirmationStatus?: Prisma.EnumCustomerConfirmationStatusFieldUpdateOperationsInput | $Enums.CustomerConfirmationStatus
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  internalNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  customer?: Prisma.CustomerUpdateOneRequiredWithoutOrdersNestedInput
+  property?: Prisma.PropertyUpdateOneRequiredWithoutOrdersNestedInput
+  orderTypeDefinition?: Prisma.OrderTypeDefinitionUpdateOneWithoutOrdersNestedInput
+  services?: Prisma.OrderServiceUpdateManyWithoutOrderNestedInput
+  appointments?: Prisma.AppointmentUpdateManyWithoutOrderNestedInput
+  files?: Prisma.FileUploadUpdateManyWithoutOrderNestedInput
+  checklists?: Prisma.OrderChecklistUpdateManyWithoutOrderNestedInput
+  messages?: Prisma.MessageUpdateManyWithoutOrderNestedInput
+  timeEntries?: Prisma.TimeEntryUpdateManyWithoutOrderNestedInput
+  materialUsages?: Prisma.MaterialUsageUpdateManyWithoutOrderNestedInput
+  calculations?: Prisma.CalculationUpdateManyWithoutOrderNestedInput
+  phases?: Prisma.OrderPhaseUpdateManyWithoutOrderNestedInput
+  materialLines?: Prisma.OrderMaterialLineUpdateManyWithoutOrderNestedInput
+  reservations?: Prisma.ReservationUpdateManyWithoutOrderNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutOrderNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutOrderNestedInput
+  planMarkers?: Prisma.PlanMarkerUpdateManyWithoutOrderNestedInput
+  team?: Prisma.TeamUpdateOneWithoutOrdersNestedInput
+  vehicle?: Prisma.VehicleUpdateOneWithoutOrdersNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutOrdersNestedInput
+  staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutOrderNestedInput
+  shares?: Prisma.OrderShareUpdateManyWithoutOrderNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutOrderNestedInput
+  projectNotes?: Prisma.ProjectNoteUpdateManyWithoutOrderNestedInput
+  projectFiles?: Prisma.ProjectFileUpdateManyWithoutOrderNestedInput
+  projectCosts?: Prisma.ProjectCostUpdateManyWithoutOrderNestedInput
+}
+
+export type OrderUncheckedUpdateWithoutTenantInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.StringFieldUpdateOperationsInput | string
+  propertyId?: Prisma.StringFieldUpdateOperationsInput | string
+  orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  orderTypeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeCustom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+  priority?: Prisma.EnumOrderPriorityFieldUpdateOperationsInput | $Enums.OrderPriority
+  materialStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
+  completionResult?: Prisma.NullableEnumCompletionResultFieldUpdateOperationsInput | $Enums.CompletionResult | null
+  customerConfirmationStatus?: Prisma.EnumCustomerConfirmationStatusFieldUpdateOperationsInput | $Enums.CustomerConfirmationStatus
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  internalNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  services?: Prisma.OrderServiceUncheckedUpdateManyWithoutOrderNestedInput
+  appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutOrderNestedInput
+  files?: Prisma.FileUploadUncheckedUpdateManyWithoutOrderNestedInput
+  checklists?: Prisma.OrderChecklistUncheckedUpdateManyWithoutOrderNestedInput
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutOrderNestedInput
+  timeEntries?: Prisma.TimeEntryUncheckedUpdateManyWithoutOrderNestedInput
+  materialUsages?: Prisma.MaterialUsageUncheckedUpdateManyWithoutOrderNestedInput
+  calculations?: Prisma.CalculationUncheckedUpdateManyWithoutOrderNestedInput
+  phases?: Prisma.OrderPhaseUncheckedUpdateManyWithoutOrderNestedInput
+  materialLines?: Prisma.OrderMaterialLineUncheckedUpdateManyWithoutOrderNestedInput
+  reservations?: Prisma.ReservationUncheckedUpdateManyWithoutOrderNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutOrderNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutOrderNestedInput
+  planMarkers?: Prisma.PlanMarkerUncheckedUpdateManyWithoutOrderNestedInput
+  staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutOrderNestedInput
+  shares?: Prisma.OrderShareUncheckedUpdateManyWithoutOrderNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrderNestedInput
+  projectNotes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutOrderNestedInput
+  projectFiles?: Prisma.ProjectFileUncheckedUpdateManyWithoutOrderNestedInput
+  projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutOrderNestedInput
+}
+
+export type OrderUncheckedUpdateManyWithoutTenantInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.StringFieldUpdateOperationsInput | string
+  propertyId?: Prisma.StringFieldUpdateOperationsInput | string
+  orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  orderTypeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeCustom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+  priority?: Prisma.EnumOrderPriorityFieldUpdateOperationsInput | $Enums.OrderPriority
+  materialStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
+  completionResult?: Prisma.NullableEnumCompletionResultFieldUpdateOperationsInput | $Enums.CompletionResult | null
+  customerConfirmationStatus?: Prisma.EnumCustomerConfirmationStatusFieldUpdateOperationsInput | $Enums.CustomerConfirmationStatus
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  internalNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -5099,6 +7125,9 @@ export type OrderCreateManyCustomerInput = {
   orderNumber: string
   title?: string | null
   orderType?: $Enums.OrderType
+  orderTypeId?: string | null
+  orderTypeLabel?: string | null
+  orderTypeCustom?: string | null
   status?: $Enums.OrderStatus
   priority?: $Enums.OrderPriority
   materialStatus?: $Enums.MaterialOrderStatus
@@ -5115,6 +7144,7 @@ export type OrderCreateManyCustomerInput = {
   invoicedAt?: Date | string | null
   teamId?: string | null
   vehicleId?: string | null
+  projectId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -5124,6 +7154,8 @@ export type OrderUpdateWithoutCustomerInput = {
   orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  orderTypeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeCustom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   priority?: Prisma.EnumOrderPriorityFieldUpdateOperationsInput | $Enums.OrderPriority
   materialStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
@@ -5142,6 +7174,7 @@ export type OrderUpdateWithoutCustomerInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutOrdersNestedInput
   property?: Prisma.PropertyUpdateOneRequiredWithoutOrdersNestedInput
+  orderTypeDefinition?: Prisma.OrderTypeDefinitionUpdateOneWithoutOrdersNestedInput
   services?: Prisma.OrderServiceUpdateManyWithoutOrderNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutOrderNestedInput
   files?: Prisma.FileUploadUpdateManyWithoutOrderNestedInput
@@ -5158,8 +7191,13 @@ export type OrderUpdateWithoutCustomerInput = {
   planMarkers?: Prisma.PlanMarkerUpdateManyWithoutOrderNestedInput
   team?: Prisma.TeamUpdateOneWithoutOrdersNestedInput
   vehicle?: Prisma.VehicleUpdateOneWithoutOrdersNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutOrdersNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutOrderNestedInput
   shares?: Prisma.OrderShareUpdateManyWithoutOrderNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutOrderNestedInput
+  projectNotes?: Prisma.ProjectNoteUpdateManyWithoutOrderNestedInput
+  projectFiles?: Prisma.ProjectFileUpdateManyWithoutOrderNestedInput
+  projectCosts?: Prisma.ProjectCostUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutCustomerInput = {
@@ -5169,6 +7207,9 @@ export type OrderUncheckedUpdateWithoutCustomerInput = {
   orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  orderTypeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeCustom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   priority?: Prisma.EnumOrderPriorityFieldUpdateOperationsInput | $Enums.OrderPriority
   materialStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
@@ -5185,6 +7226,7 @@ export type OrderUncheckedUpdateWithoutCustomerInput = {
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   services?: Prisma.OrderServiceUncheckedUpdateManyWithoutOrderNestedInput
@@ -5203,6 +7245,10 @@ export type OrderUncheckedUpdateWithoutCustomerInput = {
   planMarkers?: Prisma.PlanMarkerUncheckedUpdateManyWithoutOrderNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutOrderNestedInput
   shares?: Prisma.OrderShareUncheckedUpdateManyWithoutOrderNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrderNestedInput
+  projectNotes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutOrderNestedInput
+  projectFiles?: Prisma.ProjectFileUncheckedUpdateManyWithoutOrderNestedInput
+  projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateManyWithoutCustomerInput = {
@@ -5212,6 +7258,9 @@ export type OrderUncheckedUpdateManyWithoutCustomerInput = {
   orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  orderTypeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeCustom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   priority?: Prisma.EnumOrderPriorityFieldUpdateOperationsInput | $Enums.OrderPriority
   materialStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
@@ -5228,6 +7277,7 @@ export type OrderUncheckedUpdateManyWithoutCustomerInput = {
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -5239,6 +7289,9 @@ export type OrderCreateManyPropertyInput = {
   orderNumber: string
   title?: string | null
   orderType?: $Enums.OrderType
+  orderTypeId?: string | null
+  orderTypeLabel?: string | null
+  orderTypeCustom?: string | null
   status?: $Enums.OrderStatus
   priority?: $Enums.OrderPriority
   materialStatus?: $Enums.MaterialOrderStatus
@@ -5255,6 +7308,7 @@ export type OrderCreateManyPropertyInput = {
   invoicedAt?: Date | string | null
   teamId?: string | null
   vehicleId?: string | null
+  projectId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -5264,6 +7318,8 @@ export type OrderUpdateWithoutPropertyInput = {
   orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  orderTypeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeCustom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   priority?: Prisma.EnumOrderPriorityFieldUpdateOperationsInput | $Enums.OrderPriority
   materialStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
@@ -5282,6 +7338,7 @@ export type OrderUpdateWithoutPropertyInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutOrdersNestedInput
   customer?: Prisma.CustomerUpdateOneRequiredWithoutOrdersNestedInput
+  orderTypeDefinition?: Prisma.OrderTypeDefinitionUpdateOneWithoutOrdersNestedInput
   services?: Prisma.OrderServiceUpdateManyWithoutOrderNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutOrderNestedInput
   files?: Prisma.FileUploadUpdateManyWithoutOrderNestedInput
@@ -5298,8 +7355,13 @@ export type OrderUpdateWithoutPropertyInput = {
   planMarkers?: Prisma.PlanMarkerUpdateManyWithoutOrderNestedInput
   team?: Prisma.TeamUpdateOneWithoutOrdersNestedInput
   vehicle?: Prisma.VehicleUpdateOneWithoutOrdersNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutOrdersNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutOrderNestedInput
   shares?: Prisma.OrderShareUpdateManyWithoutOrderNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutOrderNestedInput
+  projectNotes?: Prisma.ProjectNoteUpdateManyWithoutOrderNestedInput
+  projectFiles?: Prisma.ProjectFileUpdateManyWithoutOrderNestedInput
+  projectCosts?: Prisma.ProjectCostUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutPropertyInput = {
@@ -5309,6 +7371,9 @@ export type OrderUncheckedUpdateWithoutPropertyInput = {
   orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  orderTypeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeCustom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   priority?: Prisma.EnumOrderPriorityFieldUpdateOperationsInput | $Enums.OrderPriority
   materialStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
@@ -5325,6 +7390,7 @@ export type OrderUncheckedUpdateWithoutPropertyInput = {
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   services?: Prisma.OrderServiceUncheckedUpdateManyWithoutOrderNestedInput
@@ -5343,6 +7409,10 @@ export type OrderUncheckedUpdateWithoutPropertyInput = {
   planMarkers?: Prisma.PlanMarkerUncheckedUpdateManyWithoutOrderNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutOrderNestedInput
   shares?: Prisma.OrderShareUncheckedUpdateManyWithoutOrderNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrderNestedInput
+  projectNotes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutOrderNestedInput
+  projectFiles?: Prisma.ProjectFileUncheckedUpdateManyWithoutOrderNestedInput
+  projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateManyWithoutPropertyInput = {
@@ -5352,6 +7422,9 @@ export type OrderUncheckedUpdateManyWithoutPropertyInput = {
   orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  orderTypeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeCustom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   priority?: Prisma.EnumOrderPriorityFieldUpdateOperationsInput | $Enums.OrderPriority
   materialStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
@@ -5368,6 +7441,171 @@ export type OrderUncheckedUpdateManyWithoutPropertyInput = {
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type OrderCreateManyOrderTypeDefinitionInput = {
+  id?: string
+  tenantId: string
+  customerId: string
+  propertyId: string
+  orderNumber: string
+  title?: string | null
+  orderType?: $Enums.OrderType
+  orderTypeLabel?: string | null
+  orderTypeCustom?: string | null
+  status?: $Enums.OrderStatus
+  priority?: $Enums.OrderPriority
+  materialStatus?: $Enums.MaterialOrderStatus
+  completionResult?: $Enums.CompletionResult | null
+  customerConfirmationStatus?: $Enums.CustomerConfirmationStatus
+  description?: string | null
+  internalNotes?: string | null
+  customerNotes?: string | null
+  questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  scheduledStart?: Date | string | null
+  scheduledEnd?: Date | string | null
+  bookingConfirmationSentAt?: Date | string | null
+  completedAt?: Date | string | null
+  invoicedAt?: Date | string | null
+  teamId?: string | null
+  vehicleId?: string | null
+  projectId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type OrderUpdateWithoutOrderTypeDefinitionInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  orderTypeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeCustom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+  priority?: Prisma.EnumOrderPriorityFieldUpdateOperationsInput | $Enums.OrderPriority
+  materialStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
+  completionResult?: Prisma.NullableEnumCompletionResultFieldUpdateOperationsInput | $Enums.CompletionResult | null
+  customerConfirmationStatus?: Prisma.EnumCustomerConfirmationStatusFieldUpdateOperationsInput | $Enums.CustomerConfirmationStatus
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  internalNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutOrdersNestedInput
+  customer?: Prisma.CustomerUpdateOneRequiredWithoutOrdersNestedInput
+  property?: Prisma.PropertyUpdateOneRequiredWithoutOrdersNestedInput
+  services?: Prisma.OrderServiceUpdateManyWithoutOrderNestedInput
+  appointments?: Prisma.AppointmentUpdateManyWithoutOrderNestedInput
+  files?: Prisma.FileUploadUpdateManyWithoutOrderNestedInput
+  checklists?: Prisma.OrderChecklistUpdateManyWithoutOrderNestedInput
+  messages?: Prisma.MessageUpdateManyWithoutOrderNestedInput
+  timeEntries?: Prisma.TimeEntryUpdateManyWithoutOrderNestedInput
+  materialUsages?: Prisma.MaterialUsageUpdateManyWithoutOrderNestedInput
+  calculations?: Prisma.CalculationUpdateManyWithoutOrderNestedInput
+  phases?: Prisma.OrderPhaseUpdateManyWithoutOrderNestedInput
+  materialLines?: Prisma.OrderMaterialLineUpdateManyWithoutOrderNestedInput
+  reservations?: Prisma.ReservationUpdateManyWithoutOrderNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutOrderNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutOrderNestedInput
+  planMarkers?: Prisma.PlanMarkerUpdateManyWithoutOrderNestedInput
+  team?: Prisma.TeamUpdateOneWithoutOrdersNestedInput
+  vehicle?: Prisma.VehicleUpdateOneWithoutOrdersNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutOrdersNestedInput
+  staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutOrderNestedInput
+  shares?: Prisma.OrderShareUpdateManyWithoutOrderNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutOrderNestedInput
+  projectNotes?: Prisma.ProjectNoteUpdateManyWithoutOrderNestedInput
+  projectFiles?: Prisma.ProjectFileUpdateManyWithoutOrderNestedInput
+  projectCosts?: Prisma.ProjectCostUpdateManyWithoutOrderNestedInput
+}
+
+export type OrderUncheckedUpdateWithoutOrderTypeDefinitionInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.StringFieldUpdateOperationsInput | string
+  propertyId?: Prisma.StringFieldUpdateOperationsInput | string
+  orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  orderTypeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeCustom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+  priority?: Prisma.EnumOrderPriorityFieldUpdateOperationsInput | $Enums.OrderPriority
+  materialStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
+  completionResult?: Prisma.NullableEnumCompletionResultFieldUpdateOperationsInput | $Enums.CompletionResult | null
+  customerConfirmationStatus?: Prisma.EnumCustomerConfirmationStatusFieldUpdateOperationsInput | $Enums.CustomerConfirmationStatus
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  internalNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  services?: Prisma.OrderServiceUncheckedUpdateManyWithoutOrderNestedInput
+  appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutOrderNestedInput
+  files?: Prisma.FileUploadUncheckedUpdateManyWithoutOrderNestedInput
+  checklists?: Prisma.OrderChecklistUncheckedUpdateManyWithoutOrderNestedInput
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutOrderNestedInput
+  timeEntries?: Prisma.TimeEntryUncheckedUpdateManyWithoutOrderNestedInput
+  materialUsages?: Prisma.MaterialUsageUncheckedUpdateManyWithoutOrderNestedInput
+  calculations?: Prisma.CalculationUncheckedUpdateManyWithoutOrderNestedInput
+  phases?: Prisma.OrderPhaseUncheckedUpdateManyWithoutOrderNestedInput
+  materialLines?: Prisma.OrderMaterialLineUncheckedUpdateManyWithoutOrderNestedInput
+  reservations?: Prisma.ReservationUncheckedUpdateManyWithoutOrderNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutOrderNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutOrderNestedInput
+  planMarkers?: Prisma.PlanMarkerUncheckedUpdateManyWithoutOrderNestedInput
+  staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutOrderNestedInput
+  shares?: Prisma.OrderShareUncheckedUpdateManyWithoutOrderNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrderNestedInput
+  projectNotes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutOrderNestedInput
+  projectFiles?: Prisma.ProjectFileUncheckedUpdateManyWithoutOrderNestedInput
+  projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutOrderNestedInput
+}
+
+export type OrderUncheckedUpdateManyWithoutOrderTypeDefinitionInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.StringFieldUpdateOperationsInput | string
+  propertyId?: Prisma.StringFieldUpdateOperationsInput | string
+  orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  orderTypeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeCustom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+  priority?: Prisma.EnumOrderPriorityFieldUpdateOperationsInput | $Enums.OrderPriority
+  materialStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
+  completionResult?: Prisma.NullableEnumCompletionResultFieldUpdateOperationsInput | $Enums.CompletionResult | null
+  customerConfirmationStatus?: Prisma.EnumCustomerConfirmationStatusFieldUpdateOperationsInput | $Enums.CustomerConfirmationStatus
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  internalNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -5380,6 +7618,9 @@ export type OrderCreateManyTeamInput = {
   orderNumber: string
   title?: string | null
   orderType?: $Enums.OrderType
+  orderTypeId?: string | null
+  orderTypeLabel?: string | null
+  orderTypeCustom?: string | null
   status?: $Enums.OrderStatus
   priority?: $Enums.OrderPriority
   materialStatus?: $Enums.MaterialOrderStatus
@@ -5395,6 +7636,7 @@ export type OrderCreateManyTeamInput = {
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
   vehicleId?: string | null
+  projectId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -5404,6 +7646,8 @@ export type OrderUpdateWithoutTeamInput = {
   orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  orderTypeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeCustom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   priority?: Prisma.EnumOrderPriorityFieldUpdateOperationsInput | $Enums.OrderPriority
   materialStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
@@ -5423,6 +7667,7 @@ export type OrderUpdateWithoutTeamInput = {
   tenant?: Prisma.TenantUpdateOneRequiredWithoutOrdersNestedInput
   customer?: Prisma.CustomerUpdateOneRequiredWithoutOrdersNestedInput
   property?: Prisma.PropertyUpdateOneRequiredWithoutOrdersNestedInput
+  orderTypeDefinition?: Prisma.OrderTypeDefinitionUpdateOneWithoutOrdersNestedInput
   services?: Prisma.OrderServiceUpdateManyWithoutOrderNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutOrderNestedInput
   files?: Prisma.FileUploadUpdateManyWithoutOrderNestedInput
@@ -5438,8 +7683,13 @@ export type OrderUpdateWithoutTeamInput = {
   purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutOrderNestedInput
   planMarkers?: Prisma.PlanMarkerUpdateManyWithoutOrderNestedInput
   vehicle?: Prisma.VehicleUpdateOneWithoutOrdersNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutOrdersNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutOrderNestedInput
   shares?: Prisma.OrderShareUpdateManyWithoutOrderNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutOrderNestedInput
+  projectNotes?: Prisma.ProjectNoteUpdateManyWithoutOrderNestedInput
+  projectFiles?: Prisma.ProjectFileUpdateManyWithoutOrderNestedInput
+  projectCosts?: Prisma.ProjectCostUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutTeamInput = {
@@ -5450,6 +7700,9 @@ export type OrderUncheckedUpdateWithoutTeamInput = {
   orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  orderTypeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeCustom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   priority?: Prisma.EnumOrderPriorityFieldUpdateOperationsInput | $Enums.OrderPriority
   materialStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
@@ -5465,6 +7718,7 @@ export type OrderUncheckedUpdateWithoutTeamInput = {
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   services?: Prisma.OrderServiceUncheckedUpdateManyWithoutOrderNestedInput
@@ -5483,6 +7737,10 @@ export type OrderUncheckedUpdateWithoutTeamInput = {
   planMarkers?: Prisma.PlanMarkerUncheckedUpdateManyWithoutOrderNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutOrderNestedInput
   shares?: Prisma.OrderShareUncheckedUpdateManyWithoutOrderNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrderNestedInput
+  projectNotes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutOrderNestedInput
+  projectFiles?: Prisma.ProjectFileUncheckedUpdateManyWithoutOrderNestedInput
+  projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateManyWithoutTeamInput = {
@@ -5493,6 +7751,9 @@ export type OrderUncheckedUpdateManyWithoutTeamInput = {
   orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  orderTypeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeCustom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   priority?: Prisma.EnumOrderPriorityFieldUpdateOperationsInput | $Enums.OrderPriority
   materialStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
@@ -5508,6 +7769,7 @@ export type OrderUncheckedUpdateManyWithoutTeamInput = {
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -5520,6 +7782,9 @@ export type OrderCreateManyVehicleInput = {
   orderNumber: string
   title?: string | null
   orderType?: $Enums.OrderType
+  orderTypeId?: string | null
+  orderTypeLabel?: string | null
+  orderTypeCustom?: string | null
   status?: $Enums.OrderStatus
   priority?: $Enums.OrderPriority
   materialStatus?: $Enums.MaterialOrderStatus
@@ -5535,6 +7800,7 @@ export type OrderCreateManyVehicleInput = {
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
   teamId?: string | null
+  projectId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -5544,6 +7810,8 @@ export type OrderUpdateWithoutVehicleInput = {
   orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  orderTypeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeCustom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   priority?: Prisma.EnumOrderPriorityFieldUpdateOperationsInput | $Enums.OrderPriority
   materialStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
@@ -5563,6 +7831,7 @@ export type OrderUpdateWithoutVehicleInput = {
   tenant?: Prisma.TenantUpdateOneRequiredWithoutOrdersNestedInput
   customer?: Prisma.CustomerUpdateOneRequiredWithoutOrdersNestedInput
   property?: Prisma.PropertyUpdateOneRequiredWithoutOrdersNestedInput
+  orderTypeDefinition?: Prisma.OrderTypeDefinitionUpdateOneWithoutOrdersNestedInput
   services?: Prisma.OrderServiceUpdateManyWithoutOrderNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutOrderNestedInput
   files?: Prisma.FileUploadUpdateManyWithoutOrderNestedInput
@@ -5578,8 +7847,13 @@ export type OrderUpdateWithoutVehicleInput = {
   purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutOrderNestedInput
   planMarkers?: Prisma.PlanMarkerUpdateManyWithoutOrderNestedInput
   team?: Prisma.TeamUpdateOneWithoutOrdersNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutOrdersNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutOrderNestedInput
   shares?: Prisma.OrderShareUpdateManyWithoutOrderNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutOrderNestedInput
+  projectNotes?: Prisma.ProjectNoteUpdateManyWithoutOrderNestedInput
+  projectFiles?: Prisma.ProjectFileUpdateManyWithoutOrderNestedInput
+  projectCosts?: Prisma.ProjectCostUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutVehicleInput = {
@@ -5590,6 +7864,9 @@ export type OrderUncheckedUpdateWithoutVehicleInput = {
   orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  orderTypeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeCustom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   priority?: Prisma.EnumOrderPriorityFieldUpdateOperationsInput | $Enums.OrderPriority
   materialStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
@@ -5605,6 +7882,7 @@ export type OrderUncheckedUpdateWithoutVehicleInput = {
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   services?: Prisma.OrderServiceUncheckedUpdateManyWithoutOrderNestedInput
@@ -5623,6 +7901,10 @@ export type OrderUncheckedUpdateWithoutVehicleInput = {
   planMarkers?: Prisma.PlanMarkerUncheckedUpdateManyWithoutOrderNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutOrderNestedInput
   shares?: Prisma.OrderShareUncheckedUpdateManyWithoutOrderNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrderNestedInput
+  projectNotes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutOrderNestedInput
+  projectFiles?: Prisma.ProjectFileUncheckedUpdateManyWithoutOrderNestedInput
+  projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateManyWithoutVehicleInput = {
@@ -5633,6 +7915,9 @@ export type OrderUncheckedUpdateManyWithoutVehicleInput = {
   orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  orderTypeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeCustom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   priority?: Prisma.EnumOrderPriorityFieldUpdateOperationsInput | $Enums.OrderPriority
   materialStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
@@ -5648,6 +7933,171 @@ export type OrderUncheckedUpdateManyWithoutVehicleInput = {
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type OrderCreateManyProjectInput = {
+  id?: string
+  tenantId: string
+  customerId: string
+  propertyId: string
+  orderNumber: string
+  title?: string | null
+  orderType?: $Enums.OrderType
+  orderTypeId?: string | null
+  orderTypeLabel?: string | null
+  orderTypeCustom?: string | null
+  status?: $Enums.OrderStatus
+  priority?: $Enums.OrderPriority
+  materialStatus?: $Enums.MaterialOrderStatus
+  completionResult?: $Enums.CompletionResult | null
+  customerConfirmationStatus?: $Enums.CustomerConfirmationStatus
+  description?: string | null
+  internalNotes?: string | null
+  customerNotes?: string | null
+  questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  scheduledStart?: Date | string | null
+  scheduledEnd?: Date | string | null
+  bookingConfirmationSentAt?: Date | string | null
+  completedAt?: Date | string | null
+  invoicedAt?: Date | string | null
+  teamId?: string | null
+  vehicleId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type OrderUpdateWithoutProjectInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  orderTypeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeCustom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+  priority?: Prisma.EnumOrderPriorityFieldUpdateOperationsInput | $Enums.OrderPriority
+  materialStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
+  completionResult?: Prisma.NullableEnumCompletionResultFieldUpdateOperationsInput | $Enums.CompletionResult | null
+  customerConfirmationStatus?: Prisma.EnumCustomerConfirmationStatusFieldUpdateOperationsInput | $Enums.CustomerConfirmationStatus
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  internalNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutOrdersNestedInput
+  customer?: Prisma.CustomerUpdateOneRequiredWithoutOrdersNestedInput
+  property?: Prisma.PropertyUpdateOneRequiredWithoutOrdersNestedInput
+  orderTypeDefinition?: Prisma.OrderTypeDefinitionUpdateOneWithoutOrdersNestedInput
+  services?: Prisma.OrderServiceUpdateManyWithoutOrderNestedInput
+  appointments?: Prisma.AppointmentUpdateManyWithoutOrderNestedInput
+  files?: Prisma.FileUploadUpdateManyWithoutOrderNestedInput
+  checklists?: Prisma.OrderChecklistUpdateManyWithoutOrderNestedInput
+  messages?: Prisma.MessageUpdateManyWithoutOrderNestedInput
+  timeEntries?: Prisma.TimeEntryUpdateManyWithoutOrderNestedInput
+  materialUsages?: Prisma.MaterialUsageUpdateManyWithoutOrderNestedInput
+  calculations?: Prisma.CalculationUpdateManyWithoutOrderNestedInput
+  phases?: Prisma.OrderPhaseUpdateManyWithoutOrderNestedInput
+  materialLines?: Prisma.OrderMaterialLineUpdateManyWithoutOrderNestedInput
+  reservations?: Prisma.ReservationUpdateManyWithoutOrderNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutOrderNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutOrderNestedInput
+  planMarkers?: Prisma.PlanMarkerUpdateManyWithoutOrderNestedInput
+  team?: Prisma.TeamUpdateOneWithoutOrdersNestedInput
+  vehicle?: Prisma.VehicleUpdateOneWithoutOrdersNestedInput
+  staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutOrderNestedInput
+  shares?: Prisma.OrderShareUpdateManyWithoutOrderNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutOrderNestedInput
+  projectNotes?: Prisma.ProjectNoteUpdateManyWithoutOrderNestedInput
+  projectFiles?: Prisma.ProjectFileUpdateManyWithoutOrderNestedInput
+  projectCosts?: Prisma.ProjectCostUpdateManyWithoutOrderNestedInput
+}
+
+export type OrderUncheckedUpdateWithoutProjectInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.StringFieldUpdateOperationsInput | string
+  propertyId?: Prisma.StringFieldUpdateOperationsInput | string
+  orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  orderTypeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeCustom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+  priority?: Prisma.EnumOrderPriorityFieldUpdateOperationsInput | $Enums.OrderPriority
+  materialStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
+  completionResult?: Prisma.NullableEnumCompletionResultFieldUpdateOperationsInput | $Enums.CompletionResult | null
+  customerConfirmationStatus?: Prisma.EnumCustomerConfirmationStatusFieldUpdateOperationsInput | $Enums.CustomerConfirmationStatus
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  internalNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  services?: Prisma.OrderServiceUncheckedUpdateManyWithoutOrderNestedInput
+  appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutOrderNestedInput
+  files?: Prisma.FileUploadUncheckedUpdateManyWithoutOrderNestedInput
+  checklists?: Prisma.OrderChecklistUncheckedUpdateManyWithoutOrderNestedInput
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutOrderNestedInput
+  timeEntries?: Prisma.TimeEntryUncheckedUpdateManyWithoutOrderNestedInput
+  materialUsages?: Prisma.MaterialUsageUncheckedUpdateManyWithoutOrderNestedInput
+  calculations?: Prisma.CalculationUncheckedUpdateManyWithoutOrderNestedInput
+  phases?: Prisma.OrderPhaseUncheckedUpdateManyWithoutOrderNestedInput
+  materialLines?: Prisma.OrderMaterialLineUncheckedUpdateManyWithoutOrderNestedInput
+  reservations?: Prisma.ReservationUncheckedUpdateManyWithoutOrderNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutOrderNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutOrderNestedInput
+  planMarkers?: Prisma.PlanMarkerUncheckedUpdateManyWithoutOrderNestedInput
+  staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutOrderNestedInput
+  shares?: Prisma.OrderShareUncheckedUpdateManyWithoutOrderNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrderNestedInput
+  projectNotes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutOrderNestedInput
+  projectFiles?: Prisma.ProjectFileUncheckedUpdateManyWithoutOrderNestedInput
+  projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutOrderNestedInput
+}
+
+export type OrderUncheckedUpdateManyWithoutProjectInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.StringFieldUpdateOperationsInput | string
+  propertyId?: Prisma.StringFieldUpdateOperationsInput | string
+  orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  orderTypeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeCustom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+  priority?: Prisma.EnumOrderPriorityFieldUpdateOperationsInput | $Enums.OrderPriority
+  materialStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
+  completionResult?: Prisma.NullableEnumCompletionResultFieldUpdateOperationsInput | $Enums.CompletionResult | null
+  customerConfirmationStatus?: Prisma.EnumCustomerConfirmationStatusFieldUpdateOperationsInput | $Enums.CustomerConfirmationStatus
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  internalNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -5674,6 +8124,10 @@ export type OrderCountOutputType = {
   planMarkers: number
   staffRequests: number
   shares: number
+  expenses: number
+  projectNotes: number
+  projectFiles: number
+  projectCosts: number
 }
 
 export type OrderCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -5693,6 +8147,10 @@ export type OrderCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.
   planMarkers?: boolean | OrderCountOutputTypeCountPlanMarkersArgs
   staffRequests?: boolean | OrderCountOutputTypeCountStaffRequestsArgs
   shares?: boolean | OrderCountOutputTypeCountSharesArgs
+  expenses?: boolean | OrderCountOutputTypeCountExpensesArgs
+  projectNotes?: boolean | OrderCountOutputTypeCountProjectNotesArgs
+  projectFiles?: boolean | OrderCountOutputTypeCountProjectFilesArgs
+  projectCosts?: boolean | OrderCountOutputTypeCountProjectCostsArgs
 }
 
 /**
@@ -5817,6 +8275,34 @@ export type OrderCountOutputTypeCountSharesArgs<ExtArgs extends runtime.Types.Ex
   where?: Prisma.OrderShareWhereInput
 }
 
+/**
+ * OrderCountOutputType without action
+ */
+export type OrderCountOutputTypeCountExpensesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ExpenseWhereInput
+}
+
+/**
+ * OrderCountOutputType without action
+ */
+export type OrderCountOutputTypeCountProjectNotesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ProjectNoteWhereInput
+}
+
+/**
+ * OrderCountOutputType without action
+ */
+export type OrderCountOutputTypeCountProjectFilesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ProjectFileWhereInput
+}
+
+/**
+ * OrderCountOutputType without action
+ */
+export type OrderCountOutputTypeCountProjectCostsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ProjectCostWhereInput
+}
+
 
 export type OrderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -5826,6 +8312,9 @@ export type OrderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   orderNumber?: boolean
   title?: boolean
   orderType?: boolean
+  orderTypeId?: boolean
+  orderTypeLabel?: boolean
+  orderTypeCustom?: boolean
   status?: boolean
   priority?: boolean
   materialStatus?: boolean
@@ -5842,11 +8331,13 @@ export type OrderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   invoicedAt?: boolean
   teamId?: boolean
   vehicleId?: boolean
+  projectId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   customer?: boolean | Prisma.CustomerDefaultArgs<ExtArgs>
   property?: boolean | Prisma.PropertyDefaultArgs<ExtArgs>
+  orderTypeDefinition?: boolean | Prisma.Order$orderTypeDefinitionArgs<ExtArgs>
   services?: boolean | Prisma.Order$servicesArgs<ExtArgs>
   appointments?: boolean | Prisma.Order$appointmentsArgs<ExtArgs>
   files?: boolean | Prisma.Order$filesArgs<ExtArgs>
@@ -5863,8 +8354,13 @@ export type OrderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   planMarkers?: boolean | Prisma.Order$planMarkersArgs<ExtArgs>
   team?: boolean | Prisma.Order$teamArgs<ExtArgs>
   vehicle?: boolean | Prisma.Order$vehicleArgs<ExtArgs>
+  project?: boolean | Prisma.Order$projectArgs<ExtArgs>
   staffRequests?: boolean | Prisma.Order$staffRequestsArgs<ExtArgs>
   shares?: boolean | Prisma.Order$sharesArgs<ExtArgs>
+  expenses?: boolean | Prisma.Order$expensesArgs<ExtArgs>
+  projectNotes?: boolean | Prisma.Order$projectNotesArgs<ExtArgs>
+  projectFiles?: boolean | Prisma.Order$projectFilesArgs<ExtArgs>
+  projectCosts?: boolean | Prisma.Order$projectCostsArgs<ExtArgs>
   _count?: boolean | Prisma.OrderCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["order"]>
 
@@ -5876,6 +8372,9 @@ export type OrderSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   orderNumber?: boolean
   title?: boolean
   orderType?: boolean
+  orderTypeId?: boolean
+  orderTypeLabel?: boolean
+  orderTypeCustom?: boolean
   status?: boolean
   priority?: boolean
   materialStatus?: boolean
@@ -5892,13 +8391,16 @@ export type OrderSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   invoicedAt?: boolean
   teamId?: boolean
   vehicleId?: boolean
+  projectId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   customer?: boolean | Prisma.CustomerDefaultArgs<ExtArgs>
   property?: boolean | Prisma.PropertyDefaultArgs<ExtArgs>
+  orderTypeDefinition?: boolean | Prisma.Order$orderTypeDefinitionArgs<ExtArgs>
   team?: boolean | Prisma.Order$teamArgs<ExtArgs>
   vehicle?: boolean | Prisma.Order$vehicleArgs<ExtArgs>
+  project?: boolean | Prisma.Order$projectArgs<ExtArgs>
 }, ExtArgs["result"]["order"]>
 
 export type OrderSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -5909,6 +8411,9 @@ export type OrderSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   orderNumber?: boolean
   title?: boolean
   orderType?: boolean
+  orderTypeId?: boolean
+  orderTypeLabel?: boolean
+  orderTypeCustom?: boolean
   status?: boolean
   priority?: boolean
   materialStatus?: boolean
@@ -5925,13 +8430,16 @@ export type OrderSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   invoicedAt?: boolean
   teamId?: boolean
   vehicleId?: boolean
+  projectId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   customer?: boolean | Prisma.CustomerDefaultArgs<ExtArgs>
   property?: boolean | Prisma.PropertyDefaultArgs<ExtArgs>
+  orderTypeDefinition?: boolean | Prisma.Order$orderTypeDefinitionArgs<ExtArgs>
   team?: boolean | Prisma.Order$teamArgs<ExtArgs>
   vehicle?: boolean | Prisma.Order$vehicleArgs<ExtArgs>
+  project?: boolean | Prisma.Order$projectArgs<ExtArgs>
 }, ExtArgs["result"]["order"]>
 
 export type OrderSelectScalar = {
@@ -5942,6 +8450,9 @@ export type OrderSelectScalar = {
   orderNumber?: boolean
   title?: boolean
   orderType?: boolean
+  orderTypeId?: boolean
+  orderTypeLabel?: boolean
+  orderTypeCustom?: boolean
   status?: boolean
   priority?: boolean
   materialStatus?: boolean
@@ -5958,15 +8469,17 @@ export type OrderSelectScalar = {
   invoicedAt?: boolean
   teamId?: boolean
   vehicleId?: boolean
+  projectId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type OrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "customerId" | "propertyId" | "orderNumber" | "title" | "orderType" | "status" | "priority" | "materialStatus" | "completionResult" | "customerConfirmationStatus" | "description" | "internalNotes" | "customerNotes" | "questionAnswers" | "scheduledStart" | "scheduledEnd" | "bookingConfirmationSentAt" | "completedAt" | "invoicedAt" | "teamId" | "vehicleId" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
+export type OrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "customerId" | "propertyId" | "orderNumber" | "title" | "orderType" | "orderTypeId" | "orderTypeLabel" | "orderTypeCustom" | "status" | "priority" | "materialStatus" | "completionResult" | "customerConfirmationStatus" | "description" | "internalNotes" | "customerNotes" | "questionAnswers" | "scheduledStart" | "scheduledEnd" | "bookingConfirmationSentAt" | "completedAt" | "invoicedAt" | "teamId" | "vehicleId" | "projectId" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
 export type OrderInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   customer?: boolean | Prisma.CustomerDefaultArgs<ExtArgs>
   property?: boolean | Prisma.PropertyDefaultArgs<ExtArgs>
+  orderTypeDefinition?: boolean | Prisma.Order$orderTypeDefinitionArgs<ExtArgs>
   services?: boolean | Prisma.Order$servicesArgs<ExtArgs>
   appointments?: boolean | Prisma.Order$appointmentsArgs<ExtArgs>
   files?: boolean | Prisma.Order$filesArgs<ExtArgs>
@@ -5983,23 +8496,32 @@ export type OrderInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   planMarkers?: boolean | Prisma.Order$planMarkersArgs<ExtArgs>
   team?: boolean | Prisma.Order$teamArgs<ExtArgs>
   vehicle?: boolean | Prisma.Order$vehicleArgs<ExtArgs>
+  project?: boolean | Prisma.Order$projectArgs<ExtArgs>
   staffRequests?: boolean | Prisma.Order$staffRequestsArgs<ExtArgs>
   shares?: boolean | Prisma.Order$sharesArgs<ExtArgs>
+  expenses?: boolean | Prisma.Order$expensesArgs<ExtArgs>
+  projectNotes?: boolean | Prisma.Order$projectNotesArgs<ExtArgs>
+  projectFiles?: boolean | Prisma.Order$projectFilesArgs<ExtArgs>
+  projectCosts?: boolean | Prisma.Order$projectCostsArgs<ExtArgs>
   _count?: boolean | Prisma.OrderCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type OrderIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   customer?: boolean | Prisma.CustomerDefaultArgs<ExtArgs>
   property?: boolean | Prisma.PropertyDefaultArgs<ExtArgs>
+  orderTypeDefinition?: boolean | Prisma.Order$orderTypeDefinitionArgs<ExtArgs>
   team?: boolean | Prisma.Order$teamArgs<ExtArgs>
   vehicle?: boolean | Prisma.Order$vehicleArgs<ExtArgs>
+  project?: boolean | Prisma.Order$projectArgs<ExtArgs>
 }
 export type OrderIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   customer?: boolean | Prisma.CustomerDefaultArgs<ExtArgs>
   property?: boolean | Prisma.PropertyDefaultArgs<ExtArgs>
+  orderTypeDefinition?: boolean | Prisma.Order$orderTypeDefinitionArgs<ExtArgs>
   team?: boolean | Prisma.Order$teamArgs<ExtArgs>
   vehicle?: boolean | Prisma.Order$vehicleArgs<ExtArgs>
+  project?: boolean | Prisma.Order$projectArgs<ExtArgs>
 }
 
 export type $OrderPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -6008,6 +8530,7 @@ export type $OrderPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     tenant: Prisma.$TenantPayload<ExtArgs>
     customer: Prisma.$CustomerPayload<ExtArgs>
     property: Prisma.$PropertyPayload<ExtArgs>
+    orderTypeDefinition: Prisma.$OrderTypeDefinitionPayload<ExtArgs> | null
     services: Prisma.$OrderServicePayload<ExtArgs>[]
     appointments: Prisma.$AppointmentPayload<ExtArgs>[]
     files: Prisma.$FileUploadPayload<ExtArgs>[]
@@ -6024,8 +8547,13 @@ export type $OrderPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     planMarkers: Prisma.$PlanMarkerPayload<ExtArgs>[]
     team: Prisma.$TeamPayload<ExtArgs> | null
     vehicle: Prisma.$VehiclePayload<ExtArgs> | null
+    project: Prisma.$ProjectPayload<ExtArgs> | null
     staffRequests: Prisma.$StaffAssignmentRequestPayload<ExtArgs>[]
     shares: Prisma.$OrderSharePayload<ExtArgs>[]
+    expenses: Prisma.$ExpensePayload<ExtArgs>[]
+    projectNotes: Prisma.$ProjectNotePayload<ExtArgs>[]
+    projectFiles: Prisma.$ProjectFilePayload<ExtArgs>[]
+    projectCosts: Prisma.$ProjectCostPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -6034,7 +8562,19 @@ export type $OrderPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     propertyId: string
     orderNumber: string
     title: string | null
+    /**
+     * Legacy-Enum – wird weitergeschrieben, wenn der Katalog-Typ ein legacyKey hat.
+     */
     orderType: $Enums.OrderType
+    orderTypeId: string | null
+    /**
+     * Anzeige-Snapshot beim Speichern (bleibt bei Umbenennung im Katalog erhalten).
+     */
+    orderTypeLabel: string | null
+    /**
+     * Freitext, wenn Auftragstyp „Sonstiges“ (isOther) gewählt wurde.
+     */
+    orderTypeCustom: string | null
     status: $Enums.OrderStatus
     priority: $Enums.OrderPriority
     materialStatus: $Enums.MaterialOrderStatus
@@ -6051,6 +8591,7 @@ export type $OrderPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     invoicedAt: Date | null
     teamId: string | null
     vehicleId: string | null
+    projectId: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["order"]>
@@ -6450,6 +8991,7 @@ export interface Prisma__OrderClient<T, Null = never, ExtArgs extends runtime.Ty
   tenant<T extends Prisma.TenantDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TenantDefaultArgs<ExtArgs>>): Prisma.Prisma__TenantClient<runtime.Types.Result.GetResult<Prisma.$TenantPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   customer<T extends Prisma.CustomerDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CustomerDefaultArgs<ExtArgs>>): Prisma.Prisma__CustomerClient<runtime.Types.Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   property<T extends Prisma.PropertyDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PropertyDefaultArgs<ExtArgs>>): Prisma.Prisma__PropertyClient<runtime.Types.Result.GetResult<Prisma.$PropertyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  orderTypeDefinition<T extends Prisma.Order$orderTypeDefinitionArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$orderTypeDefinitionArgs<ExtArgs>>): Prisma.Prisma__OrderTypeDefinitionClient<runtime.Types.Result.GetResult<Prisma.$OrderTypeDefinitionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   services<T extends Prisma.Order$servicesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$servicesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderServicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   appointments<T extends Prisma.Order$appointmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$appointmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AppointmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   files<T extends Prisma.Order$filesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$filesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FileUploadPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -6466,8 +9008,13 @@ export interface Prisma__OrderClient<T, Null = never, ExtArgs extends runtime.Ty
   planMarkers<T extends Prisma.Order$planMarkersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$planMarkersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PlanMarkerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   team<T extends Prisma.Order$teamArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$teamArgs<ExtArgs>>): Prisma.Prisma__TeamClient<runtime.Types.Result.GetResult<Prisma.$TeamPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   vehicle<T extends Prisma.Order$vehicleArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$vehicleArgs<ExtArgs>>): Prisma.Prisma__VehicleClient<runtime.Types.Result.GetResult<Prisma.$VehiclePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  project<T extends Prisma.Order$projectArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$projectArgs<ExtArgs>>): Prisma.Prisma__ProjectClient<runtime.Types.Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   staffRequests<T extends Prisma.Order$staffRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$staffRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StaffAssignmentRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   shares<T extends Prisma.Order$sharesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$sharesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderSharePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  expenses<T extends Prisma.Order$expensesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$expensesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExpensePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  projectNotes<T extends Prisma.Order$projectNotesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$projectNotesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectNotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  projectFiles<T extends Prisma.Order$projectFilesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$projectFilesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectFilePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  projectCosts<T extends Prisma.Order$projectCostsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$projectCostsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectCostPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6504,6 +9051,9 @@ export interface OrderFieldRefs {
   readonly orderNumber: Prisma.FieldRef<"Order", 'String'>
   readonly title: Prisma.FieldRef<"Order", 'String'>
   readonly orderType: Prisma.FieldRef<"Order", 'OrderType'>
+  readonly orderTypeId: Prisma.FieldRef<"Order", 'String'>
+  readonly orderTypeLabel: Prisma.FieldRef<"Order", 'String'>
+  readonly orderTypeCustom: Prisma.FieldRef<"Order", 'String'>
   readonly status: Prisma.FieldRef<"Order", 'OrderStatus'>
   readonly priority: Prisma.FieldRef<"Order", 'OrderPriority'>
   readonly materialStatus: Prisma.FieldRef<"Order", 'MaterialOrderStatus'>
@@ -6520,6 +9070,7 @@ export interface OrderFieldRefs {
   readonly invoicedAt: Prisma.FieldRef<"Order", 'DateTime'>
   readonly teamId: Prisma.FieldRef<"Order", 'String'>
   readonly vehicleId: Prisma.FieldRef<"Order", 'String'>
+  readonly projectId: Prisma.FieldRef<"Order", 'String'>
   readonly createdAt: Prisma.FieldRef<"Order", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Order", 'DateTime'>
 }
@@ -6923,6 +9474,25 @@ export type OrderDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Interna
 }
 
 /**
+ * Order.orderTypeDefinition
+ */
+export type Order$orderTypeDefinitionArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the OrderTypeDefinition
+   */
+  select?: Prisma.OrderTypeDefinitionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the OrderTypeDefinition
+   */
+  omit?: Prisma.OrderTypeDefinitionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OrderTypeDefinitionInclude<ExtArgs> | null
+  where?: Prisma.OrderTypeDefinitionWhereInput
+}
+
+/**
  * Order.services
  */
 export type Order$servicesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -7297,6 +9867,25 @@ export type Order$vehicleArgs<ExtArgs extends runtime.Types.Extensions.InternalA
 }
 
 /**
+ * Order.project
+ */
+export type Order$projectArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Project
+   */
+  select?: Prisma.ProjectSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Project
+   */
+  omit?: Prisma.ProjectOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ProjectInclude<ExtArgs> | null
+  where?: Prisma.ProjectWhereInput
+}
+
+/**
  * Order.staffRequests
  */
 export type Order$staffRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -7342,6 +9931,102 @@ export type Order$sharesArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
   take?: number
   skip?: number
   distinct?: Prisma.OrderShareScalarFieldEnum | Prisma.OrderShareScalarFieldEnum[]
+}
+
+/**
+ * Order.expenses
+ */
+export type Order$expensesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Expense
+   */
+  select?: Prisma.ExpenseSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Expense
+   */
+  omit?: Prisma.ExpenseOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ExpenseInclude<ExtArgs> | null
+  where?: Prisma.ExpenseWhereInput
+  orderBy?: Prisma.ExpenseOrderByWithRelationInput | Prisma.ExpenseOrderByWithRelationInput[]
+  cursor?: Prisma.ExpenseWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ExpenseScalarFieldEnum | Prisma.ExpenseScalarFieldEnum[]
+}
+
+/**
+ * Order.projectNotes
+ */
+export type Order$projectNotesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ProjectNote
+   */
+  select?: Prisma.ProjectNoteSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ProjectNote
+   */
+  omit?: Prisma.ProjectNoteOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ProjectNoteInclude<ExtArgs> | null
+  where?: Prisma.ProjectNoteWhereInput
+  orderBy?: Prisma.ProjectNoteOrderByWithRelationInput | Prisma.ProjectNoteOrderByWithRelationInput[]
+  cursor?: Prisma.ProjectNoteWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ProjectNoteScalarFieldEnum | Prisma.ProjectNoteScalarFieldEnum[]
+}
+
+/**
+ * Order.projectFiles
+ */
+export type Order$projectFilesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ProjectFile
+   */
+  select?: Prisma.ProjectFileSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ProjectFile
+   */
+  omit?: Prisma.ProjectFileOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ProjectFileInclude<ExtArgs> | null
+  where?: Prisma.ProjectFileWhereInput
+  orderBy?: Prisma.ProjectFileOrderByWithRelationInput | Prisma.ProjectFileOrderByWithRelationInput[]
+  cursor?: Prisma.ProjectFileWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ProjectFileScalarFieldEnum | Prisma.ProjectFileScalarFieldEnum[]
+}
+
+/**
+ * Order.projectCosts
+ */
+export type Order$projectCostsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ProjectCost
+   */
+  select?: Prisma.ProjectCostSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ProjectCost
+   */
+  omit?: Prisma.ProjectCostOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ProjectCostInclude<ExtArgs> | null
+  where?: Prisma.ProjectCostWhereInput
+  orderBy?: Prisma.ProjectCostOrderByWithRelationInput | Prisma.ProjectCostOrderByWithRelationInput[]
+  cursor?: Prisma.ProjectCostWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ProjectCostScalarFieldEnum | Prisma.ProjectCostScalarFieldEnum[]
 }
 
 /**

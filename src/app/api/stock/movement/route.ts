@@ -23,33 +23,60 @@ export async function POST(request: NextRequest) {
     ]);
     if (!fromLoc || !toLoc) return apiError("Lagerort nicht gefunden", 404);
 
-    await transferStock({
-      tenantId: auth.tenantId,
-      articleId,
-      fromLocationId,
-      toLocationId,
-      quantity: Number(quantity),
-      notes: notes ?? `Umbuchung: ${fromLoc.name} → ${toLoc.name}`,
-      createdById: auth.id,
+    const article = await prisma.article.findFirst({
+      where: { id: articleId, tenantId: auth.tenantId, isActive: true },
     });
+    if (!article) return apiError("Artikel nicht gefunden", 404);
+
+    try {
+      await transferStock({
+        tenantId: auth.tenantId,
+        articleId,
+        fromLocationId,
+        toLocationId,
+        quantity: Number(quantity),
+        notes: notes ?? `Umbuchung: ${fromLoc.name} → ${toLoc.name}`,
+        createdById: auth.id,
+      });
+    } catch (err) {
+      return apiError(err instanceof Error ? err.message : "Umbuchung fehlgeschlagen", 400);
+    }
     return apiSuccess({ transferred: true, from: fromLoc.name, to: toLoc.name });
   }
 
   const { articleId, storageLocationId, movementType, quantity, orderId, notes } = body;
-  if (!articleId || !storageLocationId || !movementType || !quantity) {
+  if (!articleId || !storageLocationId || !movementType || quantity == null) {
     return apiError("articleId, storageLocationId, movementType und quantity erforderlich", 400);
   }
 
-  const newOnHand = await applyStockMovement({
-    tenantId: auth.tenantId,
-    articleId,
-    storageLocationId,
-    movementType,
-    quantity: Number(quantity),
-    orderId,
-    notes,
-    createdById: auth.id,
-  });
+  const qty = Number(quantity);
+  if (Number.isNaN(qty)) return apiError("Ungültige Menge", 400);
+  if (movementType === "KORREKTUR") {
+    if (qty < 0) return apiError("Ist-Bestand darf nicht negativ sein", 400);
+  } else if (qty <= 0) {
+    return apiError("Menge muss größer als 0 sein", 400);
+  }
 
-  return apiSuccess({ onHandQuantity: newOnHand });
+  const [article, location] = await Promise.all([
+    prisma.article.findFirst({ where: { id: articleId, tenantId: auth.tenantId, isActive: true } }),
+    prisma.storageLocation.findFirst({ where: { id: storageLocationId, tenantId: auth.tenantId, isActive: true } }),
+  ]);
+  if (!article) return apiError("Artikel nicht gefunden", 404);
+  if (!location) return apiError("Lagerort nicht gefunden", 404);
+
+  try {
+    const result = await applyStockMovement({
+      tenantId: auth.tenantId,
+      articleId,
+      storageLocationId,
+      movementType,
+      quantity: qty,
+      orderId,
+      notes,
+      createdById: auth.id,
+    });
+    return apiSuccess({ onHandQuantity: result.onHandQuantity });
+  } catch (err) {
+    return apiError(err instanceof Error ? err.message : "Bestandsbuchung fehlgeschlagen", 400);
+  }
 }

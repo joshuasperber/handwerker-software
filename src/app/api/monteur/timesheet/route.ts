@@ -25,7 +25,13 @@ export async function GET(request: NextRequest) {
       startTime: { gte: from, lte: to },
     },
     include: {
-      order: { select: { id: true, orderNumber: true, customer: { select: { firstName: true, lastName: true } } } },
+      order: {
+        select: {
+          id: true,
+          orderNumber: true,
+          customer: { select: { firstName: true, lastName: true } },
+        },
+      },
     },
     orderBy: { startTime: "desc" },
   });

@@ -1,4 +1,4 @@
-# Handwerker App – SaaS MVP
+# JoMaster – SaaS für Handwerksbetriebe
 
 Multi-Tenant SaaS-Plattform für kleine und mittlere Handwerksbetriebe mit Online-Buchung, Büro-Dashboard, Monteur-PWA und REST-API.
 
@@ -9,8 +9,8 @@ Multi-Tenant SaaS-Plattform für kleine und mittlere Handwerksbetriebe mit Onlin
 | Frontend | Next.js 16 / React 19 / Tailwind CSS 4 |
 | Backend | Next.js API Routes (REST/JSON) |
 | Datenbank | PostgreSQL + Prisma ORM |
-| Auth | JWT (httpOnly Cookie), rollenbasiert |
-| Dateispeicher | S3-kompatibel (MinIO lokal) |
+| Auth | Supabase Auth + Prisma-User-Profil |
+| Dateispeicher | S3-kompatibel (MinIO lokal / Supabase Storage) |
 | Benachrichtigungen | E-Mail (SMTP) + SMS (Twilio) |
 
 ## Module

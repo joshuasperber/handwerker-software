@@ -33,6 +33,11 @@ export type User = Prisma.UserModel
  */
 export type Customer = Prisma.CustomerModel
 /**
+ * Model TaxExemptionCertificate
+ * 
+ */
+export type TaxExemptionCertificate = Prisma.TaxExemptionCertificateModel
+/**
  * Model Property
  * 
  */
@@ -77,6 +82,11 @@ export type EmployeeWorkingHours = Prisma.EmployeeWorkingHoursModel
  * 
  */
 export type ServiceArea = Prisma.ServiceAreaModel
+/**
+ * Model OrderTypeDefinition
+ * 
+ */
+export type OrderTypeDefinition = Prisma.OrderTypeDefinitionModel
 /**
  * Model Order
  * 
@@ -348,6 +358,21 @@ export type Invitation = Prisma.InvitationModel
  */
 export type OrderShare = Prisma.OrderShareModel
 /**
+ * Model FinanceSettings
+ * 
+ */
+export type FinanceSettings = Prisma.FinanceSettingsModel
+/**
+ * Model Expense
+ * 
+ */
+export type Expense = Prisma.ExpenseModel
+/**
+ * Model PlannedInvestment
+ * 
+ */
+export type PlannedInvestment = Prisma.PlannedInvestmentModel
+/**
  * Model JobRun
  * 
  */
@@ -357,3 +382,38 @@ export type JobRun = Prisma.JobRunModel
  * 
  */
 export type LoginAttempt = Prisma.LoginAttemptModel
+/**
+ * Model AiChatSession
+ * 
+ */
+export type AiChatSession = Prisma.AiChatSessionModel
+/**
+ * Model AiChatMessage
+ * 
+ */
+export type AiChatMessage = Prisma.AiChatMessageModel
+/**
+ * Model Project
+ * 
+ */
+export type Project = Prisma.ProjectModel
+/**
+ * Model ProjectMember
+ * 
+ */
+export type ProjectMember = Prisma.ProjectMemberModel
+/**
+ * Model ProjectNote
+ * 
+ */
+export type ProjectNote = Prisma.ProjectNoteModel
+/**
+ * Model ProjectFile
+ * 
+ */
+export type ProjectFile = Prisma.ProjectFileModel
+/**
+ * Model ProjectCost
+ * 
+ */
+export type ProjectCost = Prisma.ProjectCostModel

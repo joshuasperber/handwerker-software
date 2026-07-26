@@ -1,17 +1,24 @@
+import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAuth, apiSuccess } from "@/lib/api";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   const auth = await requireAuth("services.read");
   if (auth instanceof Response) return auth;
 
+  const includeInactive =
+    new URL(request.url).searchParams.get("includeInactive") === "1";
+
   const services = await prisma.service.findMany({
-    where: { tenantId: auth.tenantId },
+    where: {
+      tenantId: auth.tenantId,
+      ...(includeInactive ? {} : { isActive: true }),
+    },
     include: {
       questions: { orderBy: { sortOrder: "asc" } },
       qualifications: true,
     },
-    orderBy: { sortOrder: "asc" },
+    orderBy: [{ isActive: "desc" }, { sortOrder: "asc" }, { name: "asc" }],
   });
 
   return apiSuccess(services);

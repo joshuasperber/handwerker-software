@@ -3,6 +3,7 @@ import {
   calcVisibleLinesSum,
   calcHiddenAmount,
 } from "./build-document-html";
+import { resolveFixedPriceLabel } from "@/lib/calculation/fixed-price";
 
 export interface DocLine {
   label: string;
@@ -14,6 +15,11 @@ export interface DocLine {
  * HTML-Darstellung), zur Wiederverwendung in PDF- und E-Rechnungs-Erzeugung.
  */
 export function getVisibleLineItems(calc: DocumentCalcInput): DocLine[] {
+  if (calc.useFixedPrice) {
+    const label = resolveFixedPriceLabel(calc.fixedPriceLabel);
+    return [{ label: `${label} – ${formatFixedPriceAmount(calc.netSalesPrice)}`, amount: calc.netSalesPrice }];
+  }
+
   const lines: DocLine[] = [];
 
   for (const l of calc.laborItems.filter((x) => x.isVisibleToCustomer)) {
@@ -38,6 +44,14 @@ export function getVisibleLineItems(calc: DocumentCalcInput): DocLine[] {
   }
 
   return lines;
+}
+
+/** Kompakte Euro-Darstellung für die Positionsbezeichnung „Festpreis – X €“. */
+function formatFixedPriceAmount(amount: number): string {
+  return new Intl.NumberFormat("de-DE", {
+    style: "currency",
+    currency: "EUR",
+  }).format(amount);
 }
 
 export { calcVisibleLinesSum };

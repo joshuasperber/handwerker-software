@@ -26,6 +26,7 @@ type DashboardSession = {
 type DashboardNavItem = {
   href: string;
   label: string;
+  section?: import("@/lib/permissions").NavSection;
 };
 
 function SidebarContent({
@@ -45,7 +46,7 @@ function SidebarContent({
         <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#0d5c63] text-white">
           <Wrench className="h-4 w-4" />
         </div>
-        <span className="font-bold text-slate-900">Handwerker App</span>
+        <span className="font-bold text-slate-900">JoMaster</span>
       </div>
       <nav className="min-h-0 flex-1 space-y-1.5 overflow-y-auto overscroll-contain px-5 py-5">
         <DashboardSidebarNav items={navItems} onNavigate={onNavigate} />
@@ -155,7 +156,7 @@ export function DashboardShell({
                 />
               </SheetContent>
             </Sheet>
-            <span className="truncate font-bold">Handwerker App</span>
+            <span className="truncate font-bold">JoMaster</span>
           </div>
           <div className="flex items-center gap-2">
             <NotificationBell />

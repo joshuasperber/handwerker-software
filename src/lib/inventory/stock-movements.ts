@@ -1,19 +1,32 @@
 import { prisma } from "@/lib/prisma";
 import type { StockMovementType } from "@/generated/prisma/client";
 
+export type StockMovementExtras = {
+  reason?: string | null;
+  customerId?: string | null;
+  employeeId?: string | null;
+  purchasePriceNet?: number | null;
+  salePriceNet?: number | null;
+  supplierName?: string | null;
+  occurredAt?: Date;
+  receiptFileName?: string | null;
+  receiptMimeType?: string | null;
+  receiptStorageKey?: string | null;
+  receiptSizeBytes?: number | null;
+};
+
 export async function applyStockMovement(params: {
   tenantId: string;
   articleId: string;
   storageLocationId: string;
   movementType: StockMovementType;
   quantity: number;
-  orderId?: string;
-  notes?: string;
+  orderId?: string | null;
+  notes?: string | null;
   createdById?: string;
-}) {
-  const qty = Math.abs(params.quantity);
-  if (qty <= 0) throw new Error("Menge muss größer als 0 sein");
-
+  /** Nur Admin darf negativen Bestand bewusst erlauben */
+  allowNegative?: boolean;
+} & StockMovementExtras) {
   const balance = await prisma.stockBalance.findUnique({
     where: {
       articleId_storageLocationId: {
@@ -23,33 +36,65 @@ export async function applyStockMovement(params: {
     },
   });
 
+  const currentOnHand = balance?.onHandQuantity ?? 0;
+  const reserved = balance?.reservedQuantity ?? 0;
+
   let delta = 0;
-  switch (params.movementType) {
-    case "ZUGANG":
-    case "RUECKGABE":
-      delta = qty;
-      break;
-    case "ABGANG":
-    case "VERBRAUCH":
-      delta = -qty;
-      break;
-    default:
-      delta = qty;
+  let movementQty = 0;
+
+  if (params.movementType === "KORREKTUR") {
+    const target = params.allowNegative ? params.quantity : Math.max(0, params.quantity);
+    delta = target - currentOnHand;
+    movementQty = Math.abs(delta);
+    if (movementQty === 0) return { onHandQuantity: currentOnHand, movementId: null as string | null };
+  } else {
+    movementQty = Math.abs(params.quantity);
+    if (movementQty <= 0) throw new Error("Menge muss größer als 0 sein");
+    switch (params.movementType) {
+      case "ZUGANG":
+      case "RUECKGABE":
+        delta = movementQty;
+        break;
+      case "ABGANG":
+      case "VERBRAUCH":
+        delta = -movementQty;
+        break;
+      default:
+        delta = movementQty;
+    }
   }
 
-  const newOnHand = (balance?.onHandQuantity ?? 0) + delta;
-  if (newOnHand < 0) throw new Error("Bestand darf nicht negativ werden");
+  const newOnHand = currentOnHand + delta;
+  if (newOnHand < 0 && !params.allowNegative) {
+    throw new Error(
+      `Zu wenig Bestand: verfügbar ${currentOnHand}, angefragt ${movementQty}. Bestand darf nicht negativ werden.`
+    );
+  }
+  if (newOnHand < reserved && !params.allowNegative) {
+    throw new Error(`Bestand darf nicht unter reservierte Menge (${reserved}) fallen`);
+  }
 
-  await prisma.$transaction([
+  const [movement] = await prisma.$transaction([
     prisma.stockMovement.create({
       data: {
         tenantId: params.tenantId,
         articleId: params.articleId,
         storageLocationId: params.storageLocationId,
-        orderId: params.orderId,
+        orderId: params.orderId ?? undefined,
+        customerId: params.customerId ?? undefined,
+        employeeId: params.employeeId ?? undefined,
         movementType: params.movementType,
-        quantity: qty,
-        notes: params.notes,
+        reason: params.reason ?? undefined,
+        quantity: movementQty,
+        purchasePriceNet: params.purchasePriceNet ?? undefined,
+        salePriceNet: params.salePriceNet ?? undefined,
+        supplierName: params.supplierName ?? undefined,
+        notes: params.notes ?? undefined,
+        receiptFileName: params.receiptFileName ?? undefined,
+        receiptMimeType: params.receiptMimeType ?? undefined,
+        receiptStorageKey: params.receiptStorageKey ?? undefined,
+        receiptSizeBytes: params.receiptSizeBytes ?? undefined,
+        occurredAt: params.occurredAt ?? new Date(),
         createdById: params.createdById,
       },
     }),
@@ -63,13 +108,13 @@ export async function applyStockMovement(params: {
       create: {
         articleId: params.articleId,
         storageLocationId: params.storageLocationId,
-        onHandQuantity: Math.max(0, newOnHand),
+        onHandQuantity: newOnHand,
       },
       update: { onHandQuantity: newOnHand },
     }),
   ]);
 
-  return newOnHand;
+  return { onHandQuantity: newOnHand, movementId: movement.id };
 }
 
 export async function transferStock(params: {
@@ -88,6 +133,7 @@ export async function transferStock(params: {
     storageLocationId: params.fromLocationId,
     movementType: "ABGANG",
     quantity: params.quantity,
+    reason: "SONSTIGES",
     notes: note,
     createdById: params.createdById,
   });
@@ -97,6 +143,7 @@ export async function transferStock(params: {
     storageLocationId: params.toLocationId,
     movementType: "ZUGANG",
     quantity: params.quantity,
+    reason: "SONSTIGES",
     notes: note,
     createdById: params.createdById,
   });

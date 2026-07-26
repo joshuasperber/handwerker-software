@@ -136,3 +136,8 @@
     @apply font-sans;
   }
 }
+
+/* iOS/Android safe area for fixed Monteur bottom nav */
+.safe-area-pb {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}

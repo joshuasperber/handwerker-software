@@ -11,9 +11,27 @@ import { Card } from "@/components/ui/card";
 import { InfoButton } from "@/components/ui/info-button";
 import { SummaryPanel } from "@/components/calculation/summary-panel";
 import { PriceCompositionPanel } from "@/components/calculation/price-composition";
+import { FixedPriceEditor } from "@/components/calculation/fixed-price-editor";
+import {
+  InvoiceConflictDialog,
+  type ExistingInvoiceInfo,
+} from "@/components/documents/invoice-conflict-dialog";
+import { compareFixedPrice } from "@/lib/calculation/fixed-price";
+import { convertCalculationToInvoice } from "@/lib/documents/convert-invoice-client";
+import type { InvoiceActionMode } from "@/lib/documents/invoice-lifecycle";
 import { RISK_PERCENT_BY_LEVEL } from "@/lib/calculation/formulas";
 import { formatEuro } from "@/lib/utils";
-import { ChevronLeft, ChevronRight, Save, FileText } from "lucide-react";
+import { ChevronLeft, ChevronRight, Save, FileText, Trash2, Package } from "lucide-react";
+import { toast } from "sonner";
+import {
+  TAX_TREATMENT_LABELS,
+  REVERSE_CHARGE_WARNING,
+  BUILDING_EXEMPTION_INFO,
+  reverseChargeWarnings,
+  type TaxTreatment,
+} from "@/lib/tax/treatment";
+import { calcMaterialItemSales, calcMaterialTotal } from "@/lib/calculation/formulas";
+import { articlePriceForCalculation } from "@/lib/inventory/units";
 
 const STEPS = [
   "Kunde & Ort",
@@ -32,14 +50,30 @@ const STEPS = [
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type CalcData = Record<string, any>;
 
+type InventoryArticleOption = {
+  id: string;
+  name: string;
+  unit: string;
+  purchasePriceNet: number | null;
+  salesPriceNet: number | null;
+  packageSize?: number;
+  supplierName?: string | null;
+  description?: string | null;
+};
+
 export default function KalkulationWizardPage() {
   const { id } = useParams();
   const [step, setStep] = useState(0);
   const [calc, setCalc] = useState<CalcData | null>(null);
   const [customers, setCustomers] = useState<{ id: string; firstName: string; lastName: string }[]>([]);
   const [machines, setMachines] = useState<{ id: string; name: string; calculatedHourlyRateNet: number }[]>([]);
+  const [articles, setArticles] = useState<InventoryArticleOption[]>([]);
+  const [defaultMarkup, setDefaultMarkup] = useState(25);
   const [saving, setSaving] = useState(false);
   const [overheadInfo, setOverheadInfo] = useState<CalcData | null>(null);
+  const [invoiceConflictOpen, setInvoiceConflictOpen] = useState(false);
+  const [invoiceConflict, setInvoiceConflict] = useState<ExistingInvoiceInfo | null>(null);
+  const [invoiceSaving, setInvoiceSaving] = useState(false);
 
   const load = useCallback(() => {
     fetch(`/api/calculations/${id}`)
@@ -51,6 +85,16 @@ export default function KalkulationWizardPage() {
     load();
     fetch("/api/customers").then((r) => r.json()).then((d) => { if (d.success) setCustomers(d.data); });
     fetch("/api/machines").then((r) => r.json()).then((d) => { if (d.success) setMachines(d.data); });
+    fetch("/api/articles").then((r) => r.json()).then((d) => { if (d.success) setArticles(d.data); });
+    fetch("/api/company-settings")
+      .then((r) => r.json())
+      .then((d) => {
+        const markup = d.success
+          ? d.data?.company?.defaultMaterialMarkupPercent ?? d.data?.defaultMaterialMarkupPercent
+          : null;
+        if (markup != null) setDefaultMarkup(Number(markup));
+      })
+      .catch(() => {});
   }, [load]);
 
   useEffect(() => {
@@ -141,7 +185,44 @@ export default function KalkulationWizardPage() {
     }
   }
 
+  async function saveInvoice(mode?: InvoiceActionMode, documentId?: string) {
+    if (!id || typeof id !== "string") return;
+    setInvoiceSaving(true);
+    const result = await convertCalculationToInvoice(id, { mode, documentId });
+    setInvoiceSaving(false);
+
+    if (!result.ok) {
+      if (result.conflict) {
+        setInvoiceConflict(result.invoice);
+        setInvoiceConflictOpen(true);
+        return;
+      }
+      toast.error(result.message);
+      return;
+    }
+
+    setInvoiceConflictOpen(false);
+    const number = result.document?.documentNumber ?? "";
+    const label =
+      result.action === "updated"
+        ? `Rechnung ${number} aktualisiert (gleiche ID)`
+        : result.action === "correction"
+          ? `Korrekturrechnung ${number} angelegt`
+          : `Rechnung ${number} angelegt`;
+    toast.success(label);
+    load();
+  }
+
   if (!calc) return <p className="text-slate-500 p-6">Laden...</p>;
+
+  const fixedComparison = compareFixedPrice({
+    useFixedPrice: calc.useFixedPrice,
+    fixedPriceNet: calc.fixedPriceNet,
+    fixedPriceLabel: calc.fixedPriceLabel,
+    calculatedNet: calc.netSalesPrice ?? 0,
+    profitAmount: calc.profitAmount,
+    directCosts: calc.directCosts,
+  });
 
   const breakdown = {
     netSalesPrice: calc.netSalesPrice,
@@ -151,6 +232,15 @@ export default function KalkulationWizardPage() {
     marginPercent: calc.marginPercent,
     directCosts: calc.directCosts,
     profitabilityStatus: calc.profitabilityStatus,
+    vatAmount: calc.vatAmount,
+    taxTreatment: calc.vatSettings?.taxTreatment,
+    isReverseCharge: calc.vatSettings?.taxTreatment === "REVERSE_CHARGE" || calc.vatSettings?.reverseCharge,
+    useFixedPrice: fixedComparison.useFixedPrice,
+    fixedPriceLabel: fixedComparison.label,
+    fixedPriceNet: fixedComparison.customerNet,
+    fixedDifference: fixedComparison.difference,
+    fixedEstimatedProfit: fixedComparison.estimatedProfit,
+    fixedMarginPercent: fixedComparison.marginPercent,
   };
 
   return (
@@ -220,7 +310,16 @@ export default function KalkulationWizardPage() {
 
           {step === 2 && (
             <Card title="Material">
-              <MaterialEditor items={calc.materialItems ?? []} onChange={(items) => setCalc({ ...calc, materialItems: items })} />
+              <MaterialEditor
+                items={calc.materialItems ?? []}
+                articles={articles}
+                defaultMarkup={defaultMarkup}
+                onChange={(items) => setCalc({ ...calc, materialItems: items })}
+              />
+              <p className="text-xs text-slate-400 mt-3">
+                Preise werden aus dem Inventar übernommen und bleiben in dieser Kalkulation manuell änderbar.
+                Der Lagerbestand wird dadurch nicht verändert — Entnahme erfolgt separat am Auftrag.
+              </p>
               <Button className="mt-4" variant="action" onClick={() => save({ materialItems: calc.materialItems })} disabled={saving}>Speichern & berechnen</Button>
             </Card>
           )}
@@ -318,32 +417,78 @@ export default function KalkulationWizardPage() {
 
           {step === 9 && (
             <Card
-              title="Ergebnis & Einkommensteuer"
+              title="Steuer & Ergebnis"
               action={
-                <InfoButton title="Einkommensteuer">
-                  <p>Die Einkommensteuer wird nicht als separate Rechnungsposition ausgewiesen. Sie dient nur der internen Kalkulation und ersetzt keine steuerliche Beratung.</p>
+                <InfoButton title="Steuerliche Behandlung">
+                  <p>Die App trifft keine automatische steuerliche Entscheidung. Wählen Sie die Rechnungsart bewusst aus. Bei Unsicherheit bitte steuerlich prüfen lassen.</p>
                 </InfoButton>
               }
             >
-              <div className="rounded-lg bg-slate-50 p-4 space-y-2 text-sm">
+              <TaxTreatmentEditor
+                calc={calc}
+                onChange={(vatSettings) => setCalc({ ...calc, vatSettings })}
+              />
+              <div className="rounded-lg bg-slate-50 p-4 space-y-2 text-sm mt-4">
                 <Row label="Direkte Kosten" value={calc.directCosts} />
                 <Row label="Gemeinkosten" value={calc.overheadAmount} />
                 <Row label="Wagnis" value={calc.riskAmount} />
                 <Row label="Gewinn" value={calc.profitAmount} />
                 <Row label="Netto-Verkaufspreis" value={calc.netSalesPrice} bold />
-                <Row label="Umsatzsteuer" value={calc.vatAmount} />
-                <Row label="Brutto" value={calc.grossSalesPrice} bold />
+                {calc.vatSettings?.taxTreatment === "REVERSE_CHARGE" || calc.vatSettings?.reverseCharge ? (
+                  <>
+                    <Row label="Umsatzsteuer" value="— (Reverse-Charge)" />
+                    <Row label="Rechnungsbetrag (netto)" value={calc.netSalesPrice} bold />
+                  </>
+                ) : (
+                  <>
+                    <Row label="Umsatzsteuer" value={calc.vatAmount} />
+                    <Row label="Brutto" value={calc.grossSalesPrice} bold />
+                  </>
+                )}
                 <Row label="Deckungsbeitrag" value={calc.contributionMargin} />
                 <Row label="Deckungsbeitragsquote" value={`${calc.contributionMarginRate?.toFixed(1)} %`} />
                 <Row label="Mindestpreis" value={calc.minimumPrice} />
               </div>
+              <FixedPriceEditor
+                useFixedPrice={Boolean(calc.useFixedPrice)}
+                fixedPriceNet={calc.fixedPriceNet}
+                fixedPriceLabel={calc.fixedPriceLabel}
+                calculatedNet={calc.netSalesPrice ?? 0}
+                profitAmount={calc.profitAmount ?? 0}
+                directCosts={calc.directCosts ?? 0}
+                onChange={(next) =>
+                  setCalc({
+                    ...calc,
+                    useFixedPrice: next.useFixedPrice,
+                    fixedPriceNet: next.fixedPriceNet,
+                    fixedPriceLabel: next.fixedPriceLabel,
+                  })
+                }
+              />
+              <Button
+                className="mt-4"
+                variant="action"
+                onClick={() =>
+                  save({
+                    vat: calc.vatSettings,
+                    useFixedPrice: Boolean(calc.useFixedPrice),
+                    fixedPriceNet: calc.fixedPriceNet ?? null,
+                    fixedPriceLabel: calc.fixedPriceLabel ?? null,
+                  })
+                }
+                disabled={saving}
+              >
+                <Save className="h-4 w-4 mr-1" /> Steuer &amp; Festpreis speichern
+              </Button>
             </Card>
           )}
 
           {step === 10 && (
             <Card title="Angebot erzeugen">
               <p className="text-sm text-slate-600 mb-4">
-                Es werden nur als „sichtbar“ markierte Positionen auf dem Angebot ausgewiesen. Interne Zuschläge bleiben verborgen.
+                {calc.useFixedPrice
+                  ? `Aktuell: Festpreis „${calc.fixedPriceLabel?.trim() || "Festpreis"} – ${formatEuro(calc.fixedPriceNet ?? calc.netSalesPrice)}“ auf dem Dokument. Die interne Kalkulation (${formatEuro(calc.netSalesPrice)}) bleibt gespeichert.`
+                  : "Auf dem Angebot erscheinen die Leistungspositionen (Arbeit, Material, Fahrt usw.). Interne Zuschläge wie Gemeinkosten, Wagnis und Gewinn bleiben verborgen."}
               </p>
               <div className="flex flex-wrap gap-2">
                 <Button variant="action" onClick={generateOffer}>
@@ -361,15 +506,23 @@ export default function KalkulationWizardPage() {
                 </Button>
                 <Button
                   variant="outline"
-                  onClick={async () => {
-                    const res = await fetch(`/api/calculations/${id}/convert-to-invoice`, { method: "POST" });
-                    const d = await res.json();
-                    if (d.success) alert(`Rechnung ${d.data.documentNumber} angelegt`);
-                  }}
+                  disabled={invoiceSaving}
+                  onClick={() => saveInvoice()}
                 >
                   Als Rechnung speichern
                 </Button>
               </div>
+              {Array.isArray(calc.documents) &&
+                calc.documents.some(
+                  (d: { documentType?: string; status?: string; cancelOfId?: string | null }) =>
+                    d.documentType === "INVOICE" && d.status !== "STORNIERT" && !d.cancelOfId
+                ) && (
+                  <p className="text-xs text-amber-800 mt-3 bg-amber-50 border border-amber-200 rounded-lg p-2">
+                    Zu dieser Kalkulation existiert bereits mindestens eine Rechnung. Beim erneuten
+                    Speichern kannst du die bestehende bearbeiten oder bewusst eine neue/Korrektur
+                    anlegen – es entsteht keine stille Doppelrechnung.
+                  </p>
+                )}
             </Card>
           )}
 
@@ -414,7 +567,20 @@ export default function KalkulationWizardPage() {
                 <p className="text-sm text-slate-700">{overheadInfo.explanation}</p>
               )}
               {step === 6 && (
-                <p className="text-sm text-slate-500">Zusatzkosten (Fremdleistung, Entsorgung, …) können über die API ergänzt werden.</p>
+                <>
+                  <AdditionalCostEditor
+                    items={calc.additionalItems ?? []}
+                    onChange={(items) => setCalc({ ...calc, additionalItems: items })}
+                  />
+                  <Button
+                    className="mt-4"
+                    variant="action"
+                    onClick={() => save({ additionalItems: calc.additionalItems })}
+                    disabled={saving}
+                  >
+                    Speichern & berechnen
+                  </Button>
+                </>
               )}
             </Card>
           )}
@@ -434,20 +600,26 @@ export default function KalkulationWizardPage() {
           calc={calc}
           onPreviewBreakdown={previewBreakdown}
           onPreviewInvoice={async () => {
-            const res = await fetch(`/api/calculations/${id}/convert-to-invoice`, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ preview: true }),
-            });
-            const d = await res.json();
-            if (d.success && d.data.html) {
+            if (!id || typeof id !== "string") return;
+            const result = await convertCalculationToInvoice(id, { preview: true });
+            if (result.ok && result.html) {
               const w = window.open("", "_blank");
-              w?.document.write(d.data.html);
+              w?.document.write(result.html);
               w?.document.close();
             }
           }}
         />
       </div>
+
+      <InvoiceConflictDialog
+        open={invoiceConflictOpen}
+        onOpenChange={setInvoiceConflictOpen}
+        invoice={invoiceConflict}
+        loading={invoiceSaving}
+        onChoose={(mode) =>
+          saveInvoice(mode, mode === "update" ? invoiceConflict?.id : undefined)
+        }
+      />
     </div>
   );
 }
@@ -457,6 +629,190 @@ function Row({ label, value, bold }: { label: string; value: number | string; bo
     <div className={`flex justify-between ${bold ? "font-semibold text-[#0d5c63]" : ""}`}>
       <span>{label}</span>
       <span>{typeof value === "number" ? formatEuro(value) : value}</span>
+    </div>
+  );
+}
+
+function PositionRemoveButton({ onRemove, label }: { onRemove: () => void; label?: string }) {
+  return (
+    <div className="col-span-2 flex justify-end">
+      <Button
+        type="button"
+        variant="outline"
+        size="sm"
+        className="text-red-600 border-red-200 hover:bg-red-50"
+        onClick={() => {
+          if (confirm(label ? `Position „${label}" wirklich entfernen?` : "Position wirklich entfernen?")) {
+            onRemove();
+          }
+        }}
+      >
+        <Trash2 className="h-4 w-4 mr-1" /> Entfernen
+      </Button>
+    </div>
+  );
+}
+
+function TaxTreatmentEditor({
+  calc,
+  onChange,
+}: {
+  calc: CalcData;
+  onChange: (vat: CalcData) => void;
+}) {
+  const vat = calc.vatSettings ?? {
+    vatRatePercent: 19,
+    taxTreatment: "STANDARD_VAT",
+    reverseCharge: false,
+    reverseChargeConfirmed: false,
+    includeSection13bNote: true,
+  };
+  const treatment = (vat.taxTreatment ?? "STANDARD_VAT") as TaxTreatment;
+  const customer = calc.customer as CalcData | null;
+  const rcWarnings = treatment === "REVERSE_CHARGE" ? reverseChargeWarnings(customer) : [];
+
+  function update(patch: CalcData) {
+    onChange({ ...vat, ...patch });
+  }
+
+  return (
+    <div className="space-y-4">
+      <div>
+        <label className="text-sm font-medium">Steuerliche Rechnungsart</label>
+        <select
+          className="w-full h-10 rounded-lg border mt-1 px-3 text-sm"
+          value={treatment}
+          onChange={(e) => {
+            const next = e.target.value as TaxTreatment;
+            update({
+              taxTreatment: next,
+              reverseCharge: next === "REVERSE_CHARGE",
+              reverseChargeConfirmed: next === "REVERSE_CHARGE" ? vat.reverseChargeConfirmed : false,
+            });
+          }}
+        >
+          {(Object.keys(TAX_TREATMENT_LABELS) as TaxTreatment[]).map((key) => (
+            <option key={key} value={key}>{TAX_TREATMENT_LABELS[key]}</option>
+          ))}
+        </select>
+      </div>
+
+      {treatment === "STANDARD_VAT" && (
+        <NumberInput
+          label="Umsatzsteuersatz"
+          suffix="%"
+          min={0}
+          max={100}
+          value={vat.vatRatePercent ?? 19}
+          onValueChange={(v) => update({ vatRatePercent: v ?? 19 })}
+        />
+      )}
+
+      {treatment === "REVERSE_CHARGE" && (
+        <div className="space-y-3 rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">
+          <p>{REVERSE_CHARGE_WARNING}</p>
+          {rcWarnings.length > 0 && (
+            <ul className="list-disc pl-5 space-y-1">
+              {rcWarnings.map((w) => (
+                <li key={w}>{w}</li>
+              ))}
+            </ul>
+          )}
+          <label className="flex items-start gap-2 cursor-pointer">
+            <input
+              type="checkbox"
+              className="mt-1"
+              checked={!!vat.reverseChargeConfirmed}
+              onChange={(e) => update({ reverseChargeConfirmed: e.target.checked, reverseCharge: true })}
+            />
+            <span>Ich bestätige, dass Reverse-Charge / § 13b UStG für diese Rechnung zutreffend ist.</span>
+          </label>
+          <label className="flex items-start gap-2 cursor-pointer">
+            <input
+              type="checkbox"
+              className="mt-1"
+              checked={vat.includeSection13bNote !== false}
+              onChange={(e) => update({ includeSection13bNote: e.target.checked })}
+            />
+            <span>Hinweis auf § 13b UStG auf der Rechnung anzeigen</span>
+          </label>
+        </div>
+      )}
+
+      {treatment === "BUILDING_EXEMPTION" && (
+        <div className="rounded-lg border border-slate-200 bg-slate-50 p-3 text-sm text-slate-700">
+          <p>{BUILDING_EXEMPTION_INFO}</p>
+          <p className="mt-2">Die Freistellungsbescheinigung wird im Kundenstamm dokumentiert. Die Umsatzsteuer wird standardmäßig weiterhin berechnet, sofern Sie nicht Reverse-Charge wählen.</p>
+          {customer?.id && (
+            <Link href={`/dashboard/kunden/${customer.id}`} className="text-[#0d5c63] underline text-sm mt-2 inline-block">
+              → Freistellungsbescheinigung im Kundenstamm pflegen
+            </Link>
+          )}
+        </div>
+      )}
+
+      {treatment === "MANUAL_REVIEW" && (
+        <div className="rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">
+          Diese Rechnung erfordert eine manuelle steuerliche Prüfung vor dem Versand.
+        </div>
+      )}
+
+      <Textarea
+        label="Optionaler Hinweis auf der Rechnung"
+        value={vat.vatNote ?? ""}
+        onChange={(e) => update({ vatNote: e.target.value || null })}
+        rows={2}
+        placeholder="Zusätzlicher steuerlicher Hinweis (optional)"
+      />
+    </div>
+  );
+}
+
+function AdditionalCostEditor({ items, onChange }: { items: CalcData[]; onChange: (items: CalcData[]) => void }) {
+  const list = items;
+
+  return (
+    <div className="space-y-3">
+      {list.length === 0 && (
+        <p className="text-sm text-slate-500">Noch keine Zusatzkosten. Fügen Sie z. B. Fremdleistung oder Entsorgung hinzu.</p>
+      )}
+      {list.map((item, i) => (
+        <div key={i} className="grid grid-cols-2 gap-2 border-b pb-3">
+          <Input
+            label="Beschreibung"
+            value={item.description ?? ""}
+            onChange={(e) => {
+              const n = [...list];
+              n[i] = { ...n[i], description: e.target.value };
+              onChange(n);
+            }}
+          />
+          <NumberInput
+            label="Betrag netto"
+            suffix="€"
+            min={0}
+            value={item.amountNet ?? 0}
+            onValueChange={(v) => {
+              const n = [...list];
+              n[i] = { ...n[i], amountNet: v ?? 0 };
+              onChange(n);
+            }}
+          />
+          <PositionRemoveButton
+            label={item.description ?? "Zusatzkosten"}
+            onRemove={() => onChange(list.filter((_, idx) => idx !== i))}
+          />
+        </div>
+      ))}
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={() =>
+          onChange([...list, { description: "Fremdleistung", amountNet: 0, category: "OTHER", markupPercent: 0 }])
+        }
+      >
+        + Zusatzposition
+      </Button>
     </div>
   );
 }
@@ -473,7 +829,7 @@ function LaborEditor({
   return (
     <div className="space-y-3">
       {list.map((item, i) => (
-        <div key={i} className="grid grid-cols-2 gap-2">
+        <div key={i} className="grid grid-cols-2 gap-2 border-b pb-3">
           <Input label="Beschreibung" value={item.description} onChange={(e) => {
             const n = [...list]; n[i] = { ...n[i], description: e.target.value }; onChange(n);
           }} />
@@ -486,6 +842,12 @@ function LaborEditor({
           <NumberInput label="Mitarbeiter" allowDecimal={false} min={1} value={item.quantityWorkers ?? 1} onValueChange={(v) => {
             const n = [...list]; n[i] = { ...n[i], quantityWorkers: v ?? 1 }; onChange(n);
           }} />
+          {list.length > 1 && (
+            <PositionRemoveButton
+              label={item.description}
+              onRemove={() => onChange(list.filter((_, idx) => idx !== i))}
+            />
+          )}
         </div>
       ))}
       <Button variant="outline" size="sm" onClick={() => onChange([...list, { description: "Werkstattzeit", hours: 0, hourlyRateNet: 55, quantityWorkers: 1, laborType: "WORKSHOP_WORK" }])}>
@@ -495,22 +857,217 @@ function LaborEditor({
   );
 }
 
-function MaterialEditor({ items, onChange }: { items: CalcData[]; onChange: (items: CalcData[]) => void }) {
-  const list = items.length ? items : [{ name: "Material", quantity: 1, unit: "Stk", purchasePriceNet: 0, markupPercent: 25, wastePercent: 0 }];
+function MaterialEditor({
+  items,
+  articles,
+  defaultMarkup,
+  onChange,
+}: {
+  items: CalcData[];
+  articles: InventoryArticleOption[];
+  defaultMarkup: number;
+  onChange: (items: CalcData[]) => void;
+}) {
+  const list = items.length
+    ? items
+    : [{ name: "", quantity: 1, unit: "Stück", purchasePriceNet: 0, markupPercent: defaultMarkup, wastePercent: 0, articleId: null }];
+
+  function updateItem(index: number, patch: CalcData) {
+    const next = list.map((item, i) => (i === index ? { ...item, ...patch } : item));
+    onChange(next);
+  }
+
+  function applyArticle(index: number, articleId: string) {
+    if (!articleId) {
+      updateItem(index, { articleId: null });
+      return;
+    }
+    const article = articles.find((a) => a.id === articleId);
+    if (!article) return;
+    updateItem(index, {
+      articleId: article.id,
+      name: article.name,
+      unit: article.unit || "Stück",
+      purchasePriceNet: articlePriceForCalculation(article),
+      description: article.description ?? undefined,
+      supplierName: article.supplierName ?? undefined,
+      markupPercent: list[index].markupPercent ?? defaultMarkup,
+    });
+  }
+
+  function addFromInventory(articleId: string) {
+    const article = articles.find((a) => a.id === articleId);
+    if (!article) return;
+    const blankOnly =
+      list.length === 1 && !list[0].name && !list[0].articleId && Number(list[0].purchasePriceNet) === 0;
+    const row = {
+      articleId: article.id,
+      name: article.name,
+      unit: article.unit || "Stück",
+      quantity: 1,
+      purchasePriceNet: articlePriceForCalculation(article),
+      markupPercent: defaultMarkup,
+      wastePercent: 0,
+      description: article.description ?? undefined,
+      supplierName: article.supplierName ?? undefined,
+    };
+    onChange(blankOnly ? [row] : [...list, row]);
+  }
+
+  const materialSum = calcMaterialTotal(
+    list.map((i) => ({
+      quantity: Number(i.quantity) || 0,
+      purchasePriceNet: Number(i.purchasePriceNet) || 0,
+      markupPercent: Number(i.markupPercent) || 0,
+      wastePercent: Number(i.wastePercent) || 0,
+    }))
+  );
 
   return (
-    <div className="space-y-3">
-      {list.map((item, i) => (
-        <div key={i} className="grid grid-cols-2 gap-2 border-b pb-3">
-          <Input label="Name" value={item.name} onChange={(e) => { const n = [...list]; n[i].name = e.target.value; onChange(n); }} />
-          <NumberInput label="Menge" min={0} value={item.quantity} onValueChange={(v) => { const n = [...list]; n[i].quantity = v ?? 0; onChange(n); }} />
-          <NumberInput label="Einkauf netto" suffix="€" min={0} value={item.purchasePriceNet} onValueChange={(v) => { const n = [...list]; n[i].purchasePriceNet = v ?? 0; onChange(n); }} />
-          <NumberInput label="Aufschlag %" suffix="%" value={item.markupPercent} onValueChange={(v) => { const n = [...list]; n[i].markupPercent = v ?? 0; onChange(n); }} />
+    <div className="space-y-4">
+      {articles.length > 0 && (
+        <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
+          <label className="text-sm font-medium flex items-center gap-1.5 mb-2">
+            <Package className="h-4 w-4 text-[#0d5c63]" />
+            Aus Inventar hinzufügen
+          </label>
+          <select
+            className="w-full h-10 rounded-lg border border-slate-300 px-3 text-sm bg-white"
+            defaultValue=""
+            onChange={(e) => {
+              if (e.target.value) {
+                addFromInventory(e.target.value);
+                e.target.value = "";
+              }
+            }}
+          >
+            <option value="">Artikel wählen…</option>
+            {articles.map((a) => {
+              const price = articlePriceForCalculation(a);
+              return (
+                <option key={a.id} value={a.id}>
+                  {a.name} · {a.unit}
+                  {price > 0 ? ` · ${price.toFixed(2)} €` : ""}
+                </option>
+              );
+            })}
+          </select>
         </div>
-      ))}
-      <Button variant="outline" size="sm" onClick={() => onChange([...list, { name: "Kleinmaterialpauschale", quantity: 1, unit: "Pausch.", purchasePriceNet: 15, markupPercent: 25 }])}>
-        + Kleinmaterialpauschale
-      </Button>
+      )}
+
+      {list.map((item, i) => {
+        const line = calcMaterialItemSales(
+          Number(item.quantity) || 0,
+          Number(item.purchasePriceNet) || 0,
+          Number(item.markupPercent) || 0,
+          Number(item.wastePercent) || 0
+        );
+        return (
+          <div key={item.id ?? i} className="grid grid-cols-2 gap-2 border-b pb-3">
+            {articles.length > 0 && (
+              <div className="col-span-2">
+                <label className="text-sm font-medium">Inventarartikel (optional)</label>
+                <select
+                  className="w-full h-10 rounded-lg border mt-1 px-3 text-sm"
+                  value={item.articleId ?? ""}
+                  onChange={(e) => applyArticle(i, e.target.value)}
+                >
+                  <option value="">Frei eingeben / ohne Inventar</option>
+                  {articles.map((a) => (
+                    <option key={a.id} value={a.id}>
+                      {a.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+            <Input
+              label="Name"
+              value={item.name ?? ""}
+              onChange={(e) => updateItem(i, { name: e.target.value })}
+            />
+            <NumberInput
+              label="Menge"
+              min={0}
+              value={item.quantity}
+              onValueChange={(v) => updateItem(i, { quantity: v ?? 0 })}
+            />
+            <Input
+              label="Einheit"
+              value={item.unit ?? "Stück"}
+              onChange={(e) => updateItem(i, { unit: e.target.value })}
+            />
+            <NumberInput
+              label="Preis netto"
+              suffix="€"
+              min={0}
+              value={item.purchasePriceNet}
+              onValueChange={(v) => updateItem(i, { purchasePriceNet: v ?? 0 })}
+            />
+            <NumberInput
+              label="Aufschlag %"
+              suffix="%"
+              value={item.markupPercent}
+              onValueChange={(v) => updateItem(i, { markupPercent: v ?? 0 })}
+            />
+            <div className="flex flex-col justify-end text-sm">
+              <p className="text-xs text-slate-400">Position (Verkauf netto)</p>
+              <p className="font-semibold text-[#0d5c63]">{formatEuro(line.sales)}</p>
+              <p className="text-xs text-slate-400">Einkauf {formatEuro(line.purchase)}</p>
+            </div>
+            {list.length > 1 && (
+              <PositionRemoveButton label={item.name} onRemove={() => onChange(list.filter((_, idx) => idx !== i))} />
+            )}
+          </div>
+        );
+      })}
+
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-1">
+        <div className="flex flex-wrap gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() =>
+              onChange([
+                ...list,
+                {
+                  name: "",
+                  quantity: 1,
+                  unit: "Stück",
+                  purchasePriceNet: 0,
+                  markupPercent: defaultMarkup,
+                  wastePercent: 0,
+                  articleId: null,
+                },
+              ])
+            }
+          >
+            + Manuelle Position
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() =>
+              onChange([
+                ...list,
+                {
+                  name: "Kleinmaterialpauschale",
+                  quantity: 1,
+                  unit: "Pausch.",
+                  purchasePriceNet: 15,
+                  markupPercent: defaultMarkup,
+                  articleId: null,
+                },
+              ])
+            }
+          >
+            + Kleinmaterialpauschale
+          </Button>
+        </div>
+        <p className="text-sm font-semibold text-slate-800">
+          Material gesamt: <span className="text-[#0d5c63]">{formatEuro(materialSum)}</span>
+        </p>
+      </div>
     </div>
   );
 }
@@ -565,8 +1122,28 @@ function MachineStepEditor({
               onChange(n);
             }}
           />
+          {list.length > 1 && (
+            <PositionRemoveButton onRemove={() => onChange(list.filter((_, idx) => idx !== i))} />
+          )}
         </div>
       ))}
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={() =>
+          onChange([
+            ...list,
+            {
+              machineId: machines[0]?.id,
+              description: "Maschineneinsatz",
+              usageHours: 0,
+              breakageRiskPercent: 15,
+            },
+          ])
+        }
+      >
+        + Maschine
+      </Button>
     </div>
   );
 }
@@ -575,20 +1152,56 @@ function ProcurementEditor({ items, onChange }: { items: CalcData[]; onChange: (
   const list = items.length ? items : [{ description: "Beschaffung", purchasingTimeHours: 0, procurementHourlyRateNet: 55 }];
 
   return (
-    <div className="grid grid-cols-2 gap-2">
-      <NumberInput
-        label="Einkaufszeit (h)"
-        min={0}
-        value={list[0].purchasingTimeHours}
-        onValueChange={(v) => onChange([{ ...list[0], purchasingTimeHours: v ?? 0 }])}
-      />
-      <NumberInput
-        label="Bürostundensatz"
-        suffix="€"
-        min={0}
-        value={list[0].procurementHourlyRateNet}
-        onValueChange={(v) => onChange([{ ...list[0], procurementHourlyRateNet: v ?? 0 }])}
-      />
+    <div className="space-y-3">
+      {list.map((item, i) => (
+        <div key={i} className="grid grid-cols-2 gap-2 border-b pb-3">
+          <Input
+            label="Beschreibung"
+            value={item.description ?? "Beschaffung"}
+            onChange={(e) => {
+              const n = [...list];
+              n[i] = { ...n[i], description: e.target.value };
+              onChange(n);
+            }}
+          />
+          <NumberInput
+            label="Einkaufszeit (h)"
+            min={0}
+            value={item.purchasingTimeHours}
+            onValueChange={(v) => {
+              const n = [...list];
+              n[i] = { ...n[i], purchasingTimeHours: v ?? 0 };
+              onChange(n);
+            }}
+          />
+          <NumberInput
+            label="Bürostundensatz"
+            suffix="€"
+            min={0}
+            value={item.procurementHourlyRateNet}
+            onValueChange={(v) => {
+              const n = [...list];
+              n[i] = { ...n[i], procurementHourlyRateNet: v ?? 0 };
+              onChange(n);
+            }}
+          />
+          {list.length > 1 && (
+            <PositionRemoveButton
+              label={item.description ?? "Beschaffung"}
+              onRemove={() => onChange(list.filter((_, idx) => idx !== i))}
+            />
+          )}
+        </div>
+      ))}
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={() =>
+          onChange([...list, { description: "Weitere Beschaffung", purchasingTimeHours: 0, procurementHourlyRateNet: 55 }])
+        }
+      >
+        + Beschaffungsposition
+      </Button>
     </div>
   );
 }

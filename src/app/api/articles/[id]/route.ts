@@ -19,11 +19,27 @@ export async function PUT(
     where: { id },
     data: {
       name: body.name ?? existing.name,
-      sku: body.sku ?? existing.sku,
+      sku: body.sku !== undefined ? body.sku : existing.sku,
       unit: body.unit ?? existing.unit,
-      category: body.category ?? existing.category,
+      category: body.category !== undefined ? body.category : existing.category,
+      description: body.description !== undefined ? body.description : existing.description,
+      packageSize: body.packageSize != null ? Number(body.packageSize) : undefined,
       minimumStock: body.minimumStock != null ? Number(body.minimumStock) : undefined,
       targetStock: body.targetStock != null ? Number(body.targetStock) : undefined,
+      reorderQuantity: body.reorderQuantity != null ? Number(body.reorderQuantity) : undefined,
+      supplierName: body.supplierName !== undefined ? body.supplierName : existing.supplierName,
+      purchasePriceNet:
+        body.purchasePriceNet !== undefined
+          ? body.purchasePriceNet == null
+            ? null
+            : Number(body.purchasePriceNet)
+          : undefined,
+      salesPriceNet:
+        body.salesPriceNet !== undefined
+          ? body.salesPriceNet == null
+            ? null
+            : Number(body.salesPriceNet)
+          : undefined,
       isActive: body.isActive ?? existing.isActive,
     },
   });

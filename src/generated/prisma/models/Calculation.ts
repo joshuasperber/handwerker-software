@@ -50,6 +50,7 @@ export type CalculationAvgAggregateOutputType = {
   minimumPrice: number | null
   profitAfterTaxEstimate: number | null
   totalBillableHours: number | null
+  fixedPriceNet: number | null
 }
 
 export type CalculationSumAggregateOutputType = {
@@ -76,6 +77,7 @@ export type CalculationSumAggregateOutputType = {
   minimumPrice: number | null
   profitAfterTaxEstimate: number | null
   totalBillableHours: number | null
+  fixedPriceNet: number | null
 }
 
 export type CalculationMinAggregateOutputType = {
@@ -83,6 +85,7 @@ export type CalculationMinAggregateOutputType = {
   tenantId: string | null
   customerId: string | null
   orderId: string | null
+  projectId: string | null
   title: string | null
   status: $Enums.CalculationStatus | null
   currentStep: number | null
@@ -109,6 +112,9 @@ export type CalculationMinAggregateOutputType = {
   profitAfterTaxEstimate: number | null
   totalBillableHours: number | null
   profitabilityStatus: string | null
+  useFixedPrice: boolean | null
+  fixedPriceNet: number | null
+  fixedPriceLabel: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -118,6 +124,7 @@ export type CalculationMaxAggregateOutputType = {
   tenantId: string | null
   customerId: string | null
   orderId: string | null
+  projectId: string | null
   title: string | null
   status: $Enums.CalculationStatus | null
   currentStep: number | null
@@ -144,6 +151,9 @@ export type CalculationMaxAggregateOutputType = {
   profitAfterTaxEstimate: number | null
   totalBillableHours: number | null
   profitabilityStatus: string | null
+  useFixedPrice: boolean | null
+  fixedPriceNet: number | null
+  fixedPriceLabel: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -153,6 +163,7 @@ export type CalculationCountAggregateOutputType = {
   tenantId: number
   customerId: number
   orderId: number
+  projectId: number
   title: number
   status: number
   currentStep: number
@@ -179,6 +190,9 @@ export type CalculationCountAggregateOutputType = {
   profitAfterTaxEstimate: number
   totalBillableHours: number
   profitabilityStatus: number
+  useFixedPrice: number
+  fixedPriceNet: number
+  fixedPriceLabel: number
   snapshotJson: number
   createdAt: number
   updatedAt: number
@@ -210,6 +224,7 @@ export type CalculationAvgAggregateInputType = {
   minimumPrice?: true
   profitAfterTaxEstimate?: true
   totalBillableHours?: true
+  fixedPriceNet?: true
 }
 
 export type CalculationSumAggregateInputType = {
@@ -236,6 +251,7 @@ export type CalculationSumAggregateInputType = {
   minimumPrice?: true
   profitAfterTaxEstimate?: true
   totalBillableHours?: true
+  fixedPriceNet?: true
 }
 
 export type CalculationMinAggregateInputType = {
@@ -243,6 +259,7 @@ export type CalculationMinAggregateInputType = {
   tenantId?: true
   customerId?: true
   orderId?: true
+  projectId?: true
   title?: true
   status?: true
   currentStep?: true
@@ -269,6 +286,9 @@ export type CalculationMinAggregateInputType = {
   profitAfterTaxEstimate?: true
   totalBillableHours?: true
   profitabilityStatus?: true
+  useFixedPrice?: true
+  fixedPriceNet?: true
+  fixedPriceLabel?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -278,6 +298,7 @@ export type CalculationMaxAggregateInputType = {
   tenantId?: true
   customerId?: true
   orderId?: true
+  projectId?: true
   title?: true
   status?: true
   currentStep?: true
@@ -304,6 +325,9 @@ export type CalculationMaxAggregateInputType = {
   profitAfterTaxEstimate?: true
   totalBillableHours?: true
   profitabilityStatus?: true
+  useFixedPrice?: true
+  fixedPriceNet?: true
+  fixedPriceLabel?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -313,6 +337,7 @@ export type CalculationCountAggregateInputType = {
   tenantId?: true
   customerId?: true
   orderId?: true
+  projectId?: true
   title?: true
   status?: true
   currentStep?: true
@@ -339,6 +364,9 @@ export type CalculationCountAggregateInputType = {
   profitAfterTaxEstimate?: true
   totalBillableHours?: true
   profitabilityStatus?: true
+  useFixedPrice?: true
+  fixedPriceNet?: true
+  fixedPriceLabel?: true
   snapshotJson?: true
   createdAt?: true
   updatedAt?: true
@@ -436,6 +464,7 @@ export type CalculationGroupByOutputType = {
   tenantId: string
   customerId: string | null
   orderId: string | null
+  projectId: string | null
   title: string | null
   status: $Enums.CalculationStatus
   currentStep: number
@@ -462,6 +491,9 @@ export type CalculationGroupByOutputType = {
   profitAfterTaxEstimate: number
   totalBillableHours: number
   profitabilityStatus: string
+  useFixedPrice: boolean
+  fixedPriceNet: number | null
+  fixedPriceLabel: string | null
   snapshotJson: runtime.JsonValue | null
   createdAt: Date
   updatedAt: Date
@@ -495,6 +527,7 @@ export type CalculationWhereInput = {
   tenantId?: Prisma.StringFilter<"Calculation"> | string
   customerId?: Prisma.StringNullableFilter<"Calculation"> | string | null
   orderId?: Prisma.StringNullableFilter<"Calculation"> | string | null
+  projectId?: Prisma.StringNullableFilter<"Calculation"> | string | null
   title?: Prisma.StringNullableFilter<"Calculation"> | string | null
   status?: Prisma.EnumCalculationStatusFilter<"Calculation"> | $Enums.CalculationStatus
   currentStep?: Prisma.IntFilter<"Calculation"> | number
@@ -521,12 +554,16 @@ export type CalculationWhereInput = {
   profitAfterTaxEstimate?: Prisma.FloatFilter<"Calculation"> | number
   totalBillableHours?: Prisma.FloatFilter<"Calculation"> | number
   profitabilityStatus?: Prisma.StringFilter<"Calculation"> | string
+  useFixedPrice?: Prisma.BoolFilter<"Calculation"> | boolean
+  fixedPriceNet?: Prisma.FloatNullableFilter<"Calculation"> | number | null
+  fixedPriceLabel?: Prisma.StringNullableFilter<"Calculation"> | string | null
   snapshotJson?: Prisma.JsonNullableFilter<"Calculation">
   createdAt?: Prisma.DateTimeFilter<"Calculation"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Calculation"> | Date | string
   tenant?: Prisma.XOR<Prisma.TenantScalarRelationFilter, Prisma.TenantWhereInput>
   customer?: Prisma.XOR<Prisma.CustomerNullableScalarRelationFilter, Prisma.CustomerWhereInput> | null
   order?: Prisma.XOR<Prisma.OrderNullableScalarRelationFilter, Prisma.OrderWhereInput> | null
+  project?: Prisma.XOR<Prisma.ProjectNullableScalarRelationFilter, Prisma.ProjectWhereInput> | null
   laborItems?: Prisma.LaborItemListRelationFilter
   materialItems?: Prisma.MaterialItemListRelationFilter
   machineUsages?: Prisma.MachineUsageItemListRelationFilter
@@ -545,6 +582,7 @@ export type CalculationOrderByWithRelationInput = {
   tenantId?: Prisma.SortOrder
   customerId?: Prisma.SortOrderInput | Prisma.SortOrder
   orderId?: Prisma.SortOrderInput | Prisma.SortOrder
+  projectId?: Prisma.SortOrderInput | Prisma.SortOrder
   title?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   currentStep?: Prisma.SortOrder
@@ -571,12 +609,16 @@ export type CalculationOrderByWithRelationInput = {
   profitAfterTaxEstimate?: Prisma.SortOrder
   totalBillableHours?: Prisma.SortOrder
   profitabilityStatus?: Prisma.SortOrder
+  useFixedPrice?: Prisma.SortOrder
+  fixedPriceNet?: Prisma.SortOrderInput | Prisma.SortOrder
+  fixedPriceLabel?: Prisma.SortOrderInput | Prisma.SortOrder
   snapshotJson?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   tenant?: Prisma.TenantOrderByWithRelationInput
   customer?: Prisma.CustomerOrderByWithRelationInput
   order?: Prisma.OrderOrderByWithRelationInput
+  project?: Prisma.ProjectOrderByWithRelationInput
   laborItems?: Prisma.LaborItemOrderByRelationAggregateInput
   materialItems?: Prisma.MaterialItemOrderByRelationAggregateInput
   machineUsages?: Prisma.MachineUsageItemOrderByRelationAggregateInput
@@ -598,6 +640,7 @@ export type CalculationWhereUniqueInput = Prisma.AtLeast<{
   tenantId?: Prisma.StringFilter<"Calculation"> | string
   customerId?: Prisma.StringNullableFilter<"Calculation"> | string | null
   orderId?: Prisma.StringNullableFilter<"Calculation"> | string | null
+  projectId?: Prisma.StringNullableFilter<"Calculation"> | string | null
   title?: Prisma.StringNullableFilter<"Calculation"> | string | null
   status?: Prisma.EnumCalculationStatusFilter<"Calculation"> | $Enums.CalculationStatus
   currentStep?: Prisma.IntFilter<"Calculation"> | number
@@ -624,12 +667,16 @@ export type CalculationWhereUniqueInput = Prisma.AtLeast<{
   profitAfterTaxEstimate?: Prisma.FloatFilter<"Calculation"> | number
   totalBillableHours?: Prisma.FloatFilter<"Calculation"> | number
   profitabilityStatus?: Prisma.StringFilter<"Calculation"> | string
+  useFixedPrice?: Prisma.BoolFilter<"Calculation"> | boolean
+  fixedPriceNet?: Prisma.FloatNullableFilter<"Calculation"> | number | null
+  fixedPriceLabel?: Prisma.StringNullableFilter<"Calculation"> | string | null
   snapshotJson?: Prisma.JsonNullableFilter<"Calculation">
   createdAt?: Prisma.DateTimeFilter<"Calculation"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Calculation"> | Date | string
   tenant?: Prisma.XOR<Prisma.TenantScalarRelationFilter, Prisma.TenantWhereInput>
   customer?: Prisma.XOR<Prisma.CustomerNullableScalarRelationFilter, Prisma.CustomerWhereInput> | null
   order?: Prisma.XOR<Prisma.OrderNullableScalarRelationFilter, Prisma.OrderWhereInput> | null
+  project?: Prisma.XOR<Prisma.ProjectNullableScalarRelationFilter, Prisma.ProjectWhereInput> | null
   laborItems?: Prisma.LaborItemListRelationFilter
   materialItems?: Prisma.MaterialItemListRelationFilter
   machineUsages?: Prisma.MachineUsageItemListRelationFilter
@@ -648,6 +695,7 @@ export type CalculationOrderByWithAggregationInput = {
   tenantId?: Prisma.SortOrder
   customerId?: Prisma.SortOrderInput | Prisma.SortOrder
   orderId?: Prisma.SortOrderInput | Prisma.SortOrder
+  projectId?: Prisma.SortOrderInput | Prisma.SortOrder
   title?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   currentStep?: Prisma.SortOrder
@@ -674,6 +722,9 @@ export type CalculationOrderByWithAggregationInput = {
   profitAfterTaxEstimate?: Prisma.SortOrder
   totalBillableHours?: Prisma.SortOrder
   profitabilityStatus?: Prisma.SortOrder
+  useFixedPrice?: Prisma.SortOrder
+  fixedPriceNet?: Prisma.SortOrderInput | Prisma.SortOrder
+  fixedPriceLabel?: Prisma.SortOrderInput | Prisma.SortOrder
   snapshotJson?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -692,6 +743,7 @@ export type CalculationScalarWhereWithAggregatesInput = {
   tenantId?: Prisma.StringWithAggregatesFilter<"Calculation"> | string
   customerId?: Prisma.StringNullableWithAggregatesFilter<"Calculation"> | string | null
   orderId?: Prisma.StringNullableWithAggregatesFilter<"Calculation"> | string | null
+  projectId?: Prisma.StringNullableWithAggregatesFilter<"Calculation"> | string | null
   title?: Prisma.StringNullableWithAggregatesFilter<"Calculation"> | string | null
   status?: Prisma.EnumCalculationStatusWithAggregatesFilter<"Calculation"> | $Enums.CalculationStatus
   currentStep?: Prisma.IntWithAggregatesFilter<"Calculation"> | number
@@ -718,6 +770,9 @@ export type CalculationScalarWhereWithAggregatesInput = {
   profitAfterTaxEstimate?: Prisma.FloatWithAggregatesFilter<"Calculation"> | number
   totalBillableHours?: Prisma.FloatWithAggregatesFilter<"Calculation"> | number
   profitabilityStatus?: Prisma.StringWithAggregatesFilter<"Calculation"> | string
+  useFixedPrice?: Prisma.BoolWithAggregatesFilter<"Calculation"> | boolean
+  fixedPriceNet?: Prisma.FloatNullableWithAggregatesFilter<"Calculation"> | number | null
+  fixedPriceLabel?: Prisma.StringNullableWithAggregatesFilter<"Calculation"> | string | null
   snapshotJson?: Prisma.JsonNullableWithAggregatesFilter<"Calculation">
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Calculation"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Calculation"> | Date | string
@@ -751,12 +806,16 @@ export type CalculationCreateInput = {
   profitAfterTaxEstimate?: number
   totalBillableHours?: number
   profitabilityStatus?: string
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutCalculationsInput
   customer?: Prisma.CustomerCreateNestedOneWithoutCalculationsInput
   order?: Prisma.OrderCreateNestedOneWithoutCalculationsInput
+  project?: Prisma.ProjectCreateNestedOneWithoutCalculationsInput
   laborItems?: Prisma.LaborItemCreateNestedManyWithoutCalculationInput
   materialItems?: Prisma.MaterialItemCreateNestedManyWithoutCalculationInput
   machineUsages?: Prisma.MachineUsageItemCreateNestedManyWithoutCalculationInput
@@ -775,6 +834,7 @@ export type CalculationUncheckedCreateInput = {
   tenantId: string
   customerId?: string | null
   orderId?: string | null
+  projectId?: string | null
   title?: string | null
   status?: $Enums.CalculationStatus
   currentStep?: number
@@ -801,6 +861,9 @@ export type CalculationUncheckedCreateInput = {
   profitAfterTaxEstimate?: number
   totalBillableHours?: number
   profitabilityStatus?: string
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -845,12 +908,16 @@ export type CalculationUpdateInput = {
   profitAfterTaxEstimate?: Prisma.FloatFieldUpdateOperationsInput | number
   totalBillableHours?: Prisma.FloatFieldUpdateOperationsInput | number
   profitabilityStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutCalculationsNestedInput
   customer?: Prisma.CustomerUpdateOneWithoutCalculationsNestedInput
   order?: Prisma.OrderUpdateOneWithoutCalculationsNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutCalculationsNestedInput
   laborItems?: Prisma.LaborItemUpdateManyWithoutCalculationNestedInput
   materialItems?: Prisma.MaterialItemUpdateManyWithoutCalculationNestedInput
   machineUsages?: Prisma.MachineUsageItemUpdateManyWithoutCalculationNestedInput
@@ -869,6 +936,7 @@ export type CalculationUncheckedUpdateInput = {
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumCalculationStatusFieldUpdateOperationsInput | $Enums.CalculationStatus
   currentStep?: Prisma.IntFieldUpdateOperationsInput | number
@@ -895,6 +963,9 @@ export type CalculationUncheckedUpdateInput = {
   profitAfterTaxEstimate?: Prisma.FloatFieldUpdateOperationsInput | number
   totalBillableHours?: Prisma.FloatFieldUpdateOperationsInput | number
   profitabilityStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -916,6 +987,7 @@ export type CalculationCreateManyInput = {
   tenantId: string
   customerId?: string | null
   orderId?: string | null
+  projectId?: string | null
   title?: string | null
   status?: $Enums.CalculationStatus
   currentStep?: number
@@ -942,6 +1014,9 @@ export type CalculationCreateManyInput = {
   profitAfterTaxEstimate?: number
   totalBillableHours?: number
   profitabilityStatus?: string
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -975,6 +1050,9 @@ export type CalculationUpdateManyMutationInput = {
   profitAfterTaxEstimate?: Prisma.FloatFieldUpdateOperationsInput | number
   totalBillableHours?: Prisma.FloatFieldUpdateOperationsInput | number
   profitabilityStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -985,6 +1063,7 @@ export type CalculationUncheckedUpdateManyInput = {
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumCalculationStatusFieldUpdateOperationsInput | $Enums.CalculationStatus
   currentStep?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1011,6 +1090,9 @@ export type CalculationUncheckedUpdateManyInput = {
   profitAfterTaxEstimate?: Prisma.FloatFieldUpdateOperationsInput | number
   totalBillableHours?: Prisma.FloatFieldUpdateOperationsInput | number
   profitabilityStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1031,6 +1113,7 @@ export type CalculationCountOrderByAggregateInput = {
   tenantId?: Prisma.SortOrder
   customerId?: Prisma.SortOrder
   orderId?: Prisma.SortOrder
+  projectId?: Prisma.SortOrder
   title?: Prisma.SortOrder
   status?: Prisma.SortOrder
   currentStep?: Prisma.SortOrder
@@ -1057,6 +1140,9 @@ export type CalculationCountOrderByAggregateInput = {
   profitAfterTaxEstimate?: Prisma.SortOrder
   totalBillableHours?: Prisma.SortOrder
   profitabilityStatus?: Prisma.SortOrder
+  useFixedPrice?: Prisma.SortOrder
+  fixedPriceNet?: Prisma.SortOrder
+  fixedPriceLabel?: Prisma.SortOrder
   snapshotJson?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -1086,6 +1172,7 @@ export type CalculationAvgOrderByAggregateInput = {
   minimumPrice?: Prisma.SortOrder
   profitAfterTaxEstimate?: Prisma.SortOrder
   totalBillableHours?: Prisma.SortOrder
+  fixedPriceNet?: Prisma.SortOrder
 }
 
 export type CalculationMaxOrderByAggregateInput = {
@@ -1093,6 +1180,7 @@ export type CalculationMaxOrderByAggregateInput = {
   tenantId?: Prisma.SortOrder
   customerId?: Prisma.SortOrder
   orderId?: Prisma.SortOrder
+  projectId?: Prisma.SortOrder
   title?: Prisma.SortOrder
   status?: Prisma.SortOrder
   currentStep?: Prisma.SortOrder
@@ -1119,6 +1207,9 @@ export type CalculationMaxOrderByAggregateInput = {
   profitAfterTaxEstimate?: Prisma.SortOrder
   totalBillableHours?: Prisma.SortOrder
   profitabilityStatus?: Prisma.SortOrder
+  useFixedPrice?: Prisma.SortOrder
+  fixedPriceNet?: Prisma.SortOrder
+  fixedPriceLabel?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -1128,6 +1219,7 @@ export type CalculationMinOrderByAggregateInput = {
   tenantId?: Prisma.SortOrder
   customerId?: Prisma.SortOrder
   orderId?: Prisma.SortOrder
+  projectId?: Prisma.SortOrder
   title?: Prisma.SortOrder
   status?: Prisma.SortOrder
   currentStep?: Prisma.SortOrder
@@ -1154,6 +1246,9 @@ export type CalculationMinOrderByAggregateInput = {
   profitAfterTaxEstimate?: Prisma.SortOrder
   totalBillableHours?: Prisma.SortOrder
   profitabilityStatus?: Prisma.SortOrder
+  useFixedPrice?: Prisma.SortOrder
+  fixedPriceNet?: Prisma.SortOrder
+  fixedPriceLabel?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -1182,6 +1277,7 @@ export type CalculationSumOrderByAggregateInput = {
   minimumPrice?: Prisma.SortOrder
   profitAfterTaxEstimate?: Prisma.SortOrder
   totalBillableHours?: Prisma.SortOrder
+  fixedPriceNet?: Prisma.SortOrder
 }
 
 export type CalculationScalarRelationFilter = {
@@ -1473,6 +1569,48 @@ export type CalculationUpdateOneRequiredWithoutDocumentsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.CalculationUpdateToOneWithWhereWithoutDocumentsInput, Prisma.CalculationUpdateWithoutDocumentsInput>, Prisma.CalculationUncheckedUpdateWithoutDocumentsInput>
 }
 
+export type CalculationCreateNestedManyWithoutProjectInput = {
+  create?: Prisma.XOR<Prisma.CalculationCreateWithoutProjectInput, Prisma.CalculationUncheckedCreateWithoutProjectInput> | Prisma.CalculationCreateWithoutProjectInput[] | Prisma.CalculationUncheckedCreateWithoutProjectInput[]
+  connectOrCreate?: Prisma.CalculationCreateOrConnectWithoutProjectInput | Prisma.CalculationCreateOrConnectWithoutProjectInput[]
+  createMany?: Prisma.CalculationCreateManyProjectInputEnvelope
+  connect?: Prisma.CalculationWhereUniqueInput | Prisma.CalculationWhereUniqueInput[]
+}
+
+export type CalculationUncheckedCreateNestedManyWithoutProjectInput = {
+  create?: Prisma.XOR<Prisma.CalculationCreateWithoutProjectInput, Prisma.CalculationUncheckedCreateWithoutProjectInput> | Prisma.CalculationCreateWithoutProjectInput[] | Prisma.CalculationUncheckedCreateWithoutProjectInput[]
+  connectOrCreate?: Prisma.CalculationCreateOrConnectWithoutProjectInput | Prisma.CalculationCreateOrConnectWithoutProjectInput[]
+  createMany?: Prisma.CalculationCreateManyProjectInputEnvelope
+  connect?: Prisma.CalculationWhereUniqueInput | Prisma.CalculationWhereUniqueInput[]
+}
+
+export type CalculationUpdateManyWithoutProjectNestedInput = {
+  create?: Prisma.XOR<Prisma.CalculationCreateWithoutProjectInput, Prisma.CalculationUncheckedCreateWithoutProjectInput> | Prisma.CalculationCreateWithoutProjectInput[] | Prisma.CalculationUncheckedCreateWithoutProjectInput[]
+  connectOrCreate?: Prisma.CalculationCreateOrConnectWithoutProjectInput | Prisma.CalculationCreateOrConnectWithoutProjectInput[]
+  upsert?: Prisma.CalculationUpsertWithWhereUniqueWithoutProjectInput | Prisma.CalculationUpsertWithWhereUniqueWithoutProjectInput[]
+  createMany?: Prisma.CalculationCreateManyProjectInputEnvelope
+  set?: Prisma.CalculationWhereUniqueInput | Prisma.CalculationWhereUniqueInput[]
+  disconnect?: Prisma.CalculationWhereUniqueInput | Prisma.CalculationWhereUniqueInput[]
+  delete?: Prisma.CalculationWhereUniqueInput | Prisma.CalculationWhereUniqueInput[]
+  connect?: Prisma.CalculationWhereUniqueInput | Prisma.CalculationWhereUniqueInput[]
+  update?: Prisma.CalculationUpdateWithWhereUniqueWithoutProjectInput | Prisma.CalculationUpdateWithWhereUniqueWithoutProjectInput[]
+  updateMany?: Prisma.CalculationUpdateManyWithWhereWithoutProjectInput | Prisma.CalculationUpdateManyWithWhereWithoutProjectInput[]
+  deleteMany?: Prisma.CalculationScalarWhereInput | Prisma.CalculationScalarWhereInput[]
+}
+
+export type CalculationUncheckedUpdateManyWithoutProjectNestedInput = {
+  create?: Prisma.XOR<Prisma.CalculationCreateWithoutProjectInput, Prisma.CalculationUncheckedCreateWithoutProjectInput> | Prisma.CalculationCreateWithoutProjectInput[] | Prisma.CalculationUncheckedCreateWithoutProjectInput[]
+  connectOrCreate?: Prisma.CalculationCreateOrConnectWithoutProjectInput | Prisma.CalculationCreateOrConnectWithoutProjectInput[]
+  upsert?: Prisma.CalculationUpsertWithWhereUniqueWithoutProjectInput | Prisma.CalculationUpsertWithWhereUniqueWithoutProjectInput[]
+  createMany?: Prisma.CalculationCreateManyProjectInputEnvelope
+  set?: Prisma.CalculationWhereUniqueInput | Prisma.CalculationWhereUniqueInput[]
+  disconnect?: Prisma.CalculationWhereUniqueInput | Prisma.CalculationWhereUniqueInput[]
+  delete?: Prisma.CalculationWhereUniqueInput | Prisma.CalculationWhereUniqueInput[]
+  connect?: Prisma.CalculationWhereUniqueInput | Prisma.CalculationWhereUniqueInput[]
+  update?: Prisma.CalculationUpdateWithWhereUniqueWithoutProjectInput | Prisma.CalculationUpdateWithWhereUniqueWithoutProjectInput[]
+  updateMany?: Prisma.CalculationUpdateManyWithWhereWithoutProjectInput | Prisma.CalculationUpdateManyWithWhereWithoutProjectInput[]
+  deleteMany?: Prisma.CalculationScalarWhereInput | Prisma.CalculationScalarWhereInput[]
+}
+
 export type CalculationCreateWithoutTenantInput = {
   id?: string
   title?: string | null
@@ -1501,11 +1639,15 @@ export type CalculationCreateWithoutTenantInput = {
   profitAfterTaxEstimate?: number
   totalBillableHours?: number
   profitabilityStatus?: string
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   customer?: Prisma.CustomerCreateNestedOneWithoutCalculationsInput
   order?: Prisma.OrderCreateNestedOneWithoutCalculationsInput
+  project?: Prisma.ProjectCreateNestedOneWithoutCalculationsInput
   laborItems?: Prisma.LaborItemCreateNestedManyWithoutCalculationInput
   materialItems?: Prisma.MaterialItemCreateNestedManyWithoutCalculationInput
   machineUsages?: Prisma.MachineUsageItemCreateNestedManyWithoutCalculationInput
@@ -1523,6 +1665,7 @@ export type CalculationUncheckedCreateWithoutTenantInput = {
   id?: string
   customerId?: string | null
   orderId?: string | null
+  projectId?: string | null
   title?: string | null
   status?: $Enums.CalculationStatus
   currentStep?: number
@@ -1549,6 +1692,9 @@ export type CalculationUncheckedCreateWithoutTenantInput = {
   profitAfterTaxEstimate?: number
   totalBillableHours?: number
   profitabilityStatus?: string
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1599,6 +1745,7 @@ export type CalculationScalarWhereInput = {
   tenantId?: Prisma.StringFilter<"Calculation"> | string
   customerId?: Prisma.StringNullableFilter<"Calculation"> | string | null
   orderId?: Prisma.StringNullableFilter<"Calculation"> | string | null
+  projectId?: Prisma.StringNullableFilter<"Calculation"> | string | null
   title?: Prisma.StringNullableFilter<"Calculation"> | string | null
   status?: Prisma.EnumCalculationStatusFilter<"Calculation"> | $Enums.CalculationStatus
   currentStep?: Prisma.IntFilter<"Calculation"> | number
@@ -1625,6 +1772,9 @@ export type CalculationScalarWhereInput = {
   profitAfterTaxEstimate?: Prisma.FloatFilter<"Calculation"> | number
   totalBillableHours?: Prisma.FloatFilter<"Calculation"> | number
   profitabilityStatus?: Prisma.StringFilter<"Calculation"> | string
+  useFixedPrice?: Prisma.BoolFilter<"Calculation"> | boolean
+  fixedPriceNet?: Prisma.FloatNullableFilter<"Calculation"> | number | null
+  fixedPriceLabel?: Prisma.StringNullableFilter<"Calculation"> | string | null
   snapshotJson?: Prisma.JsonNullableFilter<"Calculation">
   createdAt?: Prisma.DateTimeFilter<"Calculation"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Calculation"> | Date | string
@@ -1658,11 +1808,15 @@ export type CalculationCreateWithoutCustomerInput = {
   profitAfterTaxEstimate?: number
   totalBillableHours?: number
   profitabilityStatus?: string
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutCalculationsInput
   order?: Prisma.OrderCreateNestedOneWithoutCalculationsInput
+  project?: Prisma.ProjectCreateNestedOneWithoutCalculationsInput
   laborItems?: Prisma.LaborItemCreateNestedManyWithoutCalculationInput
   materialItems?: Prisma.MaterialItemCreateNestedManyWithoutCalculationInput
   machineUsages?: Prisma.MachineUsageItemCreateNestedManyWithoutCalculationInput
@@ -1680,6 +1834,7 @@ export type CalculationUncheckedCreateWithoutCustomerInput = {
   id?: string
   tenantId: string
   orderId?: string | null
+  projectId?: string | null
   title?: string | null
   status?: $Enums.CalculationStatus
   currentStep?: number
@@ -1706,6 +1861,9 @@ export type CalculationUncheckedCreateWithoutCustomerInput = {
   profitAfterTaxEstimate?: number
   totalBillableHours?: number
   profitabilityStatus?: string
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1776,11 +1934,15 @@ export type CalculationCreateWithoutOrderInput = {
   profitAfterTaxEstimate?: number
   totalBillableHours?: number
   profitabilityStatus?: string
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutCalculationsInput
   customer?: Prisma.CustomerCreateNestedOneWithoutCalculationsInput
+  project?: Prisma.ProjectCreateNestedOneWithoutCalculationsInput
   laborItems?: Prisma.LaborItemCreateNestedManyWithoutCalculationInput
   materialItems?: Prisma.MaterialItemCreateNestedManyWithoutCalculationInput
   machineUsages?: Prisma.MachineUsageItemCreateNestedManyWithoutCalculationInput
@@ -1798,6 +1960,7 @@ export type CalculationUncheckedCreateWithoutOrderInput = {
   id?: string
   tenantId: string
   customerId?: string | null
+  projectId?: string | null
   title?: string | null
   status?: $Enums.CalculationStatus
   currentStep?: number
@@ -1824,6 +1987,9 @@ export type CalculationUncheckedCreateWithoutOrderInput = {
   profitAfterTaxEstimate?: number
   totalBillableHours?: number
   profitabilityStatus?: string
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1894,12 +2060,16 @@ export type CalculationCreateWithoutLaborItemsInput = {
   profitAfterTaxEstimate?: number
   totalBillableHours?: number
   profitabilityStatus?: string
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutCalculationsInput
   customer?: Prisma.CustomerCreateNestedOneWithoutCalculationsInput
   order?: Prisma.OrderCreateNestedOneWithoutCalculationsInput
+  project?: Prisma.ProjectCreateNestedOneWithoutCalculationsInput
   materialItems?: Prisma.MaterialItemCreateNestedManyWithoutCalculationInput
   machineUsages?: Prisma.MachineUsageItemCreateNestedManyWithoutCalculationInput
   procurementCosts?: Prisma.ProcurementCostCreateNestedManyWithoutCalculationInput
@@ -1917,6 +2087,7 @@ export type CalculationUncheckedCreateWithoutLaborItemsInput = {
   tenantId: string
   customerId?: string | null
   orderId?: string | null
+  projectId?: string | null
   title?: string | null
   status?: $Enums.CalculationStatus
   currentStep?: number
@@ -1943,6 +2114,9 @@ export type CalculationUncheckedCreateWithoutLaborItemsInput = {
   profitAfterTaxEstimate?: number
   totalBillableHours?: number
   profitabilityStatus?: string
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2002,12 +2176,16 @@ export type CalculationUpdateWithoutLaborItemsInput = {
   profitAfterTaxEstimate?: Prisma.FloatFieldUpdateOperationsInput | number
   totalBillableHours?: Prisma.FloatFieldUpdateOperationsInput | number
   profitabilityStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutCalculationsNestedInput
   customer?: Prisma.CustomerUpdateOneWithoutCalculationsNestedInput
   order?: Prisma.OrderUpdateOneWithoutCalculationsNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutCalculationsNestedInput
   materialItems?: Prisma.MaterialItemUpdateManyWithoutCalculationNestedInput
   machineUsages?: Prisma.MachineUsageItemUpdateManyWithoutCalculationNestedInput
   procurementCosts?: Prisma.ProcurementCostUpdateManyWithoutCalculationNestedInput
@@ -2025,6 +2203,7 @@ export type CalculationUncheckedUpdateWithoutLaborItemsInput = {
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumCalculationStatusFieldUpdateOperationsInput | $Enums.CalculationStatus
   currentStep?: Prisma.IntFieldUpdateOperationsInput | number
@@ -2051,6 +2230,9 @@ export type CalculationUncheckedUpdateWithoutLaborItemsInput = {
   profitAfterTaxEstimate?: Prisma.FloatFieldUpdateOperationsInput | number
   totalBillableHours?: Prisma.FloatFieldUpdateOperationsInput | number
   profitabilityStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2094,12 +2276,16 @@ export type CalculationCreateWithoutMaterialItemsInput = {
   profitAfterTaxEstimate?: number
   totalBillableHours?: number
   profitabilityStatus?: string
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutCalculationsInput
   customer?: Prisma.CustomerCreateNestedOneWithoutCalculationsInput
   order?: Prisma.OrderCreateNestedOneWithoutCalculationsInput
+  project?: Prisma.ProjectCreateNestedOneWithoutCalculationsInput
   laborItems?: Prisma.LaborItemCreateNestedManyWithoutCalculationInput
   machineUsages?: Prisma.MachineUsageItemCreateNestedManyWithoutCalculationInput
   procurementCosts?: Prisma.ProcurementCostCreateNestedManyWithoutCalculationInput
@@ -2117,6 +2303,7 @@ export type CalculationUncheckedCreateWithoutMaterialItemsInput = {
   tenantId: string
   customerId?: string | null
   orderId?: string | null
+  projectId?: string | null
   title?: string | null
   status?: $Enums.CalculationStatus
   currentStep?: number
@@ -2143,6 +2330,9 @@ export type CalculationUncheckedCreateWithoutMaterialItemsInput = {
   profitAfterTaxEstimate?: number
   totalBillableHours?: number
   profitabilityStatus?: string
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2202,12 +2392,16 @@ export type CalculationUpdateWithoutMaterialItemsInput = {
   profitAfterTaxEstimate?: Prisma.FloatFieldUpdateOperationsInput | number
   totalBillableHours?: Prisma.FloatFieldUpdateOperationsInput | number
   profitabilityStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutCalculationsNestedInput
   customer?: Prisma.CustomerUpdateOneWithoutCalculationsNestedInput
   order?: Prisma.OrderUpdateOneWithoutCalculationsNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutCalculationsNestedInput
   laborItems?: Prisma.LaborItemUpdateManyWithoutCalculationNestedInput
   machineUsages?: Prisma.MachineUsageItemUpdateManyWithoutCalculationNestedInput
   procurementCosts?: Prisma.ProcurementCostUpdateManyWithoutCalculationNestedInput
@@ -2225,6 +2419,7 @@ export type CalculationUncheckedUpdateWithoutMaterialItemsInput = {
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumCalculationStatusFieldUpdateOperationsInput | $Enums.CalculationStatus
   currentStep?: Prisma.IntFieldUpdateOperationsInput | number
@@ -2251,6 +2446,9 @@ export type CalculationUncheckedUpdateWithoutMaterialItemsInput = {
   profitAfterTaxEstimate?: Prisma.FloatFieldUpdateOperationsInput | number
   totalBillableHours?: Prisma.FloatFieldUpdateOperationsInput | number
   profitabilityStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2294,12 +2492,16 @@ export type CalculationCreateWithoutMachineUsagesInput = {
   profitAfterTaxEstimate?: number
   totalBillableHours?: number
   profitabilityStatus?: string
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutCalculationsInput
   customer?: Prisma.CustomerCreateNestedOneWithoutCalculationsInput
   order?: Prisma.OrderCreateNestedOneWithoutCalculationsInput
+  project?: Prisma.ProjectCreateNestedOneWithoutCalculationsInput
   laborItems?: Prisma.LaborItemCreateNestedManyWithoutCalculationInput
   materialItems?: Prisma.MaterialItemCreateNestedManyWithoutCalculationInput
   procurementCosts?: Prisma.ProcurementCostCreateNestedManyWithoutCalculationInput
@@ -2317,6 +2519,7 @@ export type CalculationUncheckedCreateWithoutMachineUsagesInput = {
   tenantId: string
   customerId?: string | null
   orderId?: string | null
+  projectId?: string | null
   title?: string | null
   status?: $Enums.CalculationStatus
   currentStep?: number
@@ -2343,6 +2546,9 @@ export type CalculationUncheckedCreateWithoutMachineUsagesInput = {
   profitAfterTaxEstimate?: number
   totalBillableHours?: number
   profitabilityStatus?: string
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2402,12 +2608,16 @@ export type CalculationUpdateWithoutMachineUsagesInput = {
   profitAfterTaxEstimate?: Prisma.FloatFieldUpdateOperationsInput | number
   totalBillableHours?: Prisma.FloatFieldUpdateOperationsInput | number
   profitabilityStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutCalculationsNestedInput
   customer?: Prisma.CustomerUpdateOneWithoutCalculationsNestedInput
   order?: Prisma.OrderUpdateOneWithoutCalculationsNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutCalculationsNestedInput
   laborItems?: Prisma.LaborItemUpdateManyWithoutCalculationNestedInput
   materialItems?: Prisma.MaterialItemUpdateManyWithoutCalculationNestedInput
   procurementCosts?: Prisma.ProcurementCostUpdateManyWithoutCalculationNestedInput
@@ -2425,6 +2635,7 @@ export type CalculationUncheckedUpdateWithoutMachineUsagesInput = {
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumCalculationStatusFieldUpdateOperationsInput | $Enums.CalculationStatus
   currentStep?: Prisma.IntFieldUpdateOperationsInput | number
@@ -2451,6 +2662,9 @@ export type CalculationUncheckedUpdateWithoutMachineUsagesInput = {
   profitAfterTaxEstimate?: Prisma.FloatFieldUpdateOperationsInput | number
   totalBillableHours?: Prisma.FloatFieldUpdateOperationsInput | number
   profitabilityStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2494,12 +2708,16 @@ export type CalculationCreateWithoutProcurementCostsInput = {
   profitAfterTaxEstimate?: number
   totalBillableHours?: number
   profitabilityStatus?: string
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutCalculationsInput
   customer?: Prisma.CustomerCreateNestedOneWithoutCalculationsInput
   order?: Prisma.OrderCreateNestedOneWithoutCalculationsInput
+  project?: Prisma.ProjectCreateNestedOneWithoutCalculationsInput
   laborItems?: Prisma.LaborItemCreateNestedManyWithoutCalculationInput
   materialItems?: Prisma.MaterialItemCreateNestedManyWithoutCalculationInput
   machineUsages?: Prisma.MachineUsageItemCreateNestedManyWithoutCalculationInput
@@ -2517,6 +2735,7 @@ export type CalculationUncheckedCreateWithoutProcurementCostsInput = {
   tenantId: string
   customerId?: string | null
   orderId?: string | null
+  projectId?: string | null
   title?: string | null
   status?: $Enums.CalculationStatus
   currentStep?: number
@@ -2543,6 +2762,9 @@ export type CalculationUncheckedCreateWithoutProcurementCostsInput = {
   profitAfterTaxEstimate?: number
   totalBillableHours?: number
   profitabilityStatus?: string
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2602,12 +2824,16 @@ export type CalculationUpdateWithoutProcurementCostsInput = {
   profitAfterTaxEstimate?: Prisma.FloatFieldUpdateOperationsInput | number
   totalBillableHours?: Prisma.FloatFieldUpdateOperationsInput | number
   profitabilityStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutCalculationsNestedInput
   customer?: Prisma.CustomerUpdateOneWithoutCalculationsNestedInput
   order?: Prisma.OrderUpdateOneWithoutCalculationsNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutCalculationsNestedInput
   laborItems?: Prisma.LaborItemUpdateManyWithoutCalculationNestedInput
   materialItems?: Prisma.MaterialItemUpdateManyWithoutCalculationNestedInput
   machineUsages?: Prisma.MachineUsageItemUpdateManyWithoutCalculationNestedInput
@@ -2625,6 +2851,7 @@ export type CalculationUncheckedUpdateWithoutProcurementCostsInput = {
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumCalculationStatusFieldUpdateOperationsInput | $Enums.CalculationStatus
   currentStep?: Prisma.IntFieldUpdateOperationsInput | number
@@ -2651,6 +2878,9 @@ export type CalculationUncheckedUpdateWithoutProcurementCostsInput = {
   profitAfterTaxEstimate?: Prisma.FloatFieldUpdateOperationsInput | number
   totalBillableHours?: Prisma.FloatFieldUpdateOperationsInput | number
   profitabilityStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2694,12 +2924,16 @@ export type CalculationCreateWithoutTravelCostInput = {
   profitAfterTaxEstimate?: number
   totalBillableHours?: number
   profitabilityStatus?: string
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutCalculationsInput
   customer?: Prisma.CustomerCreateNestedOneWithoutCalculationsInput
   order?: Prisma.OrderCreateNestedOneWithoutCalculationsInput
+  project?: Prisma.ProjectCreateNestedOneWithoutCalculationsInput
   laborItems?: Prisma.LaborItemCreateNestedManyWithoutCalculationInput
   materialItems?: Prisma.MaterialItemCreateNestedManyWithoutCalculationInput
   machineUsages?: Prisma.MachineUsageItemCreateNestedManyWithoutCalculationInput
@@ -2717,6 +2951,7 @@ export type CalculationUncheckedCreateWithoutTravelCostInput = {
   tenantId: string
   customerId?: string | null
   orderId?: string | null
+  projectId?: string | null
   title?: string | null
   status?: $Enums.CalculationStatus
   currentStep?: number
@@ -2743,6 +2978,9 @@ export type CalculationUncheckedCreateWithoutTravelCostInput = {
   profitAfterTaxEstimate?: number
   totalBillableHours?: number
   profitabilityStatus?: string
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2802,12 +3040,16 @@ export type CalculationUpdateWithoutTravelCostInput = {
   profitAfterTaxEstimate?: Prisma.FloatFieldUpdateOperationsInput | number
   totalBillableHours?: Prisma.FloatFieldUpdateOperationsInput | number
   profitabilityStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutCalculationsNestedInput
   customer?: Prisma.CustomerUpdateOneWithoutCalculationsNestedInput
   order?: Prisma.OrderUpdateOneWithoutCalculationsNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutCalculationsNestedInput
   laborItems?: Prisma.LaborItemUpdateManyWithoutCalculationNestedInput
   materialItems?: Prisma.MaterialItemUpdateManyWithoutCalculationNestedInput
   machineUsages?: Prisma.MachineUsageItemUpdateManyWithoutCalculationNestedInput
@@ -2825,6 +3067,7 @@ export type CalculationUncheckedUpdateWithoutTravelCostInput = {
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumCalculationStatusFieldUpdateOperationsInput | $Enums.CalculationStatus
   currentStep?: Prisma.IntFieldUpdateOperationsInput | number
@@ -2851,6 +3094,9 @@ export type CalculationUncheckedUpdateWithoutTravelCostInput = {
   profitAfterTaxEstimate?: Prisma.FloatFieldUpdateOperationsInput | number
   totalBillableHours?: Prisma.FloatFieldUpdateOperationsInput | number
   profitabilityStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2894,12 +3140,16 @@ export type CalculationCreateWithoutAdditionalItemsInput = {
   profitAfterTaxEstimate?: number
   totalBillableHours?: number
   profitabilityStatus?: string
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutCalculationsInput
   customer?: Prisma.CustomerCreateNestedOneWithoutCalculationsInput
   order?: Prisma.OrderCreateNestedOneWithoutCalculationsInput
+  project?: Prisma.ProjectCreateNestedOneWithoutCalculationsInput
   laborItems?: Prisma.LaborItemCreateNestedManyWithoutCalculationInput
   materialItems?: Prisma.MaterialItemCreateNestedManyWithoutCalculationInput
   machineUsages?: Prisma.MachineUsageItemCreateNestedManyWithoutCalculationInput
@@ -2917,6 +3167,7 @@ export type CalculationUncheckedCreateWithoutAdditionalItemsInput = {
   tenantId: string
   customerId?: string | null
   orderId?: string | null
+  projectId?: string | null
   title?: string | null
   status?: $Enums.CalculationStatus
   currentStep?: number
@@ -2943,6 +3194,9 @@ export type CalculationUncheckedCreateWithoutAdditionalItemsInput = {
   profitAfterTaxEstimate?: number
   totalBillableHours?: number
   profitabilityStatus?: string
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -3002,12 +3256,16 @@ export type CalculationUpdateWithoutAdditionalItemsInput = {
   profitAfterTaxEstimate?: Prisma.FloatFieldUpdateOperationsInput | number
   totalBillableHours?: Prisma.FloatFieldUpdateOperationsInput | number
   profitabilityStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutCalculationsNestedInput
   customer?: Prisma.CustomerUpdateOneWithoutCalculationsNestedInput
   order?: Prisma.OrderUpdateOneWithoutCalculationsNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutCalculationsNestedInput
   laborItems?: Prisma.LaborItemUpdateManyWithoutCalculationNestedInput
   materialItems?: Prisma.MaterialItemUpdateManyWithoutCalculationNestedInput
   machineUsages?: Prisma.MachineUsageItemUpdateManyWithoutCalculationNestedInput
@@ -3025,6 +3283,7 @@ export type CalculationUncheckedUpdateWithoutAdditionalItemsInput = {
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumCalculationStatusFieldUpdateOperationsInput | $Enums.CalculationStatus
   currentStep?: Prisma.IntFieldUpdateOperationsInput | number
@@ -3051,6 +3310,9 @@ export type CalculationUncheckedUpdateWithoutAdditionalItemsInput = {
   profitAfterTaxEstimate?: Prisma.FloatFieldUpdateOperationsInput | number
   totalBillableHours?: Prisma.FloatFieldUpdateOperationsInput | number
   profitabilityStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3094,12 +3356,16 @@ export type CalculationCreateWithoutRiskSettingsInput = {
   profitAfterTaxEstimate?: number
   totalBillableHours?: number
   profitabilityStatus?: string
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutCalculationsInput
   customer?: Prisma.CustomerCreateNestedOneWithoutCalculationsInput
   order?: Prisma.OrderCreateNestedOneWithoutCalculationsInput
+  project?: Prisma.ProjectCreateNestedOneWithoutCalculationsInput
   laborItems?: Prisma.LaborItemCreateNestedManyWithoutCalculationInput
   materialItems?: Prisma.MaterialItemCreateNestedManyWithoutCalculationInput
   machineUsages?: Prisma.MachineUsageItemCreateNestedManyWithoutCalculationInput
@@ -3117,6 +3383,7 @@ export type CalculationUncheckedCreateWithoutRiskSettingsInput = {
   tenantId: string
   customerId?: string | null
   orderId?: string | null
+  projectId?: string | null
   title?: string | null
   status?: $Enums.CalculationStatus
   currentStep?: number
@@ -3143,6 +3410,9 @@ export type CalculationUncheckedCreateWithoutRiskSettingsInput = {
   profitAfterTaxEstimate?: number
   totalBillableHours?: number
   profitabilityStatus?: string
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -3202,12 +3472,16 @@ export type CalculationUpdateWithoutRiskSettingsInput = {
   profitAfterTaxEstimate?: Prisma.FloatFieldUpdateOperationsInput | number
   totalBillableHours?: Prisma.FloatFieldUpdateOperationsInput | number
   profitabilityStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutCalculationsNestedInput
   customer?: Prisma.CustomerUpdateOneWithoutCalculationsNestedInput
   order?: Prisma.OrderUpdateOneWithoutCalculationsNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutCalculationsNestedInput
   laborItems?: Prisma.LaborItemUpdateManyWithoutCalculationNestedInput
   materialItems?: Prisma.MaterialItemUpdateManyWithoutCalculationNestedInput
   machineUsages?: Prisma.MachineUsageItemUpdateManyWithoutCalculationNestedInput
@@ -3225,6 +3499,7 @@ export type CalculationUncheckedUpdateWithoutRiskSettingsInput = {
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumCalculationStatusFieldUpdateOperationsInput | $Enums.CalculationStatus
   currentStep?: Prisma.IntFieldUpdateOperationsInput | number
@@ -3251,6 +3526,9 @@ export type CalculationUncheckedUpdateWithoutRiskSettingsInput = {
   profitAfterTaxEstimate?: Prisma.FloatFieldUpdateOperationsInput | number
   totalBillableHours?: Prisma.FloatFieldUpdateOperationsInput | number
   profitabilityStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3294,12 +3572,16 @@ export type CalculationCreateWithoutProfitSettingsInput = {
   profitAfterTaxEstimate?: number
   totalBillableHours?: number
   profitabilityStatus?: string
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutCalculationsInput
   customer?: Prisma.CustomerCreateNestedOneWithoutCalculationsInput
   order?: Prisma.OrderCreateNestedOneWithoutCalculationsInput
+  project?: Prisma.ProjectCreateNestedOneWithoutCalculationsInput
   laborItems?: Prisma.LaborItemCreateNestedManyWithoutCalculationInput
   materialItems?: Prisma.MaterialItemCreateNestedManyWithoutCalculationInput
   machineUsages?: Prisma.MachineUsageItemCreateNestedManyWithoutCalculationInput
@@ -3317,6 +3599,7 @@ export type CalculationUncheckedCreateWithoutProfitSettingsInput = {
   tenantId: string
   customerId?: string | null
   orderId?: string | null
+  projectId?: string | null
   title?: string | null
   status?: $Enums.CalculationStatus
   currentStep?: number
@@ -3343,6 +3626,9 @@ export type CalculationUncheckedCreateWithoutProfitSettingsInput = {
   profitAfterTaxEstimate?: number
   totalBillableHours?: number
   profitabilityStatus?: string
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -3402,12 +3688,16 @@ export type CalculationUpdateWithoutProfitSettingsInput = {
   profitAfterTaxEstimate?: Prisma.FloatFieldUpdateOperationsInput | number
   totalBillableHours?: Prisma.FloatFieldUpdateOperationsInput | number
   profitabilityStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutCalculationsNestedInput
   customer?: Prisma.CustomerUpdateOneWithoutCalculationsNestedInput
   order?: Prisma.OrderUpdateOneWithoutCalculationsNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutCalculationsNestedInput
   laborItems?: Prisma.LaborItemUpdateManyWithoutCalculationNestedInput
   materialItems?: Prisma.MaterialItemUpdateManyWithoutCalculationNestedInput
   machineUsages?: Prisma.MachineUsageItemUpdateManyWithoutCalculationNestedInput
@@ -3425,6 +3715,7 @@ export type CalculationUncheckedUpdateWithoutProfitSettingsInput = {
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumCalculationStatusFieldUpdateOperationsInput | $Enums.CalculationStatus
   currentStep?: Prisma.IntFieldUpdateOperationsInput | number
@@ -3451,6 +3742,9 @@ export type CalculationUncheckedUpdateWithoutProfitSettingsInput = {
   profitAfterTaxEstimate?: Prisma.FloatFieldUpdateOperationsInput | number
   totalBillableHours?: Prisma.FloatFieldUpdateOperationsInput | number
   profitabilityStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3494,12 +3788,16 @@ export type CalculationCreateWithoutIncomeTaxSettingsInput = {
   profitAfterTaxEstimate?: number
   totalBillableHours?: number
   profitabilityStatus?: string
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutCalculationsInput
   customer?: Prisma.CustomerCreateNestedOneWithoutCalculationsInput
   order?: Prisma.OrderCreateNestedOneWithoutCalculationsInput
+  project?: Prisma.ProjectCreateNestedOneWithoutCalculationsInput
   laborItems?: Prisma.LaborItemCreateNestedManyWithoutCalculationInput
   materialItems?: Prisma.MaterialItemCreateNestedManyWithoutCalculationInput
   machineUsages?: Prisma.MachineUsageItemCreateNestedManyWithoutCalculationInput
@@ -3517,6 +3815,7 @@ export type CalculationUncheckedCreateWithoutIncomeTaxSettingsInput = {
   tenantId: string
   customerId?: string | null
   orderId?: string | null
+  projectId?: string | null
   title?: string | null
   status?: $Enums.CalculationStatus
   currentStep?: number
@@ -3543,6 +3842,9 @@ export type CalculationUncheckedCreateWithoutIncomeTaxSettingsInput = {
   profitAfterTaxEstimate?: number
   totalBillableHours?: number
   profitabilityStatus?: string
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -3602,12 +3904,16 @@ export type CalculationUpdateWithoutIncomeTaxSettingsInput = {
   profitAfterTaxEstimate?: Prisma.FloatFieldUpdateOperationsInput | number
   totalBillableHours?: Prisma.FloatFieldUpdateOperationsInput | number
   profitabilityStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutCalculationsNestedInput
   customer?: Prisma.CustomerUpdateOneWithoutCalculationsNestedInput
   order?: Prisma.OrderUpdateOneWithoutCalculationsNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutCalculationsNestedInput
   laborItems?: Prisma.LaborItemUpdateManyWithoutCalculationNestedInput
   materialItems?: Prisma.MaterialItemUpdateManyWithoutCalculationNestedInput
   machineUsages?: Prisma.MachineUsageItemUpdateManyWithoutCalculationNestedInput
@@ -3625,6 +3931,7 @@ export type CalculationUncheckedUpdateWithoutIncomeTaxSettingsInput = {
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumCalculationStatusFieldUpdateOperationsInput | $Enums.CalculationStatus
   currentStep?: Prisma.IntFieldUpdateOperationsInput | number
@@ -3651,6 +3958,9 @@ export type CalculationUncheckedUpdateWithoutIncomeTaxSettingsInput = {
   profitAfterTaxEstimate?: Prisma.FloatFieldUpdateOperationsInput | number
   totalBillableHours?: Prisma.FloatFieldUpdateOperationsInput | number
   profitabilityStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3694,12 +4004,16 @@ export type CalculationCreateWithoutVatSettingsInput = {
   profitAfterTaxEstimate?: number
   totalBillableHours?: number
   profitabilityStatus?: string
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutCalculationsInput
   customer?: Prisma.CustomerCreateNestedOneWithoutCalculationsInput
   order?: Prisma.OrderCreateNestedOneWithoutCalculationsInput
+  project?: Prisma.ProjectCreateNestedOneWithoutCalculationsInput
   laborItems?: Prisma.LaborItemCreateNestedManyWithoutCalculationInput
   materialItems?: Prisma.MaterialItemCreateNestedManyWithoutCalculationInput
   machineUsages?: Prisma.MachineUsageItemCreateNestedManyWithoutCalculationInput
@@ -3717,6 +4031,7 @@ export type CalculationUncheckedCreateWithoutVatSettingsInput = {
   tenantId: string
   customerId?: string | null
   orderId?: string | null
+  projectId?: string | null
   title?: string | null
   status?: $Enums.CalculationStatus
   currentStep?: number
@@ -3743,6 +4058,9 @@ export type CalculationUncheckedCreateWithoutVatSettingsInput = {
   profitAfterTaxEstimate?: number
   totalBillableHours?: number
   profitabilityStatus?: string
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -3802,12 +4120,16 @@ export type CalculationUpdateWithoutVatSettingsInput = {
   profitAfterTaxEstimate?: Prisma.FloatFieldUpdateOperationsInput | number
   totalBillableHours?: Prisma.FloatFieldUpdateOperationsInput | number
   profitabilityStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutCalculationsNestedInput
   customer?: Prisma.CustomerUpdateOneWithoutCalculationsNestedInput
   order?: Prisma.OrderUpdateOneWithoutCalculationsNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutCalculationsNestedInput
   laborItems?: Prisma.LaborItemUpdateManyWithoutCalculationNestedInput
   materialItems?: Prisma.MaterialItemUpdateManyWithoutCalculationNestedInput
   machineUsages?: Prisma.MachineUsageItemUpdateManyWithoutCalculationNestedInput
@@ -3825,6 +4147,7 @@ export type CalculationUncheckedUpdateWithoutVatSettingsInput = {
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumCalculationStatusFieldUpdateOperationsInput | $Enums.CalculationStatus
   currentStep?: Prisma.IntFieldUpdateOperationsInput | number
@@ -3851,6 +4174,9 @@ export type CalculationUncheckedUpdateWithoutVatSettingsInput = {
   profitAfterTaxEstimate?: Prisma.FloatFieldUpdateOperationsInput | number
   totalBillableHours?: Prisma.FloatFieldUpdateOperationsInput | number
   profitabilityStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3894,12 +4220,16 @@ export type CalculationCreateWithoutDocumentsInput = {
   profitAfterTaxEstimate?: number
   totalBillableHours?: number
   profitabilityStatus?: string
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutCalculationsInput
   customer?: Prisma.CustomerCreateNestedOneWithoutCalculationsInput
   order?: Prisma.OrderCreateNestedOneWithoutCalculationsInput
+  project?: Prisma.ProjectCreateNestedOneWithoutCalculationsInput
   laborItems?: Prisma.LaborItemCreateNestedManyWithoutCalculationInput
   materialItems?: Prisma.MaterialItemCreateNestedManyWithoutCalculationInput
   machineUsages?: Prisma.MachineUsageItemCreateNestedManyWithoutCalculationInput
@@ -3917,6 +4247,7 @@ export type CalculationUncheckedCreateWithoutDocumentsInput = {
   tenantId: string
   customerId?: string | null
   orderId?: string | null
+  projectId?: string | null
   title?: string | null
   status?: $Enums.CalculationStatus
   currentStep?: number
@@ -3943,6 +4274,9 @@ export type CalculationUncheckedCreateWithoutDocumentsInput = {
   profitAfterTaxEstimate?: number
   totalBillableHours?: number
   profitabilityStatus?: string
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -4002,12 +4336,16 @@ export type CalculationUpdateWithoutDocumentsInput = {
   profitAfterTaxEstimate?: Prisma.FloatFieldUpdateOperationsInput | number
   totalBillableHours?: Prisma.FloatFieldUpdateOperationsInput | number
   profitabilityStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutCalculationsNestedInput
   customer?: Prisma.CustomerUpdateOneWithoutCalculationsNestedInput
   order?: Prisma.OrderUpdateOneWithoutCalculationsNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutCalculationsNestedInput
   laborItems?: Prisma.LaborItemUpdateManyWithoutCalculationNestedInput
   materialItems?: Prisma.MaterialItemUpdateManyWithoutCalculationNestedInput
   machineUsages?: Prisma.MachineUsageItemUpdateManyWithoutCalculationNestedInput
@@ -4025,6 +4363,7 @@ export type CalculationUncheckedUpdateWithoutDocumentsInput = {
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumCalculationStatusFieldUpdateOperationsInput | $Enums.CalculationStatus
   currentStep?: Prisma.IntFieldUpdateOperationsInput | number
@@ -4051,6 +4390,9 @@ export type CalculationUncheckedUpdateWithoutDocumentsInput = {
   profitAfterTaxEstimate?: Prisma.FloatFieldUpdateOperationsInput | number
   totalBillableHours?: Prisma.FloatFieldUpdateOperationsInput | number
   profitabilityStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4066,8 +4408,59 @@ export type CalculationUncheckedUpdateWithoutDocumentsInput = {
   vatSettings?: Prisma.VATSettingsUncheckedUpdateOneWithoutCalculationNestedInput
 }
 
-export type CalculationCreateManyTenantInput = {
+export type CalculationCreateWithoutProjectInput = {
   id?: string
+  title?: string | null
+  status?: $Enums.CalculationStatus
+  currentStep?: number
+  laborTotal?: number
+  materialTotal?: number
+  machineTotal?: number
+  procurementTotal?: number
+  travelTotal?: number
+  additionalTotal?: number
+  directCosts?: number
+  overheadAmount?: number
+  incomeTaxOwnerAmount?: number
+  subtotalBeforeRisk?: number
+  riskAmount?: number
+  subtotalAfterRisk?: number
+  profitAmount?: number
+  netSalesPrice?: number
+  vatAmount?: number
+  grossSalesPrice?: number
+  contributionMargin?: number
+  contributionMarginRate?: number
+  marginPercent?: number
+  minimumPrice?: number
+  profitAfterTaxEstimate?: number
+  totalBillableHours?: number
+  profitabilityStatus?: string
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
+  snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tenant: Prisma.TenantCreateNestedOneWithoutCalculationsInput
+  customer?: Prisma.CustomerCreateNestedOneWithoutCalculationsInput
+  order?: Prisma.OrderCreateNestedOneWithoutCalculationsInput
+  laborItems?: Prisma.LaborItemCreateNestedManyWithoutCalculationInput
+  materialItems?: Prisma.MaterialItemCreateNestedManyWithoutCalculationInput
+  machineUsages?: Prisma.MachineUsageItemCreateNestedManyWithoutCalculationInput
+  procurementCosts?: Prisma.ProcurementCostCreateNestedManyWithoutCalculationInput
+  travelCost?: Prisma.TravelCostCreateNestedOneWithoutCalculationInput
+  additionalItems?: Prisma.AdditionalCostItemCreateNestedManyWithoutCalculationInput
+  riskSettings?: Prisma.RiskSettingsCreateNestedOneWithoutCalculationInput
+  profitSettings?: Prisma.ProfitSettingsCreateNestedOneWithoutCalculationInput
+  incomeTaxSettings?: Prisma.IncomeTaxSettingsCreateNestedOneWithoutCalculationInput
+  vatSettings?: Prisma.VATSettingsCreateNestedOneWithoutCalculationInput
+  documents?: Prisma.CalculationDocumentCreateNestedManyWithoutCalculationInput
+}
+
+export type CalculationUncheckedCreateWithoutProjectInput = {
+  id?: string
+  tenantId: string
   customerId?: string | null
   orderId?: string | null
   title?: string | null
@@ -4096,6 +4489,85 @@ export type CalculationCreateManyTenantInput = {
   profitAfterTaxEstimate?: number
   totalBillableHours?: number
   profitabilityStatus?: string
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
+  snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  laborItems?: Prisma.LaborItemUncheckedCreateNestedManyWithoutCalculationInput
+  materialItems?: Prisma.MaterialItemUncheckedCreateNestedManyWithoutCalculationInput
+  machineUsages?: Prisma.MachineUsageItemUncheckedCreateNestedManyWithoutCalculationInput
+  procurementCosts?: Prisma.ProcurementCostUncheckedCreateNestedManyWithoutCalculationInput
+  travelCost?: Prisma.TravelCostUncheckedCreateNestedOneWithoutCalculationInput
+  additionalItems?: Prisma.AdditionalCostItemUncheckedCreateNestedManyWithoutCalculationInput
+  riskSettings?: Prisma.RiskSettingsUncheckedCreateNestedOneWithoutCalculationInput
+  profitSettings?: Prisma.ProfitSettingsUncheckedCreateNestedOneWithoutCalculationInput
+  incomeTaxSettings?: Prisma.IncomeTaxSettingsUncheckedCreateNestedOneWithoutCalculationInput
+  vatSettings?: Prisma.VATSettingsUncheckedCreateNestedOneWithoutCalculationInput
+  documents?: Prisma.CalculationDocumentUncheckedCreateNestedManyWithoutCalculationInput
+}
+
+export type CalculationCreateOrConnectWithoutProjectInput = {
+  where: Prisma.CalculationWhereUniqueInput
+  create: Prisma.XOR<Prisma.CalculationCreateWithoutProjectInput, Prisma.CalculationUncheckedCreateWithoutProjectInput>
+}
+
+export type CalculationCreateManyProjectInputEnvelope = {
+  data: Prisma.CalculationCreateManyProjectInput | Prisma.CalculationCreateManyProjectInput[]
+  skipDuplicates?: boolean
+}
+
+export type CalculationUpsertWithWhereUniqueWithoutProjectInput = {
+  where: Prisma.CalculationWhereUniqueInput
+  update: Prisma.XOR<Prisma.CalculationUpdateWithoutProjectInput, Prisma.CalculationUncheckedUpdateWithoutProjectInput>
+  create: Prisma.XOR<Prisma.CalculationCreateWithoutProjectInput, Prisma.CalculationUncheckedCreateWithoutProjectInput>
+}
+
+export type CalculationUpdateWithWhereUniqueWithoutProjectInput = {
+  where: Prisma.CalculationWhereUniqueInput
+  data: Prisma.XOR<Prisma.CalculationUpdateWithoutProjectInput, Prisma.CalculationUncheckedUpdateWithoutProjectInput>
+}
+
+export type CalculationUpdateManyWithWhereWithoutProjectInput = {
+  where: Prisma.CalculationScalarWhereInput
+  data: Prisma.XOR<Prisma.CalculationUpdateManyMutationInput, Prisma.CalculationUncheckedUpdateManyWithoutProjectInput>
+}
+
+export type CalculationCreateManyTenantInput = {
+  id?: string
+  customerId?: string | null
+  orderId?: string | null
+  projectId?: string | null
+  title?: string | null
+  status?: $Enums.CalculationStatus
+  currentStep?: number
+  laborTotal?: number
+  materialTotal?: number
+  machineTotal?: number
+  procurementTotal?: number
+  travelTotal?: number
+  additionalTotal?: number
+  directCosts?: number
+  overheadAmount?: number
+  incomeTaxOwnerAmount?: number
+  subtotalBeforeRisk?: number
+  riskAmount?: number
+  subtotalAfterRisk?: number
+  profitAmount?: number
+  netSalesPrice?: number
+  vatAmount?: number
+  grossSalesPrice?: number
+  contributionMargin?: number
+  contributionMarginRate?: number
+  marginPercent?: number
+  minimumPrice?: number
+  profitAfterTaxEstimate?: number
+  totalBillableHours?: number
+  profitabilityStatus?: string
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -4129,11 +4601,15 @@ export type CalculationUpdateWithoutTenantInput = {
   profitAfterTaxEstimate?: Prisma.FloatFieldUpdateOperationsInput | number
   totalBillableHours?: Prisma.FloatFieldUpdateOperationsInput | number
   profitabilityStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   customer?: Prisma.CustomerUpdateOneWithoutCalculationsNestedInput
   order?: Prisma.OrderUpdateOneWithoutCalculationsNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutCalculationsNestedInput
   laborItems?: Prisma.LaborItemUpdateManyWithoutCalculationNestedInput
   materialItems?: Prisma.MaterialItemUpdateManyWithoutCalculationNestedInput
   machineUsages?: Prisma.MachineUsageItemUpdateManyWithoutCalculationNestedInput
@@ -4151,6 +4627,7 @@ export type CalculationUncheckedUpdateWithoutTenantInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumCalculationStatusFieldUpdateOperationsInput | $Enums.CalculationStatus
   currentStep?: Prisma.IntFieldUpdateOperationsInput | number
@@ -4177,6 +4654,9 @@ export type CalculationUncheckedUpdateWithoutTenantInput = {
   profitAfterTaxEstimate?: Prisma.FloatFieldUpdateOperationsInput | number
   totalBillableHours?: Prisma.FloatFieldUpdateOperationsInput | number
   profitabilityStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4197,6 +4677,7 @@ export type CalculationUncheckedUpdateManyWithoutTenantInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumCalculationStatusFieldUpdateOperationsInput | $Enums.CalculationStatus
   currentStep?: Prisma.IntFieldUpdateOperationsInput | number
@@ -4223,6 +4704,9 @@ export type CalculationUncheckedUpdateManyWithoutTenantInput = {
   profitAfterTaxEstimate?: Prisma.FloatFieldUpdateOperationsInput | number
   totalBillableHours?: Prisma.FloatFieldUpdateOperationsInput | number
   profitabilityStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4232,6 +4716,7 @@ export type CalculationCreateManyCustomerInput = {
   id?: string
   tenantId: string
   orderId?: string | null
+  projectId?: string | null
   title?: string | null
   status?: $Enums.CalculationStatus
   currentStep?: number
@@ -4258,6 +4743,9 @@ export type CalculationCreateManyCustomerInput = {
   profitAfterTaxEstimate?: number
   totalBillableHours?: number
   profitabilityStatus?: string
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -4291,11 +4779,15 @@ export type CalculationUpdateWithoutCustomerInput = {
   profitAfterTaxEstimate?: Prisma.FloatFieldUpdateOperationsInput | number
   totalBillableHours?: Prisma.FloatFieldUpdateOperationsInput | number
   profitabilityStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutCalculationsNestedInput
   order?: Prisma.OrderUpdateOneWithoutCalculationsNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutCalculationsNestedInput
   laborItems?: Prisma.LaborItemUpdateManyWithoutCalculationNestedInput
   materialItems?: Prisma.MaterialItemUpdateManyWithoutCalculationNestedInput
   machineUsages?: Prisma.MachineUsageItemUpdateManyWithoutCalculationNestedInput
@@ -4313,6 +4805,7 @@ export type CalculationUncheckedUpdateWithoutCustomerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   orderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumCalculationStatusFieldUpdateOperationsInput | $Enums.CalculationStatus
   currentStep?: Prisma.IntFieldUpdateOperationsInput | number
@@ -4339,6 +4832,9 @@ export type CalculationUncheckedUpdateWithoutCustomerInput = {
   profitAfterTaxEstimate?: Prisma.FloatFieldUpdateOperationsInput | number
   totalBillableHours?: Prisma.FloatFieldUpdateOperationsInput | number
   profitabilityStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4359,6 +4855,7 @@ export type CalculationUncheckedUpdateManyWithoutCustomerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   orderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumCalculationStatusFieldUpdateOperationsInput | $Enums.CalculationStatus
   currentStep?: Prisma.IntFieldUpdateOperationsInput | number
@@ -4385,6 +4882,9 @@ export type CalculationUncheckedUpdateManyWithoutCustomerInput = {
   profitAfterTaxEstimate?: Prisma.FloatFieldUpdateOperationsInput | number
   totalBillableHours?: Prisma.FloatFieldUpdateOperationsInput | number
   profitabilityStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4394,6 +4894,7 @@ export type CalculationCreateManyOrderInput = {
   id?: string
   tenantId: string
   customerId?: string | null
+  projectId?: string | null
   title?: string | null
   status?: $Enums.CalculationStatus
   currentStep?: number
@@ -4420,6 +4921,9 @@ export type CalculationCreateManyOrderInput = {
   profitAfterTaxEstimate?: number
   totalBillableHours?: number
   profitabilityStatus?: string
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -4453,11 +4957,15 @@ export type CalculationUpdateWithoutOrderInput = {
   profitAfterTaxEstimate?: Prisma.FloatFieldUpdateOperationsInput | number
   totalBillableHours?: Prisma.FloatFieldUpdateOperationsInput | number
   profitabilityStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutCalculationsNestedInput
   customer?: Prisma.CustomerUpdateOneWithoutCalculationsNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutCalculationsNestedInput
   laborItems?: Prisma.LaborItemUpdateManyWithoutCalculationNestedInput
   materialItems?: Prisma.MaterialItemUpdateManyWithoutCalculationNestedInput
   machineUsages?: Prisma.MachineUsageItemUpdateManyWithoutCalculationNestedInput
@@ -4475,6 +4983,7 @@ export type CalculationUncheckedUpdateWithoutOrderInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumCalculationStatusFieldUpdateOperationsInput | $Enums.CalculationStatus
   currentStep?: Prisma.IntFieldUpdateOperationsInput | number
@@ -4501,6 +5010,9 @@ export type CalculationUncheckedUpdateWithoutOrderInput = {
   profitAfterTaxEstimate?: Prisma.FloatFieldUpdateOperationsInput | number
   totalBillableHours?: Prisma.FloatFieldUpdateOperationsInput | number
   profitabilityStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4521,6 +5033,7 @@ export type CalculationUncheckedUpdateManyWithoutOrderInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumCalculationStatusFieldUpdateOperationsInput | $Enums.CalculationStatus
   currentStep?: Prisma.IntFieldUpdateOperationsInput | number
@@ -4547,6 +5060,187 @@ export type CalculationUncheckedUpdateManyWithoutOrderInput = {
   profitAfterTaxEstimate?: Prisma.FloatFieldUpdateOperationsInput | number
   totalBillableHours?: Prisma.FloatFieldUpdateOperationsInput | number
   profitabilityStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type CalculationCreateManyProjectInput = {
+  id?: string
+  tenantId: string
+  customerId?: string | null
+  orderId?: string | null
+  title?: string | null
+  status?: $Enums.CalculationStatus
+  currentStep?: number
+  laborTotal?: number
+  materialTotal?: number
+  machineTotal?: number
+  procurementTotal?: number
+  travelTotal?: number
+  additionalTotal?: number
+  directCosts?: number
+  overheadAmount?: number
+  incomeTaxOwnerAmount?: number
+  subtotalBeforeRisk?: number
+  riskAmount?: number
+  subtotalAfterRisk?: number
+  profitAmount?: number
+  netSalesPrice?: number
+  vatAmount?: number
+  grossSalesPrice?: number
+  contributionMargin?: number
+  contributionMarginRate?: number
+  marginPercent?: number
+  minimumPrice?: number
+  profitAfterTaxEstimate?: number
+  totalBillableHours?: number
+  profitabilityStatus?: string
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
+  snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type CalculationUpdateWithoutProjectInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumCalculationStatusFieldUpdateOperationsInput | $Enums.CalculationStatus
+  currentStep?: Prisma.IntFieldUpdateOperationsInput | number
+  laborTotal?: Prisma.FloatFieldUpdateOperationsInput | number
+  materialTotal?: Prisma.FloatFieldUpdateOperationsInput | number
+  machineTotal?: Prisma.FloatFieldUpdateOperationsInput | number
+  procurementTotal?: Prisma.FloatFieldUpdateOperationsInput | number
+  travelTotal?: Prisma.FloatFieldUpdateOperationsInput | number
+  additionalTotal?: Prisma.FloatFieldUpdateOperationsInput | number
+  directCosts?: Prisma.FloatFieldUpdateOperationsInput | number
+  overheadAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  incomeTaxOwnerAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  subtotalBeforeRisk?: Prisma.FloatFieldUpdateOperationsInput | number
+  riskAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  subtotalAfterRisk?: Prisma.FloatFieldUpdateOperationsInput | number
+  profitAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  netSalesPrice?: Prisma.FloatFieldUpdateOperationsInput | number
+  vatAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  grossSalesPrice?: Prisma.FloatFieldUpdateOperationsInput | number
+  contributionMargin?: Prisma.FloatFieldUpdateOperationsInput | number
+  contributionMarginRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  marginPercent?: Prisma.FloatFieldUpdateOperationsInput | number
+  minimumPrice?: Prisma.FloatFieldUpdateOperationsInput | number
+  profitAfterTaxEstimate?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalBillableHours?: Prisma.FloatFieldUpdateOperationsInput | number
+  profitabilityStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutCalculationsNestedInput
+  customer?: Prisma.CustomerUpdateOneWithoutCalculationsNestedInput
+  order?: Prisma.OrderUpdateOneWithoutCalculationsNestedInput
+  laborItems?: Prisma.LaborItemUpdateManyWithoutCalculationNestedInput
+  materialItems?: Prisma.MaterialItemUpdateManyWithoutCalculationNestedInput
+  machineUsages?: Prisma.MachineUsageItemUpdateManyWithoutCalculationNestedInput
+  procurementCosts?: Prisma.ProcurementCostUpdateManyWithoutCalculationNestedInput
+  travelCost?: Prisma.TravelCostUpdateOneWithoutCalculationNestedInput
+  additionalItems?: Prisma.AdditionalCostItemUpdateManyWithoutCalculationNestedInput
+  riskSettings?: Prisma.RiskSettingsUpdateOneWithoutCalculationNestedInput
+  profitSettings?: Prisma.ProfitSettingsUpdateOneWithoutCalculationNestedInput
+  incomeTaxSettings?: Prisma.IncomeTaxSettingsUpdateOneWithoutCalculationNestedInput
+  vatSettings?: Prisma.VATSettingsUpdateOneWithoutCalculationNestedInput
+  documents?: Prisma.CalculationDocumentUpdateManyWithoutCalculationNestedInput
+}
+
+export type CalculationUncheckedUpdateWithoutProjectInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumCalculationStatusFieldUpdateOperationsInput | $Enums.CalculationStatus
+  currentStep?: Prisma.IntFieldUpdateOperationsInput | number
+  laborTotal?: Prisma.FloatFieldUpdateOperationsInput | number
+  materialTotal?: Prisma.FloatFieldUpdateOperationsInput | number
+  machineTotal?: Prisma.FloatFieldUpdateOperationsInput | number
+  procurementTotal?: Prisma.FloatFieldUpdateOperationsInput | number
+  travelTotal?: Prisma.FloatFieldUpdateOperationsInput | number
+  additionalTotal?: Prisma.FloatFieldUpdateOperationsInput | number
+  directCosts?: Prisma.FloatFieldUpdateOperationsInput | number
+  overheadAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  incomeTaxOwnerAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  subtotalBeforeRisk?: Prisma.FloatFieldUpdateOperationsInput | number
+  riskAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  subtotalAfterRisk?: Prisma.FloatFieldUpdateOperationsInput | number
+  profitAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  netSalesPrice?: Prisma.FloatFieldUpdateOperationsInput | number
+  vatAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  grossSalesPrice?: Prisma.FloatFieldUpdateOperationsInput | number
+  contributionMargin?: Prisma.FloatFieldUpdateOperationsInput | number
+  contributionMarginRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  marginPercent?: Prisma.FloatFieldUpdateOperationsInput | number
+  minimumPrice?: Prisma.FloatFieldUpdateOperationsInput | number
+  profitAfterTaxEstimate?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalBillableHours?: Prisma.FloatFieldUpdateOperationsInput | number
+  profitabilityStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  laborItems?: Prisma.LaborItemUncheckedUpdateManyWithoutCalculationNestedInput
+  materialItems?: Prisma.MaterialItemUncheckedUpdateManyWithoutCalculationNestedInput
+  machineUsages?: Prisma.MachineUsageItemUncheckedUpdateManyWithoutCalculationNestedInput
+  procurementCosts?: Prisma.ProcurementCostUncheckedUpdateManyWithoutCalculationNestedInput
+  travelCost?: Prisma.TravelCostUncheckedUpdateOneWithoutCalculationNestedInput
+  additionalItems?: Prisma.AdditionalCostItemUncheckedUpdateManyWithoutCalculationNestedInput
+  riskSettings?: Prisma.RiskSettingsUncheckedUpdateOneWithoutCalculationNestedInput
+  profitSettings?: Prisma.ProfitSettingsUncheckedUpdateOneWithoutCalculationNestedInput
+  incomeTaxSettings?: Prisma.IncomeTaxSettingsUncheckedUpdateOneWithoutCalculationNestedInput
+  vatSettings?: Prisma.VATSettingsUncheckedUpdateOneWithoutCalculationNestedInput
+  documents?: Prisma.CalculationDocumentUncheckedUpdateManyWithoutCalculationNestedInput
+}
+
+export type CalculationUncheckedUpdateManyWithoutProjectInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumCalculationStatusFieldUpdateOperationsInput | $Enums.CalculationStatus
+  currentStep?: Prisma.IntFieldUpdateOperationsInput | number
+  laborTotal?: Prisma.FloatFieldUpdateOperationsInput | number
+  materialTotal?: Prisma.FloatFieldUpdateOperationsInput | number
+  machineTotal?: Prisma.FloatFieldUpdateOperationsInput | number
+  procurementTotal?: Prisma.FloatFieldUpdateOperationsInput | number
+  travelTotal?: Prisma.FloatFieldUpdateOperationsInput | number
+  additionalTotal?: Prisma.FloatFieldUpdateOperationsInput | number
+  directCosts?: Prisma.FloatFieldUpdateOperationsInput | number
+  overheadAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  incomeTaxOwnerAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  subtotalBeforeRisk?: Prisma.FloatFieldUpdateOperationsInput | number
+  riskAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  subtotalAfterRisk?: Prisma.FloatFieldUpdateOperationsInput | number
+  profitAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  netSalesPrice?: Prisma.FloatFieldUpdateOperationsInput | number
+  vatAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  grossSalesPrice?: Prisma.FloatFieldUpdateOperationsInput | number
+  contributionMargin?: Prisma.FloatFieldUpdateOperationsInput | number
+  contributionMarginRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  marginPercent?: Prisma.FloatFieldUpdateOperationsInput | number
+  minimumPrice?: Prisma.FloatFieldUpdateOperationsInput | number
+  profitAfterTaxEstimate?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalBillableHours?: Prisma.FloatFieldUpdateOperationsInput | number
+  profitabilityStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4633,6 +5327,7 @@ export type CalculationSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   tenantId?: boolean
   customerId?: boolean
   orderId?: boolean
+  projectId?: boolean
   title?: boolean
   status?: boolean
   currentStep?: boolean
@@ -4659,12 +5354,16 @@ export type CalculationSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   profitAfterTaxEstimate?: boolean
   totalBillableHours?: boolean
   profitabilityStatus?: boolean
+  useFixedPrice?: boolean
+  fixedPriceNet?: boolean
+  fixedPriceLabel?: boolean
   snapshotJson?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   customer?: boolean | Prisma.Calculation$customerArgs<ExtArgs>
   order?: boolean | Prisma.Calculation$orderArgs<ExtArgs>
+  project?: boolean | Prisma.Calculation$projectArgs<ExtArgs>
   laborItems?: boolean | Prisma.Calculation$laborItemsArgs<ExtArgs>
   materialItems?: boolean | Prisma.Calculation$materialItemsArgs<ExtArgs>
   machineUsages?: boolean | Prisma.Calculation$machineUsagesArgs<ExtArgs>
@@ -4684,6 +5383,7 @@ export type CalculationSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   tenantId?: boolean
   customerId?: boolean
   orderId?: boolean
+  projectId?: boolean
   title?: boolean
   status?: boolean
   currentStep?: boolean
@@ -4710,12 +5410,16 @@ export type CalculationSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   profitAfterTaxEstimate?: boolean
   totalBillableHours?: boolean
   profitabilityStatus?: boolean
+  useFixedPrice?: boolean
+  fixedPriceNet?: boolean
+  fixedPriceLabel?: boolean
   snapshotJson?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   customer?: boolean | Prisma.Calculation$customerArgs<ExtArgs>
   order?: boolean | Prisma.Calculation$orderArgs<ExtArgs>
+  project?: boolean | Prisma.Calculation$projectArgs<ExtArgs>
 }, ExtArgs["result"]["calculation"]>
 
 export type CalculationSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -4723,6 +5427,7 @@ export type CalculationSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   tenantId?: boolean
   customerId?: boolean
   orderId?: boolean
+  projectId?: boolean
   title?: boolean
   status?: boolean
   currentStep?: boolean
@@ -4749,12 +5454,16 @@ export type CalculationSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   profitAfterTaxEstimate?: boolean
   totalBillableHours?: boolean
   profitabilityStatus?: boolean
+  useFixedPrice?: boolean
+  fixedPriceNet?: boolean
+  fixedPriceLabel?: boolean
   snapshotJson?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   customer?: boolean | Prisma.Calculation$customerArgs<ExtArgs>
   order?: boolean | Prisma.Calculation$orderArgs<ExtArgs>
+  project?: boolean | Prisma.Calculation$projectArgs<ExtArgs>
 }, ExtArgs["result"]["calculation"]>
 
 export type CalculationSelectScalar = {
@@ -4762,6 +5471,7 @@ export type CalculationSelectScalar = {
   tenantId?: boolean
   customerId?: boolean
   orderId?: boolean
+  projectId?: boolean
   title?: boolean
   status?: boolean
   currentStep?: boolean
@@ -4788,16 +5498,20 @@ export type CalculationSelectScalar = {
   profitAfterTaxEstimate?: boolean
   totalBillableHours?: boolean
   profitabilityStatus?: boolean
+  useFixedPrice?: boolean
+  fixedPriceNet?: boolean
+  fixedPriceLabel?: boolean
   snapshotJson?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type CalculationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "customerId" | "orderId" | "title" | "status" | "currentStep" | "laborTotal" | "materialTotal" | "machineTotal" | "procurementTotal" | "travelTotal" | "additionalTotal" | "directCosts" | "overheadAmount" | "incomeTaxOwnerAmount" | "subtotalBeforeRisk" | "riskAmount" | "subtotalAfterRisk" | "profitAmount" | "netSalesPrice" | "vatAmount" | "grossSalesPrice" | "contributionMargin" | "contributionMarginRate" | "marginPercent" | "minimumPrice" | "profitAfterTaxEstimate" | "totalBillableHours" | "profitabilityStatus" | "snapshotJson" | "createdAt" | "updatedAt", ExtArgs["result"]["calculation"]>
+export type CalculationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "customerId" | "orderId" | "projectId" | "title" | "status" | "currentStep" | "laborTotal" | "materialTotal" | "machineTotal" | "procurementTotal" | "travelTotal" | "additionalTotal" | "directCosts" | "overheadAmount" | "incomeTaxOwnerAmount" | "subtotalBeforeRisk" | "riskAmount" | "subtotalAfterRisk" | "profitAmount" | "netSalesPrice" | "vatAmount" | "grossSalesPrice" | "contributionMargin" | "contributionMarginRate" | "marginPercent" | "minimumPrice" | "profitAfterTaxEstimate" | "totalBillableHours" | "profitabilityStatus" | "useFixedPrice" | "fixedPriceNet" | "fixedPriceLabel" | "snapshotJson" | "createdAt" | "updatedAt", ExtArgs["result"]["calculation"]>
 export type CalculationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   customer?: boolean | Prisma.Calculation$customerArgs<ExtArgs>
   order?: boolean | Prisma.Calculation$orderArgs<ExtArgs>
+  project?: boolean | Prisma.Calculation$projectArgs<ExtArgs>
   laborItems?: boolean | Prisma.Calculation$laborItemsArgs<ExtArgs>
   materialItems?: boolean | Prisma.Calculation$materialItemsArgs<ExtArgs>
   machineUsages?: boolean | Prisma.Calculation$machineUsagesArgs<ExtArgs>
@@ -4815,11 +5529,13 @@ export type CalculationIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   customer?: boolean | Prisma.Calculation$customerArgs<ExtArgs>
   order?: boolean | Prisma.Calculation$orderArgs<ExtArgs>
+  project?: boolean | Prisma.Calculation$projectArgs<ExtArgs>
 }
 export type CalculationIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   customer?: boolean | Prisma.Calculation$customerArgs<ExtArgs>
   order?: boolean | Prisma.Calculation$orderArgs<ExtArgs>
+  project?: boolean | Prisma.Calculation$projectArgs<ExtArgs>
 }
 
 export type $CalculationPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -4828,6 +5544,7 @@ export type $CalculationPayload<ExtArgs extends runtime.Types.Extensions.Interna
     tenant: Prisma.$TenantPayload<ExtArgs>
     customer: Prisma.$CustomerPayload<ExtArgs> | null
     order: Prisma.$OrderPayload<ExtArgs> | null
+    project: Prisma.$ProjectPayload<ExtArgs> | null
     laborItems: Prisma.$LaborItemPayload<ExtArgs>[]
     materialItems: Prisma.$MaterialItemPayload<ExtArgs>[]
     machineUsages: Prisma.$MachineUsageItemPayload<ExtArgs>[]
@@ -4845,6 +5562,7 @@ export type $CalculationPayload<ExtArgs extends runtime.Types.Extensions.Interna
     tenantId: string
     customerId: string | null
     orderId: string | null
+    projectId: string | null
     title: string | null
     status: $Enums.CalculationStatus
     currentStep: number
@@ -4871,6 +5589,12 @@ export type $CalculationPayload<ExtArgs extends runtime.Types.Extensions.Interna
     profitAfterTaxEstimate: number
     totalBillableHours: number
     profitabilityStatus: string
+    /**
+     * Kundenausgabe: Festpreis statt Einzelpositionen (interne Kalkulation bleibt erhalten)
+     */
+    useFixedPrice: boolean
+    fixedPriceNet: number | null
+    fixedPriceLabel: string | null
     snapshotJson: runtime.JsonValue | null
     createdAt: Date
     updatedAt: Date
@@ -5271,6 +5995,7 @@ export interface Prisma__CalculationClient<T, Null = never, ExtArgs extends runt
   tenant<T extends Prisma.TenantDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TenantDefaultArgs<ExtArgs>>): Prisma.Prisma__TenantClient<runtime.Types.Result.GetResult<Prisma.$TenantPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   customer<T extends Prisma.Calculation$customerArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Calculation$customerArgs<ExtArgs>>): Prisma.Prisma__CustomerClient<runtime.Types.Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   order<T extends Prisma.Calculation$orderArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Calculation$orderArgs<ExtArgs>>): Prisma.Prisma__OrderClient<runtime.Types.Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  project<T extends Prisma.Calculation$projectArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Calculation$projectArgs<ExtArgs>>): Prisma.Prisma__ProjectClient<runtime.Types.Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   laborItems<T extends Prisma.Calculation$laborItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Calculation$laborItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LaborItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   materialItems<T extends Prisma.Calculation$materialItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Calculation$materialItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MaterialItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   machineUsages<T extends Prisma.Calculation$machineUsagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Calculation$machineUsagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MachineUsageItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -5315,6 +6040,7 @@ export interface CalculationFieldRefs {
   readonly tenantId: Prisma.FieldRef<"Calculation", 'String'>
   readonly customerId: Prisma.FieldRef<"Calculation", 'String'>
   readonly orderId: Prisma.FieldRef<"Calculation", 'String'>
+  readonly projectId: Prisma.FieldRef<"Calculation", 'String'>
   readonly title: Prisma.FieldRef<"Calculation", 'String'>
   readonly status: Prisma.FieldRef<"Calculation", 'CalculationStatus'>
   readonly currentStep: Prisma.FieldRef<"Calculation", 'Int'>
@@ -5341,6 +6067,9 @@ export interface CalculationFieldRefs {
   readonly profitAfterTaxEstimate: Prisma.FieldRef<"Calculation", 'Float'>
   readonly totalBillableHours: Prisma.FieldRef<"Calculation", 'Float'>
   readonly profitabilityStatus: Prisma.FieldRef<"Calculation", 'String'>
+  readonly useFixedPrice: Prisma.FieldRef<"Calculation", 'Boolean'>
+  readonly fixedPriceNet: Prisma.FieldRef<"Calculation", 'Float'>
+  readonly fixedPriceLabel: Prisma.FieldRef<"Calculation", 'String'>
   readonly snapshotJson: Prisma.FieldRef<"Calculation", 'Json'>
   readonly createdAt: Prisma.FieldRef<"Calculation", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Calculation", 'DateTime'>
@@ -5780,6 +6509,25 @@ export type Calculation$orderArgs<ExtArgs extends runtime.Types.Extensions.Inter
    */
   include?: Prisma.OrderInclude<ExtArgs> | null
   where?: Prisma.OrderWhereInput
+}
+
+/**
+ * Calculation.project
+ */
+export type Calculation$projectArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Project
+   */
+  select?: Prisma.ProjectSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Project
+   */
+  omit?: Prisma.ProjectOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ProjectInclude<ExtArgs> | null
+  where?: Prisma.ProjectWhereInput
 }
 
 /**

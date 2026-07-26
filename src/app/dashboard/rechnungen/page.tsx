@@ -20,6 +20,12 @@ import { formatEuro, formatDate } from "@/lib/utils";
 import { fetchJson } from "@/lib/fetch-json";
 import { saveJson } from "@/lib/save-toast";
 import { CanAccess } from "@/components/auth/can-access";
+import { AmountModeToggle } from "@/components/finance/amount-mode-toggle";
+import {
+  amountModeLabel,
+  pickAmount,
+  useAmountMode,
+} from "@/lib/amount-mode";
 import {
   FileText,
   Receipt,
@@ -54,6 +60,8 @@ interface DocItem {
   cancelOfId: string | null;
   hasPdf: boolean;
   eInvoiceFormat: string | null;
+  taxTreatmentLabel?: string | null;
+  isReverseCharge?: boolean;
 }
 
 interface Summary {
@@ -62,6 +70,9 @@ interface Summary {
   overdueSum: number;
   overdueCount: number;
   revenueOpenCount: number;
+  vatSum?: number;
+  netSum?: number;
+  grossSum?: number;
 }
 
 const STATUS_STYLES: Record<DocItem["status"], string> = {
@@ -87,12 +98,15 @@ const TYPE_LABEL: Record<DocItem["documentType"], string> = {
 };
 
 export default function RechnungenPage() {
+  const [amountMode, setAmountMode] = useAmountMode();
   const [items, setItems] = useState<DocItem[]>([]);
   const [summary, setSummary] = useState<Summary | null>(null);
   const [loading, setLoading] = useState(true);
   const [type, setType] = useState("INVOICE");
   const [status, setStatus] = useState("");
   const [q, setQ] = useState("");
+  const [from, setFrom] = useState("");
+  const [to, setTo] = useState("");
 
   const [payDoc, setPayDoc] = useState<DocItem | null>(null);
   const [payAmount, setPayAmount] = useState("");
@@ -110,6 +124,8 @@ export default function RechnungenPage() {
     if (type) params.set("type", type);
     if (status) params.set("status", status);
     if (q.trim()) params.set("q", q.trim());
+    if (from) params.set("from", from);
+    if (to) params.set("to", to);
     const res = await fetchJson<{ items: DocItem[]; summary: Summary }>(
       `/api/documents?${params.toString()}`
     );
@@ -118,7 +134,7 @@ export default function RechnungenPage() {
       setSummary(res.data.summary);
     }
     setLoading(false);
-  }, [type, status, q]);
+  }, [type, status, q, from, to]);
 
   useEffect(() => {
     const t = setTimeout(load, 250);
@@ -196,9 +212,20 @@ export default function RechnungenPage() {
     if (res.success) load();
   }
 
-  const totalGross = useMemo(
-    () => items.filter((i) => i.status !== "STORNIERT").reduce((s, i) => s + i.grossAmount, 0),
-    [items]
+  const totalPrimary = useMemo(
+    () =>
+      items
+        .filter((i) => i.status !== "STORNIERT")
+        .reduce(
+          (s, i) =>
+            s +
+            pickAmount(amountMode, {
+              net: i.netAmount,
+              gross: i.isReverseCharge ? i.netAmount : i.grossAmount,
+            }),
+          0
+        ),
+    [items, amountMode]
   );
 
   return (
@@ -217,13 +244,23 @@ export default function RechnungenPage() {
               Offene Posten = Bruttobetrag minus erfasste Zahlungen. Überfällig =
               offen und Fälligkeitsdatum überschritten.
             </p>
+            <p className="mt-2">
+              Brutto/Netto ist nur eine Anzeigeoption und ändert keine gespeicherten
+              Rechnungsdaten.
+            </p>
           </InfoButton>
         </h1>
-        <a href="/api/documents/export?format=datev" target="_blank" rel="noreferrer">
-          <Button variant="outline" size="sm">
-            <Download className="h-4 w-4 mr-1" /> DATEV / CSV-Export
-          </Button>
-        </a>
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="flex flex-col items-end gap-0.5">
+            <AmountModeToggle mode={amountMode} onChange={setAmountMode} />
+            <span className="text-[11px] text-slate-400">Nur Anzeige</span>
+          </div>
+          <a href="/api/documents/export?format=datev" target="_blank" rel="noreferrer">
+            <Button variant="outline" size="sm">
+              <Download className="h-4 w-4 mr-1" /> DATEV / CSV-Export
+            </Button>
+          </a>
+        </div>
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
@@ -238,8 +275,16 @@ export default function RechnungenPage() {
           <p className="text-xs text-slate-400">{summary?.overdueCount ?? 0} überfällig</p>
         </Card>
         <Card className="!p-4">
-          <p className="text-xs text-slate-500">Summe (Liste, brutto)</p>
-          <p className="text-xl font-bold text-slate-900">{formatEuro(totalGross)}</p>
+          <p className="text-xs text-slate-500">
+            Summe Liste ({amountModeLabel(amountMode).toLowerCase()})
+          </p>
+          <p className="text-xl font-bold text-slate-900">{formatEuro(totalPrimary)}</p>
+          <p className="text-xs text-slate-400">
+            USt {formatEuro(summary?.vatSum ?? 0)}
+            {amountMode === "gross"
+              ? ` · Netto ${formatEuro(summary?.netSum ?? 0)}`
+              : ` · Brutto ${formatEuro(summary?.grossSum ?? 0)}`}
+          </p>
         </Card>
         <Card className="!p-4">
           <p className="text-xs text-slate-500">Belege gesamt</p>
@@ -274,6 +319,24 @@ export default function RechnungenPage() {
             <option value="STORNIERT">Storniert</option>
           </select>
         </div>
+        <div>
+          <Label className="text-xs">Von</Label>
+          <Input
+            type="date"
+            value={from}
+            onChange={(e) => setFrom(e.target.value)}
+            className="h-9 w-auto"
+          />
+        </div>
+        <div>
+          <Label className="text-xs">Bis</Label>
+          <Input
+            type="date"
+            value={to}
+            onChange={(e) => setTo(e.target.value)}
+            className="h-9 w-auto"
+          />
+        </div>
         <div className="flex-1 min-w-[200px]">
           <Label className="text-xs">Suche</Label>
           <Input
@@ -283,6 +346,20 @@ export default function RechnungenPage() {
             className="h-9"
           />
         </div>
+        {(from || to) && (
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            className="h-9"
+            onClick={() => {
+              setFrom("");
+              setTo("");
+            }}
+          >
+            Zeitraum zurücksetzen
+          </Button>
+        )}
       </div>
 
       <Card className="!p-0 overflow-x-auto">
@@ -294,7 +371,7 @@ export default function RechnungenPage() {
               <th className="px-3 py-2">Kunde</th>
               <th className="px-3 py-2">Datum</th>
               <th className="px-3 py-2">Fällig</th>
-              <th className="px-3 py-2 text-right">Brutto</th>
+              <th className="px-3 py-2 text-right">{amountModeLabel(amountMode)}</th>
               <th className="px-3 py-2 text-right">Offen</th>
               <th className="px-3 py-2">Status</th>
               <th className="px-3 py-2 text-right">Aktionen</th>
@@ -349,7 +426,21 @@ export default function RechnungenPage() {
                       )}
                     </td>
                     <td className="px-3 py-2 text-right tabular-nums">
-                      {formatEuro(doc.grossAmount)}
+                      <div>
+                        {formatEuro(
+                          pickAmount(amountMode, {
+                            net: doc.netAmount,
+                            gross: doc.isReverseCharge ? doc.netAmount : doc.grossAmount,
+                          })
+                        )}
+                      </div>
+                      <div className="text-[10px] text-slate-500 font-normal">
+                        {amountMode === "gross"
+                          ? `Netto ${formatEuro(doc.netAmount)}`
+                          : `Brutto ${formatEuro(doc.grossAmount)}`}
+                        {` · USt ${formatEuro(doc.vatAmount)}`}
+                        {doc.taxTreatmentLabel ? ` · ${doc.taxTreatmentLabel}` : ""}
+                      </div>
                     </td>
                     <td className="px-3 py-2 text-right tabular-nums">
                       {isInvoice ? formatEuro(doc.openAmount) : "—"}

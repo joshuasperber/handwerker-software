@@ -84,7 +84,7 @@ export async function POST(request: NextRequest) {
     select: { name: true },
   });
   const acceptUrl = `${new URL(request.url).origin}/einladung/${token}`;
-  await notifyInvitation(auth.tenantId, email, tenant?.name ?? "Handwerker App", acceptUrl, message);
+  await notifyInvitation(auth.tenantId, email, tenant?.name ?? "JoMaster", acceptUrl, message);
 
   return apiSuccess(invitation, 201);
 }

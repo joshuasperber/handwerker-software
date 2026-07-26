@@ -3,6 +3,8 @@ import { requireAuth, apiSuccess, apiError, getClientIp } from "@/lib/api";
 import { requireMonteurAppointment } from "@/lib/monteur-access";
 import { prisma } from "@/lib/prisma";
 import { auditEntityChange, auditOrderStatusChange } from "@/lib/audit";
+import { areOrderChecklistsComplete } from "@/lib/orders/checklist";
+import { isMonteurAppointmentStatus } from "@/lib/scheduling/monteur-status";
 
 export async function PATCH(
   request: NextRequest,
@@ -21,6 +23,9 @@ export async function PATCH(
   const { appointment, employee: _employee } = access;
   const { status } = body;
   if (!status) return apiError("status fehlt", 400);
+  if (!isMonteurAppointmentStatus(status)) {
+    return apiError("Ungültiger Status für Monteur", 400);
+  }
 
   const updated = await prisma.appointment.update({
     where: { id },
@@ -40,9 +45,7 @@ export async function PATCH(
   if (orderStatusMap[status]) {
     let newOrderStatus = orderStatusMap[status];
     if (status === "ABGESCHLOSSEN") {
-      const checklists = appointment.order.checklists;
-      const allDone =
-        checklists.length === 0 || checklists.every((c) => c.isChecked);
+      const allDone = areOrderChecklistsComplete(appointment.order.checklists);
       if (allDone) newOrderStatus = "ABRECHNUNGSBEREIT";
     }
     await auditOrderStatusChange(auth, appointment.orderId, appointment.order.status, newOrderStatus, ip);

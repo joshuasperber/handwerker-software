@@ -5,6 +5,12 @@ import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { PriceCompositionPanel } from "@/components/calculation/price-composition";
+import {
+  InvoiceConflictDialog,
+  type ExistingInvoiceInfo,
+} from "@/components/documents/invoice-conflict-dialog";
+import { convertCalculationToInvoice } from "@/lib/documents/convert-invoice-client";
+import type { InvoiceActionMode } from "@/lib/documents/invoice-lifecycle";
 import { formatEuro } from "@/lib/utils";
 import { FileText, Calculator, CheckCircle, Pencil, Download } from "lucide-react";
 import { toast } from "sonner";
@@ -28,6 +34,8 @@ export function OrderBillingSection({
   const [msg, setMsg] = useState("");
   const [loading, setLoading] = useState(false);
   const [lastDocId, setLastDocId] = useState<string | null>(null);
+  const [conflictOpen, setConflictOpen] = useState(false);
+  const [conflictInvoice, setConflictInvoice] = useState<ExistingInvoiceInfo | null>(null);
 
   const showBilling = ["ABRECHNUNGSBEREIT", "ABGERECHNET"].includes(orderStatus);
 
@@ -55,13 +63,8 @@ export function OrderBillingSection({
 
   async function previewInvoice() {
     if (!calculationId) return;
-    const res = await fetch(`/api/calculations/${calculationId}/convert-to-invoice`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ preview: true }),
-    });
-    const d = await res.json();
-    if (d.success && d.data.html) openHtml(d.data.html);
+    const result = await convertCalculationToInvoice(calculationId, { preview: true });
+    if (result.ok && result.html) openHtml(result.html);
   }
 
   async function previewBreakdown() {
@@ -77,32 +80,37 @@ export function OrderBillingSection({
 
   const alreadyInvoiced = orderStatus === "ABGERECHNET";
 
-  async function createInvoice() {
+  async function runInvoice(mode?: InvoiceActionMode, documentId?: string) {
     if (!calculationId) return;
     setLoading(true);
     setMsg("");
-    const res = await fetch(`/api/calculations/${calculationId}/convert-to-invoice`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({}),
-    });
-    const d = await res.json();
+    const result = await convertCalculationToInvoice(calculationId, { mode, documentId });
     setLoading(false);
-    if (d.success) {
-      toast.success(
-        alreadyInvoiced
-          ? `Korrigierte Rechnung ${d.data.document.documentNumber} erstellt`
-          : `Rechnung ${d.data.document.documentNumber} erstellt`,
-        { description: "Die Rechnung wurde in einem neuen Tab geöffnet." }
-      );
-      setMsg(`Rechnung ${d.data.document.documentNumber} erstellt`);
-      setLastDocId(d.data.document.id ?? null);
-      if (d.data.html) openHtml(d.data.html);
-      onInvoiceCreated();
-    } else {
-      toast.error("Rechnung fehlgeschlagen", { description: d.error ?? "Bitte erneut versuchen." });
-      setMsg(d.error ?? "Rechnung fehlgeschlagen");
+
+    if (!result.ok) {
+      if (result.conflict) {
+        setConflictInvoice(result.invoice);
+        setConflictOpen(true);
+        return;
+      }
+      toast.error("Rechnung fehlgeschlagen", { description: result.message });
+      setMsg(result.message);
+      return;
     }
+
+    setConflictOpen(false);
+    const number = result.document?.documentNumber ?? "";
+    const label =
+      result.action === "updated"
+        ? `Rechnung ${number} aktualisiert`
+        : result.action === "correction"
+          ? `Korrekturrechnung ${number} erstellt`
+          : `Rechnung ${number} erstellt`;
+    toast.success(label, { description: "Die Rechnung wurde in einem neuen Tab geöffnet." });
+    setMsg(label);
+    setLastDocId(result.document?.id ?? null);
+    if (result.html) openHtml(result.html);
+    onInvoiceCreated();
   }
 
   if (!showBilling) return null;
@@ -129,9 +137,13 @@ export function OrderBillingSection({
           <>
             <div className="flex flex-wrap items-center gap-3">
               <p className="text-lg font-bold text-[#0d5c63]">
-                Netto {formatEuro((calc?.netSalesPrice as number) ?? 0)} · Brutto {formatEuro((calc?.grossSalesPrice as number) ?? 0)}
+                Netto {formatEuro((calc?.netSalesPrice as number) ?? 0)} · Brutto{" "}
+                {formatEuro((calc?.grossSalesPrice as number) ?? 0)}
               </p>
-              <Link href={`/dashboard/kalkulation/${calculationId}`} className="text-sm text-[#0d5c63] hover:underline">
+              <Link
+                href={`/dashboard/kalkulation/${calculationId}`}
+                className="text-sm text-[#0d5c63] hover:underline"
+              >
                 Kalkulation bearbeiten →
               </Link>
             </div>
@@ -152,32 +164,43 @@ export function OrderBillingSection({
                       <CheckCircle className="h-4 w-4" /> Bereits abgerechnet
                     </p>
                     <p className="text-xs text-slate-500 leading-relaxed">
-                      Gab es nachträglich weitere Kosten? Passen Sie die Kalkulation an
-                      (z. B. zusätzliche Arbeitsstunden oder Material) und erstellen Sie
-                      anschließend eine korrigierte Rechnung mit neuer Rechnungsnummer.
+                      Änderungen an der Kalkulation aktualisieren die bestehende Rechnung, sofern
+                      sie noch bearbeitbar ist (nicht versendet/bezahlt). Sonst wählen Sie bewusst
+                      eine neue Rechnung oder Korrekturrechnung.
                     </p>
                     <Link href={`/dashboard/kalkulation/${calculationId}`}>
                       <Button variant="primary" className="w-full">
                         <Pencil className="h-4 w-4 mr-1" /> Kalkulation bearbeiten
                       </Button>
                     </Link>
-                    <Button variant="action" onClick={createInvoice} disabled={loading} className="w-full">
+                    <Button
+                      variant="action"
+                      onClick={() => runInvoice()}
+                      disabled={loading}
+                      className="w-full"
+                    >
                       <FileText className="h-4 w-4 mr-1" />
-                      {loading ? "Erstelle…" : "Korrigierte Rechnung erstellen"}
+                      {loading ? "Speichere…" : "Rechnung speichern / aktualisieren"}
                     </Button>
                   </>
                 ) : (
                   <>
                     <p className="text-xs text-slate-500 leading-relaxed">
-                      Enthält: Ihre Firmenadresse (Einstellungen), Logo, Kundenname &amp; Einsatzadresse,
-                      Leistungspositionen und die berechnete Summe inkl. versteckter Kostenanteile als Pauschale.
+                      Enthält: Ihre Firmenadresse (Einstellungen), Logo, Kundenname &amp;
+                      Einsatzadresse, Leistungspositionen und die berechnete Summe inkl.
+                      versteckter Kostenanteile als Pauschale.
                     </p>
                     <ul className="text-xs text-slate-600 space-y-1 list-disc pl-4">
                       <li>Firmendaten: Kalkulation → Einstellungen</li>
                       <li>Logo: Tenant-Einstellungen (logoUrl)</li>
                       <li>Sichtbare Positionen: in der Kalkulation markieren</li>
                     </ul>
-                    <Button variant="action" onClick={createInvoice} disabled={loading} className="w-full">
+                    <Button
+                      variant="action"
+                      onClick={() => runInvoice()}
+                      disabled={loading}
+                      className="w-full"
+                    >
                       <FileText className="h-4 w-4 mr-1" />
                       {loading ? "Erstelle…" : "Rechnung erstellen & abrechnen"}
                     </Button>
@@ -209,6 +232,16 @@ export function OrderBillingSection({
           </div>
         )}
       </div>
+
+      <InvoiceConflictDialog
+        open={conflictOpen}
+        onOpenChange={setConflictOpen}
+        invoice={conflictInvoice}
+        loading={loading}
+        onChoose={(mode) =>
+          runInvoice(mode, mode === "update" ? conflictInvoice?.id : undefined)
+        }
+      />
     </Card>
   );
 }

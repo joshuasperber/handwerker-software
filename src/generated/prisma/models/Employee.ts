@@ -210,6 +210,8 @@ export type EmployeeWhereInput = {
   staffRequests?: Prisma.StaffAssignmentRequestListRelationFilter
   orderPhases?: Prisma.OrderPhaseListRelationFilter
   assignedVehicles?: Prisma.VehicleListRelationFilter
+  stockMovements?: Prisma.StockMovementListRelationFilter
+  projectMemberships?: Prisma.ProjectMemberListRelationFilter
 }
 
 export type EmployeeOrderByWithRelationInput = {
@@ -232,6 +234,8 @@ export type EmployeeOrderByWithRelationInput = {
   staffRequests?: Prisma.StaffAssignmentRequestOrderByRelationAggregateInput
   orderPhases?: Prisma.OrderPhaseOrderByRelationAggregateInput
   assignedVehicles?: Prisma.VehicleOrderByRelationAggregateInput
+  stockMovements?: Prisma.StockMovementOrderByRelationAggregateInput
+  projectMemberships?: Prisma.ProjectMemberOrderByRelationAggregateInput
 }
 
 export type EmployeeWhereUniqueInput = Prisma.AtLeast<{
@@ -257,6 +261,8 @@ export type EmployeeWhereUniqueInput = Prisma.AtLeast<{
   staffRequests?: Prisma.StaffAssignmentRequestListRelationFilter
   orderPhases?: Prisma.OrderPhaseListRelationFilter
   assignedVehicles?: Prisma.VehicleListRelationFilter
+  stockMovements?: Prisma.StockMovementListRelationFilter
+  projectMemberships?: Prisma.ProjectMemberListRelationFilter
 }, "id" | "userId">
 
 export type EmployeeOrderByWithAggregationInput = {
@@ -303,6 +309,8 @@ export type EmployeeCreateInput = {
   staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutEmployeeInput
   orderPhases?: Prisma.OrderPhaseCreateNestedManyWithoutAssignedEmployeeInput
   assignedVehicles?: Prisma.VehicleCreateNestedManyWithoutAssignedEmployeeInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutEmployeeInput
+  projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateInput = {
@@ -323,6 +331,8 @@ export type EmployeeUncheckedCreateInput = {
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutEmployeeInput
   orderPhases?: Prisma.OrderPhaseUncheckedCreateNestedManyWithoutAssignedEmployeeInput
   assignedVehicles?: Prisma.VehicleUncheckedCreateNestedManyWithoutAssignedEmployeeInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutEmployeeInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUpdateInput = {
@@ -343,6 +353,8 @@ export type EmployeeUpdateInput = {
   staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutEmployeeNestedInput
   orderPhases?: Prisma.OrderPhaseUpdateManyWithoutAssignedEmployeeNestedInput
   assignedVehicles?: Prisma.VehicleUpdateManyWithoutAssignedEmployeeNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutEmployeeNestedInput
+  projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateInput = {
@@ -363,6 +375,8 @@ export type EmployeeUncheckedUpdateInput = {
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutEmployeeNestedInput
   orderPhases?: Prisma.OrderPhaseUncheckedUpdateManyWithoutAssignedEmployeeNestedInput
   assignedVehicles?: Prisma.VehicleUncheckedUpdateManyWithoutAssignedEmployeeNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutEmployeeNestedInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateManyInput = {
@@ -593,6 +607,22 @@ export type EmployeeUpdateOneRequiredWithoutMaterialUsagesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.EmployeeUpdateToOneWithWhereWithoutMaterialUsagesInput, Prisma.EmployeeUpdateWithoutMaterialUsagesInput>, Prisma.EmployeeUncheckedUpdateWithoutMaterialUsagesInput>
 }
 
+export type EmployeeCreateNestedOneWithoutStockMovementsInput = {
+  create?: Prisma.XOR<Prisma.EmployeeCreateWithoutStockMovementsInput, Prisma.EmployeeUncheckedCreateWithoutStockMovementsInput>
+  connectOrCreate?: Prisma.EmployeeCreateOrConnectWithoutStockMovementsInput
+  connect?: Prisma.EmployeeWhereUniqueInput
+}
+
+export type EmployeeUpdateOneWithoutStockMovementsNestedInput = {
+  create?: Prisma.XOR<Prisma.EmployeeCreateWithoutStockMovementsInput, Prisma.EmployeeUncheckedCreateWithoutStockMovementsInput>
+  connectOrCreate?: Prisma.EmployeeCreateOrConnectWithoutStockMovementsInput
+  upsert?: Prisma.EmployeeUpsertWithoutStockMovementsInput
+  disconnect?: Prisma.EmployeeWhereInput | boolean
+  delete?: Prisma.EmployeeWhereInput | boolean
+  connect?: Prisma.EmployeeWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.EmployeeUpdateToOneWithWhereWithoutStockMovementsInput, Prisma.EmployeeUpdateWithoutStockMovementsInput>, Prisma.EmployeeUncheckedUpdateWithoutStockMovementsInput>
+}
+
 export type EmployeeCreateNestedOneWithoutOrderPhasesInput = {
   create?: Prisma.XOR<Prisma.EmployeeCreateWithoutOrderPhasesInput, Prisma.EmployeeUncheckedCreateWithoutOrderPhasesInput>
   connectOrCreate?: Prisma.EmployeeCreateOrConnectWithoutOrderPhasesInput
@@ -667,6 +697,20 @@ export type EmployeeUpdateOneRequiredWithoutStaffRequestsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.EmployeeUpdateToOneWithWhereWithoutStaffRequestsInput, Prisma.EmployeeUpdateWithoutStaffRequestsInput>, Prisma.EmployeeUncheckedUpdateWithoutStaffRequestsInput>
 }
 
+export type EmployeeCreateNestedOneWithoutProjectMembershipsInput = {
+  create?: Prisma.XOR<Prisma.EmployeeCreateWithoutProjectMembershipsInput, Prisma.EmployeeUncheckedCreateWithoutProjectMembershipsInput>
+  connectOrCreate?: Prisma.EmployeeCreateOrConnectWithoutProjectMembershipsInput
+  connect?: Prisma.EmployeeWhereUniqueInput
+}
+
+export type EmployeeUpdateOneRequiredWithoutProjectMembershipsNestedInput = {
+  create?: Prisma.XOR<Prisma.EmployeeCreateWithoutProjectMembershipsInput, Prisma.EmployeeUncheckedCreateWithoutProjectMembershipsInput>
+  connectOrCreate?: Prisma.EmployeeCreateOrConnectWithoutProjectMembershipsInput
+  upsert?: Prisma.EmployeeUpsertWithoutProjectMembershipsInput
+  connect?: Prisma.EmployeeWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.EmployeeUpdateToOneWithWhereWithoutProjectMembershipsInput, Prisma.EmployeeUpdateWithoutProjectMembershipsInput>, Prisma.EmployeeUncheckedUpdateWithoutProjectMembershipsInput>
+}
+
 export type EmployeeCreateWithoutTenantInput = {
   id?: string
   color?: string
@@ -684,6 +728,8 @@ export type EmployeeCreateWithoutTenantInput = {
   staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutEmployeeInput
   orderPhases?: Prisma.OrderPhaseCreateNestedManyWithoutAssignedEmployeeInput
   assignedVehicles?: Prisma.VehicleCreateNestedManyWithoutAssignedEmployeeInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutEmployeeInput
+  projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutTenantInput = {
@@ -703,6 +749,8 @@ export type EmployeeUncheckedCreateWithoutTenantInput = {
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutEmployeeInput
   orderPhases?: Prisma.OrderPhaseUncheckedCreateNestedManyWithoutAssignedEmployeeInput
   assignedVehicles?: Prisma.VehicleUncheckedCreateNestedManyWithoutAssignedEmployeeInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutEmployeeInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutTenantInput = {
@@ -761,6 +809,8 @@ export type EmployeeCreateWithoutUserInput = {
   staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutEmployeeInput
   orderPhases?: Prisma.OrderPhaseCreateNestedManyWithoutAssignedEmployeeInput
   assignedVehicles?: Prisma.VehicleCreateNestedManyWithoutAssignedEmployeeInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutEmployeeInput
+  projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutUserInput = {
@@ -780,6 +830,8 @@ export type EmployeeUncheckedCreateWithoutUserInput = {
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutEmployeeInput
   orderPhases?: Prisma.OrderPhaseUncheckedCreateNestedManyWithoutAssignedEmployeeInput
   assignedVehicles?: Prisma.VehicleUncheckedCreateNestedManyWithoutAssignedEmployeeInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutEmployeeInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutUserInput = {
@@ -815,6 +867,8 @@ export type EmployeeUpdateWithoutUserInput = {
   staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutEmployeeNestedInput
   orderPhases?: Prisma.OrderPhaseUpdateManyWithoutAssignedEmployeeNestedInput
   assignedVehicles?: Prisma.VehicleUpdateManyWithoutAssignedEmployeeNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutEmployeeNestedInput
+  projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutUserInput = {
@@ -834,6 +888,8 @@ export type EmployeeUncheckedUpdateWithoutUserInput = {
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutEmployeeNestedInput
   orderPhases?: Prisma.OrderPhaseUncheckedUpdateManyWithoutAssignedEmployeeNestedInput
   assignedVehicles?: Prisma.VehicleUncheckedUpdateManyWithoutAssignedEmployeeNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutEmployeeNestedInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutQualificationsInput = {
@@ -853,6 +909,8 @@ export type EmployeeCreateWithoutQualificationsInput = {
   staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutEmployeeInput
   orderPhases?: Prisma.OrderPhaseCreateNestedManyWithoutAssignedEmployeeInput
   assignedVehicles?: Prisma.VehicleCreateNestedManyWithoutAssignedEmployeeInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutEmployeeInput
+  projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutQualificationsInput = {
@@ -872,6 +930,8 @@ export type EmployeeUncheckedCreateWithoutQualificationsInput = {
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutEmployeeInput
   orderPhases?: Prisma.OrderPhaseUncheckedCreateNestedManyWithoutAssignedEmployeeInput
   assignedVehicles?: Prisma.VehicleUncheckedCreateNestedManyWithoutAssignedEmployeeInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutEmployeeInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutQualificationsInput = {
@@ -907,6 +967,8 @@ export type EmployeeUpdateWithoutQualificationsInput = {
   staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutEmployeeNestedInput
   orderPhases?: Prisma.OrderPhaseUpdateManyWithoutAssignedEmployeeNestedInput
   assignedVehicles?: Prisma.VehicleUpdateManyWithoutAssignedEmployeeNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutEmployeeNestedInput
+  projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutQualificationsInput = {
@@ -926,6 +988,8 @@ export type EmployeeUncheckedUpdateWithoutQualificationsInput = {
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutEmployeeNestedInput
   orderPhases?: Prisma.OrderPhaseUncheckedUpdateManyWithoutAssignedEmployeeNestedInput
   assignedVehicles?: Prisma.VehicleUncheckedUpdateManyWithoutAssignedEmployeeNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutEmployeeNestedInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutWorkingHoursInput = {
@@ -945,6 +1009,8 @@ export type EmployeeCreateWithoutWorkingHoursInput = {
   staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutEmployeeInput
   orderPhases?: Prisma.OrderPhaseCreateNestedManyWithoutAssignedEmployeeInput
   assignedVehicles?: Prisma.VehicleCreateNestedManyWithoutAssignedEmployeeInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutEmployeeInput
+  projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutWorkingHoursInput = {
@@ -964,6 +1030,8 @@ export type EmployeeUncheckedCreateWithoutWorkingHoursInput = {
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutEmployeeInput
   orderPhases?: Prisma.OrderPhaseUncheckedCreateNestedManyWithoutAssignedEmployeeInput
   assignedVehicles?: Prisma.VehicleUncheckedCreateNestedManyWithoutAssignedEmployeeInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutEmployeeInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutWorkingHoursInput = {
@@ -999,6 +1067,8 @@ export type EmployeeUpdateWithoutWorkingHoursInput = {
   staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutEmployeeNestedInput
   orderPhases?: Prisma.OrderPhaseUpdateManyWithoutAssignedEmployeeNestedInput
   assignedVehicles?: Prisma.VehicleUpdateManyWithoutAssignedEmployeeNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutEmployeeNestedInput
+  projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutWorkingHoursInput = {
@@ -1018,6 +1088,8 @@ export type EmployeeUncheckedUpdateWithoutWorkingHoursInput = {
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutEmployeeNestedInput
   orderPhases?: Prisma.OrderPhaseUncheckedUpdateManyWithoutAssignedEmployeeNestedInput
   assignedVehicles?: Prisma.VehicleUncheckedUpdateManyWithoutAssignedEmployeeNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutEmployeeNestedInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutAppointmentsInput = {
@@ -1037,6 +1109,8 @@ export type EmployeeCreateWithoutAppointmentsInput = {
   staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutEmployeeInput
   orderPhases?: Prisma.OrderPhaseCreateNestedManyWithoutAssignedEmployeeInput
   assignedVehicles?: Prisma.VehicleCreateNestedManyWithoutAssignedEmployeeInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutEmployeeInput
+  projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutAppointmentsInput = {
@@ -1056,6 +1130,8 @@ export type EmployeeUncheckedCreateWithoutAppointmentsInput = {
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutEmployeeInput
   orderPhases?: Prisma.OrderPhaseUncheckedCreateNestedManyWithoutAssignedEmployeeInput
   assignedVehicles?: Prisma.VehicleUncheckedCreateNestedManyWithoutAssignedEmployeeInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutEmployeeInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutAppointmentsInput = {
@@ -1091,6 +1167,8 @@ export type EmployeeUpdateWithoutAppointmentsInput = {
   staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutEmployeeNestedInput
   orderPhases?: Prisma.OrderPhaseUpdateManyWithoutAssignedEmployeeNestedInput
   assignedVehicles?: Prisma.VehicleUpdateManyWithoutAssignedEmployeeNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutEmployeeNestedInput
+  projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutAppointmentsInput = {
@@ -1110,6 +1188,8 @@ export type EmployeeUncheckedUpdateWithoutAppointmentsInput = {
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutEmployeeNestedInput
   orderPhases?: Prisma.OrderPhaseUncheckedUpdateManyWithoutAssignedEmployeeNestedInput
   assignedVehicles?: Prisma.VehicleUncheckedUpdateManyWithoutAssignedEmployeeNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutEmployeeNestedInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutTimeEntriesInput = {
@@ -1129,6 +1209,8 @@ export type EmployeeCreateWithoutTimeEntriesInput = {
   staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutEmployeeInput
   orderPhases?: Prisma.OrderPhaseCreateNestedManyWithoutAssignedEmployeeInput
   assignedVehicles?: Prisma.VehicleCreateNestedManyWithoutAssignedEmployeeInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutEmployeeInput
+  projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutTimeEntriesInput = {
@@ -1148,6 +1230,8 @@ export type EmployeeUncheckedCreateWithoutTimeEntriesInput = {
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutEmployeeInput
   orderPhases?: Prisma.OrderPhaseUncheckedCreateNestedManyWithoutAssignedEmployeeInput
   assignedVehicles?: Prisma.VehicleUncheckedCreateNestedManyWithoutAssignedEmployeeInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutEmployeeInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutTimeEntriesInput = {
@@ -1183,6 +1267,8 @@ export type EmployeeUpdateWithoutTimeEntriesInput = {
   staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutEmployeeNestedInput
   orderPhases?: Prisma.OrderPhaseUpdateManyWithoutAssignedEmployeeNestedInput
   assignedVehicles?: Prisma.VehicleUpdateManyWithoutAssignedEmployeeNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutEmployeeNestedInput
+  projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutTimeEntriesInput = {
@@ -1202,6 +1288,8 @@ export type EmployeeUncheckedUpdateWithoutTimeEntriesInput = {
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutEmployeeNestedInput
   orderPhases?: Prisma.OrderPhaseUncheckedUpdateManyWithoutAssignedEmployeeNestedInput
   assignedVehicles?: Prisma.VehicleUncheckedUpdateManyWithoutAssignedEmployeeNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutEmployeeNestedInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutMaterialUsagesInput = {
@@ -1221,6 +1309,8 @@ export type EmployeeCreateWithoutMaterialUsagesInput = {
   staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutEmployeeInput
   orderPhases?: Prisma.OrderPhaseCreateNestedManyWithoutAssignedEmployeeInput
   assignedVehicles?: Prisma.VehicleCreateNestedManyWithoutAssignedEmployeeInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutEmployeeInput
+  projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutMaterialUsagesInput = {
@@ -1240,6 +1330,8 @@ export type EmployeeUncheckedCreateWithoutMaterialUsagesInput = {
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutEmployeeInput
   orderPhases?: Prisma.OrderPhaseUncheckedCreateNestedManyWithoutAssignedEmployeeInput
   assignedVehicles?: Prisma.VehicleUncheckedCreateNestedManyWithoutAssignedEmployeeInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutEmployeeInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutMaterialUsagesInput = {
@@ -1275,6 +1367,8 @@ export type EmployeeUpdateWithoutMaterialUsagesInput = {
   staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutEmployeeNestedInput
   orderPhases?: Prisma.OrderPhaseUpdateManyWithoutAssignedEmployeeNestedInput
   assignedVehicles?: Prisma.VehicleUpdateManyWithoutAssignedEmployeeNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutEmployeeNestedInput
+  projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutMaterialUsagesInput = {
@@ -1294,6 +1388,108 @@ export type EmployeeUncheckedUpdateWithoutMaterialUsagesInput = {
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutEmployeeNestedInput
   orderPhases?: Prisma.OrderPhaseUncheckedUpdateManyWithoutAssignedEmployeeNestedInput
   assignedVehicles?: Prisma.VehicleUncheckedUpdateManyWithoutAssignedEmployeeNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutEmployeeNestedInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutEmployeeNestedInput
+}
+
+export type EmployeeCreateWithoutStockMovementsInput = {
+  id?: string
+  color?: string
+  operationalStatus?: $Enums.EmployeeOperationalStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tenant: Prisma.TenantCreateNestedOneWithoutEmployeesInput
+  user: Prisma.UserCreateNestedOneWithoutEmployeeInput
+  qualifications?: Prisma.EmployeeQualificationCreateNestedManyWithoutEmployeeInput
+  workingHours?: Prisma.EmployeeWorkingHoursCreateNestedManyWithoutEmployeeInput
+  appointments?: Prisma.AppointmentCreateNestedManyWithoutEmployeeInput
+  timeEntries?: Prisma.TimeEntryCreateNestedManyWithoutEmployeeInput
+  materialUsages?: Prisma.MaterialUsageCreateNestedManyWithoutEmployeeInput
+  absences?: Prisma.EmployeeAbsenceCreateNestedManyWithoutEmployeeInput
+  teamMemberships?: Prisma.TeamMemberCreateNestedManyWithoutEmployeeInput
+  staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutEmployeeInput
+  orderPhases?: Prisma.OrderPhaseCreateNestedManyWithoutAssignedEmployeeInput
+  assignedVehicles?: Prisma.VehicleCreateNestedManyWithoutAssignedEmployeeInput
+  projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutEmployeeInput
+}
+
+export type EmployeeUncheckedCreateWithoutStockMovementsInput = {
+  id?: string
+  tenantId: string
+  userId: string
+  color?: string
+  operationalStatus?: $Enums.EmployeeOperationalStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  qualifications?: Prisma.EmployeeQualificationUncheckedCreateNestedManyWithoutEmployeeInput
+  workingHours?: Prisma.EmployeeWorkingHoursUncheckedCreateNestedManyWithoutEmployeeInput
+  appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutEmployeeInput
+  timeEntries?: Prisma.TimeEntryUncheckedCreateNestedManyWithoutEmployeeInput
+  materialUsages?: Prisma.MaterialUsageUncheckedCreateNestedManyWithoutEmployeeInput
+  absences?: Prisma.EmployeeAbsenceUncheckedCreateNestedManyWithoutEmployeeInput
+  teamMemberships?: Prisma.TeamMemberUncheckedCreateNestedManyWithoutEmployeeInput
+  staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutEmployeeInput
+  orderPhases?: Prisma.OrderPhaseUncheckedCreateNestedManyWithoutAssignedEmployeeInput
+  assignedVehicles?: Prisma.VehicleUncheckedCreateNestedManyWithoutAssignedEmployeeInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutEmployeeInput
+}
+
+export type EmployeeCreateOrConnectWithoutStockMovementsInput = {
+  where: Prisma.EmployeeWhereUniqueInput
+  create: Prisma.XOR<Prisma.EmployeeCreateWithoutStockMovementsInput, Prisma.EmployeeUncheckedCreateWithoutStockMovementsInput>
+}
+
+export type EmployeeUpsertWithoutStockMovementsInput = {
+  update: Prisma.XOR<Prisma.EmployeeUpdateWithoutStockMovementsInput, Prisma.EmployeeUncheckedUpdateWithoutStockMovementsInput>
+  create: Prisma.XOR<Prisma.EmployeeCreateWithoutStockMovementsInput, Prisma.EmployeeUncheckedCreateWithoutStockMovementsInput>
+  where?: Prisma.EmployeeWhereInput
+}
+
+export type EmployeeUpdateToOneWithWhereWithoutStockMovementsInput = {
+  where?: Prisma.EmployeeWhereInput
+  data: Prisma.XOR<Prisma.EmployeeUpdateWithoutStockMovementsInput, Prisma.EmployeeUncheckedUpdateWithoutStockMovementsInput>
+}
+
+export type EmployeeUpdateWithoutStockMovementsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.StringFieldUpdateOperationsInput | string
+  operationalStatus?: Prisma.EnumEmployeeOperationalStatusFieldUpdateOperationsInput | $Enums.EmployeeOperationalStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutEmployeesNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutEmployeeNestedInput
+  qualifications?: Prisma.EmployeeQualificationUpdateManyWithoutEmployeeNestedInput
+  workingHours?: Prisma.EmployeeWorkingHoursUpdateManyWithoutEmployeeNestedInput
+  appointments?: Prisma.AppointmentUpdateManyWithoutEmployeeNestedInput
+  timeEntries?: Prisma.TimeEntryUpdateManyWithoutEmployeeNestedInput
+  materialUsages?: Prisma.MaterialUsageUpdateManyWithoutEmployeeNestedInput
+  absences?: Prisma.EmployeeAbsenceUpdateManyWithoutEmployeeNestedInput
+  teamMemberships?: Prisma.TeamMemberUpdateManyWithoutEmployeeNestedInput
+  staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutEmployeeNestedInput
+  orderPhases?: Prisma.OrderPhaseUpdateManyWithoutAssignedEmployeeNestedInput
+  assignedVehicles?: Prisma.VehicleUpdateManyWithoutAssignedEmployeeNestedInput
+  projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutEmployeeNestedInput
+}
+
+export type EmployeeUncheckedUpdateWithoutStockMovementsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.StringFieldUpdateOperationsInput | string
+  operationalStatus?: Prisma.EnumEmployeeOperationalStatusFieldUpdateOperationsInput | $Enums.EmployeeOperationalStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  qualifications?: Prisma.EmployeeQualificationUncheckedUpdateManyWithoutEmployeeNestedInput
+  workingHours?: Prisma.EmployeeWorkingHoursUncheckedUpdateManyWithoutEmployeeNestedInput
+  appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutEmployeeNestedInput
+  timeEntries?: Prisma.TimeEntryUncheckedUpdateManyWithoutEmployeeNestedInput
+  materialUsages?: Prisma.MaterialUsageUncheckedUpdateManyWithoutEmployeeNestedInput
+  absences?: Prisma.EmployeeAbsenceUncheckedUpdateManyWithoutEmployeeNestedInput
+  teamMemberships?: Prisma.TeamMemberUncheckedUpdateManyWithoutEmployeeNestedInput
+  staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutEmployeeNestedInput
+  orderPhases?: Prisma.OrderPhaseUncheckedUpdateManyWithoutAssignedEmployeeNestedInput
+  assignedVehicles?: Prisma.VehicleUncheckedUpdateManyWithoutAssignedEmployeeNestedInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutOrderPhasesInput = {
@@ -1313,6 +1509,8 @@ export type EmployeeCreateWithoutOrderPhasesInput = {
   teamMemberships?: Prisma.TeamMemberCreateNestedManyWithoutEmployeeInput
   staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutEmployeeInput
   assignedVehicles?: Prisma.VehicleCreateNestedManyWithoutAssignedEmployeeInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutEmployeeInput
+  projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutOrderPhasesInput = {
@@ -1332,6 +1530,8 @@ export type EmployeeUncheckedCreateWithoutOrderPhasesInput = {
   teamMemberships?: Prisma.TeamMemberUncheckedCreateNestedManyWithoutEmployeeInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutEmployeeInput
   assignedVehicles?: Prisma.VehicleUncheckedCreateNestedManyWithoutAssignedEmployeeInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutEmployeeInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutOrderPhasesInput = {
@@ -1367,6 +1567,8 @@ export type EmployeeUpdateWithoutOrderPhasesInput = {
   teamMemberships?: Prisma.TeamMemberUpdateManyWithoutEmployeeNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutEmployeeNestedInput
   assignedVehicles?: Prisma.VehicleUpdateManyWithoutAssignedEmployeeNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutEmployeeNestedInput
+  projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutOrderPhasesInput = {
@@ -1386,6 +1588,8 @@ export type EmployeeUncheckedUpdateWithoutOrderPhasesInput = {
   teamMemberships?: Prisma.TeamMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutEmployeeNestedInput
   assignedVehicles?: Prisma.VehicleUncheckedUpdateManyWithoutAssignedEmployeeNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutEmployeeNestedInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutTeamMembershipsInput = {
@@ -1405,6 +1609,8 @@ export type EmployeeCreateWithoutTeamMembershipsInput = {
   staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutEmployeeInput
   orderPhases?: Prisma.OrderPhaseCreateNestedManyWithoutAssignedEmployeeInput
   assignedVehicles?: Prisma.VehicleCreateNestedManyWithoutAssignedEmployeeInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutEmployeeInput
+  projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutTeamMembershipsInput = {
@@ -1424,6 +1630,8 @@ export type EmployeeUncheckedCreateWithoutTeamMembershipsInput = {
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutEmployeeInput
   orderPhases?: Prisma.OrderPhaseUncheckedCreateNestedManyWithoutAssignedEmployeeInput
   assignedVehicles?: Prisma.VehicleUncheckedCreateNestedManyWithoutAssignedEmployeeInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutEmployeeInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutTeamMembershipsInput = {
@@ -1459,6 +1667,8 @@ export type EmployeeUpdateWithoutTeamMembershipsInput = {
   staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutEmployeeNestedInput
   orderPhases?: Prisma.OrderPhaseUpdateManyWithoutAssignedEmployeeNestedInput
   assignedVehicles?: Prisma.VehicleUpdateManyWithoutAssignedEmployeeNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutEmployeeNestedInput
+  projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutTeamMembershipsInput = {
@@ -1478,6 +1688,8 @@ export type EmployeeUncheckedUpdateWithoutTeamMembershipsInput = {
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutEmployeeNestedInput
   orderPhases?: Prisma.OrderPhaseUncheckedUpdateManyWithoutAssignedEmployeeNestedInput
   assignedVehicles?: Prisma.VehicleUncheckedUpdateManyWithoutAssignedEmployeeNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutEmployeeNestedInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutAssignedVehiclesInput = {
@@ -1497,6 +1709,8 @@ export type EmployeeCreateWithoutAssignedVehiclesInput = {
   teamMemberships?: Prisma.TeamMemberCreateNestedManyWithoutEmployeeInput
   staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutEmployeeInput
   orderPhases?: Prisma.OrderPhaseCreateNestedManyWithoutAssignedEmployeeInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutEmployeeInput
+  projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutAssignedVehiclesInput = {
@@ -1516,6 +1730,8 @@ export type EmployeeUncheckedCreateWithoutAssignedVehiclesInput = {
   teamMemberships?: Prisma.TeamMemberUncheckedCreateNestedManyWithoutEmployeeInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutEmployeeInput
   orderPhases?: Prisma.OrderPhaseUncheckedCreateNestedManyWithoutAssignedEmployeeInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutEmployeeInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutAssignedVehiclesInput = {
@@ -1551,6 +1767,8 @@ export type EmployeeUpdateWithoutAssignedVehiclesInput = {
   teamMemberships?: Prisma.TeamMemberUpdateManyWithoutEmployeeNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutEmployeeNestedInput
   orderPhases?: Prisma.OrderPhaseUpdateManyWithoutAssignedEmployeeNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutEmployeeNestedInput
+  projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutAssignedVehiclesInput = {
@@ -1570,6 +1788,8 @@ export type EmployeeUncheckedUpdateWithoutAssignedVehiclesInput = {
   teamMemberships?: Prisma.TeamMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutEmployeeNestedInput
   orderPhases?: Prisma.OrderPhaseUncheckedUpdateManyWithoutAssignedEmployeeNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutEmployeeNestedInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutAbsencesInput = {
@@ -1589,6 +1809,8 @@ export type EmployeeCreateWithoutAbsencesInput = {
   staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutEmployeeInput
   orderPhases?: Prisma.OrderPhaseCreateNestedManyWithoutAssignedEmployeeInput
   assignedVehicles?: Prisma.VehicleCreateNestedManyWithoutAssignedEmployeeInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutEmployeeInput
+  projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutAbsencesInput = {
@@ -1608,6 +1830,8 @@ export type EmployeeUncheckedCreateWithoutAbsencesInput = {
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutEmployeeInput
   orderPhases?: Prisma.OrderPhaseUncheckedCreateNestedManyWithoutAssignedEmployeeInput
   assignedVehicles?: Prisma.VehicleUncheckedCreateNestedManyWithoutAssignedEmployeeInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutEmployeeInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutAbsencesInput = {
@@ -1643,6 +1867,8 @@ export type EmployeeUpdateWithoutAbsencesInput = {
   staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutEmployeeNestedInput
   orderPhases?: Prisma.OrderPhaseUpdateManyWithoutAssignedEmployeeNestedInput
   assignedVehicles?: Prisma.VehicleUpdateManyWithoutAssignedEmployeeNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutEmployeeNestedInput
+  projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutAbsencesInput = {
@@ -1662,6 +1888,8 @@ export type EmployeeUncheckedUpdateWithoutAbsencesInput = {
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutEmployeeNestedInput
   orderPhases?: Prisma.OrderPhaseUncheckedUpdateManyWithoutAssignedEmployeeNestedInput
   assignedVehicles?: Prisma.VehicleUncheckedUpdateManyWithoutAssignedEmployeeNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutEmployeeNestedInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutStaffRequestsInput = {
@@ -1681,6 +1909,8 @@ export type EmployeeCreateWithoutStaffRequestsInput = {
   teamMemberships?: Prisma.TeamMemberCreateNestedManyWithoutEmployeeInput
   orderPhases?: Prisma.OrderPhaseCreateNestedManyWithoutAssignedEmployeeInput
   assignedVehicles?: Prisma.VehicleCreateNestedManyWithoutAssignedEmployeeInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutEmployeeInput
+  projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutStaffRequestsInput = {
@@ -1700,6 +1930,8 @@ export type EmployeeUncheckedCreateWithoutStaffRequestsInput = {
   teamMemberships?: Prisma.TeamMemberUncheckedCreateNestedManyWithoutEmployeeInput
   orderPhases?: Prisma.OrderPhaseUncheckedCreateNestedManyWithoutAssignedEmployeeInput
   assignedVehicles?: Prisma.VehicleUncheckedCreateNestedManyWithoutAssignedEmployeeInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutEmployeeInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutStaffRequestsInput = {
@@ -1735,6 +1967,8 @@ export type EmployeeUpdateWithoutStaffRequestsInput = {
   teamMemberships?: Prisma.TeamMemberUpdateManyWithoutEmployeeNestedInput
   orderPhases?: Prisma.OrderPhaseUpdateManyWithoutAssignedEmployeeNestedInput
   assignedVehicles?: Prisma.VehicleUpdateManyWithoutAssignedEmployeeNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutEmployeeNestedInput
+  projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutStaffRequestsInput = {
@@ -1754,6 +1988,108 @@ export type EmployeeUncheckedUpdateWithoutStaffRequestsInput = {
   teamMemberships?: Prisma.TeamMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   orderPhases?: Prisma.OrderPhaseUncheckedUpdateManyWithoutAssignedEmployeeNestedInput
   assignedVehicles?: Prisma.VehicleUncheckedUpdateManyWithoutAssignedEmployeeNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutEmployeeNestedInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutEmployeeNestedInput
+}
+
+export type EmployeeCreateWithoutProjectMembershipsInput = {
+  id?: string
+  color?: string
+  operationalStatus?: $Enums.EmployeeOperationalStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tenant: Prisma.TenantCreateNestedOneWithoutEmployeesInput
+  user: Prisma.UserCreateNestedOneWithoutEmployeeInput
+  qualifications?: Prisma.EmployeeQualificationCreateNestedManyWithoutEmployeeInput
+  workingHours?: Prisma.EmployeeWorkingHoursCreateNestedManyWithoutEmployeeInput
+  appointments?: Prisma.AppointmentCreateNestedManyWithoutEmployeeInput
+  timeEntries?: Prisma.TimeEntryCreateNestedManyWithoutEmployeeInput
+  materialUsages?: Prisma.MaterialUsageCreateNestedManyWithoutEmployeeInput
+  absences?: Prisma.EmployeeAbsenceCreateNestedManyWithoutEmployeeInput
+  teamMemberships?: Prisma.TeamMemberCreateNestedManyWithoutEmployeeInput
+  staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutEmployeeInput
+  orderPhases?: Prisma.OrderPhaseCreateNestedManyWithoutAssignedEmployeeInput
+  assignedVehicles?: Prisma.VehicleCreateNestedManyWithoutAssignedEmployeeInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutEmployeeInput
+}
+
+export type EmployeeUncheckedCreateWithoutProjectMembershipsInput = {
+  id?: string
+  tenantId: string
+  userId: string
+  color?: string
+  operationalStatus?: $Enums.EmployeeOperationalStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  qualifications?: Prisma.EmployeeQualificationUncheckedCreateNestedManyWithoutEmployeeInput
+  workingHours?: Prisma.EmployeeWorkingHoursUncheckedCreateNestedManyWithoutEmployeeInput
+  appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutEmployeeInput
+  timeEntries?: Prisma.TimeEntryUncheckedCreateNestedManyWithoutEmployeeInput
+  materialUsages?: Prisma.MaterialUsageUncheckedCreateNestedManyWithoutEmployeeInput
+  absences?: Prisma.EmployeeAbsenceUncheckedCreateNestedManyWithoutEmployeeInput
+  teamMemberships?: Prisma.TeamMemberUncheckedCreateNestedManyWithoutEmployeeInput
+  staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutEmployeeInput
+  orderPhases?: Prisma.OrderPhaseUncheckedCreateNestedManyWithoutAssignedEmployeeInput
+  assignedVehicles?: Prisma.VehicleUncheckedCreateNestedManyWithoutAssignedEmployeeInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutEmployeeInput
+}
+
+export type EmployeeCreateOrConnectWithoutProjectMembershipsInput = {
+  where: Prisma.EmployeeWhereUniqueInput
+  create: Prisma.XOR<Prisma.EmployeeCreateWithoutProjectMembershipsInput, Prisma.EmployeeUncheckedCreateWithoutProjectMembershipsInput>
+}
+
+export type EmployeeUpsertWithoutProjectMembershipsInput = {
+  update: Prisma.XOR<Prisma.EmployeeUpdateWithoutProjectMembershipsInput, Prisma.EmployeeUncheckedUpdateWithoutProjectMembershipsInput>
+  create: Prisma.XOR<Prisma.EmployeeCreateWithoutProjectMembershipsInput, Prisma.EmployeeUncheckedCreateWithoutProjectMembershipsInput>
+  where?: Prisma.EmployeeWhereInput
+}
+
+export type EmployeeUpdateToOneWithWhereWithoutProjectMembershipsInput = {
+  where?: Prisma.EmployeeWhereInput
+  data: Prisma.XOR<Prisma.EmployeeUpdateWithoutProjectMembershipsInput, Prisma.EmployeeUncheckedUpdateWithoutProjectMembershipsInput>
+}
+
+export type EmployeeUpdateWithoutProjectMembershipsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.StringFieldUpdateOperationsInput | string
+  operationalStatus?: Prisma.EnumEmployeeOperationalStatusFieldUpdateOperationsInput | $Enums.EmployeeOperationalStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutEmployeesNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutEmployeeNestedInput
+  qualifications?: Prisma.EmployeeQualificationUpdateManyWithoutEmployeeNestedInput
+  workingHours?: Prisma.EmployeeWorkingHoursUpdateManyWithoutEmployeeNestedInput
+  appointments?: Prisma.AppointmentUpdateManyWithoutEmployeeNestedInput
+  timeEntries?: Prisma.TimeEntryUpdateManyWithoutEmployeeNestedInput
+  materialUsages?: Prisma.MaterialUsageUpdateManyWithoutEmployeeNestedInput
+  absences?: Prisma.EmployeeAbsenceUpdateManyWithoutEmployeeNestedInput
+  teamMemberships?: Prisma.TeamMemberUpdateManyWithoutEmployeeNestedInput
+  staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutEmployeeNestedInput
+  orderPhases?: Prisma.OrderPhaseUpdateManyWithoutAssignedEmployeeNestedInput
+  assignedVehicles?: Prisma.VehicleUpdateManyWithoutAssignedEmployeeNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutEmployeeNestedInput
+}
+
+export type EmployeeUncheckedUpdateWithoutProjectMembershipsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.StringFieldUpdateOperationsInput | string
+  operationalStatus?: Prisma.EnumEmployeeOperationalStatusFieldUpdateOperationsInput | $Enums.EmployeeOperationalStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  qualifications?: Prisma.EmployeeQualificationUncheckedUpdateManyWithoutEmployeeNestedInput
+  workingHours?: Prisma.EmployeeWorkingHoursUncheckedUpdateManyWithoutEmployeeNestedInput
+  appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutEmployeeNestedInput
+  timeEntries?: Prisma.TimeEntryUncheckedUpdateManyWithoutEmployeeNestedInput
+  materialUsages?: Prisma.MaterialUsageUncheckedUpdateManyWithoutEmployeeNestedInput
+  absences?: Prisma.EmployeeAbsenceUncheckedUpdateManyWithoutEmployeeNestedInput
+  teamMemberships?: Prisma.TeamMemberUncheckedUpdateManyWithoutEmployeeNestedInput
+  staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutEmployeeNestedInput
+  orderPhases?: Prisma.OrderPhaseUncheckedUpdateManyWithoutAssignedEmployeeNestedInput
+  assignedVehicles?: Prisma.VehicleUncheckedUpdateManyWithoutAssignedEmployeeNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateManyTenantInput = {
@@ -1782,6 +2118,8 @@ export type EmployeeUpdateWithoutTenantInput = {
   staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutEmployeeNestedInput
   orderPhases?: Prisma.OrderPhaseUpdateManyWithoutAssignedEmployeeNestedInput
   assignedVehicles?: Prisma.VehicleUpdateManyWithoutAssignedEmployeeNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutEmployeeNestedInput
+  projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutTenantInput = {
@@ -1801,6 +2139,8 @@ export type EmployeeUncheckedUpdateWithoutTenantInput = {
   staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutEmployeeNestedInput
   orderPhases?: Prisma.OrderPhaseUncheckedUpdateManyWithoutAssignedEmployeeNestedInput
   assignedVehicles?: Prisma.VehicleUncheckedUpdateManyWithoutAssignedEmployeeNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutEmployeeNestedInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateManyWithoutTenantInput = {
@@ -1828,6 +2168,8 @@ export type EmployeeCountOutputType = {
   staffRequests: number
   orderPhases: number
   assignedVehicles: number
+  stockMovements: number
+  projectMemberships: number
 }
 
 export type EmployeeCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1841,6 +2183,8 @@ export type EmployeeCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensio
   staffRequests?: boolean | EmployeeCountOutputTypeCountStaffRequestsArgs
   orderPhases?: boolean | EmployeeCountOutputTypeCountOrderPhasesArgs
   assignedVehicles?: boolean | EmployeeCountOutputTypeCountAssignedVehiclesArgs
+  stockMovements?: boolean | EmployeeCountOutputTypeCountStockMovementsArgs
+  projectMemberships?: boolean | EmployeeCountOutputTypeCountProjectMembershipsArgs
 }
 
 /**
@@ -1923,6 +2267,20 @@ export type EmployeeCountOutputTypeCountAssignedVehiclesArgs<ExtArgs extends run
   where?: Prisma.VehicleWhereInput
 }
 
+/**
+ * EmployeeCountOutputType without action
+ */
+export type EmployeeCountOutputTypeCountStockMovementsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.StockMovementWhereInput
+}
+
+/**
+ * EmployeeCountOutputType without action
+ */
+export type EmployeeCountOutputTypeCountProjectMembershipsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ProjectMemberWhereInput
+}
+
 
 export type EmployeeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1944,6 +2302,8 @@ export type EmployeeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   staffRequests?: boolean | Prisma.Employee$staffRequestsArgs<ExtArgs>
   orderPhases?: boolean | Prisma.Employee$orderPhasesArgs<ExtArgs>
   assignedVehicles?: boolean | Prisma.Employee$assignedVehiclesArgs<ExtArgs>
+  stockMovements?: boolean | Prisma.Employee$stockMovementsArgs<ExtArgs>
+  projectMemberships?: boolean | Prisma.Employee$projectMembershipsArgs<ExtArgs>
   _count?: boolean | Prisma.EmployeeCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["employee"]>
 
@@ -1995,6 +2355,8 @@ export type EmployeeInclude<ExtArgs extends runtime.Types.Extensions.InternalArg
   staffRequests?: boolean | Prisma.Employee$staffRequestsArgs<ExtArgs>
   orderPhases?: boolean | Prisma.Employee$orderPhasesArgs<ExtArgs>
   assignedVehicles?: boolean | Prisma.Employee$assignedVehiclesArgs<ExtArgs>
+  stockMovements?: boolean | Prisma.Employee$stockMovementsArgs<ExtArgs>
+  projectMemberships?: boolean | Prisma.Employee$projectMembershipsArgs<ExtArgs>
   _count?: boolean | Prisma.EmployeeCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type EmployeeIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2021,6 +2383,8 @@ export type $EmployeePayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     staffRequests: Prisma.$StaffAssignmentRequestPayload<ExtArgs>[]
     orderPhases: Prisma.$OrderPhasePayload<ExtArgs>[]
     assignedVehicles: Prisma.$VehiclePayload<ExtArgs>[]
+    stockMovements: Prisma.$StockMovementPayload<ExtArgs>[]
+    projectMemberships: Prisma.$ProjectMemberPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2436,6 +2800,8 @@ export interface Prisma__EmployeeClient<T, Null = never, ExtArgs extends runtime
   staffRequests<T extends Prisma.Employee$staffRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Employee$staffRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StaffAssignmentRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   orderPhases<T extends Prisma.Employee$orderPhasesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Employee$orderPhasesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderPhasePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   assignedVehicles<T extends Prisma.Employee$assignedVehiclesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Employee$assignedVehiclesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$VehiclePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  stockMovements<T extends Prisma.Employee$stockMovementsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Employee$stockMovementsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StockMovementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  projectMemberships<T extends Prisma.Employee$projectMembershipsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Employee$projectMembershipsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3110,6 +3476,54 @@ export type Employee$assignedVehiclesArgs<ExtArgs extends runtime.Types.Extensio
   take?: number
   skip?: number
   distinct?: Prisma.VehicleScalarFieldEnum | Prisma.VehicleScalarFieldEnum[]
+}
+
+/**
+ * Employee.stockMovements
+ */
+export type Employee$stockMovementsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StockMovement
+   */
+  select?: Prisma.StockMovementSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the StockMovement
+   */
+  omit?: Prisma.StockMovementOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StockMovementInclude<ExtArgs> | null
+  where?: Prisma.StockMovementWhereInput
+  orderBy?: Prisma.StockMovementOrderByWithRelationInput | Prisma.StockMovementOrderByWithRelationInput[]
+  cursor?: Prisma.StockMovementWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.StockMovementScalarFieldEnum | Prisma.StockMovementScalarFieldEnum[]
+}
+
+/**
+ * Employee.projectMemberships
+ */
+export type Employee$projectMembershipsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ProjectMember
+   */
+  select?: Prisma.ProjectMemberSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ProjectMember
+   */
+  omit?: Prisma.ProjectMemberOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ProjectMemberInclude<ExtArgs> | null
+  where?: Prisma.ProjectMemberWhereInput
+  orderBy?: Prisma.ProjectMemberOrderByWithRelationInput | Prisma.ProjectMemberOrderByWithRelationInput[]
+  cursor?: Prisma.ProjectMemberWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ProjectMemberScalarFieldEnum | Prisma.ProjectMemberScalarFieldEnum[]
 }
 
 /**

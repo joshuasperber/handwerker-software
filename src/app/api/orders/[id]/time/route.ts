@@ -22,6 +22,19 @@ export async function POST(
 
   if (!employee) return apiError("Mitarbeiterprofil nicht gefunden", 404);
 
+  const { validateTimeEntryInput } = await import("@/lib/time-entry");
+  const validationError = validateTimeEntryInput({
+    startTime: body.startTime,
+    endTime: body.endTime,
+    breakMinutes: body.breakMinutes,
+    orderId,
+    activity: body.activity,
+    notes: body.notes,
+    requireEndTime: Boolean(body.endTime),
+  });
+  if (body.endTime && validationError) return apiError(validationError, 400);
+  if (!body.startTime) return apiError("Startzeit ist Pflicht.", 400);
+
   const entry = await prisma.timeEntry.create({
     data: {
       orderId,
@@ -29,7 +42,9 @@ export async function POST(
       startTime: new Date(body.startTime),
       endTime: body.endTime ? new Date(body.endTime) : undefined,
       breakMinutes: body.breakMinutes ?? 0,
+      activity: body.activity?.trim() || null,
       notes: body.notes,
+      status: "OPEN",
     },
   });
 

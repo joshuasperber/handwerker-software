@@ -17,6 +17,7 @@ export async function GET(
         include: { travelZone: true },
         orderBy: [{ isPrimary: "desc" }, { createdAt: "asc" }],
       },
+      taxExemptionCertificate: true,
       orders: { orderBy: { createdAt: "desc" }, take: 20 },
     },
   });
@@ -47,12 +48,20 @@ export async function PATCH(
       ...(body.email !== undefined ? { email: body.email } : {}),
       ...(body.phone !== undefined ? { phone: body.phone } : {}),
       ...(body.company !== undefined ? { company: body.company } : {}),
+      ...(body.customerType !== undefined ? { customerType: body.customerType } : {}),
+      ...(body.contactPerson !== undefined ? { contactPerson: body.contactPerson || null } : {}),
+      ...(body.vatId !== undefined ? { vatId: body.vatId || null } : {}),
+      ...(body.taxNumber !== undefined ? { taxNumber: body.taxNumber || null } : {}),
+      ...(body.billingStreet !== undefined ? { billingStreet: body.billingStreet || null } : {}),
+      ...(body.billingZipCode !== undefined ? { billingZipCode: body.billingZipCode || null } : {}),
+      ...(body.billingCity !== undefined ? { billingCity: body.billingCity || null } : {}),
+      ...(body.taxNotes !== undefined ? { taxNotes: body.taxNotes || null } : {}),
       ...(body.notes !== undefined ? { notes: body.notes } : {}),
       ...(body.bookingConfirmationEmailTemplate !== undefined
         ? { bookingConfirmationEmailTemplate: body.bookingConfirmationEmailTemplate || null }
         : {}),
     },
-    include: { properties: true },
+    include: { properties: true, taxExemptionCertificate: true },
   });
 
   return apiSuccess(customer);

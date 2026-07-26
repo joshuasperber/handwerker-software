@@ -1,7 +1,8 @@
 "use client";
 
+import Link from "next/link";
 import { motion } from "motion/react";
-import { TrendingUp, BarChart3, PieChart, CalendarDays } from "lucide-react";
+import { TrendingUp, BarChart3, PieChart, CalendarDays, ArrowUpRight } from "lucide-react";
 import {
   Card,
   CardHeader,
@@ -10,6 +11,7 @@ import {
   CardContent,
 } from "@/components/ui/card";
 import type { DashboardAnalytics } from "@/lib/dashboard/analytics";
+import { usePermission } from "@/components/auth/can-access";
 import { KpiCards } from "./kpi-cards";
 import { RevenueChart } from "./revenue-chart";
 import { OrdersStatusChart } from "./orders-status-chart";
@@ -26,12 +28,16 @@ function ChartCard({
   description,
   icon: Icon,
   delay,
+  href,
+  linkLabel,
   children,
 }: {
   title: string;
   description: string;
   icon: typeof TrendingUp;
   delay: number;
+  href?: string;
+  linkLabel?: string;
   children: React.ReactNode;
 }) {
   return (
@@ -42,10 +48,21 @@ function ChartCard({
     >
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Icon className="h-4 w-4 text-[#0d5c63]" />
-            {title}
-          </CardTitle>
+          <div className="flex items-start justify-between gap-2">
+            <CardTitle className="flex items-center gap-2">
+              <Icon className="h-4 w-4 text-[#0d5c63]" />
+              {title}
+            </CardTitle>
+            {href && linkLabel && (
+              <Link
+                href={href}
+                className="inline-flex shrink-0 items-center gap-1 text-xs font-medium text-[#0d5c63] hover:underline"
+              >
+                {linkLabel}
+                <ArrowUpRight className="h-3.5 w-3.5" />
+              </Link>
+            )}
+          </div>
           <CardDescription>{description}</CardDescription>
         </CardHeader>
         <CardContent>{children}</CardContent>
@@ -55,6 +72,8 @@ function ChartCard({
 }
 
 export function DashboardView({ data }: { data: DashboardAnalytics }) {
+  const canReadInvoices = usePermission("invoices.read");
+
   return (
     <div className="space-y-6">
       {data.invoiceMetricsApproximate && (
@@ -72,6 +91,8 @@ export function DashboardView({ data }: { data: DashboardAnalytics }) {
           description="Gestellte Rechnungen der letzten 6 Monate"
           icon={TrendingUp}
           delay={0.05}
+          href={canReadInvoices ? "/dashboard/umsatz" : undefined}
+          linkLabel={canReadInvoices ? "Umsatzübersicht" : undefined}
         >
           <RevenueChart data={data.revenuePerMonth} />
         </ChartCard>
@@ -90,6 +111,8 @@ export function DashboardView({ data }: { data: DashboardAnalytics }) {
           description="Status der Kalkulationen / Rechnungen"
           icon={PieChart}
           delay={0.15}
+          href={canReadInvoices ? "/dashboard/rechnungen" : undefined}
+          linkLabel={canReadInvoices ? "Rechnungen" : undefined}
         >
           <InvoiceStatusChart data={data.invoiceStatus} />
         </ChartCard>

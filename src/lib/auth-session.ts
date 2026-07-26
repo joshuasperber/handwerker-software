@@ -3,7 +3,8 @@ import { cookies } from "next/headers";
 import type { NextResponse } from "next/server";
 import type { UserRole } from "@/generated/prisma/enums";
 
-const COOKIE_NAME = "handwerker-session";
+const COOKIE_NAME = "jomaster-session";
+const LEGACY_COOKIE_NAME = "handwerker-session";
 export const SESSION_DURATION = 60 * 60 * 24 * 7; // 7 days
 
 export const SESSION_COOKIE_OPTIONS = {
@@ -75,7 +76,9 @@ export async function verifySession(token: string): Promise<SessionUser | null> 
 
 export async function getSession(): Promise<SessionUser | null> {
   const cookieStore = await cookies();
-  const token = cookieStore.get(COOKIE_NAME)?.value;
+  const token =
+    cookieStore.get(COOKIE_NAME)?.value ??
+    cookieStore.get(LEGACY_COOKIE_NAME)?.value;
   if (!token) return null;
   return verifySession(token);
 }
@@ -92,6 +95,7 @@ export async function setSessionCookie(token: string): Promise<void> {
 export async function clearSessionCookie(): Promise<void> {
   const cookieStore = await cookies();
   cookieStore.delete({ name: COOKIE_NAME, path: "/" });
+  cookieStore.delete({ name: LEGACY_COOKIE_NAME, path: "/" });
 }
 
-export { COOKIE_NAME };
+export { COOKIE_NAME, LEGACY_COOKIE_NAME };

@@ -38,7 +38,10 @@ export type VATSettingsMinAggregateOutputType = {
   id: string | null
   calculationId: string | null
   vatRatePercent: number | null
+  taxTreatment: $Enums.TaxTreatmentType | null
   reverseCharge: boolean | null
+  reverseChargeConfirmed: boolean | null
+  includeSection13bNote: boolean | null
   taxExempt: boolean | null
   vatNote: string | null
   createdAt: Date | null
@@ -49,7 +52,10 @@ export type VATSettingsMaxAggregateOutputType = {
   id: string | null
   calculationId: string | null
   vatRatePercent: number | null
+  taxTreatment: $Enums.TaxTreatmentType | null
   reverseCharge: boolean | null
+  reverseChargeConfirmed: boolean | null
+  includeSection13bNote: boolean | null
   taxExempt: boolean | null
   vatNote: string | null
   createdAt: Date | null
@@ -60,7 +66,10 @@ export type VATSettingsCountAggregateOutputType = {
   id: number
   calculationId: number
   vatRatePercent: number
+  taxTreatment: number
   reverseCharge: number
+  reverseChargeConfirmed: number
+  includeSection13bNote: number
   taxExempt: number
   vatNote: number
   createdAt: number
@@ -81,7 +90,10 @@ export type VATSettingsMinAggregateInputType = {
   id?: true
   calculationId?: true
   vatRatePercent?: true
+  taxTreatment?: true
   reverseCharge?: true
+  reverseChargeConfirmed?: true
+  includeSection13bNote?: true
   taxExempt?: true
   vatNote?: true
   createdAt?: true
@@ -92,7 +104,10 @@ export type VATSettingsMaxAggregateInputType = {
   id?: true
   calculationId?: true
   vatRatePercent?: true
+  taxTreatment?: true
   reverseCharge?: true
+  reverseChargeConfirmed?: true
+  includeSection13bNote?: true
   taxExempt?: true
   vatNote?: true
   createdAt?: true
@@ -103,7 +118,10 @@ export type VATSettingsCountAggregateInputType = {
   id?: true
   calculationId?: true
   vatRatePercent?: true
+  taxTreatment?: true
   reverseCharge?: true
+  reverseChargeConfirmed?: true
+  includeSection13bNote?: true
   taxExempt?: true
   vatNote?: true
   createdAt?: true
@@ -201,7 +219,10 @@ export type VATSettingsGroupByOutputType = {
   id: string
   calculationId: string
   vatRatePercent: number
+  taxTreatment: $Enums.TaxTreatmentType
   reverseCharge: boolean
+  reverseChargeConfirmed: boolean
+  includeSection13bNote: boolean
   taxExempt: boolean
   vatNote: string | null
   createdAt: Date
@@ -235,7 +256,10 @@ export type VATSettingsWhereInput = {
   id?: Prisma.StringFilter<"VATSettings"> | string
   calculationId?: Prisma.StringFilter<"VATSettings"> | string
   vatRatePercent?: Prisma.FloatFilter<"VATSettings"> | number
+  taxTreatment?: Prisma.EnumTaxTreatmentTypeFilter<"VATSettings"> | $Enums.TaxTreatmentType
   reverseCharge?: Prisma.BoolFilter<"VATSettings"> | boolean
+  reverseChargeConfirmed?: Prisma.BoolFilter<"VATSettings"> | boolean
+  includeSection13bNote?: Prisma.BoolFilter<"VATSettings"> | boolean
   taxExempt?: Prisma.BoolFilter<"VATSettings"> | boolean
   vatNote?: Prisma.StringNullableFilter<"VATSettings"> | string | null
   createdAt?: Prisma.DateTimeFilter<"VATSettings"> | Date | string
@@ -247,7 +271,10 @@ export type VATSettingsOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   calculationId?: Prisma.SortOrder
   vatRatePercent?: Prisma.SortOrder
+  taxTreatment?: Prisma.SortOrder
   reverseCharge?: Prisma.SortOrder
+  reverseChargeConfirmed?: Prisma.SortOrder
+  includeSection13bNote?: Prisma.SortOrder
   taxExempt?: Prisma.SortOrder
   vatNote?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -262,7 +289,10 @@ export type VATSettingsWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.VATSettingsWhereInput[]
   NOT?: Prisma.VATSettingsWhereInput | Prisma.VATSettingsWhereInput[]
   vatRatePercent?: Prisma.FloatFilter<"VATSettings"> | number
+  taxTreatment?: Prisma.EnumTaxTreatmentTypeFilter<"VATSettings"> | $Enums.TaxTreatmentType
   reverseCharge?: Prisma.BoolFilter<"VATSettings"> | boolean
+  reverseChargeConfirmed?: Prisma.BoolFilter<"VATSettings"> | boolean
+  includeSection13bNote?: Prisma.BoolFilter<"VATSettings"> | boolean
   taxExempt?: Prisma.BoolFilter<"VATSettings"> | boolean
   vatNote?: Prisma.StringNullableFilter<"VATSettings"> | string | null
   createdAt?: Prisma.DateTimeFilter<"VATSettings"> | Date | string
@@ -274,7 +304,10 @@ export type VATSettingsOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   calculationId?: Prisma.SortOrder
   vatRatePercent?: Prisma.SortOrder
+  taxTreatment?: Prisma.SortOrder
   reverseCharge?: Prisma.SortOrder
+  reverseChargeConfirmed?: Prisma.SortOrder
+  includeSection13bNote?: Prisma.SortOrder
   taxExempt?: Prisma.SortOrder
   vatNote?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -293,7 +326,10 @@ export type VATSettingsScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"VATSettings"> | string
   calculationId?: Prisma.StringWithAggregatesFilter<"VATSettings"> | string
   vatRatePercent?: Prisma.FloatWithAggregatesFilter<"VATSettings"> | number
+  taxTreatment?: Prisma.EnumTaxTreatmentTypeWithAggregatesFilter<"VATSettings"> | $Enums.TaxTreatmentType
   reverseCharge?: Prisma.BoolWithAggregatesFilter<"VATSettings"> | boolean
+  reverseChargeConfirmed?: Prisma.BoolWithAggregatesFilter<"VATSettings"> | boolean
+  includeSection13bNote?: Prisma.BoolWithAggregatesFilter<"VATSettings"> | boolean
   taxExempt?: Prisma.BoolWithAggregatesFilter<"VATSettings"> | boolean
   vatNote?: Prisma.StringNullableWithAggregatesFilter<"VATSettings"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"VATSettings"> | Date | string
@@ -303,7 +339,10 @@ export type VATSettingsScalarWhereWithAggregatesInput = {
 export type VATSettingsCreateInput = {
   id?: string
   vatRatePercent?: number
+  taxTreatment?: $Enums.TaxTreatmentType
   reverseCharge?: boolean
+  reverseChargeConfirmed?: boolean
+  includeSection13bNote?: boolean
   taxExempt?: boolean
   vatNote?: string | null
   createdAt?: Date | string
@@ -315,7 +354,10 @@ export type VATSettingsUncheckedCreateInput = {
   id?: string
   calculationId: string
   vatRatePercent?: number
+  taxTreatment?: $Enums.TaxTreatmentType
   reverseCharge?: boolean
+  reverseChargeConfirmed?: boolean
+  includeSection13bNote?: boolean
   taxExempt?: boolean
   vatNote?: string | null
   createdAt?: Date | string
@@ -325,7 +367,10 @@ export type VATSettingsUncheckedCreateInput = {
 export type VATSettingsUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   vatRatePercent?: Prisma.FloatFieldUpdateOperationsInput | number
+  taxTreatment?: Prisma.EnumTaxTreatmentTypeFieldUpdateOperationsInput | $Enums.TaxTreatmentType
   reverseCharge?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  reverseChargeConfirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  includeSection13bNote?: Prisma.BoolFieldUpdateOperationsInput | boolean
   taxExempt?: Prisma.BoolFieldUpdateOperationsInput | boolean
   vatNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -337,7 +382,10 @@ export type VATSettingsUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   calculationId?: Prisma.StringFieldUpdateOperationsInput | string
   vatRatePercent?: Prisma.FloatFieldUpdateOperationsInput | number
+  taxTreatment?: Prisma.EnumTaxTreatmentTypeFieldUpdateOperationsInput | $Enums.TaxTreatmentType
   reverseCharge?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  reverseChargeConfirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  includeSection13bNote?: Prisma.BoolFieldUpdateOperationsInput | boolean
   taxExempt?: Prisma.BoolFieldUpdateOperationsInput | boolean
   vatNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -348,7 +396,10 @@ export type VATSettingsCreateManyInput = {
   id?: string
   calculationId: string
   vatRatePercent?: number
+  taxTreatment?: $Enums.TaxTreatmentType
   reverseCharge?: boolean
+  reverseChargeConfirmed?: boolean
+  includeSection13bNote?: boolean
   taxExempt?: boolean
   vatNote?: string | null
   createdAt?: Date | string
@@ -358,7 +409,10 @@ export type VATSettingsCreateManyInput = {
 export type VATSettingsUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   vatRatePercent?: Prisma.FloatFieldUpdateOperationsInput | number
+  taxTreatment?: Prisma.EnumTaxTreatmentTypeFieldUpdateOperationsInput | $Enums.TaxTreatmentType
   reverseCharge?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  reverseChargeConfirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  includeSection13bNote?: Prisma.BoolFieldUpdateOperationsInput | boolean
   taxExempt?: Prisma.BoolFieldUpdateOperationsInput | boolean
   vatNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -369,7 +423,10 @@ export type VATSettingsUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   calculationId?: Prisma.StringFieldUpdateOperationsInput | string
   vatRatePercent?: Prisma.FloatFieldUpdateOperationsInput | number
+  taxTreatment?: Prisma.EnumTaxTreatmentTypeFieldUpdateOperationsInput | $Enums.TaxTreatmentType
   reverseCharge?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  reverseChargeConfirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  includeSection13bNote?: Prisma.BoolFieldUpdateOperationsInput | boolean
   taxExempt?: Prisma.BoolFieldUpdateOperationsInput | boolean
   vatNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -385,7 +442,10 @@ export type VATSettingsCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   calculationId?: Prisma.SortOrder
   vatRatePercent?: Prisma.SortOrder
+  taxTreatment?: Prisma.SortOrder
   reverseCharge?: Prisma.SortOrder
+  reverseChargeConfirmed?: Prisma.SortOrder
+  includeSection13bNote?: Prisma.SortOrder
   taxExempt?: Prisma.SortOrder
   vatNote?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -400,7 +460,10 @@ export type VATSettingsMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   calculationId?: Prisma.SortOrder
   vatRatePercent?: Prisma.SortOrder
+  taxTreatment?: Prisma.SortOrder
   reverseCharge?: Prisma.SortOrder
+  reverseChargeConfirmed?: Prisma.SortOrder
+  includeSection13bNote?: Prisma.SortOrder
   taxExempt?: Prisma.SortOrder
   vatNote?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -411,7 +474,10 @@ export type VATSettingsMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   calculationId?: Prisma.SortOrder
   vatRatePercent?: Prisma.SortOrder
+  taxTreatment?: Prisma.SortOrder
   reverseCharge?: Prisma.SortOrder
+  reverseChargeConfirmed?: Prisma.SortOrder
+  includeSection13bNote?: Prisma.SortOrder
   taxExempt?: Prisma.SortOrder
   vatNote?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -454,10 +520,17 @@ export type VATSettingsUncheckedUpdateOneWithoutCalculationNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.VATSettingsUpdateToOneWithWhereWithoutCalculationInput, Prisma.VATSettingsUpdateWithoutCalculationInput>, Prisma.VATSettingsUncheckedUpdateWithoutCalculationInput>
 }
 
+export type EnumTaxTreatmentTypeFieldUpdateOperationsInput = {
+  set?: $Enums.TaxTreatmentType
+}
+
 export type VATSettingsCreateWithoutCalculationInput = {
   id?: string
   vatRatePercent?: number
+  taxTreatment?: $Enums.TaxTreatmentType
   reverseCharge?: boolean
+  reverseChargeConfirmed?: boolean
+  includeSection13bNote?: boolean
   taxExempt?: boolean
   vatNote?: string | null
   createdAt?: Date | string
@@ -467,7 +540,10 @@ export type VATSettingsCreateWithoutCalculationInput = {
 export type VATSettingsUncheckedCreateWithoutCalculationInput = {
   id?: string
   vatRatePercent?: number
+  taxTreatment?: $Enums.TaxTreatmentType
   reverseCharge?: boolean
+  reverseChargeConfirmed?: boolean
+  includeSection13bNote?: boolean
   taxExempt?: boolean
   vatNote?: string | null
   createdAt?: Date | string
@@ -493,7 +569,10 @@ export type VATSettingsUpdateToOneWithWhereWithoutCalculationInput = {
 export type VATSettingsUpdateWithoutCalculationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   vatRatePercent?: Prisma.FloatFieldUpdateOperationsInput | number
+  taxTreatment?: Prisma.EnumTaxTreatmentTypeFieldUpdateOperationsInput | $Enums.TaxTreatmentType
   reverseCharge?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  reverseChargeConfirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  includeSection13bNote?: Prisma.BoolFieldUpdateOperationsInput | boolean
   taxExempt?: Prisma.BoolFieldUpdateOperationsInput | boolean
   vatNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -503,7 +582,10 @@ export type VATSettingsUpdateWithoutCalculationInput = {
 export type VATSettingsUncheckedUpdateWithoutCalculationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   vatRatePercent?: Prisma.FloatFieldUpdateOperationsInput | number
+  taxTreatment?: Prisma.EnumTaxTreatmentTypeFieldUpdateOperationsInput | $Enums.TaxTreatmentType
   reverseCharge?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  reverseChargeConfirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  includeSection13bNote?: Prisma.BoolFieldUpdateOperationsInput | boolean
   taxExempt?: Prisma.BoolFieldUpdateOperationsInput | boolean
   vatNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -516,7 +598,10 @@ export type VATSettingsSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   id?: boolean
   calculationId?: boolean
   vatRatePercent?: boolean
+  taxTreatment?: boolean
   reverseCharge?: boolean
+  reverseChargeConfirmed?: boolean
+  includeSection13bNote?: boolean
   taxExempt?: boolean
   vatNote?: boolean
   createdAt?: boolean
@@ -528,7 +613,10 @@ export type VATSettingsSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   id?: boolean
   calculationId?: boolean
   vatRatePercent?: boolean
+  taxTreatment?: boolean
   reverseCharge?: boolean
+  reverseChargeConfirmed?: boolean
+  includeSection13bNote?: boolean
   taxExempt?: boolean
   vatNote?: boolean
   createdAt?: boolean
@@ -540,7 +628,10 @@ export type VATSettingsSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   id?: boolean
   calculationId?: boolean
   vatRatePercent?: boolean
+  taxTreatment?: boolean
   reverseCharge?: boolean
+  reverseChargeConfirmed?: boolean
+  includeSection13bNote?: boolean
   taxExempt?: boolean
   vatNote?: boolean
   createdAt?: boolean
@@ -552,14 +643,17 @@ export type VATSettingsSelectScalar = {
   id?: boolean
   calculationId?: boolean
   vatRatePercent?: boolean
+  taxTreatment?: boolean
   reverseCharge?: boolean
+  reverseChargeConfirmed?: boolean
+  includeSection13bNote?: boolean
   taxExempt?: boolean
   vatNote?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type VATSettingsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "calculationId" | "vatRatePercent" | "reverseCharge" | "taxExempt" | "vatNote" | "createdAt" | "updatedAt", ExtArgs["result"]["vATSettings"]>
+export type VATSettingsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "calculationId" | "vatRatePercent" | "taxTreatment" | "reverseCharge" | "reverseChargeConfirmed" | "includeSection13bNote" | "taxExempt" | "vatNote" | "createdAt" | "updatedAt", ExtArgs["result"]["vATSettings"]>
 export type VATSettingsInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   calculation?: boolean | Prisma.CalculationDefaultArgs<ExtArgs>
 }
@@ -579,7 +673,10 @@ export type $VATSettingsPayload<ExtArgs extends runtime.Types.Extensions.Interna
     id: string
     calculationId: string
     vatRatePercent: number
+    taxTreatment: $Enums.TaxTreatmentType
     reverseCharge: boolean
+    reverseChargeConfirmed: boolean
+    includeSection13bNote: boolean
     taxExempt: boolean
     vatNote: string | null
     createdAt: Date
@@ -1011,7 +1108,10 @@ export interface VATSettingsFieldRefs {
   readonly id: Prisma.FieldRef<"VATSettings", 'String'>
   readonly calculationId: Prisma.FieldRef<"VATSettings", 'String'>
   readonly vatRatePercent: Prisma.FieldRef<"VATSettings", 'Float'>
+  readonly taxTreatment: Prisma.FieldRef<"VATSettings", 'TaxTreatmentType'>
   readonly reverseCharge: Prisma.FieldRef<"VATSettings", 'Boolean'>
+  readonly reverseChargeConfirmed: Prisma.FieldRef<"VATSettings", 'Boolean'>
+  readonly includeSection13bNote: Prisma.FieldRef<"VATSettings", 'Boolean'>
   readonly taxExempt: Prisma.FieldRef<"VATSettings", 'Boolean'>
   readonly vatNote: Prisma.FieldRef<"VATSettings", 'String'>
   readonly createdAt: Prisma.FieldRef<"VATSettings", 'DateTime'>

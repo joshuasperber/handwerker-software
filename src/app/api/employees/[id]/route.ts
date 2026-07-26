@@ -57,6 +57,9 @@ export async function PATCH(
   if (role && !ALLOWED_ROLES.includes(role)) {
     return apiError("Ungültige Rolle", 400);
   }
+  if (role === "ADMIN" && auth.role !== "ADMIN") {
+    return apiError("Nur Administratoren können Admin-Rollen vergeben", 403);
+  }
 
   if (email && email.toLowerCase() !== employee.user.email) {
     const existing = await prisma.user.findFirst({
@@ -67,6 +70,34 @@ export async function PATCH(
 
   const roleChanged = role !== undefined && role !== employee.user.role;
   const deactivate = isActive === false && employee.user.isActive;
+
+  if (password) {
+    const { createSupabaseAuthUser, updateSupabaseAuthPassword } = await import(
+      "@/lib/supabase/auth-users"
+    );
+    const { isSupabaseAuthConfigured } = await import("@/lib/supabase/env");
+    if (isSupabaseAuthConfigured()) {
+      if (employee.user.supabaseUserId) {
+        const updatedAuth = await updateSupabaseAuthPassword(
+          employee.user.supabaseUserId,
+          password
+        );
+        if (!updatedAuth.ok) return apiError(updatedAuth.error, 400);
+      } else {
+        const created = await createSupabaseAuthUser({
+          email: (email ?? employee.user.email).toLowerCase(),
+          password,
+          firstName: firstName ?? employee.user.firstName,
+          lastName: lastName ?? employee.user.lastName,
+        });
+        if (!created.ok) return apiError(created.error, 400);
+        await prisma.user.update({
+          where: { id: employee.userId },
+          data: { supabaseUserId: created.supabaseUserId },
+        });
+      }
+    }
+  }
 
   await prisma.user.update({
     where: { id: employee.userId },

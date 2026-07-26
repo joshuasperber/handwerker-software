@@ -74,7 +74,7 @@ export async function uploadFile(
     );
   }
 
-  const bucket = process.env.S3_BUCKET ?? "handwerker-uploads";
+  const bucket = process.env.S3_BUCKET ?? "jomaster-uploads";
   const key = `${folder}/${uuidv4()}-${fileName.replace(/[^a-zA-Z0-9.-]/g, "_")}`;
 
   try {
@@ -108,7 +108,7 @@ export async function getSignedDownloadUrl(
   key: string,
   expiresIn = 3600
 ): Promise<string> {
-  const bucket = process.env.S3_BUCKET ?? "handwerker-uploads";
+  const bucket = process.env.S3_BUCKET ?? "jomaster-uploads";
   const client = getS3Client();
 
   return getSignedUrl(
@@ -125,7 +125,7 @@ export function isStorageConfigured(): boolean {
 /** Lädt eine Datei als Buffer aus dem Bucket; null bei Fehler/fehlender Datei. */
 export async function downloadFile(key: string): Promise<Buffer | null> {
   try {
-    const bucket = process.env.S3_BUCKET ?? "handwerker-uploads";
+    const bucket = process.env.S3_BUCKET ?? "jomaster-uploads";
     const client = getS3Client();
     const res = await client.send(
       new GetObjectCommand({ Bucket: bucket, Key: key })
@@ -138,7 +138,7 @@ export async function downloadFile(key: string): Promise<Buffer | null> {
 }
 
 export async function deleteFile(key: string): Promise<void> {
-  const bucket = process.env.S3_BUCKET ?? "handwerker-uploads";
+  const bucket = process.env.S3_BUCKET ?? "jomaster-uploads";
   const client = getS3Client();
 
   await client.send(

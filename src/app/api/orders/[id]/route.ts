@@ -51,13 +51,44 @@ export async function PATCH(
 
   await ensureOrderPhases(id);
 
-  const { status, priority, description, internalNotes, scheduledStart, scheduledEnd, teamId, vehicleId, completionResult, customerConfirmationStatus } = body;
+  const { status, priority, description, internalNotes, scheduledStart, scheduledEnd, teamId, vehicleId, completionResult, customerConfirmationStatus, orderTypeId, orderTypeCustom, title } = body;
+
+  let typePatch: {
+    orderType?: typeof existing.orderType;
+    orderTypeId?: string | null;
+    orderTypeLabel?: string | null;
+    orderTypeCustom?: string | null;
+  } = {};
+
+  if (orderTypeId !== undefined || orderTypeCustom !== undefined) {
+    const { resolveOrderTypeAssignment } = await import("@/lib/orders/order-types");
+    const nextId = orderTypeId ?? existing.orderTypeId;
+    const assignment = await resolveOrderTypeAssignment(auth.tenantId, {
+      orderTypeId: nextId,
+      orderTypeCustom:
+        orderTypeCustom !== undefined ? orderTypeCustom : existing.orderTypeCustom,
+      orderType: existing.orderType,
+      allowInactive: nextId === existing.orderTypeId,
+    });
+    if ("error" in assignment) return apiError(assignment.error, 400);
+    typePatch = {
+      orderType: assignment.orderType,
+      orderTypeId: assignment.orderTypeId,
+      // Snapshot nur aktualisieren, wenn der Typ gewechselt wurde – Historie bei Umbenennung bleibt.
+      orderTypeLabel:
+        nextId === existing.orderTypeId && existing.orderTypeLabel
+          ? existing.orderTypeLabel
+          : assignment.orderTypeLabel,
+      orderTypeCustom: assignment.orderTypeCustom,
+    };
+  }
 
   const order = await prisma.order.update({
     where: { id },
     data: {
       ...(status ? { status } : {}),
       ...(priority ? { priority } : {}),
+      ...(title !== undefined ? { title } : {}),
       ...(description !== undefined ? { description } : {}),
       ...(internalNotes !== undefined ? { internalNotes } : {}),
       ...(scheduledStart ? { scheduledStart: new Date(scheduledStart) } : {}),
@@ -68,12 +99,14 @@ export async function PATCH(
       ...(customerConfirmationStatus !== undefined ? { customerConfirmationStatus } : {}),
       ...(status === "ABGESCHLOSSEN" || status === "ABRECHNUNGSBEREIT" ? { completedAt: new Date() } : {}),
       ...(status === "ABGERECHNET" ? { invoicedAt: new Date() } : {}),
+      ...typePatch,
     },
     include: {
       customer: true,
       property: true,
       services: { include: { service: true } },
       appointments: { include: { employee: { include: { user: true } } } },
+      orderTypeDefinition: true,
     },
   });
 

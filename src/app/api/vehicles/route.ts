@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAuth, apiSuccess, apiError } from "@/lib/api";
+import { requireTenantEmployee } from "@/lib/tenant-scope";
 
 export async function GET(request: NextRequest) {
   const auth = await requireAuth("orders.read");
@@ -30,6 +31,11 @@ export async function POST(request: NextRequest) {
 
   const body = await request.json();
   if (!body.name) return apiError("Name fehlt", 400);
+
+  if (body.assignedEmployeeId) {
+    const employee = await requireTenantEmployee(auth.tenantId, body.assignedEmployeeId);
+    if (!employee) return apiError("Mitarbeiter nicht gefunden", 404);
+  }
 
   const location = await prisma.storageLocation.create({
     data: {

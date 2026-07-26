@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { apiSuccess, apiError } from "@/lib/api";
 import { hashPassword, createSession, setSessionCookie } from "@/lib/auth";
 import { getRoleHomePath } from "@/lib/permissions";
+import { ensureEmployeeProfile } from "@/lib/employees/ensure-profile";
 
 /** Lädt eine Einladung anhand des Tokens und prüft ihre Gültigkeit. */
 async function loadValidInvitation(token: string) {
@@ -62,17 +63,34 @@ export async function POST(request: NextRequest) {
 
   const passwordHash = await hashPassword(password);
 
+  let supabaseUserId: string | null = null;
+  const { isSupabaseAuthConfigured } = await import("@/lib/supabase/env");
+  if (isSupabaseAuthConfigured()) {
+    const { createSupabaseAuthUser } = await import("@/lib/supabase/auth-users");
+    const created = await createSupabaseAuthUser({
+      email: invitation.email,
+      password,
+      firstName,
+      lastName,
+    });
+    if (!created.ok) return apiError(created.error, 400);
+    supabaseUserId = created.supabaseUserId;
+  }
+
   const user = await prisma.user.create({
     data: {
       tenantId: invitation.tenantId,
       email: invitation.email,
       passwordHash,
+      supabaseUserId,
       firstName,
       lastName,
       role: invitation.role,
       isActive: true,
     },
   });
+
+  await ensureEmployeeProfile(user.id, user.tenantId, user.role);
 
   await prisma.invitation.update({
     where: { id: invitation.id },

@@ -8,8 +8,19 @@ import { Input } from "@/components/ui/input";
 import { NumberInput } from "@/components/ui/number-input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
-import { ORDER_TYPE_LABELS } from "@/lib/inventory/formulas";
 import { ChevronLeft, ChevronRight, Check, Plus, Trash2 } from "lucide-react";
+import {
+  formatBillingAddressOneLine,
+  hasBillingAddress,
+  propertyMatchesBilling,
+} from "@/lib/addresses/billing-vs-site";
+import {
+  OrderMaterialEditor,
+  type EditableMaterialLine,
+  type InventoryArticleOption,
+} from "@/components/orders/order-material-editor";
+import { OrderTypeSelect } from "@/components/orders/order-type-select";
+import { articlePriceForCalculation } from "@/lib/inventory/units";
 
 interface CustomService {
   name: string;
@@ -25,6 +36,10 @@ interface Customer {
   id: string;
   firstName: string;
   lastName: string;
+  company?: string | null;
+  billingStreet?: string | null;
+  billingZipCode?: string | null;
+  billingCity?: string | null;
   properties: {
     id: string;
     label: string;
@@ -48,18 +63,31 @@ interface Employee {
   user: { firstName: string; lastName: string };
 }
 
+interface TravelZone {
+  id: string;
+  name: string;
+}
+
 export default function NeuerAuftragPage() {
   const router = useRouter();
   const [step, setStep] = useState(0);
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [services, setServices] = useState<Service[]>([]);
   const [employees, setEmployees] = useState<Employee[]>([]);
-  const [previewLines, setPreviewLines] = useState<{ name: string; quantityRequired: number; unit: string }[]>([]);
+  const [travelZones, setTravelZones] = useState<TravelZone[]>([]);
+  const [articles, setArticles] = useState<InventoryArticleOption[]>([]);
+  const [materialLines, setMaterialLines] = useState<EditableMaterialLine[]>([]);
+  const [materialTouched, setMaterialTouched] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const [siteMode, setSiteMode] = useState<"existing" | "new" | "billing">("existing");
+  const [creatingProperty, setCreatingProperty] = useState(false);
 
   const [form, setForm] = useState({
-    orderType: "REPARATUR",
+    orderTypeId: "",
+    orderTypeCustom: "",
+    orderTypeIsOther: false,
+    orderTypeName: "",
     title: "",
     description: "",
     customerId: "",
@@ -70,45 +98,107 @@ export default function NeuerAuftragPage() {
     scheduledStart: "",
     scheduledEnd: "",
     confirmMaterial: false,
-    newCustomer: { firstName: "", lastName: "", email: "", phone: "", street: "", zipCode: "", city: "" },
     createNewCustomer: false,
+    sameSiteAsBilling: true,
+    newCustomer: {
+      firstName: "",
+      lastName: "",
+      email: "",
+      phone: "",
+      billingStreet: "",
+      billingZipCode: "",
+      billingCity: "",
+      siteLabel: "Baustelle",
+      siteStreet: "",
+      siteZipCode: "",
+      siteCity: "",
+      siteTravelZoneId: "",
+    },
+    newSite: {
+      label: "Baustelle",
+      street: "",
+      zipCode: "",
+      city: "",
+      travelZoneId: "",
+    },
   });
 
-  useEffect(() => {
-    fetch("/api/customers").then((r) => r.json()).then((d) => { if (d.success) setCustomers(d.data); });
-    fetch("/api/services").then((r) => r.json()).then((d) => { if (d.success) setServices(d.data); });
-    fetch("/api/employees").then((r) => r.json()).then((d) => { if (d.success) setEmployees(d.data); });
-  }, []);
+  function reloadCustomers() {
+    return fetch("/api/customers")
+      .then((r) => r.json())
+      .then((d) => {
+        if (d.success) setCustomers(d.data);
+        return d;
+      });
+  }
 
   useEffect(() => {
-    if (step === 3 && form.serviceIds.length) {
-      fetch("/api/services")
-        .then((r) => r.json())
-        .then(async () => {
-          const res = await fetch(`/api/services?includeMaterials=1`).catch(() => null);
-          if (!res) return;
-          const all = await fetch("/api/services").then((r) => r.json());
-          if (!all.success) return;
-          const lines: { name: string; quantityRequired: number; unit: string }[] = [];
-          for (const sid of form.serviceIds) {
-            const matRes = await fetch(`/api/services/${sid}/material-template`);
-            const mat = await matRes.json();
-            if (mat.success) lines.push(...mat.data.map((m: { name: string; defaultQuantity: number; unit: string }) => ({
-              name: m.name,
-              quantityRequired: m.defaultQuantity,
-              unit: m.unit,
-            })));
-          }
-          setPreviewLines(lines);
+    reloadCustomers();
+    fetch("/api/services").then((r) => r.json()).then((d) => { if (d.success) setServices(d.data); });
+    fetch("/api/employees").then((r) => r.json()).then((d) => { if (d.success) setEmployees(d.data); });
+    fetch("/api/travel-zones").then((r) => r.json()).then((d) => { if (d.success) setTravelZones(d.data); });
+    fetch("/api/articles")
+      .then((r) => r.json())
+      .then((d) => {
+        if (d.success) setArticles(d.data);
+      })
+      .catch(() => {});
+  }, []);
+
+  async function loadMaterialSuggestions(force = false) {
+    if (materialTouched && !force) return;
+    const lines: EditableMaterialLine[] = [];
+    for (const sid of form.serviceIds) {
+      const matRes = await fetch(`/api/services/${sid}/material-template`);
+      const mat = await matRes.json();
+      if (!mat.success) continue;
+      for (const m of mat.data as {
+        name: string;
+        defaultQuantity: number;
+        unit: string;
+        isTool?: boolean;
+        articleId?: string | null;
+      }[]) {
+        if (m.isTool) continue;
+        const article = m.articleId
+          ? articles.find((a) => a.id === m.articleId)
+          : undefined;
+        lines.push({
+          key: `tmpl-${sid}-${m.name}-${lines.length}`,
+          articleId: m.articleId ?? null,
+          sourceServiceId: sid,
+          name: m.name,
+          quantityRequired: m.defaultQuantity,
+          unit: m.unit || "Stück",
+          unitPriceNet: article ? articlePriceForCalculation(article) : null,
+          notes: "",
+          stockAvailable: article?.totals?.available ?? null,
         });
+      }
     }
-  }, [step, form.serviceIds]);
+    setMaterialLines(lines);
+    if (force) setMaterialTouched(false);
+  }
+
+  useEffect(() => {
+    if (step === 3) {
+      void loadMaterialSuggestions(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [step, form.serviceIds, articles]);
 
   async function ensureCustomer(): Promise<{ customerId: string; propertyId: string } | null> {
     if (form.createNewCustomer) {
       const nc = form.newCustomer;
-      if (!nc.firstName || !nc.lastName || !nc.street || !nc.zipCode || !nc.city) {
-        setError("Bitte alle Pflichtfelder für den neuen Kunden ausfüllen.");
+      if (!nc.firstName || !nc.lastName || !nc.billingStreet || !nc.billingZipCode || !nc.billingCity) {
+        setError("Bitte Name und Rechnungsadresse für den neuen Kunden ausfüllen.");
+        return null;
+      }
+      const siteStreet = form.sameSiteAsBilling ? nc.billingStreet : nc.siteStreet;
+      const siteZip = form.sameSiteAsBilling ? nc.billingZipCode : nc.siteZipCode;
+      const siteCity = form.sameSiteAsBilling ? nc.billingCity : nc.siteCity;
+      if (!siteStreet || !siteZip || !siteCity) {
+        setError("Bitte die Ausführungsadresse / Baustelle ausfüllen.");
         return null;
       }
       const res = await fetch("/api/customers", {
@@ -119,18 +209,105 @@ export default function NeuerAuftragPage() {
           lastName: nc.lastName,
           email: nc.email || undefined,
           phone: nc.phone,
-          property: { street: nc.street, zipCode: nc.zipCode, city: nc.city, label: "Einsatzort" },
+          billingStreet: nc.billingStreet,
+          billingZipCode: nc.billingZipCode,
+          billingCity: nc.billingCity,
+          property: {
+            street: siteStreet,
+            zipCode: siteZip,
+            city: siteCity,
+            label: form.sameSiteAsBilling ? "Ausführungsadresse" : nc.siteLabel || "Baustelle",
+            travelZoneId: nc.siteTravelZoneId || undefined,
+          },
         }),
       });
       const data = await res.json();
-      if (!data.success) { setError(data.error ?? "Kunde konnte nicht angelegt werden"); return null; }
+      if (!data.success) {
+        setError(data.error ?? "Kunde konnte nicht angelegt werden");
+        return null;
+      }
       return { customerId: data.data.id, propertyId: data.data.properties[0].id };
     }
-    if (!form.customerId || !form.propertyId) {
-      setError("Bitte Kunde und Einsatzort wählen.");
+
+    if (!form.customerId) {
+      setError("Bitte einen Kunden wählen.");
       return null;
     }
-    return { customerId: form.customerId, propertyId: form.propertyId };
+
+    if (siteMode === "existing") {
+      if (!form.propertyId) {
+        setError("Bitte eine Ausführungsadresse wählen.");
+        return null;
+      }
+      return { customerId: form.customerId, propertyId: form.propertyId };
+    }
+
+    const selected = customers.find((c) => c.id === form.customerId);
+    if (!selected) {
+      setError("Kunde nicht gefunden.");
+      return null;
+    }
+
+    let street = form.newSite.street;
+    let zipCode = form.newSite.zipCode;
+    let city = form.newSite.city;
+    let label = form.newSite.label || "Baustelle";
+    let travelZoneId = form.newSite.travelZoneId || undefined;
+
+    if (siteMode === "billing") {
+      if (!hasBillingAddress(selected)) {
+        setError("Für diesen Kunden ist keine Rechnungsadresse hinterlegt.");
+        return null;
+      }
+      const match = selected.properties.find(
+        (p) => p.isActive && propertyMatchesBilling(p, selected)
+      );
+      if (match) {
+        return { customerId: form.customerId, propertyId: match.id };
+      }
+      street = selected.billingStreet!;
+      zipCode = selected.billingZipCode!;
+      city = selected.billingCity!;
+      label = "Ausführungsadresse (wie Rechnung)";
+    } else if (!street || !zipCode || !city) {
+      setError("Bitte Straße, PLZ und Ort der Ausführungsadresse angeben.");
+      return null;
+    }
+
+    setCreatingProperty(true);
+    const res = await fetch("/api/properties", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        customerId: form.customerId,
+        label,
+        street,
+        zipCode,
+        city,
+        travelZoneId,
+      }),
+    });
+    const data = await res.json();
+    setCreatingProperty(false);
+    if (!data.success) {
+      setError(data.error ?? "Ausführungsadresse konnte nicht angelegt werden");
+      return null;
+    }
+    await reloadCustomers();
+    return { customerId: form.customerId, propertyId: data.data.id };
+  }
+
+  function selectCustomer(customerId: string) {
+    const c = customers.find((x) => x.id === customerId);
+    const primary = c?.properties.find((p) => p.isActive && p.isPrimary);
+    const first = c?.properties.find((p) => p.isActive);
+    setSiteMode("existing");
+    setForm((f) => ({
+      ...f,
+      customerId,
+      propertyId: primary?.id ?? first?.id ?? "",
+      newSite: { label: "Baustelle", street: "", zipCode: "", city: "", travelZoneId: "" },
+    }));
   }
 
   async function submit() {
@@ -144,8 +321,9 @@ export default function NeuerAuftragPage() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         ...ids,
-        title: form.title || ORDER_TYPE_LABELS[form.orderType],
-        orderType: form.orderType,
+        title: form.title || form.orderTypeCustom || form.orderTypeName || "Neuer Auftrag",
+        orderTypeId: form.orderTypeId,
+        orderTypeCustom: form.orderTypeIsOther ? form.orderTypeCustom : undefined,
         description: form.description,
         serviceIds: form.serviceIds,
         customServices: form.customServices
@@ -161,6 +339,18 @@ export default function NeuerAuftragPage() {
         scheduledStart: form.scheduledStart || undefined,
         scheduledEnd: form.scheduledEnd || undefined,
         confirmMaterial: form.confirmMaterial,
+        materialLines: materialLines
+          .filter((l) => l.name.trim())
+          .map((l) => ({
+            articleId: l.articleId,
+            sourceServiceId: l.sourceServiceId,
+            name: l.name,
+            quantityRequired: l.quantityRequired,
+            unit: l.unit,
+            unitPriceNet: l.unitPriceNet,
+            notes: l.notes || undefined,
+            isTool: false,
+          })),
       }),
     });
     const data = await res.json();
@@ -173,6 +363,7 @@ export default function NeuerAuftragPage() {
   }
 
   function toggleService(id: string) {
+    setMaterialTouched(false);
     setForm((f) => ({
       ...f,
       serviceIds: f.serviceIds.includes(id) ? f.serviceIds.filter((x) => x !== id) : [...f.serviceIds, id],
@@ -229,18 +420,19 @@ export default function NeuerAuftragPage() {
       {step === 0 && (
         <Card title="Auftragstyp">
           <div className="space-y-4">
-            <div>
-              <label className="text-sm font-medium">Typ *</label>
-              <select
-                className="w-full h-10 rounded-lg border mt-1 px-3 text-sm"
-                value={form.orderType}
-                onChange={(e) => setForm({ ...form, orderType: e.target.value })}
-              >
-                {Object.entries(ORDER_TYPE_LABELS).map(([k, v]) => (
-                  <option key={k} value={k}>{v}</option>
-                ))}
-              </select>
-            </div>
+            <OrderTypeSelect
+              valueId={form.orderTypeId}
+              customValue={form.orderTypeCustom}
+              onChange={({ orderTypeId, orderTypeCustom, isOther, name }) => {
+                setForm((f) => ({
+                  ...f,
+                  orderTypeId,
+                  orderTypeCustom,
+                  orderTypeIsOther: isOther,
+                  orderTypeName: name,
+                }));
+              }}
+            />
             <Input label="Auftragstitel *" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} placeholder="z. B. Tür montieren Müller" />
             <Textarea label="Beschreibung" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={3} />
           </div>
@@ -248,60 +440,338 @@ export default function NeuerAuftragPage() {
       )}
 
       {step === 1 && (
-        <Card title="Kunde & Einsatzort">
+        <Card title="Kunde, Rechnung & Ausführungsadresse">
+          <p className="text-sm text-slate-500 mb-4">
+            Die Rechnungsadresse gehört zum Kunden. Die Ausführungsadresse / Baustelle gehört zum
+            Auftrag und steuert Anfahrt sowie Zonen.
+          </p>
           <label className="flex items-center gap-2 text-sm mb-4">
-            <input type="checkbox" checked={form.createNewCustomer} onChange={(e) => setForm({ ...form, createNewCustomer: e.target.checked })} />
+            <input
+              type="checkbox"
+              checked={form.createNewCustomer}
+              onChange={(e) => setForm({ ...form, createNewCustomer: e.target.checked })}
+            />
             Neuen Kunden anlegen
           </label>
           {form.createNewCustomer ? (
-            <div className="grid gap-3 sm:grid-cols-2">
-              <Input label="Vorname *" value={form.newCustomer.firstName} onChange={(e) => setForm({ ...form, newCustomer: { ...form.newCustomer, firstName: e.target.value } })} />
-              <Input label="Nachname *" value={form.newCustomer.lastName} onChange={(e) => setForm({ ...form, newCustomer: { ...form.newCustomer, lastName: e.target.value } })} />
-              <Input label="E-Mail" type="email" value={form.newCustomer.email} onChange={(e) => setForm({ ...form, newCustomer: { ...form.newCustomer, email: e.target.value } })} />
-              <Input label="Telefon" value={form.newCustomer.phone} onChange={(e) => setForm({ ...form, newCustomer: { ...form.newCustomer, phone: e.target.value } })} />
-              <Input label="Straße *" value={form.newCustomer.street} onChange={(e) => setForm({ ...form, newCustomer: { ...form.newCustomer, street: e.target.value } })} />
-              <Input label="PLZ *" value={form.newCustomer.zipCode} onChange={(e) => setForm({ ...form, newCustomer: { ...form.newCustomer, zipCode: e.target.value } })} />
-              <Input label="Ort *" value={form.newCustomer.city} onChange={(e) => setForm({ ...form, newCustomer: { ...form.newCustomer, city: e.target.value } })} />
+            <div className="space-y-4">
+              <div className="grid gap-3 sm:grid-cols-2">
+                <Input
+                  label="Vorname *"
+                  value={form.newCustomer.firstName}
+                  onChange={(e) =>
+                    setForm({ ...form, newCustomer: { ...form.newCustomer, firstName: e.target.value } })
+                  }
+                />
+                <Input
+                  label="Nachname *"
+                  value={form.newCustomer.lastName}
+                  onChange={(e) =>
+                    setForm({ ...form, newCustomer: { ...form.newCustomer, lastName: e.target.value } })
+                  }
+                />
+                <Input
+                  label="E-Mail"
+                  type="email"
+                  value={form.newCustomer.email}
+                  onChange={(e) =>
+                    setForm({ ...form, newCustomer: { ...form.newCustomer, email: e.target.value } })
+                  }
+                />
+                <Input
+                  label="Telefon"
+                  value={form.newCustomer.phone}
+                  onChange={(e) =>
+                    setForm({ ...form, newCustomer: { ...form.newCustomer, phone: e.target.value } })
+                  }
+                />
+              </div>
+              <div className="rounded-lg border border-slate-200 p-3 space-y-3">
+                <p className="text-sm font-medium text-slate-800">Rechnungsadresse *</p>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <Input
+                    label="Straße *"
+                    className="sm:col-span-2"
+                    value={form.newCustomer.billingStreet}
+                    onChange={(e) =>
+                      setForm({
+                        ...form,
+                        newCustomer: { ...form.newCustomer, billingStreet: e.target.value },
+                      })
+                    }
+                  />
+                  <Input
+                    label="PLZ *"
+                    value={form.newCustomer.billingZipCode}
+                    onChange={(e) =>
+                      setForm({
+                        ...form,
+                        newCustomer: { ...form.newCustomer, billingZipCode: e.target.value },
+                      })
+                    }
+                  />
+                  <Input
+                    label="Ort *"
+                    value={form.newCustomer.billingCity}
+                    onChange={(e) =>
+                      setForm({
+                        ...form,
+                        newCustomer: { ...form.newCustomer, billingCity: e.target.value },
+                      })
+                    }
+                  />
+                </div>
+              </div>
+              <label className="flex items-start gap-2 text-sm">
+                <input
+                  type="checkbox"
+                  className="mt-1"
+                  checked={form.sameSiteAsBilling}
+                  onChange={(e) => setForm({ ...form, sameSiteAsBilling: e.target.checked })}
+                />
+                <span>Ausführungsadresse = Rechnungsadresse übernehmen</span>
+              </label>
+              {!form.sameSiteAsBilling && (
+                <div className="rounded-lg border border-[#0d5c63]/30 bg-[#0d5c63]/5 p-3 space-y-3">
+                  <p className="text-sm font-medium text-[#0d5c63]">Ausführungsadresse / Baustelle *</p>
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <Input
+                      label="Bezeichnung"
+                      className="sm:col-span-2"
+                      value={form.newCustomer.siteLabel}
+                      onChange={(e) =>
+                        setForm({
+                          ...form,
+                          newCustomer: { ...form.newCustomer, siteLabel: e.target.value },
+                        })
+                      }
+                      placeholder="z. B. Baustelle Friedrichstraße"
+                    />
+                    <Input
+                      label="Straße *"
+                      className="sm:col-span-2"
+                      value={form.newCustomer.siteStreet}
+                      onChange={(e) =>
+                        setForm({
+                          ...form,
+                          newCustomer: { ...form.newCustomer, siteStreet: e.target.value },
+                        })
+                      }
+                    />
+                    <Input
+                      label="PLZ *"
+                      value={form.newCustomer.siteZipCode}
+                      onChange={(e) =>
+                        setForm({
+                          ...form,
+                          newCustomer: { ...form.newCustomer, siteZipCode: e.target.value },
+                        })
+                      }
+                    />
+                    <Input
+                      label="Ort *"
+                      value={form.newCustomer.siteCity}
+                      onChange={(e) =>
+                        setForm({
+                          ...form,
+                          newCustomer: { ...form.newCustomer, siteCity: e.target.value },
+                        })
+                      }
+                    />
+                    <div className="sm:col-span-2">
+                      <label className="text-sm font-medium">Anfahrtszone (optional)</label>
+                      <select
+                        className="w-full h-10 rounded-lg border mt-1 px-3 text-sm"
+                        value={form.newCustomer.siteTravelZoneId}
+                        onChange={(e) =>
+                          setForm({
+                            ...form,
+                            newCustomer: {
+                              ...form.newCustomer,
+                              siteTravelZoneId: e.target.value,
+                            },
+                          })
+                        }
+                      >
+                        <option value="">Keine Zone</option>
+                        {travelZones.map((z) => (
+                          <option key={z.id} value={z.id}>
+                            {z.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           ) : (
             <>
               <select
                 className="w-full h-10 rounded-lg border px-3 text-sm mb-3"
                 value={form.customerId}
-                onChange={(e) => setForm({ ...form, customerId: e.target.value, propertyId: "" })}
+                onChange={(e) => selectCustomer(e.target.value)}
               >
                 <option value="">Kunde wählen...</option>
                 {customers.map((c) => (
-                  <option key={c.id} value={c.id}>{c.firstName} {c.lastName}</option>
+                  <option key={c.id} value={c.id}>
+                    {c.company?.trim()
+                      ? `${c.company} (${c.firstName} ${c.lastName})`
+                      : `${c.firstName} ${c.lastName}`}
+                  </option>
                 ))}
               </select>
               {selectedCustomer && (
-                <>
-                  <select
-                    className="w-full h-10 rounded-lg border px-3 text-sm"
-                    value={form.propertyId}
-                    onChange={(e) => setForm({ ...form, propertyId: e.target.value })}
-                  >
-                    <option value="">Standort / Einsatzort wählen...</option>
-                    {selectedCustomer.properties.filter((p) => p.isActive).map((p) => (
-                      <option key={p.id} value={p.id}>
-                        {p.label}: {p.street}, {p.city}
-                        {p.travelZone ? ` · Zone: ${p.travelZone.name}` : " · keine Zone"}
-                      </option>
-                    ))}
-                  </select>
-                  {form.propertyId && (() => {
-                    const sel = selectedCustomer.properties.find((p) => p.id === form.propertyId);
-                    if (sel && !sel.travelZone) {
-                      return (
-                        <p className="mt-2 text-xs text-amber-700 bg-amber-50 rounded-lg px-3 py-2">
-                          Diesem Standort ist keine Anfahrtszone zugeordnet. Die Anfahrtskosten können dann nicht automatisch berechnet werden – bitte zuerst beim Kunden eine Zone zuweisen.
-                        </p>
-                      );
-                    }
-                    return null;
-                  })()}
-                </>
+                <div className="space-y-4">
+                  <div className="rounded-lg border border-slate-200 bg-slate-50 p-3 text-sm">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                      Rechnungsadresse
+                    </p>
+                    <p className="mt-1 text-slate-800">
+                      {hasBillingAddress(selectedCustomer)
+                        ? formatBillingAddressOneLine(selectedCustomer)
+                        : "Keine Rechnungsadresse hinterlegt – bitte beim Kunden ergänzen."}
+                    </p>
+                  </div>
+
+                  <div>
+                    <p className="text-sm font-medium mb-2">Ausführungsadresse / Baustelle *</p>
+                    <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap mb-3">
+                      <label className="flex items-center gap-2 text-sm">
+                        <input
+                          type="radio"
+                          name="siteMode"
+                          checked={siteMode === "existing"}
+                          onChange={() => setSiteMode("existing")}
+                        />
+                        Vorhandene wählen
+                      </label>
+                      <label className="flex items-center gap-2 text-sm">
+                        <input
+                          type="radio"
+                          name="siteMode"
+                          checked={siteMode === "billing"}
+                          onChange={() => setSiteMode("billing")}
+                          disabled={!hasBillingAddress(selectedCustomer)}
+                        />
+                        Rechnungsadresse übernehmen
+                      </label>
+                      <label className="flex items-center gap-2 text-sm">
+                        <input
+                          type="radio"
+                          name="siteMode"
+                          checked={siteMode === "new"}
+                          onChange={() => setSiteMode("new")}
+                        />
+                        Neue Adresse erfassen
+                      </label>
+                    </div>
+
+                    {siteMode === "existing" && (
+                      <>
+                        <select
+                          className="w-full h-10 rounded-lg border px-3 text-sm"
+                          value={form.propertyId}
+                          onChange={(e) => setForm({ ...form, propertyId: e.target.value })}
+                        >
+                          <option value="">Adresse wählen...</option>
+                          {selectedCustomer.properties
+                            .filter((p) => p.isActive)
+                            .map((p) => (
+                              <option key={p.id} value={p.id}>
+                                {p.label}: {p.street}, {p.zipCode} {p.city}
+                                {p.travelZone ? ` · Zone: ${p.travelZone.name}` : " · keine Zone"}
+                              </option>
+                            ))}
+                        </select>
+                        {!selectedCustomer.properties.some((p) => p.isActive) && (
+                          <p className="mt-2 text-xs text-amber-700 bg-amber-50 rounded-lg px-3 py-2">
+                            Keine gespeicherten Ausführungsadressen – bitte eine neue erfassen oder die
+                            Rechnungsadresse übernehmen.
+                          </p>
+                        )}
+                      </>
+                    )}
+
+                    {siteMode === "billing" && (
+                      <p className="text-sm text-slate-600 rounded-lg border border-[#0d5c63]/20 bg-[#0d5c63]/5 px-3 py-2">
+                        Als Ausführungsadresse wird verwendet:{" "}
+                        <strong>{formatBillingAddressOneLine(selectedCustomer)}</strong>
+                      </p>
+                    )}
+
+                    {siteMode === "new" && (
+                      <div className="grid gap-3 sm:grid-cols-2 rounded-lg border border-slate-200 p-3">
+                        <Input
+                          label="Bezeichnung"
+                          className="sm:col-span-2"
+                          value={form.newSite.label}
+                          onChange={(e) =>
+                            setForm({ ...form, newSite: { ...form.newSite, label: e.target.value } })
+                          }
+                          placeholder="z. B. Baustelle Friedrichstraße"
+                        />
+                        <Input
+                          label="Straße *"
+                          className="sm:col-span-2"
+                          value={form.newSite.street}
+                          onChange={(e) =>
+                            setForm({ ...form, newSite: { ...form.newSite, street: e.target.value } })
+                          }
+                        />
+                        <Input
+                          label="PLZ *"
+                          value={form.newSite.zipCode}
+                          onChange={(e) =>
+                            setForm({ ...form, newSite: { ...form.newSite, zipCode: e.target.value } })
+                          }
+                        />
+                        <Input
+                          label="Ort *"
+                          value={form.newSite.city}
+                          onChange={(e) =>
+                            setForm({ ...form, newSite: { ...form.newSite, city: e.target.value } })
+                          }
+                        />
+                        <div className="sm:col-span-2">
+                          <label className="text-sm font-medium">Anfahrtszone (optional)</label>
+                          <select
+                            className="w-full h-10 rounded-lg border mt-1 px-3 text-sm"
+                            value={form.newSite.travelZoneId}
+                            onChange={(e) =>
+                              setForm({
+                                ...form,
+                                newSite: { ...form.newSite, travelZoneId: e.target.value },
+                              })
+                            }
+                          >
+                            <option value="">Keine Zone</option>
+                            {travelZones.map((z) => (
+                              <option key={z.id} value={z.id}>
+                                {z.name}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      </div>
+                    )}
+
+                    {siteMode === "existing" &&
+                      form.propertyId &&
+                      (() => {
+                        const sel = selectedCustomer.properties.find((p) => p.id === form.propertyId);
+                        if (sel && !sel.travelZone) {
+                          return (
+                            <p className="mt-2 text-xs text-amber-700 bg-amber-50 rounded-lg px-3 py-2">
+                              Dieser Ausführungsadresse ist keine Anfahrtszone zugeordnet. Anfahrtskosten
+                              können dann nicht automatisch berechnet werden.
+                            </p>
+                          );
+                        }
+                        return null;
+                      })()}
+                  </div>
+                </div>
               )}
             </>
           )}
@@ -387,20 +857,30 @@ export default function NeuerAuftragPage() {
       )}
 
       {step === 3 && (
-        <Card title="Material prüfen">
-          <p className="text-sm text-slate-500 mb-4">Vorschlag aus Leistungsverzeichnis. Reservierung erfolgt erst nach Freigabe in Schritt 6.</p>
-          {previewLines.length === 0 ? (
-            <p className="text-sm text-amber-700 bg-amber-50 rounded-lg p-3">Keine Materialvorlagen für gewählte Leistungen – bitte im Leistungsverzeichnis pflegen oder später manuell ergänzen.</p>
-          ) : (
-            <ul className="divide-y divide-slate-100">
-              {previewLines.map((l, i) => (
-                <li key={i} className="py-2 flex justify-between text-sm">
-                  <span>{l.name}</span>
-                  <span className="text-slate-500">{l.quantityRequired} {l.unit}</span>
-                </li>
-              ))}
-            </ul>
-          )}
+        <Card title="Material">
+          <p className="text-sm text-slate-500 mb-4">
+            Vorschläge aus dem Leistungsverzeichnis können Sie ergänzen, anpassen oder löschen.
+            Preise und Mengen fließen später in die Kalkulation ein. Reservierung erst in Schritt 6.
+          </p>
+          <div className="mb-3 flex flex-wrap gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => loadMaterialSuggestions(true)}
+            >
+              Vorschläge aus Leistungen neu laden
+            </Button>
+          </div>
+          <OrderMaterialEditor
+            compact
+            lines={materialLines}
+            articles={articles}
+            onChange={(next) => {
+              setMaterialTouched(true);
+              setMaterialLines(next);
+            }}
+          />
         </Card>
       )}
 
@@ -430,17 +910,18 @@ export default function NeuerAuftragPage() {
       {step === 5 && (
         <Card title="Freigabe">
           <ul className="text-sm space-y-2 mb-4">
-            <li className="flex gap-2"><Check className="h-4 w-4 text-green-600" /> {ORDER_TYPE_LABELS[form.orderType]}</li>
+            <li className="flex gap-2"><Check className="h-4 w-4 text-green-600" /> {form.orderTypeIsOther && form.orderTypeCustom.trim() ? form.orderTypeCustom.trim() : (form.orderTypeName || "Auftragstyp")}</li>
             <li className="flex gap-2"><Check className="h-4 w-4 text-green-600" /> {form.title || "—"}</li>
             <li className="flex gap-2"><Check className="h-4 w-4 text-green-600" /> {form.serviceIds.length + form.customServices.filter((c) => c.name.trim()).length} Leistung(en){hasCustomService ? ` (inkl. ${form.customServices.filter((c) => c.name.trim()).length} sonstige)` : ""}</li>
+            <li className="flex gap-2"><Check className="h-4 w-4 text-green-600" /> {materialLines.filter((l) => l.name.trim()).length} Materialposition(en)</li>
             <li className="flex gap-2"><Check className="h-4 w-4 text-green-600" /> Phasen werden automatisch erzeugt</li>
           </ul>
           <label className="flex items-start gap-2 text-sm">
             <input type="checkbox" className="mt-1" checked={form.confirmMaterial} onChange={(e) => setForm({ ...form, confirmMaterial: e.target.checked })} />
             <span>Material jetzt reservieren (nur wenn Bestand im Hauptlager vorhanden)</span>
           </label>
-          <Button className="mt-6 w-full" variant="action" onClick={submit} disabled={saving}>
-            {saving ? "Wird angelegt..." : "Auftrag anlegen"}
+          <Button className="mt-6 w-full" variant="action" onClick={submit} disabled={saving || creatingProperty}>
+            {saving || creatingProperty ? "Wird angelegt..." : "Auftrag anlegen"}
           </Button>
         </Card>
       )}
@@ -455,6 +936,38 @@ export default function NeuerAuftragPage() {
             onClick={() => {
               setError("");
               if (step === 0 && !form.title) { setError("Bitte Auftragstitel eingeben."); return; }
+              if (step === 0 && !form.orderTypeId) { setError("Bitte einen Auftragstyp wählen."); return; }
+              if (step === 0 && form.orderTypeIsOther && !form.orderTypeCustom.trim()) {
+                setError("Bitte den Auftragstyp unter „Sonstiges“ beschreiben.");
+                return;
+              }
+              if (step === 1) {
+                if (form.createNewCustomer) {
+                  const nc = form.newCustomer;
+                  if (!nc.firstName || !nc.lastName || !nc.billingStreet || !nc.billingZipCode || !nc.billingCity) {
+                    setError("Bitte Name und Rechnungsadresse ausfüllen.");
+                    return;
+                  }
+                  if (!form.sameSiteAsBilling && (!nc.siteStreet || !nc.siteZipCode || !nc.siteCity)) {
+                    setError("Bitte die Ausführungsadresse ausfüllen.");
+                    return;
+                  }
+                } else {
+                  if (!form.customerId) { setError("Bitte einen Kunden wählen."); return; }
+                  if (siteMode === "existing" && !form.propertyId) {
+                    setError("Bitte eine Ausführungsadresse wählen.");
+                    return;
+                  }
+                  if (siteMode === "new" && (!form.newSite.street || !form.newSite.zipCode || !form.newSite.city)) {
+                    setError("Bitte Straße, PLZ und Ort der Ausführungsadresse angeben.");
+                    return;
+                  }
+                  if (siteMode === "billing" && selectedCustomer && !hasBillingAddress(selectedCustomer)) {
+                    setError("Keine Rechnungsadresse vorhanden.");
+                    return;
+                  }
+                }
+              }
               if (step === 2 && !form.serviceIds.length && !hasCustomService) { setError("Bitte mindestens eine Leistung wählen oder eine sonstige Leistung erfassen."); return; }
               setStep((s) => s + 1);
             }}
