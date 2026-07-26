@@ -252,7 +252,7 @@ export default function NeuerAuftragPage() {
     let zipCode = form.newSite.zipCode;
     let city = form.newSite.city;
     let label = form.newSite.label || "Baustelle";
-    let travelZoneId = form.newSite.travelZoneId || undefined;
+    const travelZoneId = form.newSite.travelZoneId || undefined;
 
     if (siteMode === "billing") {
       if (!hasBillingAddress(selected)) {

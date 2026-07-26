@@ -45,12 +45,10 @@ export default function AuftraegePage() {
   useEffect(() => {
     const urlStatus = searchParams.get("status");
     if (urlStatus && urlStatus !== statusFilter) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setStatusFilter(urlStatus);
     }
     const urlTab = searchParams.get("tab");
     if (urlTab === "erledigt" || urlTab === "aktiv") {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setTab(urlTab);
     }
   }, [searchParams, statusFilter]);

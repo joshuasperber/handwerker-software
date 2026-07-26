@@ -141,7 +141,7 @@ export function AssistantChat() {
     setPendingDisambiguation(null);
 
     const userMsg: ChatMessage = {
-      id: `user-${Date.now()}`,
+      id: `user-${crypto.randomUUID()}`,
       role: "user",
       content: trimmed,
     };
@@ -173,7 +173,7 @@ export function AssistantChat() {
       setMessages((prev) => [
         ...prev,
         {
-          id: `err-${Date.now()}`,
+          id: `err-${crypto.randomUUID()}`,
           role: "assistant",
           content: res.error ?? "Anfrage fehlgeschlagen.",
         },
@@ -193,7 +193,7 @@ export function AssistantChat() {
     setMessages((prev) => [
       ...prev,
       {
-        id: `asst-${Date.now()}`,
+        id: `asst-${crypto.randomUUID()}`,
         role: "assistant",
         content: res.data!.content,
         metadata: {

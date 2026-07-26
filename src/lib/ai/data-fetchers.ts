@@ -355,7 +355,7 @@ export async function fetchEmployeeMaterials(
       })
     : [];
 
-  let stockInfo: Array<{ name: string; required: number; onHand: number; unit: string }> = [];
+  const stockInfo: Array<{ name: string; required: number; onHand: number; unit: string }> = [];
   if (canReadInventory(auth)) {
     const articleIds = [
       ...materialLines.map((l) => l.articleId).filter(Boolean),
