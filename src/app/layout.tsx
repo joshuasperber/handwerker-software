@@ -10,7 +10,21 @@ export const metadata: Metadata = {
   title: "JoMaster – Software für Handwerksbetriebe",
   description:
     "Online-Terminbuchung, Disposition, Monteur-App und Büro-Dashboard für KMU-Handwerksbetriebe",
+  applicationName: "JoMaster",
   manifest: "/manifest.json",
+  // Explizite Favicons – Safari bevorzugt /favicon.ico; ohne gültige Datei erscheint
+  // auf Vercel sonst das Standard-Dreieck.
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon-16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon-32.png", sizes: "32x32", type: "image/png" },
+      { url: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icons/icon-512.png", sizes: "512x512", type: "image/png" },
+    ],
+    apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
+    shortcut: ["/favicon.ico"],
+  },
 };
 
 export const viewport: Viewport = {
