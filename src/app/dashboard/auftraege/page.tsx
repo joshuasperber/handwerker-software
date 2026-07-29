@@ -79,27 +79,33 @@ export default function AuftraegePage() {
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div>
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
           <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
             <ClipboardList className="h-7 w-7 text-[#0d5c63]" />
             Aufträge
           </h1>
           <p className="mt-1 text-sm text-slate-500">Neueste zuerst</p>
         </div>
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex shrink-0 items-center gap-2">
           <CanAccess permission="orders.write">
-            <Button asChild variant="outline" size="sm" className="min-h-11 sm:min-h-9">
+            <Button asChild variant="outline" size="sm">
               <Link href="/dashboard/auftraege/typen">Auftragstypen</Link>
             </Button>
           </CanAccess>
           <CanAccess permission="orders.write">
-            <AddButton href="/dashboard/auftraege/neu" className="w-full sm:w-auto">
+            <AddButton href="/dashboard/auftraege/neu" className="hidden sm:inline-flex">
               Neuer Auftrag
             </AddButton>
           </CanAccess>
         </div>
       </div>
+
+      <CanAccess permission="orders.write">
+        <AddButton href="/dashboard/auftraege/neu" className="w-full sm:hidden">
+          Neuer Auftrag
+        </AddButton>
+      </CanAccess>
 
       <div className="flex flex-col gap-3 sm:flex-row">
         <div className="relative flex-1 min-w-0">

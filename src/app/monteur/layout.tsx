@@ -3,7 +3,8 @@ import { getSession } from "@/lib/auth";
 import { canAccessMonteurApp, getRoleHomePath } from "@/lib/permissions";
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
-import { Wrench, AlertTriangle } from "lucide-react";
+import Image from "next/image";
+import { AlertTriangle } from "lucide-react";
 import { Suspense } from "react";
 import { MonteurBottomNav } from "@/components/monteur/bottom-nav";
 import { NotificationBell } from "@/components/notifications/notification-bell";
@@ -31,7 +32,13 @@ export default async function MonteurLayout({
     <div className="min-h-screen bg-slate-50 flex flex-col">
       <header className="sticky top-0 z-10 flex h-14 items-center justify-between border-b border-slate-200 bg-white px-4">
         <div className="flex items-center gap-2">
-          <Wrench className="h-5 w-5 text-[#0d5c63]" />
+          <Image
+            src="/icons/icon-192.png"
+            alt="JoMaster Logo"
+            width={28}
+            height={28}
+            className="h-7 w-7 rounded-lg"
+          />
           <span className="font-bold text-slate-900">
             {session.role === "MONTEUR" ? "Monteur" : "Feld-Ansicht"}
           </span>

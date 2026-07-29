@@ -7,8 +7,9 @@ import { ComposeMessage } from "@/components/messages/compose-message";
 import { MessageList } from "@/components/messages/message-list";
 import { InvitationsManager } from "@/components/messages/invitations-manager";
 import { MessagesInbox } from "@/components/messages/messages-inbox";
+import { NotificationsPanel } from "@/components/notifications/notifications-panel";
 
-type Tab = "inbox" | "compose" | "material" | "invitations";
+type Tab = "inbox" | "notifications" | "compose" | "material" | "invitations";
 
 export function MessagesCenter() {
   const canInvite = usePermission("invitations.manage");
@@ -16,6 +17,7 @@ export function MessagesCenter() {
 
   const tabs: { id: Tab; label: string }[] = [
     { id: "inbox", label: "Posteingang" },
+    { id: "notifications", label: "Benachrichtigungen" },
     { id: "compose", label: "Neue Nachricht" },
     { id: "material", label: "Material" },
     ...(canInvite ? [{ id: "invitations" as const, label: "Einladungen" }] : []),
@@ -43,6 +45,8 @@ export function MessagesCenter() {
       {tab === "inbox" && (
         <MessageList box="inbox" emptyLabel="Keine eingegangenen Nachrichten." />
       )}
+
+      {tab === "notifications" && <NotificationsPanel />}
 
       {tab === "compose" && (
         <Card title="Neue Nachricht">

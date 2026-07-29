@@ -40,6 +40,7 @@ import {
   Loader2,
   CalendarDays,
   MoreHorizontal,
+  Search,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -289,9 +290,9 @@ export default function RechnungenPage() {
     <div>
       <LoadingOverlay open={busy} label="Vorgang läuft …" />
 
-      <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
-        <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
-          <Receipt className="h-7 w-7 text-[#0d5c63]" />
+      <div className="flex items-start justify-between gap-3 mb-6">
+        <h1 className="min-w-0 text-2xl font-bold text-slate-900 flex items-center gap-2">
+          <Receipt className="h-7 w-7 shrink-0 text-[#0d5c63]" />
           Rechnungen &amp; Belege
           <InfoButton title="Rechnungsübersicht">
             <p>
@@ -314,17 +315,20 @@ export default function RechnungenPage() {
             </p>
           </InfoButton>
         </h1>
-        <div className="flex flex-wrap items-center gap-2">
-          <div className="flex flex-col items-end gap-0.5">
-            <AmountModeToggle mode={amountMode} onChange={setAmountMode} />
-            <span className="text-[11px] text-slate-400">Nur Anzeige</span>
-          </div>
-          <a href="/api/documents/export?format=datev" target="_blank" rel="noreferrer">
-            <Button variant="outline" size="sm">
-              <Download className="h-4 w-4 mr-1" /> DATEV / CSV-Export
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" size="sm" className="shrink-0" aria-label="Weitere Aktionen">
+              <MoreHorizontal className="h-4 w-4" />
             </Button>
-          </a>
-        </div>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-56">
+            <DropdownMenuItem asChild>
+              <a href="/api/documents/export?format=datev" target="_blank" rel="noreferrer">
+                <Download className="h-4 w-4 mr-2" /> DATEV / CSV-Export
+              </a>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
@@ -356,66 +360,74 @@ export default function RechnungenPage() {
         </Card>
       </div>
 
-      <div className="flex flex-wrap items-end gap-3 mb-4">
-        <div>
-          <Label className="text-xs">Typ</Label>
-          <select
-            value={type}
-            onChange={(e) => setType(e.target.value)}
-            className="block h-9 rounded-md border border-slate-300 bg-white px-2 text-sm"
-          >
-            <option value="">Alle</option>
-            <option value="INVOICE">Rechnungen</option>
-            <option value="OFFER">Angebote</option>
-          </select>
+      <Card className="!p-4 mb-4 space-y-3">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+          <div className="relative flex-1 min-w-0">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+            <Input
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
+              placeholder="Belegnummer oder Kunde suchen …"
+              className="h-10 pl-9"
+            />
+          </div>
+          <div className="flex items-center justify-between gap-2 sm:justify-end">
+            <AmountModeToggle mode={amountMode} onChange={setAmountMode} />
+            <span className="text-[11px] text-slate-400">Nur Anzeige</span>
+          </div>
         </div>
-        <div>
-          <Label className="text-xs">Status</Label>
-          <select
-            value={status}
-            onChange={(e) => setStatus(e.target.value)}
-            className="block h-9 rounded-md border border-slate-300 bg-white px-2 text-sm"
-          >
-            <option value="">Alle</option>
-            <option value="OFFEN">Offen</option>
-            <option value="TEILBEZAHLT">Teilbezahlt</option>
-            <option value="BEZAHLT">Bezahlt</option>
-            <option value="STORNIERT">Storniert</option>
-          </select>
-        </div>
-        <div>
-          <Label className="text-xs">Von</Label>
-          <Input
-            type="date"
-            value={from}
-            onChange={(e) => setFrom(e.target.value)}
-            className="h-9 w-auto"
-          />
-        </div>
-        <div>
-          <Label className="text-xs">Bis</Label>
-          <Input
-            type="date"
-            value={to}
-            onChange={(e) => setTo(e.target.value)}
-            className="h-9 w-auto"
-          />
-        </div>
-        <div className="flex-1 min-w-[200px]">
-          <Label className="text-xs">Suche</Label>
-          <Input
-            value={q}
-            onChange={(e) => setQ(e.target.value)}
-            placeholder="Belegnummer oder Kunde …"
-            className="h-9"
-          />
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <div>
+            <Label className="text-xs">Typ</Label>
+            <select
+              value={type}
+              onChange={(e) => setType(e.target.value)}
+              className="block h-9 w-full rounded-md border border-slate-300 bg-white px-2 text-sm"
+            >
+              <option value="">Alle</option>
+              <option value="INVOICE">Rechnungen</option>
+              <option value="OFFER">Angebote</option>
+            </select>
+          </div>
+          <div>
+            <Label className="text-xs">Status</Label>
+            <select
+              value={status}
+              onChange={(e) => setStatus(e.target.value)}
+              className="block h-9 w-full rounded-md border border-slate-300 bg-white px-2 text-sm"
+            >
+              <option value="">Alle</option>
+              <option value="OFFEN">Offen</option>
+              <option value="TEILBEZAHLT">Teilbezahlt</option>
+              <option value="BEZAHLT">Bezahlt</option>
+              <option value="STORNIERT">Storniert</option>
+            </select>
+          </div>
+          <div>
+            <Label className="text-xs">Von</Label>
+            <Input
+              type="date"
+              value={from}
+              onChange={(e) => setFrom(e.target.value)}
+              className="h-9 w-full"
+            />
+          </div>
+          <div>
+            <Label className="text-xs">Bis</Label>
+            <Input
+              type="date"
+              value={to}
+              onChange={(e) => setTo(e.target.value)}
+              className="h-9 w-full"
+            />
+          </div>
         </div>
         {(from || to) && (
           <Button
             type="button"
             variant="ghost"
             size="sm"
-            className="h-9"
+            className="h-8"
             onClick={() => {
               setFrom("");
               setTo("");
@@ -424,7 +436,7 @@ export default function RechnungenPage() {
             Zeitraum zurücksetzen
           </Button>
         )}
-      </div>
+      </Card>
 
       {/* Mobile cards */}
       <div className="space-y-3 md:hidden mb-4">

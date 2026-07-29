@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import Link from "next/link";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,7 +16,7 @@ import {
   type DocumentCalcInput,
   type DocumentCompanyInput,
 } from "@/lib/documents/build-document-html";
-import { ChevronLeft, Save, Upload, X, Eye } from "lucide-react";
+import { Save, Upload, X, Eye } from "lucide-react";
 
 interface InvoiceForm {
   companyName: string;
@@ -207,13 +206,6 @@ export default function RechnungseinstellungenPage() {
 
   return (
     <div>
-      <Link
-        href="/dashboard/kalkulation/einstellungen"
-        className="text-sm text-[#0d5c63] flex items-center gap-1 mb-4"
-      >
-        <ChevronLeft className="h-4 w-4" /> Zurück zu den Einstellungen
-      </Link>
-
       <div className="flex items-center gap-2 mb-6">
         <h1 className="text-2xl font-bold text-slate-900">Rechnungseinstellungen</h1>
         <InfoButton title="Rechnungseinstellungen">

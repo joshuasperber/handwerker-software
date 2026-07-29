@@ -7,7 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { fetchJson } from "@/lib/fetch-json";
 import { ROLE_LABELS } from "@/lib/utils";
-import { Wrench, Loader2, CheckCircle, AlertCircle } from "lucide-react";
+import Image from "next/image";
+import { Loader2, CheckCircle, AlertCircle } from "lucide-react";
 
 interface InvitationInfo {
   email: string;
@@ -92,9 +93,13 @@ export default function AcceptInvitationPage() {
     <div className="min-h-screen flex items-center justify-center bg-slate-50 px-4 py-8">
       <Card className="w-full max-w-md">
         <div className="flex flex-col items-center mb-6">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#0d5c63] text-white mb-4">
-            <Wrench className="h-6 w-6" />
-          </div>
+          <Image
+            src="/icons/icon-192.png"
+            alt="JoMaster Logo"
+            width={48}
+            height={48}
+            className="h-12 w-12 rounded-xl mb-4"
+          />
           <h1 className="text-2xl font-bold text-slate-900 text-center">{info.companyName}</h1>
           <p className="text-sm text-slate-500 mt-1 text-center">
             Sie wurden eingeladen · {ROLE_LABELS[info.role] ?? info.role}

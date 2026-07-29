@@ -2,7 +2,8 @@
 
 import { useState, type ReactNode } from "react";
 import Link from "next/link";
-import { AlertTriangle, Menu, Wrench } from "lucide-react";
+import Image from "next/image";
+import { AlertTriangle, Menu } from "lucide-react";
 import { DashboardSearch } from "@/components/dashboard/search";
 import { DashboardSidebarNav } from "@/components/dashboard/sidebar-nav";
 import { NotificationBell } from "@/components/notifications/notification-bell";
@@ -50,9 +51,13 @@ function BrandHomeLink({
       }
     >
       {!compact && (
-        <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#0d5c63] text-white">
-          <Wrench className="h-4 w-4" />
-        </span>
+        <Image
+          src="/icons/icon-192.png"
+          alt="JoMaster Logo"
+          width={32}
+          height={32}
+          className="h-8 w-8 rounded-lg"
+        />
       )}
       <span className={compact ? undefined : "font-bold text-slate-900"}>JoMaster</span>
     </Link>

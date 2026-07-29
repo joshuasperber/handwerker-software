@@ -157,49 +157,52 @@ export function buildCustomerDocumentHtml(
     : "Kunde";
   const isReverseCharge = calc.isReverseCharge ?? calc.taxTreatment === "REVERSE_CHARGE";
 
-  const visibleLines: string[] = [];
+  const positionRows: { label: string; amount: number }[] = [];
   if (calc.useFixedPrice) {
-    const label = (calc.fixedPriceLabel?.trim() || "Festpreis");
-    visibleLines.push(
-      `<tr><td>${escapeHtml(label)} – ${formatEuro(calc.netSalesPrice)}</td><td style="text-align:right">${formatEuro(calc.netSalesPrice)}</td></tr>`
-    );
+    positionRows.push({
+      label: escapeHtml(calc.fixedPriceLabel?.trim() || "Festpreis"),
+      amount: calc.netSalesPrice,
+    });
   } else {
     for (const l of calc.laborItems.filter((x) => x.isVisibleToCustomer)) {
-      visibleLines.push(
-        `<tr><td>${escapeHtml(l.description)}</td><td style="text-align:right">${formatEuro(l.totalNet)}</td></tr>`
-      );
+      positionRows.push({ label: escapeHtml(l.description), amount: l.totalNet });
     }
     for (const m of calc.materialItems.filter((x) => x.isVisibleToCustomer)) {
-      visibleLines.push(
-        `<tr><td>${escapeHtml(m.name)}</td><td style="text-align:right">${formatEuro(m.totalSalesNet)}</td></tr>`
-      );
+      positionRows.push({ label: escapeHtml(m.name), amount: m.totalSalesNet });
     }
     if (calc.travelCost?.isVisibleToCustomer) {
-      visibleLines.push(
-        `<tr><td>Anfahrt / Fahrtkosten</td><td style="text-align:right">${formatEuro(calc.travelCost.totalNet)}</td></tr>`
-      );
+      positionRows.push({ label: "Anfahrt / Fahrtkosten", amount: calc.travelCost.totalNet });
     }
     for (const a of (calc.additionalItems ?? []).filter((x) => x.isVisibleToCustomer)) {
-      visibleLines.push(
-        `<tr><td>${escapeHtml(a.description)}</td><td style="text-align:right">${formatEuro(a.totalNet)}</td></tr>`
-      );
+      positionRows.push({ label: escapeHtml(a.description), amount: a.totalNet });
     }
 
-    if (visibleLines.length === 0 && calc.netSalesPrice > 0) {
-      visibleLines.push(
-        `<tr><td>${escapeHtml(calc.title ?? "Leistungspauschale")}</td><td style="text-align:right">${formatEuro(calc.netSalesPrice)}</td></tr>`
-      );
+    if (positionRows.length === 0 && calc.netSalesPrice > 0) {
+      positionRows.push({
+        label: escapeHtml(calc.title ?? "Leistungspauschale"),
+        amount: calc.netSalesPrice,
+      });
     } else if (hiddenAmount > 0.01) {
-      visibleLines.push(
-        `<tr><td>Projektpauschale (Gemeinkosten, Wagnis &amp; Gewinn)</td><td style="text-align:right">${formatEuro(hiddenAmount)}</td></tr>`
-      );
+      positionRows.push({
+        label: "Projektpauschale (Gemeinkosten, Wagnis &amp; Gewinn)",
+        amount: hiddenAmount,
+      });
     }
   }
 
+  const visibleLines = positionRows.map(
+    (row, i) =>
+      `<tr>
+        <td class="pos-nr">${i + 1}</td>
+        <td>${row.label}</td>
+        <td class="amount">${formatEuro(row.amount)}</td>
+      </tr>`
+  );
+
   const logoUrl = company.invoiceLogoUrl || company.logoUrl;
   const logoBlock = logoUrl
-    ? `<img src="${logoUrl}" alt="Logo" style="max-height:56px;max-width:180px;margin-bottom:12px"/>`
-    : "";
+    ? `<img src="${logoUrl}" alt="Logo" class="logo"/>`
+    : `<div class="logo-fallback">${escapeHtml(company.companyName)}</div>`;
 
   const dueDate =
     type === "INVOICE" && company.paymentTermsDays != null
@@ -220,55 +223,81 @@ export function buildCustomerDocumentHtml(
   };
 
   const introBlock = company.invoiceIntroText
-    ? `<p style="font-size:14px;margin:16px 0">${escapeHtml(applyVariables(company.invoiceIntroText, variables)).replace(/\n/g, "<br/>")}</p>`
+    ? `<p class="intro">${escapeHtml(applyVariables(company.invoiceIntroText, variables)).replace(/\n/g, "<br/>")}</p>`
     : "";
 
   const paymentBlock =
-    type === "INVOICE"
+    type === "INVOICE" && (dueDate || company.bankName || company.iban)
       ? `<div class="payment">
-          ${dueDate ? `<p><strong>Zahlungsziel:</strong> ${formatDate(dueDate)}${company.paymentTermsDays ? ` (${company.paymentTermsDays} Tage)` : ""}</p>` : ""}
-          ${company.bankName || company.iban ? `<p><strong>Bankverbindung:</strong> ${[company.bankName, company.iban ? `IBAN ${company.iban}` : "", company.bic ? `BIC ${company.bic}` : ""].filter(Boolean).join(" · ")}</p>` : ""}
+          <p class="payment-title">Zahlungsinformationen</p>
+          ${dueDate ? `<div class="payment-row"><span>Zahlbar bis</span><strong>${formatDate(dueDate)}${company.paymentTermsDays ? ` (${company.paymentTermsDays} Tage)` : ""}</strong></div>` : ""}
+          ${company.bankName ? `<div class="payment-row"><span>Bank</span><strong>${escapeHtml(company.bankName)}</strong></div>` : ""}
+          ${company.iban ? `<div class="payment-row"><span>IBAN</span><strong>${escapeHtml(company.iban)}</strong></div>` : ""}
+          ${company.bic ? `<div class="payment-row"><span>BIC</span><strong>${escapeHtml(company.bic)}</strong></div>` : ""}
+          <div class="payment-row"><span>Verwendungszweck</span><strong>${documentNumber}</strong></div>
         </div>`
       : "";
 
   const taxLine = [
-    company.taxNumber ? `Steuernr.: ${company.taxNumber}` : "",
-    company.vatId ? `USt-IdNr.: ${company.vatId}` : "",
+    company.taxNumber ? `Steuernr. ${company.taxNumber}` : "",
+    company.vatId ? `USt-IdNr. ${company.vatId}` : "",
   ]
     .filter(Boolean)
-    .join(" · ");
+    .join("<br/>");
 
-  const contactLine = [
-    company.phone ? `Tel.: ${company.phone}` : "",
-    company.email ?? "",
-    company.website ?? "",
+  const contactFooter = [
+    company.phone ? `Tel. ${escapeHtml(company.phone)}` : "",
+    company.email ? escapeHtml(company.email) : "",
+    company.website ? escapeHtml(company.website) : "",
   ]
     .filter(Boolean)
-    .join(" · ");
+    .join("<br/>");
+
+  const bankFooter = [
+    company.bankName ? escapeHtml(company.bankName) : "",
+    company.iban ? `IBAN ${escapeHtml(company.iban)}` : "",
+    company.bic ? `BIC ${escapeHtml(company.bic)}` : "",
+  ]
+    .filter(Boolean)
+    .join("<br/>");
 
   const taxNoticeBlock =
     isReverseCharge && (calc.invoiceTaxNotice || calc.section13bNote || calc.vatNote)
-      ? `<div class="tax-notice" style="margin-top:16px;padding:12px;background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;font-size:13px">
+      ? `<div class="tax-notice">
           ${calc.invoiceTaxNotice ? `<p style="margin:0 0 4px;font-weight:600">${calc.invoiceTaxNotice}</p>` : ""}
           ${calc.section13bNote ? `<p style="margin:0 0 4px">${calc.section13bNote}</p>` : ""}
           ${calc.vatNote ? `<p style="margin:0">${calc.vatNote}</p>` : ""}
         </div>`
       : calc.vatNote
-        ? `<p style="font-size:13px;color:#475569;margin-top:12px">${escapeHtml(calc.vatNote)}</p>`
+        ? `<p class="vat-note">${escapeHtml(calc.vatNote)}</p>`
         : "";
 
-  const totalsBlock = isReverseCharge
-    ? `<p class="total">Rechnungsbetrag (netto): ${formatEuro(calc.netSalesPrice)}</p>
-       <p style="font-size:13px;color:#64748b">Keine Umsatzsteuer ausgewiesen — ${calc.invoiceTaxNotice ?? "Steuerschuldnerschaft des Leistungsempfängers"}</p>`
-    : `<p>Umsatzsteuer (${calc.vatAmount > 0 && calc.netSalesPrice > 0 ? Math.round((calc.vatAmount / calc.netSalesPrice) * 100) : 19} %): ${formatEuro(calc.vatAmount)}</p>
-       <p class="total">Brutto gesamt: ${formatEuro(calc.grossSalesPrice)}</p>`;
+  const vatRatePercent =
+    calc.vatAmount > 0 && calc.netSalesPrice > 0
+      ? Math.round((calc.vatAmount / calc.netSalesPrice) * 100)
+      : 19;
+
+  const totalsRows = isReverseCharge
+    ? `<div class="totals-row"><span>Netto gesamt</span><span>${formatEuro(calc.netSalesPrice)}</span></div>
+       <div class="totals-grand"><span>Rechnungsbetrag (netto)</span><span>${formatEuro(calc.netSalesPrice)}</span></div>
+       <p class="totals-hint">Keine Umsatzsteuer ausgewiesen — ${calc.invoiceTaxNotice ?? "Steuerschuldnerschaft des Leistungsempfängers"}</p>`
+    : `<div class="totals-row"><span>Netto gesamt</span><span>${formatEuro(calc.netSalesPrice)}</span></div>
+       <div class="totals-row"><span>Umsatzsteuer ${vatRatePercent} %</span><span>${formatEuro(calc.vatAmount)}</span></div>
+       <div class="totals-grand"><span>Gesamtbetrag</span><span>${formatEuro(calc.grossSalesPrice)}</span></div>`;
+
+  const totalsSubline = calc.useFixedPrice
+    ? `<div class="totals-row muted"><span>Abrechnung als Festpreis (${escapeHtml(calc.fixedPriceLabel?.trim() || "Festpreis")})</span><span></span></div>`
+    : hiddenAmount > 0.01
+      ? `<div class="totals-row muted"><span>Sichtbare Positionen</span><span>${formatEuro(visibleSum)}</span></div>
+         <div class="totals-row muted"><span>Pauschale / Kostenanteile</span><span>${formatEuro(hiddenAmount)}</span></div>`
+      : "";
 
   const customerVatLine = calc.customer?.vatId
-    ? `<br/><span style="color:#64748b;font-size:12px">USt-IdNr.: ${calc.customer.vatId}</span>`
+    ? `<br/><span class="small muted-text">USt-IdNr. ${calc.customer.vatId}</span>`
     : "";
 
   const notesBlock = company.invoiceNotes
-    ? `<p style="font-size:13px;color:#475569;margin-top:24px">${escapeHtml(applyVariables(company.invoiceNotes, variables)).replace(/\n/g, "<br/>")}</p>`
+    ? `<p class="notes">${escapeHtml(applyVariables(company.invoiceNotes, variables)).replace(/\n/g, "<br/>")}</p>`
     : "";
 
   const footerText = company.invoiceFooterText
@@ -280,90 +309,146 @@ export function buildCustomerDocumentHtml(
   const billingHtml = customerBillingAddressHtml(calc);
   const siteHtml = siteAddressHtml(calc);
   const siteDiffers = siteDiffersFromBilling(calc.customer, calc.order?.property);
-  const showLeistungsort = Boolean(siteHtml) && (siteDiffers || (type === "OFFER" && hasBillingAddress(calc.customer)));
+  const showLeistungsort =
+    Boolean(siteHtml) && (siteDiffers || (type === "OFFER" && hasBillingAddress(calc.customer)));
 
-  const recipientBlock =
-    type === "OFFER"
-      ? `<div style="text-align:right">
-        <strong>Kunde</strong>
-        ${customerName}<br/>
-        ${billingHtml || siteHtml}${customerVatLine}
-        ${showLeistungsort ? `<br/><br/><strong>Leistungsort / Baustelle</strong><br/>${siteHtml}` : ""}
-        ${calc.order ? `<br/><span style="color:#64748b">Auftrag ${calc.order.orderNumber}</span>` : ""}
-      </div>`
-      : `<div style="text-align:right">
-        <strong>Rechnungsempfänger</strong>
-        ${customerName}<br/>
-        ${billingHtml}${customerVatLine}
-        ${
-          siteHtml && siteDiffers
-            ? `<br/><br/><strong>Leistungsort</strong><br/>${siteHtml}`
-            : ""
-        }
-        ${calc.order ? `<br/><span style="color:#64748b">Auftrag ${calc.order.orderNumber}</span>` : ""}
-      </div>`;
+  const senderLine = [
+    company.companyName,
+    [company.street, company.houseNumber].filter(Boolean).join(" "),
+    [company.postalCode, company.city].filter(Boolean).join(" "),
+  ]
+    .filter(Boolean)
+    .map((s) => escapeHtml(String(s)))
+    .join(" · ");
+
+  const recipientAddress = type === "OFFER" ? billingHtml || siteHtml : billingHtml;
+
+  const metaRows = [
+    [`${title}s-Nr.`, documentNumber],
+    ["Datum", formatDate(issueDate)],
+    calc.order ? ["Auftrag", calc.order.orderNumber] : null,
+    type === "INVOICE" && dueDate ? ["Zahlbar bis", formatDate(dueDate)] : null,
+  ].filter((r): r is [string, string] => Boolean(r));
 
   return `<!DOCTYPE html><html lang="de"><head><meta charset="utf-8"/><style>
-    body{font-family:Inter,system-ui,sans-serif;color:#1e293b;padding:40px;max-width:800px;margin:0 auto;line-height:1.5}
-    h1{color:#0d5c63;margin:0 0 4px;font-size:1.75rem}
-    .meta{color:#64748b;font-size:14px;margin-bottom:24px}
-    .addresses{display:flex;justify-content:space-between;gap:32px;margin-bottom:32px;font-size:14px}
-    .addresses strong{display:block;color:#0d5c63;margin-bottom:4px}
-    table{width:100%;border-collapse:collapse;margin:24px 0}
-    th{text-align:left;padding:10px 8px;border-bottom:2px solid #0d5c63;color:#0d5c63;font-size:13px}
-    td{padding:10px 8px;border-bottom:1px solid #e2e8f0;font-size:14px}
-    .totals{margin-top:16px;text-align:right;font-size:14px}
-    .total{font-weight:bold;font-size:1.15em;color:#0d5c63}
-    .payment{margin-top:24px;font-size:13px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:12px}
-    .payment p{margin:2px 0}
-    .footer{font-size:12px;color:#64748b;margin-top:48px;border-top:1px solid #e2e8f0;padding-top:16px}
-    @media print{body{padding:16px}.no-print{display:none}}
-    .print-bar{position:sticky;top:0;display:flex;justify-content:flex-end;gap:8px;padding:8px 0;margin-bottom:8px}
+    *{box-sizing:border-box}
+    body{font-family:Inter,system-ui,-apple-system,sans-serif;color:#0f172a;margin:0;background:#f1f5f9;line-height:1.55;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .sheet{max-width:800px;margin:24px auto;background:#fff;border-radius:12px;box-shadow:0 1px 3px rgba(15,23,42,.1);overflow:hidden}
+    .accent-bar{height:6px;background:linear-gradient(90deg,#0d5c63,#14929c)}
+    .inner{padding:44px 48px}
+    .logo{max-height:56px;max-width:200px;object-fit:contain}
+    .logo-fallback{font-size:20px;font-weight:700;color:#0d5c63}
+    .head{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;margin-bottom:36px}
+    .doc-type{margin:0;font-size:28px;font-weight:800;letter-spacing:-.02em;color:#0d5c63;text-align:right}
+    .doc-number{margin:2px 0 0;font-size:13px;color:#64748b;text-align:right}
+    .address-block{display:flex;justify-content:space-between;gap:32px;margin-bottom:36px}
+    .sender-line{font-size:10px;color:#94a3b8;border-bottom:1px solid #e2e8f0;padding-bottom:3px;margin-bottom:10px}
+    .recipient{font-size:14px}
+    .recipient .name{font-weight:600}
+    .meta-card{min-width:240px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:14px 16px;font-size:13px;align-self:flex-start}
+    .meta-card .row{display:flex;justify-content:space-between;gap:16px;padding:3px 0}
+    .meta-card .row span:first-child{color:#64748b}
+    .meta-card .row span:last-child{font-weight:600;text-align:right}
+    .subject{font-size:16px;font-weight:700;margin:0 0 4px}
+    .intro{font-size:14px;color:#334155;margin:12px 0 0}
+    table{width:100%;border-collapse:collapse;margin:24px 0 8px}
+    th{text-align:left;padding:10px 10px;background:#0d5c63;color:#fff;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+    th:first-child{border-radius:8px 0 0 8px;width:44px}
+    th:last-child{border-radius:0 8px 8px 0;text-align:right}
+    td{padding:11px 10px;border-bottom:1px solid #eef2f7;font-size:14px;vertical-align:top}
+    tr:nth-child(even) td{background:#fafcfd}
+    .pos-nr{color:#94a3b8;font-size:13px}
+    .amount{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+    .totals{margin-left:auto;max-width:340px;font-size:14px}
+    .totals-row{display:flex;justify-content:space-between;gap:24px;padding:5px 10px}
+    .totals-row.muted{color:#64748b;font-size:13px}
+    .totals-row span:last-child{font-variant-numeric:tabular-nums}
+    .totals-grand{display:flex;justify-content:space-between;gap:24px;margin-top:6px;padding:12px 14px;background:#0d5c63;color:#fff;border-radius:10px;font-weight:700;font-size:16px}
+    .totals-grand span:last-child{font-variant-numeric:tabular-nums}
+    .totals-hint{font-size:12px;color:#64748b;padding:6px 10px 0;margin:0}
+    .tax-notice{margin-top:20px;padding:14px 16px;background:#f0f9ff;border:1px solid #bae6fd;border-radius:10px;font-size:13px}
+    .vat-note{font-size:13px;color:#475569;margin-top:14px}
+    .payment{margin-top:28px;padding:16px 18px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;font-size:13px;max-width:380px}
+    .payment-title{margin:0 0 8px;font-weight:700;color:#0d5c63;font-size:12px;text-transform:uppercase;letter-spacing:.05em}
+    .payment-row{display:flex;justify-content:space-between;gap:16px;padding:2px 0}
+    .payment-row span{color:#64748b}
+    .notes{font-size:13px;color:#475569;margin-top:24px}
+    .small{font-size:12px}
+    .muted-text{color:#64748b}
+    .footer{margin-top:44px;border-top:2px solid #0d5c63;padding-top:16px}
+    .footer-note{font-size:11px;color:#94a3b8;margin:0 0 14px}
+    .footer-cols{display:flex;justify-content:space-between;gap:24px;font-size:11px;color:#64748b}
+    .footer-cols strong{display:block;color:#334155;margin-bottom:2px;font-size:11px}
+    @media print{
+      body{background:#fff}
+      .sheet{margin:0;max-width:none;border-radius:0;box-shadow:none}
+      .inner{padding:24px 28px}
+      .no-print{display:none}
+    }
+    .print-bar{position:sticky;top:0;z-index:10;display:flex;justify-content:flex-end;gap:8px;padding:10px 16px;background:rgba(241,245,249,.92);backdrop-filter:blur(4px)}
     .print-bar button{background:#0d5c63;color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:14px;font-weight:600;cursor:pointer}
+    .print-bar button:hover{background:#0a4a50}
   </style></head><body>
     <div class="print-bar no-print">
       <button onclick="window.print()" type="button">Als PDF speichern / drucken</button>
     </div>
-    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px">
-      <div>${logoBlock}<h1>${title}</h1><p class="meta">${documentNumber} · ${formatDate(issueDate)}</p></div>
-    </div>
 
-    <div class="addresses">
-      <div>
-        <strong>Auftragnehmer</strong>
-        ${company.companyName}<br/>
-        ${companyAddress(company)}
-        ${contactLine ? `<br/><span style="color:#64748b;font-size:12px">${contactLine}</span>` : ""}
-        ${taxLine ? `<br/><span style="color:#64748b;font-size:12px">${taxLine}</span>` : ""}
+    <div class="sheet">
+      <div class="accent-bar"></div>
+      <div class="inner">
+
+        <div class="head">
+          <div>${logoBlock}</div>
+          <div>
+            <h1 class="doc-type">${title}</h1>
+            <p class="doc-number">${documentNumber}</p>
+          </div>
+        </div>
+
+        <div class="address-block">
+          <div class="recipient">
+            ${senderLine ? `<div class="sender-line">${senderLine}</div>` : ""}
+            <div class="name">${customerName}</div>
+            ${recipientAddress ? `${recipientAddress}` : ""}${customerVatLine}
+            ${showLeistungsort ? `<div style="margin-top:12px"><span class="small muted-text" style="font-weight:600">Leistungsort / Baustelle</span><br/>${siteHtml}</div>` : ""}
+          </div>
+          <div class="meta-card">
+            ${metaRows.map(([k, v]) => `<div class="row"><span>${k}</span><span>${v}</span></div>`).join("")}
+          </div>
+        </div>
+
+        <p class="subject">${escapeHtml(calc.title ?? "Leistung")}</p>
+        ${introBlock}
+
+        <table>
+          <thead><tr><th>Pos.</th><th>Bezeichnung</th><th>Betrag (netto)</th></tr></thead>
+          <tbody>${visibleLines.join("")}</tbody>
+        </table>
+
+        <div class="totals">
+          ${totalsSubline}
+          ${totalsRows}
+        </div>
+
+        ${taxNoticeBlock}
+        ${paymentBlock}
+        ${notesBlock}
+
+        <div class="footer">
+          <p class="footer-note">${footerText}</p>
+          <div class="footer-cols">
+            <div>
+              <strong>${escapeHtml(company.companyName)}</strong>
+              ${companyAddress(company)}
+            </div>
+            ${contactFooter ? `<div><strong>Kontakt</strong>${contactFooter}</div>` : ""}
+            ${bankFooter ? `<div><strong>Bankverbindung</strong>${bankFooter}</div>` : ""}
+            ${taxLine ? `<div><strong>Steuer</strong>${taxLine}</div>` : ""}
+          </div>
+        </div>
+
       </div>
-      ${recipientBlock}
     </div>
-
-    ${introBlock}
-
-    <p style="font-size:15px;font-weight:600;margin-bottom:8px">${calc.title ?? "Leistung"}</p>
-
-    <table>
-      <thead><tr><th>Position</th><th style="text-align:right">Netto</th></tr></thead>
-      <tbody>${visibleLines.join("")}</tbody>
-    </table>
-
-    <div class="totals">
-      ${
-        calc.useFixedPrice
-          ? `<p>Abrechnung als Festpreis (${escapeHtml(calc.fixedPriceLabel?.trim() || "Festpreis")})</p>`
-          : `<p>Zwischensumme sichtbare Positionen: ${formatEuro(visibleSum)}</p>
-      ${hiddenAmount > 0.01 ? `<p>Pauschale / interne Kostenanteile: ${formatEuro(hiddenAmount)}</p>` : ""}`
-      }
-      <p class="total">Netto gesamt: ${formatEuro(calc.netSalesPrice)}</p>
-      ${totalsBlock}
-    </div>
-
-    ${taxNoticeBlock}
-    ${paymentBlock}
-    ${notesBlock}
-
-    <p class="footer">${footerText}</p>
   </body></html>`;
 }
 

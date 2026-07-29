@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { fetchJson } from "@/lib/fetch-json";
-import { Wrench } from "lucide-react";
+import Image from "next/image";
 
 export default function RegistrierenPage() {
   const router = useRouter();
@@ -53,9 +53,13 @@ export default function RegistrierenPage() {
     <div className="min-h-screen bg-slate-50 flex items-center justify-center px-4 py-10">
       <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
         <div className="mb-6 flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#0d5c63] text-white">
-            <Wrench className="h-5 w-5" />
-          </div>
+          <Image
+            src="/icons/icon-192.png"
+            alt="JoMaster Logo"
+            width={36}
+            height={36}
+            className="h-9 w-9 rounded-lg"
+          />
           <div>
             <h1 className="text-xl font-bold text-slate-900">JoMaster starten</h1>
             <p className="text-sm text-slate-500">Leerer Workspace für deinen Betrieb</p>

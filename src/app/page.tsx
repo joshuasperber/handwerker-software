@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Wrench, Calendar, Users, Smartphone, Shield, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LegalFooter } from "@/components/legal/legal-footer";
@@ -9,9 +10,13 @@ export default function HomePage() {
       <header className="border-b border-slate-200">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
           <div className="flex items-center gap-2">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#0d5c63] text-white">
-              <Wrench className="h-5 w-5" />
-            </div>
+            <Image
+              src="/icons/icon-192.png"
+              alt="JoMaster Logo"
+              width={36}
+              height={36}
+              className="h-9 w-9 rounded-lg"
+            />
             <span className="text-lg font-bold text-slate-900">JoMaster</span>
           </div>
           <div className="flex items-center gap-3">

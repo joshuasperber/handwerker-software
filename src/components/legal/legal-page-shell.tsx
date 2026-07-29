@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
-import { Wrench } from "lucide-react";
+import Image from "next/image";
 import { LegalFooter } from "@/components/legal/legal-footer";
 
 export function LegalPageShell({
@@ -17,9 +17,13 @@ export function LegalPageShell({
       <header className="border-b border-slate-200 bg-white">
         <div className="mx-auto flex max-w-3xl items-center justify-between px-4 py-4">
           <Link href="/" className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#0d5c63] text-white">
-              <Wrench className="h-4 w-4" />
-            </div>
+            <Image
+              src="/icons/icon-192.png"
+              alt="JoMaster Logo"
+              width={32}
+              height={32}
+              className="h-8 w-8 rounded-lg"
+            />
             <span className="font-bold text-slate-900">JoMaster</span>
           </Link>
           <Link href="/login" className="text-sm text-[#0d5c63] hover:underline">
