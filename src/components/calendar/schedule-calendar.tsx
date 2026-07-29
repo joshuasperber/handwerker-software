@@ -1,7 +1,6 @@
 "use client";
 
-import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   addDays,
   addMonths,
@@ -18,8 +17,14 @@ import {
   startOfWeek,
 } from "date-fns";
 import { de } from "date-fns/locale";
-import { ChevronLeft, ChevronRight, Users, Truck, X, SlidersHorizontal } from "lucide-react";
+import { ChevronLeft, ChevronRight, Users, Truck, X, SlidersHorizontal, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  appointmentDisplayTitle,
+  resolveAppointmentColor,
+} from "@/lib/calendar/appointment-colors";
+
+const DEFAULT_SLOT_DURATION_MS = 2 * 60 * 60 * 1000;
 
 export interface CalendarFilterTeam {
   id: string;
@@ -35,31 +40,50 @@ export interface CalendarAppointment {
   startTime: string;
   endTime: string;
   employeeId: string | null;
+  teamId?: string | null;
+  vehicleId?: string | null;
+  projectId?: string | null;
+  title?: string | null;
+  color?: string | null;
+  notes?: string | null;
+  status?: string;
+  addressText?: string | null;
   order: {
     id: string;
     orderNumber: string;
+    title?: string | null;
     customer: { firstName: string; lastName: string };
+    project?: { id: string; name: string } | null;
     team?: { id: string; name: string } | null;
     vehicle?: { id: string; name: string; licensePlate: string | null } | null;
-  };
+  } | null;
+  project?: { id: string; name: string } | null;
+  team?: { id: string; name: string } | null;
+  vehicle?: { id: string; name: string; licensePlate: string | null } | null;
   employee: { color: string; user: { firstName: string; lastName: string } } | null;
 }
 
+export type CalendarViewMode = "day" | "week" | "workweek" | "month";
+
 interface ScheduleCalendarProps {
-  view: "week" | "month";
+  view: CalendarViewMode;
   anchorDate: Date;
   appointments: CalendarAppointment[];
   employees: { id: string; user: { firstName: string; lastName: string }; color: string }[];
   selectedEmployeeIds: string[];
   onSelectedEmployeeIdsChange: (ids: string[]) => void;
   onAnchorChange: (date: Date) => void;
-  onViewChange: (view: "week" | "month") => void;
+  onViewChange: (view: CalendarViewMode) => void;
   onAppointmentReschedule: (
     appointmentId: string,
     startTime: Date,
     endTime: Date,
     employeeId: string
   ) => Promise<void>;
+  /** Leeren Zeitraum anklicken/tippen → Termin erstellen. */
+  onSlotSelect?: (slot: { start: Date; end: Date; employeeIdHint?: string }) => void;
+  /** Termin anklicken → bearbeiten. */
+  onAppointmentClick?: (appointment: CalendarAppointment) => void;
   readOnly?: boolean;
   /** Optionale Filter nach Teams. Leere Auswahl = alle anzeigen. */
   teams?: CalendarFilterTeam[];
@@ -158,12 +182,14 @@ function getEmployeeColor(
   apt: CalendarAppointment,
   employees: { id: string; color: string }[]
 ): string {
-  if (apt.employee?.color) return apt.employee.color;
-  if (apt.employeeId) {
-    const emp = employees.find((e) => e.id === apt.employeeId);
-    if (emp) return emp.color;
-  }
-  return "#0d5c63";
+  const empColor =
+    apt.employee?.color ??
+    (apt.employeeId ? employees.find((e) => e.id === apt.employeeId)?.color : null);
+  return resolveAppointmentColor({ color: apt.color, employeeColor: empColor });
+}
+
+function eventLabel(apt: CalendarAppointment): string {
+  return appointmentDisplayTitle({ title: apt.title, order: apt.order });
 }
 
 function layoutOverlapping(apts: CalendarAppointment[]) {
@@ -204,6 +230,8 @@ export function ScheduleCalendar({
   onAnchorChange,
   onViewChange,
   onAppointmentReschedule,
+  onSlotSelect,
+  onAppointmentClick,
   readOnly = false,
   teams = [],
   selectedTeamIds = [],
@@ -213,17 +241,22 @@ export function ScheduleCalendar({
   onSelectedVehicleIdsChange,
 }: ScheduleCalendarProps) {
   const [draggingId, setDraggingId] = useState<string | null>(null);
+  const [resizingId, setResizingId] = useState<string | null>(null);
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
 
-  // Auf Mobile/Tablet kompakte Arbeitswoche (Mo–Fr), sonst volle Woche (Mo–So).
+  // Auf Mobile/Tablet: Standard Arbeitswoche; Desktop: volle Woche – außer explizite Ansicht
   const isCompact = useMediaQuery("(max-width: 1024px)");
-  const dayCount = isCompact ? 5 : 7;
-  const hourHeight = isCompact ? 34 : 48;
+  const dayCount =
+    view === "day" ? 1 : view === "workweek" || (view === "week" && isCompact) ? 5 : 7;
+  const hourHeight = isCompact || view === "day" ? 40 : 48;
   const timeColW = isCompact ? 40 : 64;
   const gridHeight = HOURS.length * hourHeight;
   const gridTemplate = `${timeColW}px repeat(${dayCount}, minmax(0, 1fr))`;
 
-  const weekStart = startOfWeek(anchorDate, { weekStartsOn: 1 });
+  const weekStart =
+    view === "day"
+      ? new Date(anchorDate.getFullYear(), anchorDate.getMonth(), anchorDate.getDate())
+      : startOfWeek(anchorDate, { weekStartsOn: 1 });
   const weekDays = Array.from({ length: dayCount }, (_, i) => addDays(weekStart, i));
   const monthStart = startOfMonth(anchorDate);
   const monthGridStart = startOfWeek(monthStart, { weekStartsOn: 1 });
@@ -235,8 +268,9 @@ export function ScheduleCalendar({
   const showFilters = (teams.length > 0 && !!onSelectedTeamIdsChange) || (vehicles.length > 0 && !!onSelectedVehicleIdsChange);
 
   function navigate(dir: -1 | 1) {
-    if (view === "week") onAnchorChange(addWeeks(anchorDate, dir));
-    else onAnchorChange(addMonths(anchorDate, dir));
+    if (view === "day") onAnchorChange(addDays(anchorDate, dir));
+    else if (view === "month") onAnchorChange(addMonths(anchorDate, dir));
+    else onAnchorChange(addWeeks(anchorDate, dir));
   }
 
   function toggleEmployee(id: string) {
@@ -256,8 +290,10 @@ export function ScheduleCalendar({
 
   function isVisible(a: CalendarAppointment) {
     if (a.employeeId && !selectedEmployeeIds.includes(a.employeeId)) return false;
-    if (teamFilterActive && !(a.order.team && selectedTeamIds.includes(a.order.team.id))) return false;
-    if (vehicleFilterActive && !(a.order.vehicle && selectedVehicleIds.includes(a.order.vehicle.id))) return false;
+    const teamId = a.teamId ?? a.team?.id ?? a.order?.team?.id;
+    const vehicleId = a.vehicleId ?? a.vehicle?.id ?? a.order?.vehicle?.id;
+    if (teamFilterActive && !(teamId && selectedTeamIds.includes(teamId))) return false;
+    if (vehicleFilterActive && !(vehicleId && selectedVehicleIds.includes(vehicleId))) return false;
     return true;
   }
 
@@ -316,10 +352,72 @@ export function ScheduleCalendar({
     }
   }
 
+  function openSlotAt(day: Date, clientY: number, cellTop: number) {
+    if (readOnly || !onSlotSelect) return;
+    const { hour, minute } = dropTimeFromY(clientY, cellTop, hourHeight);
+    const start = setMinutes(setHours(day, hour), minute);
+    const end = new Date(start.getTime() + DEFAULT_SLOT_DURATION_MS);
+    onSlotSelect({
+      start,
+      end,
+      employeeIdHint: selectedEmployeeIds.length === 1 ? selectedEmployeeIds[0] : undefined,
+    });
+  }
+
+  function openDayDefaultSlot(day: Date) {
+    if (readOnly || !onSlotSelect) return;
+    const start = setMinutes(setHours(day, 9), 0);
+    const end = new Date(start.getTime() + DEFAULT_SLOT_DURATION_MS);
+    onSlotSelect({
+      start,
+      end,
+      employeeIdHint: selectedEmployeeIds.length === 1 ? selectedEmployeeIds[0] : undefined,
+    });
+  }
+
+  function startResize(
+    e: React.PointerEvent,
+    apt: CalendarAppointment,
+    cellEl: HTMLElement | null
+  ) {
+    if (readOnly || !cellEl) return;
+    e.preventDefault();
+    e.stopPropagation();
+    const employeeId = apt.employeeId ?? selectedEmployeeIds[0] ?? "";
+    if (!employeeId) return;
+
+    const start = new Date(apt.startTime);
+    setResizingId(apt.id);
+
+    const onMove = (_ev: PointerEvent) => {
+      /* Speichern erst beim Loslassen – Snap auf 15 Min. */
+    };
+
+    const onUp = async (ev: PointerEvent) => {
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerup", onUp);
+      setResizingId(null);
+      const rect = cellEl.getBoundingClientRect();
+      const { hour, minute } = dropTimeFromY(ev.clientY, rect.top, hourHeight);
+      let newEnd = setMinutes(setHours(start, hour), minute);
+      // Ende bezieht sich auf denselben Tag wie Start (Wochenraster-Spalte)
+      newEnd = setMinutes(setHours(start, hour), minute);
+      const minEnd = new Date(start.getTime() + 15 * 60 * 1000);
+      if (newEnd < minEnd) newEnd = minEnd;
+      if (newEnd.getTime() === new Date(apt.endTime).getTime()) return;
+      await onAppointmentReschedule(apt.id, start, newEnd, employeeId);
+    };
+
+    window.addEventListener("pointermove", onMove);
+    window.addEventListener("pointerup", onUp);
+  }
+
   const headerLabel =
-    view === "week"
-      ? `${format(weekStart, "d. MMM", { locale: de })} – ${format(addDays(weekStart, dayCount - 1), "d. MMM yyyy", { locale: de })}`
-      : format(anchorDate, "MMMM yyyy", { locale: de });
+    view === "day"
+      ? format(anchorDate, "EEEE, d. MMMM yyyy", { locale: de })
+      : view === "month"
+        ? format(anchorDate, "MMMM yyyy", { locale: de })
+        : `${format(weekStart, "d. MMM", { locale: de })} – ${format(addDays(weekStart, dayCount - 1), "d. MMM yyyy", { locale: de })}`;
 
   const visibleCount = selectedEmployeeIds.length;
 
@@ -458,38 +556,70 @@ export function ScheduleCalendar({
             <Button variant="outline" size="sm" onClick={() => navigate(-1)}>
               <ChevronLeft className="h-4 w-4" />
             </Button>
-            <span className="text-sm sm:text-base font-semibold min-w-[140px] sm:min-w-[220px] text-center capitalize">{headerLabel}</span>
+            <span className="text-sm sm:text-base font-semibold min-w-[110px] sm:min-w-[220px] text-center capitalize">{headerLabel}</span>
             <Button variant="outline" size="sm" onClick={() => navigate(1)}>
               <ChevronRight className="h-4 w-4" />
             </Button>
-            <Button variant="outline" size="sm" onClick={() => onAnchorChange(new Date())}>Heute</Button>
+            <Button variant="outline" size="sm" className="hidden sm:inline-flex" onClick={() => onAnchorChange(new Date())}>
+              Heute
+            </Button>
           </div>
-          <div className="flex rounded-lg border border-slate-200 overflow-hidden">
+          <div className="flex items-center gap-2">
+            {!readOnly && onSlotSelect && (
+              <Button
+                size="sm"
+                className="bg-[#0d5c63] hover:bg-[#0a4a50] gap-1"
+                onClick={() => openDayDefaultSlot(anchorDate)}
+              >
+                <Plus className="h-4 w-4" />
+                <span className="hidden sm:inline">Neuer Termin</span>
+              </Button>
+            )}
             <button
               type="button"
               onClick={() => setMobileFilterOpen(true)}
-              className="lg:hidden px-3 py-2 text-sm font-medium bg-white text-slate-600 border-r border-slate-200 flex items-center gap-1"
+              className="lg:hidden h-9 px-3 rounded-lg border border-slate-200 text-sm font-medium bg-white text-slate-600 flex items-center gap-1"
+              aria-label="Filter öffnen"
             >
               <SlidersHorizontal className="h-4 w-4" /> {visibleCount}
             </button>
-            <button
-              type="button"
-              onClick={() => onViewChange("week")}
-              className={`px-3 sm:px-4 py-2 text-sm font-medium ${view === "week" ? "bg-[#0d5c63] text-white" : "bg-white text-slate-600 hover:bg-slate-50"}`}
+            {/* Mobil: kompakte Auswahl statt 4 Buttons */}
+            <select
+              value={view}
+              onChange={(e) => onViewChange(e.target.value as CalendarViewMode)}
+              className="sm:hidden h-9 rounded-lg border border-slate-200 bg-white px-2 text-sm font-medium text-slate-700"
+              aria-label="Ansicht wählen"
             >
-              Woche
-            </button>
-            <button
-              type="button"
-              onClick={() => onViewChange("month")}
-              className={`px-3 sm:px-4 py-2 text-sm font-medium ${view === "month" ? "bg-[#0d5c63] text-white" : "bg-white text-slate-600 hover:bg-slate-50"}`}
-            >
-              Monat
-            </button>
+              <option value="day">Tag</option>
+              <option value="workweek">Mo–Fr</option>
+              <option value="week">Woche</option>
+              <option value="month">Monat</option>
+            </select>
+            <div className="hidden sm:flex rounded-lg border border-slate-200 overflow-hidden">
+              {(
+                [
+                  ["day", "Tag"],
+                  ["workweek", "Mo–Fr"],
+                  ["week", "Woche"],
+                  ["month", "Monat"],
+                ] as const
+              ).map(([id, label]) => (
+                <button
+                  key={id}
+                  type="button"
+                  onClick={() => onViewChange(id)}
+                  className={`px-2 sm:px-3 py-2 text-xs sm:text-sm font-medium border-l border-slate-200 first:border-l-0 ${
+                    view === id ? "bg-[#0d5c63] text-white" : "bg-white text-slate-600 hover:bg-slate-50"
+                  }`}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 
-        {view === "week" ? (
+        {view !== "month" ? (
           <div className="flex-1 overflow-auto">
             <div className={isCompact ? "min-w-0" : "min-w-[800px]"}>
               {/* Kopfzeile: Wochentage */}
@@ -529,12 +659,14 @@ export function ScheduleCalendar({
                       const empName = apt.employee?.user
                         ? `${apt.employee.user.firstName.charAt(0)}. ${apt.employee.user.lastName}`
                         : "";
+                      const label = eventLabel(apt);
                       return (
-                        <Link
+                        <button
+                          type="button"
                           key={apt.id}
-                          href={`/dashboard/auftraege/${apt.order.id}`}
-                          title={`${empName} · ${apt.order.orderNumber} (mehrtägig)`}
-                          className="absolute flex items-center gap-1 rounded-md px-2 h-[18px] text-[11px] font-medium leading-[18px] text-white truncate shadow-sm border border-white/20 hover:opacity-90"
+                          onClick={() => onAppointmentClick?.(apt)}
+                          title={`${empName} · ${label} (mehrtägig)`}
+                          className="absolute flex items-center gap-1 rounded-md px-2 h-[18px] text-[11px] font-medium leading-[18px] text-white truncate shadow-sm border border-white/20 hover:opacity-90 text-left"
                           style={{
                             left: `calc(${(startCol / dayCount) * 100}% + 3px)`,
                             width: `calc(${(span / dayCount) * 100}% - 6px)`,
@@ -543,10 +675,10 @@ export function ScheduleCalendar({
                           }}
                         >
                           <span className="truncate">
-                            {apt.order.customer.lastName}
+                            {label}
                             {empName ? ` · ${empName}` : ""}
                           </span>
-                        </Link>
+                        </button>
                       );
                     })}
                   </div>
@@ -572,7 +704,16 @@ export function ScheduleCalendar({
 
                 {/* Tages-Spalten */}
                 {weekDays.map((day) => (
-                  <DayDropCell key={day.toISOString()} gridHeight={gridHeight} onDrop={(e, ref) => handleDrop(e, day, ref)}>
+                  <DayDropCell
+                    key={day.toISOString()}
+                    gridHeight={gridHeight}
+                    onDrop={(e, ref) => handleDrop(e, day, ref)}
+                    onSlotClick={
+                      readOnly || !onSlotSelect
+                        ? undefined
+                        : (clientY, rectTop) => openSlotAt(day, clientY, rectTop)
+                    }
+                  >
                     {/* Hervorgehobener Fokus-Zeitraum 17–19 Uhr */}
                     <div
                       className="absolute w-full bg-amber-100/50 border-y border-amber-200/70 pointer-events-none"
@@ -602,14 +743,20 @@ export function ScheduleCalendar({
                       return (
                         <div
                           key={apt.id}
-                          draggable={!readOnly}
-                          onDragStart={readOnly ? undefined : (e) => {
-                            e.dataTransfer.setData("appointmentId", apt.id);
-                            setDraggingId(apt.id);
-                          }}
-                          onDragEnd={readOnly ? undefined : () => setDraggingId(null)}
-                          title={`${empName} · ${apt.order.orderNumber}`}
-                          className={`absolute rounded-md px-1 sm:px-1.5 py-0.5 text-white overflow-hidden z-10 shadow-md border border-white/20 ${readOnly ? "cursor-pointer" : "cursor-grab active:cursor-grabbing"} ${draggingId === apt.id ? "opacity-40 ring-2 ring-[#0d5c63]" : ""}`}
+                          data-appointment
+                          draggable={!readOnly && !isCompact && resizingId !== apt.id}
+                          onDragStart={
+                            readOnly || isCompact
+                              ? undefined
+                              : (e) => {
+                                  e.dataTransfer.setData("appointmentId", apt.id);
+                                  setDraggingId(apt.id);
+                                }
+                          }
+                          onDragEnd={readOnly || isCompact ? undefined : () => setDraggingId(null)}
+                          onClick={() => onAppointmentClick?.(apt)}
+                          title={`${empName} · ${eventLabel(apt)}`}
+                          className={`absolute rounded-md px-1 sm:px-1.5 py-0.5 text-white overflow-hidden z-10 shadow-md border border-white/20 cursor-pointer ${!readOnly && !isCompact ? "active:cursor-grabbing" : ""} ${draggingId === apt.id || resizingId === apt.id ? "opacity-40 ring-2 ring-[#0d5c63]" : ""}`}
                           style={{
                             top,
                             height,
@@ -618,21 +765,30 @@ export function ScheduleCalendar({
                             backgroundColor: color,
                           }}
                         >
-                          <Link
-                            href={`/dashboard/auftraege/${apt.order.id}`}
-                            className="block h-full min-h-0"
-                            onClick={(e) => e.stopPropagation()}
-                          >
-                            <p className="text-[10px] sm:text-[11px] font-bold leading-tight truncate pointer-events-none">
-                              {format(start, "HH:mm")} {apt.order.customer.lastName}
+                          <div className="block h-full min-h-0 pointer-events-none">
+                            <p className="text-[10px] sm:text-[11px] font-bold leading-tight truncate">
+                              {format(start, "HH:mm")} {eventLabel(apt)}
                             </p>
                             {height > 34 && empName && (
-                              <p className="text-[9px] sm:text-[10px] opacity-90 truncate pointer-events-none">{empName}</p>
+                              <p className="text-[9px] sm:text-[10px] opacity-90 truncate">{empName}</p>
                             )}
-                            {height > 50 && (
-                              <p className="text-[9px] sm:text-[10px] opacity-75 truncate pointer-events-none">{apt.order.orderNumber}</p>
+                            {height > 50 && apt.order?.orderNumber && (
+                              <p className="text-[9px] sm:text-[10px] opacity-75 truncate">{apt.order.orderNumber}</p>
                             )}
-                          </Link>
+                          </div>
+                          {!readOnly && !isCompact && (
+                            <div
+                              role="separator"
+                              aria-label="Dauer ändern"
+                              className="absolute bottom-0 left-0 right-0 h-2 cursor-ns-resize touch-none pointer-events-auto"
+                              onPointerDown={(e) => {
+                                e.stopPropagation();
+                                const cell = (e.currentTarget.closest("[data-day-cell]") as HTMLElement | null);
+                                startResize(e, apt, cell);
+                              }}
+                              onClick={(e) => e.stopPropagation()}
+                            />
+                          )}
                         </div>
                       );
                     })}
@@ -641,7 +797,17 @@ export function ScheduleCalendar({
               </div>
             </div>
             <p className="text-[10px] sm:text-xs text-slate-400 px-3 sm:px-4 py-2 border-t border-slate-100">
-              {isCompact ? "Mo–Fr · " : "Mo–So · "}Farbe = Monteur · Gelb hervorgehoben = 17–19 Uhr{readOnly ? "" : " · Termine per Drag-and-drop verschieben"}
+              {view === "day"
+                ? "Tagesansicht · "
+                : view === "workweek" || isCompact
+                  ? "Mo–Fr · "
+                  : "Mo–So · "}
+              Farbe wählbar · Gelb = 17–19 Uhr
+              {readOnly
+                ? ""
+                : isCompact
+                  ? " · Tippen zum Erstellen/Bearbeiten"
+                  : " · Klick erstellen · Drag-and-drop verschieben · Unterkante = Dauer"}
             </p>
           </div>
         ) : (
@@ -658,7 +824,27 @@ export function ScheduleCalendar({
                 return (
                   <div
                     key={day.toISOString()}
-                    className={`min-h-[90px] sm:min-h-[120px] border-b border-r border-slate-50 p-1.5 sm:p-2 ${!inMonth ? "bg-slate-50/60" : "bg-white"} ${isSameDay(day, new Date()) ? "ring-2 ring-inset ring-[#0d5c63]/30 bg-[#0d5c63]/5" : ""}`}
+                    role={!readOnly && onSlotSelect ? "button" : undefined}
+                    tabIndex={!readOnly && onSlotSelect ? 0 : undefined}
+                    onClick={
+                      readOnly || !onSlotSelect
+                        ? undefined
+                        : (e) => {
+                            if ((e.target as HTMLElement).closest("[data-appointment]")) return;
+                            openDayDefaultSlot(day);
+                          }
+                    }
+                    onKeyDown={
+                      readOnly || !onSlotSelect
+                        ? undefined
+                        : (e) => {
+                            if (e.key === "Enter" || e.key === " ") {
+                              e.preventDefault();
+                              openDayDefaultSlot(day);
+                            }
+                          }
+                    }
+                    className={`min-h-[90px] sm:min-h-[120px] border-b border-r border-slate-50 p-1.5 sm:p-2 ${!inMonth ? "bg-slate-50/60" : "bg-white"} ${isSameDay(day, new Date()) ? "ring-2 ring-inset ring-[#0d5c63]/30 bg-[#0d5c63]/5" : ""} ${!readOnly && onSlotSelect ? "cursor-pointer hover:bg-slate-50/80" : ""}`}
                   >
                     <p className={`text-xs sm:text-sm font-semibold mb-1 ${isSameDay(day, new Date()) ? "text-[#0d5c63]" : inMonth ? "text-slate-800" : "text-slate-300"}`}>
                       {format(day, "d.")}
@@ -668,16 +854,25 @@ export function ScheduleCalendar({
                         const color = getEmployeeColor(apt, employees);
                         const empInitial = apt.employee?.user.firstName.charAt(0) ?? "?";
                         return (
-                          <Link
+                          <button
+                            type="button"
                             key={apt.id}
-                            href={`/dashboard/auftraege/${apt.order.id}`}
-                            className="flex items-center gap-1 rounded px-1.5 py-0.5 text-[10px] text-white truncate shadow-sm"
+                            data-appointment
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onAppointmentClick?.(apt);
+                            }}
+                            className="flex w-full items-center gap-1 rounded px-1.5 py-0.5 text-[10px] text-white truncate shadow-sm text-left"
                             style={{ backgroundColor: color }}
-                            title={apt.employee?.user ? `${apt.employee.user.firstName} ${apt.employee.user.lastName}` : ""}
+                            title={
+                              apt.employee?.user
+                                ? `${apt.employee.user.firstName} ${apt.employee.user.lastName}`
+                                : eventLabel(apt)
+                            }
                           >
                             <span className="font-bold opacity-80">{empInitial}</span>
-                            {format(new Date(apt.startTime), "HH:mm")} {apt.order.customer.lastName}
-                          </Link>
+                            {format(new Date(apt.startTime), "HH:mm")} {eventLabel(apt)}
+                          </button>
                         );
                       })}
                       {dayApts.length > 4 && (
@@ -698,20 +893,46 @@ export function ScheduleCalendar({
 function DayDropCell({
   children,
   onDrop,
+  onSlotClick,
   gridHeight,
 }: {
   children: React.ReactNode;
   onDrop: (e: React.DragEvent, ref: HTMLDivElement | null) => void;
+  onSlotClick?: (clientY: number, rectTop: number) => void;
   gridHeight: number;
 }) {
   const [ref, setRef] = useState<HTMLDivElement | null>(null);
+  const pointerDown = useRef<{ x: number; y: number } | null>(null);
+
   return (
     <div
       ref={setRef}
+      data-day-cell
       className="relative border-l border-slate-100 bg-white"
       style={{ height: gridHeight }}
       onDragOver={(e) => e.preventDefault()}
       onDrop={(e) => onDrop(e, ref)}
+      onPointerDown={(e) => {
+        if (!onSlotClick) return;
+        if ((e.target as HTMLElement).closest("[data-appointment]")) return;
+        pointerDown.current = { x: e.clientX, y: e.clientY };
+      }}
+      onPointerUp={(e) => {
+        if (!onSlotClick || !ref || !pointerDown.current) {
+          pointerDown.current = null;
+          return;
+        }
+        const dx = Math.abs(e.clientX - pointerDown.current.x);
+        const dy = Math.abs(e.clientY - pointerDown.current.y);
+        pointerDown.current = null;
+        if (dx > 8 || dy > 8) return;
+        if ((e.target as HTMLElement).closest("[data-appointment]")) return;
+        const rect = ref.getBoundingClientRect();
+        onSlotClick(e.clientY, rect.top);
+      }}
+      onPointerCancel={() => {
+        pointerDown.current = null;
+      }}
     >
       {children}
     </div>

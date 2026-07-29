@@ -3,14 +3,31 @@ import { getSession, type SessionUser } from "./auth";
 import { hasPermission, type Permission } from "./permissions";
 import { prisma } from "./prisma";
 
-export function apiSuccess<T>(data: T, status = 200) {
-  return NextResponse.json({ success: true, data }, { status });
+/** Sensible Tenant-Daten: nie im Browser-/CDN-HTTP-Cache ablegen. */
+export const NO_STORE_HEADERS = {
+  "Cache-Control": "private, no-store, max-age=0",
+} as const;
+
+/** Kurzlebige private Antwort für Referenzlisten (z. B. Dropdowns), nicht für Finanzen/PII. */
+export const SHORT_PRIVATE_CACHE_HEADERS = {
+  "Cache-Control": "private, max-age=30, stale-while-revalidate=60",
+} as const;
+
+export function apiSuccess<T>(
+  data: T,
+  status = 200,
+  headers?: HeadersInit
+) {
+  return NextResponse.json(
+    { success: true, data },
+    { status, headers }
+  );
 }
 
 export function apiError(message: string, status = 400, data?: unknown) {
   return NextResponse.json(
     { success: false, error: message, ...(data !== undefined ? { data } : {}) },
-    { status }
+    { status, headers: NO_STORE_HEADERS }
   );
 }
 

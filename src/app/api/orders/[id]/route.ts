@@ -16,19 +16,24 @@ export async function GET(
 
   const { id } = await params;
 
-  const existing = await prisma.order.findFirst({
-    where: { id, tenantId: auth.tenantId },
-    select: { id: true },
-  });
-  if (!existing) return apiError("Auftrag nicht gefunden", 404);
+  try {
+    const existing = await prisma.order.findFirst({
+      where: { id, tenantId: auth.tenantId },
+      select: { id: true },
+    });
+    if (!existing) return apiError("Auftrag nicht gefunden", 404);
 
-  const order = await prisma.order.findFirst({
-    where: { id, tenantId: auth.tenantId },
-    include: ORDER_DETAIL_INCLUDE,
-  });
+    const order = await prisma.order.findFirst({
+      where: { id, tenantId: auth.tenantId },
+      include: ORDER_DETAIL_INCLUDE,
+    });
 
-  if (!order) return apiError("Auftrag nicht gefunden", 404);
-  return apiSuccess(order);
+    if (!order) return apiError("Auftrag nicht gefunden", 404);
+    return apiSuccess(order);
+  } catch (err) {
+    console.error("[orders/[id] GET]", err);
+    return apiError("Auftrag konnte nicht geladen werden", 500);
+  }
 }
 
 export async function PATCH(
@@ -51,7 +56,7 @@ export async function PATCH(
 
   await ensureOrderPhases(id);
 
-  const { status, priority, description, internalNotes, scheduledStart, scheduledEnd, teamId, vehicleId, completionResult, customerConfirmationStatus, orderTypeId, orderTypeCustom, title } = body;
+  const { status, priority, description, internalNotes, scheduledStart, scheduledEnd, teamId, vehicleId, completionResult, customerConfirmationStatus, orderTypeId, orderTypeCustom, title, projectId } = body;
 
   let typePatch: {
     orderType?: typeof existing.orderType;
@@ -83,6 +88,27 @@ export async function PATCH(
     };
   }
 
+  let nextProjectId: string | null | undefined = undefined;
+  if (projectId !== undefined) {
+    const raw = typeof projectId === "string" ? projectId.trim() : "";
+    if (!raw) {
+      nextProjectId = null;
+    } else {
+      const project = await prisma.project.findFirst({
+        where: { id: raw, tenantId: auth.tenantId },
+        select: { id: true, customerId: true, status: true },
+      });
+      if (!project) return apiError("Projekt nicht gefunden", 404);
+      if (project.customerId !== existing.customerId) {
+        return apiError("Projekt gehört zu einem anderen Kunden", 400);
+      }
+      if (project.status === "STORNIERT") {
+        return apiError("Storniertes Projekt kann nicht zugeordnet werden", 400);
+      }
+      nextProjectId = project.id;
+    }
+  }
+
   const order = await prisma.order.update({
     where: { id },
     data: {
@@ -97,17 +123,12 @@ export async function PATCH(
       ...(vehicleId !== undefined ? { vehicleId: vehicleId || null } : {}),
       ...(completionResult !== undefined ? { completionResult } : {}),
       ...(customerConfirmationStatus !== undefined ? { customerConfirmationStatus } : {}),
+      ...(nextProjectId !== undefined ? { projectId: nextProjectId } : {}),
       ...(status === "ABGESCHLOSSEN" || status === "ABRECHNUNGSBEREIT" ? { completedAt: new Date() } : {}),
       ...(status === "ABGERECHNET" ? { invoicedAt: new Date() } : {}),
       ...typePatch,
     },
-    include: {
-      customer: true,
-      property: true,
-      services: { include: { service: true } },
-      appointments: { include: { employee: { include: { user: true } } } },
-      orderTypeDefinition: true,
-    },
+    include: ORDER_DETAIL_INCLUDE,
   });
 
   if (status && status !== existing.status) {

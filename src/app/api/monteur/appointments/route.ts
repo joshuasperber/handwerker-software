@@ -62,6 +62,9 @@ export async function POST(request: NextRequest) {
           notes: "Eigener Termin (Monteur)",
         },
       },
+      assignees: {
+        create: { employeeId: employee.id },
+      },
     },
     include: {
       appointments: true,

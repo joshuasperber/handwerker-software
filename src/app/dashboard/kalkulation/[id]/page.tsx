@@ -19,10 +19,13 @@ import {
 import { compareFixedPrice } from "@/lib/calculation/fixed-price";
 import { convertCalculationToInvoice } from "@/lib/documents/convert-invoice-client";
 import type { InvoiceActionMode } from "@/lib/documents/invoice-lifecycle";
+import { formatIssueDateInput } from "@/lib/documents/issue-date";
+import { Label } from "@/components/ui/label";
 import { RISK_PERCENT_BY_LEVEL } from "@/lib/calculation/formulas";
 import { formatEuro } from "@/lib/utils";
 import { ChevronLeft, ChevronRight, Save, FileText, Trash2, Package } from "lucide-react";
 import { toast } from "sonner";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import {
   TAX_TREATMENT_LABELS,
   REVERSE_CHARGE_WARNING,
@@ -74,6 +77,7 @@ export default function KalkulationWizardPage() {
   const [invoiceConflictOpen, setInvoiceConflictOpen] = useState(false);
   const [invoiceConflict, setInvoiceConflict] = useState<ExistingInvoiceInfo | null>(null);
   const [invoiceSaving, setInvoiceSaving] = useState(false);
+  const [invoiceIssueDate, setInvoiceIssueDate] = useState(() => formatIssueDateInput(new Date()));
 
   const load = useCallback(() => {
     fetch(`/api/calculations/${id}`)
@@ -107,16 +111,24 @@ export default function KalkulationWizardPage() {
 
   async function save(payload: CalcData) {
     setSaving(true);
-    const res = await fetch(`/api/calculations/${id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-    const data = await res.json();
-    if (data.success) {
-      setCalc(data.data.calculation ?? data.data);
+    try {
+      const res = await fetch(`/api/calculations/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setCalc(data.data.calculation ?? data.data);
+        toast.success("Gespeichert & neu berechnet");
+      } else {
+        toast.error(data.error ?? "Speichern fehlgeschlagen");
+      }
+    } catch {
+      toast.error("Speichern fehlgeschlagen");
+    } finally {
+      setSaving(false);
     }
-    setSaving(false);
   }
 
   async function loadExample() {
@@ -188,7 +200,11 @@ export default function KalkulationWizardPage() {
   async function saveInvoice(mode?: InvoiceActionMode, documentId?: string) {
     if (!id || typeof id !== "string") return;
     setInvoiceSaving(true);
-    const result = await convertCalculationToInvoice(id, { mode, documentId });
+    const result = await convertCalculationToInvoice(id, {
+      mode,
+      documentId,
+      issueDate: invoiceIssueDate,
+    });
     setInvoiceSaving(false);
 
     if (!result.ok) {
@@ -334,18 +350,30 @@ export default function KalkulationWizardPage() {
               <Button
                 className="mt-4"
                 variant="action"
-                onClick={() =>
+                onClick={() => {
+                  const t = calc.travelCost ?? {};
+                  if (t.totalIsManual && (t.manualTotalNet == null || t.manualTotalNet === "")) {
+                    toast.error("Bitte manuellen Fahrtbetrag eingeben (0,00 € ist erlaubt).");
+                    return;
+                  }
                   save({
                     travel: {
-                      startAddress: calc.travelCost?.startAddress,
-                      destinationAddress: calc.travelCost?.destinationAddress,
-                      distanceKm: calc.travelCost?.distanceKm,
-                      estimatedDriveTimeHours: calc.travelCost?.estimatedDriveTimeHours,
-                      kilometerRateNet: calc.travelCost?.kilometerRateNet,
-                      travelHourlyRateNet: calc.travelCost?.travelHourlyRateNet,
+                      startAddress: t.startAddress ?? "Betrieb",
+                      destinationAddress: t.destinationAddress ?? "",
+                      distanceKm: t.distanceKm ?? 0,
+                      estimatedDriveTimeHours: t.estimatedDriveTimeHours ?? 0,
+                      kilometerRateNet: t.kilometerRateNet ?? 0,
+                      travelHourlyRateNet: t.travelHourlyRateNet ?? 0,
+                      parkingFeesNet: t.parkingFeesNet ?? 0,
+                      tollFeesNet: t.tollFeesNet ?? 0,
+                      otherTravelCostsNet: t.otherTravelCostsNet ?? 0,
+                      selectedZoneId: t.selectedZoneId ?? null,
+                      totalIsManual: Boolean(t.totalIsManual),
+                      manualTotalNet: t.totalIsManual ? (t.manualTotalNet ?? 0) : null,
+                      isVisibleToCustomer: t.isVisibleToCustomer !== false,
                     },
-                  })
-                }
+                  });
+                }}
                 disabled={saving}
               >
                 Speichern & berechnen
@@ -378,11 +406,13 @@ export default function KalkulationWizardPage() {
                     label="Wagnis %"
                     suffix="%"
                     className="mt-2"
+                    min={0}
+                    required
                     value={calc.riskSettings?.riskPercent ?? 7}
                     onValueChange={(v) =>
                       setCalc({
                         ...calc,
-                        riskSettings: { ...calc.riskSettings, riskPercent: v ?? 7 },
+                        riskSettings: { ...calc.riskSettings, riskPercent: v ?? 0 },
                       })
                     }
                   />
@@ -391,23 +421,105 @@ export default function KalkulationWizardPage() {
                   </p>
                 </div>
                 <div>
-                  <NumberInput
-                    label="Gewinn %"
-                    suffix="%"
-                    value={calc.profitSettings?.profitPercent ?? 12}
-                    onValueChange={(v) =>
+                  <label className="text-sm font-medium">Gewinnstrategie</label>
+                  <select
+                    className="mt-1 h-10 w-full rounded-lg border px-3 text-sm"
+                    value={calc.profitSettings?.profitStrategy ?? "PERCENT"}
+                    onChange={(e) =>
                       setCalc({
                         ...calc,
-                        profitSettings: { ...calc.profitSettings, profitPercent: v ?? 12, profitStrategy: "PERCENT" },
+                        profitSettings: {
+                          ...calc.profitSettings,
+                          profitStrategy: e.target.value,
+                        },
                       })
                     }
-                  />
+                  >
+                    <option value="PERCENT">Prozent vom Zwischensumme</option>
+                    <option value="FIXED_AMOUNT">Fester Gewinnbetrag</option>
+                    <option value="TARGET_MARGIN">Zielmarge %</option>
+                  </select>
+                  {(calc.profitSettings?.profitStrategy ?? "PERCENT") === "PERCENT" && (
+                    <NumberInput
+                      label="Gewinn %"
+                      suffix="%"
+                      className="mt-2"
+                      min={0}
+                      value={calc.profitSettings?.profitPercent ?? 12}
+                      onValueChange={(v) =>
+                        setCalc({
+                          ...calc,
+                          profitSettings: {
+                            ...calc.profitSettings,
+                            profitPercent: v ?? 0,
+                            profitStrategy: "PERCENT",
+                          },
+                        })
+                      }
+                    />
+                  )}
+                  {calc.profitSettings?.profitStrategy === "FIXED_AMOUNT" && (
+                    <NumberInput
+                      label="Gewinnbetrag (netto)"
+                      suffix="€"
+                      className="mt-2"
+                      min={0}
+                      value={calc.profitSettings?.targetProfitAmountNet ?? 0}
+                      onValueChange={(v) =>
+                        setCalc({
+                          ...calc,
+                          profitSettings: {
+                            ...calc.profitSettings,
+                            targetProfitAmountNet: v ?? 0,
+                            profitStrategy: "FIXED_AMOUNT",
+                          },
+                        })
+                      }
+                    />
+                  )}
+                  {calc.profitSettings?.profitStrategy === "TARGET_MARGIN" && (
+                    <NumberInput
+                      label="Zielmarge %"
+                      suffix="%"
+                      className="mt-2"
+                      min={0}
+                      value={calc.profitSettings?.targetMarginPercent ?? 12}
+                      onValueChange={(v) =>
+                        setCalc({
+                          ...calc,
+                          profitSettings: {
+                            ...calc.profitSettings,
+                            targetMarginPercent: v ?? 0,
+                            profitStrategy: "TARGET_MARGIN",
+                          },
+                        })
+                      }
+                    />
+                  )}
                 </div>
               </div>
               <Button
                 className="mt-4"
                 variant="action"
-                onClick={() => save({ risk: calc.riskSettings, profit: calc.profitSettings })}
+                onClick={() => {
+                  const risk = calc.riskSettings ?? {};
+                  if (risk.riskPercent == null || risk.riskPercent === "") {
+                    toast.error("Bitte Wagnis-% angeben (0 ist erlaubt).");
+                    return;
+                  }
+                  save({
+                    risk: {
+                      riskLevel: risk.riskLevel ?? "NORMAL",
+                      riskPercent: Number(risk.riskPercent),
+                    },
+                    profit: {
+                      profitStrategy: calc.profitSettings?.profitStrategy ?? "PERCENT",
+                      profitPercent: calc.profitSettings?.profitPercent ?? 12,
+                      targetProfitAmountNet: calc.profitSettings?.targetProfitAmountNet ?? null,
+                      targetMarginPercent: calc.profitSettings?.targetMarginPercent ?? null,
+                    },
+                  });
+                }}
                 disabled={saving}
               >
                 Speichern & berechnen
@@ -468,14 +580,21 @@ export default function KalkulationWizardPage() {
               <Button
                 className="mt-4"
                 variant="action"
-                onClick={() =>
+                onClick={() => {
+                  if (
+                    calc.useFixedPrice &&
+                    (calc.fixedPriceNet == null || !Number.isFinite(Number(calc.fixedPriceNet)))
+                  ) {
+                    toast.error("Bitte einen gültigen Festpreis angeben (0,00 € ist erlaubt).");
+                    return;
+                  }
                   save({
                     vat: calc.vatSettings,
                     useFixedPrice: Boolean(calc.useFixedPrice),
-                    fixedPriceNet: calc.fixedPriceNet ?? null,
+                    fixedPriceNet: calc.useFixedPrice ? Number(calc.fixedPriceNet) : calc.fixedPriceNet ?? null,
                     fixedPriceLabel: calc.fixedPriceLabel ?? null,
-                  })
-                }
+                  });
+                }}
                 disabled={saving}
               >
                 <Save className="h-4 w-4 mr-1" /> Steuer &amp; Festpreis speichern
@@ -499,15 +618,29 @@ export default function KalkulationWizardPage() {
                   onClick={async () => {
                     const res = await fetch(`/api/calculations/${id}/convert-to-offer`, { method: "POST" });
                     const d = await res.json();
-                    if (d.success) alert(`Angebot ${d.data.documentNumber} angelegt`);
+                    if (d.success) toast.success(`Angebot ${d.data.documentNumber} angelegt`);
+                    else toast.error(d.error ?? "Angebot konnte nicht angelegt werden");
                   }}
                 >
                   Als Angebot speichern
                 </Button>
+              </div>
+              <div className="mt-4 rounded-lg border border-slate-200 bg-slate-50 p-3 space-y-2 max-w-sm">
+                <Label htmlFor="invoice-issue-date">Rechnungsdatum</Label>
+                <Input
+                  id="invoice-issue-date"
+                  type="date"
+                  value={invoiceIssueDate}
+                  onChange={(e) => setInvoiceIssueDate(e.target.value)}
+                />
+                <p className="text-xs text-slate-500">
+                  Der Umsatz wird diesem Monat zugeordnet – unabhängig vom Speicherdatum.
+                </p>
                 <Button
                   variant="outline"
-                  disabled={invoiceSaving}
+                  disabled={invoiceSaving || !invoiceIssueDate}
                   onClick={() => saveInvoice()}
+                  className="w-full sm:w-auto"
                 >
                   Als Rechnung speichern
                 </Button>
@@ -563,8 +696,95 @@ export default function KalkulationWizardPage() {
 
           {(step === 6 || step === 7) && (
             <Card title={STEPS[step]}>
-              {step === 7 && overheadInfo && (
-                <p className="text-sm text-slate-700">{overheadInfo.explanation}</p>
+              {step === 7 && (
+                <div className="space-y-4">
+                  {overheadInfo && (
+                    <div className="rounded-lg bg-slate-50 p-3 text-sm text-slate-700">
+                      <p>{overheadInfo.explanation}</p>
+                      <p className="mt-2 text-xs text-slate-500">
+                        Aktuell berechnet:{" "}
+                        <strong>{formatEuro(calc.overheadAmount ?? 0)}</strong>
+                        {(calc.overheadAmountOverride != null ||
+                          calc.overheadPercentOverride != null) && (
+                          <span className="ml-2 rounded bg-amber-100 px-1.5 py-0.5 text-amber-800">
+                            manuell überschrieben
+                          </span>
+                        )}
+                      </p>
+                    </div>
+                  )}
+                  <p className="text-sm text-slate-600">
+                    Standardwerte kommen aus den Betriebseinstellungen und können hier pro
+                    Kalkulation überschrieben werden. 0,00 € bzw. 0 % sind gültig.
+                  </p>
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <NumberInput
+                      label="Gemeinkosten % (Override)"
+                      suffix="%"
+                      min={0}
+                      value={calc.overheadPercentOverride}
+                      placeholder="Standard nutzen"
+                      onValueChange={(v) =>
+                        setCalc({
+                          ...calc,
+                          overheadPercentOverride: v,
+                          overheadAmountOverride: v != null ? null : calc.overheadAmountOverride,
+                        })
+                      }
+                    />
+                    <NumberInput
+                      label="Gemeinkosten fest (netto €)"
+                      suffix="€"
+                      min={0}
+                      value={calc.overheadAmountOverride}
+                      placeholder="Optional statt %"
+                      onValueChange={(v) =>
+                        setCalc({
+                          ...calc,
+                          overheadAmountOverride: v,
+                          overheadPercentOverride: v != null ? null : calc.overheadPercentOverride,
+                        })
+                      }
+                    />
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    <Button
+                      variant="action"
+                      disabled={saving}
+                      onClick={() =>
+                        save({
+                          overheadPercentOverride: calc.overheadPercentOverride ?? null,
+                          overheadAmountOverride: calc.overheadAmountOverride ?? null,
+                        })
+                      }
+                    >
+                      Speichern & berechnen
+                    </Button>
+                    <Button
+                      variant="outline"
+                      disabled={saving}
+                      onClick={() => {
+                        setCalc({
+                          ...calc,
+                          overheadPercentOverride: null,
+                          overheadAmountOverride: null,
+                        });
+                        save({
+                          overheadPercentOverride: null,
+                          overheadAmountOverride: null,
+                        });
+                      }}
+                    >
+                      Standard wiederherstellen
+                    </Button>
+                    <Link
+                      href="/dashboard/kalkulation/einstellungen"
+                      className="self-center text-sm text-[#0d5c63] hover:underline"
+                    >
+                      Betriebseinstellungen →
+                    </Link>
+                  </div>
+                </div>
               )}
               {step === 6 && (
                 <>
@@ -634,6 +854,7 @@ function Row({ label, value, bold }: { label: string; value: number | string; bo
 }
 
 function PositionRemoveButton({ onRemove, label }: { onRemove: () => void; label?: string }) {
+  const [confirmOpen, setConfirmOpen] = useState(false);
   return (
     <div className="col-span-2 flex justify-end">
       <Button
@@ -641,14 +862,23 @@ function PositionRemoveButton({ onRemove, label }: { onRemove: () => void; label
         variant="outline"
         size="sm"
         className="text-red-600 border-red-200 hover:bg-red-50"
-        onClick={() => {
-          if (confirm(label ? `Position „${label}" wirklich entfernen?` : "Position wirklich entfernen?")) {
-            onRemove();
-          }
-        }}
+        onClick={() => setConfirmOpen(true)}
       >
         <Trash2 className="h-4 w-4 mr-1" /> Entfernen
       </Button>
+      <ConfirmDialog
+        open={confirmOpen}
+        onOpenChange={setConfirmOpen}
+        title="Position entfernen?"
+        description={label ? `Position „${label}“ wird entfernt.` : "Die Position wird entfernt."}
+        confirmLabel="Entfernen"
+        cancelLabel="Abbrechen"
+        variant="destructive"
+        onConfirm={() => {
+          setConfirmOpen(false);
+          onRemove();
+        }}
+      />
     </div>
   );
 }
@@ -1208,33 +1438,63 @@ function ProcurementEditor({ items, onChange }: { items: CalcData[]; onChange: (
 
 function TravelEditor({
   travel,
-  calcId,
+  calcId: _calcId,
   onChange,
 }: {
   travel: CalcData | null;
   calcId: string;
   onChange: (t: CalcData) => void;
 }) {
-  const [dest, setDest] = useState(travel?.destinationAddress ?? "Hauptstraße 42, 10115 Berlin");
-  const [km, setKm] = useState(travel?.distanceKm ?? 46);
   const [zoneError, setZoneError] = useState("");
+
+  const t = travel ?? {
+    startAddress: "Betrieb",
+    destinationAddress: "",
+    distanceKm: 0,
+    estimatedDriveTimeHours: 0,
+    kilometerRateNet: 0.45,
+    travelHourlyRateNet: 45,
+    parkingFeesNet: 0,
+    tollFeesNet: 0,
+    otherTravelCostsNet: 0,
+    totalNet: 0,
+    totalIsManual: false,
+    manualTotalNet: 0,
+    isVisibleToCustomer: true,
+  };
+
+  function patch(partial: CalcData) {
+    onChange({ ...t, ...partial });
+  }
 
   async function calcZone() {
     setZoneError("");
     const distRes = await fetch("/api/travel/calculate-distance", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ destinationAddress: dest, manualDistanceKm: km }),
+      body: JSON.stringify({
+        destinationAddress: t.destinationAddress,
+        manualDistanceKm: t.distanceKm,
+      }),
     });
     const distData = await distRes.json();
+
+    const distanceKm = distData.success ? distData.data.distanceKm : (t.distanceKm ?? 0);
+    const estimatedDriveTimeHours =
+      distData.data?.estimatedDriveTimeHours ?? t.estimatedDriveTimeHours ?? 0.5;
 
     const zoneRes = await fetch("/api/travel/calculate-zone", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        distanceKm: distData.success ? distData.data.distanceKm : km,
-        estimatedDriveTimeHours: distData.data?.estimatedDriveTimeHours ?? 0.5,
-        selectedZoneId: travel?.selectedZoneId ?? undefined,
+        distanceKm,
+        estimatedDriveTimeHours,
+        selectedZoneId: t.selectedZoneId ?? undefined,
+        kilometerRateNet: t.kilometerRateNet,
+        travelHourlyRateNet: t.travelHourlyRateNet,
+        parkingFeesNet: t.parkingFeesNet,
+        tollFeesNet: t.tollFeesNet,
+        otherTravelCostsNet: t.otherTravelCostsNet,
       }),
     });
     const zoneData = await zoneRes.json();
@@ -1243,41 +1503,146 @@ function TravelEditor({
       return;
     }
     if (zoneData.data.noZone) {
-      setZoneError("Für diese Entfernung konnte keine Anfahrtszone bestimmt werden. Bitte dem Kundenstandort eine Zone zuordnen oder unter Kalkulation → Zonen eine passende Zone anlegen.");
+      setZoneError(
+        "Für diese Entfernung konnte keine Anfahrtszone bestimmt werden. Bitte dem Kundenstandort eine Zone zuordnen oder unter Kalkulation → Zonen eine passende Zone anlegen."
+      );
     }
-    onChange({
-      startAddress: distData.data?.startAddress ?? "",
-      destinationAddress: dest,
-      distanceKm: distData.data?.distanceKm ?? km,
-      estimatedDriveTimeHours: distData.data?.estimatedDriveTimeHours ?? 0,
+    patch({
+      startAddress: distData.data?.startAddress ?? t.startAddress,
+      destinationAddress: t.destinationAddress,
+      distanceKm,
+      estimatedDriveTimeHours,
       zoneName: zoneData.data.zoneName,
       totalNet: zoneData.data.total,
-      kilometerRateNet: 0.45,
-      travelHourlyRateNet: 45,
+      selectedZoneId: zoneData.data.zoneId ?? t.selectedZoneId ?? null,
+      calculationMode: zoneData.data.mode,
+      totalIsManual: false,
+      manualTotalNet: null,
     });
-    setKm(distData.data?.distanceKm ?? km);
   }
 
-  const noZone = travel?.zoneName === "Keine Zone";
+  const noZone = t.zoneName === "Keine Zone";
+  const isManual = Boolean(t.totalIsManual);
 
   return (
     <div className="space-y-3">
-      <Input label="Zieladresse" value={dest} onChange={(e) => setDest(e.target.value)} />
-      <NumberInput label="Entfernung km (manuell korrigierbar)" min={0} value={km} onValueChange={(v) => setKm(v ?? 0)} />
-      <Button variant="outline" onClick={calcZone}>Entfernung & Zone berechnen</Button>
+      <Input
+        label="Zieladresse"
+        value={t.destinationAddress ?? ""}
+        onChange={(e) => patch({ destinationAddress: e.target.value })}
+      />
+      <div className="grid gap-3 sm:grid-cols-2">
+        <NumberInput
+          label="Entfernung (km)"
+          min={0}
+          value={t.distanceKm ?? 0}
+          onValueChange={(v) => patch({ distanceKm: v ?? 0 })}
+        />
+        <NumberInput
+          label="Fahrzeit (h)"
+          min={0}
+          value={t.estimatedDriveTimeHours ?? 0}
+          onValueChange={(v) => patch({ estimatedDriveTimeHours: v ?? 0 })}
+        />
+        <NumberInput
+          label="Km-Satz"
+          suffix="€"
+          min={0}
+          value={t.kilometerRateNet ?? 0}
+          onValueChange={(v) => patch({ kilometerRateNet: v ?? 0 })}
+        />
+        <NumberInput
+          label="Fahrstunden-Satz"
+          suffix="€"
+          min={0}
+          value={t.travelHourlyRateNet ?? 0}
+          onValueChange={(v) => patch({ travelHourlyRateNet: v ?? 0 })}
+        />
+        <NumberInput
+          label="Parkgebühren"
+          suffix="€"
+          min={0}
+          value={t.parkingFeesNet ?? 0}
+          onValueChange={(v) => patch({ parkingFeesNet: v ?? 0 })}
+        />
+        <NumberInput
+          label="Maut / Sonstiges"
+          suffix="€"
+          min={0}
+          value={((t.tollFeesNet ?? 0) as number) + ((t.otherTravelCostsNet ?? 0) as number)}
+          onValueChange={(v) =>
+            patch({ tollFeesNet: v ?? 0, otherTravelCostsNet: 0 })
+          }
+        />
+      </div>
+
+      <Button type="button" variant="outline" onClick={calcZone}>
+        Entfernung & Zone berechnen
+      </Button>
       {zoneError && (
         <div className="rounded-lg bg-amber-50 p-3 text-sm text-amber-800">{zoneError}</div>
       )}
-      {travel?.zoneName && !noZone && (
+      {t.zoneName && !noZone && !isManual && (
         <div className="rounded-lg bg-green-50 p-3 text-sm text-green-800">
-          Zone: <strong>{travel.zoneName}</strong> · {travel.calculationMode === "FORMULA" ? "Formel" : "Pauschale"} · {formatEuro(travel.totalNet ?? 0)}
+          Zone: <strong>{t.zoneName}</strong> ·{" "}
+          {t.calculationMode === "FORMULA" ? "Formel" : "Pauschale"} ·{" "}
+          {formatEuro(t.totalNet ?? 0)}
+          <span className="ml-2 rounded bg-white/70 px-1.5 text-xs text-green-700">automatisch</span>
         </div>
       )}
-      {noZone && (
+      {noZone && !isManual && (
         <div className="rounded-lg bg-amber-50 p-3 text-sm text-amber-800">
-          Keine Anfahrtszone zugeordnet – Anfahrtskosten aktuell 0 €. Bitte dem Kundenstandort eine Zone zuweisen.
+          Keine Anfahrtszone zugeordnet – Anfahrtskosten aktuell 0 €.
         </div>
       )}
+
+      <div className="rounded-lg border border-slate-200 p-3 space-y-3">
+        <label className="flex items-start gap-2 text-sm cursor-pointer">
+          <input
+            type="checkbox"
+            className="mt-1"
+            checked={isManual}
+            onChange={(e) => {
+              const on = e.target.checked;
+              patch({
+                totalIsManual: on,
+                manualTotalNet: on ? (t.manualTotalNet ?? t.totalNet ?? 0) : null,
+              });
+            }}
+          />
+          <span>
+            <span className="font-medium">Fahrtkosten manuell festlegen</span>
+            <span className="block text-xs text-slate-500">
+              Ermöglicht 0,00 € oder einen eigenen Betrag. Die Zone/Formel überschreibt den Wert dann nicht.
+            </span>
+          </span>
+        </label>
+        {isManual && (
+          <NumberInput
+            label="Fahrtkosten gesamt (netto)"
+            suffix="€"
+            min={0}
+            required
+            value={t.manualTotalNet ?? 0}
+            onValueChange={(v) =>
+              patch({
+                totalIsManual: true,
+                manualTotalNet: v,
+                totalNet: v ?? 0,
+              })
+            }
+          />
+        )}
+      </div>
+
+      <label className="flex items-center gap-2 text-sm">
+        <input
+          type="checkbox"
+          checked={t.isVisibleToCustomer !== false}
+          onChange={(e) => patch({ isVisibleToCustomer: e.target.checked })}
+        />
+        Auf Angebot/Rechnung sichtbar
+      </label>
     </div>
   );
 }

@@ -333,7 +333,9 @@ export async function fetchEmployeeMaterials(
   if ("error" in schedule) return schedule;
 
   const { employee, appointments, from, to } = schedule;
-  const orderIds = appointments.map((a) => a.orderId);
+  const orderIds = appointments
+    .map((a) => a.orderId)
+    .filter((id): id is string => Boolean(id));
 
   const materialLines = orderIds.length
     ? await prisma.orderMaterialLine.findMany({
@@ -360,7 +362,7 @@ export async function fetchEmployeeMaterials(
     const articleIds = [
       ...materialLines.map((l) => l.articleId).filter(Boolean),
       ...serviceMaterials.flatMap((os) =>
-        os.service?.materialTemplates.map((t) => t.articleId).filter(Boolean) ?? []
+        os.service?.materialTemplates.map((t: { articleId: string | null }) => t.articleId).filter(Boolean) ?? []
       ),
     ] as string[];
 
@@ -546,6 +548,7 @@ export async function fetchMaterialShortage(auth: SessionUser, intent: AiIntent)
   const needs = new Map<string, { name: string; required: number; unit: string; articleId?: string }>();
 
   for (const appt of appointments) {
+    if (!appt.order) continue;
     for (const line of appt.order.materialLines) {
       const key = line.articleId ?? line.name;
       const existing = needs.get(key) ?? { name: line.name, required: 0, unit: line.unit, articleId: line.articleId ?? undefined };

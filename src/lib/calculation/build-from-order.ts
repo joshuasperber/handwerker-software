@@ -111,6 +111,7 @@ export async function createCalculationFromOrder(tenantId: string, orderId: stri
       tenantId,
       orderId: order.id,
       customerId: order.customerId,
+      projectId: order.projectId ?? undefined,
       title: `Kalkulation ${order.orderNumber}`,
       ...(laborCreates.length ? { laborItems: { create: laborCreates } } : {}),
       ...(materialCreates.length ? { materialItems: { create: materialCreates } } : {}),

@@ -33,8 +33,8 @@ export async function GET(request: NextRequest) {
     const orders = await prisma.order.findMany({
       where,
       include: ORDER_LIST_INCLUDE,
-      orderBy: { createdAt: "desc" },
-      take: 100,
+      orderBy: [{ updatedAt: "desc" }, { createdAt: "desc" }],
+      take: 150,
     });
     return apiSuccess(orders);
   } catch (err) {
@@ -53,8 +53,8 @@ export async function GET(request: NextRequest) {
     const orders = await prisma.order.findMany({
       where,
       include: legacyInclude,
-      orderBy: { createdAt: "desc" },
-      take: 100,
+      orderBy: [{ updatedAt: "desc" }, { createdAt: "desc" }],
+      take: 150,
     });
     return apiSuccess(orders);
   }

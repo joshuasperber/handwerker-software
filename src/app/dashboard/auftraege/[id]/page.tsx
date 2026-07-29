@@ -6,17 +6,24 @@ import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { formatDateTime } from "@/lib/utils";
+import { formatDateTime, formatEuro, ROLE_LABELS } from "@/lib/utils";
 import { MATERIAL_STATUS_LABELS } from "@/lib/inventory/formulas";
 import { Clock, CheckSquare, Upload, History, CheckCircle, Package } from "lucide-react";
+import {
+  calcPlannedHours,
+  summarizeOrderTimeEntries,
+} from "@/lib/orders/time-summary";
+import { TIME_ENTRY_STATUS_LABELS } from "@/lib/time-entry";
 import { PlanViewer } from "@/components/orders/plan-viewer";
 import { PhotoGallery } from "@/components/orders/photo-gallery";
 import { OrderBillingSection } from "@/components/orders/billing-section";
 import { OrderDetailHeader } from "@/components/orders/order-detail-header";
+import { ProjectAssignField } from "@/components/orders/project-assign-field";
 import { OrderCustomerSection } from "@/components/orders/order-customer-section";
 import { OrderPhases, type OrderPhaseData } from "@/components/orders/order-phases";
 import { OrderSharePanel } from "@/components/orders/order-share-panel";
 import { OrderTypeSelect } from "@/components/orders/order-type-select";
+import { EmployeeMultiSelect } from "@/components/orders/employee-multi-select";
 import {
   OrderMaterialEditor,
   type EditableMaterialLine,
@@ -39,6 +46,9 @@ interface OrderDetail {
   internalNotes: string | null;
   scheduledStart: string | null;
   scheduledEnd: string | null;
+  customerId?: string;
+  projectId?: string | null;
+  project?: { id: string; name: string; status?: string } | null;
   customer: {
     firstName: string;
     lastName: string;
@@ -61,11 +71,42 @@ interface OrderDetail {
     id: string;
     startTime: string;
     endTime: string;
+    title?: string | null;
+    color?: string | null;
     employee: { user: { firstName: string; lastName: string } } | null;
+  }[];
+  assignees?: {
+    id: string;
+    employeeId: string;
+    employee: {
+      id: string;
+      operationalStatus?: string | null;
+      user: {
+        firstName: string;
+        lastName: string;
+        phone: string | null;
+        role: string;
+        isActive: boolean;
+      };
+      teamMemberships?: Array<{ team: { id: string; name: string } }>;
+    };
   }[];
   checklists: { id: string; label: string; isChecked: boolean }[];
   files: { id: string; fileName: string; category: string }[];
-  timeEntries: { startTime: string; endTime: string | null; breakMinutes: number }[];
+  timeEntries: {
+    id: string;
+    startTime: string;
+    endTime: string | null;
+    breakMinutes: number;
+    activity: string | null;
+    notes: string | null;
+    status: string;
+    employee: {
+      id: string;
+      hourlyWageNet: number | null;
+      user: { firstName: string; lastName: string };
+    };
+  }[];
   materialUsages: { name: string; quantity: number; unit: string }[];
   title?: string | null;
   orderType?: string;
@@ -110,10 +151,11 @@ export default function AuftragDetailPage() {
   const [staffMessage, setStaffMessage] = useState("");
   const [staffError, setStaffError] = useState("");
   const [staffRequests, setStaffRequests] = useState<{ id: string; status: string; employee: { user: { firstName: string; lastName: string } } }[]>([]);
-  const [assignEmployeeId, setAssignEmployeeId] = useState("");
+  const [assigneeIds, setAssigneeIds] = useState<string[]>([]);
   const [assignStart, setAssignStart] = useState("");
   const [assignEnd, setAssignEnd] = useState("");
   const [assignError, setAssignError] = useState("");
+  const [savingAssignees, setSavingAssignees] = useState(false);
   const [availabilityWarning, setAvailabilityWarning] = useState("");
   const [actionMsg, setActionMsg] = useState("");
   const [confirmComplete, setConfirmComplete] = useState(false);
@@ -133,13 +175,17 @@ export default function AuftragDetailPage() {
   const [calculation, setCalculation] = useState<{ id: string; title: string | null; netSalesPrice: number } | null>(null);
   const [timeline, setTimeline] = useState<{ id: string; at: string; label: string; detail?: string; user?: string }[]>([]);
 
+  const [loadError, setLoadError] = useState("");
+
   const loadOrder = useCallback(() => {
     if (!id || typeof id !== "string") return;
+    setLoadError("");
 
     fetchJson<OrderDetail>(`/api/orders/${id}`).then((data) => {
       if (data.success && data.data) {
         setOrder(data.data);
         setNotes(data.data.internalNotes ?? "");
+        setAssigneeIds((data.data.assignees ?? []).map((a) => a.employeeId));
         setTypeDraft({
           orderTypeId: data.data.orderTypeId ?? "",
           orderTypeCustom: data.data.orderTypeCustom ?? "",
@@ -151,7 +197,9 @@ export default function AuftragDetailPage() {
         if (data.data.scheduledEnd) {
           setAssignEnd((prev) => prev || data.data!.scheduledEnd!.slice(0, 16));
         }
+        return;
       }
+      setLoadError(data.error ?? "Auftrag konnte nicht geladen werden");
     });
 
     fetchJson<typeof plans>(`/api/orders/${id}/plans`).then((d) => {
@@ -180,12 +228,12 @@ export default function AuftragDetailPage() {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      if (!assignEmployeeId || !assignStart || !assignEnd || !id) {
+      if (assigneeIds.length !== 1 || !assignStart || !assignEnd || !id) {
         setAvailabilityWarning("");
         return;
       }
       const params = new URLSearchParams({
-        employeeId: assignEmployeeId,
+        employeeId: assigneeIds[0],
         startTime: new Date(assignStart).toISOString(),
         endTime: new Date(assignEnd).toISOString(),
       });
@@ -197,7 +245,7 @@ export default function AuftragDetailPage() {
       });
     }, 400);
     return () => clearTimeout(timer);
-  }, [assignEmployeeId, assignStart, assignEnd, id]);
+  }, [assigneeIds, assignStart, assignEnd, id]);
 
   async function updatePriority(priority: string) {
     await saveJson(
@@ -323,8 +371,9 @@ export default function AuftragDetailPage() {
         .then((r) => r.json())
         .then((d) => {
           if (d.success) setArticles(d.data);
+          else toast.error("Artikel konnten nicht geladen werden");
         })
-        .catch(() => {});
+        .catch(() => toast.error("Artikel konnten nicht geladen werden"));
     }
     setEditingMaterial(true);
   }
@@ -416,31 +465,39 @@ export default function AuftragDetailPage() {
     });
   }
 
-  async function assignEmployee() {
+  async function saveAssignees() {
     setAssignError("");
-    if (!assignEmployeeId || !assignStart || !assignEnd) {
-      setAssignError("Mitarbeiter, Start und Ende auswählen");
+    setSavingAssignees(true);
+    const hasTimes = Boolean(assignStart && assignEnd);
+    if (hasTimes && new Date(assignEnd) <= new Date(assignStart)) {
+      setAssignError("Ende muss nach Beginn liegen");
+      setSavingAssignees(false);
       return;
     }
-    const res = await fetch("/api/appointments", {
-      method: "POST",
+    const res = await fetch(`/api/orders/${id}/assignees`, {
+      method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        orderId: id,
-        employeeId: assignEmployeeId,
-        startTime: new Date(assignStart).toISOString(),
-        endTime: new Date(assignEnd).toISOString(),
+        employeeIds: assigneeIds,
+        syncAppointments: hasTimes,
+        startTime: hasTimes ? new Date(assignStart).toISOString() : null,
+        endTime: hasTimes ? new Date(assignEnd).toISOString() : null,
       }),
     });
     const data = await res.json();
+    setSavingAssignees(false);
     if (data.success) {
-      setAssignEmployeeId("");
+      toast.success(
+        hasTimes
+          ? "Mitarbeiter zugewiesen und Kalender aktualisiert"
+          : "Mitarbeiterzuweisung gespeichert"
+      );
       loadOrder();
       fetchJson<{ timeline: typeof timeline }>(`/api/orders/${id}/history`).then((d) => {
         if (d.success && d.data?.timeline) setTimeline(d.data.timeline);
       });
     } else {
-      setAssignError(data.error ?? "Termin konnte nicht angelegt werden");
+      setAssignError(data.error ?? "Zuweisung fehlgeschlagen");
     }
   }
 
@@ -463,7 +520,7 @@ export default function AuftragDetailPage() {
   async function planTeamInCalendar() {
     setActionMsg("");
     if (!assignStart || !assignEnd) {
-      setActionMsg("Bitte zuerst Von/Bis unter „Mitarbeiter zuweisen“ setzen und speichern (Termin anlegen).");
+      setActionMsg("Bitte zuerst Von/Bis unter „Zugewiesene Mitarbeiter“ setzen und Speichern.");
       return;
     }
     const res = await fetch(`/api/orders/${id}/team-appointments`, { method: "POST" });
@@ -521,7 +578,27 @@ export default function AuftragDetailPage() {
     e.target.value = "";
   }
 
-  if (!order) return <div className="text-slate-500">Laden...</div>;
+  if (!order) {
+    if (loadError) {
+      return (
+        <div className="space-y-3">
+          <p className="text-sm text-red-600">{loadError}</p>
+          <Button type="button" variant="outline" size="sm" onClick={loadOrder}>
+            Erneut versuchen
+          </Button>
+        </div>
+      );
+    }
+    return <div className="text-slate-500">Laden...</div>;
+  }
+
+  const plannedHours = calcPlannedHours({
+    appointments: order.appointments,
+    services: order.services,
+    scheduledStart: order.scheduledStart,
+    scheduledEnd: order.scheduledEnd,
+  });
+  const timeSummary = summarizeOrderTimeEntries(order.timeEntries, plannedHours);
 
   return (
     <div>
@@ -576,6 +653,27 @@ export default function AuftragDetailPage() {
             services={order.services}
             description={order.description}
           />
+
+          <CanAccess permission="orders.write">
+            <Card title="Projekt">
+              <ProjectAssignField
+                customerId={order.customerId ?? null}
+                value={order.projectId ?? order.project?.id ?? ""}
+                onChange={async (projectId) => {
+                  const res = await saveJson(
+                    `/api/orders/${order.id}`,
+                    {
+                      method: "PATCH",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ projectId: projectId || null }),
+                    },
+                    { success: projectId ? "Projekt zugeordnet" : "Projektzuordnung entfernt" }
+                  );
+                  if (res.success) loadOrder();
+                }}
+              />
+            </Card>
+          </CanAccess>
 
           <CanAccess permission="orders.write">
             <Card title="Auftragstyp">
@@ -758,51 +856,91 @@ export default function AuftragDetailPage() {
 
         <div className="space-y-6">
           <CanAccess permission="orders.assign">
-          <Card title="Mitarbeiter zuweisen">
+          <Card title="Zugewiesene Mitarbeiter">
+            {(order.assignees?.length ?? 0) === 0 ? (
+              <p className="text-sm text-slate-500 mb-3">Noch keine Einzelmitarbeiter zugewiesen.</p>
+            ) : (
+              <ul className="mb-4 divide-y divide-slate-100">
+                {(order.assignees ?? []).map((a) => {
+                  const hours = timeSummary.byEmployee.find((r) => r.employeeId === a.employeeId);
+                  const teams = (a.employee.teamMemberships ?? [])
+                    .map((m) => m.team.name)
+                    .filter(Boolean);
+                  return (
+                    <li key={a.id} className="py-2.5 first:pt-0">
+                      <div className="flex flex-wrap items-baseline justify-between gap-2">
+                        <p className="text-sm font-medium text-slate-800">
+                          {a.employee.user.firstName} {a.employee.user.lastName}
+                        </p>
+                        <span className="text-xs text-slate-400">
+                          {a.employee.user.isActive ? "Aktiv" : "Inaktiv"}
+                          {a.employee.operationalStatus
+                            ? ` · ${a.employee.operationalStatus}`
+                            : ""}
+                        </span>
+                      </div>
+                      <p className="text-xs text-slate-500">
+                        {ROLE_LABELS[a.employee.user.role] ?? a.employee.user.role}
+                        {a.employee.user.phone ? ` · ${a.employee.user.phone}` : ""}
+                        {teams.length ? ` · ${teams.join(", ")}` : ""}
+                        {hours ? ` · ${hours.hours.toFixed(2)} h gebucht` : ""}
+                      </p>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
+            {order.team && (
+              <p className="mb-3 rounded-lg border border-slate-100 bg-slate-50 px-3 py-2 text-xs text-slate-600">
+                Zusätzlich Team „{order.team.name}“ (Teamzuweisung getrennt von Einzelmitarbeitern).
+              </p>
+            )}
             <p className="text-xs text-slate-500 mb-3">
-              Wählen Sie Mitarbeiter und Termin – der Eintrag erscheint im Team-Kalender unter Termine.
+              Mehrfachauswahl: Assignees sehen den Auftrag in Monteur-App und Stundenzettel.
+              Mit Von/Bis werden Kalendertermine für alle Ausgewählten angelegt/aktualisiert.
             </p>
             {assignError && <p className="text-sm text-red-600 mb-2">{assignError}</p>}
             {availabilityWarning && (
               <p className="text-sm text-amber-700 mb-2">⚠ {availabilityWarning}</p>
             )}
             <div className="space-y-3">
-              <div>
-                <label className="text-xs text-slate-500">Mitarbeiter</label>
-                <select
-                  className="w-full mt-1 h-10 rounded-lg border border-slate-300 px-3 text-sm"
-                  value={assignEmployeeId}
-                  onChange={(e) => setAssignEmployeeId(e.target.value)}
-                >
-                  <option value="">— Mitarbeiter wählen —</option>
-                  {allEmployees.map((emp) => (
-                    <option key={emp.id} value={emp.id} disabled={emp.assignmentStatus === "busy"}>
-                      {emp.user.firstName} {emp.user.lastName}
-                      {emp.assignmentStatus === "busy" ? " (bereits eingeplant)" : ""}
-                    </option>
-                  ))}
-                </select>
+              <EmployeeMultiSelect
+                employees={allEmployees.map((emp) => ({
+                  id: emp.id,
+                  firstName: emp.user.firstName,
+                  lastName: emp.user.lastName,
+                  role: ROLE_LABELS[emp.user.role] ?? emp.user.role,
+                  // „busy“ blockiert nicht die Zuweisung – nur Hinweis in der Liste
+                  disabledReason:
+                    emp.assignmentStatus === "busy" && !assigneeIds.includes(emp.id)
+                      ? "bereits eingeplant (Kalenderkonflikt möglich)"
+                      : undefined,
+                }))}
+                value={assigneeIds}
+                onChange={setAssigneeIds}
+              />
+              <div className="grid gap-3 sm:grid-cols-2">
+                <div>
+                  <label className="text-xs text-slate-500">Von (Kalender)</label>
+                  <input
+                    type="datetime-local"
+                    className="w-full mt-1 h-10 rounded-lg border border-slate-300 px-3 text-sm"
+                    value={assignStart}
+                    onChange={(e) => setAssignStart(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <label className="text-xs text-slate-500">Bis (Kalender)</label>
+                  <input
+                    type="datetime-local"
+                    className="w-full mt-1 h-10 rounded-lg border border-slate-300 px-3 text-sm"
+                    value={assignEnd}
+                    onChange={(e) => setAssignEnd(e.target.value)}
+                  />
+                </div>
               </div>
-              <div>
-                <label className="text-xs text-slate-500">Von</label>
-                <input
-                  type="datetime-local"
-                  className="w-full mt-1 h-10 rounded-lg border border-slate-300 px-3 text-sm"
-                  value={assignStart}
-                  onChange={(e) => setAssignStart(e.target.value)}
-                />
-              </div>
-              <div>
-                <label className="text-xs text-slate-500">Bis</label>
-                <input
-                  type="datetime-local"
-                  className="w-full mt-1 h-10 rounded-lg border border-slate-300 px-3 text-sm"
-                  value={assignEnd}
-                  onChange={(e) => setAssignEnd(e.target.value)}
-                />
-              </div>
-              <Button size="sm" onClick={assignEmployee} disabled={!assignEmployeeId || !assignStart || !assignEnd}>
-                Termin anlegen
+              <Button size="sm" onClick={saveAssignees} disabled={savingAssignees}>
+                {savingAssignees ? "Speichern…" : "Zuweisung speichern"}
               </Button>
             </div>
           </Card>
@@ -915,14 +1053,25 @@ export default function AuftragDetailPage() {
             {order.appointments.map((apt) => (
               <div key={apt.id} className="py-2 border-b border-slate-50 last:border-0">
                 <div className="flex items-center gap-2 text-sm">
+                  <span
+                    className="h-2.5 w-2.5 shrink-0 rounded-full"
+                    style={{ backgroundColor: apt.color || "#0d5c63" }}
+                    aria-hidden
+                  />
                   <Clock className="h-4 w-4 text-slate-400" />
-                  {formatDateTime(apt.startTime)}
+                  <span className="font-medium text-slate-800">
+                    {apt.title?.trim() || order.title || "Termin"}
+                  </span>
                 </div>
-                {apt.employee && (
-                  <p className="text-xs text-slate-400 mt-1 ml-6">
-                    {apt.employee.user.firstName} {apt.employee.user.lastName}
-                  </p>
-                )}
+                <p className="text-xs text-slate-500 mt-1 ml-6">
+                  {formatDateTime(apt.startTime)}
+                  {apt.endTime
+                    ? ` – ${new Date(apt.endTime).toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" })}`
+                    : ""}
+                  {apt.employee
+                    ? ` · ${apt.employee.user.firstName} ${apt.employee.user.lastName}`
+                    : ""}
+                </p>
               </div>
             ))}
             {!order.appointments.length && (
@@ -930,16 +1079,105 @@ export default function AuftragDetailPage() {
             )}
           </Card>
 
-          {order.timeEntries.length > 0 && (
-            <Card title="Arbeitszeit">
-              {order.timeEntries.map((t, i) => (
-                <p key={i} className="text-sm py-1">
-                  {formatDateTime(t.startTime)}
-                  {t.endTime ? ` – ${formatDateTime(t.endTime)}` : " (läuft)"}
+          <Card title="Arbeitszeit">
+            <div className="grid grid-cols-2 gap-3 text-sm mb-3">
+              <div>
+                <p className="text-xs text-slate-500">Geplant</p>
+                <p className="font-semibold">{timeSummary.plannedHours.toFixed(2)} h</p>
+              </div>
+              <div>
+                <p className="text-xs text-slate-500">Tatsächlich</p>
+                <p className="font-semibold text-[#0d5c63]">
+                  {timeSummary.actualHours.toFixed(2)} h
                 </p>
-              ))}
-            </Card>
-          )}
+              </div>
+              <div>
+                <p className="text-xs text-slate-500">Differenz</p>
+                <p
+                  className={`font-semibold ${
+                    timeSummary.deltaHours > 0
+                      ? "text-amber-700"
+                      : timeSummary.deltaHours < 0
+                        ? "text-emerald-700"
+                        : "text-slate-700"
+                  }`}
+                >
+                  {timeSummary.deltaHours > 0 ? "+" : ""}
+                  {timeSummary.deltaHours.toFixed(2)} h
+                </p>
+              </div>
+              <div>
+                <p className="text-xs text-slate-500">Arbeitskosten</p>
+                <p className="font-semibold">
+                  {timeSummary.laborCostNet != null
+                    ? formatEuro(timeSummary.laborCostNet)
+                    : "—"}
+                </p>
+              </div>
+            </div>
+
+            {timeSummary.byEmployee.length > 0 && (
+              <div className="mb-3 space-y-1 border-t border-slate-100 pt-2">
+                <p className="text-xs font-medium text-slate-600">Nach Mitarbeiter</p>
+                {timeSummary.byEmployee.map((row) => (
+                  <div
+                    key={row.employeeId}
+                    className="flex justify-between gap-2 text-sm"
+                  >
+                    <span>{row.name}</span>
+                    <span className="text-slate-600">
+                      {row.hours.toFixed(2)} h
+                      {row.laborCostNet != null
+                        ? ` · ${formatEuro(row.laborCostNet)}`
+                        : row.hourlyWageNet == null
+                          ? " · kein Lohn hinterlegt"
+                          : ""}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {timeSummary.entries.length === 0 ? (
+              <p className="text-sm text-slate-500">Noch keine Zeiten gebucht.</p>
+            ) : (
+              <div className="divide-y divide-slate-50 border-t border-slate-100">
+                {timeSummary.entries.map((t) => (
+                  <div key={t.id} className="py-2 text-sm">
+                    <div className="flex justify-between gap-2">
+                      <p className="font-medium">{t.employeeName}</p>
+                      <p className="font-semibold text-[#0d5c63]">
+                        {t.hours != null ? `${t.hours.toFixed(2)} h` : "läuft"}
+                      </p>
+                    </div>
+                    {t.activity && (
+                      <p className="text-xs text-slate-500">{t.activity}</p>
+                    )}
+                    <p className="text-xs text-slate-400">
+                      {formatDateTime(t.startTime)}
+                      {t.endTime ? ` – ${formatDateTime(t.endTime)}` : ""}
+                      {" · "}
+                      {TIME_ENTRY_STATUS_LABELS[t.status] ?? t.status}
+                      {t.laborCostNet != null
+                        ? ` · ${formatEuro(t.laborCostNet)}`
+                        : ""}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <p className="text-[11px] text-slate-400 mt-3">
+              Tatsächliche Stunden können bewusst in Kalkulation/Rechnung übernommen
+              werden — nicht automatisch.
+            </p>
+            <Link
+              href="/dashboard/stunden"
+              className="inline-block mt-1 text-xs text-[#0d5c63] underline-offset-2 hover:underline"
+            >
+              Zu Team-Stunden →
+            </Link>
+          </Card>
 
           {order.materialUsages.length > 0 && (
             <Card title="Material">

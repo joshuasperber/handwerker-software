@@ -243,6 +243,7 @@ export type VehicleWhereInput = {
   assignedEmployee?: Prisma.XOR<Prisma.EmployeeNullableScalarRelationFilter, Prisma.EmployeeWhereInput> | null
   teams?: Prisma.TeamListRelationFilter
   orders?: Prisma.OrderListRelationFilter
+  appointments?: Prisma.AppointmentListRelationFilter
 }
 
 export type VehicleOrderByWithRelationInput = {
@@ -263,6 +264,7 @@ export type VehicleOrderByWithRelationInput = {
   assignedEmployee?: Prisma.EmployeeOrderByWithRelationInput
   teams?: Prisma.TeamOrderByRelationAggregateInput
   orders?: Prisma.OrderOrderByRelationAggregateInput
+  appointments?: Prisma.AppointmentOrderByRelationAggregateInput
 }
 
 export type VehicleWhereUniqueInput = Prisma.AtLeast<{
@@ -286,6 +288,7 @@ export type VehicleWhereUniqueInput = Prisma.AtLeast<{
   assignedEmployee?: Prisma.XOR<Prisma.EmployeeNullableScalarRelationFilter, Prisma.EmployeeWhereInput> | null
   teams?: Prisma.TeamListRelationFilter
   orders?: Prisma.OrderListRelationFilter
+  appointments?: Prisma.AppointmentListRelationFilter
 }, "id" | "storageLocationId">
 
 export type VehicleOrderByWithAggregationInput = {
@@ -339,6 +342,7 @@ export type VehicleCreateInput = {
   assignedEmployee?: Prisma.EmployeeCreateNestedOneWithoutAssignedVehiclesInput
   teams?: Prisma.TeamCreateNestedManyWithoutVehicleInput
   orders?: Prisma.OrderCreateNestedManyWithoutVehicleInput
+  appointments?: Prisma.AppointmentCreateNestedManyWithoutVehicleInput
 }
 
 export type VehicleUncheckedCreateInput = {
@@ -356,6 +360,7 @@ export type VehicleUncheckedCreateInput = {
   updatedAt?: Date | string
   teams?: Prisma.TeamUncheckedCreateNestedManyWithoutVehicleInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutVehicleInput
+  appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutVehicleInput
 }
 
 export type VehicleUpdateInput = {
@@ -373,6 +378,7 @@ export type VehicleUpdateInput = {
   assignedEmployee?: Prisma.EmployeeUpdateOneWithoutAssignedVehiclesNestedInput
   teams?: Prisma.TeamUpdateManyWithoutVehicleNestedInput
   orders?: Prisma.OrderUpdateManyWithoutVehicleNestedInput
+  appointments?: Prisma.AppointmentUpdateManyWithoutVehicleNestedInput
 }
 
 export type VehicleUncheckedUpdateInput = {
@@ -390,6 +396,7 @@ export type VehicleUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   teams?: Prisma.TeamUncheckedUpdateManyWithoutVehicleNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutVehicleNestedInput
+  appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutVehicleNestedInput
 }
 
 export type VehicleCreateManyInput = {
@@ -594,6 +601,22 @@ export type VehicleUpdateOneWithoutOrdersNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.VehicleUpdateToOneWithWhereWithoutOrdersInput, Prisma.VehicleUpdateWithoutOrdersInput>, Prisma.VehicleUncheckedUpdateWithoutOrdersInput>
 }
 
+export type VehicleCreateNestedOneWithoutAppointmentsInput = {
+  create?: Prisma.XOR<Prisma.VehicleCreateWithoutAppointmentsInput, Prisma.VehicleUncheckedCreateWithoutAppointmentsInput>
+  connectOrCreate?: Prisma.VehicleCreateOrConnectWithoutAppointmentsInput
+  connect?: Prisma.VehicleWhereUniqueInput
+}
+
+export type VehicleUpdateOneWithoutAppointmentsNestedInput = {
+  create?: Prisma.XOR<Prisma.VehicleCreateWithoutAppointmentsInput, Prisma.VehicleUncheckedCreateWithoutAppointmentsInput>
+  connectOrCreate?: Prisma.VehicleCreateOrConnectWithoutAppointmentsInput
+  upsert?: Prisma.VehicleUpsertWithoutAppointmentsInput
+  disconnect?: Prisma.VehicleWhereInput | boolean
+  delete?: Prisma.VehicleWhereInput | boolean
+  connect?: Prisma.VehicleWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.VehicleUpdateToOneWithWhereWithoutAppointmentsInput, Prisma.VehicleUpdateWithoutAppointmentsInput>, Prisma.VehicleUncheckedUpdateWithoutAppointmentsInput>
+}
+
 export type VehicleCreateNestedOneWithoutStorageLocationInput = {
   create?: Prisma.XOR<Prisma.VehicleCreateWithoutStorageLocationInput, Prisma.VehicleUncheckedCreateWithoutStorageLocationInput>
   connectOrCreate?: Prisma.VehicleCreateOrConnectWithoutStorageLocationInput
@@ -660,6 +683,7 @@ export type VehicleCreateWithoutTenantInput = {
   assignedEmployee?: Prisma.EmployeeCreateNestedOneWithoutAssignedVehiclesInput
   teams?: Prisma.TeamCreateNestedManyWithoutVehicleInput
   orders?: Prisma.OrderCreateNestedManyWithoutVehicleInput
+  appointments?: Prisma.AppointmentCreateNestedManyWithoutVehicleInput
 }
 
 export type VehicleUncheckedCreateWithoutTenantInput = {
@@ -676,6 +700,7 @@ export type VehicleUncheckedCreateWithoutTenantInput = {
   updatedAt?: Date | string
   teams?: Prisma.TeamUncheckedCreateNestedManyWithoutVehicleInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutVehicleInput
+  appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutVehicleInput
 }
 
 export type VehicleCreateOrConnectWithoutTenantInput = {
@@ -736,6 +761,7 @@ export type VehicleCreateWithoutAssignedEmployeeInput = {
   storageLocation?: Prisma.StorageLocationCreateNestedOneWithoutVehicleInput
   teams?: Prisma.TeamCreateNestedManyWithoutVehicleInput
   orders?: Prisma.OrderCreateNestedManyWithoutVehicleInput
+  appointments?: Prisma.AppointmentCreateNestedManyWithoutVehicleInput
 }
 
 export type VehicleUncheckedCreateWithoutAssignedEmployeeInput = {
@@ -752,6 +778,7 @@ export type VehicleUncheckedCreateWithoutAssignedEmployeeInput = {
   updatedAt?: Date | string
   teams?: Prisma.TeamUncheckedCreateNestedManyWithoutVehicleInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutVehicleInput
+  appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutVehicleInput
 }
 
 export type VehicleCreateOrConnectWithoutAssignedEmployeeInput = {
@@ -794,6 +821,7 @@ export type VehicleCreateWithoutOrdersInput = {
   storageLocation?: Prisma.StorageLocationCreateNestedOneWithoutVehicleInput
   assignedEmployee?: Prisma.EmployeeCreateNestedOneWithoutAssignedVehiclesInput
   teams?: Prisma.TeamCreateNestedManyWithoutVehicleInput
+  appointments?: Prisma.AppointmentCreateNestedManyWithoutVehicleInput
 }
 
 export type VehicleUncheckedCreateWithoutOrdersInput = {
@@ -810,6 +838,7 @@ export type VehicleUncheckedCreateWithoutOrdersInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   teams?: Prisma.TeamUncheckedCreateNestedManyWithoutVehicleInput
+  appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutVehicleInput
 }
 
 export type VehicleCreateOrConnectWithoutOrdersInput = {
@@ -842,6 +871,7 @@ export type VehicleUpdateWithoutOrdersInput = {
   storageLocation?: Prisma.StorageLocationUpdateOneWithoutVehicleNestedInput
   assignedEmployee?: Prisma.EmployeeUpdateOneWithoutAssignedVehiclesNestedInput
   teams?: Prisma.TeamUpdateManyWithoutVehicleNestedInput
+  appointments?: Prisma.AppointmentUpdateManyWithoutVehicleNestedInput
 }
 
 export type VehicleUncheckedUpdateWithoutOrdersInput = {
@@ -858,6 +888,91 @@ export type VehicleUncheckedUpdateWithoutOrdersInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   teams?: Prisma.TeamUncheckedUpdateManyWithoutVehicleNestedInput
+  appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutVehicleNestedInput
+}
+
+export type VehicleCreateWithoutAppointmentsInput = {
+  id?: string
+  name: string
+  licensePlate?: string | null
+  vehicleType?: string | null
+  status?: $Enums.VehicleStatus
+  notes?: string | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tenant: Prisma.TenantCreateNestedOneWithoutVehiclesInput
+  storageLocation?: Prisma.StorageLocationCreateNestedOneWithoutVehicleInput
+  assignedEmployee?: Prisma.EmployeeCreateNestedOneWithoutAssignedVehiclesInput
+  teams?: Prisma.TeamCreateNestedManyWithoutVehicleInput
+  orders?: Prisma.OrderCreateNestedManyWithoutVehicleInput
+}
+
+export type VehicleUncheckedCreateWithoutAppointmentsInput = {
+  id?: string
+  tenantId: string
+  name: string
+  licensePlate?: string | null
+  vehicleType?: string | null
+  status?: $Enums.VehicleStatus
+  notes?: string | null
+  assignedEmployeeId?: string | null
+  storageLocationId?: string | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  teams?: Prisma.TeamUncheckedCreateNestedManyWithoutVehicleInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutVehicleInput
+}
+
+export type VehicleCreateOrConnectWithoutAppointmentsInput = {
+  where: Prisma.VehicleWhereUniqueInput
+  create: Prisma.XOR<Prisma.VehicleCreateWithoutAppointmentsInput, Prisma.VehicleUncheckedCreateWithoutAppointmentsInput>
+}
+
+export type VehicleUpsertWithoutAppointmentsInput = {
+  update: Prisma.XOR<Prisma.VehicleUpdateWithoutAppointmentsInput, Prisma.VehicleUncheckedUpdateWithoutAppointmentsInput>
+  create: Prisma.XOR<Prisma.VehicleCreateWithoutAppointmentsInput, Prisma.VehicleUncheckedCreateWithoutAppointmentsInput>
+  where?: Prisma.VehicleWhereInput
+}
+
+export type VehicleUpdateToOneWithWhereWithoutAppointmentsInput = {
+  where?: Prisma.VehicleWhereInput
+  data: Prisma.XOR<Prisma.VehicleUpdateWithoutAppointmentsInput, Prisma.VehicleUncheckedUpdateWithoutAppointmentsInput>
+}
+
+export type VehicleUpdateWithoutAppointmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  licensePlate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vehicleType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumVehicleStatusFieldUpdateOperationsInput | $Enums.VehicleStatus
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutVehiclesNestedInput
+  storageLocation?: Prisma.StorageLocationUpdateOneWithoutVehicleNestedInput
+  assignedEmployee?: Prisma.EmployeeUpdateOneWithoutAssignedVehiclesNestedInput
+  teams?: Prisma.TeamUpdateManyWithoutVehicleNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutVehicleNestedInput
+}
+
+export type VehicleUncheckedUpdateWithoutAppointmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  licensePlate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vehicleType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumVehicleStatusFieldUpdateOperationsInput | $Enums.VehicleStatus
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedEmployeeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  storageLocationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  teams?: Prisma.TeamUncheckedUpdateManyWithoutVehicleNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutVehicleNestedInput
 }
 
 export type VehicleCreateWithoutStorageLocationInput = {
@@ -874,6 +989,7 @@ export type VehicleCreateWithoutStorageLocationInput = {
   assignedEmployee?: Prisma.EmployeeCreateNestedOneWithoutAssignedVehiclesInput
   teams?: Prisma.TeamCreateNestedManyWithoutVehicleInput
   orders?: Prisma.OrderCreateNestedManyWithoutVehicleInput
+  appointments?: Prisma.AppointmentCreateNestedManyWithoutVehicleInput
 }
 
 export type VehicleUncheckedCreateWithoutStorageLocationInput = {
@@ -890,6 +1006,7 @@ export type VehicleUncheckedCreateWithoutStorageLocationInput = {
   updatedAt?: Date | string
   teams?: Prisma.TeamUncheckedCreateNestedManyWithoutVehicleInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutVehicleInput
+  appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutVehicleInput
 }
 
 export type VehicleCreateOrConnectWithoutStorageLocationInput = {
@@ -922,6 +1039,7 @@ export type VehicleUpdateWithoutStorageLocationInput = {
   assignedEmployee?: Prisma.EmployeeUpdateOneWithoutAssignedVehiclesNestedInput
   teams?: Prisma.TeamUpdateManyWithoutVehicleNestedInput
   orders?: Prisma.OrderUpdateManyWithoutVehicleNestedInput
+  appointments?: Prisma.AppointmentUpdateManyWithoutVehicleNestedInput
 }
 
 export type VehicleUncheckedUpdateWithoutStorageLocationInput = {
@@ -938,6 +1056,7 @@ export type VehicleUncheckedUpdateWithoutStorageLocationInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   teams?: Prisma.TeamUncheckedUpdateManyWithoutVehicleNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutVehicleNestedInput
+  appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutVehicleNestedInput
 }
 
 export type VehicleCreateWithoutTeamsInput = {
@@ -954,6 +1073,7 @@ export type VehicleCreateWithoutTeamsInput = {
   storageLocation?: Prisma.StorageLocationCreateNestedOneWithoutVehicleInput
   assignedEmployee?: Prisma.EmployeeCreateNestedOneWithoutAssignedVehiclesInput
   orders?: Prisma.OrderCreateNestedManyWithoutVehicleInput
+  appointments?: Prisma.AppointmentCreateNestedManyWithoutVehicleInput
 }
 
 export type VehicleUncheckedCreateWithoutTeamsInput = {
@@ -970,6 +1090,7 @@ export type VehicleUncheckedCreateWithoutTeamsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutVehicleInput
+  appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutVehicleInput
 }
 
 export type VehicleCreateOrConnectWithoutTeamsInput = {
@@ -1002,6 +1123,7 @@ export type VehicleUpdateWithoutTeamsInput = {
   storageLocation?: Prisma.StorageLocationUpdateOneWithoutVehicleNestedInput
   assignedEmployee?: Prisma.EmployeeUpdateOneWithoutAssignedVehiclesNestedInput
   orders?: Prisma.OrderUpdateManyWithoutVehicleNestedInput
+  appointments?: Prisma.AppointmentUpdateManyWithoutVehicleNestedInput
 }
 
 export type VehicleUncheckedUpdateWithoutTeamsInput = {
@@ -1018,6 +1140,7 @@ export type VehicleUncheckedUpdateWithoutTeamsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   orders?: Prisma.OrderUncheckedUpdateManyWithoutVehicleNestedInput
+  appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutVehicleNestedInput
 }
 
 export type VehicleCreateManyTenantInput = {
@@ -1048,6 +1171,7 @@ export type VehicleUpdateWithoutTenantInput = {
   assignedEmployee?: Prisma.EmployeeUpdateOneWithoutAssignedVehiclesNestedInput
   teams?: Prisma.TeamUpdateManyWithoutVehicleNestedInput
   orders?: Prisma.OrderUpdateManyWithoutVehicleNestedInput
+  appointments?: Prisma.AppointmentUpdateManyWithoutVehicleNestedInput
 }
 
 export type VehicleUncheckedUpdateWithoutTenantInput = {
@@ -1064,6 +1188,7 @@ export type VehicleUncheckedUpdateWithoutTenantInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   teams?: Prisma.TeamUncheckedUpdateManyWithoutVehicleNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutVehicleNestedInput
+  appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutVehicleNestedInput
 }
 
 export type VehicleUncheckedUpdateManyWithoutTenantInput = {
@@ -1108,6 +1233,7 @@ export type VehicleUpdateWithoutAssignedEmployeeInput = {
   storageLocation?: Prisma.StorageLocationUpdateOneWithoutVehicleNestedInput
   teams?: Prisma.TeamUpdateManyWithoutVehicleNestedInput
   orders?: Prisma.OrderUpdateManyWithoutVehicleNestedInput
+  appointments?: Prisma.AppointmentUpdateManyWithoutVehicleNestedInput
 }
 
 export type VehicleUncheckedUpdateWithoutAssignedEmployeeInput = {
@@ -1124,6 +1250,7 @@ export type VehicleUncheckedUpdateWithoutAssignedEmployeeInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   teams?: Prisma.TeamUncheckedUpdateManyWithoutVehicleNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutVehicleNestedInput
+  appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutVehicleNestedInput
 }
 
 export type VehicleUncheckedUpdateManyWithoutAssignedEmployeeInput = {
@@ -1148,11 +1275,13 @@ export type VehicleUncheckedUpdateManyWithoutAssignedEmployeeInput = {
 export type VehicleCountOutputType = {
   teams: number
   orders: number
+  appointments: number
 }
 
 export type VehicleCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   teams?: boolean | VehicleCountOutputTypeCountTeamsArgs
   orders?: boolean | VehicleCountOutputTypeCountOrdersArgs
+  appointments?: boolean | VehicleCountOutputTypeCountAppointmentsArgs
 }
 
 /**
@@ -1179,6 +1308,13 @@ export type VehicleCountOutputTypeCountOrdersArgs<ExtArgs extends runtime.Types.
   where?: Prisma.OrderWhereInput
 }
 
+/**
+ * VehicleCountOutputType without action
+ */
+export type VehicleCountOutputTypeCountAppointmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AppointmentWhereInput
+}
+
 
 export type VehicleSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1198,6 +1334,7 @@ export type VehicleSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   assignedEmployee?: boolean | Prisma.Vehicle$assignedEmployeeArgs<ExtArgs>
   teams?: boolean | Prisma.Vehicle$teamsArgs<ExtArgs>
   orders?: boolean | Prisma.Vehicle$ordersArgs<ExtArgs>
+  appointments?: boolean | Prisma.Vehicle$appointmentsArgs<ExtArgs>
   _count?: boolean | Prisma.VehicleCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["vehicle"]>
 
@@ -1259,6 +1396,7 @@ export type VehicleInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   assignedEmployee?: boolean | Prisma.Vehicle$assignedEmployeeArgs<ExtArgs>
   teams?: boolean | Prisma.Vehicle$teamsArgs<ExtArgs>
   orders?: boolean | Prisma.Vehicle$ordersArgs<ExtArgs>
+  appointments?: boolean | Prisma.Vehicle$appointmentsArgs<ExtArgs>
   _count?: boolean | Prisma.VehicleCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type VehicleIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1280,6 +1418,7 @@ export type $VehiclePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     assignedEmployee: Prisma.$EmployeePayload<ExtArgs> | null
     teams: Prisma.$TeamPayload<ExtArgs>[]
     orders: Prisma.$OrderPayload<ExtArgs>[]
+    appointments: Prisma.$AppointmentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1693,6 +1832,7 @@ export interface Prisma__VehicleClient<T, Null = never, ExtArgs extends runtime.
   assignedEmployee<T extends Prisma.Vehicle$assignedEmployeeArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Vehicle$assignedEmployeeArgs<ExtArgs>>): Prisma.Prisma__EmployeeClient<runtime.Types.Result.GetResult<Prisma.$EmployeePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   teams<T extends Prisma.Vehicle$teamsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Vehicle$teamsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TeamPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   orders<T extends Prisma.Vehicle$ordersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Vehicle$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  appointments<T extends Prisma.Vehicle$appointmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Vehicle$appointmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AppointmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2218,6 +2358,30 @@ export type Vehicle$ordersArgs<ExtArgs extends runtime.Types.Extensions.Internal
   take?: number
   skip?: number
   distinct?: Prisma.OrderScalarFieldEnum | Prisma.OrderScalarFieldEnum[]
+}
+
+/**
+ * Vehicle.appointments
+ */
+export type Vehicle$appointmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Appointment
+   */
+  select?: Prisma.AppointmentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Appointment
+   */
+  omit?: Prisma.AppointmentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AppointmentInclude<ExtArgs> | null
+  where?: Prisma.AppointmentWhereInput
+  orderBy?: Prisma.AppointmentOrderByWithRelationInput | Prisma.AppointmentOrderByWithRelationInput[]
+  cursor?: Prisma.AppointmentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AppointmentScalarFieldEnum | Prisma.AppointmentScalarFieldEnum[]
 }
 
 /**

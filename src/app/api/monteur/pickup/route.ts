@@ -42,7 +42,35 @@ export async function GET(request: NextRequest) {
     orderBy: { startTime: "asc" },
   });
 
-  const orders = appointments.map((a) => a.order);
+  const assigneeOrders = await prisma.order.findMany({
+    where: {
+      tenantId: auth.tenantId,
+      status: { not: "STORNIERT" },
+      scheduledStart: { gte: startOfDay(date), lte: endOfDay(date) },
+      assignees: { some: { employeeId: employee.id } },
+      id: {
+        notIn: appointments
+          .map((a) => a.orderId)
+          .filter((id): id is string => Boolean(id)),
+      },
+    },
+    include: {
+      customer: true,
+      materialLines: {
+        include: {
+          reservations: {
+            where: { status: { in: ["VORGESCHLAGEN", "RESERVIERT"] } },
+            include: { storageLocation: true },
+          },
+        },
+      },
+    },
+  });
+
+  const orders = [
+    ...appointments.map((a) => a.order).filter((o): o is NonNullable<typeof o> => Boolean(o)),
+    ...assigneeOrders,
+  ];
   const uniqueOrders = [...new Map(orders.map((o) => [o.id, o])).values()];
 
   const pickup = buildPickupList(
@@ -68,18 +96,20 @@ export async function GET(request: NextRequest) {
 
   return apiSuccess({
     date: dateStr,
-    appointments: appointments.map((a) => ({
-      id: a.id,
-      startTime: a.startTime,
-      endTime: a.endTime,
-      status: a.status,
-      order: {
-        id: a.order.id,
-        orderNumber: a.order.orderNumber,
-        customer: a.order.customer,
-        materialStatus: a.order.materialStatus,
-      },
-    })),
+    appointments: appointments
+      .filter((a) => a.order)
+      .map((a) => ({
+        id: a.id,
+        startTime: a.startTime,
+        endTime: a.endTime,
+        status: a.status,
+        order: {
+          id: a.order!.id,
+          orderNumber: a.order!.orderNumber,
+          customer: a.order!.customer,
+          materialStatus: a.order!.materialStatus,
+        },
+      })),
     ...pickup,
   });
 }

@@ -3,8 +3,6 @@ import { z } from "zod";
 import {
   login,
   createSession,
-  COOKIE_NAME,
-  SESSION_COOKIE_OPTIONS,
   applySessionCookie,
 } from "@/lib/auth";
 import { apiSuccess, apiError, getClientIp } from "@/lib/api";
@@ -14,6 +12,7 @@ import {
   recordLoginAttempt,
   pruneLoginAttempts,
 } from "@/lib/auth/rate-limit";
+import { assertSameOrigin } from "@/lib/security/origin";
 import { logger } from "@/lib/logger";
 
 const loginSchema = z.object({
@@ -78,6 +77,9 @@ async function parseLoginInput(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
+    const originError = assertSameOrigin(request);
+    if (originError) return originError;
+
     const parsed = await parseLoginInput(request);
     const jsonClient = wantsJsonResponse(request);
 
@@ -112,15 +114,16 @@ export async function POST(request: NextRequest) {
 
     const token = await createSession(user);
 
-    if (jsonClient) {
-      const response = apiSuccess({ user });
-      response.cookies.set(COOKIE_NAME, token, SESSION_COOKIE_OPTIONS);
-      return response;
-    }
-
     const home = getRoleHomePath(user.role, {
       mustChangePassword: user.mustChangePassword,
     });
+
+    if (jsonClient) {
+      const response = apiSuccess({ user, redirectTo: home });
+      applySessionCookie(response, token);
+      return response;
+    }
+
     const response = NextResponse.redirect(new URL(home, request.url), 303);
     applySessionCookie(response, token);
     return response;

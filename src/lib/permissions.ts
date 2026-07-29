@@ -134,6 +134,7 @@ const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
     "inventory.read",
     "inventory.write",
     "inventory.reserve",
+    "monteur.own",
     "ai.chat",
     "time_entries.read",
     "time_entries.approve",
@@ -205,6 +206,7 @@ export const DASHBOARD_NAV_CONFIG: {
   { href: "/dashboard/projekte", label: "Projekte", permission: "orders.read", section: "betrieb" },
   { href: "/dashboard/termine", label: "Termine", permission: "appointments.read", section: "betrieb" },
   { href: "/dashboard/disposition", label: "Disposition", permission: "appointments.read", section: "betrieb" },
+  { href: "/dashboard/stundenzettel", label: "Stundenzettel", permission: "monteur.own", section: "betrieb" },
   { href: "/dashboard/stunden", label: "Team-Stunden", permission: "time_entries.read", section: "betrieb" },
   { href: "/dashboard/inventar", label: "Inventar", permission: "inventory.read", section: "material" },
   { href: "/dashboard/einkauf", label: "Einkauf", permission: "inventory.read", section: "material" },
@@ -219,9 +221,9 @@ export const DASHBOARD_NAV_CONFIG: {
   { href: "/dashboard/einstellungen/betrieb", label: "Betrieb", permission: "tenant.manage", section: "einstellungen" },
   { href: "/dashboard/einstellungen/rechnung", label: "Rechnungseinstellungen", permission: "calculations.settings", section: "einstellungen" },
   { href: "/dashboard/einstellungen/benachrichtigungen", label: "Benachrichtigungen", permission: "notifications.manage", section: "einstellungen" },
+  { href: "/dashboard/einstellungen/sicherheit", label: "Sicherheit & Datenschutz", permission: "tenant.manage", section: "einstellungen" },
   { href: "/dashboard/einstellungen/system", label: "Systemstatus", permission: "notifications.manage", section: "einstellungen" },
   { href: "/dashboard/ki-assistent", label: "Betriebsassistent", permission: "ai.chat", section: null },
-  { href: "/dashboard/stundenzettel", label: "Stundenzettel", permission: "monteur.own", section: null },
   { href: "/dashboard/profil", label: "Profil", permission: null, section: null },
   { href: "/dashboard/nachrichten", label: "Nachrichten", permission: "messages.read", section: null },
 ];
@@ -257,8 +259,6 @@ export function isMonteurExcludedDashboardPath(pathname: string): boolean {
 export function getDashboardNavItems(role: UserRole) {
   return DASHBOARD_NAV_CONFIG.filter((item) => {
     if (role === "MONTEUR" && MONTEUR_EXCLUDED_NAV.has(item.href)) return false;
-    // Stundenzettel = eigene Zeiterfassung → nur für Monteure in der Sidebar
-    if (item.href === "/dashboard/stundenzettel" && role !== "MONTEUR") return false;
     return item.permission === null || hasPermission(role, item.permission);
   });
 }

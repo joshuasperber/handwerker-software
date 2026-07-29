@@ -2,7 +2,8 @@ import { redirect } from "next/navigation";
 import { getSession } from "@/lib/auth";
 import { canAccessCustomerPortal, getRoleHomePath } from "@/lib/permissions";
 import { SessionProvider } from "@/components/auth/can-access";
-import { LogOut, User } from "lucide-react";
+import { LogoutButton } from "@/components/auth/logout-button";
+import { User } from "lucide-react";
 
 export default async function KundeLayout({ children }: { children: React.ReactNode }) {
   const session = await getSession();
@@ -20,11 +21,10 @@ export default async function KundeLayout({ children }: { children: React.ReactN
             </div>
             <div className="flex items-center gap-3">
               <span className="text-sm text-slate-500">{session.firstName}</span>
-              <form action="/api/auth/logout" method="POST">
-                <button type="submit" aria-label="Abmelden">
-                  <LogOut className="h-4 w-4 text-slate-400" />
-                </button>
-              </form>
+              <LogoutButton
+                label=""
+                className="rounded-lg p-2 text-slate-400 hover:bg-slate-50 hover:text-red-600 disabled:opacity-60"
+              />
             </div>
           </div>
         </header>

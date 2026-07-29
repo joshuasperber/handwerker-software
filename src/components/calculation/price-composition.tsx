@@ -45,6 +45,18 @@ export function PriceCompositionPanel({ calc, onPreviewInvoice, onPreviewBreakdo
   const fixedNet =
     useFixedPrice && calc.fixedPriceNet != null ? Number(calc.fixedPriceNet) : null;
   const fixedLabel = calc.fixedPriceLabel?.trim() || "Festpreis";
+  const vatRate =
+    calc.vatAmount != null && (calc.netSalesPrice ?? 0) > 0
+      ? calc.vatAmount / (calc.netSalesPrice ?? 1)
+      : 0.19;
+  const customerVat =
+    useFixedPrice && fixedNet != null
+      ? Math.round(fixedNet * vatRate * 100) / 100
+      : (calc.vatAmount ?? 0);
+  const customerGross =
+    useFixedPrice && fixedNet != null
+      ? Math.round((fixedNet + customerVat) * 100) / 100
+      : (calc.grossSalesPrice ?? 0);
 
   const steps = [
     { label: "Direkte Kosten", value: calc.directCosts ?? 0, hint: "Arbeit + Material + Maschinen + Beschaffung + Fahrt + Zusatz" },
@@ -55,8 +67,13 @@ export function PriceCompositionPanel({ calc, onPreviewInvoice, onPreviewBreakdo
     ...(useFixedPrice && fixedNet != null
       ? [{ label: `= ${fixedLabel} (Kunde)`, value: fixedNet, bold: true, accent: true }]
       : []),
-    { label: "+ USt", value: calc.vatAmount ?? 0 },
-    { label: "= Brutto", value: calc.grossSalesPrice ?? 0, bold: true, accent: !useFixedPrice },
+    { label: "+ USt", value: useFixedPrice ? customerVat : (calc.vatAmount ?? 0) },
+    {
+      label: "= Brutto",
+      value: useFixedPrice ? customerGross : (calc.grossSalesPrice ?? 0),
+      bold: true,
+      accent: !useFixedPrice,
+    },
   ];
 
   return (

@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { requireAuth, apiSuccess, apiError } from "@/lib/api";
+import { requireAuth, apiSuccess, apiError, NO_STORE_HEADERS } from "@/lib/api";
 import { investmentInputSchema } from "@/lib/finance/schemas";
 import {
   INVESTMENT_CATEGORY_LABELS,
@@ -41,7 +41,7 @@ export async function GET() {
     orderBy: [{ status: "asc" }, { plannedDate: "asc" }],
   });
 
-  return apiSuccess(items.map(toInvestmentDTO));
+  return apiSuccess(items.map(toInvestmentDTO), 200, NO_STORE_HEADERS);
 }
 
 export async function POST(request: NextRequest) {
@@ -67,5 +67,5 @@ export async function POST(request: NextRequest) {
     },
   });
 
-  return apiSuccess(toInvestmentDTO(item), 201);
+  return apiSuccess(toInvestmentDTO(item), 201, NO_STORE_HEADERS);
 }

@@ -1,9 +1,17 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Bot, Loader2, MessageSquare, Plus, Send, Sparkles, Trash2 } from "lucide-react";
+import { Bot, History, Loader2, MessageSquare, Plus, Send, Sparkles, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { LoadingOverlay } from "@/components/ui/loading-overlay";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 import { fetchJson } from "@/lib/fetch-json";
 import { cn } from "@/lib/utils";
 import type { AiMessageMetadata, PersonMatch } from "@/lib/ai/types";
@@ -70,6 +78,7 @@ export function AssistantChat() {
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [sessions, setSessions] = useState<SessionSummary[]>([]);
+  const [historyOpen, setHistoryOpen] = useState(false);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [loadingSession, setLoadingSession] = useState(false);
@@ -87,7 +96,7 @@ export function AssistantChat() {
   const loadSessions = useCallback(async () => {
     const res = await fetchJson<SessionSummary[]>("/api/ai/sessions");
     if (res.success && res.data) {
-      setSessions(res.data.slice(0, 3));
+      setSessions(res.data);
     }
   }, []);
 
@@ -103,6 +112,7 @@ export function AssistantChat() {
     if (loading || loadingSession) return;
     setLoadingSession(true);
     setPendingDisambiguation(null);
+    setHistoryOpen(false);
 
     const res = await fetchJson<{
       id: string;
@@ -209,11 +219,11 @@ export function AssistantChat() {
   };
 
   const startNewChat = () => {
-    // Alten Chat behalten (Historie) — nur UI zurücksetzen
     setSessionId(null);
     setMessages([]);
     setPendingDisambiguation(null);
     setInput("");
+    setHistoryOpen(false);
     inputRef.current?.focus();
   };
 
@@ -240,190 +250,237 @@ export function AssistantChat() {
   };
 
   return (
-    <div className="flex flex-col h-[calc(100dvh-8rem)] lg:h-[calc(100dvh-6rem)]">
-      <div className="flex items-start justify-between gap-3 mb-4">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
-            <Sparkles className="h-6 w-6 text-[#0d5c63]" />
-            Betriebsassistent
+    <div className="flex flex-col h-[calc(100dvh-7rem)] sm:h-[calc(100dvh-8rem)] lg:h-[calc(100dvh-6rem)]">
+      <LoadingOverlay open={loading} label="Assistent antwortet …" />
+
+      <div className="flex items-start justify-between gap-2 mb-3">
+        <div className="min-w-0">
+          <h1 className="text-xl sm:text-2xl font-bold text-slate-900 flex items-center gap-2">
+            <Sparkles className="h-5 w-5 sm:h-6 sm:w-6 text-[#0d5c63] shrink-0" />
+            <span className="truncate">Betriebsassistent</span>
           </h1>
-          <p className="text-sm text-slate-500 mt-1">
-            Antworten basieren nur auf deinen App-Daten — nichts wird erfunden.
+          <p className="text-xs sm:text-sm text-slate-500 mt-1">
+            Antworten basieren nur auf App-Daten. KI-Antworten können Fehler enthalten und ersetzen
+            keine Steuer-/Rechtsberatung. Details:{" "}
+            <a href="/datenschutz" className="text-[#0d5c63] underline underline-offset-2">
+              Datenschutz
+            </a>
+            .
           </p>
         </div>
-        <Button variant="outline" size="sm" onClick={startNewChat} className="shrink-0">
-          <Plus className="h-4 w-4 mr-1" />
-          Neuer Chat
-        </Button>
+        <div className="flex items-center gap-2 shrink-0">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            className="gap-1.5 min-h-10"
+            onClick={() => setHistoryOpen(true)}
+          >
+            <History className="h-4 w-4" />
+            <span className="hidden xs:inline sm:inline">Chats</span>
+            {sessions.length > 0 && (
+              <span className="rounded-full bg-slate-100 px-1.5 text-[10px] font-semibold text-slate-600">
+                {sessions.length}
+              </span>
+            )}
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={startNewChat}
+            className="gap-1 min-h-10"
+          >
+            <Plus className="h-4 w-4" />
+            <span className="hidden sm:inline">Neu</span>
+          </Button>
+        </div>
       </div>
 
-      <div className="flex flex-col lg:flex-row gap-3 flex-1 min-h-0">
-        <aside className="lg:w-64 shrink-0 flex flex-col gap-2">
-          <p className="text-xs font-medium text-slate-500 uppercase tracking-wide px-1">
-            Letzte Chats
-          </p>
-          {sessions.length === 0 ? (
-            <p className="text-xs text-slate-400 px-1 py-2">Noch keine gespeicherten Chats.</p>
-          ) : (
-            sessions.map((s) => (
-              <div
-                key={s.id}
-                className={cn(
-                  "group relative rounded-xl border transition-colors",
-                  sessionId === s.id
-                    ? "border-[#0d5c63]/40 bg-[#0d5c63]/5"
-                    : "border-slate-200 bg-white hover:bg-slate-50"
-                )}
-              >
-                <button
-                  type="button"
-                  onClick={() => loadSession(s.id)}
-                  className="w-full text-left px-3 py-2.5 pr-10"
-                >
-                  <div className="flex items-start gap-2">
-                    <MessageSquare className="h-3.5 w-3.5 mt-0.5 text-slate-400 shrink-0" />
-                    <div className="min-w-0 flex-1">
-                      <p className="text-sm font-medium text-slate-800 truncate">
-                        {s.title || "Chat"}
-                      </p>
-                      <p className="text-[11px] text-slate-400 mt-0.5">
-                        {formatSessionTime(s.updatedAt)}
-                      </p>
-                    </div>
-                  </div>
-                </button>
-                <button
-                  type="button"
-                  aria-label="Chat löschen"
-                  onClick={(e) => deleteSession(s.id, e)}
-                  className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 p-1 rounded hover:bg-slate-200 text-slate-400 hover:text-red-600 transition-opacity"
-                >
-                  <Trash2 className="h-3.5 w-3.5" />
-                </button>
-              </div>
-            ))
-          )}
-        </aside>
-
-        <Card className="flex flex-col flex-1 min-h-0 overflow-hidden p-0">
-          <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 py-4 sm:px-6 space-y-4">
-            {loadingSession && (
-              <div className="flex justify-center py-8">
-                <Loader2 className="h-5 w-5 animate-spin text-slate-400" />
-              </div>
-            )}
-
-            {!loadingSession && messages.length === 0 && (
-              <div className="text-center py-8 px-4">
-                <Bot className="h-12 w-12 mx-auto text-slate-300 mb-4" />
-                <p className="text-slate-600 mb-6 max-w-md mx-auto">
-                  Stelle Fragen zu Kunden, Mitarbeitern, Aufträgen, Terminen, Material oder Finanzen.
-                </p>
-                <div className="flex flex-wrap gap-2 justify-center">
-                  {STARTER_PROMPTS.map((prompt) => (
-                    <button
-                      key={prompt}
-                      type="button"
-                      onClick={() => sendMessage(prompt)}
-                      className="text-sm px-3 py-2 rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition-colors"
-                    >
-                      {prompt}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {messages.map((msg) => (
-              <div
-                key={msg.id}
-                className={`flex gap-3 ${msg.role === "user" ? "justify-end" : "justify-start"}`}
-              >
-                {msg.role === "assistant" && (
-                  <div className="shrink-0 w-8 h-8 rounded-full bg-[#0d5c63]/10 flex items-center justify-center">
-                    <Bot className="h-4 w-4 text-[#0d5c63]" />
-                  </div>
-                )}
+      <Sheet open={historyOpen} onOpenChange={setHistoryOpen}>
+        <SheetContent side="right" className="w-[min(100%,22rem)] sm:max-w-sm p-0 flex flex-col">
+          <SheetHeader className="border-b border-slate-100 px-4 py-4 text-left">
+            <SheetTitle>Chat-Verlauf</SheetTitle>
+            <SheetDescription>
+              Vorherige Chats öffnen oder einen neuen starten.
+            </SheetDescription>
+          </SheetHeader>
+          <div className="flex-1 overflow-y-auto p-3 space-y-2">
+            <Button
+              type="button"
+              variant="primary"
+              className="w-full gap-2 min-h-11"
+              onClick={startNewChat}
+            >
+              <Plus className="h-4 w-4" />
+              Neuer Chat
+            </Button>
+            {sessions.length === 0 ? (
+              <p className="text-sm text-slate-400 px-1 py-6 text-center">
+                Noch keine gespeicherten Chats.
+              </p>
+            ) : (
+              sessions.map((s) => (
                 <div
-                  className={`max-w-[85%] sm:max-w-[75%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
-                    msg.role === "user"
-                      ? "bg-[#0d5c63] text-white"
-                      : "bg-slate-100 text-slate-800"
-                  }`}
-                >
-                  <div className="whitespace-pre-wrap">{renderMarkdownLite(msg.content)}</div>
-                  {msg.metadata?.dataSources && msg.metadata.dataSources.length > 0 && (
-                    <div className="mt-2 pt-2 border-t border-slate-200/60 text-xs text-slate-500">
-                      Quellen:{" "}
-                      {msg.metadata.dataSources.map((s) => `${s.count} ${s.label}`).join(", ")}
-                      {msg.metadata.confidence &&
-                        ` · ${msg.metadata.confidence === "high" ? "Hohe" : msg.metadata.confidence === "medium" ? "Mittlere" : "Geringe"} Sicherheit`}
-                    </div>
+                  key={s.id}
+                  className={cn(
+                    "group relative rounded-xl border transition-colors",
+                    sessionId === s.id
+                      ? "border-[#0d5c63]/40 bg-[#0d5c63]/5"
+                      : "border-slate-200 bg-white"
                   )}
+                >
+                  <button
+                    type="button"
+                    onClick={() => loadSession(s.id)}
+                    className="w-full text-left px-3 py-3 pr-10 active:bg-slate-50 rounded-xl touch-manipulation"
+                  >
+                    <div className="flex items-start gap-2">
+                      <MessageSquare className="h-4 w-4 mt-0.5 text-slate-400 shrink-0" />
+                      <div className="min-w-0 flex-1">
+                        <p className="text-sm font-medium text-slate-800 truncate">
+                          {s.title || "Chat"}
+                        </p>
+                        {s.preview && (
+                          <p className="text-xs text-slate-400 mt-0.5 line-clamp-2">{s.preview}</p>
+                        )}
+                        <p className="text-[11px] text-slate-400 mt-1">
+                          {formatSessionTime(s.updatedAt)}
+                        </p>
+                      </div>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    aria-label="Chat löschen"
+                    onClick={(e) => deleteSession(s.id, e)}
+                    className="absolute top-2.5 right-2 p-2 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-red-600 touch-manipulation"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
                 </div>
-              </div>
-            ))}
+              ))
+            )}
+          </div>
+        </SheetContent>
+      </Sheet>
 
-            {loading && (
-              <div className="flex gap-3">
+      <Card className="flex flex-col flex-1 min-h-0 overflow-hidden !p-0">
+        <div ref={scrollRef} className="flex-1 overflow-y-auto px-3 py-4 sm:px-6 space-y-4">
+          {loadingSession && (
+            <div className="flex justify-center py-8">
+              <Loader2 className="h-5 w-5 animate-spin text-slate-400" />
+            </div>
+          )}
+
+          {!loadingSession && messages.length === 0 && (
+            <div className="text-center py-6 px-2 sm:py-8">
+              <Bot className="h-10 w-10 sm:h-12 sm:w-12 mx-auto text-slate-300 mb-3" />
+              <p className="text-slate-600 mb-5 max-w-md mx-auto text-sm">
+                Stelle Fragen zu Kunden, Mitarbeitern, Aufträgen, Terminen, Material oder Finanzen.
+              </p>
+              <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2 justify-center">
+                {STARTER_PROMPTS.map((prompt) => (
+                  <button
+                    key={prompt}
+                    type="button"
+                    onClick={() => sendMessage(prompt)}
+                    className="text-sm px-3 py-3 sm:py-2 rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 active:scale-[0.98] transition-[transform,background-color] touch-manipulation text-left sm:text-center"
+                  >
+                    {prompt}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {messages.map((msg) => (
+            <div
+              key={msg.id}
+              className={`flex gap-2 sm:gap-3 ${msg.role === "user" ? "justify-end" : "justify-start"}`}
+            >
+              {msg.role === "assistant" && (
                 <div className="shrink-0 w-8 h-8 rounded-full bg-[#0d5c63]/10 flex items-center justify-center">
                   <Bot className="h-4 w-4 text-[#0d5c63]" />
                 </div>
-                <div className="bg-slate-100 rounded-2xl px-4 py-3">
-                  <Loader2 className="h-4 w-4 animate-spin text-slate-400" />
-                </div>
+              )}
+              <div
+                className={`max-w-[90%] sm:max-w-[75%] rounded-2xl px-3.5 py-2.5 sm:px-4 sm:py-3 text-sm leading-relaxed ${
+                  msg.role === "user"
+                    ? "bg-[#0d5c63] text-white"
+                    : "bg-slate-100 text-slate-800"
+                }`}
+              >
+                <div className="whitespace-pre-wrap">{renderMarkdownLite(msg.content)}</div>
+                {msg.metadata?.dataSources && msg.metadata.dataSources.length > 0 && (
+                  <div className="mt-2 pt-2 border-t border-slate-200/60 text-xs text-slate-500">
+                    Quellen:{" "}
+                    {msg.metadata.dataSources.map((s) => `${s.count} ${s.label}`).join(", ")}
+                    {msg.metadata.confidence &&
+                      ` · ${msg.metadata.confidence === "high" ? "Hohe" : msg.metadata.confidence === "medium" ? "Mittlere" : "Geringe"} Sicherheit`}
+                  </div>
+                )}
               </div>
-            )}
+            </div>
+          ))}
 
-            {pendingDisambiguation && (
-              <div className="flex flex-wrap gap-2 px-2">
-                {pendingDisambiguation.options.map((opt) => (
-                  <Button
-                    key={`${opt.type}-${opt.id}`}
-                    variant="outline"
-                    size="sm"
-                    onClick={() =>
-                      sendMessage(pendingDisambiguation.originalMessage, {
-                        choice: opt.type,
-                        name: `${opt.firstName} ${opt.lastName}`,
-                      })
-                    }
-                  >
-                    {opt.label}
-                  </Button>
-                ))}
+          {loading && (
+            <div className="flex gap-3">
+              <div className="shrink-0 w-8 h-8 rounded-full bg-[#0d5c63]/10 flex items-center justify-center">
+                <Bot className="h-4 w-4 text-[#0d5c63]" />
               </div>
-            )}
-          </div>
+              <div className="bg-slate-100 rounded-2xl px-4 py-3">
+                <Loader2 className="h-4 w-4 animate-spin text-slate-400" />
+              </div>
+            </div>
+          )}
 
-          <form
-            onSubmit={handleSubmit}
-            className="border-t border-slate-200 p-3 sm:p-4 flex gap-2 items-end bg-white"
+          {pendingDisambiguation && (
+            <div className="flex flex-wrap gap-2 px-1">
+              {pendingDisambiguation.options.map((opt) => (
+                <Button
+                  key={`${opt.type}-${opt.id}`}
+                  variant="outline"
+                  size="sm"
+                  className="min-h-10"
+                  onClick={() =>
+                    sendMessage(pendingDisambiguation.originalMessage, {
+                      choice: opt.type,
+                      name: `${opt.firstName} ${opt.lastName}`,
+                    })
+                  }
+                >
+                  {opt.label}
+                </Button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <form
+          onSubmit={handleSubmit}
+          className="border-t border-slate-200 p-3 sm:p-4 flex gap-2 items-end bg-white safe-area-pb"
+        >
+          <textarea
+            ref={inputRef}
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder="Frage stellen…"
+            rows={1}
+            className="flex-1 resize-none rounded-xl border border-slate-200 px-4 py-3 text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#0d5c63]/30 min-h-[48px] max-h-32"
+            disabled={loading}
+          />
+          <Button
+            type="submit"
+            disabled={loading || !input.trim()}
+            className="shrink-0 h-12 w-12 rounded-xl p-0"
+            aria-label="Senden"
           >
-            <textarea
-              ref={inputRef}
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder="Frage stellen…"
-              rows={1}
-              className="flex-1 resize-none rounded-xl border border-slate-200 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#0d5c63]/30 min-h-[48px] max-h-32"
-              disabled={loading}
-            />
-            <Button
-              type="submit"
-              disabled={loading || !input.trim()}
-              className="shrink-0 h-12 w-12 rounded-xl p-0"
-            >
-              <Send className="h-5 w-5" />
-            </Button>
-          </form>
-        </Card>
-      </div>
-
-      <p className="text-xs text-slate-400 mt-2 text-center">
-        Die letzten 3 Chats bleiben erhalten. Einzelne Chats kannst du über das Papierkorb-Symbol löschen.
-      </p>
+            {loading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Send className="h-5 w-5" />}
+          </Button>
+        </form>
+      </Card>
     </div>
   );
 }

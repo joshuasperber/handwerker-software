@@ -1,6 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Wrench } from "lucide-react";
 import { LoginForm } from "./login-form";
+import { LegalInlineLinks } from "@/components/legal/legal-footer";
 
 export default async function LoginPage({
   searchParams,
@@ -10,7 +11,7 @@ export default async function LoginPage({
   const { error } = await searchParams;
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-50 px-4">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50 px-4 py-8">
       <Card className="w-full max-w-md">
         <div className="flex flex-col items-center mb-6">
           <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-600 text-white mb-4">
@@ -22,6 +23,7 @@ export default async function LoginPage({
 
         <LoginForm errorCode={error} />
       </Card>
+      <LegalInlineLinks className="mt-6" />
     </div>
   );
 }

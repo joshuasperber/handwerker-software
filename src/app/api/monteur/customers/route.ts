@@ -13,7 +13,10 @@ export async function GET() {
   const linkedOrders = await prisma.order.findMany({
     where: {
       tenantId: auth.tenantId,
-      appointments: { some: { employeeId: employee.id } },
+      OR: [
+        { assignees: { some: { employeeId: employee.id } } },
+        { appointments: { some: { employeeId: employee.id } } },
+      ],
     },
     select: { customerId: true },
     distinct: ["customerId"],

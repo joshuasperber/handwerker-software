@@ -10,6 +10,7 @@ import { NumberInput } from "@/components/ui/number-input";
 import { CanAccess } from "@/components/auth/can-access";
 import { ChevronLeft, Plus, Trash2, Wrench } from "lucide-react";
 import { toast } from "sonner";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 
 interface TemplateLine {
   id: string;
@@ -39,6 +40,7 @@ export default function LeistungDetailPage() {
   const [articles, setArticles] = useState<Article[]>([]);
   const [error, setError] = useState("");
   const [deleting, setDeleting] = useState(false);
+  const [confirmRemove, setConfirmRemove] = useState(false);
   const [materialForm, setMaterialForm] = useState({ articleId: "", defaultQuantity: 1 });
   const [toolForm, setToolForm] = useState({ name: "", defaultQuantity: 1, unit: "Stk" });
 
@@ -104,8 +106,6 @@ export default function LeistungDetailPage() {
 
   async function removeService() {
     if (!id || typeof id !== "string") return;
-    if (!confirm("Möchtest du diese Leistung wirklich löschen?")) return;
-
     setDeleting(true);
     const res = await fetch(`/api/services/${id}`, { method: "DELETE" });
     const d = await res.json();
@@ -147,7 +147,7 @@ export default function LeistungDetailPage() {
             size="sm"
             className="text-red-600 border-red-200 hover:bg-red-50"
             disabled={deleting}
-            onClick={removeService}
+            onClick={() => setConfirmRemove(true)}
           >
             <Trash2 className="h-4 w-4 mr-1" />
             Leistung löschen
@@ -271,6 +271,21 @@ export default function LeistungDetailPage() {
           </Button>
         </form>
       </Card>
+
+      <ConfirmDialog
+        open={confirmRemove}
+        onOpenChange={setConfirmRemove}
+        title="Leistung löschen?"
+        description={`„${service.name}“ wird gelöscht bzw. deaktiviert, wenn sie bereits verwendet wird.`}
+        confirmLabel="Leistung löschen"
+        cancelLabel="Abbrechen"
+        variant="destructive"
+        loading={deleting}
+        onConfirm={async () => {
+          setConfirmRemove(false);
+          await removeService();
+        }}
+      />
     </div>
   );
 }

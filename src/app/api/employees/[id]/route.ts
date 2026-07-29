@@ -52,6 +52,7 @@ export async function PATCH(
     qualifications,
     isActive,
     operationalStatus,
+    hourlyWageNet,
   } = body;
 
   if (role && !ALLOWED_ROLES.includes(role)) {
@@ -133,6 +134,14 @@ export async function PATCH(
     data: {
       ...(color !== undefined ? { color } : {}),
       ...(operationalStatus !== undefined ? { operationalStatus } : {}),
+      ...(hourlyWageNet !== undefined
+        ? {
+            hourlyWageNet:
+              hourlyWageNet === null || hourlyWageNet === ""
+                ? null
+                : Number(hourlyWageNet),
+          }
+        : {}),
     },
     include: { user: true, qualifications: true },
   });

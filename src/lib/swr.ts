@@ -21,6 +21,11 @@ export const swrKeys = {
   messagesUnreadCount: () => "/api/messages/unread-count",
   onboardingStatus: () => "/api/onboarding/status",
   tenantSettings: () => "/api/tenant/settings",
+  /** Sensible Finanzdaten — nur In-Memory-SWR, Server setzt no-store */
+  financeOverview: (qs: string) => `/api/finance/overview?${qs}`,
+  financeExpenses: (qs = "") => `/api/finance/expenses${qs ? `?${qs}` : ""}`,
+  financeInvestments: () => "/api/finance/investments",
+  projects: (qs = "") => `/api/projects${qs ? `?${qs}` : ""}`,
 } as const;
 
 async function jsonFetcher<T>(url: string): Promise<T> {

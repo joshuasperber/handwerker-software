@@ -1,9 +1,15 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { requireAuth, apiSuccess, apiError } from "@/lib/api";
+import { requireAuth, apiSuccess, apiError, NO_STORE_HEADERS } from "@/lib/api";
 import { expenseInputSchema } from "@/lib/finance/schemas";
 import { toExpenseDTO } from "@/lib/finance/overview";
+import { parseLocalDateInput } from "@/lib/finance/period";
 import { deleteFile } from "@/lib/storage";
+
+function parseExpenseDate(value: string): Date {
+  const local = parseLocalDateInput(value);
+  return new Date(local.getFullYear(), local.getMonth(), local.getDate(), 12, 0, 0, 0);
+}
 
 export async function GET(
   _request: NextRequest,
@@ -18,7 +24,7 @@ export async function GET(
   });
   if (!expense) return apiError("Ausgabe nicht gefunden", 404);
 
-  return apiSuccess(toExpenseDTO(expense));
+  return apiSuccess(toExpenseDTO(expense), 200, NO_STORE_HEADERS);
 }
 
 export async function PATCH(
@@ -49,17 +55,20 @@ export async function PATCH(
       ...(data.netAmount !== undefined && { netAmount: data.netAmount }),
       ...(data.vatAmount !== undefined && { vatAmount: data.vatAmount }),
       ...(data.grossAmount !== undefined && { grossAmount: data.grossAmount }),
-      ...(data.expenseDate !== undefined && { expenseDate: new Date(data.expenseDate) }),
+      ...(data.expenseDate !== undefined && {
+        expenseDate: parseExpenseDate(data.expenseDate),
+      }),
       ...(data.paymentStatus !== undefined && { paymentStatus: data.paymentStatus }),
       ...(data.supplier !== undefined && { supplier: data.supplier }),
-      ...(data.orderId !== undefined && { orderId: data.orderId }),
-      ...(data.customerId !== undefined && { customerId: data.customerId }),
+      ...(data.orderId !== undefined && { orderId: data.orderId || null }),
+      ...(data.customerId !== undefined && { customerId: data.customerId || null }),
+      ...(data.projectId !== undefined && { projectId: data.projectId || null }),
       ...(data.internalNote !== undefined && { internalNote: data.internalNote }),
       ...(data.isInvestment !== undefined && { isInvestment: data.isInvestment }),
     },
   });
 
-  return apiSuccess(toExpenseDTO(expense));
+  return apiSuccess(toExpenseDTO(expense), 200, NO_STORE_HEADERS);
 }
 
 export async function DELETE(
@@ -84,5 +93,5 @@ export async function DELETE(
   }
 
   await prisma.expense.delete({ where: { id } });
-  return apiSuccess({ deleted: true });
+  return apiSuccess({ deleted: true }, 200, NO_STORE_HEADERS);
 }

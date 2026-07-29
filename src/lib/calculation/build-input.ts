@@ -24,6 +24,7 @@ export function buildCalculationInputFromRecord(
     overheadCalculationMode: OverheadMode;
     overheadPercent?: number | null;
     additionalOverheadPercent?: number;
+    manualAmount?: number | null;
   },
   travelZones: {
     id?: string;
@@ -89,6 +90,7 @@ export function buildCalculationInputFromRecord(
       directCosts: 0,
       overheadPercent: overheadContext.overheadPercent ?? undefined,
       additionalOverheadPercent: overheadContext.additionalOverheadPercent ?? 0,
+      manualAmount: overheadContext.manualAmount ?? null,
     },
     risk: {
       riskPercent: calc.riskSettings?.riskPercent ?? 7,

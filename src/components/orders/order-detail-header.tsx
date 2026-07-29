@@ -1,9 +1,31 @@
 "use client";
 
 import Link from "next/link";
-import { Calculator, CheckCircle, ExternalLink, Users } from "lucide-react";
+import {
+  Calculator,
+  CheckCircle,
+  ExternalLink,
+  Flag,
+  MoreHorizontal,
+  PhoneCall,
+  RefreshCw,
+  Users,
+} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { CanAccess } from "@/components/auth/can-access";
 import {
   ORDER_STATUS_FLOW,
@@ -58,10 +80,15 @@ export function OrderDetailHeader({
   onUpdateStatus,
   onUpdateConfirmation,
 }: OrderDetailHeaderProps) {
+  const confirmation = order.customerConfirmationStatus ?? "OFFEN";
+  const canComplete = !["ABRECHNUNGSBEREIT", "ABGERECHNET", "STORNIERT"].includes(
+    order.status
+  );
+
   return (
-    <div className="flex items-center justify-between mb-6">
-      <div>
-        <h1 className="text-2xl font-bold text-slate-900">
+    <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+      <div className="min-w-0">
+        <h1 className="text-2xl font-bold text-slate-900 break-words">
           {order.title ?? order.orderNumber}
         </h1>
         <p className="text-sm text-slate-400">{order.orderNumber}</p>
@@ -81,89 +108,124 @@ export function OrderDetailHeader({
             </Link>
           </p>
         )}
-        {isOverdue(order.scheduledStart, order.status) && (
-          <Badge status="UEBERFAELLIG" label="Überfällig" className="mt-2 mr-2" />
-        )}
-        <Badge
-          status={order.status}
-          label={ORDER_STATUS_LABELS[order.status]}
-          className="mt-2"
-        />
-        <span
-          className={`ml-2 text-xs px-2 py-0.5 rounded-full ${PRIORITY_COLORS[order.priority]}`}
-        >
-          {PRIORITY_LABELS[order.priority]}
-        </span>
+        <div className="mt-2 flex flex-wrap items-center gap-2">
+          {isOverdue(order.scheduledStart, order.status) && (
+            <Badge status="UEBERFAELLIG" label="Überfällig" />
+          )}
+          <Badge status={order.status} label={ORDER_STATUS_LABELS[order.status]} />
+          <span
+            className={`text-xs px-2 py-0.5 rounded-full ${PRIORITY_COLORS[order.priority]}`}
+          >
+            {PRIORITY_LABELS[order.priority]}
+          </span>
+          <span className="text-xs px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">
+            {CONFIRMATION_LABELS[confirmation] ?? confirmation}
+          </span>
+        </div>
       </div>
-      <div className="flex flex-wrap gap-2">
-        <CanAccess permission="calculations.write">
-          {calculation ? (
-            <Link href={`/dashboard/kalkulation/${calculation.id}`}>
-              <Button size="sm" variant="outline">
-                <ExternalLink className="h-4 w-4 mr-1" /> Zur Kalkulation
-              </Button>
-            </Link>
-          ) : (
-            <Button size="sm" variant="outline" onClick={onCreateCalculation}>
-              <Calculator className="h-4 w-4 mr-1" /> Grundkalkulation
-            </Button>
-          )}
-        </CanAccess>
-        <CanAccess permission="orders.assign">
-          {order.team && (
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={onPlanTeamInCalendar}
-              disabled={!canPlanTeam}
-              title={!canPlanTeam ? "Zuerst Terminzeiten setzen" : undefined}
-            >
-              <Users className="h-4 w-4 mr-1" /> Team in Kalender
-            </Button>
-          )}
-        </CanAccess>
-        <CanAccess permission="orders.write">
-          {!["ABRECHNUNGSBEREIT", "ABGERECHNET", "STORNIERT"].includes(order.status) && (
+
+      <CanAccess permission="orders.write">
+        <div className="flex shrink-0 items-center gap-2">
+          {canComplete && (
             <Button size="sm" variant="action" onClick={onComplete}>
               <CheckCircle className="h-4 w-4 mr-1" /> Abschließen
             </Button>
           )}
-          <select
-            value={order.priority}
-            onChange={(e) => onUpdatePriority(e.target.value)}
-            className="h-10 rounded-lg border border-slate-300 px-3 text-sm"
-          >
-            {Object.entries(PRIORITY_LABELS).map(([key, label]) => (
-              <option key={key} value={key}>
-                {label}
-              </option>
-            ))}
-          </select>
-          <select
-            value={order.status}
-            onChange={(e) => onUpdateStatus(e.target.value)}
-            className="h-10 rounded-lg border border-slate-300 px-3 text-sm"
-          >
-            {ORDER_STATUS_FLOW.map((status) => (
-              <option key={status} value={status}>
-                {ORDER_STATUS_LABELS[status]}
-              </option>
-            ))}
-          </select>
-          <select
-            value={order.customerConfirmationStatus ?? "OFFEN"}
-            onChange={(e) => onUpdateConfirmation(e.target.value)}
-            className="h-10 rounded-lg border border-slate-300 px-3 text-sm"
-            title="Kundenbestätigung für Terminerinnerungen"
-          >
-            {Object.entries(CONFIRMATION_LABELS).map(([key, label]) => (
-              <option key={key} value={key}>
-                {label}
-              </option>
-            ))}
-          </select>
-        </CanAccess>
-      </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button size="sm" variant="outline" aria-label="Weitere Aktionen">
+                <MoreHorizontal className="h-4 w-4 sm:mr-1" />
+                <span className="hidden sm:inline">Aktionen</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-64">
+              <CanAccess permission="calculations.write">
+                {calculation ? (
+                  <DropdownMenuItem asChild>
+                    <Link href={`/dashboard/kalkulation/${calculation.id}`}>
+                      <ExternalLink className="h-4 w-4 mr-2" /> Zur Kalkulation
+                    </Link>
+                  </DropdownMenuItem>
+                ) : (
+                  <DropdownMenuItem onSelect={onCreateCalculation}>
+                    <Calculator className="h-4 w-4 mr-2" /> Grundkalkulation erstellen
+                  </DropdownMenuItem>
+                )}
+              </CanAccess>
+              <CanAccess permission="orders.assign">
+                {order.team ? (
+                  <DropdownMenuItem
+                    disabled={!canPlanTeam}
+                    onSelect={onPlanTeamInCalendar}
+                  >
+                    <Users className="h-4 w-4 mr-2" /> Team in Kalender
+                    {!canPlanTeam && (
+                      <span className="ml-auto text-xs text-slate-400">
+                        Termin fehlt
+                      </span>
+                    )}
+                  </DropdownMenuItem>
+                ) : null}
+              </CanAccess>
+              <DropdownMenuSeparator />
+              <DropdownMenuLabel className="text-xs text-slate-400">
+                Ändern
+              </DropdownMenuLabel>
+              <DropdownMenuSub>
+                <DropdownMenuSubTrigger>
+                  <RefreshCw className="h-4 w-4 mr-2" /> Status
+                </DropdownMenuSubTrigger>
+                <DropdownMenuSubContent className="w-56">
+                  <DropdownMenuRadioGroup
+                    value={order.status}
+                    onValueChange={onUpdateStatus}
+                  >
+                    {ORDER_STATUS_FLOW.map((status) => (
+                      <DropdownMenuRadioItem key={status} value={status}>
+                        {ORDER_STATUS_LABELS[status]}
+                      </DropdownMenuRadioItem>
+                    ))}
+                  </DropdownMenuRadioGroup>
+                </DropdownMenuSubContent>
+              </DropdownMenuSub>
+              <DropdownMenuSub>
+                <DropdownMenuSubTrigger>
+                  <Flag className="h-4 w-4 mr-2" /> Priorität
+                </DropdownMenuSubTrigger>
+                <DropdownMenuSubContent className="w-48">
+                  <DropdownMenuRadioGroup
+                    value={order.priority}
+                    onValueChange={onUpdatePriority}
+                  >
+                    {Object.entries(PRIORITY_LABELS).map(([key, label]) => (
+                      <DropdownMenuRadioItem key={key} value={key}>
+                        {label}
+                      </DropdownMenuRadioItem>
+                    ))}
+                  </DropdownMenuRadioGroup>
+                </DropdownMenuSubContent>
+              </DropdownMenuSub>
+              <DropdownMenuSub>
+                <DropdownMenuSubTrigger>
+                  <PhoneCall className="h-4 w-4 mr-2" /> Kundenbestätigung
+                </DropdownMenuSubTrigger>
+                <DropdownMenuSubContent className="w-52">
+                  <DropdownMenuRadioGroup
+                    value={confirmation}
+                    onValueChange={onUpdateConfirmation}
+                  >
+                    {Object.entries(CONFIRMATION_LABELS).map(([key, label]) => (
+                      <DropdownMenuRadioItem key={key} value={key}>
+                        {label}
+                      </DropdownMenuRadioItem>
+                    ))}
+                  </DropdownMenuRadioGroup>
+                </DropdownMenuSubContent>
+              </DropdownMenuSub>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      </CanAccess>
     </div>
   );
 }

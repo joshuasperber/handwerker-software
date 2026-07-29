@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, RefreshCw, Server, Database, Mail, HardDrive, Clock } from "lucide-react";
 import { formatDateTime } from "@/lib/utils";
+import { toast } from "sonner";
 
 interface HealthCheck {
   status: string;
@@ -105,7 +106,7 @@ export default function SystemStatusPage() {
       load();
       return;
     }
-    alert(data.error ?? "Cron fehlgeschlagen");
+    toast.error(data.error ?? "Cron fehlgeschlagen");
   }
 
   return (

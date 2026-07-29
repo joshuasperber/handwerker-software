@@ -88,3 +88,22 @@ export function validateUpload(mimeType: string, sizeBytes: number): UploadValid
 
   return { ok: true };
 }
+
+/**
+ * Platzhalter für künftige Malware-/AV-Prüfung (z. B. ClamAV, Cloud-Scanner).
+ * Aktuell: nur MIME/Größe. Vor Produktivbetrieb mit sensiblen Uploads anbinden.
+ */
+export async function scanUploadForMalware(_params: {
+  buffer: Buffer;
+  mimeType: string;
+  fileName: string;
+}): Promise<UploadValidationResult> {
+  if (process.env.UPLOAD_MALWARE_SCAN_URL) {
+    // Hook für externen Scanner — noch nicht implementiert.
+    return {
+      ok: false,
+      error: "Malware-Scan ist konfiguriert, aber noch nicht angebunden.",
+    };
+  }
+  return { ok: true };
+}

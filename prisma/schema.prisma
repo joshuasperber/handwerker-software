@@ -346,6 +346,8 @@ model Employee {
   tenantId            String
   userId              String   @unique
   color               String   @default("#3b82f6")
+  /** Interner Stundenlohn (netto) für Auftragskosten aus Zeiterfassung */
+  hourlyWageNet       Float?
   operationalStatus   EmployeeOperationalStatus @default(VERFUEGBAR)
   createdAt           DateTime @default(now())
   updatedAt           DateTime @updatedAt
@@ -364,6 +366,7 @@ model Employee {
   assignedVehicles Vehicle[]              @relation("EmployeeVehicle")
   stockMovements  StockMovement[]
   projectMemberships ProjectMember[]
+  orderAssignments OrderAssignee[]
 }
 
 model EmployeeQualification {
@@ -494,6 +497,7 @@ model Order {
   projectNotes  ProjectNote[]
   projectFiles  ProjectFile[]
   projectCosts  ProjectCost[]
+  assignees     OrderAssignee[]
 
   @@unique([tenantId, orderNumber])
   @@index([tenantId, status])
@@ -502,6 +506,20 @@ model Order {
   @@index([tenantId, scheduledStart, status])
   @@index([projectId])
   @@index([orderTypeId])
+}
+
+model OrderAssignee {
+  id         String   @id @default(cuid())
+  orderId    String
+  employeeId String
+  createdAt  DateTime @default(now())
+
+  order    Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  employee Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+
+  @@unique([orderId, employeeId])
+  @@index([employeeId])
+  @@index([orderId])
 }
 
 model OrderService {
@@ -524,9 +542,19 @@ model OrderService {
 model Appointment {
   id          String            @id @default(cuid())
   tenantId    String
-  orderId     String
+  /// Optional: Termin kann ohne Auftrag existieren (z. B. intern)
+  orderId     String?
   orderPhaseId String?
   employeeId  String?
+  /// Freier Titel (besonders für Termine ohne Auftrag)
+  title       String?
+  /// Manuelle Farbe (#RRGGBB); Fallback: Mitarbeiterfarbe
+  color       String?
+  projectId   String?
+  teamId      String?
+  vehicleId   String?
+  /// Freitext-Adresse, wenn kein Auftrag/Objekt verknüpft ist
+  addressText String?
   startTime   DateTime
   endTime     DateTime
   status      AppointmentStatus @default(GEPLANT)
@@ -537,15 +565,21 @@ model Appointment {
   updatedAt   DateTime          @updatedAt
 
   tenant   Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  order    Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  order    Order?    @relation(fields: [orderId], references: [id], onDelete: Cascade)
   orderPhase OrderPhase? @relation(fields: [orderPhaseId], references: [id], onDelete: SetNull)
   employee Employee? @relation(fields: [employeeId], references: [id])
+  project  Project?  @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  team     Team?     @relation(fields: [teamId], references: [id], onDelete: SetNull)
+  vehicle  Vehicle?  @relation(fields: [vehicleId], references: [id], onDelete: SetNull)
 
   @@index([tenantId, startTime])
   @@index([tenantId, status, startTime])
   @@index([employeeId, startTime])
   @@index([orderId])
   @@index([orderPhaseId])
+  @@index([projectId])
+  @@index([teamId])
+  @@index([vehicleId])
 }
 
 model ChecklistTemplate {
@@ -1041,6 +1075,10 @@ model Calculation {
   fixedPriceNet           Float?
   fixedPriceLabel         String?
 
+  /// Pro-Kalkulation: Gemeinkosten überschreiben (null = Tenant-Standard)
+  overheadPercentOverride Float?
+  overheadAmountOverride  Float?
+
   snapshotJson Json?
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
@@ -1157,6 +1195,9 @@ model TravelCost {
   tollFeesNet            Float                 @default(0)
   otherTravelCostsNet    Float                 @default(0)
   totalNet               Float                 @default(0)
+  /// Wenn true: totalNet kommt aus manualTotalNet und wird nicht neu berechnet
+  totalIsManual          Boolean               @default(false)
+  manualTotalNet         Float?
   calculationMode        TravelCalculationMode @default(ZONE_FLAT_FEE)
   isVisibleToCustomer    Boolean               @default(true)
   createdAt              DateTime              @default(now())
@@ -1761,6 +1802,7 @@ model Team {
   orders  Order[]
   orderPhases OrderPhase[]
   projects Project[]
+  appointments Appointment[]
 
   @@index([tenantId])
 }
@@ -1803,6 +1845,7 @@ model Vehicle {
   assignedEmployee Employee?        @relation("EmployeeVehicle", fields: [assignedEmployeeId], references: [id], onDelete: SetNull)
   teams            Team[]
   orders           Order[]
+  appointments     Appointment[]
 
   @@index([tenantId])
   @@index([assignedEmployeeId])
@@ -2166,6 +2209,7 @@ model Project {
   costs        ProjectCost[]
   calculations Calculation[]
   expenses     Expense[]
+  appointments Appointment[]
 
   @@index([tenantId, status])
   @@index([tenantId, createdAt])
@@ -2237,6 +2281,9 @@ model ProjectCost {
   paidAmount     Float             @default(0)
   isReimbursable Boolean           @default(false)
   isBillable     Boolean           @default(true)
+  /// Gesetzt, sobald die Position in eine Projekt-Abschlusskalkulation übernommen wurde
+  invoicedAt              DateTime?
+  invoicedCalculationId   String?
   expenseId      String?
   articleId      String?
   createdById    String?
@@ -2252,4 +2299,5 @@ model ProjectCost {
   @@index([projectId, createdAt])
   @@index([orderId])
   @@index([expenseId])
+  @@index([invoicedCalculationId])
 }

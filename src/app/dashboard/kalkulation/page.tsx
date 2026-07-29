@@ -9,7 +9,8 @@ import { CanAccess } from "@/components/auth/can-access";
 import { AddButton } from "@/components/ui/add-button";
 import { InfoButton } from "@/components/ui/info-button";
 import { saveJson } from "@/lib/save-toast";
-import { Calculator } from "lucide-react";
+import { Calculator, Building2 } from "lucide-react";
+import { NavActionCard } from "@/components/ui/nav-action-card";
 
 interface CalcRow {
   id: string;
@@ -73,12 +74,12 @@ export default function KalkulationListPage() {
 
       <div className="mb-6">
         <CanAccess permission="calculations.settings">
-          <Link
+          <NavActionCard
             href="/dashboard/kalkulation/einstellungen"
-            className="text-sm text-[#0d5c63] font-medium hover:underline"
-          >
-            Unternehmensprofil & Fixkosten einrichten →
-          </Link>
+            title="Unternehmensprofil & Fixkosten"
+            description="Adresse, Zuschläge und Gemeinkosten einrichten"
+            icon={Building2}
+          />
         </CanAccess>
       </div>
 
@@ -93,15 +94,15 @@ export default function KalkulationListPage() {
               <Link
                 key={c.id}
                 href={`/dashboard/kalkulation/${c.id}`}
-                className="flex items-center justify-between py-4 hover:bg-slate-50 -mx-2 px-2 rounded-lg"
+                className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between py-4 px-2 -mx-2 rounded-xl hover:bg-slate-50 active:bg-slate-100 active:scale-[0.99] transition-[transform,background-color] touch-manipulation"
               >
-                <div>
+                <div className="min-w-0">
                   <p className="font-medium text-[#0d5c63]">{c.title ?? "Ohne Titel"}</p>
                   <p className="text-sm text-slate-500">
                     {c.customer ? `${c.customer.firstName} ${c.customer.lastName}` : "Kein Kunde"} · {formatDateTime(c.updatedAt)}
                   </p>
                 </div>
-                <div className="text-right">
+                <div className="text-left sm:text-right shrink-0">
                   <p className="font-semibold">{formatEuro(c.grossSalesPrice)}</p>
                   <p className="text-xs text-slate-400">Netto {formatEuro(c.netSalesPrice)} · Marge {c.marginPercent?.toFixed(1)} %</p>
                   <Badge

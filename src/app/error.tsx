@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { AlertTriangle, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { LegalInlineLinks } from "@/components/legal/legal-footer";
 
 export default function GlobalRouteError({
   error,
@@ -36,6 +37,7 @@ export default function GlobalRouteError({
             Seite neu laden
           </Button>
         </div>
+        <LegalInlineLinks className="mt-6" />
       </div>
     </div>
   );

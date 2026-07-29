@@ -13,6 +13,7 @@ import { AddButton } from "@/components/ui/add-button";
 import { saveJson } from "@/lib/save-toast";
 import { Clock, Trash2, RotateCcw } from "lucide-react";
 import { toast } from "sonner";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 
 interface Service {
   id: string;
@@ -29,6 +30,7 @@ export default function LeistungenPage() {
   const [services, setServices] = useState<Service[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [busyId, setBusyId] = useState<string | null>(null);
+  const [removeTarget, setRemoveTarget] = useState<Service | null>(null);
   const [form, setForm] = useState({
     name: "",
     description: "",
@@ -70,8 +72,6 @@ export default function LeistungenPage() {
   }
 
   async function removeService(service: Service) {
-    if (!confirm("Möchtest du diese Leistung wirklich löschen?")) return;
-
     setBusyId(service.id);
     const res = await fetch(`/api/services/${service.id}`, { method: "DELETE" });
     const d = await res.json();
@@ -138,7 +138,7 @@ export default function LeistungenPage() {
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    removeService(s);
+                    setRemoveTarget(s);
                   }}
                 >
                   <Trash2 className="h-4 w-4 sm:mr-1" />
@@ -271,6 +271,29 @@ export default function LeistungenPage() {
           </div>
         </div>
       )}
+
+      <ConfirmDialog
+        open={removeTarget !== null}
+        onOpenChange={(open) => {
+          if (!open) setRemoveTarget(null);
+        }}
+        title="Leistung löschen?"
+        description={
+          removeTarget
+            ? `„${removeTarget.name}“ wird gelöscht bzw. deaktiviert, wenn sie bereits verwendet wird.`
+            : ""
+        }
+        confirmLabel="Leistung löschen"
+        cancelLabel="Abbrechen"
+        variant="destructive"
+        onConfirm={async () => {
+          if (removeTarget) {
+            const target = removeTarget;
+            setRemoveTarget(null);
+            await removeService(target);
+          }
+        }}
+      />
     </div>
   );
 }

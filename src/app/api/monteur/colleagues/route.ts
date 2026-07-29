@@ -34,10 +34,13 @@ export async function GET() {
     for (const m of teamMembers) colleagueIds.add(m.employeeId);
   }
 
-  if (myOrderIds.length > 0) {
+  const linkedOrderIds = myOrderIds
+    .map((o) => o.orderId)
+    .filter((id): id is string => Boolean(id));
+  if (linkedOrderIds.length > 0) {
     const orderColleagues = await prisma.appointment.findMany({
       where: {
-        orderId: { in: myOrderIds.map((o) => o.orderId) },
+        orderId: { in: linkedOrderIds },
         employeeId: { not: employee.id },
         tenantId: auth.tenantId,
       },

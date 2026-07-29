@@ -1,8 +1,13 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAuth, apiSuccess, apiError } from "@/lib/api";
-import { getEmployeeForUser } from "@/lib/monteur-access";
-import { validateTimeEntryInput } from "@/lib/time-entry";
+import { getEmployeeForUser, requireMonteurOrder } from "@/lib/monteur-access";
+import {
+  resolveStoredActivity,
+  validateTimeEntryInput,
+  TIME_ENTRY_ACTIVITY_SONSTIGES,
+  isSonstigesActivity,
+} from "@/lib/time-entry";
 import type { SessionUser } from "@/lib/auth";
 
 async function requireOwnTimeEntry(auth: SessionUser | Response, entryId: string) {
@@ -42,20 +47,43 @@ export async function PATCH(
       : access.entry.breakMinutes;
   const nextOrderId =
     body.orderId !== undefined ? body.orderId || null : access.entry.orderId;
-  const nextActivity =
+
+  let activityForValidation =
     body.activity !== undefined ? body.activity : access.entry.activity;
+  let activityCustom = body.activityCustom as string | undefined;
+  if (
+    body.activity === undefined &&
+    body.activityCustom === undefined &&
+    isSonstigesActivity(access.entry.activity)
+  ) {
+    activityForValidation = TIME_ENTRY_ACTIVITY_SONSTIGES;
+    activityCustom = access.entry.activity ?? undefined;
+  }
+
   const nextNotes = body.notes !== undefined ? body.notes : access.entry.notes;
+  const storedActivity =
+    body.activity !== undefined || body.activityCustom !== undefined
+      ? resolveStoredActivity(activityForValidation, activityCustom)
+      : access.entry.activity;
 
   const validationError = validateTimeEntryInput({
     startTime: nextStart,
     endTime: nextEnd,
     breakMinutes: nextBreak,
     orderId: nextOrderId,
-    activity: nextActivity,
+    activity: activityForValidation,
+    activityCustom,
     notes: nextNotes,
     requireEndTime: Boolean(nextEnd),
   });
   if (validationError) return apiError(validationError, 400);
+
+  if (nextOrderId && nextOrderId !== access.entry.orderId) {
+    const orderAccess = await requireMonteurOrder(access.auth, nextOrderId, {
+      forTimeBooking: true,
+    });
+    if ("error" in orderAccess) return orderAccess.error;
+  }
 
   const updated = await prisma.timeEntry.update({
     where: { id },
@@ -68,7 +96,9 @@ export async function PATCH(
         ? { breakMinutes: Number(body.breakMinutes) || 0 }
         : {}),
       ...(body.notes !== undefined ? { notes: body.notes || null } : {}),
-      ...(body.activity !== undefined ? { activity: body.activity?.trim() || null } : {}),
+      ...(body.activity !== undefined || body.activityCustom !== undefined
+        ? { activity: storedActivity }
+        : {}),
       ...(body.orderId !== undefined ? { orderId: body.orderId || null } : {}),
       ...(body.status !== undefined ? { status: body.status } : {}),
     },

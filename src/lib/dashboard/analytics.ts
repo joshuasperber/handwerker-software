@@ -119,6 +119,8 @@ async function loadInvoiceAnalytics(
       prisma.calculationDocument.findMany({
         where: {
           documentType: "INVOICE",
+          status: { not: "STORNIERT" },
+          cancelOfId: null,
           issueDate: { gte: rangeMonthsStart },
           calculation: { tenantId },
         },
@@ -131,6 +133,7 @@ async function loadInvoiceAnalytics(
         where: {
           documentType: "INVOICE",
           status: { in: ["OFFEN", "TEILBEZAHLT"] },
+          cancelOfId: null,
           calculation: { tenantId },
         },
         include: INVOICE_DOC_INCLUDE,
@@ -171,6 +174,8 @@ async function loadInvoiceAnalytics(
     prisma.calculationDocument.findMany({
       where: {
         documentType: "INVOICE",
+        status: { not: "STORNIERT" },
+        cancelOfId: null,
         issueDate: { gte: rangeMonthsStart },
         calculation: { tenantId },
       },
@@ -182,6 +187,7 @@ async function loadInvoiceAnalytics(
     prisma.calculationDocument.findMany({
       where: {
         documentType: "INVOICE",
+        cancelOfId: null,
         calculation: { tenantId, status: "INVOICE_CREATED" },
       },
       include: INVOICE_DOC_INCLUDE,

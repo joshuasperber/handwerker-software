@@ -36,6 +36,7 @@ export async function runAppointmentReminders(
   });
 
   for (const appt of appointments) {
+    if (!appt.order) continue;
     try {
       const when = formatDateTime(appt.startTime);
       const orderNumber = appt.order.orderNumber;

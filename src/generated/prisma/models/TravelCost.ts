@@ -36,6 +36,7 @@ export type TravelCostAvgAggregateOutputType = {
   tollFeesNet: number | null
   otherTravelCostsNet: number | null
   totalNet: number | null
+  manualTotalNet: number | null
 }
 
 export type TravelCostSumAggregateOutputType = {
@@ -48,6 +49,7 @@ export type TravelCostSumAggregateOutputType = {
   tollFeesNet: number | null
   otherTravelCostsNet: number | null
   totalNet: number | null
+  manualTotalNet: number | null
 }
 
 export type TravelCostMinAggregateOutputType = {
@@ -66,6 +68,8 @@ export type TravelCostMinAggregateOutputType = {
   tollFeesNet: number | null
   otherTravelCostsNet: number | null
   totalNet: number | null
+  totalIsManual: boolean | null
+  manualTotalNet: number | null
   calculationMode: $Enums.TravelCalculationMode | null
   isVisibleToCustomer: boolean | null
   createdAt: Date | null
@@ -88,6 +92,8 @@ export type TravelCostMaxAggregateOutputType = {
   tollFeesNet: number | null
   otherTravelCostsNet: number | null
   totalNet: number | null
+  totalIsManual: boolean | null
+  manualTotalNet: number | null
   calculationMode: $Enums.TravelCalculationMode | null
   isVisibleToCustomer: boolean | null
   createdAt: Date | null
@@ -110,6 +116,8 @@ export type TravelCostCountAggregateOutputType = {
   tollFeesNet: number
   otherTravelCostsNet: number
   totalNet: number
+  totalIsManual: number
+  manualTotalNet: number
   calculationMode: number
   isVisibleToCustomer: number
   createdAt: number
@@ -128,6 +136,7 @@ export type TravelCostAvgAggregateInputType = {
   tollFeesNet?: true
   otherTravelCostsNet?: true
   totalNet?: true
+  manualTotalNet?: true
 }
 
 export type TravelCostSumAggregateInputType = {
@@ -140,6 +149,7 @@ export type TravelCostSumAggregateInputType = {
   tollFeesNet?: true
   otherTravelCostsNet?: true
   totalNet?: true
+  manualTotalNet?: true
 }
 
 export type TravelCostMinAggregateInputType = {
@@ -158,6 +168,8 @@ export type TravelCostMinAggregateInputType = {
   tollFeesNet?: true
   otherTravelCostsNet?: true
   totalNet?: true
+  totalIsManual?: true
+  manualTotalNet?: true
   calculationMode?: true
   isVisibleToCustomer?: true
   createdAt?: true
@@ -180,6 +192,8 @@ export type TravelCostMaxAggregateInputType = {
   tollFeesNet?: true
   otherTravelCostsNet?: true
   totalNet?: true
+  totalIsManual?: true
+  manualTotalNet?: true
   calculationMode?: true
   isVisibleToCustomer?: true
   createdAt?: true
@@ -202,6 +216,8 @@ export type TravelCostCountAggregateInputType = {
   tollFeesNet?: true
   otherTravelCostsNet?: true
   totalNet?: true
+  totalIsManual?: true
+  manualTotalNet?: true
   calculationMode?: true
   isVisibleToCustomer?: true
   createdAt?: true
@@ -311,6 +327,8 @@ export type TravelCostGroupByOutputType = {
   tollFeesNet: number
   otherTravelCostsNet: number
   totalNet: number
+  totalIsManual: boolean
+  manualTotalNet: number | null
   calculationMode: $Enums.TravelCalculationMode
   isVisibleToCustomer: boolean
   createdAt: Date
@@ -356,6 +374,8 @@ export type TravelCostWhereInput = {
   tollFeesNet?: Prisma.FloatFilter<"TravelCost"> | number
   otherTravelCostsNet?: Prisma.FloatFilter<"TravelCost"> | number
   totalNet?: Prisma.FloatFilter<"TravelCost"> | number
+  totalIsManual?: Prisma.BoolFilter<"TravelCost"> | boolean
+  manualTotalNet?: Prisma.FloatNullableFilter<"TravelCost"> | number | null
   calculationMode?: Prisma.EnumTravelCalculationModeFilter<"TravelCost"> | $Enums.TravelCalculationMode
   isVisibleToCustomer?: Prisma.BoolFilter<"TravelCost"> | boolean
   createdAt?: Prisma.DateTimeFilter<"TravelCost"> | Date | string
@@ -379,6 +399,8 @@ export type TravelCostOrderByWithRelationInput = {
   tollFeesNet?: Prisma.SortOrder
   otherTravelCostsNet?: Prisma.SortOrder
   totalNet?: Prisma.SortOrder
+  totalIsManual?: Prisma.SortOrder
+  manualTotalNet?: Prisma.SortOrderInput | Prisma.SortOrder
   calculationMode?: Prisma.SortOrder
   isVisibleToCustomer?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -405,6 +427,8 @@ export type TravelCostWhereUniqueInput = Prisma.AtLeast<{
   tollFeesNet?: Prisma.FloatFilter<"TravelCost"> | number
   otherTravelCostsNet?: Prisma.FloatFilter<"TravelCost"> | number
   totalNet?: Prisma.FloatFilter<"TravelCost"> | number
+  totalIsManual?: Prisma.BoolFilter<"TravelCost"> | boolean
+  manualTotalNet?: Prisma.FloatNullableFilter<"TravelCost"> | number | null
   calculationMode?: Prisma.EnumTravelCalculationModeFilter<"TravelCost"> | $Enums.TravelCalculationMode
   isVisibleToCustomer?: Prisma.BoolFilter<"TravelCost"> | boolean
   createdAt?: Prisma.DateTimeFilter<"TravelCost"> | Date | string
@@ -428,6 +452,8 @@ export type TravelCostOrderByWithAggregationInput = {
   tollFeesNet?: Prisma.SortOrder
   otherTravelCostsNet?: Prisma.SortOrder
   totalNet?: Prisma.SortOrder
+  totalIsManual?: Prisma.SortOrder
+  manualTotalNet?: Prisma.SortOrderInput | Prisma.SortOrder
   calculationMode?: Prisma.SortOrder
   isVisibleToCustomer?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -458,6 +484,8 @@ export type TravelCostScalarWhereWithAggregatesInput = {
   tollFeesNet?: Prisma.FloatWithAggregatesFilter<"TravelCost"> | number
   otherTravelCostsNet?: Prisma.FloatWithAggregatesFilter<"TravelCost"> | number
   totalNet?: Prisma.FloatWithAggregatesFilter<"TravelCost"> | number
+  totalIsManual?: Prisma.BoolWithAggregatesFilter<"TravelCost"> | boolean
+  manualTotalNet?: Prisma.FloatNullableWithAggregatesFilter<"TravelCost"> | number | null
   calculationMode?: Prisma.EnumTravelCalculationModeWithAggregatesFilter<"TravelCost"> | $Enums.TravelCalculationMode
   isVisibleToCustomer?: Prisma.BoolWithAggregatesFilter<"TravelCost"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"TravelCost"> | Date | string
@@ -479,6 +507,8 @@ export type TravelCostCreateInput = {
   tollFeesNet?: number
   otherTravelCostsNet?: number
   totalNet?: number
+  totalIsManual?: boolean
+  manualTotalNet?: number | null
   calculationMode?: $Enums.TravelCalculationMode
   isVisibleToCustomer?: boolean
   createdAt?: Date | string
@@ -502,6 +532,8 @@ export type TravelCostUncheckedCreateInput = {
   tollFeesNet?: number
   otherTravelCostsNet?: number
   totalNet?: number
+  totalIsManual?: boolean
+  manualTotalNet?: number | null
   calculationMode?: $Enums.TravelCalculationMode
   isVisibleToCustomer?: boolean
   createdAt?: Date | string
@@ -523,6 +555,8 @@ export type TravelCostUpdateInput = {
   tollFeesNet?: Prisma.FloatFieldUpdateOperationsInput | number
   otherTravelCostsNet?: Prisma.FloatFieldUpdateOperationsInput | number
   totalNet?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalIsManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  manualTotalNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   calculationMode?: Prisma.EnumTravelCalculationModeFieldUpdateOperationsInput | $Enums.TravelCalculationMode
   isVisibleToCustomer?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -546,6 +580,8 @@ export type TravelCostUncheckedUpdateInput = {
   tollFeesNet?: Prisma.FloatFieldUpdateOperationsInput | number
   otherTravelCostsNet?: Prisma.FloatFieldUpdateOperationsInput | number
   totalNet?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalIsManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  manualTotalNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   calculationMode?: Prisma.EnumTravelCalculationModeFieldUpdateOperationsInput | $Enums.TravelCalculationMode
   isVisibleToCustomer?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -568,6 +604,8 @@ export type TravelCostCreateManyInput = {
   tollFeesNet?: number
   otherTravelCostsNet?: number
   totalNet?: number
+  totalIsManual?: boolean
+  manualTotalNet?: number | null
   calculationMode?: $Enums.TravelCalculationMode
   isVisibleToCustomer?: boolean
   createdAt?: Date | string
@@ -589,6 +627,8 @@ export type TravelCostUpdateManyMutationInput = {
   tollFeesNet?: Prisma.FloatFieldUpdateOperationsInput | number
   otherTravelCostsNet?: Prisma.FloatFieldUpdateOperationsInput | number
   totalNet?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalIsManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  manualTotalNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   calculationMode?: Prisma.EnumTravelCalculationModeFieldUpdateOperationsInput | $Enums.TravelCalculationMode
   isVisibleToCustomer?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -611,6 +651,8 @@ export type TravelCostUncheckedUpdateManyInput = {
   tollFeesNet?: Prisma.FloatFieldUpdateOperationsInput | number
   otherTravelCostsNet?: Prisma.FloatFieldUpdateOperationsInput | number
   totalNet?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalIsManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  manualTotalNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   calculationMode?: Prisma.EnumTravelCalculationModeFieldUpdateOperationsInput | $Enums.TravelCalculationMode
   isVisibleToCustomer?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -638,6 +680,8 @@ export type TravelCostCountOrderByAggregateInput = {
   tollFeesNet?: Prisma.SortOrder
   otherTravelCostsNet?: Prisma.SortOrder
   totalNet?: Prisma.SortOrder
+  totalIsManual?: Prisma.SortOrder
+  manualTotalNet?: Prisma.SortOrder
   calculationMode?: Prisma.SortOrder
   isVisibleToCustomer?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -654,6 +698,7 @@ export type TravelCostAvgOrderByAggregateInput = {
   tollFeesNet?: Prisma.SortOrder
   otherTravelCostsNet?: Prisma.SortOrder
   totalNet?: Prisma.SortOrder
+  manualTotalNet?: Prisma.SortOrder
 }
 
 export type TravelCostMaxOrderByAggregateInput = {
@@ -672,6 +717,8 @@ export type TravelCostMaxOrderByAggregateInput = {
   tollFeesNet?: Prisma.SortOrder
   otherTravelCostsNet?: Prisma.SortOrder
   totalNet?: Prisma.SortOrder
+  totalIsManual?: Prisma.SortOrder
+  manualTotalNet?: Prisma.SortOrder
   calculationMode?: Prisma.SortOrder
   isVisibleToCustomer?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -694,6 +741,8 @@ export type TravelCostMinOrderByAggregateInput = {
   tollFeesNet?: Prisma.SortOrder
   otherTravelCostsNet?: Prisma.SortOrder
   totalNet?: Prisma.SortOrder
+  totalIsManual?: Prisma.SortOrder
+  manualTotalNet?: Prisma.SortOrder
   calculationMode?: Prisma.SortOrder
   isVisibleToCustomer?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -710,6 +759,7 @@ export type TravelCostSumOrderByAggregateInput = {
   tollFeesNet?: Prisma.SortOrder
   otherTravelCostsNet?: Prisma.SortOrder
   totalNet?: Prisma.SortOrder
+  manualTotalNet?: Prisma.SortOrder
 }
 
 export type TravelCostCreateNestedOneWithoutCalculationInput = {
@@ -763,6 +813,8 @@ export type TravelCostCreateWithoutCalculationInput = {
   tollFeesNet?: number
   otherTravelCostsNet?: number
   totalNet?: number
+  totalIsManual?: boolean
+  manualTotalNet?: number | null
   calculationMode?: $Enums.TravelCalculationMode
   isVisibleToCustomer?: boolean
   createdAt?: Date | string
@@ -784,6 +836,8 @@ export type TravelCostUncheckedCreateWithoutCalculationInput = {
   tollFeesNet?: number
   otherTravelCostsNet?: number
   totalNet?: number
+  totalIsManual?: boolean
+  manualTotalNet?: number | null
   calculationMode?: $Enums.TravelCalculationMode
   isVisibleToCustomer?: boolean
   createdAt?: Date | string
@@ -821,6 +875,8 @@ export type TravelCostUpdateWithoutCalculationInput = {
   tollFeesNet?: Prisma.FloatFieldUpdateOperationsInput | number
   otherTravelCostsNet?: Prisma.FloatFieldUpdateOperationsInput | number
   totalNet?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalIsManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  manualTotalNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   calculationMode?: Prisma.EnumTravelCalculationModeFieldUpdateOperationsInput | $Enums.TravelCalculationMode
   isVisibleToCustomer?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -842,6 +898,8 @@ export type TravelCostUncheckedUpdateWithoutCalculationInput = {
   tollFeesNet?: Prisma.FloatFieldUpdateOperationsInput | number
   otherTravelCostsNet?: Prisma.FloatFieldUpdateOperationsInput | number
   totalNet?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalIsManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  manualTotalNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   calculationMode?: Prisma.EnumTravelCalculationModeFieldUpdateOperationsInput | $Enums.TravelCalculationMode
   isVisibleToCustomer?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -866,6 +924,8 @@ export type TravelCostSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   tollFeesNet?: boolean
   otherTravelCostsNet?: boolean
   totalNet?: boolean
+  totalIsManual?: boolean
+  manualTotalNet?: boolean
   calculationMode?: boolean
   isVisibleToCustomer?: boolean
   createdAt?: boolean
@@ -889,6 +949,8 @@ export type TravelCostSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
   tollFeesNet?: boolean
   otherTravelCostsNet?: boolean
   totalNet?: boolean
+  totalIsManual?: boolean
+  manualTotalNet?: boolean
   calculationMode?: boolean
   isVisibleToCustomer?: boolean
   createdAt?: boolean
@@ -912,6 +974,8 @@ export type TravelCostSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
   tollFeesNet?: boolean
   otherTravelCostsNet?: boolean
   totalNet?: boolean
+  totalIsManual?: boolean
+  manualTotalNet?: boolean
   calculationMode?: boolean
   isVisibleToCustomer?: boolean
   createdAt?: boolean
@@ -935,13 +999,15 @@ export type TravelCostSelectScalar = {
   tollFeesNet?: boolean
   otherTravelCostsNet?: boolean
   totalNet?: boolean
+  totalIsManual?: boolean
+  manualTotalNet?: boolean
   calculationMode?: boolean
   isVisibleToCustomer?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type TravelCostOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "calculationId" | "startAddress" | "destinationAddress" | "distanceKm" | "estimatedDriveTimeHours" | "selectedZoneId" | "zoneName" | "zoneFlatFeeNet" | "kilometerRateNet" | "travelHourlyRateNet" | "parkingFeesNet" | "tollFeesNet" | "otherTravelCostsNet" | "totalNet" | "calculationMode" | "isVisibleToCustomer" | "createdAt" | "updatedAt", ExtArgs["result"]["travelCost"]>
+export type TravelCostOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "calculationId" | "startAddress" | "destinationAddress" | "distanceKm" | "estimatedDriveTimeHours" | "selectedZoneId" | "zoneName" | "zoneFlatFeeNet" | "kilometerRateNet" | "travelHourlyRateNet" | "parkingFeesNet" | "tollFeesNet" | "otherTravelCostsNet" | "totalNet" | "totalIsManual" | "manualTotalNet" | "calculationMode" | "isVisibleToCustomer" | "createdAt" | "updatedAt", ExtArgs["result"]["travelCost"]>
 export type TravelCostInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   calculation?: boolean | Prisma.CalculationDefaultArgs<ExtArgs>
 }
@@ -973,6 +1039,11 @@ export type $TravelCostPayload<ExtArgs extends runtime.Types.Extensions.Internal
     tollFeesNet: number
     otherTravelCostsNet: number
     totalNet: number
+    /**
+     * Wenn true: totalNet kommt aus manualTotalNet und wird nicht neu berechnet
+     */
+    totalIsManual: boolean
+    manualTotalNet: number | null
     calculationMode: $Enums.TravelCalculationMode
     isVisibleToCustomer: boolean
     createdAt: Date
@@ -1416,6 +1487,8 @@ export interface TravelCostFieldRefs {
   readonly tollFeesNet: Prisma.FieldRef<"TravelCost", 'Float'>
   readonly otherTravelCostsNet: Prisma.FieldRef<"TravelCost", 'Float'>
   readonly totalNet: Prisma.FieldRef<"TravelCost", 'Float'>
+  readonly totalIsManual: Prisma.FieldRef<"TravelCost", 'Boolean'>
+  readonly manualTotalNet: Prisma.FieldRef<"TravelCost", 'Float'>
   readonly calculationMode: Prisma.FieldRef<"TravelCost", 'TravelCalculationMode'>
   readonly isVisibleToCustomer: Prisma.FieldRef<"TravelCost", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"TravelCost", 'DateTime'>

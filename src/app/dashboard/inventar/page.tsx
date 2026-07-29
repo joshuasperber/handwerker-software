@@ -443,7 +443,7 @@ export default function InventarPage() {
         </CanAccess>
       </div>
 
-      <div className="flex gap-2 mb-6">
+      <div className="flex flex-wrap gap-2 mb-6">
         <button
           type="button"
           onClick={() => setTab("artikel")}
@@ -471,8 +471,11 @@ export default function InventarPage() {
         >
           <History className="h-4 w-4 inline mr-1" /> Bewegungen
         </button>
-        <Link href="/dashboard/einkauf" className="px-4 py-2 rounded-lg text-sm font-medium bg-white border border-slate-200 text-[#0d5c63] hover:bg-slate-50 ml-auto">
-          Einkauf & Bestellvorschläge →
+        <Link
+          href="/dashboard/einkauf"
+          className="inline-flex items-center justify-center gap-2 min-h-11 px-4 py-2 rounded-xl text-sm font-medium bg-white border border-slate-200 text-[#0d5c63] hover:bg-slate-50 active:scale-[0.98] transition-[transform,background-color] touch-manipulation ml-auto w-full sm:w-auto"
+        >
+          Einkauf & Bestellvorschläge
         </Link>
       </div>
 
@@ -729,7 +732,8 @@ export default function InventarPage() {
                       <ArrowRightLeft className="h-3.5 w-3.5" />
                       Tipp: Zeile auf ein anderes Lager links ziehen, um schnell umzubuchen.
                     </p>
-                    <table className="w-full text-sm mb-4">
+                    <div className="overflow-x-auto mb-4">
+                    <table className="w-full min-w-[480px] text-sm">
                       <thead>
                         <tr className="text-left text-slate-500 border-b">
                           <th className="pb-2 pl-3 pr-4">Artikel</th>
@@ -810,6 +814,7 @@ export default function InventarPage() {
                         })}
                       </tbody>
                     </table>
+                    </div>
                   </>
                 )}
                 <CanAccess permission="inventory.write">

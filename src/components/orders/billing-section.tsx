@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { PriceCompositionPanel } from "@/components/calculation/price-composition";
 import {
   InvoiceConflictDialog,
@@ -11,6 +13,7 @@ import {
 } from "@/components/documents/invoice-conflict-dialog";
 import { convertCalculationToInvoice } from "@/lib/documents/convert-invoice-client";
 import type { InvoiceActionMode } from "@/lib/documents/invoice-lifecycle";
+import { formatIssueDateInput } from "@/lib/documents/issue-date";
 import { formatEuro } from "@/lib/utils";
 import { FileText, Calculator, CheckCircle, Pencil, Download } from "lucide-react";
 import { toast } from "sonner";
@@ -36,6 +39,7 @@ export function OrderBillingSection({
   const [lastDocId, setLastDocId] = useState<string | null>(null);
   const [conflictOpen, setConflictOpen] = useState(false);
   const [conflictInvoice, setConflictInvoice] = useState<ExistingInvoiceInfo | null>(null);
+  const [issueDate, setIssueDate] = useState(() => formatIssueDateInput(new Date()));
 
   const showBilling = ["ABRECHNUNGSBEREIT", "ABGERECHNET"].includes(orderStatus);
 
@@ -84,7 +88,11 @@ export function OrderBillingSection({
     if (!calculationId) return;
     setLoading(true);
     setMsg("");
-    const result = await convertCalculationToInvoice(calculationId, { mode, documentId });
+    const result = await convertCalculationToInvoice(calculationId, {
+      mode,
+      documentId,
+      issueDate,
+    });
     setLoading(false);
 
     if (!result.ok) {
@@ -158,6 +166,18 @@ export function OrderBillingSection({
                 <h4 className="font-semibold text-slate-900">
                   {alreadyInvoiced ? "Rechnung bearbeiten" : "Rechnung erstellen"}
                 </h4>
+                <div className="space-y-1.5">
+                  <Label htmlFor="order-invoice-issue-date">Rechnungsdatum</Label>
+                  <Input
+                    id="order-invoice-issue-date"
+                    type="date"
+                    value={issueDate}
+                    onChange={(e) => setIssueDate(e.target.value)}
+                  />
+                  <p className="text-xs text-slate-500">
+                    Umsatz wird dem Monat dieses Datums zugeordnet.
+                  </p>
+                </div>
                 {alreadyInvoiced ? (
                   <>
                     <p className="text-sm text-green-700 flex items-center gap-1">
@@ -176,7 +196,7 @@ export function OrderBillingSection({
                     <Button
                       variant="action"
                       onClick={() => runInvoice()}
-                      disabled={loading}
+                      disabled={loading || !issueDate}
                       className="w-full"
                     >
                       <FileText className="h-4 w-4 mr-1" />
@@ -198,7 +218,7 @@ export function OrderBillingSection({
                     <Button
                       variant="action"
                       onClick={() => runInvoice()}
-                      disabled={loading}
+                      disabled={loading || !issueDate}
                       className="w-full"
                     >
                       <FileText className="h-4 w-4 mr-1" />

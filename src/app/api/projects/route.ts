@@ -10,8 +10,10 @@ import {
   parseOptionalDate,
   validateProjectInput,
   PROJECT_STATUSES,
+  PROJECT_STATUS_LABELS,
   type ProjectInput,
 } from "@/lib/projects/types";
+import { ORDER_STATUS_LABELS } from "@/lib/utils";
 import type { ProjectStatus } from "@/generated/prisma/client";
 
 const createSchema = z.object({
@@ -36,10 +38,12 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const q = searchParams.get("q")?.trim() ?? "";
   const status = searchParams.get("status");
+  const customerId = searchParams.get("customerId")?.trim() ?? "";
 
   const projects = await prisma.project.findMany({
     where: {
       tenantId: auth.tenantId,
+      ...(customerId ? { customerId } : {}),
       ...(status && PROJECT_STATUSES.includes(status as ProjectStatus)
         ? { status: status as ProjectStatus }
         : {}),
@@ -83,7 +87,45 @@ export async function GET(request: NextRequest) {
     take: 100,
   });
 
-  return apiSuccess(projects.map(mapProjectListItem));
+  return apiSuccess(
+    projects.map((project) => ({
+      id: project.id,
+      name: project.name,
+      status: project.status,
+      statusLabel: PROJECT_STATUS_LABELS[project.status],
+      customerId: project.customerId,
+      startDate: project.startDate?.toISOString() ?? null,
+      endDate: project.endDate?.toISOString() ?? null,
+      addressStreet: project.addressStreet,
+      addressZip: project.addressZip,
+      addressCity: project.addressCity,
+      description: project.description,
+      notes: project.notes,
+      customer: {
+        id: project.customer.id,
+        name: `${project.customer.firstName} ${project.customer.lastName}`.trim(),
+        email: project.customer.email,
+      },
+      team: project.team,
+      members: project.members.map((m) => ({
+        id: m.id,
+        employeeId: m.employeeId,
+        name: `${m.employee.user.firstName} ${m.employee.user.lastName}`.trim(),
+      })),
+      orders: project.orders.map((o) => ({
+        id: o.id,
+        orderNumber: o.orderNumber,
+        title: o.title,
+        status: o.status,
+        statusLabel: ORDER_STATUS_LABELS[o.status] ?? o.status,
+        createdAt: o.createdAt.toISOString(),
+        scheduledStart: o.scheduledStart?.toISOString() ?? null,
+      })),
+      counts: project._count,
+      createdAt: project.createdAt.toISOString(),
+      updatedAt: project.updatedAt.toISOString(),
+    }))
+  );
 }
 
 export async function POST(request: NextRequest) {

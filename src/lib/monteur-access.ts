@@ -17,12 +17,18 @@ export async function getTeamIdsForEmployee(employeeId: string) {
   return memberships.map((m) => m.teamId);
 }
 
-/** Ob der Mitarbeiter Zugriff auf den Auftrag hat (Termin, Phase, Team). */
+/** Ob der Mitarbeiter Zugriff auf den Auftrag hat (Zuweisung, Termin, Phase, Team). */
 export async function employeeCanAccessOrder(
   tenantId: string,
   employeeId: string,
   orderId: string
 ): Promise<boolean> {
+  const assigned = await prisma.orderAssignee.findFirst({
+    where: { orderId, employeeId, order: { tenantId } },
+    select: { id: true },
+  });
+  if (assigned) return true;
+
   const teamIds = await getTeamIdsForEmployee(employeeId);
 
   const hasAppointment = await prisma.appointment.findFirst({
@@ -94,19 +100,35 @@ export async function requireMonteurAppointment(
   return { employee, appointment };
 }
 
-export async function requireMonteurOrder(auth: SessionUser, orderId: string) {
+/**
+ * Auftrag für Monteur-Aktionen laden.
+ * `forTimeBooking`: erlaubt Zeitbuchung auf jeden nicht-stornierten Auftrag des Tenants
+ * (Aushilfe auf Kollegen-Aufträgen), sonst nur bei persönlicher/Team-Zuordnung.
+ */
+export async function requireMonteurOrder(
+  auth: SessionUser,
+  orderId: string,
+  options?: { forTimeBooking?: boolean }
+) {
   const employee = await getEmployeeForUser(auth);
   if (!employee) return { error: apiError("Kein Mitarbeiterprofil", 403) };
 
-  // Büro/Meister mit orders.write dürfen Zeiten auf alle Aufträge des Tenants buchen
   const officeAccess = hasPermission(auth.role, "orders.write");
-  if (!officeAccess) {
+  const timeBookingAny = Boolean(options?.forTimeBooking);
+
+  if (!officeAccess && !timeBookingAny) {
     const ok = await employeeCanAccessOrder(auth.tenantId, employee.id, orderId);
     if (!ok) return { error: apiError("Kein Zugriff auf diesen Auftrag", 403) };
   }
 
   const order = await prisma.order.findFirst({
-    where: { id: orderId, tenantId: auth.tenantId },
+    where: {
+      id: orderId,
+      tenantId: auth.tenantId,
+      ...(timeBookingAny && !officeAccess
+        ? { status: { not: "STORNIERT" } }
+        : {}),
+    },
     include: { checklists: true },
   });
   if (!order) return { error: apiError("Auftrag nicht gefunden", 404) };

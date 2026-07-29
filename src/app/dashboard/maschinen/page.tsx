@@ -13,6 +13,7 @@ import { CanAccess } from "@/components/auth/can-access";
 import { AddButton } from "@/components/ui/add-button";
 import { saveJson } from "@/lib/save-toast";
 import { Trash2, ChevronLeft, Calculator } from "lucide-react";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 
 interface Machine {
   id: string;
@@ -55,6 +56,7 @@ export default function MaschinenPage() {
   const [form, setForm] = useState(EMPTY);
   const [saving, setSaving] = useState(false);
   const [formError, setFormError] = useState("");
+  const [deactivateId, setDeactivateId] = useState<string | null>(null);
 
   function load() {
     fetch("/api/machines").then((r) => r.json()).then((d) => { if (d.success) setMachines(d.data); });
@@ -143,7 +145,6 @@ export default function MaschinenPage() {
   }
 
   async function deactivate(id: string) {
-    if (!confirm("Maschine deaktivieren?")) return;
     await fetch(`/api/machines/${id}`, { method: "DELETE" });
     load();
   }
@@ -289,7 +290,7 @@ export default function MaschinenPage() {
                   </p>
                 </div>
                 <CanAccess permission="calculations.settings">
-                  <button onClick={() => deactivate(m.id)} className="text-red-500 hover:text-red-700">
+                  <button onClick={() => setDeactivateId(m.id)} className="text-red-500 hover:text-red-700">
                     <Trash2 className="h-4 w-4" />
                   </button>
                 </CanAccess>
@@ -315,6 +316,25 @@ export default function MaschinenPage() {
       <Link href="/dashboard/kalkulation/einstellungen" className="inline-flex items-center gap-1 text-sm text-[#0d5c63] mt-6 hover:underline">
         <ChevronLeft className="h-4 w-4" /> Kalkulationseinstellungen
       </Link>
+
+      <ConfirmDialog
+        open={deactivateId !== null}
+        onOpenChange={(open) => {
+          if (!open) setDeactivateId(null);
+        }}
+        title="Maschine deaktivieren?"
+        description="Die Maschine steht danach nicht mehr für neue Kalkulationen zur Verfügung."
+        confirmLabel="Deaktivieren"
+        cancelLabel="Abbrechen"
+        variant="destructive"
+        onConfirm={async () => {
+          if (deactivateId) {
+            const id = deactivateId;
+            setDeactivateId(null);
+            await deactivate(id);
+          }
+        }}
+      />
     </div>
   );
 }

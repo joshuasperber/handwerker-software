@@ -86,6 +86,7 @@ export function runCalculation(input: CalculationInput): CalculationBreakdown {
     directCosts,
     overheadPercent: input.overhead.overheadPercent,
     additionalOverheadPercent: input.overhead.additionalOverheadPercent,
+    manualAmount: input.overhead.manualAmount,
   });
 
   let subtotalBeforeRisk = roundMoney(directCosts + overhead.amount);

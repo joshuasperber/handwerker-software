@@ -6,8 +6,10 @@ import {
   getSession,
   setSessionCookie,
   clearSessionCookie,
+  clearSessionCookiesOnResponse,
   verifySession,
   COOKIE_NAME,
+  LEGACY_COOKIE_NAME,
   SESSION_COOKIE_OPTIONS,
   SESSION_DURATION,
   applySessionCookie,
@@ -21,8 +23,10 @@ export {
   getSession,
   setSessionCookie,
   clearSessionCookie,
+  clearSessionCookiesOnResponse,
   verifySession,
   COOKIE_NAME,
+  LEGACY_COOKIE_NAME,
   SESSION_COOKIE_OPTIONS,
   SESSION_DURATION,
   applySessionCookie,
@@ -65,8 +69,8 @@ function toSessionUser(user: {
 }
 
 /**
- * Login via Supabase Auth when configured; falls back to bcrypt hash.
- * Tenant binding comes from the Prisma user (no hidden demo slug required).
+ * Login: zuerst lokaler Passwort-Hash (schnell), dann Supabase als Fallback.
+ * So hängt die Anmeldung nicht an einem langsamen Supabase-Roundtrip.
  */
 export async function login(
   email: string,
@@ -75,54 +79,62 @@ export async function login(
 ): Promise<SessionUser | null> {
   const normalizedEmail = email.toLowerCase().trim();
 
-  if (isSupabaseAuthConfigured()) {
-    const auth = await signInWithSupabasePassword(normalizedEmail, password);
-    if (auth.ok) {
-      const user = await prisma.user.findFirst({
-        where: {
-          isActive: true,
-          ...(tenantSlug ? { tenant: { slug: tenantSlug } } : {}),
-          OR: [
-            { supabaseUserId: auth.supabaseUserId },
-            { email: normalizedEmail },
-          ],
-        },
-      });
-      if (user) {
-        if (!user.supabaseUserId) {
-          await prisma.user.update({
-            where: { id: user.id },
-            data: { supabaseUserId: auth.supabaseUserId, lastLoginAt: new Date() },
-          });
-        } else {
-          await prisma.user.update({
-            where: { id: user.id },
-            data: { lastLoginAt: new Date() },
-          });
-        }
-        return toSessionUser(user);
-      }
-    }
-  }
-
   const where = tenantSlug
     ? { email: normalizedEmail, tenant: { slug: tenantSlug }, isActive: true }
     : { email: normalizedEmail, isActive: true };
 
-  const user = await prisma.user.findFirst({
+  const localUser = await prisma.user.findFirst({
     where,
     include: { tenant: true },
   });
 
-  if (!user) return null;
+  if (localUser) {
+    const valid = await verifyPassword(password, localUser.passwordHash);
+    if (valid) {
+      await prisma.user.update({
+        where: { id: localUser.id },
+        data: { lastLoginAt: new Date() },
+      });
+      return toSessionUser(localUser);
+    }
+  }
 
-  const valid = await verifyPassword(password, user.passwordHash);
-  if (!valid) return null;
+  if (isSupabaseAuthConfigured()) {
+    try {
+      const auth = await signInWithSupabasePassword(normalizedEmail, password);
+      if (auth.ok) {
+        const user = await prisma.user.findFirst({
+          where: {
+            isActive: true,
+            ...(tenantSlug ? { tenant: { slug: tenantSlug } } : {}),
+            OR: [
+              { supabaseUserId: auth.supabaseUserId },
+              { email: normalizedEmail },
+            ],
+          },
+        });
+        if (user) {
+          if (!user.supabaseUserId) {
+            await prisma.user.update({
+              where: { id: user.id },
+              data: {
+                supabaseUserId: auth.supabaseUserId,
+                lastLoginAt: new Date(),
+              },
+            });
+          } else {
+            await prisma.user.update({
+              where: { id: user.id },
+              data: { lastLoginAt: new Date() },
+            });
+          }
+          return toSessionUser(user);
+        }
+      }
+    } catch (err) {
+      console.warn("[auth.login] Supabase sign-in failed", err);
+    }
+  }
 
-  await prisma.user.update({
-    where: { id: user.id },
-    data: { lastLoginAt: new Date() },
-  });
-
-  return toSessionUser(user);
+  return null;
 }

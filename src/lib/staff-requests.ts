@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { findEmployeeScheduleConflict } from "@/lib/disposition/schedule-conflicts";
+import { ensureOrderAssignee } from "@/lib/orders/assignees";
 
 export async function acceptStaffRequest(requestId: string, tenantId: string) {
   const req = await prisma.staffAssignmentRequest.findFirst({
@@ -41,6 +42,8 @@ export async function acceptStaffRequest(requestId: string, tenantId: string) {
       },
     });
   }
+
+  await ensureOrderAssignee(req.orderId, req.employeeId);
 
   return prisma.staffAssignmentRequest.update({
     where: { id: requestId },

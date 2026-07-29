@@ -51,6 +51,8 @@ export type CalculationAvgAggregateOutputType = {
   profitAfterTaxEstimate: number | null
   totalBillableHours: number | null
   fixedPriceNet: number | null
+  overheadPercentOverride: number | null
+  overheadAmountOverride: number | null
 }
 
 export type CalculationSumAggregateOutputType = {
@@ -78,6 +80,8 @@ export type CalculationSumAggregateOutputType = {
   profitAfterTaxEstimate: number | null
   totalBillableHours: number | null
   fixedPriceNet: number | null
+  overheadPercentOverride: number | null
+  overheadAmountOverride: number | null
 }
 
 export type CalculationMinAggregateOutputType = {
@@ -115,6 +119,8 @@ export type CalculationMinAggregateOutputType = {
   useFixedPrice: boolean | null
   fixedPriceNet: number | null
   fixedPriceLabel: string | null
+  overheadPercentOverride: number | null
+  overheadAmountOverride: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -154,6 +160,8 @@ export type CalculationMaxAggregateOutputType = {
   useFixedPrice: boolean | null
   fixedPriceNet: number | null
   fixedPriceLabel: string | null
+  overheadPercentOverride: number | null
+  overheadAmountOverride: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -193,6 +201,8 @@ export type CalculationCountAggregateOutputType = {
   useFixedPrice: number
   fixedPriceNet: number
   fixedPriceLabel: number
+  overheadPercentOverride: number
+  overheadAmountOverride: number
   snapshotJson: number
   createdAt: number
   updatedAt: number
@@ -225,6 +235,8 @@ export type CalculationAvgAggregateInputType = {
   profitAfterTaxEstimate?: true
   totalBillableHours?: true
   fixedPriceNet?: true
+  overheadPercentOverride?: true
+  overheadAmountOverride?: true
 }
 
 export type CalculationSumAggregateInputType = {
@@ -252,6 +264,8 @@ export type CalculationSumAggregateInputType = {
   profitAfterTaxEstimate?: true
   totalBillableHours?: true
   fixedPriceNet?: true
+  overheadPercentOverride?: true
+  overheadAmountOverride?: true
 }
 
 export type CalculationMinAggregateInputType = {
@@ -289,6 +303,8 @@ export type CalculationMinAggregateInputType = {
   useFixedPrice?: true
   fixedPriceNet?: true
   fixedPriceLabel?: true
+  overheadPercentOverride?: true
+  overheadAmountOverride?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -328,6 +344,8 @@ export type CalculationMaxAggregateInputType = {
   useFixedPrice?: true
   fixedPriceNet?: true
   fixedPriceLabel?: true
+  overheadPercentOverride?: true
+  overheadAmountOverride?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -367,6 +385,8 @@ export type CalculationCountAggregateInputType = {
   useFixedPrice?: true
   fixedPriceNet?: true
   fixedPriceLabel?: true
+  overheadPercentOverride?: true
+  overheadAmountOverride?: true
   snapshotJson?: true
   createdAt?: true
   updatedAt?: true
@@ -494,6 +514,8 @@ export type CalculationGroupByOutputType = {
   useFixedPrice: boolean
   fixedPriceNet: number | null
   fixedPriceLabel: string | null
+  overheadPercentOverride: number | null
+  overheadAmountOverride: number | null
   snapshotJson: runtime.JsonValue | null
   createdAt: Date
   updatedAt: Date
@@ -557,6 +579,8 @@ export type CalculationWhereInput = {
   useFixedPrice?: Prisma.BoolFilter<"Calculation"> | boolean
   fixedPriceNet?: Prisma.FloatNullableFilter<"Calculation"> | number | null
   fixedPriceLabel?: Prisma.StringNullableFilter<"Calculation"> | string | null
+  overheadPercentOverride?: Prisma.FloatNullableFilter<"Calculation"> | number | null
+  overheadAmountOverride?: Prisma.FloatNullableFilter<"Calculation"> | number | null
   snapshotJson?: Prisma.JsonNullableFilter<"Calculation">
   createdAt?: Prisma.DateTimeFilter<"Calculation"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Calculation"> | Date | string
@@ -612,6 +636,8 @@ export type CalculationOrderByWithRelationInput = {
   useFixedPrice?: Prisma.SortOrder
   fixedPriceNet?: Prisma.SortOrderInput | Prisma.SortOrder
   fixedPriceLabel?: Prisma.SortOrderInput | Prisma.SortOrder
+  overheadPercentOverride?: Prisma.SortOrderInput | Prisma.SortOrder
+  overheadAmountOverride?: Prisma.SortOrderInput | Prisma.SortOrder
   snapshotJson?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -670,6 +696,8 @@ export type CalculationWhereUniqueInput = Prisma.AtLeast<{
   useFixedPrice?: Prisma.BoolFilter<"Calculation"> | boolean
   fixedPriceNet?: Prisma.FloatNullableFilter<"Calculation"> | number | null
   fixedPriceLabel?: Prisma.StringNullableFilter<"Calculation"> | string | null
+  overheadPercentOverride?: Prisma.FloatNullableFilter<"Calculation"> | number | null
+  overheadAmountOverride?: Prisma.FloatNullableFilter<"Calculation"> | number | null
   snapshotJson?: Prisma.JsonNullableFilter<"Calculation">
   createdAt?: Prisma.DateTimeFilter<"Calculation"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Calculation"> | Date | string
@@ -725,6 +753,8 @@ export type CalculationOrderByWithAggregationInput = {
   useFixedPrice?: Prisma.SortOrder
   fixedPriceNet?: Prisma.SortOrderInput | Prisma.SortOrder
   fixedPriceLabel?: Prisma.SortOrderInput | Prisma.SortOrder
+  overheadPercentOverride?: Prisma.SortOrderInput | Prisma.SortOrder
+  overheadAmountOverride?: Prisma.SortOrderInput | Prisma.SortOrder
   snapshotJson?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -773,6 +803,8 @@ export type CalculationScalarWhereWithAggregatesInput = {
   useFixedPrice?: Prisma.BoolWithAggregatesFilter<"Calculation"> | boolean
   fixedPriceNet?: Prisma.FloatNullableWithAggregatesFilter<"Calculation"> | number | null
   fixedPriceLabel?: Prisma.StringNullableWithAggregatesFilter<"Calculation"> | string | null
+  overheadPercentOverride?: Prisma.FloatNullableWithAggregatesFilter<"Calculation"> | number | null
+  overheadAmountOverride?: Prisma.FloatNullableWithAggregatesFilter<"Calculation"> | number | null
   snapshotJson?: Prisma.JsonNullableWithAggregatesFilter<"Calculation">
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Calculation"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Calculation"> | Date | string
@@ -809,6 +841,8 @@ export type CalculationCreateInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  overheadPercentOverride?: number | null
+  overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -864,6 +898,8 @@ export type CalculationUncheckedCreateInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  overheadPercentOverride?: number | null
+  overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -911,6 +947,8 @@ export type CalculationUpdateInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -966,6 +1004,8 @@ export type CalculationUncheckedUpdateInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1017,6 +1057,8 @@ export type CalculationCreateManyInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  overheadPercentOverride?: number | null
+  overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1053,6 +1095,8 @@ export type CalculationUpdateManyMutationInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1093,6 +1137,8 @@ export type CalculationUncheckedUpdateManyInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1143,6 +1189,8 @@ export type CalculationCountOrderByAggregateInput = {
   useFixedPrice?: Prisma.SortOrder
   fixedPriceNet?: Prisma.SortOrder
   fixedPriceLabel?: Prisma.SortOrder
+  overheadPercentOverride?: Prisma.SortOrder
+  overheadAmountOverride?: Prisma.SortOrder
   snapshotJson?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -1173,6 +1221,8 @@ export type CalculationAvgOrderByAggregateInput = {
   profitAfterTaxEstimate?: Prisma.SortOrder
   totalBillableHours?: Prisma.SortOrder
   fixedPriceNet?: Prisma.SortOrder
+  overheadPercentOverride?: Prisma.SortOrder
+  overheadAmountOverride?: Prisma.SortOrder
 }
 
 export type CalculationMaxOrderByAggregateInput = {
@@ -1210,6 +1260,8 @@ export type CalculationMaxOrderByAggregateInput = {
   useFixedPrice?: Prisma.SortOrder
   fixedPriceNet?: Prisma.SortOrder
   fixedPriceLabel?: Prisma.SortOrder
+  overheadPercentOverride?: Prisma.SortOrder
+  overheadAmountOverride?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -1249,6 +1301,8 @@ export type CalculationMinOrderByAggregateInput = {
   useFixedPrice?: Prisma.SortOrder
   fixedPriceNet?: Prisma.SortOrder
   fixedPriceLabel?: Prisma.SortOrder
+  overheadPercentOverride?: Prisma.SortOrder
+  overheadAmountOverride?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -1278,6 +1332,8 @@ export type CalculationSumOrderByAggregateInput = {
   profitAfterTaxEstimate?: Prisma.SortOrder
   totalBillableHours?: Prisma.SortOrder
   fixedPriceNet?: Prisma.SortOrder
+  overheadPercentOverride?: Prisma.SortOrder
+  overheadAmountOverride?: Prisma.SortOrder
 }
 
 export type CalculationScalarRelationFilter = {
@@ -1642,6 +1698,8 @@ export type CalculationCreateWithoutTenantInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  overheadPercentOverride?: number | null
+  overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1695,6 +1753,8 @@ export type CalculationUncheckedCreateWithoutTenantInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  overheadPercentOverride?: number | null
+  overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1775,6 +1835,8 @@ export type CalculationScalarWhereInput = {
   useFixedPrice?: Prisma.BoolFilter<"Calculation"> | boolean
   fixedPriceNet?: Prisma.FloatNullableFilter<"Calculation"> | number | null
   fixedPriceLabel?: Prisma.StringNullableFilter<"Calculation"> | string | null
+  overheadPercentOverride?: Prisma.FloatNullableFilter<"Calculation"> | number | null
+  overheadAmountOverride?: Prisma.FloatNullableFilter<"Calculation"> | number | null
   snapshotJson?: Prisma.JsonNullableFilter<"Calculation">
   createdAt?: Prisma.DateTimeFilter<"Calculation"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Calculation"> | Date | string
@@ -1811,6 +1873,8 @@ export type CalculationCreateWithoutCustomerInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  overheadPercentOverride?: number | null
+  overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1864,6 +1928,8 @@ export type CalculationUncheckedCreateWithoutCustomerInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  overheadPercentOverride?: number | null
+  overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1937,6 +2003,8 @@ export type CalculationCreateWithoutOrderInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  overheadPercentOverride?: number | null
+  overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1990,6 +2058,8 @@ export type CalculationUncheckedCreateWithoutOrderInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  overheadPercentOverride?: number | null
+  overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2063,6 +2133,8 @@ export type CalculationCreateWithoutLaborItemsInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  overheadPercentOverride?: number | null
+  overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2117,6 +2189,8 @@ export type CalculationUncheckedCreateWithoutLaborItemsInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  overheadPercentOverride?: number | null
+  overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2179,6 +2253,8 @@ export type CalculationUpdateWithoutLaborItemsInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2233,6 +2309,8 @@ export type CalculationUncheckedUpdateWithoutLaborItemsInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2279,6 +2357,8 @@ export type CalculationCreateWithoutMaterialItemsInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  overheadPercentOverride?: number | null
+  overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2333,6 +2413,8 @@ export type CalculationUncheckedCreateWithoutMaterialItemsInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  overheadPercentOverride?: number | null
+  overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2395,6 +2477,8 @@ export type CalculationUpdateWithoutMaterialItemsInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2449,6 +2533,8 @@ export type CalculationUncheckedUpdateWithoutMaterialItemsInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2495,6 +2581,8 @@ export type CalculationCreateWithoutMachineUsagesInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  overheadPercentOverride?: number | null
+  overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2549,6 +2637,8 @@ export type CalculationUncheckedCreateWithoutMachineUsagesInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  overheadPercentOverride?: number | null
+  overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2611,6 +2701,8 @@ export type CalculationUpdateWithoutMachineUsagesInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2665,6 +2757,8 @@ export type CalculationUncheckedUpdateWithoutMachineUsagesInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2711,6 +2805,8 @@ export type CalculationCreateWithoutProcurementCostsInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  overheadPercentOverride?: number | null
+  overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2765,6 +2861,8 @@ export type CalculationUncheckedCreateWithoutProcurementCostsInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  overheadPercentOverride?: number | null
+  overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2827,6 +2925,8 @@ export type CalculationUpdateWithoutProcurementCostsInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2881,6 +2981,8 @@ export type CalculationUncheckedUpdateWithoutProcurementCostsInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2927,6 +3029,8 @@ export type CalculationCreateWithoutTravelCostInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  overheadPercentOverride?: number | null
+  overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2981,6 +3085,8 @@ export type CalculationUncheckedCreateWithoutTravelCostInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  overheadPercentOverride?: number | null
+  overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -3043,6 +3149,8 @@ export type CalculationUpdateWithoutTravelCostInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3097,6 +3205,8 @@ export type CalculationUncheckedUpdateWithoutTravelCostInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3143,6 +3253,8 @@ export type CalculationCreateWithoutAdditionalItemsInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  overheadPercentOverride?: number | null
+  overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -3197,6 +3309,8 @@ export type CalculationUncheckedCreateWithoutAdditionalItemsInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  overheadPercentOverride?: number | null
+  overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -3259,6 +3373,8 @@ export type CalculationUpdateWithoutAdditionalItemsInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3313,6 +3429,8 @@ export type CalculationUncheckedUpdateWithoutAdditionalItemsInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3359,6 +3477,8 @@ export type CalculationCreateWithoutRiskSettingsInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  overheadPercentOverride?: number | null
+  overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -3413,6 +3533,8 @@ export type CalculationUncheckedCreateWithoutRiskSettingsInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  overheadPercentOverride?: number | null
+  overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -3475,6 +3597,8 @@ export type CalculationUpdateWithoutRiskSettingsInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3529,6 +3653,8 @@ export type CalculationUncheckedUpdateWithoutRiskSettingsInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3575,6 +3701,8 @@ export type CalculationCreateWithoutProfitSettingsInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  overheadPercentOverride?: number | null
+  overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -3629,6 +3757,8 @@ export type CalculationUncheckedCreateWithoutProfitSettingsInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  overheadPercentOverride?: number | null
+  overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -3691,6 +3821,8 @@ export type CalculationUpdateWithoutProfitSettingsInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3745,6 +3877,8 @@ export type CalculationUncheckedUpdateWithoutProfitSettingsInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3791,6 +3925,8 @@ export type CalculationCreateWithoutIncomeTaxSettingsInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  overheadPercentOverride?: number | null
+  overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -3845,6 +3981,8 @@ export type CalculationUncheckedCreateWithoutIncomeTaxSettingsInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  overheadPercentOverride?: number | null
+  overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -3907,6 +4045,8 @@ export type CalculationUpdateWithoutIncomeTaxSettingsInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3961,6 +4101,8 @@ export type CalculationUncheckedUpdateWithoutIncomeTaxSettingsInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4007,6 +4149,8 @@ export type CalculationCreateWithoutVatSettingsInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  overheadPercentOverride?: number | null
+  overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -4061,6 +4205,8 @@ export type CalculationUncheckedCreateWithoutVatSettingsInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  overheadPercentOverride?: number | null
+  overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -4123,6 +4269,8 @@ export type CalculationUpdateWithoutVatSettingsInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4177,6 +4325,8 @@ export type CalculationUncheckedUpdateWithoutVatSettingsInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4223,6 +4373,8 @@ export type CalculationCreateWithoutDocumentsInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  overheadPercentOverride?: number | null
+  overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -4277,6 +4429,8 @@ export type CalculationUncheckedCreateWithoutDocumentsInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  overheadPercentOverride?: number | null
+  overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -4339,6 +4493,8 @@ export type CalculationUpdateWithoutDocumentsInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4393,6 +4549,8 @@ export type CalculationUncheckedUpdateWithoutDocumentsInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4439,6 +4597,8 @@ export type CalculationCreateWithoutProjectInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  overheadPercentOverride?: number | null
+  overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -4492,6 +4652,8 @@ export type CalculationUncheckedCreateWithoutProjectInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  overheadPercentOverride?: number | null
+  overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -4568,6 +4730,8 @@ export type CalculationCreateManyTenantInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  overheadPercentOverride?: number | null
+  overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -4604,6 +4768,8 @@ export type CalculationUpdateWithoutTenantInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4657,6 +4823,8 @@ export type CalculationUncheckedUpdateWithoutTenantInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4707,6 +4875,8 @@ export type CalculationUncheckedUpdateManyWithoutTenantInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4746,6 +4916,8 @@ export type CalculationCreateManyCustomerInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  overheadPercentOverride?: number | null
+  overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -4782,6 +4954,8 @@ export type CalculationUpdateWithoutCustomerInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4835,6 +5009,8 @@ export type CalculationUncheckedUpdateWithoutCustomerInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4885,6 +5061,8 @@ export type CalculationUncheckedUpdateManyWithoutCustomerInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4924,6 +5102,8 @@ export type CalculationCreateManyOrderInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  overheadPercentOverride?: number | null
+  overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -4960,6 +5140,8 @@ export type CalculationUpdateWithoutOrderInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -5013,6 +5195,8 @@ export type CalculationUncheckedUpdateWithoutOrderInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -5063,6 +5247,8 @@ export type CalculationUncheckedUpdateManyWithoutOrderInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -5102,6 +5288,8 @@ export type CalculationCreateManyProjectInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  overheadPercentOverride?: number | null
+  overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -5138,6 +5326,8 @@ export type CalculationUpdateWithoutProjectInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -5191,6 +5381,8 @@ export type CalculationUncheckedUpdateWithoutProjectInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -5241,6 +5433,8 @@ export type CalculationUncheckedUpdateManyWithoutProjectInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -5357,6 +5551,8 @@ export type CalculationSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   useFixedPrice?: boolean
   fixedPriceNet?: boolean
   fixedPriceLabel?: boolean
+  overheadPercentOverride?: boolean
+  overheadAmountOverride?: boolean
   snapshotJson?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -5413,6 +5609,8 @@ export type CalculationSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   useFixedPrice?: boolean
   fixedPriceNet?: boolean
   fixedPriceLabel?: boolean
+  overheadPercentOverride?: boolean
+  overheadAmountOverride?: boolean
   snapshotJson?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -5457,6 +5655,8 @@ export type CalculationSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   useFixedPrice?: boolean
   fixedPriceNet?: boolean
   fixedPriceLabel?: boolean
+  overheadPercentOverride?: boolean
+  overheadAmountOverride?: boolean
   snapshotJson?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -5501,12 +5701,14 @@ export type CalculationSelectScalar = {
   useFixedPrice?: boolean
   fixedPriceNet?: boolean
   fixedPriceLabel?: boolean
+  overheadPercentOverride?: boolean
+  overheadAmountOverride?: boolean
   snapshotJson?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type CalculationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "customerId" | "orderId" | "projectId" | "title" | "status" | "currentStep" | "laborTotal" | "materialTotal" | "machineTotal" | "procurementTotal" | "travelTotal" | "additionalTotal" | "directCosts" | "overheadAmount" | "incomeTaxOwnerAmount" | "subtotalBeforeRisk" | "riskAmount" | "subtotalAfterRisk" | "profitAmount" | "netSalesPrice" | "vatAmount" | "grossSalesPrice" | "contributionMargin" | "contributionMarginRate" | "marginPercent" | "minimumPrice" | "profitAfterTaxEstimate" | "totalBillableHours" | "profitabilityStatus" | "useFixedPrice" | "fixedPriceNet" | "fixedPriceLabel" | "snapshotJson" | "createdAt" | "updatedAt", ExtArgs["result"]["calculation"]>
+export type CalculationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "customerId" | "orderId" | "projectId" | "title" | "status" | "currentStep" | "laborTotal" | "materialTotal" | "machineTotal" | "procurementTotal" | "travelTotal" | "additionalTotal" | "directCosts" | "overheadAmount" | "incomeTaxOwnerAmount" | "subtotalBeforeRisk" | "riskAmount" | "subtotalAfterRisk" | "profitAmount" | "netSalesPrice" | "vatAmount" | "grossSalesPrice" | "contributionMargin" | "contributionMarginRate" | "marginPercent" | "minimumPrice" | "profitAfterTaxEstimate" | "totalBillableHours" | "profitabilityStatus" | "useFixedPrice" | "fixedPriceNet" | "fixedPriceLabel" | "overheadPercentOverride" | "overheadAmountOverride" | "snapshotJson" | "createdAt" | "updatedAt", ExtArgs["result"]["calculation"]>
 export type CalculationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   customer?: boolean | Prisma.Calculation$customerArgs<ExtArgs>
@@ -5595,6 +5797,11 @@ export type $CalculationPayload<ExtArgs extends runtime.Types.Extensions.Interna
     useFixedPrice: boolean
     fixedPriceNet: number | null
     fixedPriceLabel: string | null
+    /**
+     * Pro-Kalkulation: Gemeinkosten überschreiben (null = Tenant-Standard)
+     */
+    overheadPercentOverride: number | null
+    overheadAmountOverride: number | null
     snapshotJson: runtime.JsonValue | null
     createdAt: Date
     updatedAt: Date
@@ -6070,6 +6277,8 @@ export interface CalculationFieldRefs {
   readonly useFixedPrice: Prisma.FieldRef<"Calculation", 'Boolean'>
   readonly fixedPriceNet: Prisma.FieldRef<"Calculation", 'Float'>
   readonly fixedPriceLabel: Prisma.FieldRef<"Calculation", 'String'>
+  readonly overheadPercentOverride: Prisma.FieldRef<"Calculation", 'Float'>
+  readonly overheadAmountOverride: Prisma.FieldRef<"Calculation", 'Float'>
   readonly snapshotJson: Prisma.FieldRef<"Calculation", 'Json'>
   readonly createdAt: Prisma.FieldRef<"Calculation", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Calculation", 'DateTime'>

@@ -30,6 +30,8 @@ export async function convertCalculationToInvoice(
     preview?: boolean;
     mode?: InvoiceActionMode;
     documentId?: string;
+    /** Rechnungsdatum (YYYY-MM-DD). Standard: heute. */
+    issueDate?: string;
   } = {}
 ): Promise<ConvertInvoiceResult> {
   const res = await fetch(`/api/calculations/${calculationId}/convert-to-invoice`, {
@@ -39,6 +41,7 @@ export async function convertCalculationToInvoice(
       preview: options.preview === true,
       mode: options.mode,
       documentId: options.documentId,
+      issueDate: options.issueDate,
     }),
   });
   const d = await res.json();

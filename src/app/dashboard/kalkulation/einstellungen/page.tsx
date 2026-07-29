@@ -7,9 +7,10 @@ import { Input } from "@/components/ui/input";
 import { NumberInput } from "@/components/ui/number-input";
 import { Card } from "@/components/ui/card";
 import { InfoButton } from "@/components/ui/info-button";
-import { ChevronLeft, Save, FileText } from "lucide-react";
+import { ChevronLeft, Save, FileText, Cog, MapPin } from "lucide-react";
 import { formatEuro } from "@/lib/utils";
 import { CanAccess } from "@/components/auth/can-access";
+import { NavActionCard } from "@/components/ui/nav-action-card";
 
 interface CompanyForm {
   companyName: string;
@@ -164,15 +165,26 @@ export default function KalkulationEinstellungenPage() {
 
   return (
     <div>
-      <Link href="/dashboard/kalkulation" className="text-sm text-[#0d5c63] flex items-center gap-1 mb-4">
-        <ChevronLeft className="h-4 w-4" /> Zurück zur Kalkulation
-      </Link>
-      <Link href="/dashboard/maschinen" className="text-sm text-[#0d5c63] flex items-center gap-1 mb-4 ml-4">
-        Maschinen & Amortisation →
-      </Link>
-      <Link href="/dashboard/kalkulation/zonen" className="text-sm text-[#0d5c63] flex items-center gap-1 mb-4 ml-4">
-        Anfahrtszonen verwalten →
-      </Link>
+      <Button asChild variant="ghost" size="sm" className="mb-3 -ml-2 gap-1 text-slate-600">
+        <Link href="/dashboard/kalkulation">
+          <ChevronLeft className="h-4 w-4" /> Zurück zur Kalkulation
+        </Link>
+      </Button>
+
+      <div className="mb-6 grid gap-2 sm:grid-cols-2">
+        <NavActionCard
+          href="/dashboard/maschinen"
+          title="Maschinen & Amortisation"
+          description="Maschinenstunden und Kosten hinterlegen"
+          icon={Cog}
+        />
+        <NavActionCard
+          href="/dashboard/kalkulation/zonen"
+          title="Anfahrtszonen verwalten"
+          description="Zonen und Kilometerpauschalen"
+          icon={MapPin}
+        />
+      </div>
 
       <h1 className="text-2xl font-bold mb-6">Unternehmensprofil & Gemeinkosten</h1>
 

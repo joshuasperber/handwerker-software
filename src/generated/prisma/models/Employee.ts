@@ -20,8 +20,18 @@ export type EmployeeModel = runtime.Types.Result.DefaultSelection<Prisma.$Employ
 
 export type AggregateEmployee = {
   _count: EmployeeCountAggregateOutputType | null
+  _avg: EmployeeAvgAggregateOutputType | null
+  _sum: EmployeeSumAggregateOutputType | null
   _min: EmployeeMinAggregateOutputType | null
   _max: EmployeeMaxAggregateOutputType | null
+}
+
+export type EmployeeAvgAggregateOutputType = {
+  hourlyWageNet: number | null
+}
+
+export type EmployeeSumAggregateOutputType = {
+  hourlyWageNet: number | null
 }
 
 export type EmployeeMinAggregateOutputType = {
@@ -29,6 +39,7 @@ export type EmployeeMinAggregateOutputType = {
   tenantId: string | null
   userId: string | null
   color: string | null
+  hourlyWageNet: number | null
   operationalStatus: $Enums.EmployeeOperationalStatus | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -39,6 +50,7 @@ export type EmployeeMaxAggregateOutputType = {
   tenantId: string | null
   userId: string | null
   color: string | null
+  hourlyWageNet: number | null
   operationalStatus: $Enums.EmployeeOperationalStatus | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -49,6 +61,7 @@ export type EmployeeCountAggregateOutputType = {
   tenantId: number
   userId: number
   color: number
+  hourlyWageNet: number
   operationalStatus: number
   createdAt: number
   updatedAt: number
@@ -56,11 +69,20 @@ export type EmployeeCountAggregateOutputType = {
 }
 
 
+export type EmployeeAvgAggregateInputType = {
+  hourlyWageNet?: true
+}
+
+export type EmployeeSumAggregateInputType = {
+  hourlyWageNet?: true
+}
+
 export type EmployeeMinAggregateInputType = {
   id?: true
   tenantId?: true
   userId?: true
   color?: true
+  hourlyWageNet?: true
   operationalStatus?: true
   createdAt?: true
   updatedAt?: true
@@ -71,6 +93,7 @@ export type EmployeeMaxAggregateInputType = {
   tenantId?: true
   userId?: true
   color?: true
+  hourlyWageNet?: true
   operationalStatus?: true
   createdAt?: true
   updatedAt?: true
@@ -81,6 +104,7 @@ export type EmployeeCountAggregateInputType = {
   tenantId?: true
   userId?: true
   color?: true
+  hourlyWageNet?: true
   operationalStatus?: true
   createdAt?: true
   updatedAt?: true
@@ -125,6 +149,18 @@ export type EmployeeAggregateArgs<ExtArgs extends runtime.Types.Extensions.Inter
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: EmployeeAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: EmployeeSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: EmployeeMinAggregateInputType
@@ -155,6 +191,8 @@ export type EmployeeGroupByArgs<ExtArgs extends runtime.Types.Extensions.Interna
   take?: number
   skip?: number
   _count?: EmployeeCountAggregateInputType | true
+  _avg?: EmployeeAvgAggregateInputType
+  _sum?: EmployeeSumAggregateInputType
   _min?: EmployeeMinAggregateInputType
   _max?: EmployeeMaxAggregateInputType
 }
@@ -164,10 +202,13 @@ export type EmployeeGroupByOutputType = {
   tenantId: string
   userId: string
   color: string
+  hourlyWageNet: number | null
   operationalStatus: $Enums.EmployeeOperationalStatus
   createdAt: Date
   updatedAt: Date
   _count: EmployeeCountAggregateOutputType | null
+  _avg: EmployeeAvgAggregateOutputType | null
+  _sum: EmployeeSumAggregateOutputType | null
   _min: EmployeeMinAggregateOutputType | null
   _max: EmployeeMaxAggregateOutputType | null
 }
@@ -195,6 +236,7 @@ export type EmployeeWhereInput = {
   tenantId?: Prisma.StringFilter<"Employee"> | string
   userId?: Prisma.StringFilter<"Employee"> | string
   color?: Prisma.StringFilter<"Employee"> | string
+  hourlyWageNet?: Prisma.FloatNullableFilter<"Employee"> | number | null
   operationalStatus?: Prisma.EnumEmployeeOperationalStatusFilter<"Employee"> | $Enums.EmployeeOperationalStatus
   createdAt?: Prisma.DateTimeFilter<"Employee"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Employee"> | Date | string
@@ -212,6 +254,7 @@ export type EmployeeWhereInput = {
   assignedVehicles?: Prisma.VehicleListRelationFilter
   stockMovements?: Prisma.StockMovementListRelationFilter
   projectMemberships?: Prisma.ProjectMemberListRelationFilter
+  orderAssignments?: Prisma.OrderAssigneeListRelationFilter
 }
 
 export type EmployeeOrderByWithRelationInput = {
@@ -219,6 +262,7 @@ export type EmployeeOrderByWithRelationInput = {
   tenantId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   color?: Prisma.SortOrder
+  hourlyWageNet?: Prisma.SortOrderInput | Prisma.SortOrder
   operationalStatus?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -236,6 +280,7 @@ export type EmployeeOrderByWithRelationInput = {
   assignedVehicles?: Prisma.VehicleOrderByRelationAggregateInput
   stockMovements?: Prisma.StockMovementOrderByRelationAggregateInput
   projectMemberships?: Prisma.ProjectMemberOrderByRelationAggregateInput
+  orderAssignments?: Prisma.OrderAssigneeOrderByRelationAggregateInput
 }
 
 export type EmployeeWhereUniqueInput = Prisma.AtLeast<{
@@ -246,6 +291,7 @@ export type EmployeeWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.EmployeeWhereInput | Prisma.EmployeeWhereInput[]
   tenantId?: Prisma.StringFilter<"Employee"> | string
   color?: Prisma.StringFilter<"Employee"> | string
+  hourlyWageNet?: Prisma.FloatNullableFilter<"Employee"> | number | null
   operationalStatus?: Prisma.EnumEmployeeOperationalStatusFilter<"Employee"> | $Enums.EmployeeOperationalStatus
   createdAt?: Prisma.DateTimeFilter<"Employee"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Employee"> | Date | string
@@ -263,6 +309,7 @@ export type EmployeeWhereUniqueInput = Prisma.AtLeast<{
   assignedVehicles?: Prisma.VehicleListRelationFilter
   stockMovements?: Prisma.StockMovementListRelationFilter
   projectMemberships?: Prisma.ProjectMemberListRelationFilter
+  orderAssignments?: Prisma.OrderAssigneeListRelationFilter
 }, "id" | "userId">
 
 export type EmployeeOrderByWithAggregationInput = {
@@ -270,12 +317,15 @@ export type EmployeeOrderByWithAggregationInput = {
   tenantId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   color?: Prisma.SortOrder
+  hourlyWageNet?: Prisma.SortOrderInput | Prisma.SortOrder
   operationalStatus?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.EmployeeCountOrderByAggregateInput
+  _avg?: Prisma.EmployeeAvgOrderByAggregateInput
   _max?: Prisma.EmployeeMaxOrderByAggregateInput
   _min?: Prisma.EmployeeMinOrderByAggregateInput
+  _sum?: Prisma.EmployeeSumOrderByAggregateInput
 }
 
 export type EmployeeScalarWhereWithAggregatesInput = {
@@ -286,6 +336,7 @@ export type EmployeeScalarWhereWithAggregatesInput = {
   tenantId?: Prisma.StringWithAggregatesFilter<"Employee"> | string
   userId?: Prisma.StringWithAggregatesFilter<"Employee"> | string
   color?: Prisma.StringWithAggregatesFilter<"Employee"> | string
+  hourlyWageNet?: Prisma.FloatNullableWithAggregatesFilter<"Employee"> | number | null
   operationalStatus?: Prisma.EnumEmployeeOperationalStatusWithAggregatesFilter<"Employee"> | $Enums.EmployeeOperationalStatus
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Employee"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Employee"> | Date | string
@@ -294,6 +345,7 @@ export type EmployeeScalarWhereWithAggregatesInput = {
 export type EmployeeCreateInput = {
   id?: string
   color?: string
+  hourlyWageNet?: number | null
   operationalStatus?: $Enums.EmployeeOperationalStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -311,6 +363,7 @@ export type EmployeeCreateInput = {
   assignedVehicles?: Prisma.VehicleCreateNestedManyWithoutAssignedEmployeeInput
   stockMovements?: Prisma.StockMovementCreateNestedManyWithoutEmployeeInput
   projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutEmployeeInput
+  orderAssignments?: Prisma.OrderAssigneeCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateInput = {
@@ -318,6 +371,7 @@ export type EmployeeUncheckedCreateInput = {
   tenantId: string
   userId: string
   color?: string
+  hourlyWageNet?: number | null
   operationalStatus?: $Enums.EmployeeOperationalStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -333,11 +387,13 @@ export type EmployeeUncheckedCreateInput = {
   assignedVehicles?: Prisma.VehicleUncheckedCreateNestedManyWithoutAssignedEmployeeInput
   stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutEmployeeInput
   projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutEmployeeInput
+  orderAssignments?: Prisma.OrderAssigneeUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  hourlyWageNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   operationalStatus?: Prisma.EnumEmployeeOperationalStatusFieldUpdateOperationsInput | $Enums.EmployeeOperationalStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -355,6 +411,7 @@ export type EmployeeUpdateInput = {
   assignedVehicles?: Prisma.VehicleUpdateManyWithoutAssignedEmployeeNestedInput
   stockMovements?: Prisma.StockMovementUpdateManyWithoutEmployeeNestedInput
   projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutEmployeeNestedInput
+  orderAssignments?: Prisma.OrderAssigneeUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateInput = {
@@ -362,6 +419,7 @@ export type EmployeeUncheckedUpdateInput = {
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  hourlyWageNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   operationalStatus?: Prisma.EnumEmployeeOperationalStatusFieldUpdateOperationsInput | $Enums.EmployeeOperationalStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -377,6 +435,7 @@ export type EmployeeUncheckedUpdateInput = {
   assignedVehicles?: Prisma.VehicleUncheckedUpdateManyWithoutAssignedEmployeeNestedInput
   stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutEmployeeNestedInput
   projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutEmployeeNestedInput
+  orderAssignments?: Prisma.OrderAssigneeUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateManyInput = {
@@ -384,6 +443,7 @@ export type EmployeeCreateManyInput = {
   tenantId: string
   userId: string
   color?: string
+  hourlyWageNet?: number | null
   operationalStatus?: $Enums.EmployeeOperationalStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -392,6 +452,7 @@ export type EmployeeCreateManyInput = {
 export type EmployeeUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  hourlyWageNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   operationalStatus?: Prisma.EnumEmployeeOperationalStatusFieldUpdateOperationsInput | $Enums.EmployeeOperationalStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -402,6 +463,7 @@ export type EmployeeUncheckedUpdateManyInput = {
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  hourlyWageNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   operationalStatus?: Prisma.EnumEmployeeOperationalStatusFieldUpdateOperationsInput | $Enums.EmployeeOperationalStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -427,9 +489,14 @@ export type EmployeeCountOrderByAggregateInput = {
   tenantId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   color?: Prisma.SortOrder
+  hourlyWageNet?: Prisma.SortOrder
   operationalStatus?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type EmployeeAvgOrderByAggregateInput = {
+  hourlyWageNet?: Prisma.SortOrder
 }
 
 export type EmployeeMaxOrderByAggregateInput = {
@@ -437,6 +504,7 @@ export type EmployeeMaxOrderByAggregateInput = {
   tenantId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   color?: Prisma.SortOrder
+  hourlyWageNet?: Prisma.SortOrder
   operationalStatus?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -447,9 +515,14 @@ export type EmployeeMinOrderByAggregateInput = {
   tenantId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   color?: Prisma.SortOrder
+  hourlyWageNet?: Prisma.SortOrder
   operationalStatus?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type EmployeeSumOrderByAggregateInput = {
+  hourlyWageNet?: Prisma.SortOrder
 }
 
 export type EmployeeScalarRelationFilter = {
@@ -561,6 +634,20 @@ export type EmployeeUpdateOneRequiredWithoutWorkingHoursNestedInput = {
   upsert?: Prisma.EmployeeUpsertWithoutWorkingHoursInput
   connect?: Prisma.EmployeeWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.EmployeeUpdateToOneWithWhereWithoutWorkingHoursInput, Prisma.EmployeeUpdateWithoutWorkingHoursInput>, Prisma.EmployeeUncheckedUpdateWithoutWorkingHoursInput>
+}
+
+export type EmployeeCreateNestedOneWithoutOrderAssignmentsInput = {
+  create?: Prisma.XOR<Prisma.EmployeeCreateWithoutOrderAssignmentsInput, Prisma.EmployeeUncheckedCreateWithoutOrderAssignmentsInput>
+  connectOrCreate?: Prisma.EmployeeCreateOrConnectWithoutOrderAssignmentsInput
+  connect?: Prisma.EmployeeWhereUniqueInput
+}
+
+export type EmployeeUpdateOneRequiredWithoutOrderAssignmentsNestedInput = {
+  create?: Prisma.XOR<Prisma.EmployeeCreateWithoutOrderAssignmentsInput, Prisma.EmployeeUncheckedCreateWithoutOrderAssignmentsInput>
+  connectOrCreate?: Prisma.EmployeeCreateOrConnectWithoutOrderAssignmentsInput
+  upsert?: Prisma.EmployeeUpsertWithoutOrderAssignmentsInput
+  connect?: Prisma.EmployeeWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.EmployeeUpdateToOneWithWhereWithoutOrderAssignmentsInput, Prisma.EmployeeUpdateWithoutOrderAssignmentsInput>, Prisma.EmployeeUncheckedUpdateWithoutOrderAssignmentsInput>
 }
 
 export type EmployeeCreateNestedOneWithoutAppointmentsInput = {
@@ -714,6 +801,7 @@ export type EmployeeUpdateOneRequiredWithoutProjectMembershipsNestedInput = {
 export type EmployeeCreateWithoutTenantInput = {
   id?: string
   color?: string
+  hourlyWageNet?: number | null
   operationalStatus?: $Enums.EmployeeOperationalStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -730,12 +818,14 @@ export type EmployeeCreateWithoutTenantInput = {
   assignedVehicles?: Prisma.VehicleCreateNestedManyWithoutAssignedEmployeeInput
   stockMovements?: Prisma.StockMovementCreateNestedManyWithoutEmployeeInput
   projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutEmployeeInput
+  orderAssignments?: Prisma.OrderAssigneeCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutTenantInput = {
   id?: string
   userId: string
   color?: string
+  hourlyWageNet?: number | null
   operationalStatus?: $Enums.EmployeeOperationalStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -751,6 +841,7 @@ export type EmployeeUncheckedCreateWithoutTenantInput = {
   assignedVehicles?: Prisma.VehicleUncheckedCreateNestedManyWithoutAssignedEmployeeInput
   stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutEmployeeInput
   projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutEmployeeInput
+  orderAssignments?: Prisma.OrderAssigneeUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutTenantInput = {
@@ -787,6 +878,7 @@ export type EmployeeScalarWhereInput = {
   tenantId?: Prisma.StringFilter<"Employee"> | string
   userId?: Prisma.StringFilter<"Employee"> | string
   color?: Prisma.StringFilter<"Employee"> | string
+  hourlyWageNet?: Prisma.FloatNullableFilter<"Employee"> | number | null
   operationalStatus?: Prisma.EnumEmployeeOperationalStatusFilter<"Employee"> | $Enums.EmployeeOperationalStatus
   createdAt?: Prisma.DateTimeFilter<"Employee"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Employee"> | Date | string
@@ -795,6 +887,7 @@ export type EmployeeScalarWhereInput = {
 export type EmployeeCreateWithoutUserInput = {
   id?: string
   color?: string
+  hourlyWageNet?: number | null
   operationalStatus?: $Enums.EmployeeOperationalStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -811,12 +904,14 @@ export type EmployeeCreateWithoutUserInput = {
   assignedVehicles?: Prisma.VehicleCreateNestedManyWithoutAssignedEmployeeInput
   stockMovements?: Prisma.StockMovementCreateNestedManyWithoutEmployeeInput
   projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutEmployeeInput
+  orderAssignments?: Prisma.OrderAssigneeCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutUserInput = {
   id?: string
   tenantId: string
   color?: string
+  hourlyWageNet?: number | null
   operationalStatus?: $Enums.EmployeeOperationalStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -832,6 +927,7 @@ export type EmployeeUncheckedCreateWithoutUserInput = {
   assignedVehicles?: Prisma.VehicleUncheckedCreateNestedManyWithoutAssignedEmployeeInput
   stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutEmployeeInput
   projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutEmployeeInput
+  orderAssignments?: Prisma.OrderAssigneeUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutUserInput = {
@@ -853,6 +949,7 @@ export type EmployeeUpdateToOneWithWhereWithoutUserInput = {
 export type EmployeeUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  hourlyWageNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   operationalStatus?: Prisma.EnumEmployeeOperationalStatusFieldUpdateOperationsInput | $Enums.EmployeeOperationalStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -869,12 +966,14 @@ export type EmployeeUpdateWithoutUserInput = {
   assignedVehicles?: Prisma.VehicleUpdateManyWithoutAssignedEmployeeNestedInput
   stockMovements?: Prisma.StockMovementUpdateManyWithoutEmployeeNestedInput
   projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutEmployeeNestedInput
+  orderAssignments?: Prisma.OrderAssigneeUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  hourlyWageNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   operationalStatus?: Prisma.EnumEmployeeOperationalStatusFieldUpdateOperationsInput | $Enums.EmployeeOperationalStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -890,11 +989,13 @@ export type EmployeeUncheckedUpdateWithoutUserInput = {
   assignedVehicles?: Prisma.VehicleUncheckedUpdateManyWithoutAssignedEmployeeNestedInput
   stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutEmployeeNestedInput
   projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutEmployeeNestedInput
+  orderAssignments?: Prisma.OrderAssigneeUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutQualificationsInput = {
   id?: string
   color?: string
+  hourlyWageNet?: number | null
   operationalStatus?: $Enums.EmployeeOperationalStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -911,6 +1012,7 @@ export type EmployeeCreateWithoutQualificationsInput = {
   assignedVehicles?: Prisma.VehicleCreateNestedManyWithoutAssignedEmployeeInput
   stockMovements?: Prisma.StockMovementCreateNestedManyWithoutEmployeeInput
   projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutEmployeeInput
+  orderAssignments?: Prisma.OrderAssigneeCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutQualificationsInput = {
@@ -918,6 +1020,7 @@ export type EmployeeUncheckedCreateWithoutQualificationsInput = {
   tenantId: string
   userId: string
   color?: string
+  hourlyWageNet?: number | null
   operationalStatus?: $Enums.EmployeeOperationalStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -932,6 +1035,7 @@ export type EmployeeUncheckedCreateWithoutQualificationsInput = {
   assignedVehicles?: Prisma.VehicleUncheckedCreateNestedManyWithoutAssignedEmployeeInput
   stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutEmployeeInput
   projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutEmployeeInput
+  orderAssignments?: Prisma.OrderAssigneeUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutQualificationsInput = {
@@ -953,6 +1057,7 @@ export type EmployeeUpdateToOneWithWhereWithoutQualificationsInput = {
 export type EmployeeUpdateWithoutQualificationsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  hourlyWageNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   operationalStatus?: Prisma.EnumEmployeeOperationalStatusFieldUpdateOperationsInput | $Enums.EmployeeOperationalStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -969,6 +1074,7 @@ export type EmployeeUpdateWithoutQualificationsInput = {
   assignedVehicles?: Prisma.VehicleUpdateManyWithoutAssignedEmployeeNestedInput
   stockMovements?: Prisma.StockMovementUpdateManyWithoutEmployeeNestedInput
   projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutEmployeeNestedInput
+  orderAssignments?: Prisma.OrderAssigneeUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutQualificationsInput = {
@@ -976,6 +1082,7 @@ export type EmployeeUncheckedUpdateWithoutQualificationsInput = {
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  hourlyWageNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   operationalStatus?: Prisma.EnumEmployeeOperationalStatusFieldUpdateOperationsInput | $Enums.EmployeeOperationalStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -990,11 +1097,13 @@ export type EmployeeUncheckedUpdateWithoutQualificationsInput = {
   assignedVehicles?: Prisma.VehicleUncheckedUpdateManyWithoutAssignedEmployeeNestedInput
   stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutEmployeeNestedInput
   projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutEmployeeNestedInput
+  orderAssignments?: Prisma.OrderAssigneeUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutWorkingHoursInput = {
   id?: string
   color?: string
+  hourlyWageNet?: number | null
   operationalStatus?: $Enums.EmployeeOperationalStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1011,6 +1120,7 @@ export type EmployeeCreateWithoutWorkingHoursInput = {
   assignedVehicles?: Prisma.VehicleCreateNestedManyWithoutAssignedEmployeeInput
   stockMovements?: Prisma.StockMovementCreateNestedManyWithoutEmployeeInput
   projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutEmployeeInput
+  orderAssignments?: Prisma.OrderAssigneeCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutWorkingHoursInput = {
@@ -1018,6 +1128,7 @@ export type EmployeeUncheckedCreateWithoutWorkingHoursInput = {
   tenantId: string
   userId: string
   color?: string
+  hourlyWageNet?: number | null
   operationalStatus?: $Enums.EmployeeOperationalStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1032,6 +1143,7 @@ export type EmployeeUncheckedCreateWithoutWorkingHoursInput = {
   assignedVehicles?: Prisma.VehicleUncheckedCreateNestedManyWithoutAssignedEmployeeInput
   stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutEmployeeInput
   projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutEmployeeInput
+  orderAssignments?: Prisma.OrderAssigneeUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutWorkingHoursInput = {
@@ -1053,6 +1165,7 @@ export type EmployeeUpdateToOneWithWhereWithoutWorkingHoursInput = {
 export type EmployeeUpdateWithoutWorkingHoursInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  hourlyWageNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   operationalStatus?: Prisma.EnumEmployeeOperationalStatusFieldUpdateOperationsInput | $Enums.EmployeeOperationalStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1069,6 +1182,7 @@ export type EmployeeUpdateWithoutWorkingHoursInput = {
   assignedVehicles?: Prisma.VehicleUpdateManyWithoutAssignedEmployeeNestedInput
   stockMovements?: Prisma.StockMovementUpdateManyWithoutEmployeeNestedInput
   projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutEmployeeNestedInput
+  orderAssignments?: Prisma.OrderAssigneeUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutWorkingHoursInput = {
@@ -1076,10 +1190,120 @@ export type EmployeeUncheckedUpdateWithoutWorkingHoursInput = {
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  hourlyWageNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   operationalStatus?: Prisma.EnumEmployeeOperationalStatusFieldUpdateOperationsInput | $Enums.EmployeeOperationalStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   qualifications?: Prisma.EmployeeQualificationUncheckedUpdateManyWithoutEmployeeNestedInput
+  appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutEmployeeNestedInput
+  timeEntries?: Prisma.TimeEntryUncheckedUpdateManyWithoutEmployeeNestedInput
+  materialUsages?: Prisma.MaterialUsageUncheckedUpdateManyWithoutEmployeeNestedInput
+  absences?: Prisma.EmployeeAbsenceUncheckedUpdateManyWithoutEmployeeNestedInput
+  teamMemberships?: Prisma.TeamMemberUncheckedUpdateManyWithoutEmployeeNestedInput
+  staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutEmployeeNestedInput
+  orderPhases?: Prisma.OrderPhaseUncheckedUpdateManyWithoutAssignedEmployeeNestedInput
+  assignedVehicles?: Prisma.VehicleUncheckedUpdateManyWithoutAssignedEmployeeNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutEmployeeNestedInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutEmployeeNestedInput
+  orderAssignments?: Prisma.OrderAssigneeUncheckedUpdateManyWithoutEmployeeNestedInput
+}
+
+export type EmployeeCreateWithoutOrderAssignmentsInput = {
+  id?: string
+  color?: string
+  hourlyWageNet?: number | null
+  operationalStatus?: $Enums.EmployeeOperationalStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tenant: Prisma.TenantCreateNestedOneWithoutEmployeesInput
+  user: Prisma.UserCreateNestedOneWithoutEmployeeInput
+  qualifications?: Prisma.EmployeeQualificationCreateNestedManyWithoutEmployeeInput
+  workingHours?: Prisma.EmployeeWorkingHoursCreateNestedManyWithoutEmployeeInput
+  appointments?: Prisma.AppointmentCreateNestedManyWithoutEmployeeInput
+  timeEntries?: Prisma.TimeEntryCreateNestedManyWithoutEmployeeInput
+  materialUsages?: Prisma.MaterialUsageCreateNestedManyWithoutEmployeeInput
+  absences?: Prisma.EmployeeAbsenceCreateNestedManyWithoutEmployeeInput
+  teamMemberships?: Prisma.TeamMemberCreateNestedManyWithoutEmployeeInput
+  staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutEmployeeInput
+  orderPhases?: Prisma.OrderPhaseCreateNestedManyWithoutAssignedEmployeeInput
+  assignedVehicles?: Prisma.VehicleCreateNestedManyWithoutAssignedEmployeeInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutEmployeeInput
+  projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutEmployeeInput
+}
+
+export type EmployeeUncheckedCreateWithoutOrderAssignmentsInput = {
+  id?: string
+  tenantId: string
+  userId: string
+  color?: string
+  hourlyWageNet?: number | null
+  operationalStatus?: $Enums.EmployeeOperationalStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  qualifications?: Prisma.EmployeeQualificationUncheckedCreateNestedManyWithoutEmployeeInput
+  workingHours?: Prisma.EmployeeWorkingHoursUncheckedCreateNestedManyWithoutEmployeeInput
+  appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutEmployeeInput
+  timeEntries?: Prisma.TimeEntryUncheckedCreateNestedManyWithoutEmployeeInput
+  materialUsages?: Prisma.MaterialUsageUncheckedCreateNestedManyWithoutEmployeeInput
+  absences?: Prisma.EmployeeAbsenceUncheckedCreateNestedManyWithoutEmployeeInput
+  teamMemberships?: Prisma.TeamMemberUncheckedCreateNestedManyWithoutEmployeeInput
+  staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutEmployeeInput
+  orderPhases?: Prisma.OrderPhaseUncheckedCreateNestedManyWithoutAssignedEmployeeInput
+  assignedVehicles?: Prisma.VehicleUncheckedCreateNestedManyWithoutAssignedEmployeeInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutEmployeeInput
+  projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutEmployeeInput
+}
+
+export type EmployeeCreateOrConnectWithoutOrderAssignmentsInput = {
+  where: Prisma.EmployeeWhereUniqueInput
+  create: Prisma.XOR<Prisma.EmployeeCreateWithoutOrderAssignmentsInput, Prisma.EmployeeUncheckedCreateWithoutOrderAssignmentsInput>
+}
+
+export type EmployeeUpsertWithoutOrderAssignmentsInput = {
+  update: Prisma.XOR<Prisma.EmployeeUpdateWithoutOrderAssignmentsInput, Prisma.EmployeeUncheckedUpdateWithoutOrderAssignmentsInput>
+  create: Prisma.XOR<Prisma.EmployeeCreateWithoutOrderAssignmentsInput, Prisma.EmployeeUncheckedCreateWithoutOrderAssignmentsInput>
+  where?: Prisma.EmployeeWhereInput
+}
+
+export type EmployeeUpdateToOneWithWhereWithoutOrderAssignmentsInput = {
+  where?: Prisma.EmployeeWhereInput
+  data: Prisma.XOR<Prisma.EmployeeUpdateWithoutOrderAssignmentsInput, Prisma.EmployeeUncheckedUpdateWithoutOrderAssignmentsInput>
+}
+
+export type EmployeeUpdateWithoutOrderAssignmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.StringFieldUpdateOperationsInput | string
+  hourlyWageNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  operationalStatus?: Prisma.EnumEmployeeOperationalStatusFieldUpdateOperationsInput | $Enums.EmployeeOperationalStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutEmployeesNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutEmployeeNestedInput
+  qualifications?: Prisma.EmployeeQualificationUpdateManyWithoutEmployeeNestedInput
+  workingHours?: Prisma.EmployeeWorkingHoursUpdateManyWithoutEmployeeNestedInput
+  appointments?: Prisma.AppointmentUpdateManyWithoutEmployeeNestedInput
+  timeEntries?: Prisma.TimeEntryUpdateManyWithoutEmployeeNestedInput
+  materialUsages?: Prisma.MaterialUsageUpdateManyWithoutEmployeeNestedInput
+  absences?: Prisma.EmployeeAbsenceUpdateManyWithoutEmployeeNestedInput
+  teamMemberships?: Prisma.TeamMemberUpdateManyWithoutEmployeeNestedInput
+  staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutEmployeeNestedInput
+  orderPhases?: Prisma.OrderPhaseUpdateManyWithoutAssignedEmployeeNestedInput
+  assignedVehicles?: Prisma.VehicleUpdateManyWithoutAssignedEmployeeNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutEmployeeNestedInput
+  projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutEmployeeNestedInput
+}
+
+export type EmployeeUncheckedUpdateWithoutOrderAssignmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.StringFieldUpdateOperationsInput | string
+  hourlyWageNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  operationalStatus?: Prisma.EnumEmployeeOperationalStatusFieldUpdateOperationsInput | $Enums.EmployeeOperationalStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  qualifications?: Prisma.EmployeeQualificationUncheckedUpdateManyWithoutEmployeeNestedInput
+  workingHours?: Prisma.EmployeeWorkingHoursUncheckedUpdateManyWithoutEmployeeNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutEmployeeNestedInput
   timeEntries?: Prisma.TimeEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   materialUsages?: Prisma.MaterialUsageUncheckedUpdateManyWithoutEmployeeNestedInput
@@ -1095,6 +1319,7 @@ export type EmployeeUncheckedUpdateWithoutWorkingHoursInput = {
 export type EmployeeCreateWithoutAppointmentsInput = {
   id?: string
   color?: string
+  hourlyWageNet?: number | null
   operationalStatus?: $Enums.EmployeeOperationalStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1111,6 +1336,7 @@ export type EmployeeCreateWithoutAppointmentsInput = {
   assignedVehicles?: Prisma.VehicleCreateNestedManyWithoutAssignedEmployeeInput
   stockMovements?: Prisma.StockMovementCreateNestedManyWithoutEmployeeInput
   projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutEmployeeInput
+  orderAssignments?: Prisma.OrderAssigneeCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutAppointmentsInput = {
@@ -1118,6 +1344,7 @@ export type EmployeeUncheckedCreateWithoutAppointmentsInput = {
   tenantId: string
   userId: string
   color?: string
+  hourlyWageNet?: number | null
   operationalStatus?: $Enums.EmployeeOperationalStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1132,6 +1359,7 @@ export type EmployeeUncheckedCreateWithoutAppointmentsInput = {
   assignedVehicles?: Prisma.VehicleUncheckedCreateNestedManyWithoutAssignedEmployeeInput
   stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutEmployeeInput
   projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutEmployeeInput
+  orderAssignments?: Prisma.OrderAssigneeUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutAppointmentsInput = {
@@ -1153,6 +1381,7 @@ export type EmployeeUpdateToOneWithWhereWithoutAppointmentsInput = {
 export type EmployeeUpdateWithoutAppointmentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  hourlyWageNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   operationalStatus?: Prisma.EnumEmployeeOperationalStatusFieldUpdateOperationsInput | $Enums.EmployeeOperationalStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1169,6 +1398,7 @@ export type EmployeeUpdateWithoutAppointmentsInput = {
   assignedVehicles?: Prisma.VehicleUpdateManyWithoutAssignedEmployeeNestedInput
   stockMovements?: Prisma.StockMovementUpdateManyWithoutEmployeeNestedInput
   projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutEmployeeNestedInput
+  orderAssignments?: Prisma.OrderAssigneeUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutAppointmentsInput = {
@@ -1176,6 +1406,7 @@ export type EmployeeUncheckedUpdateWithoutAppointmentsInput = {
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  hourlyWageNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   operationalStatus?: Prisma.EnumEmployeeOperationalStatusFieldUpdateOperationsInput | $Enums.EmployeeOperationalStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1190,11 +1421,13 @@ export type EmployeeUncheckedUpdateWithoutAppointmentsInput = {
   assignedVehicles?: Prisma.VehicleUncheckedUpdateManyWithoutAssignedEmployeeNestedInput
   stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutEmployeeNestedInput
   projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutEmployeeNestedInput
+  orderAssignments?: Prisma.OrderAssigneeUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutTimeEntriesInput = {
   id?: string
   color?: string
+  hourlyWageNet?: number | null
   operationalStatus?: $Enums.EmployeeOperationalStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1211,6 +1444,7 @@ export type EmployeeCreateWithoutTimeEntriesInput = {
   assignedVehicles?: Prisma.VehicleCreateNestedManyWithoutAssignedEmployeeInput
   stockMovements?: Prisma.StockMovementCreateNestedManyWithoutEmployeeInput
   projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutEmployeeInput
+  orderAssignments?: Prisma.OrderAssigneeCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutTimeEntriesInput = {
@@ -1218,6 +1452,7 @@ export type EmployeeUncheckedCreateWithoutTimeEntriesInput = {
   tenantId: string
   userId: string
   color?: string
+  hourlyWageNet?: number | null
   operationalStatus?: $Enums.EmployeeOperationalStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1232,6 +1467,7 @@ export type EmployeeUncheckedCreateWithoutTimeEntriesInput = {
   assignedVehicles?: Prisma.VehicleUncheckedCreateNestedManyWithoutAssignedEmployeeInput
   stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutEmployeeInput
   projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutEmployeeInput
+  orderAssignments?: Prisma.OrderAssigneeUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutTimeEntriesInput = {
@@ -1253,6 +1489,7 @@ export type EmployeeUpdateToOneWithWhereWithoutTimeEntriesInput = {
 export type EmployeeUpdateWithoutTimeEntriesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  hourlyWageNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   operationalStatus?: Prisma.EnumEmployeeOperationalStatusFieldUpdateOperationsInput | $Enums.EmployeeOperationalStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1269,6 +1506,7 @@ export type EmployeeUpdateWithoutTimeEntriesInput = {
   assignedVehicles?: Prisma.VehicleUpdateManyWithoutAssignedEmployeeNestedInput
   stockMovements?: Prisma.StockMovementUpdateManyWithoutEmployeeNestedInput
   projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutEmployeeNestedInput
+  orderAssignments?: Prisma.OrderAssigneeUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutTimeEntriesInput = {
@@ -1276,6 +1514,7 @@ export type EmployeeUncheckedUpdateWithoutTimeEntriesInput = {
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  hourlyWageNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   operationalStatus?: Prisma.EnumEmployeeOperationalStatusFieldUpdateOperationsInput | $Enums.EmployeeOperationalStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1290,11 +1529,13 @@ export type EmployeeUncheckedUpdateWithoutTimeEntriesInput = {
   assignedVehicles?: Prisma.VehicleUncheckedUpdateManyWithoutAssignedEmployeeNestedInput
   stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutEmployeeNestedInput
   projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutEmployeeNestedInput
+  orderAssignments?: Prisma.OrderAssigneeUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutMaterialUsagesInput = {
   id?: string
   color?: string
+  hourlyWageNet?: number | null
   operationalStatus?: $Enums.EmployeeOperationalStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1311,6 +1552,7 @@ export type EmployeeCreateWithoutMaterialUsagesInput = {
   assignedVehicles?: Prisma.VehicleCreateNestedManyWithoutAssignedEmployeeInput
   stockMovements?: Prisma.StockMovementCreateNestedManyWithoutEmployeeInput
   projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutEmployeeInput
+  orderAssignments?: Prisma.OrderAssigneeCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutMaterialUsagesInput = {
@@ -1318,6 +1560,7 @@ export type EmployeeUncheckedCreateWithoutMaterialUsagesInput = {
   tenantId: string
   userId: string
   color?: string
+  hourlyWageNet?: number | null
   operationalStatus?: $Enums.EmployeeOperationalStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1332,6 +1575,7 @@ export type EmployeeUncheckedCreateWithoutMaterialUsagesInput = {
   assignedVehicles?: Prisma.VehicleUncheckedCreateNestedManyWithoutAssignedEmployeeInput
   stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutEmployeeInput
   projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutEmployeeInput
+  orderAssignments?: Prisma.OrderAssigneeUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutMaterialUsagesInput = {
@@ -1353,6 +1597,7 @@ export type EmployeeUpdateToOneWithWhereWithoutMaterialUsagesInput = {
 export type EmployeeUpdateWithoutMaterialUsagesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  hourlyWageNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   operationalStatus?: Prisma.EnumEmployeeOperationalStatusFieldUpdateOperationsInput | $Enums.EmployeeOperationalStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1369,6 +1614,7 @@ export type EmployeeUpdateWithoutMaterialUsagesInput = {
   assignedVehicles?: Prisma.VehicleUpdateManyWithoutAssignedEmployeeNestedInput
   stockMovements?: Prisma.StockMovementUpdateManyWithoutEmployeeNestedInput
   projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutEmployeeNestedInput
+  orderAssignments?: Prisma.OrderAssigneeUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutMaterialUsagesInput = {
@@ -1376,6 +1622,7 @@ export type EmployeeUncheckedUpdateWithoutMaterialUsagesInput = {
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  hourlyWageNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   operationalStatus?: Prisma.EnumEmployeeOperationalStatusFieldUpdateOperationsInput | $Enums.EmployeeOperationalStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1390,11 +1637,13 @@ export type EmployeeUncheckedUpdateWithoutMaterialUsagesInput = {
   assignedVehicles?: Prisma.VehicleUncheckedUpdateManyWithoutAssignedEmployeeNestedInput
   stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutEmployeeNestedInput
   projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutEmployeeNestedInput
+  orderAssignments?: Prisma.OrderAssigneeUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutStockMovementsInput = {
   id?: string
   color?: string
+  hourlyWageNet?: number | null
   operationalStatus?: $Enums.EmployeeOperationalStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1411,6 +1660,7 @@ export type EmployeeCreateWithoutStockMovementsInput = {
   orderPhases?: Prisma.OrderPhaseCreateNestedManyWithoutAssignedEmployeeInput
   assignedVehicles?: Prisma.VehicleCreateNestedManyWithoutAssignedEmployeeInput
   projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutEmployeeInput
+  orderAssignments?: Prisma.OrderAssigneeCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutStockMovementsInput = {
@@ -1418,6 +1668,7 @@ export type EmployeeUncheckedCreateWithoutStockMovementsInput = {
   tenantId: string
   userId: string
   color?: string
+  hourlyWageNet?: number | null
   operationalStatus?: $Enums.EmployeeOperationalStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1432,6 +1683,7 @@ export type EmployeeUncheckedCreateWithoutStockMovementsInput = {
   orderPhases?: Prisma.OrderPhaseUncheckedCreateNestedManyWithoutAssignedEmployeeInput
   assignedVehicles?: Prisma.VehicleUncheckedCreateNestedManyWithoutAssignedEmployeeInput
   projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutEmployeeInput
+  orderAssignments?: Prisma.OrderAssigneeUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutStockMovementsInput = {
@@ -1453,6 +1705,7 @@ export type EmployeeUpdateToOneWithWhereWithoutStockMovementsInput = {
 export type EmployeeUpdateWithoutStockMovementsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  hourlyWageNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   operationalStatus?: Prisma.EnumEmployeeOperationalStatusFieldUpdateOperationsInput | $Enums.EmployeeOperationalStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1469,6 +1722,7 @@ export type EmployeeUpdateWithoutStockMovementsInput = {
   orderPhases?: Prisma.OrderPhaseUpdateManyWithoutAssignedEmployeeNestedInput
   assignedVehicles?: Prisma.VehicleUpdateManyWithoutAssignedEmployeeNestedInput
   projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutEmployeeNestedInput
+  orderAssignments?: Prisma.OrderAssigneeUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutStockMovementsInput = {
@@ -1476,6 +1730,7 @@ export type EmployeeUncheckedUpdateWithoutStockMovementsInput = {
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  hourlyWageNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   operationalStatus?: Prisma.EnumEmployeeOperationalStatusFieldUpdateOperationsInput | $Enums.EmployeeOperationalStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1490,11 +1745,13 @@ export type EmployeeUncheckedUpdateWithoutStockMovementsInput = {
   orderPhases?: Prisma.OrderPhaseUncheckedUpdateManyWithoutAssignedEmployeeNestedInput
   assignedVehicles?: Prisma.VehicleUncheckedUpdateManyWithoutAssignedEmployeeNestedInput
   projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutEmployeeNestedInput
+  orderAssignments?: Prisma.OrderAssigneeUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutOrderPhasesInput = {
   id?: string
   color?: string
+  hourlyWageNet?: number | null
   operationalStatus?: $Enums.EmployeeOperationalStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1511,6 +1768,7 @@ export type EmployeeCreateWithoutOrderPhasesInput = {
   assignedVehicles?: Prisma.VehicleCreateNestedManyWithoutAssignedEmployeeInput
   stockMovements?: Prisma.StockMovementCreateNestedManyWithoutEmployeeInput
   projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutEmployeeInput
+  orderAssignments?: Prisma.OrderAssigneeCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutOrderPhasesInput = {
@@ -1518,6 +1776,7 @@ export type EmployeeUncheckedCreateWithoutOrderPhasesInput = {
   tenantId: string
   userId: string
   color?: string
+  hourlyWageNet?: number | null
   operationalStatus?: $Enums.EmployeeOperationalStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1532,6 +1791,7 @@ export type EmployeeUncheckedCreateWithoutOrderPhasesInput = {
   assignedVehicles?: Prisma.VehicleUncheckedCreateNestedManyWithoutAssignedEmployeeInput
   stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutEmployeeInput
   projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutEmployeeInput
+  orderAssignments?: Prisma.OrderAssigneeUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutOrderPhasesInput = {
@@ -1553,6 +1813,7 @@ export type EmployeeUpdateToOneWithWhereWithoutOrderPhasesInput = {
 export type EmployeeUpdateWithoutOrderPhasesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  hourlyWageNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   operationalStatus?: Prisma.EnumEmployeeOperationalStatusFieldUpdateOperationsInput | $Enums.EmployeeOperationalStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1569,6 +1830,7 @@ export type EmployeeUpdateWithoutOrderPhasesInput = {
   assignedVehicles?: Prisma.VehicleUpdateManyWithoutAssignedEmployeeNestedInput
   stockMovements?: Prisma.StockMovementUpdateManyWithoutEmployeeNestedInput
   projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutEmployeeNestedInput
+  orderAssignments?: Prisma.OrderAssigneeUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutOrderPhasesInput = {
@@ -1576,6 +1838,7 @@ export type EmployeeUncheckedUpdateWithoutOrderPhasesInput = {
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  hourlyWageNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   operationalStatus?: Prisma.EnumEmployeeOperationalStatusFieldUpdateOperationsInput | $Enums.EmployeeOperationalStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1590,11 +1853,13 @@ export type EmployeeUncheckedUpdateWithoutOrderPhasesInput = {
   assignedVehicles?: Prisma.VehicleUncheckedUpdateManyWithoutAssignedEmployeeNestedInput
   stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutEmployeeNestedInput
   projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutEmployeeNestedInput
+  orderAssignments?: Prisma.OrderAssigneeUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutTeamMembershipsInput = {
   id?: string
   color?: string
+  hourlyWageNet?: number | null
   operationalStatus?: $Enums.EmployeeOperationalStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1611,6 +1876,7 @@ export type EmployeeCreateWithoutTeamMembershipsInput = {
   assignedVehicles?: Prisma.VehicleCreateNestedManyWithoutAssignedEmployeeInput
   stockMovements?: Prisma.StockMovementCreateNestedManyWithoutEmployeeInput
   projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutEmployeeInput
+  orderAssignments?: Prisma.OrderAssigneeCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutTeamMembershipsInput = {
@@ -1618,6 +1884,7 @@ export type EmployeeUncheckedCreateWithoutTeamMembershipsInput = {
   tenantId: string
   userId: string
   color?: string
+  hourlyWageNet?: number | null
   operationalStatus?: $Enums.EmployeeOperationalStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1632,6 +1899,7 @@ export type EmployeeUncheckedCreateWithoutTeamMembershipsInput = {
   assignedVehicles?: Prisma.VehicleUncheckedCreateNestedManyWithoutAssignedEmployeeInput
   stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutEmployeeInput
   projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutEmployeeInput
+  orderAssignments?: Prisma.OrderAssigneeUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutTeamMembershipsInput = {
@@ -1653,6 +1921,7 @@ export type EmployeeUpdateToOneWithWhereWithoutTeamMembershipsInput = {
 export type EmployeeUpdateWithoutTeamMembershipsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  hourlyWageNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   operationalStatus?: Prisma.EnumEmployeeOperationalStatusFieldUpdateOperationsInput | $Enums.EmployeeOperationalStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1669,6 +1938,7 @@ export type EmployeeUpdateWithoutTeamMembershipsInput = {
   assignedVehicles?: Prisma.VehicleUpdateManyWithoutAssignedEmployeeNestedInput
   stockMovements?: Prisma.StockMovementUpdateManyWithoutEmployeeNestedInput
   projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutEmployeeNestedInput
+  orderAssignments?: Prisma.OrderAssigneeUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutTeamMembershipsInput = {
@@ -1676,6 +1946,7 @@ export type EmployeeUncheckedUpdateWithoutTeamMembershipsInput = {
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  hourlyWageNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   operationalStatus?: Prisma.EnumEmployeeOperationalStatusFieldUpdateOperationsInput | $Enums.EmployeeOperationalStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1690,11 +1961,13 @@ export type EmployeeUncheckedUpdateWithoutTeamMembershipsInput = {
   assignedVehicles?: Prisma.VehicleUncheckedUpdateManyWithoutAssignedEmployeeNestedInput
   stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutEmployeeNestedInput
   projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutEmployeeNestedInput
+  orderAssignments?: Prisma.OrderAssigneeUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutAssignedVehiclesInput = {
   id?: string
   color?: string
+  hourlyWageNet?: number | null
   operationalStatus?: $Enums.EmployeeOperationalStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1711,6 +1984,7 @@ export type EmployeeCreateWithoutAssignedVehiclesInput = {
   orderPhases?: Prisma.OrderPhaseCreateNestedManyWithoutAssignedEmployeeInput
   stockMovements?: Prisma.StockMovementCreateNestedManyWithoutEmployeeInput
   projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutEmployeeInput
+  orderAssignments?: Prisma.OrderAssigneeCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutAssignedVehiclesInput = {
@@ -1718,6 +1992,7 @@ export type EmployeeUncheckedCreateWithoutAssignedVehiclesInput = {
   tenantId: string
   userId: string
   color?: string
+  hourlyWageNet?: number | null
   operationalStatus?: $Enums.EmployeeOperationalStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1732,6 +2007,7 @@ export type EmployeeUncheckedCreateWithoutAssignedVehiclesInput = {
   orderPhases?: Prisma.OrderPhaseUncheckedCreateNestedManyWithoutAssignedEmployeeInput
   stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutEmployeeInput
   projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutEmployeeInput
+  orderAssignments?: Prisma.OrderAssigneeUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutAssignedVehiclesInput = {
@@ -1753,6 +2029,7 @@ export type EmployeeUpdateToOneWithWhereWithoutAssignedVehiclesInput = {
 export type EmployeeUpdateWithoutAssignedVehiclesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  hourlyWageNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   operationalStatus?: Prisma.EnumEmployeeOperationalStatusFieldUpdateOperationsInput | $Enums.EmployeeOperationalStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1769,6 +2046,7 @@ export type EmployeeUpdateWithoutAssignedVehiclesInput = {
   orderPhases?: Prisma.OrderPhaseUpdateManyWithoutAssignedEmployeeNestedInput
   stockMovements?: Prisma.StockMovementUpdateManyWithoutEmployeeNestedInput
   projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutEmployeeNestedInput
+  orderAssignments?: Prisma.OrderAssigneeUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutAssignedVehiclesInput = {
@@ -1776,6 +2054,7 @@ export type EmployeeUncheckedUpdateWithoutAssignedVehiclesInput = {
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  hourlyWageNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   operationalStatus?: Prisma.EnumEmployeeOperationalStatusFieldUpdateOperationsInput | $Enums.EmployeeOperationalStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1790,11 +2069,13 @@ export type EmployeeUncheckedUpdateWithoutAssignedVehiclesInput = {
   orderPhases?: Prisma.OrderPhaseUncheckedUpdateManyWithoutAssignedEmployeeNestedInput
   stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutEmployeeNestedInput
   projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutEmployeeNestedInput
+  orderAssignments?: Prisma.OrderAssigneeUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutAbsencesInput = {
   id?: string
   color?: string
+  hourlyWageNet?: number | null
   operationalStatus?: $Enums.EmployeeOperationalStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1811,6 +2092,7 @@ export type EmployeeCreateWithoutAbsencesInput = {
   assignedVehicles?: Prisma.VehicleCreateNestedManyWithoutAssignedEmployeeInput
   stockMovements?: Prisma.StockMovementCreateNestedManyWithoutEmployeeInput
   projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutEmployeeInput
+  orderAssignments?: Prisma.OrderAssigneeCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutAbsencesInput = {
@@ -1818,6 +2100,7 @@ export type EmployeeUncheckedCreateWithoutAbsencesInput = {
   tenantId: string
   userId: string
   color?: string
+  hourlyWageNet?: number | null
   operationalStatus?: $Enums.EmployeeOperationalStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1832,6 +2115,7 @@ export type EmployeeUncheckedCreateWithoutAbsencesInput = {
   assignedVehicles?: Prisma.VehicleUncheckedCreateNestedManyWithoutAssignedEmployeeInput
   stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutEmployeeInput
   projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutEmployeeInput
+  orderAssignments?: Prisma.OrderAssigneeUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutAbsencesInput = {
@@ -1853,6 +2137,7 @@ export type EmployeeUpdateToOneWithWhereWithoutAbsencesInput = {
 export type EmployeeUpdateWithoutAbsencesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  hourlyWageNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   operationalStatus?: Prisma.EnumEmployeeOperationalStatusFieldUpdateOperationsInput | $Enums.EmployeeOperationalStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1869,6 +2154,7 @@ export type EmployeeUpdateWithoutAbsencesInput = {
   assignedVehicles?: Prisma.VehicleUpdateManyWithoutAssignedEmployeeNestedInput
   stockMovements?: Prisma.StockMovementUpdateManyWithoutEmployeeNestedInput
   projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutEmployeeNestedInput
+  orderAssignments?: Prisma.OrderAssigneeUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutAbsencesInput = {
@@ -1876,6 +2162,7 @@ export type EmployeeUncheckedUpdateWithoutAbsencesInput = {
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  hourlyWageNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   operationalStatus?: Prisma.EnumEmployeeOperationalStatusFieldUpdateOperationsInput | $Enums.EmployeeOperationalStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1890,11 +2177,13 @@ export type EmployeeUncheckedUpdateWithoutAbsencesInput = {
   assignedVehicles?: Prisma.VehicleUncheckedUpdateManyWithoutAssignedEmployeeNestedInput
   stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutEmployeeNestedInput
   projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutEmployeeNestedInput
+  orderAssignments?: Prisma.OrderAssigneeUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutStaffRequestsInput = {
   id?: string
   color?: string
+  hourlyWageNet?: number | null
   operationalStatus?: $Enums.EmployeeOperationalStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1911,6 +2200,7 @@ export type EmployeeCreateWithoutStaffRequestsInput = {
   assignedVehicles?: Prisma.VehicleCreateNestedManyWithoutAssignedEmployeeInput
   stockMovements?: Prisma.StockMovementCreateNestedManyWithoutEmployeeInput
   projectMemberships?: Prisma.ProjectMemberCreateNestedManyWithoutEmployeeInput
+  orderAssignments?: Prisma.OrderAssigneeCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutStaffRequestsInput = {
@@ -1918,6 +2208,7 @@ export type EmployeeUncheckedCreateWithoutStaffRequestsInput = {
   tenantId: string
   userId: string
   color?: string
+  hourlyWageNet?: number | null
   operationalStatus?: $Enums.EmployeeOperationalStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1932,6 +2223,7 @@ export type EmployeeUncheckedCreateWithoutStaffRequestsInput = {
   assignedVehicles?: Prisma.VehicleUncheckedCreateNestedManyWithoutAssignedEmployeeInput
   stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutEmployeeInput
   projectMemberships?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutEmployeeInput
+  orderAssignments?: Prisma.OrderAssigneeUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutStaffRequestsInput = {
@@ -1953,6 +2245,7 @@ export type EmployeeUpdateToOneWithWhereWithoutStaffRequestsInput = {
 export type EmployeeUpdateWithoutStaffRequestsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  hourlyWageNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   operationalStatus?: Prisma.EnumEmployeeOperationalStatusFieldUpdateOperationsInput | $Enums.EmployeeOperationalStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1969,6 +2262,7 @@ export type EmployeeUpdateWithoutStaffRequestsInput = {
   assignedVehicles?: Prisma.VehicleUpdateManyWithoutAssignedEmployeeNestedInput
   stockMovements?: Prisma.StockMovementUpdateManyWithoutEmployeeNestedInput
   projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutEmployeeNestedInput
+  orderAssignments?: Prisma.OrderAssigneeUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutStaffRequestsInput = {
@@ -1976,6 +2270,7 @@ export type EmployeeUncheckedUpdateWithoutStaffRequestsInput = {
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  hourlyWageNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   operationalStatus?: Prisma.EnumEmployeeOperationalStatusFieldUpdateOperationsInput | $Enums.EmployeeOperationalStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1990,11 +2285,13 @@ export type EmployeeUncheckedUpdateWithoutStaffRequestsInput = {
   assignedVehicles?: Prisma.VehicleUncheckedUpdateManyWithoutAssignedEmployeeNestedInput
   stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutEmployeeNestedInput
   projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutEmployeeNestedInput
+  orderAssignments?: Prisma.OrderAssigneeUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutProjectMembershipsInput = {
   id?: string
   color?: string
+  hourlyWageNet?: number | null
   operationalStatus?: $Enums.EmployeeOperationalStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2011,6 +2308,7 @@ export type EmployeeCreateWithoutProjectMembershipsInput = {
   orderPhases?: Prisma.OrderPhaseCreateNestedManyWithoutAssignedEmployeeInput
   assignedVehicles?: Prisma.VehicleCreateNestedManyWithoutAssignedEmployeeInput
   stockMovements?: Prisma.StockMovementCreateNestedManyWithoutEmployeeInput
+  orderAssignments?: Prisma.OrderAssigneeCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutProjectMembershipsInput = {
@@ -2018,6 +2316,7 @@ export type EmployeeUncheckedCreateWithoutProjectMembershipsInput = {
   tenantId: string
   userId: string
   color?: string
+  hourlyWageNet?: number | null
   operationalStatus?: $Enums.EmployeeOperationalStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2032,6 +2331,7 @@ export type EmployeeUncheckedCreateWithoutProjectMembershipsInput = {
   orderPhases?: Prisma.OrderPhaseUncheckedCreateNestedManyWithoutAssignedEmployeeInput
   assignedVehicles?: Prisma.VehicleUncheckedCreateNestedManyWithoutAssignedEmployeeInput
   stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutEmployeeInput
+  orderAssignments?: Prisma.OrderAssigneeUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutProjectMembershipsInput = {
@@ -2053,6 +2353,7 @@ export type EmployeeUpdateToOneWithWhereWithoutProjectMembershipsInput = {
 export type EmployeeUpdateWithoutProjectMembershipsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  hourlyWageNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   operationalStatus?: Prisma.EnumEmployeeOperationalStatusFieldUpdateOperationsInput | $Enums.EmployeeOperationalStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2069,6 +2370,7 @@ export type EmployeeUpdateWithoutProjectMembershipsInput = {
   orderPhases?: Prisma.OrderPhaseUpdateManyWithoutAssignedEmployeeNestedInput
   assignedVehicles?: Prisma.VehicleUpdateManyWithoutAssignedEmployeeNestedInput
   stockMovements?: Prisma.StockMovementUpdateManyWithoutEmployeeNestedInput
+  orderAssignments?: Prisma.OrderAssigneeUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutProjectMembershipsInput = {
@@ -2076,6 +2378,7 @@ export type EmployeeUncheckedUpdateWithoutProjectMembershipsInput = {
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  hourlyWageNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   operationalStatus?: Prisma.EnumEmployeeOperationalStatusFieldUpdateOperationsInput | $Enums.EmployeeOperationalStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2090,12 +2393,14 @@ export type EmployeeUncheckedUpdateWithoutProjectMembershipsInput = {
   orderPhases?: Prisma.OrderPhaseUncheckedUpdateManyWithoutAssignedEmployeeNestedInput
   assignedVehicles?: Prisma.VehicleUncheckedUpdateManyWithoutAssignedEmployeeNestedInput
   stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutEmployeeNestedInput
+  orderAssignments?: Prisma.OrderAssigneeUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateManyTenantInput = {
   id?: string
   userId: string
   color?: string
+  hourlyWageNet?: number | null
   operationalStatus?: $Enums.EmployeeOperationalStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2104,6 +2409,7 @@ export type EmployeeCreateManyTenantInput = {
 export type EmployeeUpdateWithoutTenantInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  hourlyWageNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   operationalStatus?: Prisma.EnumEmployeeOperationalStatusFieldUpdateOperationsInput | $Enums.EmployeeOperationalStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2120,12 +2426,14 @@ export type EmployeeUpdateWithoutTenantInput = {
   assignedVehicles?: Prisma.VehicleUpdateManyWithoutAssignedEmployeeNestedInput
   stockMovements?: Prisma.StockMovementUpdateManyWithoutEmployeeNestedInput
   projectMemberships?: Prisma.ProjectMemberUpdateManyWithoutEmployeeNestedInput
+  orderAssignments?: Prisma.OrderAssigneeUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutTenantInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  hourlyWageNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   operationalStatus?: Prisma.EnumEmployeeOperationalStatusFieldUpdateOperationsInput | $Enums.EmployeeOperationalStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2141,12 +2449,14 @@ export type EmployeeUncheckedUpdateWithoutTenantInput = {
   assignedVehicles?: Prisma.VehicleUncheckedUpdateManyWithoutAssignedEmployeeNestedInput
   stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutEmployeeNestedInput
   projectMemberships?: Prisma.ProjectMemberUncheckedUpdateManyWithoutEmployeeNestedInput
+  orderAssignments?: Prisma.OrderAssigneeUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateManyWithoutTenantInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  hourlyWageNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   operationalStatus?: Prisma.EnumEmployeeOperationalStatusFieldUpdateOperationsInput | $Enums.EmployeeOperationalStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2170,6 +2480,7 @@ export type EmployeeCountOutputType = {
   assignedVehicles: number
   stockMovements: number
   projectMemberships: number
+  orderAssignments: number
 }
 
 export type EmployeeCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2185,6 +2496,7 @@ export type EmployeeCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensio
   assignedVehicles?: boolean | EmployeeCountOutputTypeCountAssignedVehiclesArgs
   stockMovements?: boolean | EmployeeCountOutputTypeCountStockMovementsArgs
   projectMemberships?: boolean | EmployeeCountOutputTypeCountProjectMembershipsArgs
+  orderAssignments?: boolean | EmployeeCountOutputTypeCountOrderAssignmentsArgs
 }
 
 /**
@@ -2281,12 +2593,20 @@ export type EmployeeCountOutputTypeCountProjectMembershipsArgs<ExtArgs extends r
   where?: Prisma.ProjectMemberWhereInput
 }
 
+/**
+ * EmployeeCountOutputType without action
+ */
+export type EmployeeCountOutputTypeCountOrderAssignmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.OrderAssigneeWhereInput
+}
+
 
 export type EmployeeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   tenantId?: boolean
   userId?: boolean
   color?: boolean
+  hourlyWageNet?: boolean
   operationalStatus?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -2304,6 +2624,7 @@ export type EmployeeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   assignedVehicles?: boolean | Prisma.Employee$assignedVehiclesArgs<ExtArgs>
   stockMovements?: boolean | Prisma.Employee$stockMovementsArgs<ExtArgs>
   projectMemberships?: boolean | Prisma.Employee$projectMembershipsArgs<ExtArgs>
+  orderAssignments?: boolean | Prisma.Employee$orderAssignmentsArgs<ExtArgs>
   _count?: boolean | Prisma.EmployeeCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["employee"]>
 
@@ -2312,6 +2633,7 @@ export type EmployeeSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   tenantId?: boolean
   userId?: boolean
   color?: boolean
+  hourlyWageNet?: boolean
   operationalStatus?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -2324,6 +2646,7 @@ export type EmployeeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   tenantId?: boolean
   userId?: boolean
   color?: boolean
+  hourlyWageNet?: boolean
   operationalStatus?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -2336,12 +2659,13 @@ export type EmployeeSelectScalar = {
   tenantId?: boolean
   userId?: boolean
   color?: boolean
+  hourlyWageNet?: boolean
   operationalStatus?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type EmployeeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "userId" | "color" | "operationalStatus" | "createdAt" | "updatedAt", ExtArgs["result"]["employee"]>
+export type EmployeeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "userId" | "color" | "hourlyWageNet" | "operationalStatus" | "createdAt" | "updatedAt", ExtArgs["result"]["employee"]>
 export type EmployeeInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -2357,6 +2681,7 @@ export type EmployeeInclude<ExtArgs extends runtime.Types.Extensions.InternalArg
   assignedVehicles?: boolean | Prisma.Employee$assignedVehiclesArgs<ExtArgs>
   stockMovements?: boolean | Prisma.Employee$stockMovementsArgs<ExtArgs>
   projectMemberships?: boolean | Prisma.Employee$projectMembershipsArgs<ExtArgs>
+  orderAssignments?: boolean | Prisma.Employee$orderAssignmentsArgs<ExtArgs>
   _count?: boolean | Prisma.EmployeeCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type EmployeeIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2385,12 +2710,17 @@ export type $EmployeePayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     assignedVehicles: Prisma.$VehiclePayload<ExtArgs>[]
     stockMovements: Prisma.$StockMovementPayload<ExtArgs>[]
     projectMemberships: Prisma.$ProjectMemberPayload<ExtArgs>[]
+    orderAssignments: Prisma.$OrderAssigneePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     tenantId: string
     userId: string
     color: string
+    /**
+     * * Interner Stundenlohn (netto) für Auftragskosten aus Zeiterfassung
+     */
+    hourlyWageNet: number | null
     operationalStatus: $Enums.EmployeeOperationalStatus
     createdAt: Date
     updatedAt: Date
@@ -2802,6 +3132,7 @@ export interface Prisma__EmployeeClient<T, Null = never, ExtArgs extends runtime
   assignedVehicles<T extends Prisma.Employee$assignedVehiclesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Employee$assignedVehiclesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$VehiclePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   stockMovements<T extends Prisma.Employee$stockMovementsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Employee$stockMovementsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StockMovementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   projectMemberships<T extends Prisma.Employee$projectMembershipsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Employee$projectMembershipsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  orderAssignments<T extends Prisma.Employee$orderAssignmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Employee$orderAssignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderAssigneePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2835,6 +3166,7 @@ export interface EmployeeFieldRefs {
   readonly tenantId: Prisma.FieldRef<"Employee", 'String'>
   readonly userId: Prisma.FieldRef<"Employee", 'String'>
   readonly color: Prisma.FieldRef<"Employee", 'String'>
+  readonly hourlyWageNet: Prisma.FieldRef<"Employee", 'Float'>
   readonly operationalStatus: Prisma.FieldRef<"Employee", 'EmployeeOperationalStatus'>
   readonly createdAt: Prisma.FieldRef<"Employee", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Employee", 'DateTime'>
@@ -3524,6 +3856,30 @@ export type Employee$projectMembershipsArgs<ExtArgs extends runtime.Types.Extens
   take?: number
   skip?: number
   distinct?: Prisma.ProjectMemberScalarFieldEnum | Prisma.ProjectMemberScalarFieldEnum[]
+}
+
+/**
+ * Employee.orderAssignments
+ */
+export type Employee$orderAssignmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the OrderAssignee
+   */
+  select?: Prisma.OrderAssigneeSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the OrderAssignee
+   */
+  omit?: Prisma.OrderAssigneeOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OrderAssigneeInclude<ExtArgs> | null
+  where?: Prisma.OrderAssigneeWhereInput
+  orderBy?: Prisma.OrderAssigneeOrderByWithRelationInput | Prisma.OrderAssigneeOrderByWithRelationInput[]
+  cursor?: Prisma.OrderAssigneeWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.OrderAssigneeScalarFieldEnum | Prisma.OrderAssigneeScalarFieldEnum[]
 }
 
 /**

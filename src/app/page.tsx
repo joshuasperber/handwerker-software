@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Wrench, Calendar, Users, Smartphone, Shield, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { LegalFooter } from "@/components/legal/legal-footer";
 
 export default function HomePage() {
   return (
@@ -31,7 +32,7 @@ export default function HomePage() {
         </h1>
         <p className="mx-auto mt-6 max-w-2xl text-lg text-slate-600">
           Online-Terminbuchung, Disposition, Monteur-App und Büro-Dashboard in einer
-          DSGVO-konformen SaaS-Lösung. Skalierbar für Angebote, Rechnungen und KI-Funktionen.
+          Multi-Tenant-SaaS-Lösung. Skalierbar für Angebote, Rechnungen und KI-Funktionen.
         </p>
         <div className="mt-10 flex flex-wrap justify-center gap-4">
           <Link href="/registrieren">
@@ -67,9 +68,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <footer className="border-t border-slate-200 py-8 text-center text-sm text-slate-500">
-        JoMaster · DSGVO-orientiert · Multi-Tenant SaaS
-      </footer>
+      <LegalFooter />
     </div>
   );
 }

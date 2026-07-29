@@ -2,11 +2,12 @@
 
 import { useState, type ReactNode } from "react";
 import Link from "next/link";
-import { AlertTriangle, LogOut, Menu, Wrench } from "lucide-react";
+import { AlertTriangle, Menu, Wrench } from "lucide-react";
 import { DashboardSearch } from "@/components/dashboard/search";
 import { DashboardSidebarNav } from "@/components/dashboard/sidebar-nav";
 import { NotificationBell } from "@/components/notifications/notification-bell";
 import { Button } from "@/components/ui/button";
+import { LogoutButton } from "@/components/auth/logout-button";
 import {
   Sheet,
   SheetContent,
@@ -29,6 +30,35 @@ type DashboardNavItem = {
   section?: import("@/lib/permissions").NavSection;
 };
 
+function BrandHomeLink({
+  onNavigate,
+  compact = false,
+}: {
+  onNavigate?: () => void;
+  compact?: boolean;
+}) {
+  return (
+    <Link
+      href="/dashboard"
+      onClick={onNavigate}
+      aria-label="Zum Dashboard"
+      title="Zum Dashboard"
+      className={
+        compact
+          ? "truncate font-bold text-slate-900 transition-colors hover:text-[#0d5c63] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0d5c63]/40 rounded"
+          : "flex items-center gap-2 rounded-lg outline-none transition-colors hover:bg-slate-50 focus-visible:ring-2 focus-visible:ring-[#0d5c63]/40 -ml-1 px-1 py-1"
+      }
+    >
+      {!compact && (
+        <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#0d5c63] text-white">
+          <Wrench className="h-4 w-4" />
+        </span>
+      )}
+      <span className={compact ? undefined : "font-bold text-slate-900"}>JoMaster</span>
+    </Link>
+  );
+}
+
 function SidebarContent({
   navItems,
   session,
@@ -42,11 +72,8 @@ function SidebarContent({
 }) {
   return (
     <div className="flex h-full min-h-0 flex-col">
-      <div className="flex h-16 shrink-0 items-center gap-2 border-b border-slate-100 px-6">
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#0d5c63] text-white">
-          <Wrench className="h-4 w-4" />
-        </div>
-        <span className="font-bold text-slate-900">JoMaster</span>
+      <div className="flex h-16 shrink-0 items-center border-b border-slate-100 px-5">
+        <BrandHomeLink onNavigate={onNavigate} />
       </div>
       <nav className="min-h-0 flex-1 space-y-1.5 overflow-y-auto overscroll-contain px-5 py-5">
         <DashboardSidebarNav items={navItems} onNavigate={onNavigate} />
@@ -78,14 +105,18 @@ function SidebarContent({
             </span>
           </span>
         </Link>
-        <form action="/api/auth/logout" method="POST">
-          <button
-            type="submit"
-            className="flex min-h-10 w-full items-center gap-2 rounded-lg px-3 text-sm text-slate-500 transition-colors hover:bg-slate-50 hover:text-red-600"
-          >
-            <LogOut className="h-4 w-4" /> Abmelden
-          </button>
-        </form>
+        <LogoutButton />
+        <div className="mt-3 flex flex-wrap gap-x-3 gap-y-1 px-1 text-[10px] text-slate-400">
+          <Link href="/impressum" onClick={onNavigate} className="hover:text-[#0d5c63]">
+            Impressum
+          </Link>
+          <Link href="/datenschutz" onClick={onNavigate} className="hover:text-[#0d5c63]">
+            Datenschutz
+          </Link>
+          <Link href="/agb" onClick={onNavigate} className="hover:text-[#0d5c63]">
+            AGB
+          </Link>
+        </div>
       </div>
     </div>
   );
@@ -113,9 +144,9 @@ export function DashboardShell({
       </aside>
 
       <div className="flex min-h-0 min-w-0 flex-1 flex-col">
-        <header className="hidden h-14 items-center justify-between border-b border-slate-200 bg-white px-6 lg:flex">
-          <DashboardSearch />
-          <div className="flex items-center gap-4 text-sm text-slate-500">
+        <header className="hidden h-14 items-center justify-between gap-4 border-b border-slate-200 bg-white px-6 lg:flex">
+          <DashboardSearch className="max-w-lg flex-1" />
+          <div className="flex shrink-0 items-center gap-4 text-sm text-slate-500">
             {canAccessMonteur && (
               <Link href="/monteur" className="text-[#0d5c63] hover:underline">
                 Monteur-App
@@ -128,8 +159,8 @@ export function DashboardShell({
           </div>
         </header>
 
-        <header className="flex h-16 items-center justify-between border-b border-slate-200 bg-white px-4 sm:px-6 lg:hidden">
-          <div className="flex min-w-0 items-center gap-3">
+        <header className="flex h-16 items-center justify-between gap-2 border-b border-slate-200 bg-white px-4 sm:px-6 lg:hidden">
+          <div className="flex min-w-0 items-center gap-2">
             <Sheet open={mobileNavOpen} onOpenChange={setMobileNavOpen}>
               <SheetTrigger asChild>
                 <Button
@@ -156,13 +187,14 @@ export function DashboardShell({
                 />
               </SheetContent>
             </Sheet>
-            <span className="truncate font-bold">JoMaster</span>
+            <BrandHomeLink compact />
           </div>
-          <div className="flex items-center gap-2">
+          <DashboardSearch className="min-w-0 flex-1" />
+          <div className="flex shrink-0 items-center gap-2">
             <NotificationBell />
             {canAccessMonteur && (
               <Link href="/monteur" className="shrink-0 text-sm text-[#0d5c63]">
-                Monteur-App
+                Monteur
               </Link>
             )}
           </div>

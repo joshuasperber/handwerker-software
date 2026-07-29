@@ -80,6 +80,8 @@ export interface OverheadInput {
   directCosts: number;
   overheadPercent?: number;
   additionalOverheadPercent?: number;
+  /** Wenn gesetzt: fester Gemeinkostenbetrag statt Formel */
+  manualAmount?: number | null;
 }
 
 export interface RiskInput {

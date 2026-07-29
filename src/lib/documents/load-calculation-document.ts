@@ -9,6 +9,7 @@ export async function loadCalculationForDocument(tenantId: string, calculationId
       laborItems: true,
       materialItems: true,
       travelCost: true,
+      additionalItems: true,
       vatSettings: true,
       customer: true,
       order: { include: { property: true } },
@@ -69,6 +70,11 @@ export async function loadCalculationForDocument(tenantId: string, calculationId
     laborItems: calc.laborItems,
     materialItems: calc.materialItems,
     travelCost: calc.travelCost,
+    additionalItems: calc.additionalItems.map((a) => ({
+      description: a.description,
+      totalNet: a.totalNet,
+      isVisibleToCustomer: a.isVisibleToCustomer,
+    })),
     customer: calc.customer,
     order: calc.order
       ? {

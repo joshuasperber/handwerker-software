@@ -1,16 +1,21 @@
-/** Tätigkeiten für Stundenzettel ohne (oder mit) Auftrag */
+/** Tätigkeiten für Stundenzettel */
 export const TIME_ENTRY_ACTIVITIES = [
-  "Lagerarbeit",
+  "Montage",
+  "Fahrtzeit",
   "Vorbereitung",
-  "Fahrzeit",
+  "Lagerarbeit",
+  "Aufmaß",
+  "Nacharbeit",
+  "Reparatur",
   "Büroarbeit",
-  "allgemeine Arbeit",
-  "interne Aufgaben",
   "Werkstatt",
+  "allgemeine Arbeit",
   "Sonstiges",
 ] as const;
 
 export type TimeEntryActivity = (typeof TIME_ENTRY_ACTIVITIES)[number];
+
+export const TIME_ENTRY_ACTIVITY_SONSTIGES = "Sonstiges" as const;
 
 export const TIME_ENTRY_STATUS_LABELS: Record<string, string> = {
   OPEN: "Offen",
@@ -23,11 +28,36 @@ export interface TimeEntryInput {
   endTime?: string | Date | null;
   breakMinutes?: number;
   orderId?: string | null;
+  /** Auswahlliste-Wert, z. B. Montage oder Sonstiges */
   activity?: string | null;
+  /** Pflicht-Freitext wenn activity === Sonstiges */
+  activityCustom?: string | null;
   notes?: string | null;
   status?: "OPEN" | "REVIEWED" | "APPROVED";
   /** Bei Update: Endzeit darf fehlen (läuft noch) */
   requireEndTime?: boolean;
+}
+
+/** Speichert Tätigkeit: bei Sonstiges den Freitext, sonst den Listenwert. */
+export function resolveStoredActivity(
+  activity: string | null | undefined,
+  activityCustom?: string | null
+): string | null {
+  const selected = activity?.trim() ?? "";
+  if (!selected) return null;
+  if (selected === TIME_ENTRY_ACTIVITY_SONSTIGES) {
+    const custom = activityCustom?.trim() ?? "";
+    return custom || TIME_ENTRY_ACTIVITY_SONSTIGES;
+  }
+  return selected;
+}
+
+export function isSonstigesActivity(activity: string | null | undefined): boolean {
+  const a = activity?.trim() ?? "";
+  if (a === TIME_ENTRY_ACTIVITY_SONSTIGES) return true;
+  // Gespeicherte Freitexte sind nicht in der Standardliste
+  if (!a) return false;
+  return !(TIME_ENTRY_ACTIVITIES as readonly string[]).includes(a);
 }
 
 export function validateTimeEntryInput(input: TimeEntryInput): string | null {
@@ -62,10 +92,18 @@ export function validateTimeEntryInput(input: TimeEntryInput): string | null {
     }
   }
 
+  const selected = input.activity?.trim() ?? "";
+  if (selected === TIME_ENTRY_ACTIVITY_SONSTIGES) {
+    const custom = input.activityCustom?.trim() ?? "";
+    if (!custom) {
+      return "Bitte die Tätigkeit unter „Sonstiges“ beschreiben.";
+    }
+  }
+
+  const storedActivity = resolveStoredActivity(input.activity, input.activityCustom);
   const hasOrder = Boolean(input.orderId);
-  const activity = input.activity?.trim() ?? "";
   const notes = input.notes?.trim() ?? "";
-  if (!hasOrder && !activity && !notes) {
+  if (!hasOrder && !storedActivity && !notes) {
     return "Ohne Auftrag bitte eine Tätigkeit oder Notiz angeben.";
   }
 
@@ -83,4 +121,15 @@ export function calcWorkedHours(
   if (!Number.isFinite(start) || !Number.isFinite(end) || end < start) return null;
   const hours = Math.max(0, (end - start) / 3600000 - breakMinutes / 60);
   return Math.round(hours * 100) / 100;
+}
+
+/** Arbeitskosten = Stunden × Stundenlohn (netto). */
+export function calcLaborCost(
+  hours: number | null | undefined,
+  hourlyWageNet: number | null | undefined
+): number | null {
+  if (hours == null || hourlyWageNet == null) return null;
+  if (!Number.isFinite(hours) || !Number.isFinite(hourlyWageNet)) return null;
+  if (hours < 0 || hourlyWageNet < 0) return null;
+  return Math.round(hours * hourlyWageNet * 100) / 100;
 }

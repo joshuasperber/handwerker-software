@@ -1,12 +1,13 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { motion } from "motion/react";
 import {
   Euro,
   ClipboardList,
   CalendarClock,
   FileWarning,
+  Calculator,
   ArrowUpRight,
   type LucideIcon,
 } from "lucide-react";
@@ -30,18 +31,51 @@ interface KpiItem {
 }
 
 function KpiCardButton({ item, index }: { item: KpiItem; index: number }) {
-  const router = useRouter();
   const allowed = usePermission(item.permission);
 
-  function handleActivate() {
-    if (!allowed) {
-      toast.message("Diese Funktion ist noch nicht verfügbar.", {
-        description: "Für diesen Bereich fehlt die Berechtigung.",
-      });
-      return;
-    }
-    router.push(item.href);
+  function handleDenied(e: React.MouseEvent) {
+    e.preventDefault();
+    toast.message("Keine Berechtigung", {
+      description: `„${item.actionLabel}“ ist für Ihre Rolle nicht freigeschaltet.`,
+    });
   }
+
+  const inner = (
+    <Card
+      className={`group relative h-full !p-4 transition-all ${
+        allowed
+          ? "hover:border-[#0d5c63]/30 hover:shadow-md"
+          : "opacity-70 hover:shadow-none"
+      }`}
+    >
+      {allowed ? (
+        <ArrowUpRight className="absolute right-3 top-3 h-4 w-4 text-slate-300 transition-colors group-hover:text-[#0d5c63]" />
+      ) : (
+        <span className="absolute right-3 top-3 text-[10px] font-medium uppercase tracking-wide text-slate-400">
+          Gesperrt
+        </span>
+      )}
+      <div className="flex items-start justify-between gap-3 pr-6">
+        <div className="min-w-0">
+          <p className="truncate text-sm text-muted-foreground">{item.label}</p>
+          <p className={`mt-1 text-2xl font-semibold ${item.accent}`}>{item.value}</p>
+          <p className="mt-0.5 truncate text-xs text-muted-foreground">{item.hint}</p>
+          <p
+            className={`mt-2 text-xs font-medium ${
+              allowed ? "text-[#0d5c63]" : "text-slate-400"
+            }`}
+          >
+            {allowed ? item.actionLabel : "Nicht verfügbar"}
+          </p>
+        </div>
+        <div
+          className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${item.iconBg}`}
+        >
+          <item.icon className="h-5 w-5" />
+        </div>
+      </div>
+    </Card>
+  );
 
   return (
     <motion.div
@@ -49,61 +83,26 @@ function KpiCardButton({ item, index }: { item: KpiItem; index: number }) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.35, delay: index * 0.06, ease: "easeOut" }}
     >
-      <button
-        type="button"
-        onClick={handleActivate}
-        disabled={!allowed}
-        aria-label={allowed ? item.actionLabel : `${item.label}: nicht verfügbar`}
-        title={
-          allowed
-            ? item.actionLabel
-            : "Diese Funktion ist noch nicht verfügbar."
-        }
-        className={`block h-full w-full rounded-xl text-left transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0d5c63]/40 ${
-          allowed
-            ? "cursor-pointer"
-            : "cursor-not-allowed opacity-60"
-        }`}
-      >
-        <Card
-          className={`group relative h-full !p-4 transition-all ${
-            allowed
-              ? "hover:border-[#0d5c63]/30 hover:shadow-md"
-              : "hover:shadow-none"
-          }`}
+      {allowed ? (
+        <Link
+          href={item.href}
+          aria-label={item.actionLabel}
+          title={item.actionLabel}
+          className="block h-full w-full rounded-xl text-left transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0d5c63]/40"
         >
-          {allowed ? (
-            <ArrowUpRight className="absolute right-3 top-3 h-4 w-4 text-slate-300 transition-colors group-hover:text-[#0d5c63]" />
-          ) : (
-            <span className="absolute right-3 top-3 text-[10px] font-medium uppercase tracking-wide text-slate-400">
-              Gesperrt
-            </span>
-          )}
-          <div className="flex items-start justify-between gap-3 pr-6">
-            <div className="min-w-0">
-              <p className="truncate text-sm text-muted-foreground">{item.label}</p>
-              <p className={`mt-1 text-2xl font-semibold ${item.accent}`}>
-                {item.value}
-              </p>
-              <p className="mt-0.5 truncate text-xs text-muted-foreground">
-                {item.hint}
-              </p>
-              <p
-                className={`mt-2 text-xs font-medium ${
-                  allowed ? "text-[#0d5c63]" : "text-slate-400"
-                }`}
-              >
-                {allowed ? `${item.actionLabel} →` : "Nicht verfügbar"}
-              </p>
-            </div>
-            <div
-              className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${item.iconBg}`}
-            >
-              <item.icon className="h-5 w-5" />
-            </div>
-          </div>
-        </Card>
-      </button>
+          {inner}
+        </Link>
+      ) : (
+        <button
+          type="button"
+          onClick={handleDenied}
+          aria-label={`${item.label}: nicht verfügbar`}
+          title="Keine Berechtigung für diesen Bereich"
+          className="block h-full w-full cursor-not-allowed rounded-xl text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0d5c63]/40"
+        >
+          {inner}
+        </button>
+      )}
     </motion.div>
   );
 }
@@ -145,9 +144,9 @@ export function KpiCards({ kpis }: { kpis: DashboardAnalytics["kpis"] }) {
         kpis.overdueAppointments > 0
           ? "bg-red-50 text-red-600"
           : "bg-[#e87722]/10 text-[#e87722]",
-      href: "/dashboard/disposition",
+      href: "/dashboard/termine",
       permission: "appointments.read",
-      actionLabel: "Zur Disposition",
+      actionLabel: "Zum Kalender",
     },
     {
       label: "Offene Rechnungen",
@@ -168,5 +167,33 @@ export function KpiCards({ kpis }: { kpis: DashboardAnalytics["kpis"] }) {
         <KpiCardButton key={item.label} item={item} index={index} />
       ))}
     </div>
+  );
+}
+
+/** Schnellzugriff unter den KPIs – klare Navigation zur Kalkulation. */
+export function DashboardCalcShortcut() {
+  const allowed = usePermission("calculations.read");
+  if (!allowed) return null;
+
+  return (
+    <Link
+      href="/dashboard/kalkulation"
+      className="group flex items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm transition-colors hover:border-[#0d5c63]/30 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0d5c63]/40"
+    >
+      <span className="flex min-w-0 items-center gap-3">
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#0d5c63]/10 text-[#0d5c63]">
+          <Calculator className="h-5 w-5" />
+        </span>
+        <span className="min-w-0">
+          <span className="block text-sm font-semibold text-slate-900">
+            Angebots- &amp; Rechnungskalkulation
+          </span>
+          <span className="block text-xs text-slate-500">
+            Kalkulationen öffnen, Angebote und Rechnungen vorbereiten
+          </span>
+        </span>
+      </span>
+      <ArrowUpRight className="h-4 w-4 shrink-0 text-slate-300 transition-colors group-hover:text-[#0d5c63]" />
+    </Link>
   );
 }

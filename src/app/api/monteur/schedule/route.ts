@@ -112,7 +112,7 @@ export async function GET(request: NextRequest) {
     appointments.map((a) => a.orderPhaseId).filter(Boolean) as string[]
   );
 
-  const synthetic: ScheduleEntry[] = phaseOnly
+  const synthetic = phaseOnly
     .filter((p) => !coveredPhaseIds.has(p.id))
     .filter((p) => p.plannedStart && p.plannedEnd)
     .map((p) => ({
@@ -121,6 +121,12 @@ export async function GET(request: NextRequest) {
       orderId: p.orderId,
       orderPhaseId: p.id,
       employeeId: p.assignedEmployeeId ?? employee.id,
+      title: p.name,
+      color: null,
+      projectId: p.order.projectId,
+      teamId: p.order.teamId,
+      vehicleId: p.order.vehicleId,
+      addressText: null,
       startTime: p.plannedStart!,
       endTime: p.plannedEnd!,
       status: p.status === "IN_ARBEIT" ? "IN_ARBEIT" : "GEPLANT",
@@ -131,9 +137,50 @@ export async function GET(request: NextRequest) {
       updatedAt: p.updatedAt,
       order: p.order,
       orderPhase: { id: p.id, name: p.name },
-    })) as ScheduleEntry[];
+    })) as unknown as ScheduleEntry[];
 
-  const merged = [...appointments, ...synthetic]
+  // Zugewiesene Aufträge ohne eigenen Termin, aber mit geplantem Zeitfenster
+  const coveredOrderIds = appointments
+    .map((a) => a.orderId)
+    .filter((id): id is string => Boolean(id));
+  const assigneeOrders = await prisma.order.findMany({
+    where: {
+      tenantId: auth.tenantId,
+      status: { not: "STORNIERT" },
+      scheduledStart: { gte: rangeStart, lte: rangeEnd },
+      assignees: { some: { employeeId: employee.id } },
+      id: { notIn: coveredOrderIds },
+    },
+    include: orderInclude,
+  });
+
+  const assigneeSynthetic = assigneeOrders
+    .filter((o) => o.scheduledStart && o.scheduledEnd)
+    .map((o) => ({
+      id: `assignee-${o.id}`,
+      tenantId: auth.tenantId,
+      orderId: o.id,
+      orderPhaseId: null,
+      employeeId: employee.id,
+      title: o.title,
+      color: null,
+      projectId: o.projectId,
+      teamId: o.teamId,
+      vehicleId: o.vehicleId,
+      addressText: null,
+      startTime: o.scheduledStart!,
+      endTime: o.scheduledEnd!,
+      status: "GEPLANT" as const,
+      isTentative: true,
+      notes: "Zugewiesen",
+      reminderSentAt: null,
+      createdAt: o.createdAt,
+      updatedAt: o.updatedAt,
+      order: o,
+      orderPhase: null,
+    })) as unknown as ScheduleEntry[];
+
+  const merged = [...appointments, ...synthetic, ...assigneeSynthetic]
     .filter((a, i, arr) => arr.findIndex((x) => x.id === a.id) === i)
     .sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime());
 

@@ -10,6 +10,7 @@ import { AddButton } from "@/components/ui/add-button";
 import { saveJson } from "@/lib/save-toast";
 import { ChevronLeft, Trash2, Users, Pencil, RotateCcw, X, Truck } from "lucide-react";
 import { toast } from "sonner";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 
 interface Team {
   id: string;
@@ -38,6 +39,7 @@ export default function TeamsPage() {
   const [showForm, setShowForm] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
   const [form, setForm] = useState({ ...EMPTY_FORM });
+  const [deactivateTarget, setDeactivateTarget] = useState<Team | null>(null);
 
   function load() {
     Promise.all([
@@ -90,7 +92,6 @@ export default function TeamsPage() {
   }
 
   async function deactivate(id: string) {
-    if (!confirm("Team deaktivieren?")) return;
     const res = await fetch(`/api/teams/${id}`, { method: "DELETE" });
     if (res.ok) { toast.success("Team deaktiviert"); load(); }
   }
@@ -213,7 +214,7 @@ export default function TeamsPage() {
                   <Pencil className="h-3.5 w-3.5 mr-1" /> Bearbeiten
                 </Button>
                 {team.isActive ? (
-                  <Button size="sm" variant="ghost" className="text-amber-600" onClick={() => deactivate(team.id)}>
+                  <Button size="sm" variant="ghost" className="text-amber-600" onClick={() => setDeactivateTarget(team)}>
                     <Trash2 className="h-3.5 w-3.5 mr-1" /> Deaktivieren
                   </Button>
                 ) : (
@@ -226,6 +227,29 @@ export default function TeamsPage() {
           </Card>
         ))}
       </div>
+
+      <ConfirmDialog
+        open={deactivateTarget !== null}
+        onOpenChange={(open) => {
+          if (!open) setDeactivateTarget(null);
+        }}
+        title="Team deaktivieren?"
+        description={
+          deactivateTarget
+            ? `„${deactivateTarget.name}“ steht danach nicht mehr für die Einsatzplanung zur Verfügung.`
+            : ""
+        }
+        confirmLabel="Deaktivieren"
+        cancelLabel="Abbrechen"
+        variant="destructive"
+        onConfirm={async () => {
+          if (deactivateTarget) {
+            const target = deactivateTarget;
+            setDeactivateTarget(null);
+            await deactivate(target.id);
+          }
+        }}
+      />
     </div>
   );
 }

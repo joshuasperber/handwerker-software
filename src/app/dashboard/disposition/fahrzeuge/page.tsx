@@ -13,6 +13,7 @@ import { saveJson } from "@/lib/save-toast";
 import { VEHICLE_STATUS_LABELS, VEHICLE_STATUS_BADGE } from "@/lib/utils";
 import { ChevronLeft, Trash2, Truck, Pencil, RotateCcw, X } from "lucide-react";
 import { toast } from "sonner";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 
 interface Vehicle {
   id: string;
@@ -47,6 +48,10 @@ export default function FahrzeugePage() {
   const [showForm, setShowForm] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
   const [form, setForm] = useState({ ...EMPTY_FORM });
+  const [confirmAction, setConfirmAction] = useState<{
+    type: "deactivate" | "delete";
+    vehicle: Vehicle;
+  } | null>(null);
 
   function load() {
     Promise.all([
@@ -99,7 +104,6 @@ export default function FahrzeugePage() {
   }
 
   async function deactivate(id: string) {
-    if (!confirm("Fahrzeug deaktivieren?")) return;
     const res = await fetch(`/api/vehicles/${id}`, { method: "DELETE" });
     if (res.ok) { toast.success("Fahrzeug deaktiviert"); load(); }
   }
@@ -114,7 +118,6 @@ export default function FahrzeugePage() {
   }
 
   async function hardDelete(id: string) {
-    if (!confirm("Fahrzeug endgültig löschen? Das kann nicht rückgängig gemacht werden.")) return;
     const res = await fetch(`/api/vehicles/${id}?hard=1`, { method: "DELETE" });
     const data = await res.json();
     if (data.success) { toast.success("Fahrzeug gelöscht"); load(); }
@@ -219,7 +222,7 @@ export default function FahrzeugePage() {
                   <Pencil className="h-3.5 w-3.5 mr-1" /> Bearbeiten
                 </Button>
                 {v.isActive ? (
-                  <Button size="sm" variant="ghost" className="text-amber-600" onClick={() => deactivate(v.id)}>
+                  <Button size="sm" variant="ghost" className="text-amber-600" onClick={() => setConfirmAction({ type: "deactivate", vehicle: v })}>
                     Deaktivieren
                   </Button>
                 ) : (
@@ -227,7 +230,7 @@ export default function FahrzeugePage() {
                     <RotateCcw className="h-3.5 w-3.5 mr-1" /> Reaktivieren
                   </Button>
                 )}
-                <Button size="sm" variant="ghost" className="text-red-500" onClick={() => hardDelete(v.id)} title="Endgültig löschen">
+                <Button size="sm" variant="ghost" className="text-red-500" onClick={() => setConfirmAction({ type: "delete", vehicle: v })} title="Endgültig löschen">
                   <Trash2 className="h-3.5 w-3.5" />
                 </Button>
               </div>
@@ -240,6 +243,36 @@ export default function FahrzeugePage() {
           </p>
         )}
       </div>
+
+      <ConfirmDialog
+        open={confirmAction !== null}
+        onOpenChange={(open) => {
+          if (!open) setConfirmAction(null);
+        }}
+        title={
+          confirmAction?.type === "delete"
+            ? "Fahrzeug endgültig löschen?"
+            : "Fahrzeug deaktivieren?"
+        }
+        description={
+          confirmAction
+            ? confirmAction.type === "delete"
+              ? `„${confirmAction.vehicle.name}“ wird endgültig gelöscht. Das kann nicht rückgängig gemacht werden.`
+              : `„${confirmAction.vehicle.name}“ steht danach nicht mehr für die Einsatzplanung zur Verfügung.`
+            : ""
+        }
+        confirmLabel={confirmAction?.type === "delete" ? "Endgültig löschen" : "Deaktivieren"}
+        cancelLabel="Abbrechen"
+        variant="destructive"
+        onConfirm={async () => {
+          if (confirmAction) {
+            const action = confirmAction;
+            setConfirmAction(null);
+            if (action.type === "delete") await hardDelete(action.vehicle.id);
+            else await deactivate(action.vehicle.id);
+          }
+        }}
+      />
     </div>
   );
 }

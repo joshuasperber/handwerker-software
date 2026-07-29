@@ -16,10 +16,39 @@ export const ORDER_DETAIL_INCLUDE = {
   property: true,
   services: { include: { service: true } },
   appointments: { include: { employee: { include: { user: true } } } },
+  assignees: {
+    include: {
+      employee: {
+        include: {
+          user: {
+            select: {
+              id: true,
+              firstName: true,
+              lastName: true,
+              phone: true,
+              role: true,
+              isActive: true,
+            },
+          },
+          teamMemberships: {
+            include: { team: { select: { id: true, name: true } } },
+          },
+        },
+      },
+    },
+  },
   files: true,
   checklists: { orderBy: { sortOrder: "asc" as const } },
   messages: { orderBy: { createdAt: "desc" as const }, include: { sender: true } },
-  timeEntries: { include: { employee: { include: { user: true } } } },
+  timeEntries: {
+    include: {
+      employee: {
+        include: { user: true },
+        // hourlyWageNet is on Employee — included by default
+      },
+    },
+    orderBy: { startTime: "desc" as const },
+  },
   materialUsages: { include: { employee: { include: { user: true } } } },
   phases: {
     orderBy: { sortOrder: "asc" as const },

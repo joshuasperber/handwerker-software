@@ -397,6 +397,7 @@ export type OrderWhereInput = {
   projectNotes?: Prisma.ProjectNoteListRelationFilter
   projectFiles?: Prisma.ProjectFileListRelationFilter
   projectCosts?: Prisma.ProjectCostListRelationFilter
+  assignees?: Prisma.OrderAssigneeListRelationFilter
 }
 
 export type OrderOrderByWithRelationInput = {
@@ -456,6 +457,7 @@ export type OrderOrderByWithRelationInput = {
   projectNotes?: Prisma.ProjectNoteOrderByRelationAggregateInput
   projectFiles?: Prisma.ProjectFileOrderByRelationAggregateInput
   projectCosts?: Prisma.ProjectCostOrderByRelationAggregateInput
+  assignees?: Prisma.OrderAssigneeOrderByRelationAggregateInput
 }
 
 export type OrderWhereUniqueInput = Prisma.AtLeast<{
@@ -519,6 +521,7 @@ export type OrderWhereUniqueInput = Prisma.AtLeast<{
   projectNotes?: Prisma.ProjectNoteListRelationFilter
   projectFiles?: Prisma.ProjectFileListRelationFilter
   projectCosts?: Prisma.ProjectCostListRelationFilter
+  assignees?: Prisma.OrderAssigneeListRelationFilter
 }, "id" | "tenantId_orderNumber">
 
 export type OrderOrderByWithAggregationInput = {
@@ -641,6 +644,7 @@ export type OrderCreateInput = {
   projectNotes?: Prisma.ProjectNoteCreateNestedManyWithoutOrderInput
   projectFiles?: Prisma.ProjectFileCreateNestedManyWithoutOrderInput
   projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutOrderInput
+  assignees?: Prisma.OrderAssigneeCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateInput = {
@@ -693,6 +697,7 @@ export type OrderUncheckedCreateInput = {
   projectNotes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutOrderInput
   projectFiles?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutOrderInput
   projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutOrderInput
+  assignees?: Prisma.OrderAssigneeUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUpdateInput = {
@@ -745,6 +750,7 @@ export type OrderUpdateInput = {
   projectNotes?: Prisma.ProjectNoteUpdateManyWithoutOrderNestedInput
   projectFiles?: Prisma.ProjectFileUpdateManyWithoutOrderNestedInput
   projectCosts?: Prisma.ProjectCostUpdateManyWithoutOrderNestedInput
+  assignees?: Prisma.OrderAssigneeUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateInput = {
@@ -797,6 +803,7 @@ export type OrderUncheckedUpdateInput = {
   projectNotes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutOrderNestedInput
   projectFiles?: Prisma.ProjectFileUncheckedUpdateManyWithoutOrderNestedInput
   projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutOrderNestedInput
+  assignees?: Prisma.OrderAssigneeUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateManyInput = {
@@ -1199,6 +1206,20 @@ export type EnumCustomerConfirmationStatusFieldUpdateOperationsInput = {
   set?: $Enums.CustomerConfirmationStatus
 }
 
+export type OrderCreateNestedOneWithoutAssigneesInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutAssigneesInput, Prisma.OrderUncheckedCreateWithoutAssigneesInput>
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutAssigneesInput
+  connect?: Prisma.OrderWhereUniqueInput
+}
+
+export type OrderUpdateOneRequiredWithoutAssigneesNestedInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutAssigneesInput, Prisma.OrderUncheckedCreateWithoutAssigneesInput>
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutAssigneesInput
+  upsert?: Prisma.OrderUpsertWithoutAssigneesInput
+  connect?: Prisma.OrderWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OrderUpdateToOneWithWhereWithoutAssigneesInput, Prisma.OrderUpdateWithoutAssigneesInput>, Prisma.OrderUncheckedUpdateWithoutAssigneesInput>
+}
+
 export type OrderCreateNestedOneWithoutServicesInput = {
   create?: Prisma.XOR<Prisma.OrderCreateWithoutServicesInput, Prisma.OrderUncheckedCreateWithoutServicesInput>
   connectOrCreate?: Prisma.OrderCreateOrConnectWithoutServicesInput
@@ -1219,10 +1240,12 @@ export type OrderCreateNestedOneWithoutAppointmentsInput = {
   connect?: Prisma.OrderWhereUniqueInput
 }
 
-export type OrderUpdateOneRequiredWithoutAppointmentsNestedInput = {
+export type OrderUpdateOneWithoutAppointmentsNestedInput = {
   create?: Prisma.XOR<Prisma.OrderCreateWithoutAppointmentsInput, Prisma.OrderUncheckedCreateWithoutAppointmentsInput>
   connectOrCreate?: Prisma.OrderCreateOrConnectWithoutAppointmentsInput
   upsert?: Prisma.OrderUpsertWithoutAppointmentsInput
+  disconnect?: Prisma.OrderWhereInput | boolean
+  delete?: Prisma.OrderWhereInput | boolean
   connect?: Prisma.OrderWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.OrderUpdateToOneWithWhereWithoutAppointmentsInput, Prisma.OrderUpdateWithoutAppointmentsInput>, Prisma.OrderUncheckedUpdateWithoutAppointmentsInput>
 }
@@ -1672,6 +1695,7 @@ export type OrderCreateWithoutTenantInput = {
   projectNotes?: Prisma.ProjectNoteCreateNestedManyWithoutOrderInput
   projectFiles?: Prisma.ProjectFileCreateNestedManyWithoutOrderInput
   projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutOrderInput
+  assignees?: Prisma.OrderAssigneeCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutTenantInput = {
@@ -1723,6 +1747,7 @@ export type OrderUncheckedCreateWithoutTenantInput = {
   projectNotes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutOrderInput
   projectFiles?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutOrderInput
   projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutOrderInput
+  assignees?: Prisma.OrderAssigneeUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutTenantInput = {
@@ -1835,6 +1860,7 @@ export type OrderCreateWithoutCustomerInput = {
   projectNotes?: Prisma.ProjectNoteCreateNestedManyWithoutOrderInput
   projectFiles?: Prisma.ProjectFileCreateNestedManyWithoutOrderInput
   projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutOrderInput
+  assignees?: Prisma.OrderAssigneeCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutCustomerInput = {
@@ -1886,6 +1912,7 @@ export type OrderUncheckedCreateWithoutCustomerInput = {
   projectNotes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutOrderInput
   projectFiles?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutOrderInput
   projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutOrderInput
+  assignees?: Prisma.OrderAssigneeUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutCustomerInput = {
@@ -1963,6 +1990,7 @@ export type OrderCreateWithoutPropertyInput = {
   projectNotes?: Prisma.ProjectNoteCreateNestedManyWithoutOrderInput
   projectFiles?: Prisma.ProjectFileCreateNestedManyWithoutOrderInput
   projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutOrderInput
+  assignees?: Prisma.OrderAssigneeCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutPropertyInput = {
@@ -2014,6 +2042,7 @@ export type OrderUncheckedCreateWithoutPropertyInput = {
   projectNotes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutOrderInput
   projectFiles?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutOrderInput
   projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutOrderInput
+  assignees?: Prisma.OrderAssigneeUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutPropertyInput = {
@@ -2091,6 +2120,7 @@ export type OrderCreateWithoutOrderTypeDefinitionInput = {
   projectNotes?: Prisma.ProjectNoteCreateNestedManyWithoutOrderInput
   projectFiles?: Prisma.ProjectFileCreateNestedManyWithoutOrderInput
   projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutOrderInput
+  assignees?: Prisma.OrderAssigneeCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutOrderTypeDefinitionInput = {
@@ -2142,6 +2172,7 @@ export type OrderUncheckedCreateWithoutOrderTypeDefinitionInput = {
   projectNotes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutOrderInput
   projectFiles?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutOrderInput
   projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutOrderInput
+  assignees?: Prisma.OrderAssigneeUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutOrderTypeDefinitionInput = {
@@ -2168,6 +2199,230 @@ export type OrderUpdateWithWhereUniqueWithoutOrderTypeDefinitionInput = {
 export type OrderUpdateManyWithWhereWithoutOrderTypeDefinitionInput = {
   where: Prisma.OrderScalarWhereInput
   data: Prisma.XOR<Prisma.OrderUpdateManyMutationInput, Prisma.OrderUncheckedUpdateManyWithoutOrderTypeDefinitionInput>
+}
+
+export type OrderCreateWithoutAssigneesInput = {
+  id?: string
+  orderNumber: string
+  title?: string | null
+  orderType?: $Enums.OrderType
+  orderTypeLabel?: string | null
+  orderTypeCustom?: string | null
+  status?: $Enums.OrderStatus
+  priority?: $Enums.OrderPriority
+  materialStatus?: $Enums.MaterialOrderStatus
+  completionResult?: $Enums.CompletionResult | null
+  customerConfirmationStatus?: $Enums.CustomerConfirmationStatus
+  description?: string | null
+  internalNotes?: string | null
+  customerNotes?: string | null
+  questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  scheduledStart?: Date | string | null
+  scheduledEnd?: Date | string | null
+  bookingConfirmationSentAt?: Date | string | null
+  completedAt?: Date | string | null
+  invoicedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tenant: Prisma.TenantCreateNestedOneWithoutOrdersInput
+  customer: Prisma.CustomerCreateNestedOneWithoutOrdersInput
+  property: Prisma.PropertyCreateNestedOneWithoutOrdersInput
+  orderTypeDefinition?: Prisma.OrderTypeDefinitionCreateNestedOneWithoutOrdersInput
+  services?: Prisma.OrderServiceCreateNestedManyWithoutOrderInput
+  appointments?: Prisma.AppointmentCreateNestedManyWithoutOrderInput
+  files?: Prisma.FileUploadCreateNestedManyWithoutOrderInput
+  checklists?: Prisma.OrderChecklistCreateNestedManyWithoutOrderInput
+  messages?: Prisma.MessageCreateNestedManyWithoutOrderInput
+  timeEntries?: Prisma.TimeEntryCreateNestedManyWithoutOrderInput
+  materialUsages?: Prisma.MaterialUsageCreateNestedManyWithoutOrderInput
+  calculations?: Prisma.CalculationCreateNestedManyWithoutOrderInput
+  phases?: Prisma.OrderPhaseCreateNestedManyWithoutOrderInput
+  materialLines?: Prisma.OrderMaterialLineCreateNestedManyWithoutOrderInput
+  reservations?: Prisma.ReservationCreateNestedManyWithoutOrderInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutOrderInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutOrderInput
+  planMarkers?: Prisma.PlanMarkerCreateNestedManyWithoutOrderInput
+  team?: Prisma.TeamCreateNestedOneWithoutOrdersInput
+  vehicle?: Prisma.VehicleCreateNestedOneWithoutOrdersInput
+  project?: Prisma.ProjectCreateNestedOneWithoutOrdersInput
+  staffRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutOrderInput
+  shares?: Prisma.OrderShareCreateNestedManyWithoutOrderInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutOrderInput
+  projectNotes?: Prisma.ProjectNoteCreateNestedManyWithoutOrderInput
+  projectFiles?: Prisma.ProjectFileCreateNestedManyWithoutOrderInput
+  projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutOrderInput
+}
+
+export type OrderUncheckedCreateWithoutAssigneesInput = {
+  id?: string
+  tenantId: string
+  customerId: string
+  propertyId: string
+  orderNumber: string
+  title?: string | null
+  orderType?: $Enums.OrderType
+  orderTypeId?: string | null
+  orderTypeLabel?: string | null
+  orderTypeCustom?: string | null
+  status?: $Enums.OrderStatus
+  priority?: $Enums.OrderPriority
+  materialStatus?: $Enums.MaterialOrderStatus
+  completionResult?: $Enums.CompletionResult | null
+  customerConfirmationStatus?: $Enums.CustomerConfirmationStatus
+  description?: string | null
+  internalNotes?: string | null
+  customerNotes?: string | null
+  questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  scheduledStart?: Date | string | null
+  scheduledEnd?: Date | string | null
+  bookingConfirmationSentAt?: Date | string | null
+  completedAt?: Date | string | null
+  invoicedAt?: Date | string | null
+  teamId?: string | null
+  vehicleId?: string | null
+  projectId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  services?: Prisma.OrderServiceUncheckedCreateNestedManyWithoutOrderInput
+  appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutOrderInput
+  files?: Prisma.FileUploadUncheckedCreateNestedManyWithoutOrderInput
+  checklists?: Prisma.OrderChecklistUncheckedCreateNestedManyWithoutOrderInput
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutOrderInput
+  timeEntries?: Prisma.TimeEntryUncheckedCreateNestedManyWithoutOrderInput
+  materialUsages?: Prisma.MaterialUsageUncheckedCreateNestedManyWithoutOrderInput
+  calculations?: Prisma.CalculationUncheckedCreateNestedManyWithoutOrderInput
+  phases?: Prisma.OrderPhaseUncheckedCreateNestedManyWithoutOrderInput
+  materialLines?: Prisma.OrderMaterialLineUncheckedCreateNestedManyWithoutOrderInput
+  reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutOrderInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutOrderInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutOrderInput
+  planMarkers?: Prisma.PlanMarkerUncheckedCreateNestedManyWithoutOrderInput
+  staffRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutOrderInput
+  shares?: Prisma.OrderShareUncheckedCreateNestedManyWithoutOrderInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrderInput
+  projectNotes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutOrderInput
+  projectFiles?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutOrderInput
+  projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutOrderInput
+}
+
+export type OrderCreateOrConnectWithoutAssigneesInput = {
+  where: Prisma.OrderWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrderCreateWithoutAssigneesInput, Prisma.OrderUncheckedCreateWithoutAssigneesInput>
+}
+
+export type OrderUpsertWithoutAssigneesInput = {
+  update: Prisma.XOR<Prisma.OrderUpdateWithoutAssigneesInput, Prisma.OrderUncheckedUpdateWithoutAssigneesInput>
+  create: Prisma.XOR<Prisma.OrderCreateWithoutAssigneesInput, Prisma.OrderUncheckedCreateWithoutAssigneesInput>
+  where?: Prisma.OrderWhereInput
+}
+
+export type OrderUpdateToOneWithWhereWithoutAssigneesInput = {
+  where?: Prisma.OrderWhereInput
+  data: Prisma.XOR<Prisma.OrderUpdateWithoutAssigneesInput, Prisma.OrderUncheckedUpdateWithoutAssigneesInput>
+}
+
+export type OrderUpdateWithoutAssigneesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  orderTypeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeCustom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+  priority?: Prisma.EnumOrderPriorityFieldUpdateOperationsInput | $Enums.OrderPriority
+  materialStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
+  completionResult?: Prisma.NullableEnumCompletionResultFieldUpdateOperationsInput | $Enums.CompletionResult | null
+  customerConfirmationStatus?: Prisma.EnumCustomerConfirmationStatusFieldUpdateOperationsInput | $Enums.CustomerConfirmationStatus
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  internalNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutOrdersNestedInput
+  customer?: Prisma.CustomerUpdateOneRequiredWithoutOrdersNestedInput
+  property?: Prisma.PropertyUpdateOneRequiredWithoutOrdersNestedInput
+  orderTypeDefinition?: Prisma.OrderTypeDefinitionUpdateOneWithoutOrdersNestedInput
+  services?: Prisma.OrderServiceUpdateManyWithoutOrderNestedInput
+  appointments?: Prisma.AppointmentUpdateManyWithoutOrderNestedInput
+  files?: Prisma.FileUploadUpdateManyWithoutOrderNestedInput
+  checklists?: Prisma.OrderChecklistUpdateManyWithoutOrderNestedInput
+  messages?: Prisma.MessageUpdateManyWithoutOrderNestedInput
+  timeEntries?: Prisma.TimeEntryUpdateManyWithoutOrderNestedInput
+  materialUsages?: Prisma.MaterialUsageUpdateManyWithoutOrderNestedInput
+  calculations?: Prisma.CalculationUpdateManyWithoutOrderNestedInput
+  phases?: Prisma.OrderPhaseUpdateManyWithoutOrderNestedInput
+  materialLines?: Prisma.OrderMaterialLineUpdateManyWithoutOrderNestedInput
+  reservations?: Prisma.ReservationUpdateManyWithoutOrderNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutOrderNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutOrderNestedInput
+  planMarkers?: Prisma.PlanMarkerUpdateManyWithoutOrderNestedInput
+  team?: Prisma.TeamUpdateOneWithoutOrdersNestedInput
+  vehicle?: Prisma.VehicleUpdateOneWithoutOrdersNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutOrdersNestedInput
+  staffRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutOrderNestedInput
+  shares?: Prisma.OrderShareUpdateManyWithoutOrderNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutOrderNestedInput
+  projectNotes?: Prisma.ProjectNoteUpdateManyWithoutOrderNestedInput
+  projectFiles?: Prisma.ProjectFileUpdateManyWithoutOrderNestedInput
+  projectCosts?: Prisma.ProjectCostUpdateManyWithoutOrderNestedInput
+}
+
+export type OrderUncheckedUpdateWithoutAssigneesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.StringFieldUpdateOperationsInput | string
+  propertyId?: Prisma.StringFieldUpdateOperationsInput | string
+  orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderType?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  orderTypeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTypeCustom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+  priority?: Prisma.EnumOrderPriorityFieldUpdateOperationsInput | $Enums.OrderPriority
+  materialStatus?: Prisma.EnumMaterialOrderStatusFieldUpdateOperationsInput | $Enums.MaterialOrderStatus
+  completionResult?: Prisma.NullableEnumCompletionResultFieldUpdateOperationsInput | $Enums.CompletionResult | null
+  customerConfirmationStatus?: Prisma.EnumCustomerConfirmationStatusFieldUpdateOperationsInput | $Enums.CustomerConfirmationStatus
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  internalNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  questionAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  scheduledStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  services?: Prisma.OrderServiceUncheckedUpdateManyWithoutOrderNestedInput
+  appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutOrderNestedInput
+  files?: Prisma.FileUploadUncheckedUpdateManyWithoutOrderNestedInput
+  checklists?: Prisma.OrderChecklistUncheckedUpdateManyWithoutOrderNestedInput
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutOrderNestedInput
+  timeEntries?: Prisma.TimeEntryUncheckedUpdateManyWithoutOrderNestedInput
+  materialUsages?: Prisma.MaterialUsageUncheckedUpdateManyWithoutOrderNestedInput
+  calculations?: Prisma.CalculationUncheckedUpdateManyWithoutOrderNestedInput
+  phases?: Prisma.OrderPhaseUncheckedUpdateManyWithoutOrderNestedInput
+  materialLines?: Prisma.OrderMaterialLineUncheckedUpdateManyWithoutOrderNestedInput
+  reservations?: Prisma.ReservationUncheckedUpdateManyWithoutOrderNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutOrderNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutOrderNestedInput
+  planMarkers?: Prisma.PlanMarkerUncheckedUpdateManyWithoutOrderNestedInput
+  staffRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutOrderNestedInput
+  shares?: Prisma.OrderShareUncheckedUpdateManyWithoutOrderNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrderNestedInput
+  projectNotes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutOrderNestedInput
+  projectFiles?: Prisma.ProjectFileUncheckedUpdateManyWithoutOrderNestedInput
+  projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutServicesInput = {
@@ -2219,6 +2474,7 @@ export type OrderCreateWithoutServicesInput = {
   projectNotes?: Prisma.ProjectNoteCreateNestedManyWithoutOrderInput
   projectFiles?: Prisma.ProjectFileCreateNestedManyWithoutOrderInput
   projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutOrderInput
+  assignees?: Prisma.OrderAssigneeCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutServicesInput = {
@@ -2270,6 +2526,7 @@ export type OrderUncheckedCreateWithoutServicesInput = {
   projectNotes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutOrderInput
   projectFiles?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutOrderInput
   projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutOrderInput
+  assignees?: Prisma.OrderAssigneeUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutServicesInput = {
@@ -2337,6 +2594,7 @@ export type OrderUpdateWithoutServicesInput = {
   projectNotes?: Prisma.ProjectNoteUpdateManyWithoutOrderNestedInput
   projectFiles?: Prisma.ProjectFileUpdateManyWithoutOrderNestedInput
   projectCosts?: Prisma.ProjectCostUpdateManyWithoutOrderNestedInput
+  assignees?: Prisma.OrderAssigneeUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutServicesInput = {
@@ -2388,6 +2646,7 @@ export type OrderUncheckedUpdateWithoutServicesInput = {
   projectNotes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutOrderNestedInput
   projectFiles?: Prisma.ProjectFileUncheckedUpdateManyWithoutOrderNestedInput
   projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutOrderNestedInput
+  assignees?: Prisma.OrderAssigneeUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutAppointmentsInput = {
@@ -2439,6 +2698,7 @@ export type OrderCreateWithoutAppointmentsInput = {
   projectNotes?: Prisma.ProjectNoteCreateNestedManyWithoutOrderInput
   projectFiles?: Prisma.ProjectFileCreateNestedManyWithoutOrderInput
   projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutOrderInput
+  assignees?: Prisma.OrderAssigneeCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutAppointmentsInput = {
@@ -2490,6 +2750,7 @@ export type OrderUncheckedCreateWithoutAppointmentsInput = {
   projectNotes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutOrderInput
   projectFiles?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutOrderInput
   projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutOrderInput
+  assignees?: Prisma.OrderAssigneeUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutAppointmentsInput = {
@@ -2557,6 +2818,7 @@ export type OrderUpdateWithoutAppointmentsInput = {
   projectNotes?: Prisma.ProjectNoteUpdateManyWithoutOrderNestedInput
   projectFiles?: Prisma.ProjectFileUpdateManyWithoutOrderNestedInput
   projectCosts?: Prisma.ProjectCostUpdateManyWithoutOrderNestedInput
+  assignees?: Prisma.OrderAssigneeUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutAppointmentsInput = {
@@ -2608,6 +2870,7 @@ export type OrderUncheckedUpdateWithoutAppointmentsInput = {
   projectNotes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutOrderNestedInput
   projectFiles?: Prisma.ProjectFileUncheckedUpdateManyWithoutOrderNestedInput
   projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutOrderNestedInput
+  assignees?: Prisma.OrderAssigneeUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutChecklistsInput = {
@@ -2659,6 +2922,7 @@ export type OrderCreateWithoutChecklistsInput = {
   projectNotes?: Prisma.ProjectNoteCreateNestedManyWithoutOrderInput
   projectFiles?: Prisma.ProjectFileCreateNestedManyWithoutOrderInput
   projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutOrderInput
+  assignees?: Prisma.OrderAssigneeCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutChecklistsInput = {
@@ -2710,6 +2974,7 @@ export type OrderUncheckedCreateWithoutChecklistsInput = {
   projectNotes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutOrderInput
   projectFiles?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutOrderInput
   projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutOrderInput
+  assignees?: Prisma.OrderAssigneeUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutChecklistsInput = {
@@ -2777,6 +3042,7 @@ export type OrderUpdateWithoutChecklistsInput = {
   projectNotes?: Prisma.ProjectNoteUpdateManyWithoutOrderNestedInput
   projectFiles?: Prisma.ProjectFileUpdateManyWithoutOrderNestedInput
   projectCosts?: Prisma.ProjectCostUpdateManyWithoutOrderNestedInput
+  assignees?: Prisma.OrderAssigneeUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutChecklistsInput = {
@@ -2828,6 +3094,7 @@ export type OrderUncheckedUpdateWithoutChecklistsInput = {
   projectNotes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutOrderNestedInput
   projectFiles?: Prisma.ProjectFileUncheckedUpdateManyWithoutOrderNestedInput
   projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutOrderNestedInput
+  assignees?: Prisma.OrderAssigneeUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutFilesInput = {
@@ -2879,6 +3146,7 @@ export type OrderCreateWithoutFilesInput = {
   projectNotes?: Prisma.ProjectNoteCreateNestedManyWithoutOrderInput
   projectFiles?: Prisma.ProjectFileCreateNestedManyWithoutOrderInput
   projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutOrderInput
+  assignees?: Prisma.OrderAssigneeCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutFilesInput = {
@@ -2930,6 +3198,7 @@ export type OrderUncheckedCreateWithoutFilesInput = {
   projectNotes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutOrderInput
   projectFiles?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutOrderInput
   projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutOrderInput
+  assignees?: Prisma.OrderAssigneeUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutFilesInput = {
@@ -2997,6 +3266,7 @@ export type OrderUpdateWithoutFilesInput = {
   projectNotes?: Prisma.ProjectNoteUpdateManyWithoutOrderNestedInput
   projectFiles?: Prisma.ProjectFileUpdateManyWithoutOrderNestedInput
   projectCosts?: Prisma.ProjectCostUpdateManyWithoutOrderNestedInput
+  assignees?: Prisma.OrderAssigneeUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutFilesInput = {
@@ -3048,6 +3318,7 @@ export type OrderUncheckedUpdateWithoutFilesInput = {
   projectNotes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutOrderNestedInput
   projectFiles?: Prisma.ProjectFileUncheckedUpdateManyWithoutOrderNestedInput
   projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutOrderNestedInput
+  assignees?: Prisma.OrderAssigneeUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutTimeEntriesInput = {
@@ -3099,6 +3370,7 @@ export type OrderCreateWithoutTimeEntriesInput = {
   projectNotes?: Prisma.ProjectNoteCreateNestedManyWithoutOrderInput
   projectFiles?: Prisma.ProjectFileCreateNestedManyWithoutOrderInput
   projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutOrderInput
+  assignees?: Prisma.OrderAssigneeCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutTimeEntriesInput = {
@@ -3150,6 +3422,7 @@ export type OrderUncheckedCreateWithoutTimeEntriesInput = {
   projectNotes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutOrderInput
   projectFiles?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutOrderInput
   projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutOrderInput
+  assignees?: Prisma.OrderAssigneeUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutTimeEntriesInput = {
@@ -3217,6 +3490,7 @@ export type OrderUpdateWithoutTimeEntriesInput = {
   projectNotes?: Prisma.ProjectNoteUpdateManyWithoutOrderNestedInput
   projectFiles?: Prisma.ProjectFileUpdateManyWithoutOrderNestedInput
   projectCosts?: Prisma.ProjectCostUpdateManyWithoutOrderNestedInput
+  assignees?: Prisma.OrderAssigneeUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutTimeEntriesInput = {
@@ -3268,6 +3542,7 @@ export type OrderUncheckedUpdateWithoutTimeEntriesInput = {
   projectNotes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutOrderNestedInput
   projectFiles?: Prisma.ProjectFileUncheckedUpdateManyWithoutOrderNestedInput
   projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutOrderNestedInput
+  assignees?: Prisma.OrderAssigneeUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutMaterialUsagesInput = {
@@ -3319,6 +3594,7 @@ export type OrderCreateWithoutMaterialUsagesInput = {
   projectNotes?: Prisma.ProjectNoteCreateNestedManyWithoutOrderInput
   projectFiles?: Prisma.ProjectFileCreateNestedManyWithoutOrderInput
   projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutOrderInput
+  assignees?: Prisma.OrderAssigneeCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutMaterialUsagesInput = {
@@ -3370,6 +3646,7 @@ export type OrderUncheckedCreateWithoutMaterialUsagesInput = {
   projectNotes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutOrderInput
   projectFiles?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutOrderInput
   projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutOrderInput
+  assignees?: Prisma.OrderAssigneeUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutMaterialUsagesInput = {
@@ -3437,6 +3714,7 @@ export type OrderUpdateWithoutMaterialUsagesInput = {
   projectNotes?: Prisma.ProjectNoteUpdateManyWithoutOrderNestedInput
   projectFiles?: Prisma.ProjectFileUpdateManyWithoutOrderNestedInput
   projectCosts?: Prisma.ProjectCostUpdateManyWithoutOrderNestedInput
+  assignees?: Prisma.OrderAssigneeUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutMaterialUsagesInput = {
@@ -3488,6 +3766,7 @@ export type OrderUncheckedUpdateWithoutMaterialUsagesInput = {
   projectNotes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutOrderNestedInput
   projectFiles?: Prisma.ProjectFileUncheckedUpdateManyWithoutOrderNestedInput
   projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutOrderNestedInput
+  assignees?: Prisma.OrderAssigneeUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutMessagesInput = {
@@ -3539,6 +3818,7 @@ export type OrderCreateWithoutMessagesInput = {
   projectNotes?: Prisma.ProjectNoteCreateNestedManyWithoutOrderInput
   projectFiles?: Prisma.ProjectFileCreateNestedManyWithoutOrderInput
   projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutOrderInput
+  assignees?: Prisma.OrderAssigneeCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutMessagesInput = {
@@ -3590,6 +3870,7 @@ export type OrderUncheckedCreateWithoutMessagesInput = {
   projectNotes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutOrderInput
   projectFiles?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutOrderInput
   projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutOrderInput
+  assignees?: Prisma.OrderAssigneeUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutMessagesInput = {
@@ -3657,6 +3938,7 @@ export type OrderUpdateWithoutMessagesInput = {
   projectNotes?: Prisma.ProjectNoteUpdateManyWithoutOrderNestedInput
   projectFiles?: Prisma.ProjectFileUpdateManyWithoutOrderNestedInput
   projectCosts?: Prisma.ProjectCostUpdateManyWithoutOrderNestedInput
+  assignees?: Prisma.OrderAssigneeUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutMessagesInput = {
@@ -3708,6 +3990,7 @@ export type OrderUncheckedUpdateWithoutMessagesInput = {
   projectNotes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutOrderNestedInput
   projectFiles?: Prisma.ProjectFileUncheckedUpdateManyWithoutOrderNestedInput
   projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutOrderNestedInput
+  assignees?: Prisma.OrderAssigneeUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutCalculationsInput = {
@@ -3759,6 +4042,7 @@ export type OrderCreateWithoutCalculationsInput = {
   projectNotes?: Prisma.ProjectNoteCreateNestedManyWithoutOrderInput
   projectFiles?: Prisma.ProjectFileCreateNestedManyWithoutOrderInput
   projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutOrderInput
+  assignees?: Prisma.OrderAssigneeCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutCalculationsInput = {
@@ -3810,6 +4094,7 @@ export type OrderUncheckedCreateWithoutCalculationsInput = {
   projectNotes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutOrderInput
   projectFiles?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutOrderInput
   projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutOrderInput
+  assignees?: Prisma.OrderAssigneeUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutCalculationsInput = {
@@ -3877,6 +4162,7 @@ export type OrderUpdateWithoutCalculationsInput = {
   projectNotes?: Prisma.ProjectNoteUpdateManyWithoutOrderNestedInput
   projectFiles?: Prisma.ProjectFileUpdateManyWithoutOrderNestedInput
   projectCosts?: Prisma.ProjectCostUpdateManyWithoutOrderNestedInput
+  assignees?: Prisma.OrderAssigneeUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutCalculationsInput = {
@@ -3928,6 +4214,7 @@ export type OrderUncheckedUpdateWithoutCalculationsInput = {
   projectNotes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutOrderNestedInput
   projectFiles?: Prisma.ProjectFileUncheckedUpdateManyWithoutOrderNestedInput
   projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutOrderNestedInput
+  assignees?: Prisma.OrderAssigneeUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutStockMovementsInput = {
@@ -3979,6 +4266,7 @@ export type OrderCreateWithoutStockMovementsInput = {
   projectNotes?: Prisma.ProjectNoteCreateNestedManyWithoutOrderInput
   projectFiles?: Prisma.ProjectFileCreateNestedManyWithoutOrderInput
   projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutOrderInput
+  assignees?: Prisma.OrderAssigneeCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutStockMovementsInput = {
@@ -4030,6 +4318,7 @@ export type OrderUncheckedCreateWithoutStockMovementsInput = {
   projectNotes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutOrderInput
   projectFiles?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutOrderInput
   projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutOrderInput
+  assignees?: Prisma.OrderAssigneeUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutStockMovementsInput = {
@@ -4097,6 +4386,7 @@ export type OrderUpdateWithoutStockMovementsInput = {
   projectNotes?: Prisma.ProjectNoteUpdateManyWithoutOrderNestedInput
   projectFiles?: Prisma.ProjectFileUpdateManyWithoutOrderNestedInput
   projectCosts?: Prisma.ProjectCostUpdateManyWithoutOrderNestedInput
+  assignees?: Prisma.OrderAssigneeUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutStockMovementsInput = {
@@ -4148,6 +4438,7 @@ export type OrderUncheckedUpdateWithoutStockMovementsInput = {
   projectNotes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutOrderNestedInput
   projectFiles?: Prisma.ProjectFileUncheckedUpdateManyWithoutOrderNestedInput
   projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutOrderNestedInput
+  assignees?: Prisma.OrderAssigneeUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutReservationsInput = {
@@ -4199,6 +4490,7 @@ export type OrderCreateWithoutReservationsInput = {
   projectNotes?: Prisma.ProjectNoteCreateNestedManyWithoutOrderInput
   projectFiles?: Prisma.ProjectFileCreateNestedManyWithoutOrderInput
   projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutOrderInput
+  assignees?: Prisma.OrderAssigneeCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutReservationsInput = {
@@ -4250,6 +4542,7 @@ export type OrderUncheckedCreateWithoutReservationsInput = {
   projectNotes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutOrderInput
   projectFiles?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutOrderInput
   projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutOrderInput
+  assignees?: Prisma.OrderAssigneeUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutReservationsInput = {
@@ -4317,6 +4610,7 @@ export type OrderUpdateWithoutReservationsInput = {
   projectNotes?: Prisma.ProjectNoteUpdateManyWithoutOrderNestedInput
   projectFiles?: Prisma.ProjectFileUpdateManyWithoutOrderNestedInput
   projectCosts?: Prisma.ProjectCostUpdateManyWithoutOrderNestedInput
+  assignees?: Prisma.OrderAssigneeUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutReservationsInput = {
@@ -4368,6 +4662,7 @@ export type OrderUncheckedUpdateWithoutReservationsInput = {
   projectNotes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutOrderNestedInput
   projectFiles?: Prisma.ProjectFileUncheckedUpdateManyWithoutOrderNestedInput
   projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutOrderNestedInput
+  assignees?: Prisma.OrderAssigneeUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutPhasesInput = {
@@ -4419,6 +4714,7 @@ export type OrderCreateWithoutPhasesInput = {
   projectNotes?: Prisma.ProjectNoteCreateNestedManyWithoutOrderInput
   projectFiles?: Prisma.ProjectFileCreateNestedManyWithoutOrderInput
   projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutOrderInput
+  assignees?: Prisma.OrderAssigneeCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutPhasesInput = {
@@ -4470,6 +4766,7 @@ export type OrderUncheckedCreateWithoutPhasesInput = {
   projectNotes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutOrderInput
   projectFiles?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutOrderInput
   projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutOrderInput
+  assignees?: Prisma.OrderAssigneeUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutPhasesInput = {
@@ -4537,6 +4834,7 @@ export type OrderUpdateWithoutPhasesInput = {
   projectNotes?: Prisma.ProjectNoteUpdateManyWithoutOrderNestedInput
   projectFiles?: Prisma.ProjectFileUpdateManyWithoutOrderNestedInput
   projectCosts?: Prisma.ProjectCostUpdateManyWithoutOrderNestedInput
+  assignees?: Prisma.OrderAssigneeUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutPhasesInput = {
@@ -4588,6 +4886,7 @@ export type OrderUncheckedUpdateWithoutPhasesInput = {
   projectNotes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutOrderNestedInput
   projectFiles?: Prisma.ProjectFileUncheckedUpdateManyWithoutOrderNestedInput
   projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutOrderNestedInput
+  assignees?: Prisma.OrderAssigneeUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutMaterialLinesInput = {
@@ -4639,6 +4938,7 @@ export type OrderCreateWithoutMaterialLinesInput = {
   projectNotes?: Prisma.ProjectNoteCreateNestedManyWithoutOrderInput
   projectFiles?: Prisma.ProjectFileCreateNestedManyWithoutOrderInput
   projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutOrderInput
+  assignees?: Prisma.OrderAssigneeCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutMaterialLinesInput = {
@@ -4690,6 +4990,7 @@ export type OrderUncheckedCreateWithoutMaterialLinesInput = {
   projectNotes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutOrderInput
   projectFiles?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutOrderInput
   projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutOrderInput
+  assignees?: Prisma.OrderAssigneeUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutMaterialLinesInput = {
@@ -4757,6 +5058,7 @@ export type OrderUpdateWithoutMaterialLinesInput = {
   projectNotes?: Prisma.ProjectNoteUpdateManyWithoutOrderNestedInput
   projectFiles?: Prisma.ProjectFileUpdateManyWithoutOrderNestedInput
   projectCosts?: Prisma.ProjectCostUpdateManyWithoutOrderNestedInput
+  assignees?: Prisma.OrderAssigneeUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutMaterialLinesInput = {
@@ -4808,6 +5110,7 @@ export type OrderUncheckedUpdateWithoutMaterialLinesInput = {
   projectNotes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutOrderNestedInput
   projectFiles?: Prisma.ProjectFileUncheckedUpdateManyWithoutOrderNestedInput
   projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutOrderNestedInput
+  assignees?: Prisma.OrderAssigneeUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutPurchaseOrdersInput = {
@@ -4859,6 +5162,7 @@ export type OrderCreateWithoutPurchaseOrdersInput = {
   projectNotes?: Prisma.ProjectNoteCreateNestedManyWithoutOrderInput
   projectFiles?: Prisma.ProjectFileCreateNestedManyWithoutOrderInput
   projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutOrderInput
+  assignees?: Prisma.OrderAssigneeCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutPurchaseOrdersInput = {
@@ -4910,6 +5214,7 @@ export type OrderUncheckedCreateWithoutPurchaseOrdersInput = {
   projectNotes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutOrderInput
   projectFiles?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutOrderInput
   projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutOrderInput
+  assignees?: Prisma.OrderAssigneeUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutPurchaseOrdersInput = {
@@ -4977,6 +5282,7 @@ export type OrderUpdateWithoutPurchaseOrdersInput = {
   projectNotes?: Prisma.ProjectNoteUpdateManyWithoutOrderNestedInput
   projectFiles?: Prisma.ProjectFileUpdateManyWithoutOrderNestedInput
   projectCosts?: Prisma.ProjectCostUpdateManyWithoutOrderNestedInput
+  assignees?: Prisma.OrderAssigneeUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutPurchaseOrdersInput = {
@@ -5028,6 +5334,7 @@ export type OrderUncheckedUpdateWithoutPurchaseOrdersInput = {
   projectNotes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutOrderNestedInput
   projectFiles?: Prisma.ProjectFileUncheckedUpdateManyWithoutOrderNestedInput
   projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutOrderNestedInput
+  assignees?: Prisma.OrderAssigneeUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutTeamInput = {
@@ -5079,6 +5386,7 @@ export type OrderCreateWithoutTeamInput = {
   projectNotes?: Prisma.ProjectNoteCreateNestedManyWithoutOrderInput
   projectFiles?: Prisma.ProjectFileCreateNestedManyWithoutOrderInput
   projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutOrderInput
+  assignees?: Prisma.OrderAssigneeCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutTeamInput = {
@@ -5130,6 +5438,7 @@ export type OrderUncheckedCreateWithoutTeamInput = {
   projectNotes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutOrderInput
   projectFiles?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutOrderInput
   projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutOrderInput
+  assignees?: Prisma.OrderAssigneeUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutTeamInput = {
@@ -5207,6 +5516,7 @@ export type OrderCreateWithoutVehicleInput = {
   projectNotes?: Prisma.ProjectNoteCreateNestedManyWithoutOrderInput
   projectFiles?: Prisma.ProjectFileCreateNestedManyWithoutOrderInput
   projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutOrderInput
+  assignees?: Prisma.OrderAssigneeCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutVehicleInput = {
@@ -5258,6 +5568,7 @@ export type OrderUncheckedCreateWithoutVehicleInput = {
   projectNotes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutOrderInput
   projectFiles?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutOrderInput
   projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutOrderInput
+  assignees?: Prisma.OrderAssigneeUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutVehicleInput = {
@@ -5335,6 +5646,7 @@ export type OrderCreateWithoutPlanMarkersInput = {
   projectNotes?: Prisma.ProjectNoteCreateNestedManyWithoutOrderInput
   projectFiles?: Prisma.ProjectFileCreateNestedManyWithoutOrderInput
   projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutOrderInput
+  assignees?: Prisma.OrderAssigneeCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutPlanMarkersInput = {
@@ -5386,6 +5698,7 @@ export type OrderUncheckedCreateWithoutPlanMarkersInput = {
   projectNotes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutOrderInput
   projectFiles?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutOrderInput
   projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutOrderInput
+  assignees?: Prisma.OrderAssigneeUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutPlanMarkersInput = {
@@ -5453,6 +5766,7 @@ export type OrderUpdateWithoutPlanMarkersInput = {
   projectNotes?: Prisma.ProjectNoteUpdateManyWithoutOrderNestedInput
   projectFiles?: Prisma.ProjectFileUpdateManyWithoutOrderNestedInput
   projectCosts?: Prisma.ProjectCostUpdateManyWithoutOrderNestedInput
+  assignees?: Prisma.OrderAssigneeUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutPlanMarkersInput = {
@@ -5504,6 +5818,7 @@ export type OrderUncheckedUpdateWithoutPlanMarkersInput = {
   projectNotes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutOrderNestedInput
   projectFiles?: Prisma.ProjectFileUncheckedUpdateManyWithoutOrderNestedInput
   projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutOrderNestedInput
+  assignees?: Prisma.OrderAssigneeUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutStaffRequestsInput = {
@@ -5555,6 +5870,7 @@ export type OrderCreateWithoutStaffRequestsInput = {
   projectNotes?: Prisma.ProjectNoteCreateNestedManyWithoutOrderInput
   projectFiles?: Prisma.ProjectFileCreateNestedManyWithoutOrderInput
   projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutOrderInput
+  assignees?: Prisma.OrderAssigneeCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutStaffRequestsInput = {
@@ -5606,6 +5922,7 @@ export type OrderUncheckedCreateWithoutStaffRequestsInput = {
   projectNotes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutOrderInput
   projectFiles?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutOrderInput
   projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutOrderInput
+  assignees?: Prisma.OrderAssigneeUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutStaffRequestsInput = {
@@ -5673,6 +5990,7 @@ export type OrderUpdateWithoutStaffRequestsInput = {
   projectNotes?: Prisma.ProjectNoteUpdateManyWithoutOrderNestedInput
   projectFiles?: Prisma.ProjectFileUpdateManyWithoutOrderNestedInput
   projectCosts?: Prisma.ProjectCostUpdateManyWithoutOrderNestedInput
+  assignees?: Prisma.OrderAssigneeUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutStaffRequestsInput = {
@@ -5724,6 +6042,7 @@ export type OrderUncheckedUpdateWithoutStaffRequestsInput = {
   projectNotes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutOrderNestedInput
   projectFiles?: Prisma.ProjectFileUncheckedUpdateManyWithoutOrderNestedInput
   projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutOrderNestedInput
+  assignees?: Prisma.OrderAssigneeUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutSharesInput = {
@@ -5775,6 +6094,7 @@ export type OrderCreateWithoutSharesInput = {
   projectNotes?: Prisma.ProjectNoteCreateNestedManyWithoutOrderInput
   projectFiles?: Prisma.ProjectFileCreateNestedManyWithoutOrderInput
   projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutOrderInput
+  assignees?: Prisma.OrderAssigneeCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutSharesInput = {
@@ -5826,6 +6146,7 @@ export type OrderUncheckedCreateWithoutSharesInput = {
   projectNotes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutOrderInput
   projectFiles?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutOrderInput
   projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutOrderInput
+  assignees?: Prisma.OrderAssigneeUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutSharesInput = {
@@ -5893,6 +6214,7 @@ export type OrderUpdateWithoutSharesInput = {
   projectNotes?: Prisma.ProjectNoteUpdateManyWithoutOrderNestedInput
   projectFiles?: Prisma.ProjectFileUpdateManyWithoutOrderNestedInput
   projectCosts?: Prisma.ProjectCostUpdateManyWithoutOrderNestedInput
+  assignees?: Prisma.OrderAssigneeUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutSharesInput = {
@@ -5944,6 +6266,7 @@ export type OrderUncheckedUpdateWithoutSharesInput = {
   projectNotes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutOrderNestedInput
   projectFiles?: Prisma.ProjectFileUncheckedUpdateManyWithoutOrderNestedInput
   projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutOrderNestedInput
+  assignees?: Prisma.OrderAssigneeUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutExpensesInput = {
@@ -5995,6 +6318,7 @@ export type OrderCreateWithoutExpensesInput = {
   projectNotes?: Prisma.ProjectNoteCreateNestedManyWithoutOrderInput
   projectFiles?: Prisma.ProjectFileCreateNestedManyWithoutOrderInput
   projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutOrderInput
+  assignees?: Prisma.OrderAssigneeCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutExpensesInput = {
@@ -6046,6 +6370,7 @@ export type OrderUncheckedCreateWithoutExpensesInput = {
   projectNotes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutOrderInput
   projectFiles?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutOrderInput
   projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutOrderInput
+  assignees?: Prisma.OrderAssigneeUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutExpensesInput = {
@@ -6113,6 +6438,7 @@ export type OrderUpdateWithoutExpensesInput = {
   projectNotes?: Prisma.ProjectNoteUpdateManyWithoutOrderNestedInput
   projectFiles?: Prisma.ProjectFileUpdateManyWithoutOrderNestedInput
   projectCosts?: Prisma.ProjectCostUpdateManyWithoutOrderNestedInput
+  assignees?: Prisma.OrderAssigneeUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutExpensesInput = {
@@ -6164,6 +6490,7 @@ export type OrderUncheckedUpdateWithoutExpensesInput = {
   projectNotes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutOrderNestedInput
   projectFiles?: Prisma.ProjectFileUncheckedUpdateManyWithoutOrderNestedInput
   projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutOrderNestedInput
+  assignees?: Prisma.OrderAssigneeUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutProjectInput = {
@@ -6215,6 +6542,7 @@ export type OrderCreateWithoutProjectInput = {
   projectNotes?: Prisma.ProjectNoteCreateNestedManyWithoutOrderInput
   projectFiles?: Prisma.ProjectFileCreateNestedManyWithoutOrderInput
   projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutOrderInput
+  assignees?: Prisma.OrderAssigneeCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutProjectInput = {
@@ -6266,6 +6594,7 @@ export type OrderUncheckedCreateWithoutProjectInput = {
   projectNotes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutOrderInput
   projectFiles?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutOrderInput
   projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutOrderInput
+  assignees?: Prisma.OrderAssigneeUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutProjectInput = {
@@ -6343,6 +6672,7 @@ export type OrderCreateWithoutProjectNotesInput = {
   expenses?: Prisma.ExpenseCreateNestedManyWithoutOrderInput
   projectFiles?: Prisma.ProjectFileCreateNestedManyWithoutOrderInput
   projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutOrderInput
+  assignees?: Prisma.OrderAssigneeCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutProjectNotesInput = {
@@ -6394,6 +6724,7 @@ export type OrderUncheckedCreateWithoutProjectNotesInput = {
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrderInput
   projectFiles?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutOrderInput
   projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutOrderInput
+  assignees?: Prisma.OrderAssigneeUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutProjectNotesInput = {
@@ -6461,6 +6792,7 @@ export type OrderUpdateWithoutProjectNotesInput = {
   expenses?: Prisma.ExpenseUpdateManyWithoutOrderNestedInput
   projectFiles?: Prisma.ProjectFileUpdateManyWithoutOrderNestedInput
   projectCosts?: Prisma.ProjectCostUpdateManyWithoutOrderNestedInput
+  assignees?: Prisma.OrderAssigneeUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutProjectNotesInput = {
@@ -6512,6 +6844,7 @@ export type OrderUncheckedUpdateWithoutProjectNotesInput = {
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrderNestedInput
   projectFiles?: Prisma.ProjectFileUncheckedUpdateManyWithoutOrderNestedInput
   projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutOrderNestedInput
+  assignees?: Prisma.OrderAssigneeUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutProjectFilesInput = {
@@ -6563,6 +6896,7 @@ export type OrderCreateWithoutProjectFilesInput = {
   expenses?: Prisma.ExpenseCreateNestedManyWithoutOrderInput
   projectNotes?: Prisma.ProjectNoteCreateNestedManyWithoutOrderInput
   projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutOrderInput
+  assignees?: Prisma.OrderAssigneeCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutProjectFilesInput = {
@@ -6614,6 +6948,7 @@ export type OrderUncheckedCreateWithoutProjectFilesInput = {
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrderInput
   projectNotes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutOrderInput
   projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutOrderInput
+  assignees?: Prisma.OrderAssigneeUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutProjectFilesInput = {
@@ -6681,6 +7016,7 @@ export type OrderUpdateWithoutProjectFilesInput = {
   expenses?: Prisma.ExpenseUpdateManyWithoutOrderNestedInput
   projectNotes?: Prisma.ProjectNoteUpdateManyWithoutOrderNestedInput
   projectCosts?: Prisma.ProjectCostUpdateManyWithoutOrderNestedInput
+  assignees?: Prisma.OrderAssigneeUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutProjectFilesInput = {
@@ -6732,6 +7068,7 @@ export type OrderUncheckedUpdateWithoutProjectFilesInput = {
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrderNestedInput
   projectNotes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutOrderNestedInput
   projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutOrderNestedInput
+  assignees?: Prisma.OrderAssigneeUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutProjectCostsInput = {
@@ -6783,6 +7120,7 @@ export type OrderCreateWithoutProjectCostsInput = {
   expenses?: Prisma.ExpenseCreateNestedManyWithoutOrderInput
   projectNotes?: Prisma.ProjectNoteCreateNestedManyWithoutOrderInput
   projectFiles?: Prisma.ProjectFileCreateNestedManyWithoutOrderInput
+  assignees?: Prisma.OrderAssigneeCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutProjectCostsInput = {
@@ -6834,6 +7172,7 @@ export type OrderUncheckedCreateWithoutProjectCostsInput = {
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrderInput
   projectNotes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutOrderInput
   projectFiles?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutOrderInput
+  assignees?: Prisma.OrderAssigneeUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutProjectCostsInput = {
@@ -6901,6 +7240,7 @@ export type OrderUpdateWithoutProjectCostsInput = {
   expenses?: Prisma.ExpenseUpdateManyWithoutOrderNestedInput
   projectNotes?: Prisma.ProjectNoteUpdateManyWithoutOrderNestedInput
   projectFiles?: Prisma.ProjectFileUpdateManyWithoutOrderNestedInput
+  assignees?: Prisma.OrderAssigneeUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutProjectCostsInput = {
@@ -6952,6 +7292,7 @@ export type OrderUncheckedUpdateWithoutProjectCostsInput = {
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrderNestedInput
   projectNotes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutOrderNestedInput
   projectFiles?: Prisma.ProjectFileUncheckedUpdateManyWithoutOrderNestedInput
+  assignees?: Prisma.OrderAssigneeUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateManyTenantInput = {
@@ -7034,6 +7375,7 @@ export type OrderUpdateWithoutTenantInput = {
   projectNotes?: Prisma.ProjectNoteUpdateManyWithoutOrderNestedInput
   projectFiles?: Prisma.ProjectFileUpdateManyWithoutOrderNestedInput
   projectCosts?: Prisma.ProjectCostUpdateManyWithoutOrderNestedInput
+  assignees?: Prisma.OrderAssigneeUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutTenantInput = {
@@ -7085,6 +7427,7 @@ export type OrderUncheckedUpdateWithoutTenantInput = {
   projectNotes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutOrderNestedInput
   projectFiles?: Prisma.ProjectFileUncheckedUpdateManyWithoutOrderNestedInput
   projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutOrderNestedInput
+  assignees?: Prisma.OrderAssigneeUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateManyWithoutTenantInput = {
@@ -7198,6 +7541,7 @@ export type OrderUpdateWithoutCustomerInput = {
   projectNotes?: Prisma.ProjectNoteUpdateManyWithoutOrderNestedInput
   projectFiles?: Prisma.ProjectFileUpdateManyWithoutOrderNestedInput
   projectCosts?: Prisma.ProjectCostUpdateManyWithoutOrderNestedInput
+  assignees?: Prisma.OrderAssigneeUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutCustomerInput = {
@@ -7249,6 +7593,7 @@ export type OrderUncheckedUpdateWithoutCustomerInput = {
   projectNotes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutOrderNestedInput
   projectFiles?: Prisma.ProjectFileUncheckedUpdateManyWithoutOrderNestedInput
   projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutOrderNestedInput
+  assignees?: Prisma.OrderAssigneeUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateManyWithoutCustomerInput = {
@@ -7362,6 +7707,7 @@ export type OrderUpdateWithoutPropertyInput = {
   projectNotes?: Prisma.ProjectNoteUpdateManyWithoutOrderNestedInput
   projectFiles?: Prisma.ProjectFileUpdateManyWithoutOrderNestedInput
   projectCosts?: Prisma.ProjectCostUpdateManyWithoutOrderNestedInput
+  assignees?: Prisma.OrderAssigneeUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutPropertyInput = {
@@ -7413,6 +7759,7 @@ export type OrderUncheckedUpdateWithoutPropertyInput = {
   projectNotes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutOrderNestedInput
   projectFiles?: Prisma.ProjectFileUncheckedUpdateManyWithoutOrderNestedInput
   projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutOrderNestedInput
+  assignees?: Prisma.OrderAssigneeUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateManyWithoutPropertyInput = {
@@ -7526,6 +7873,7 @@ export type OrderUpdateWithoutOrderTypeDefinitionInput = {
   projectNotes?: Prisma.ProjectNoteUpdateManyWithoutOrderNestedInput
   projectFiles?: Prisma.ProjectFileUpdateManyWithoutOrderNestedInput
   projectCosts?: Prisma.ProjectCostUpdateManyWithoutOrderNestedInput
+  assignees?: Prisma.OrderAssigneeUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutOrderTypeDefinitionInput = {
@@ -7577,6 +7925,7 @@ export type OrderUncheckedUpdateWithoutOrderTypeDefinitionInput = {
   projectNotes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutOrderNestedInput
   projectFiles?: Prisma.ProjectFileUncheckedUpdateManyWithoutOrderNestedInput
   projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutOrderNestedInput
+  assignees?: Prisma.OrderAssigneeUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateManyWithoutOrderTypeDefinitionInput = {
@@ -7690,6 +8039,7 @@ export type OrderUpdateWithoutTeamInput = {
   projectNotes?: Prisma.ProjectNoteUpdateManyWithoutOrderNestedInput
   projectFiles?: Prisma.ProjectFileUpdateManyWithoutOrderNestedInput
   projectCosts?: Prisma.ProjectCostUpdateManyWithoutOrderNestedInput
+  assignees?: Prisma.OrderAssigneeUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutTeamInput = {
@@ -7741,6 +8091,7 @@ export type OrderUncheckedUpdateWithoutTeamInput = {
   projectNotes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutOrderNestedInput
   projectFiles?: Prisma.ProjectFileUncheckedUpdateManyWithoutOrderNestedInput
   projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutOrderNestedInput
+  assignees?: Prisma.OrderAssigneeUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateManyWithoutTeamInput = {
@@ -7854,6 +8205,7 @@ export type OrderUpdateWithoutVehicleInput = {
   projectNotes?: Prisma.ProjectNoteUpdateManyWithoutOrderNestedInput
   projectFiles?: Prisma.ProjectFileUpdateManyWithoutOrderNestedInput
   projectCosts?: Prisma.ProjectCostUpdateManyWithoutOrderNestedInput
+  assignees?: Prisma.OrderAssigneeUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutVehicleInput = {
@@ -7905,6 +8257,7 @@ export type OrderUncheckedUpdateWithoutVehicleInput = {
   projectNotes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutOrderNestedInput
   projectFiles?: Prisma.ProjectFileUncheckedUpdateManyWithoutOrderNestedInput
   projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutOrderNestedInput
+  assignees?: Prisma.OrderAssigneeUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateManyWithoutVehicleInput = {
@@ -8018,6 +8371,7 @@ export type OrderUpdateWithoutProjectInput = {
   projectNotes?: Prisma.ProjectNoteUpdateManyWithoutOrderNestedInput
   projectFiles?: Prisma.ProjectFileUpdateManyWithoutOrderNestedInput
   projectCosts?: Prisma.ProjectCostUpdateManyWithoutOrderNestedInput
+  assignees?: Prisma.OrderAssigneeUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutProjectInput = {
@@ -8069,6 +8423,7 @@ export type OrderUncheckedUpdateWithoutProjectInput = {
   projectNotes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutOrderNestedInput
   projectFiles?: Prisma.ProjectFileUncheckedUpdateManyWithoutOrderNestedInput
   projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutOrderNestedInput
+  assignees?: Prisma.OrderAssigneeUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateManyWithoutProjectInput = {
@@ -8128,6 +8483,7 @@ export type OrderCountOutputType = {
   projectNotes: number
   projectFiles: number
   projectCosts: number
+  assignees: number
 }
 
 export type OrderCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -8151,6 +8507,7 @@ export type OrderCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.
   projectNotes?: boolean | OrderCountOutputTypeCountProjectNotesArgs
   projectFiles?: boolean | OrderCountOutputTypeCountProjectFilesArgs
   projectCosts?: boolean | OrderCountOutputTypeCountProjectCostsArgs
+  assignees?: boolean | OrderCountOutputTypeCountAssigneesArgs
 }
 
 /**
@@ -8303,6 +8660,13 @@ export type OrderCountOutputTypeCountProjectCostsArgs<ExtArgs extends runtime.Ty
   where?: Prisma.ProjectCostWhereInput
 }
 
+/**
+ * OrderCountOutputType without action
+ */
+export type OrderCountOutputTypeCountAssigneesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.OrderAssigneeWhereInput
+}
+
 
 export type OrderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -8361,6 +8725,7 @@ export type OrderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   projectNotes?: boolean | Prisma.Order$projectNotesArgs<ExtArgs>
   projectFiles?: boolean | Prisma.Order$projectFilesArgs<ExtArgs>
   projectCosts?: boolean | Prisma.Order$projectCostsArgs<ExtArgs>
+  assignees?: boolean | Prisma.Order$assigneesArgs<ExtArgs>
   _count?: boolean | Prisma.OrderCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["order"]>
 
@@ -8503,6 +8868,7 @@ export type OrderInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   projectNotes?: boolean | Prisma.Order$projectNotesArgs<ExtArgs>
   projectFiles?: boolean | Prisma.Order$projectFilesArgs<ExtArgs>
   projectCosts?: boolean | Prisma.Order$projectCostsArgs<ExtArgs>
+  assignees?: boolean | Prisma.Order$assigneesArgs<ExtArgs>
   _count?: boolean | Prisma.OrderCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type OrderIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -8554,6 +8920,7 @@ export type $OrderPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     projectNotes: Prisma.$ProjectNotePayload<ExtArgs>[]
     projectFiles: Prisma.$ProjectFilePayload<ExtArgs>[]
     projectCosts: Prisma.$ProjectCostPayload<ExtArgs>[]
+    assignees: Prisma.$OrderAssigneePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -9015,6 +9382,7 @@ export interface Prisma__OrderClient<T, Null = never, ExtArgs extends runtime.Ty
   projectNotes<T extends Prisma.Order$projectNotesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$projectNotesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectNotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   projectFiles<T extends Prisma.Order$projectFilesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$projectFilesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectFilePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   projectCosts<T extends Prisma.Order$projectCostsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$projectCostsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectCostPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  assignees<T extends Prisma.Order$assigneesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$assigneesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderAssigneePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -10027,6 +10395,30 @@ export type Order$projectCostsArgs<ExtArgs extends runtime.Types.Extensions.Inte
   take?: number
   skip?: number
   distinct?: Prisma.ProjectCostScalarFieldEnum | Prisma.ProjectCostScalarFieldEnum[]
+}
+
+/**
+ * Order.assignees
+ */
+export type Order$assigneesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the OrderAssignee
+   */
+  select?: Prisma.OrderAssigneeSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the OrderAssignee
+   */
+  omit?: Prisma.OrderAssigneeOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OrderAssigneeInclude<ExtArgs> | null
+  where?: Prisma.OrderAssigneeWhereInput
+  orderBy?: Prisma.OrderAssigneeOrderByWithRelationInput | Prisma.OrderAssigneeOrderByWithRelationInput[]
+  cursor?: Prisma.OrderAssigneeWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.OrderAssigneeScalarFieldEnum | Prisma.OrderAssigneeScalarFieldEnum[]
 }
 
 /**

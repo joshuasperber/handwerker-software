@@ -10,6 +10,7 @@ import { fetchJson } from "@/lib/fetch-json";
 import { formatDate } from "@/lib/utils";
 import { FolderKanban, Search } from "lucide-react";
 import { PROJECT_STATUS_LABELS } from "@/lib/projects/types";
+import { toast } from "sonner";
 
 interface ProjectListItem {
   id: string;
@@ -48,7 +49,11 @@ export default function ProjektePage() {
       if (search.trim()) params.set("q", search.trim());
       if (status) params.set("status", status);
       const res = await fetchJson<ProjectListItem[]>(`/api/projects?${params}`);
-      if (res.success && res.data) setItems(res.data);
+      if (res.success && res.data) {
+        setItems(res.data);
+      } else {
+        toast.error(res.error ?? "Projekte konnten nicht geladen werden");
+      }
       setLoading(false);
     }, 200);
     return () => clearTimeout(t);

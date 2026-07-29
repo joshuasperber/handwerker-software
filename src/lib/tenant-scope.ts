@@ -22,6 +22,7 @@ export async function validateOrderCreateRefs(
     propertyId: string;
     serviceIds?: string[];
     employeeId?: string | null;
+    employeeIds?: string[];
   }
 ): Promise<string | null> {
   const customer = await prisma.customer.findFirst({
@@ -43,9 +44,16 @@ export async function validateOrderCreateRefs(
     if (count !== refs.serviceIds.length) return "Leistung nicht gefunden";
   }
 
-  if (refs.employeeId) {
-    const employee = await requireTenantEmployee(tenantId, refs.employeeId);
-    if (!employee) return "Mitarbeiter nicht gefunden";
+  const employeeIds = [
+    ...new Set(
+      [...(refs.employeeIds ?? []), ...(refs.employeeId ? [refs.employeeId] : [])].filter(Boolean)
+    ),
+  ];
+  if (employeeIds.length) {
+    const count = await prisma.employee.count({
+      where: { id: { in: employeeIds }, tenantId },
+    });
+    if (count !== employeeIds.length) return "Mitarbeiter nicht gefunden";
   }
 
   return null;

@@ -23,7 +23,17 @@ import { formatDate, formatDateTime, formatEuro, ORDER_STATUS_LABELS } from "@/l
 import { PHOTO_CATEGORIES } from "@/lib/files";
 import { PROJECT_COST_SOURCE_LABELS, PROJECT_STATUS_LABELS } from "@/lib/projects/types";
 import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import {
   ArrowLeft,
+  AlertTriangle,
   Camera,
   FileText,
   FolderKanban,
@@ -57,8 +67,36 @@ interface ProjectDetail {
     status: string;
     statusLabel: string;
     createdAt: string;
+    scheduledStart?: string | null;
+    customerName?: string;
+    materialCount?: number;
+    materialNet?: number;
+    workHours?: number;
+    costNet?: number;
+    totalNet?: number;
+    invoiceStatus?: string;
+    invoiceStatusLabel?: string;
+    invoiceNumbers?: string[];
   }[];
-  counts: { orders: number; notesEntries: number; files: number; costs: number };
+  appointments?: {
+    id: string;
+    title: string;
+    color: string | null;
+    startTime: string;
+    endTime: string;
+    status: string;
+    notes: string | null;
+    orderId: string | null;
+    orderNumber: string | null;
+    employeeName: string | null;
+  }[];
+  counts: {
+    orders: number;
+    notesEntries: number;
+    files: number;
+    costs: number;
+    appointments?: number;
+  };
 }
 
 interface NoteItem {
@@ -94,6 +132,7 @@ interface CostItem {
   openAmount: number;
   isReimbursable: boolean;
   isBillable: boolean;
+  alreadyBilled?: boolean;
   orderNumber: string | null;
   createdAt: string;
 }
@@ -121,26 +160,58 @@ interface ClosingOverview {
     reimbursableCount: number;
     billableNet: number;
     billableCount: number;
+    billedNet?: number;
+    billedCount?: number;
+    openBillableNet?: number;
+    openBillableCount?: number;
     invoicePaid: number;
     invoiceOpen: number;
   };
   invoiceCandidates: Array<{
     id: string;
-    kind: "cost" | "order";
+    kind: string;
     costId: string | null;
     orderId: string | null;
+    materialLineId?: string | null;
+    orderServiceId?: string | null;
+    timeEntryId?: string | null;
     label: string;
+    categoryLabel?: string;
     netAmount: number;
     selectedByDefault: boolean;
+    alreadyBilled?: boolean;
+    disabled?: boolean;
+    warning?: string | null;
   }>;
   existingCalculations: Array<{
     id: string;
     title: string | null;
     netSalesPrice: number;
+    vatAmount?: number;
     grossSalesPrice: number;
     invoiceNumber: string | null;
+    invoiceStatus?: string | null;
+    issueDate?: string | null;
+    isProjectClosing?: boolean;
+    includedOrderLabels?: string[];
+    lineCount?: number | null;
   }>;
 }
+
+type InvoicePreviewDraft = {
+  groups: Array<{
+    orderId: string | null;
+    orderLabel: string;
+    lines: Array<{ kind: string; label: string; netAmount: number }>;
+    subtotalNet: number;
+  }>;
+  netTotal: number;
+  vatRatePercent: number;
+  vatAmount: number;
+  grossTotal: number;
+  warnings: Array<{ orderId: string | null; message: string }>;
+  lines: Array<{ kind: string; label: string; netAmount: number; sourceKey?: string }>;
+};
 
 interface OrderOption {
   id: string;
@@ -183,6 +254,12 @@ export default function ProjektDetailPage() {
   const [uploading, setUploading] = useState(false);
   const [selectedInvoiceIds, setSelectedInvoiceIds] = useState<string[]>([]);
   const [invoiceBusy, setInvoiceBusy] = useState(false);
+  const [invoiceMode, setInvoiceMode] = useState<"aggregate" | "per_order">("aggregate");
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewDraft, setPreviewDraft] = useState<InvoicePreviewDraft | null>(null);
+  const [deselectedPreviewKeys, setDeselectedPreviewKeys] = useState<string[]>([]);
+  const [alreadyBilledConfirmOpen, setAlreadyBilledConfirmOpen] = useState(false);
+  const [includeAlreadyBilled, setIncludeAlreadyBilled] = useState(false);
 
   const loadProject = useCallback(async () => {
     const res = await fetchJson<ProjectDetail>(`/api/projects/${id}`);
@@ -211,7 +288,9 @@ export default function ProjektDetailPage() {
     if (res.success && res.data) {
       setClosing(res.data);
       setSelectedInvoiceIds(
-        res.data.invoiceCandidates.filter((c) => c.selectedByDefault).map((c) => c.id)
+        res.data.invoiceCandidates
+          .filter((c) => c.selectedByDefault && !c.alreadyBilled && !c.disabled)
+          .map((c) => c.id)
       );
     }
   }, [id]);
@@ -355,32 +434,167 @@ export default function ProjektDetailPage() {
     }
   }
 
-  async function createInvoice() {
+  function buildInvoicePayload(includeBilled: boolean) {
+    if (!closing) return null;
+    const selected = closing.invoiceCandidates.filter((c) =>
+      selectedInvoiceIds.includes(c.id)
+    );
+    if (invoiceMode === "per_order") {
+      let orderIds = selected
+        .filter((c) => c.kind === "order" && c.orderId)
+        .map((c) => c.orderId!);
+      if (orderIds.length === 0) {
+        orderIds = Array.from(
+          new Set(selected.map((c) => c.orderId).filter((oid): oid is string => Boolean(oid)))
+        );
+      }
+      return { mode: "per_order" as const, orderIds, includeAlreadyBilled: includeBilled };
+    }
+    return {
+      mode: "aggregate" as const,
+      includeAlreadyBilled: includeBilled,
+      costIds: selected.filter((c) => c.costId).map((c) => c.costId!),
+      orderIds: selected
+        .filter((c) => c.kind === "order" && c.orderId)
+        .map((c) => c.orderId!),
+      materialLineIds: selected
+        .filter((c) => c.materialLineId)
+        .map((c) => c.materialLineId!),
+      orderServiceIds: selected
+        .filter((c) => c.orderServiceId)
+        .map((c) => c.orderServiceId!),
+      timeEntryIds: selected
+        .filter((c) => c.timeEntryId)
+        .map((c) => c.timeEntryId!),
+    };
+  }
+
+  function toggleInvoiceCandidate(candidateId: string) {
+    if (!closing) return;
+    const candidate = closing.invoiceCandidates.find((c) => c.id === candidateId);
+    if (!candidate || candidate.disabled) return;
+
+    setSelectedInvoiceIds((ids) => {
+      if (ids.includes(candidateId)) {
+        return ids.filter((x) => x !== candidateId);
+      }
+
+      let next = [...ids, candidateId];
+
+      // „gesamter Auftrag“ und Einzelpositionen schließen sich gegenseitig aus
+      if (candidate.kind === "order" && candidate.orderId) {
+        const granularIds = closing.invoiceCandidates
+          .filter(
+            (c) =>
+              c.orderId === candidate.orderId &&
+              (c.orderServiceId || c.materialLineId || c.timeEntryId)
+          )
+          .map((c) => c.id);
+        next = next.filter((id) => !granularIds.includes(id));
+      } else if (
+        candidate.orderId &&
+        (candidate.orderServiceId || candidate.materialLineId || candidate.timeEntryId)
+      ) {
+        const wholeId = `order:${candidate.orderId}`;
+        next = next.filter((id) => id !== wholeId);
+      }
+
+      return next;
+    });
+  }
+
+  function selectionHasAlreadyBilled() {
+    if (!closing) return false;
+    return closing.invoiceCandidates.some(
+      (c) => selectedInvoiceIds.includes(c.id) && c.alreadyBilled
+    );
+  }
+
+  async function openInvoicePreview(forceIncludeBilled = includeAlreadyBilled) {
     if (!closing || selectedInvoiceIds.length === 0) {
       toast.error("Bitte Positionen auswählen");
       return;
     }
-    setInvoiceBusy(true);
-    const costIds = closing.invoiceCandidates
-      .filter((c) => c.kind === "cost" && selectedInvoiceIds.includes(c.id) && c.costId)
-      .map((c) => c.costId!);
-    const orderIds = closing.invoiceCandidates
-      .filter((c) => c.kind === "order" && selectedInvoiceIds.includes(c.id) && c.orderId)
-      .map((c) => c.orderId!);
+    if (selectionHasAlreadyBilled() && !forceIncludeBilled) {
+      setAlreadyBilledConfirmOpen(true);
+      return;
+    }
 
-    const res = await saveJson<{ id: string }>(
+    setInvoiceBusy(true);
+    const payload = buildInvoicePayload(forceIncludeBilled);
+    if (!payload) {
+      setInvoiceBusy(false);
+      return;
+    }
+
+    if (payload.mode === "per_order") {
+      setInvoiceBusy(false);
+      await createInvoiceFromPayload(payload);
+      return;
+    }
+
+    const res = await fetchJson<{
+      draft: InvoicePreviewDraft;
+      warnings: InvoicePreviewDraft["warnings"];
+    }>(`/api/projects/${id}/invoice`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ...payload, preview: true }),
+    });
+    setInvoiceBusy(false);
+
+    if (!res.success || !res.data?.draft) {
+      toast.error(res.error ?? "Vorschau fehlgeschlagen");
+      return;
+    }
+
+    setIncludeAlreadyBilled(forceIncludeBilled);
+    setPreviewDraft({
+      ...res.data.draft,
+      warnings: res.data.warnings ?? res.data.draft.warnings ?? [],
+    });
+    setDeselectedPreviewKeys([]);
+    setPreviewOpen(true);
+  }
+
+  async function createInvoiceFromPayload(
+    payload: NonNullable<ReturnType<typeof buildInvoicePayload>>
+  ) {
+    setInvoiceBusy(true);
+    const finalBody = {
+      ...payload,
+      ...(payload.mode === "aggregate" && deselectedPreviewKeys.length
+        ? { excludedSourceKeys: deselectedPreviewKeys }
+        : {}),
+    };
+
+    const res = await saveJson<{ id: string; warnings?: Array<{ message: string }> }>(
       `/api/projects/${id}/invoice`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ costIds, orderIds }),
+        body: JSON.stringify(finalBody),
       },
-      { success: "Kalkulation für Abschlussrechnung erstellt" }
+      {
+        success:
+          payload.mode === "per_order"
+            ? "Auftragskalkulation(en) vorbereitet"
+            : "Abschlussrechnung vorbereitet – Positionen übernommen",
+      }
     );
     setInvoiceBusy(false);
+    setPreviewOpen(false);
     if (res.success && res.data) {
+      const warns = res.data.warnings ?? [];
+      for (const w of warns.slice(0, 3)) toast.message(w.message);
+      void loadClosing();
+      void loadProject();
       router.push(`/dashboard/kalkulation/${res.data.id}`);
     }
+  }
+
+  async function createInvoice() {
+    await openInvoicePreview(includeAlreadyBilled);
   }
 
   if (loading) {
@@ -523,6 +737,50 @@ export default function ProjektDetailPage() {
               ))
             )}
           </Card>
+          <Card className="!p-0 lg:col-span-3 overflow-hidden">
+            <div className="flex items-center justify-between border-b border-slate-100 px-4 py-3">
+              <span className="text-sm font-semibold">Termine</span>
+              <Link
+                href="/dashboard/termine"
+                className="text-xs text-[#0d5c63] hover:underline"
+              >
+                Zum Kalender
+              </Link>
+            </div>
+            {(project.appointments?.length ?? 0) === 0 ? (
+              <p className="px-4 py-6 text-sm text-slate-500">
+                Keine Termine mit diesem Projekt verknüpft.
+              </p>
+            ) : (
+              project.appointments!.map((apt) => (
+                <div
+                  key={apt.id}
+                  className="flex items-start gap-3 border-b border-slate-50 px-4 py-3 text-sm last:border-0"
+                >
+                  <span
+                    className="mt-1 h-3 w-3 shrink-0 rounded-full"
+                    style={{ backgroundColor: apt.color || "#0d5c63" }}
+                    aria-hidden
+                  />
+                  <div className="min-w-0 flex-1">
+                    <p className="font-medium text-slate-800 truncate">{apt.title}</p>
+                    <p className="text-xs text-slate-500">
+                      {formatDateTime(apt.startTime)}
+                      {apt.employeeName ? ` · ${apt.employeeName}` : ""}
+                    </p>
+                    {apt.orderId && apt.orderNumber && (
+                      <Link
+                        href={`/dashboard/auftraege/${apt.orderId}`}
+                        className="text-xs text-[#0d5c63] hover:underline"
+                      >
+                        {apt.orderNumber}
+                      </Link>
+                    )}
+                  </div>
+                </div>
+              ))
+            )}
+          </Card>
         </div>
       )}
 
@@ -561,35 +819,85 @@ export default function ProjektDetailPage() {
                 Keine Aufträge im Projekt.
               </p>
             ) : (
-              project.orders.map((o) => (
-                <div
-                  key={o.id}
-                  className="flex flex-col gap-2 border-b border-slate-100 px-4 py-3 last:border-0 sm:flex-row sm:items-center sm:justify-between"
-                >
-                  <div>
-                    <Link
-                      href={`/dashboard/auftraege/${o.id}`}
-                      className="font-medium text-[#0d5c63] hover:underline"
-                    >
-                      {o.orderNumber}
-                      {o.title ? ` · ${o.title}` : ""}
-                    </Link>
-                    <p className="text-xs text-slate-400">
-                      {formatDate(o.createdAt)} · {o.statusLabel}
-                    </p>
-                  </div>
-                  <CanAccess permission="orders.write">
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => unlinkOrder(o.id)}
-                    >
-                      <Unlink className="mr-1 h-3.5 w-3.5" /> Lösen
-                    </Button>
-                  </CanAccess>
-                </div>
-              ))
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-slate-100 text-left text-xs text-slate-500">
+                      <th className="px-4 py-2 font-medium">Auftrag</th>
+                      <th className="px-4 py-2 font-medium">Kunde</th>
+                      <th className="px-4 py-2 font-medium">Status</th>
+                      <th className="px-4 py-2 font-medium">Datum</th>
+                      <th className="px-4 py-2 font-medium">Material</th>
+                      <th className="px-4 py-2 font-medium">Zeiten</th>
+                      <th className="px-4 py-2 font-medium">Kosten</th>
+                      <th className="px-4 py-2 font-medium">Rechnung</th>
+                      <th className="px-4 py-2 font-medium" />
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {project.orders.map((o) => (
+                      <tr key={o.id} className="border-b border-slate-50 last:border-0">
+                        <td className="px-4 py-3">
+                          <Link
+                            href={`/dashboard/auftraege/${o.id}`}
+                            className="font-medium text-[#0d5c63] hover:underline"
+                          >
+                            {o.orderNumber}
+                            {o.title ? ` · ${o.title}` : ""}
+                          </Link>
+                        </td>
+                        <td className="px-4 py-3 text-slate-600">
+                          {o.customerName ?? project.customer.name}
+                        </td>
+                        <td className="px-4 py-3">
+                          <Badge variant="secondary">{o.statusLabel}</Badge>
+                        </td>
+                        <td className="px-4 py-3 text-slate-500">
+                          {formatDate(o.scheduledStart ?? o.createdAt)}
+                        </td>
+                        <td className="px-4 py-3 tabular-nums text-slate-600">
+                          {o.materialCount ?? 0}
+                          {o.materialNet != null && o.materialNet > 0
+                            ? ` · ${formatEuro(o.materialNet)}`
+                            : ""}
+                        </td>
+                        <td className="px-4 py-3 tabular-nums text-slate-600">
+                          {o.workHours != null ? `${o.workHours} h` : "—"}
+                        </td>
+                        <td className="px-4 py-3 tabular-nums text-slate-600">
+                          {formatEuro((o.totalNet ?? o.costNet) ?? 0)}
+                        </td>
+                        <td className="px-4 py-3">
+                          <Badge
+                            variant={
+                              o.invoiceStatus === "INVOICED" ? "default" : "secondary"
+                            }
+                          >
+                            {o.invoiceStatusLabel ?? "Offen"}
+                          </Badge>
+                          {o.invoiceNumbers && o.invoiceNumbers.length > 0 && (
+                            <p className="mt-0.5 text-[10px] text-slate-400">
+                              {o.invoiceNumbers.join(", ")}
+                            </p>
+                          )}
+                        </td>
+                        <td className="px-4 py-3 text-right">
+                          <CanAccess permission="orders.write">
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => unlinkOrder(o.id)}
+                            >
+                              <Unlink className="mr-1 h-3.5 w-3.5" /> Lösen
+                            </Button>
+                          </CanAccess>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             )}
           </Card>
         </div>
@@ -919,12 +1227,12 @@ export default function ProjektDetailPage() {
                   <p className="text-xl font-bold">{formatEuro(closing.totals.costNet)}</p>
                 </Card>
                 <Card className="!p-4">
-                  <p className="text-xs text-slate-500">Bezahlt / Offen</p>
+                  <p className="text-xs text-slate-500">Abgerechnet / Offen</p>
                   <p className="text-xl font-bold">
-                    {formatEuro(closing.totals.costPaid)}
+                    {formatEuro(closing.totals.billedNet ?? 0)}
                   </p>
                   <p className="text-xs text-amber-700">
-                    Offen {formatEuro(closing.totals.costOpen)}
+                    Offen {formatEuro(closing.totals.openBillableNet ?? closing.totals.costOpen)}
                   </p>
                 </Card>
                 <Card className="!p-4">
@@ -937,7 +1245,7 @@ export default function ProjektDetailPage() {
                   </p>
                 </Card>
                 <Card className="!p-4">
-                  <p className="text-xs text-slate-500">Rechnungen (Aufträge)</p>
+                  <p className="text-xs text-slate-500">Rechnungen</p>
                   <p className="text-xl font-bold">
                     {formatEuro(closing.totals.invoicePaid)}
                   </p>
@@ -950,31 +1258,68 @@ export default function ProjektDetailPage() {
               <Card className="!p-4 space-y-3">
                 <h2 className="text-sm font-semibold">Positionen für Abschlussrechnung</h2>
                 <p className="text-xs text-slate-500">
-                  Wähle aus, welche Kosten und Aufträge in die Kalkulation übernommen werden.
-                  Anschließend kannst du die Rechnung in der Kalkulation finalisieren.
+                  Empfohlen: „gesamter Auftrag“ wählen – Leistungen, Material, Maschinen,
+                  Fahrt, Arbeitszeit und Festpreise werden automatisch aus der Kalkulation
+                  übernommen. Vor dem Erstellen erscheint eine Vorschau.
                 </p>
-                <div className="max-h-72 space-y-1 overflow-y-auto rounded-md border border-slate-200 p-2">
+                <div className="flex flex-wrap gap-2">
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant={invoiceMode === "aggregate" ? "default" : "outline"}
+                    onClick={() => setInvoiceMode("aggregate")}
+                  >
+                    Gesamtrechnung Projekt
+                  </Button>
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant={invoiceMode === "per_order" ? "default" : "outline"}
+                    onClick={() => setInvoiceMode("per_order")}
+                  >
+                    Rechnung je Auftrag
+                  </Button>
+                </div>
+                {invoiceMode === "per_order" && (
+                  <p className="text-xs text-slate-500">
+                    Pro ausgewähltem Auftrag wird eine eigene Kalkulation erzeugt. Wähle
+                    idealerweise die Zeilen „gesamter Auftrag“.
+                  </p>
+                )}
+                <div className="max-h-80 space-y-1 overflow-y-auto rounded-md border border-slate-200 p-2">
                   {closing.invoiceCandidates.map((c) => (
                     <label
                       key={c.id}
-                      className="flex items-center justify-between gap-3 rounded px-2 py-1.5 text-sm hover:bg-slate-50"
+                      className={`flex items-start justify-between gap-3 rounded px-2 py-1.5 text-sm ${
+                        c.disabled ? "cursor-not-allowed opacity-50" : "hover:bg-slate-50"
+                      }`}
                     >
-                      <span className="flex items-center gap-2 min-w-0">
+                      <span className="flex min-w-0 items-start gap-2">
                         <input
                           type="checkbox"
+                          className="mt-1"
+                          disabled={c.disabled}
                           checked={selectedInvoiceIds.includes(c.id)}
-                          onChange={() =>
-                            setSelectedInvoiceIds((ids) =>
-                              ids.includes(c.id)
-                                ? ids.filter((x) => x !== c.id)
-                                : [...ids, c.id]
-                            )
-                          }
+                          onChange={() => toggleInvoiceCandidate(c.id)}
                         />
-                        <span className="truncate">{c.label}</span>
-                        <Badge variant="secondary" className="text-[10px]">
-                          {c.kind === "cost" ? "Kosten" : "Auftrag"}
-                        </Badge>
+                        <span className="min-w-0">
+                          <span className="flex flex-wrap items-center gap-1.5">
+                            <span className="truncate">{c.label}</span>
+                            <Badge variant="secondary" className="text-[10px]">
+                              {c.categoryLabel ?? c.kind}
+                            </Badge>
+                            {c.alreadyBilled && (
+                              <Badge variant="outline" className="text-[10px] text-amber-700">
+                                bereits abgerechnet
+                              </Badge>
+                            )}
+                          </span>
+                          {c.warning && selectedInvoiceIds.includes(c.id) && (
+                            <span className="mt-0.5 block text-[11px] text-amber-700">
+                              {c.warning}
+                            </span>
+                          )}
+                        </span>
                       </span>
                       {c.netAmount > 0 && (
                         <span className="shrink-0 tabular-nums text-slate-600">
@@ -990,22 +1335,42 @@ export default function ProjektDetailPage() {
                     onClick={createInvoice}
                     disabled={invoiceBusy || selectedInvoiceIds.length === 0}
                   >
-                    {invoiceBusy ? "Erstellen …" : "Kalkulation / Rechnung vorbereiten"}
+                    {invoiceBusy
+                      ? "Laden …"
+                      : invoiceMode === "per_order"
+                        ? "Kalkulationen je Auftrag erstellen"
+                        : "Vorschau & Abschlussrechnung"}
                   </Button>
                 </CanAccess>
                 {closing.existingCalculations.length > 0 && (
                   <div className="border-t border-slate-100 pt-3 text-sm">
                     <p className="mb-2 text-xs font-medium text-slate-500">
-                      Bestehende Projekt-Kalkulationen
+                      Bestehende Projekt-Abschlussrechnungen
                     </p>
                     {closing.existingCalculations.map((c) => (
                       <Link
                         key={c.id}
                         href={`/dashboard/kalkulation/${c.id}`}
-                        className="block text-[#0d5c63] hover:underline"
+                        className="mb-2 block rounded-md border border-slate-100 px-3 py-2 hover:bg-slate-50"
                       >
-                        {c.title ?? "Kalkulation"} · {formatEuro(c.netSalesPrice)}
-                        {c.invoiceNumber ? ` · ${c.invoiceNumber}` : ""}
+                        <span className="font-medium text-[#0d5c63]">
+                          {c.title ?? "Kalkulation"}
+                        </span>
+                        <span className="mt-0.5 block text-xs text-slate-500">
+                          Netto {formatEuro(c.netSalesPrice)}
+                          {c.grossSalesPrice != null
+                            ? ` · Brutto ${formatEuro(c.grossSalesPrice)}`
+                            : ""}
+                          {c.invoiceNumber ? ` · ${c.invoiceNumber}` : " · noch keine Rechnung"}
+                          {c.invoiceStatus ? ` · ${c.invoiceStatus}` : ""}
+                          {c.issueDate ? ` · ${formatDate(c.issueDate)}` : ""}
+                        </span>
+                        {(c.includedOrderLabels?.length ?? 0) > 0 && (
+                          <span className="mt-1 block text-[11px] text-slate-400">
+                            Aufträge: {c.includedOrderLabels!.join(", ")}
+                            {c.lineCount != null ? ` · ${c.lineCount} Positionen` : ""}
+                          </span>
+                        )}
                       </Link>
                     ))}
                   </div>
@@ -1087,6 +1452,134 @@ export default function ProjektDetailPage() {
           )}
         </div>
       )}
+
+      <ConfirmDialog
+        open={alreadyBilledConfirmOpen}
+        onOpenChange={setAlreadyBilledConfirmOpen}
+        title="Bereits abgerechnete Aufträge"
+        description="Mindestens ein ausgewählter Auftrag oder eine Position wurde bereits abgerechnet. Möchtest du sie bewusst erneut in die Projekt-Abschlussrechnung übernehmen?"
+        confirmLabel="Trotzdem übernehmen"
+        cancelLabel="Abbrechen"
+        variant="action"
+        icon={<AlertTriangle className="h-5 w-5" />}
+        loading={invoiceBusy}
+        onConfirm={async () => {
+          setAlreadyBilledConfirmOpen(false);
+          setIncludeAlreadyBilled(true);
+          await openInvoicePreview(true);
+        }}
+      />
+
+      <Dialog open={previewOpen} onOpenChange={setPreviewOpen}>
+        <DialogContent className="flex max-h-[90vh] w-full max-w-lg flex-col gap-0 overflow-hidden p-0 sm:max-w-xl">
+          <DialogHeader className="p-4 pb-2">
+            <DialogTitle>Vorschau Abschlussrechnung</DialogTitle>
+            <DialogDescription>
+              Prüfe die übernommenen Positionen (gruppiert nach Auftrag). Einzelne Zeilen
+              kannst du abwählen, bevor die Kalkulation erstellt wird.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex-1 space-y-3 overflow-y-auto px-4 pb-2">
+            {(previewDraft?.warnings?.length ?? 0) > 0 && (
+              <div className="rounded-md border border-amber-200 bg-amber-50 p-2 text-xs text-amber-800 space-y-1">
+                {previewDraft!.warnings.map((w, i) => (
+                  <p key={`${w.orderId}-${i}`}>{w.message}</p>
+                ))}
+              </div>
+            )}
+            {previewDraft?.groups.map((g) => (
+              <div key={g.orderId ?? g.orderLabel} className="rounded-lg border border-slate-200">
+                <div className="flex items-center justify-between border-b border-slate-100 bg-slate-50 px-3 py-2 text-sm font-semibold">
+                  <span className="truncate">{g.orderLabel}</span>
+                  <span className="tabular-nums">{formatEuro(g.subtotalNet)}</span>
+                </div>
+                <ul className="divide-y divide-slate-50">
+                  {g.lines.map((line, idx) => {
+                    const key =
+                      (line as { sourceKey?: string }).sourceKey ??
+                      `${g.orderId}-${idx}-${line.label}`;
+                    const sourceKey = (line as { sourceKey?: string }).sourceKey;
+                    const checked = !sourceKey || !deselectedPreviewKeys.includes(sourceKey);
+                    return (
+                      <li key={key} className="flex items-start gap-2 px-3 py-2 text-sm">
+                        <input
+                          type="checkbox"
+                          className="mt-1"
+                          checked={checked}
+                          disabled={!sourceKey}
+                          onChange={() => {
+                            if (!sourceKey) return;
+                            setDeselectedPreviewKeys((keys) =>
+                              keys.includes(sourceKey)
+                                ? keys.filter((k) => k !== sourceKey)
+                                : [...keys, sourceKey]
+                            );
+                          }}
+                        />
+                        <span className={`min-w-0 flex-1 ${checked ? "" : "line-through opacity-50"}`}>
+                          {line.label}
+                        </span>
+                        <span className="shrink-0 tabular-nums text-slate-600">
+                          {formatEuro(line.netAmount)}
+                        </span>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            ))}
+            {previewDraft && (
+              <div className="rounded-lg bg-slate-50 p-3 text-sm space-y-1">
+                {(() => {
+                  const net = previewDraft.lines
+                    .filter(
+                      (l) =>
+                        !(l as { sourceKey?: string }).sourceKey ||
+                        !deselectedPreviewKeys.includes(
+                          (l as { sourceKey?: string }).sourceKey!
+                        )
+                    )
+                    .reduce((s, l) => s + l.netAmount, 0);
+                  const vat =
+                    Math.round(net * (previewDraft.vatRatePercent / 100) * 100) / 100;
+                  const gross = Math.round((net + vat) * 100) / 100;
+                  return (
+                    <>
+                      <div className="flex justify-between">
+                        <span>Netto</span>
+                        <span className="font-medium tabular-nums">{formatEuro(net)}</span>
+                      </div>
+                      <div className="flex justify-between text-slate-500">
+                        <span>USt ({previewDraft.vatRatePercent} %)</span>
+                        <span className="tabular-nums">{formatEuro(vat)}</span>
+                      </div>
+                      <div className="flex justify-between border-t border-slate-200 pt-1 font-semibold">
+                        <span>Brutto</span>
+                        <span className="tabular-nums">{formatEuro(gross)}</span>
+                      </div>
+                    </>
+                  );
+                })()}
+              </div>
+            )}
+          </div>
+          <DialogFooter className="mx-0 mb-0 rounded-b-xl">
+            <Button variant="outline" onClick={() => setPreviewOpen(false)} disabled={invoiceBusy}>
+              Abbrechen
+            </Button>
+            <Button
+              variant="action"
+              disabled={invoiceBusy || !previewDraft}
+              onClick={() => {
+                const payload = buildInvoicePayload(includeAlreadyBilled);
+                if (payload) void createInvoiceFromPayload(payload);
+              }}
+            >
+              {invoiceBusy ? "Erstellen …" : "Kalkulation erstellen"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

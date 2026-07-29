@@ -24,7 +24,6 @@ function getDashboardPermission(
   if (pathname.startsWith("/dashboard/inventar")) return "inventory.read";
   if (pathname.startsWith("/dashboard/einkauf")) return "inventory.read";
   if (pathname.startsWith("/dashboard/disposition")) return "appointments.read";
-  if (pathname.startsWith("/dashboard/stunden")) return "time_entries.read";
   if (pathname.startsWith("/dashboard/leitstand")) return "appointments.read";
   if (pathname.startsWith("/dashboard/kalkulation/einstellungen")) return "calculations.settings";
   if (pathname.startsWith("/dashboard/kalkulation/zonen")) return "calculations.settings";
@@ -32,6 +31,7 @@ function getDashboardPermission(
   if (pathname.startsWith("/dashboard/rechnungen")) return "invoices.read";
   if (pathname.startsWith("/dashboard/umsatz")) return "invoices.read";
   if (pathname.startsWith("/dashboard/finanzuebersicht")) return "invoices.read";
+  if (pathname.startsWith("/dashboard/ausgaben")) return "invoices.read";
   if (pathname.startsWith("/dashboard/kunden")) return "customers.read";
   if (pathname.startsWith("/dashboard/mitarbeiter")) return "employees.read";
   if (pathname.startsWith("/dashboard/leistungen")) return "services.read";
@@ -39,11 +39,14 @@ function getDashboardPermission(
   if (pathname.startsWith("/dashboard/einstellungen/betrieb")) return "tenant.manage";
   if (pathname.startsWith("/dashboard/einstellungen/rechnung")) return "calculations.settings";
   if (pathname.startsWith("/dashboard/einstellungen/benachrichtigungen")) return "notifications.manage";
+  if (pathname.startsWith("/dashboard/einstellungen/sicherheit")) return "tenant.manage";
   if (pathname.startsWith("/dashboard/einstellungen/system")) return "notifications.manage";
   if (pathname.startsWith("/dashboard/einstellungen")) return "tenant.manage";
   if (pathname.startsWith("/dashboard/nachrichten")) return "messages.read";
   if (pathname.startsWith("/dashboard/ki-assistent")) return "ai.chat";
+  // Längere Prefixe ZUERST — sonst matcht /dashboard/stunden auch /dashboard/stundenzettel
   if (pathname.startsWith("/dashboard/stundenzettel")) return "monteur.own";
+  if (pathname.startsWith("/dashboard/stunden")) return "time_entries.read";
   return "deny";
 }
 

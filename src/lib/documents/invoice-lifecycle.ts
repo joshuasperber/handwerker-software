@@ -47,5 +47,24 @@ export function invoiceEditBlockReason(doc: InvoiceDocLike): string | null {
   return "Die Rechnung ist finalisiert und darf nicht still überschrieben werden.";
 }
 
+/**
+ * Rechnungsdatum darf geändert werden, außer bei Storno.
+ * Bei finalisierten/versendeten/bezahlten Rechnungen braucht es eine Bestätigung.
+ */
+export function canChangeInvoiceIssueDate(doc: InvoiceDocLike): boolean {
+  return isActiveInvoice(doc);
+}
+
+/** true = Nutzer muss die Auswirkungen bestätigen. */
+export function issueDateChangeNeedsConfirmation(doc: InvoiceDocLike): boolean {
+  if (!canChangeInvoiceIssueDate(doc)) return false;
+  if (doc.status === "ENTWURF") return false;
+  if (isInvoiceEditable(doc)) return false;
+  return true;
+}
+
+export const ISSUE_DATE_CHANGE_WARNING =
+  "Diese Rechnung wurde bereits finalisiert, versendet oder bezahlt. Das Ändern des Rechnungsdatums kann Auswirkungen auf Umsatzübersichten und Buchhaltung haben. Möchtest du fortfahren?";
+
 export const INVOICE_EXISTS_MESSAGE =
   "Für diesen Auftrag existiert bereits eine Rechnung. Möchtest du die bestehende Rechnung bearbeiten oder bewusst eine neue Rechnung/Korrekturrechnung erstellen?";

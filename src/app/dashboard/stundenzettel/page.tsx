@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/auth";
 import { hasPermission } from "@/lib/permissions";
@@ -8,5 +9,9 @@ export default async function DashboardStundenzettelPage() {
   if (!session) redirect("/login");
   if (!hasPermission(session.role, "monteur.own")) redirect("/dashboard");
 
-  return <StundenzettelView />;
+  return (
+    <Suspense fallback={<div className="p-6 text-sm text-slate-500">Stundenzettel wird geladen …</div>}>
+      <StundenzettelView />
+    </Suspense>
+  );
 }

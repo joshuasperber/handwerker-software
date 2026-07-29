@@ -136,7 +136,10 @@ export function formatPersonLookup(
     if (appts.length) {
       content += `\n**Anstehende Termine (${appts.length}):**\n`;
       for (const a of appts) {
-        content += `• ${formatDateTime(a.startTime)} — ${a.order.customer.firstName} ${a.order.customer.lastName}, ${a.order.property.street}, ${a.order.property.city} (${ORDER_STATUS_LABELS[a.order.status] ?? a.order.status})\n`;
+        const label = a.order
+          ? `${a.order.customer.firstName} ${a.order.customer.lastName}, ${a.order.property.street}, ${a.order.property.city} (${ORDER_STATUS_LABELS[a.order.status] ?? a.order.status})`
+          : (a.title ?? "Termin");
+        content += `• ${formatDateTime(a.startTime)} — ${label}\n`;
       }
     } else {
       content += `\nKeine anstehenden Termine gefunden.`;

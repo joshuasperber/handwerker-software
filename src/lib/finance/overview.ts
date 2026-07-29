@@ -33,6 +33,7 @@ function toExpenseDTO(expense: {
   supplier: string | null;
   orderId: string | null;
   customerId: string | null;
+  projectId: string | null;
   internalNote: string | null;
   receiptFileName: string | null;
   receiptStorageKey: string | null;
@@ -53,6 +54,7 @@ function toExpenseDTO(expense: {
     supplier: expense.supplier,
     orderId: expense.orderId,
     customerId: expense.customerId,
+    projectId: expense.projectId,
     internalNote: expense.internalNote,
     hasReceipt: !!expense.receiptStorageKey,
     receiptFileName: expense.receiptFileName,

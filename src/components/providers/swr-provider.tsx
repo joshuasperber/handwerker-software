@@ -12,6 +12,11 @@ async function swrFetcher<T>(url: string): Promise<T> {
   return res.data;
 }
 
+/**
+ * Globales SWR: Deduplizierung + keepPreviousData für flüssigere Navigation.
+ * Sensible Daten (Finanzen, Kunden, Mitarbeiter) nur im Speicher — kein Persistenz-Cache.
+ * Finance-APIs liefern zusätzlich Cache-Control: private, no-store.
+ */
 export function SwrProvider({ children }: { children: ReactNode }) {
   return (
     <SWRConfig

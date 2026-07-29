@@ -141,3 +141,12 @@
 .safe-area-pb {
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
+
+/* Klareres Tap-Feedback auf Touch-Geräten */
+@media (hover: none) {
+  button:not(:disabled),
+  [data-slot="button"]:not(:disabled),
+  a {
+    -webkit-tap-highlight-color: transparent;
+  }
+}

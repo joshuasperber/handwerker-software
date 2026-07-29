@@ -81,7 +81,10 @@ export async function recalculateCalculationRecord(calculationId: string, tenant
         expectedConsumablePartsNet: usage.machine.expectedConsumablePartsNet,
         insuranceCostsNet: usage.machine.insuranceCostsNet,
         energyCostsTotalNet: usage.machine.energyCostsTotalNet,
-        breakageRiskPercent: usage.breakageRiskPercent || usage.machine.breakageRiskPercent,
+        breakageRiskPercent:
+          usage.breakageRiskPercent != null
+            ? usage.breakageRiskPercent
+            : usage.machine.breakageRiskPercent,
       });
     }
     const total = calcMachineUsageTotal(usage.usageHours, rate);
@@ -131,40 +134,67 @@ export async function recalculateCalculationRecord(calculationId: string, tenant
         ? propertyZoneId
         : null);
 
-    const travel = calcTravelTotal({
-      distanceKm: calc.travelCost.distanceKm,
-      estimatedDriveTimeHours: calc.travelCost.estimatedDriveTimeHours,
-      zones,
-      kilometerRateNet: calc.travelCost.kilometerRateNet,
-      travelHourlyRateNet: calc.travelCost.travelHourlyRateNet,
-      parkingFeesNet: calc.travelCost.parkingFeesNet,
-      tollFeesNet: calc.travelCost.tollFeesNet,
-      otherTravelCostsNet: calc.travelCost.otherTravelCostsNet,
-      selectedZoneId: effectiveZoneId,
-    });
-    await prisma.travelCost.update({
-      where: { id: calc.travelCost.id },
-      data: {
-        totalNet: travel.total,
-        zoneName: travel.zoneName,
-        calculationMode: travel.mode,
-        selectedZoneId: travel.zoneId ?? null,
-        zoneFlatFeeNet: travel.flatFee,
-      },
-    });
-    calc.travelCost.totalNet = travel.total;
-    // Sicherstellen, dass die Engine dieselbe Zone verwendet wie oben.
-    calc.travelCost.selectedZoneId = travel.zoneId ?? null;
+    if (calc.travelCost.totalIsManual) {
+      const manual =
+        calc.travelCost.manualTotalNet != null && Number.isFinite(calc.travelCost.manualTotalNet)
+          ? Number(calc.travelCost.manualTotalNet)
+          : 0;
+      await prisma.travelCost.update({
+        where: { id: calc.travelCost.id },
+        data: {
+          totalNet: manual,
+          selectedZoneId: effectiveZoneId,
+        },
+      });
+      calc.travelCost.totalNet = manual;
+      calc.travelCost.selectedZoneId = effectiveZoneId;
+    } else {
+      const travel = calcTravelTotal({
+        distanceKm: calc.travelCost.distanceKm,
+        estimatedDriveTimeHours: calc.travelCost.estimatedDriveTimeHours,
+        zones,
+        kilometerRateNet: calc.travelCost.kilometerRateNet,
+        travelHourlyRateNet: calc.travelCost.travelHourlyRateNet,
+        parkingFeesNet: calc.travelCost.parkingFeesNet,
+        tollFeesNet: calc.travelCost.tollFeesNet,
+        otherTravelCostsNet: calc.travelCost.otherTravelCostsNet,
+        selectedZoneId: effectiveZoneId,
+      });
+      await prisma.travelCost.update({
+        where: { id: calc.travelCost.id },
+        data: {
+          totalNet: travel.total,
+          zoneName: travel.zoneName,
+          calculationMode: travel.mode,
+          selectedZoneId: travel.zoneId ?? null,
+          zoneFlatFeeNet: travel.flatFee,
+        },
+      });
+      calc.travelCost.totalNet = travel.total;
+      calc.travelCost.selectedZoneId = travel.zoneId ?? null;
+    }
   }
+
+  const hasFixedOverhead =
+    calc.overheadAmountOverride != null && Number.isFinite(calc.overheadAmountOverride);
+  const hasPercentOverhead =
+    !hasFixedOverhead &&
+    calc.overheadPercentOverride != null &&
+    Number.isFinite(calc.overheadPercentOverride);
 
   const input = buildCalculationInputFromRecord(
     calc,
     {
       monthlyFixedCostsTotal,
       productiveHoursPerMonth,
-      overheadCalculationMode: overheadMode,
-      overheadPercent: overheadSettings?.overheadPercent ?? company?.defaultOverheadPercent,
-      additionalOverheadPercent: company?.additionalOverheadPercent ?? 0,
+      overheadCalculationMode: hasPercentOverhead ? "PERCENTAGE" : overheadMode,
+      overheadPercent: hasPercentOverhead
+        ? Number(calc.overheadPercentOverride)
+        : (overheadSettings?.overheadPercent ?? company?.defaultOverheadPercent),
+      additionalOverheadPercent: hasPercentOverhead
+        ? 0
+        : (company?.additionalOverheadPercent ?? 0),
+      manualAmount: hasFixedOverhead ? Number(calc.overheadAmountOverride) : null,
     },
     travelZones
       .filter((z) => z.isActive)

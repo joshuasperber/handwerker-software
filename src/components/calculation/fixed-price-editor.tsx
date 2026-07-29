@@ -139,19 +139,25 @@ export function FixedPriceEditor({
             <label className="text-xs font-medium text-slate-600">Festpreis (netto, €)</label>
             <NumberInput
               className="mt-1"
-              value={fixedPriceNet ?? calculatedNet}
-              suffix="€"
+              required
               min={0}
+              value={
+                fixedPriceNet != null && Number.isFinite(fixedPriceNet)
+                  ? fixedPriceNet
+                  : calculatedNet
+              }
+              suffix="€"
               onValueChange={(v) =>
                 onChange({
                   useFixedPrice: true,
                   fixedPriceNet: v,
-                  fixedPriceLabel: fixedPriceLabel ?? "Festpreis",
+                  fixedPriceLabel: fixedPriceLabel?.trim() || "Festpreis",
                 })
               }
             />
             <p className="text-xs text-slate-500 mt-1">
               Auf dem Dokument: „{comparison.label} – {formatEuro(comparison.customerNet)}“
+              {fixedPriceNet === 0 && " (0,00 € ist erlaubt)"}
             </p>
           </div>
 

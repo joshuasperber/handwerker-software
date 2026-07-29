@@ -52,10 +52,11 @@ export async function findEmployeeScheduleConflict(
   });
 
   if (conflict) {
+    const label = conflict.order?.orderNumber ?? "Termin";
     return {
       type: "APPOINTMENT",
-      message: `Terminkonflikt mit Auftrag ${conflict.order.orderNumber}`,
-      orderNumber: conflict.order.orderNumber,
+      message: `Terminkonflikt mit Auftrag ${label}`,
+      orderNumber: conflict.order?.orderNumber ?? undefined,
     };
   }
 

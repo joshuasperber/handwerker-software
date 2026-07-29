@@ -140,31 +140,130 @@ export async function PUT(
   }
 
   if (body.travel) {
-    const t = body.travel;
+    const t = body.travel as Record<string, unknown>;
+    const existingTravel = await prisma.travelCost.findUnique({ where: { calculationId: id } });
+
+    const numOr = (key: string, fallback: number) => {
+      if (t[key] === undefined || t[key] === null || t[key] === "") return fallback;
+      const n = Number(t[key]);
+      return Number.isFinite(n) ? n : fallback;
+    };
+
+    const totalIsManual =
+      t.totalIsManual != null
+        ? Boolean(t.totalIsManual)
+        : (existingTravel?.totalIsManual ?? false);
+    const manualTotalNet =
+      t.manualTotalNet !== undefined
+        ? t.manualTotalNet === null || t.manualTotalNet === ""
+          ? null
+          : Number(t.manualTotalNet)
+        : (existingTravel?.manualTotalNet ?? null);
+
+    if (totalIsManual && (manualTotalNet == null || !Number.isFinite(manualTotalNet))) {
+      return apiError("Bitte einen gültigen manuellen Fahrtkosten-Betrag angeben (0,00 € ist erlaubt).", 400);
+    }
+
     await prisma.travelCost.upsert({
       where: { calculationId: id },
       create: {
         calculationId: id,
-        startAddress: t.startAddress,
-        destinationAddress: t.destinationAddress,
-        distanceKm: Number(t.distanceKm),
-        estimatedDriveTimeHours: Number(t.estimatedDriveTimeHours ?? 0),
-        kilometerRateNet: Number(t.kilometerRateNet ?? 0.45),
-        travelHourlyRateNet: Number(t.travelHourlyRateNet ?? 45),
-        parkingFeesNet: Number(t.parkingFeesNet ?? 0),
-        tollFeesNet: Number(t.tollFeesNet ?? 0),
-        otherTravelCostsNet: Number(t.otherTravelCostsNet ?? 0),
+        startAddress: String(t.startAddress ?? existingTravel?.startAddress ?? "Betrieb"),
+        destinationAddress: String(t.destinationAddress ?? existingTravel?.destinationAddress ?? ""),
+        distanceKm: numOr("distanceKm", existingTravel?.distanceKm ?? 0),
+        estimatedDriveTimeHours: numOr(
+          "estimatedDriveTimeHours",
+          existingTravel?.estimatedDriveTimeHours ?? 0
+        ),
+        kilometerRateNet: numOr("kilometerRateNet", existingTravel?.kilometerRateNet ?? 0.45),
+        travelHourlyRateNet: numOr(
+          "travelHourlyRateNet",
+          existingTravel?.travelHourlyRateNet ?? 45
+        ),
+        parkingFeesNet: numOr("parkingFeesNet", existingTravel?.parkingFeesNet ?? 0),
+        tollFeesNet: numOr("tollFeesNet", existingTravel?.tollFeesNet ?? 0),
+        otherTravelCostsNet: numOr("otherTravelCostsNet", existingTravel?.otherTravelCostsNet ?? 0),
+        selectedZoneId:
+          t.selectedZoneId !== undefined
+            ? ((t.selectedZoneId as string) || null)
+            : (existingTravel?.selectedZoneId ?? null),
+        totalIsManual,
+        manualTotalNet: totalIsManual ? manualTotalNet : null,
+        totalNet: totalIsManual ? Number(manualTotalNet) : 0,
+        isVisibleToCustomer:
+          t.isVisibleToCustomer != null
+            ? Boolean(t.isVisibleToCustomer)
+            : (existingTravel?.isVisibleToCustomer ?? true),
       },
       update: {
-        startAddress: t.startAddress,
-        destinationAddress: t.destinationAddress,
-        distanceKm: Number(t.distanceKm),
-        estimatedDriveTimeHours: Number(t.estimatedDriveTimeHours ?? 0),
-        kilometerRateNet: Number(t.kilometerRateNet),
-        travelHourlyRateNet: Number(t.travelHourlyRateNet),
-        parkingFeesNet: Number(t.parkingFeesNet ?? 0),
-        tollFeesNet: Number(t.tollFeesNet ?? 0),
-        otherTravelCostsNet: Number(t.otherTravelCostsNet ?? 0),
+        startAddress:
+          t.startAddress !== undefined
+            ? String(t.startAddress)
+            : (existingTravel?.startAddress ?? "Betrieb"),
+        destinationAddress:
+          t.destinationAddress !== undefined
+            ? String(t.destinationAddress)
+            : (existingTravel?.destinationAddress ?? ""),
+        distanceKm: numOr("distanceKm", existingTravel?.distanceKm ?? 0),
+        estimatedDriveTimeHours: numOr(
+          "estimatedDriveTimeHours",
+          existingTravel?.estimatedDriveTimeHours ?? 0
+        ),
+        kilometerRateNet: numOr("kilometerRateNet", existingTravel?.kilometerRateNet ?? 0.45),
+        travelHourlyRateNet: numOr(
+          "travelHourlyRateNet",
+          existingTravel?.travelHourlyRateNet ?? 45
+        ),
+        parkingFeesNet: numOr("parkingFeesNet", existingTravel?.parkingFeesNet ?? 0),
+        tollFeesNet: numOr("tollFeesNet", existingTravel?.tollFeesNet ?? 0),
+        otherTravelCostsNet: numOr(
+          "otherTravelCostsNet",
+          existingTravel?.otherTravelCostsNet ?? 0
+        ),
+        ...(t.selectedZoneId !== undefined
+          ? { selectedZoneId: (t.selectedZoneId as string) || null }
+          : {}),
+        totalIsManual,
+        manualTotalNet: totalIsManual ? manualTotalNet : null,
+        ...(totalIsManual ? { totalNet: Number(manualTotalNet) } : {}),
+        ...(t.isVisibleToCustomer != null
+          ? { isVisibleToCustomer: Boolean(t.isVisibleToCustomer) }
+          : {}),
+      },
+    });
+  }
+
+  if (
+    body.overheadPercentOverride !== undefined ||
+    body.overheadAmountOverride !== undefined
+  ) {
+    let percent: number | null =
+      body.overheadPercentOverride === undefined
+        ? existing.overheadPercentOverride
+        : body.overheadPercentOverride === null || body.overheadPercentOverride === ""
+          ? null
+          : Number(body.overheadPercentOverride);
+    const amount: number | null =
+      body.overheadAmountOverride === undefined
+        ? existing.overheadAmountOverride
+        : body.overheadAmountOverride === null || body.overheadAmountOverride === ""
+          ? null
+          : Number(body.overheadAmountOverride);
+
+    if (percent != null && (!Number.isFinite(percent) || percent < 0)) {
+      return apiError("Gemeinkosten-% muss 0 oder größer sein.", 400);
+    }
+    if (amount != null && (!Number.isFinite(amount) || amount < 0)) {
+      return apiError("Gemeinkosten-Betrag muss 0 oder größer sein.", 400);
+    }
+    // Fester Betrag hat Vorrang vor Prozent
+    if (amount != null) percent = null;
+
+    await prisma.calculation.update({
+      where: { id },
+      data: {
+        overheadPercentOverride: percent,
+        overheadAmountOverride: amount,
       },
     });
   }
@@ -243,8 +342,8 @@ export async function PUT(
           ? String(body.fixedPriceLabel).trim() || null
           : existing.fixedPriceLabel;
 
-    if (useFixedPrice && (fixedPriceNet == null || !Number.isFinite(fixedPriceNet))) {
-      return apiError("Bitte einen gültigen Festpreis in € angeben.", 400);
+    if (useFixedPrice && (fixedPriceNet == null || !Number.isFinite(fixedPriceNet) || fixedPriceNet < 0)) {
+      return apiError("Bitte einen gültigen Festpreis in € angeben (0,00 € ist erlaubt).", 400);
     }
 
     await prisma.calculation.update({

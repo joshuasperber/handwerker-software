@@ -10,6 +10,7 @@ import { AddButton } from "@/components/ui/add-button";
 import { saveJson } from "@/lib/save-toast";
 import { ArrowDown, ArrowLeft, ArrowUp, Pencil, RotateCcw, Trash2 } from "lucide-react";
 import { toast } from "sonner";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 
 interface OrderTypeRow {
   id: string;
@@ -29,6 +30,7 @@ export default function AuftragstypenPage() {
   const [busyId, setBusyId] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editName, setEditName] = useState("");
+  const [removeTarget, setRemoveTarget] = useState<OrderTypeRow | null>(null);
 
   function load() {
     fetch("/api/order-types?includeInactive=1")
@@ -78,11 +80,6 @@ export default function AuftragstypenPage() {
   }
 
   async function removeType(item: OrderTypeRow) {
-    const msg = item._count.orders > 0
-      ? `„${item.name}“ wird in ${item._count.orders} Auftrag/Aufträgen verwendet und daher deaktiviert. Bestehende Aufträge bleiben erhalten.`
-      : `„${item.name}“ wirklich endgültig löschen?`;
-    if (!confirm(msg)) return;
-
     setBusyId(item.id);
     const res = await fetch(`/api/order-types/${item.id}`, { method: "DELETE" });
     const d = await res.json();
@@ -225,7 +222,7 @@ export default function AuftragstypenPage() {
                   variant="outline"
                   className="text-red-600 border-red-200 hover:bg-red-50"
                   disabled={busyId === item.id}
-                  onClick={() => removeType(item)}
+                  onClick={() => setRemoveTarget(item)}
                 >
                   <Trash2 className="h-4 w-4 sm:mr-1" />
                   <span className="hidden sm:inline">
@@ -319,6 +316,37 @@ export default function AuftragstypenPage() {
           ))}
         </Card>
       )}
+
+      <ConfirmDialog
+        open={removeTarget !== null}
+        onOpenChange={(open) => {
+          if (!open) setRemoveTarget(null);
+        }}
+        title={
+          removeTarget && removeTarget._count.orders > 0
+            ? "Auftragstyp deaktivieren?"
+            : "Auftragstyp löschen?"
+        }
+        description={
+          removeTarget
+            ? removeTarget._count.orders > 0
+              ? `„${removeTarget.name}“ wird in ${removeTarget._count.orders} Auftrag/Aufträgen verwendet und daher deaktiviert. Bestehende Aufträge bleiben erhalten.`
+              : `„${removeTarget.name}“ wird endgültig gelöscht.`
+            : ""
+        }
+        confirmLabel={
+          removeTarget && removeTarget._count.orders > 0 ? "Deaktivieren" : "Löschen"
+        }
+        cancelLabel="Abbrechen"
+        variant="destructive"
+        onConfirm={async () => {
+          if (removeTarget) {
+            const target = removeTarget;
+            setRemoveTarget(null);
+            await removeType(target);
+          }
+        }}
+      />
     </div>
   );
 }

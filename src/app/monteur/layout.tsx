@@ -3,11 +3,12 @@ import { getSession } from "@/lib/auth";
 import { canAccessMonteurApp, getRoleHomePath } from "@/lib/permissions";
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
-import { Wrench, LogOut, AlertTriangle } from "lucide-react";
+import { Wrench, AlertTriangle } from "lucide-react";
 import { Suspense } from "react";
 import { MonteurBottomNav } from "@/components/monteur/bottom-nav";
 import { NotificationBell } from "@/components/notifications/notification-bell";
 import { SessionProvider } from "@/components/auth/can-access";
+import { LogoutButton } from "@/components/auth/logout-button";
 
 export default async function MonteurLayout({
   children,
@@ -30,22 +31,23 @@ export default async function MonteurLayout({
     <div className="min-h-screen bg-slate-50 flex flex-col">
       <header className="sticky top-0 z-10 flex h-14 items-center justify-between border-b border-slate-200 bg-white px-4">
         <div className="flex items-center gap-2">
-          <Wrench className="h-5 w-5 text-blue-600" />
+          <Wrench className="h-5 w-5 text-[#0d5c63]" />
           <span className="font-bold text-slate-900">
             {session.role === "MONTEUR" ? "Monteur" : "Feld-Ansicht"}
           </span>
         </div>
         <div className="flex items-center gap-3">
           <NotificationBell />
-          <Link href="/dashboard/profil" className="text-sm text-slate-500 hover:text-blue-600">
+          <Link href="/dashboard/profil" className="text-sm text-slate-500 hover:text-[#0d5c63]">
             {session.firstName}
           </Link>
           {session.role !== "MONTEUR" && (
-            <Link href="/dashboard" className="text-sm text-blue-600">Dashboard</Link>
+            <Link href="/dashboard" className="text-sm text-[#0d5c63]">Dashboard</Link>
           )}
-          <form action="/api/auth/logout" method="POST">
-            <button type="submit"><LogOut className="h-4 w-4 text-slate-400" /></button>
-          </form>
+          <LogoutButton
+            label=""
+            className="rounded-lg p-2 text-slate-400 hover:bg-slate-50 hover:text-red-600 disabled:opacity-60"
+          />
         </div>
       </header>
       <main className="flex-1 p-4 pb-20">

@@ -18,6 +18,7 @@ export async function GET(request: NextRequest) {
   const appointments = await prisma.appointment.findMany({
     where: {
       tenantId: auth.tenantId,
+      status: { not: "STORNIERT" },
       ...(from && to
         ? {
             startTime: { gte: new Date(from), lte: new Date(to) },
@@ -31,10 +32,14 @@ export async function GET(request: NextRequest) {
           customer: true,
           property: true,
           services: { include: { service: true } },
+          project: { select: { id: true, name: true } },
           team: { select: { id: true, name: true } },
           vehicle: { select: { id: true, name: true, licensePlate: true } },
         },
       },
+      project: { select: { id: true, name: true } },
+      team: { select: { id: true, name: true } },
+      vehicle: { select: { id: true, name: true, licensePlate: true } },
       orderPhase: { select: { id: true, name: true } },
       employee: { include: { user: true } },
     },
@@ -98,6 +103,11 @@ export async function POST(request: NextRequest) {
       employee: { include: { user: true } },
     },
   });
+
+  if (employeeId) {
+    const { ensureOrderAssignee } = await import("@/lib/orders/assignees");
+    await ensureOrderAssignee(orderId, employeeId);
+  }
 
   await prisma.order.update({
     where: { id: orderId, tenantId: auth.tenantId },

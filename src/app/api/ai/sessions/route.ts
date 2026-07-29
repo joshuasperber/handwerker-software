@@ -10,7 +10,7 @@ export async function GET() {
   const sessions = await prisma.aiChatSession.findMany({
     where: { tenantId: auth.tenantId, userId: auth.id },
     orderBy: { updatedAt: "desc" },
-    take: 3,
+    take: 20,
     include: {
       messages: { orderBy: { createdAt: "desc" }, take: 1 },
     },

@@ -1,7 +1,8 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { lazy, Suspense, useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -20,9 +21,11 @@ import { FinanceDisclaimer } from "@/components/finance/finance-disclaimer";
 import { FinanceWarningsPanel } from "@/components/finance/warnings-panel";
 import { ExpenseFormDialog } from "@/components/finance/expense-form-dialog";
 import { InvestmentFormDialog } from "@/components/finance/investment-form-dialog";
-import { fetchJson } from "@/lib/fetch-json";
+import { ExpensesPanel } from "@/components/finance/expenses-panel";
+import { InvestmentsPanel } from "@/components/finance/investments-panel";
 import { saveJson } from "@/lib/save-toast";
-import { formatEuro, formatDate } from "@/lib/utils";
+import { swrKeys, useApiSWR } from "@/lib/swr";
+import { cn, formatEuro, formatDate } from "@/lib/utils";
 import {
   FINANCE_DISCLAIMERS,
   REVENUE_BASIS_LABELS,
@@ -44,19 +47,17 @@ import {
   Loader2,
   Target,
 } from "lucide-react";
-import {
-  Bar,
-  BarChart,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from "recharts";
 
 import {
   FINANCE_PERIOD_LABELS,
   FINANCE_PERIOD_PRESETS,
 } from "@/lib/finance/period";
+
+const ExpenseCategoryChart = lazy(() =>
+  import("@/components/finance/expense-category-chart").then((m) => ({
+    default: m.ExpenseCategoryChart,
+  }))
+);
 
 const PERIOD_OPTIONS: { value: FinancePeriodPreset; label: string }[] =
   FINANCE_PERIOD_PRESETS.map((value) => ({
@@ -64,35 +65,56 @@ const PERIOD_OPTIONS: { value: FinancePeriodPreset; label: string }[] =
     label: FINANCE_PERIOD_LABELS[value],
   }));
 
+type FinanceView = "ausgaben" | "investitionen" | null;
+
+function parseView(value: string | null): FinanceView {
+  if (value === "ausgaben" || value === "investitionen") return value;
+  return null;
+}
+
 function KpiCard({
   label,
   value,
   sub,
   icon: Icon,
   accent,
+  onClick,
 }: {
   label: string;
   value: string;
   sub?: string;
   icon: React.ComponentType<{ className?: string }>;
   accent?: string;
+  onClick?: () => void;
 }) {
-  return (
-    <Card className="!p-4">
-      <div className="flex items-start justify-between gap-2">
-        <div className="min-w-0">
-          <p className="text-xs font-medium text-slate-500">{label}</p>
-          <p className={`mt-1 text-xl font-bold sm:text-2xl ${accent ?? "text-slate-900"}`}>
-            {value}
-          </p>
-          {sub && <p className="mt-1 text-xs text-slate-500">{sub}</p>}
-        </div>
-        <div className="rounded-lg bg-slate-100 p-2">
-          <Icon className="h-4 w-4 text-[#0d5c63]" />
-        </div>
+  const content = (
+    <div className="flex items-start justify-between gap-2">
+      <div className="min-w-0">
+        <p className="text-xs font-medium text-slate-500">{label}</p>
+        <p className={`mt-1 text-xl font-bold sm:text-2xl ${accent ?? "text-slate-900"}`}>
+          {value}
+        </p>
+        {sub && <p className="mt-1 text-xs text-slate-500">{sub}</p>}
       </div>
-    </Card>
+      <div className="rounded-lg bg-slate-100 p-2">
+        <Icon className="h-4 w-4 text-[#0d5c63]" />
+      </div>
+    </div>
   );
+
+  if (onClick) {
+    return (
+      <button
+        type="button"
+        onClick={onClick}
+        className="rounded-xl text-left transition hover:ring-2 hover:ring-[#0d5c63]/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0d5c63]"
+      >
+        <Card className={cn("!p-4 h-full", "hover:bg-slate-50/80")}>{content}</Card>
+      </button>
+    );
+  }
+
+  return <Card className="!p-4">{content}</Card>;
 }
 
 function parseOptionalNumber(value: string): number | null {
@@ -102,10 +124,22 @@ function parseOptionalNumber(value: string): number | null {
   return Number.isFinite(n) ? n : null;
 }
 
-export default function FinanzuebersichtPage() {
-  const [overview, setOverview] = useState<FinanceOverview | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+function FinanzuebersichtContent() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const view = parseView(searchParams.get("view"));
+
+  const setView = useCallback(
+    (next: FinanceView) => {
+      if (!next) {
+        router.push("/dashboard/finanzuebersicht", { scroll: false });
+        return;
+      }
+      router.push(`/dashboard/finanzuebersicht?view=${next}`, { scroll: false });
+    },
+    [router]
+  );
+
   const [preset, setPreset] = useState<FinancePeriodPreset>("current_month");
   const [presetInitialized, setPresetInitialized] = useState(false);
   const [customFrom, setCustomFrom] = useState("");
@@ -124,7 +158,6 @@ export default function FinanzuebersichtPage() {
   const [profitTarget, setProfitTarget] = useState("");
   const [highProfitThreshold, setHighProfitThreshold] = useState("5000");
   const [lowLiquidityThreshold, setLowLiquidityThreshold] = useState("");
-  const requestIdRef = useRef(0);
 
   const queryString = useMemo(() => {
     const params = new URLSearchParams({ preset });
@@ -135,46 +168,55 @@ export default function FinanzuebersichtPage() {
     return params.toString();
   }, [preset, customFrom, customTo]);
 
-  const loadOverview = useCallback(async () => {
-    const requestId = ++requestIdRef.current;
-    setLoading(true);
-    setError(null);
+  const {
+    data: overview,
+    error: swrError,
+    isLoading,
+    isValidating,
+    mutate,
+  } = useApiSWR<FinanceOverview>(swrKeys.financeOverview(queryString), {
+    dedupingInterval: 3_000,
+    revalidateOnFocus: true,
+    keepPreviousData: true,
+  });
 
-    const res = await fetchJson<FinanceOverview>(`/api/finance/overview?${queryString}`);
+  const loading = isLoading && !overview;
+  const error = swrError
+    ? swrError instanceof Error
+      ? swrError.message
+      : "Daten konnten nicht geladen werden"
+    : null;
 
-    if (requestId !== requestIdRef.current) return;
-
-    if (res.success && res.data) {
-      setOverview(res.data);
-      const s = res.data.settings;
-      setTaxRate(String(s.estimatedTaxRate));
-      setRevenueBasis(s.revenueBasis);
-      setIncludeUnpaid(s.includeUnpaidInvoices);
-      setDefaultPeriod(
-        s.defaultPeriodPreset === "custom" ? "current_month" : s.defaultPeriodPreset
-      );
-      setProfitTarget(s.monthlyProfitTargetNet != null ? String(s.monthlyProfitTargetNet) : "");
-      setHighProfitThreshold(
-        s.highProfitWarningThreshold != null ? String(s.highProfitWarningThreshold) : ""
-      );
-      setLowLiquidityThreshold(
-        s.lowLiquidityWarningThreshold != null ? String(s.lowLiquidityWarningThreshold) : ""
-      );
-      if (!presetInitialized) {
-        setPreset(s.defaultPeriodPreset === "custom" ? "current_month" : s.defaultPeriodPreset);
-        setPresetInitialized(true);
-      }
-      setError(null);
-    } else {
-      setOverview(null);
-      setError(res.error ?? "Daten konnten nicht geladen werden");
-    }
-    setLoading(false);
-  }, [queryString, presetInitialized]);
+  const syncSettingsFromOverview = useCallback((s: FinanceOverview["settings"]) => {
+    setTaxRate(String(s.estimatedTaxRate));
+    setRevenueBasis(s.revenueBasis);
+    setIncludeUnpaid(s.includeUnpaidInvoices);
+    setDefaultPeriod(
+      s.defaultPeriodPreset === "custom" ? "current_month" : s.defaultPeriodPreset
+    );
+    setProfitTarget(s.monthlyProfitTargetNet != null ? String(s.monthlyProfitTargetNet) : "");
+    setHighProfitThreshold(
+      s.highProfitWarningThreshold != null ? String(s.highProfitWarningThreshold) : ""
+    );
+    setLowLiquidityThreshold(
+      s.lowLiquidityWarningThreshold != null ? String(s.lowLiquidityWarningThreshold) : ""
+    );
+  }, []);
 
   useEffect(() => {
-    void loadOverview();
-  }, [loadOverview]);
+    if (!overview || presetInitialized) return;
+    syncSettingsFromOverview(overview.settings);
+    setPreset(
+      overview.settings.defaultPeriodPreset === "custom"
+        ? "current_month"
+        : overview.settings.defaultPeriodPreset
+    );
+    setPresetInitialized(true);
+  }, [overview, presetInitialized, syncSettingsFromOverview]);
+
+  const refreshOverview = useCallback(async () => {
+    await mutate();
+  }, [mutate]);
 
   const saveSettings = async () => {
     const rate = parseFloat(taxRate.replace(",", "."));
@@ -200,7 +242,7 @@ export default function FinanzuebersichtPage() {
 
     if (res.success) {
       setSettingsOpen(false);
-      void loadOverview();
+      await mutate();
     }
   };
 
@@ -209,6 +251,9 @@ export default function FinanzuebersichtPage() {
       name: c.label.length > 18 ? `${c.label.slice(0, 16)}…` : c.label,
       amount: c.amount,
     })) ?? [];
+
+  const investmentTotal =
+    overview?.plannedInvestments.reduce((sum, inv) => sum + inv.plannedAmount, 0) ?? 0;
 
   const openExpenseCreate = () => {
     setEditingExpense(null);
@@ -230,6 +275,24 @@ export default function FinanzuebersichtPage() {
     setInvestmentOpen(true);
   };
 
+  if (view === "ausgaben") {
+    return (
+      <ExpensesPanel
+        onBack={() => setView(null)}
+        onChanged={refreshOverview}
+      />
+    );
+  }
+
+  if (view === "investitionen") {
+    return (
+      <InvestmentsPanel
+        onBack={() => setView(null)}
+        onChanged={refreshOverview}
+      />
+    );
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
@@ -247,13 +310,23 @@ export default function FinanzuebersichtPage() {
           </div>
           <p className="mt-1 text-sm text-slate-500">
             Steuer-Radar · Gewinnprognose · unverbindliche Orientierung
+            {isValidating && overview && (
+              <span className="ml-2 inline-flex items-center gap-1 text-slate-400">
+                <Loader2 className="h-3 w-3 animate-spin" />
+                aktualisiert…
+              </span>
+            )}
           </p>
         </div>
         <CanAccess permission="invoices.write">
           <div className="flex flex-wrap gap-2">
-            <Button onClick={openExpenseCreate} className="w-full gap-2 sm:w-auto">
+            <Button
+              variant="outline"
+              onClick={openExpenseCreate}
+              className="w-full gap-2 sm:w-auto"
+            >
               <Plus className="h-4 w-4" />
-              Ausgabe / Beleg
+              Ausgaben erfassen
             </Button>
             <Button
               variant="outline"
@@ -315,7 +388,13 @@ export default function FinanzuebersichtPage() {
               variant="outline"
               size="sm"
               className="gap-2"
-              onClick={() => setSettingsOpen((v) => !v)}
+              onClick={() => {
+                setSettingsOpen((v) => {
+                  const next = !v;
+                  if (next && overview) syncSettingsFromOverview(overview.settings);
+                  return next;
+                });
+              }}
             >
               <Settings2 className="h-4 w-4" />
               Finanzprofil
@@ -455,19 +534,20 @@ export default function FinanzuebersichtPage() {
         </div>
       )}
 
-      {error && !loading && (
+      {error && !loading && !overview && (
         <Card className="border-rose-200 bg-rose-50 !p-4 text-rose-800">{error}</Card>
       )}
 
-      {overview && !loading && (
+      {overview && (
         <>
-          <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+          <div className="grid grid-cols-2 gap-3 lg:grid-cols-5">
             <KpiCard
               label="Umsatz / Einnahmen (netto)"
               value={formatEuro(overview.revenue.net)}
               sub={`${overview.revenue.invoiceCount} Rechnung(en) · brutto ${formatEuro(overview.revenue.gross)}`}
               icon={TrendingUp}
               accent="text-emerald-700"
+              onClick={() => router.push("/dashboard/umsatz")}
             />
             <KpiCard
               label="Ausgaben (netto)"
@@ -475,6 +555,15 @@ export default function FinanzuebersichtPage() {
               sub={`${overview.expenses.count} erfasst · ${overview.expenses.withReceipt} mit Beleg`}
               icon={TrendingDown}
               accent="text-rose-700"
+              onClick={() => setView("ausgaben")}
+            />
+            <KpiCard
+              label="Investitionen"
+              value={formatEuro(investmentTotal)}
+              sub={`${overview.plannedInvestments.length} geplant`}
+              icon={PiggyBank}
+              accent="text-sky-800"
+              onClick={() => setView("investitionen")}
             />
             <KpiCard
               label="Geschätzter Gewinn"
@@ -489,6 +578,7 @@ export default function FinanzuebersichtPage() {
                   : "Schätzung · Einnahmen minus Ausgaben"
               }
               icon={Calculator}
+              onClick={() => router.push("/dashboard/kalkulation")}
             />
             <KpiCard
               label="Geschätzte Steuerlast"
@@ -496,6 +586,7 @@ export default function FinanzuebersichtPage() {
               sub={`${overview.tax.estimatedRate} % · nur Schätzung`}
               icon={Receipt}
               accent="text-amber-700"
+              onClick={() => router.push("/dashboard/rechnungen")}
             />
           </div>
 
@@ -545,23 +636,16 @@ export default function FinanzuebersichtPage() {
                   Noch keine Ausgaben im gewählten Zeitraum erfasst.
                 </p>
               ) : (
-                <div className="h-56 w-full">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={chartData} margin={{ top: 4, right: 8, left: 0, bottom: 4 }}>
-                      <XAxis
-                        dataKey="name"
-                        tick={{ fontSize: 11 }}
-                        interval={0}
-                        angle={-20}
-                        textAnchor="end"
-                        height={50}
-                      />
-                      <YAxis tick={{ fontSize: 11 }} width={60} tickFormatter={(v) => `${v} €`} />
-                      <Tooltip formatter={(v) => formatEuro(Number(v))} />
-                      <Bar dataKey="amount" fill="#0d5c63" radius={[4, 4, 0, 0]} />
-                    </BarChart>
-                  </ResponsiveContainer>
-                </div>
+                <Suspense
+                  fallback={
+                    <div className="flex h-56 items-center justify-center text-sm text-slate-400">
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Diagramm wird geladen…
+                    </div>
+                  }
+                >
+                  <ExpenseCategoryChart data={chartData} />
+                </Suspense>
               )}
             </Card>
 
@@ -599,12 +683,9 @@ export default function FinanzuebersichtPage() {
                       ` · ${formatEuro(overview.inventorySales.documentedSaleNet)}`}
                   </div>
                 )}
-                <Link
-                  href="/dashboard/rechnungen"
-                  className="inline-block text-xs text-[#0d5c63] underline-offset-2 hover:underline"
-                >
-                  Zur Rechnungsübersicht →
-                </Link>
+                <Button asChild variant="outline" size="sm" className="text-xs">
+                  <Link href="/dashboard/rechnungen">Zur Rechnungsübersicht</Link>
+                </Button>
               </div>
             </Card>
           </div>
@@ -644,11 +725,20 @@ export default function FinanzuebersichtPage() {
           <Card className="overflow-x-auto !p-0">
             <div className="border-b border-slate-100 px-4 py-3 flex items-center justify-between gap-2">
               <h2 className="text-sm font-semibold text-slate-700">Letzte Ausgaben & Belege</h2>
-              <CanAccess permission="invoices.write">
-                <Button size="sm" variant="outline" onClick={openExpenseCreate}>
-                  + Beleg
-                </Button>
-              </CanAccess>
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => setView("ausgaben")}
+                  className="inline-flex items-center rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-[#0d5c63] hover:bg-slate-50 active:scale-[0.98] touch-manipulation"
+                >
+                  Alle anzeigen
+                </button>
+                <CanAccess permission="invoices.write">
+                  <Button size="sm" variant="outline" onClick={openExpenseCreate}>
+                    Ausgaben erfassen
+                  </Button>
+                </CanAccess>
+              </div>
             </div>
             {overview.recentExpenses.length === 0 ? (
               <p className="p-6 text-center text-sm text-slate-500">
@@ -740,11 +830,20 @@ export default function FinanzuebersichtPage() {
           <Card className="!p-4">
             <div className="mb-3 flex items-center justify-between gap-2">
               <h2 className="text-sm font-semibold text-slate-700">Geplante Investitionen</h2>
-              <CanAccess permission="invoices.write">
-                <Button size="sm" variant="outline" onClick={openInvestmentCreate}>
-                  + Planen
-                </Button>
-              </CanAccess>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setView("investitionen")}
+                  className="inline-flex items-center rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-[#0d5c63] hover:bg-slate-50 active:scale-[0.98] touch-manipulation"
+                >
+                  Alle anzeigen
+                </button>
+                <CanAccess permission="invoices.write">
+                  <Button size="sm" variant="outline" onClick={openInvestmentCreate}>
+                    Investition planen
+                  </Button>
+                </CanAccess>
+              </div>
             </div>
             {overview.plannedInvestments.length === 0 ? (
               <p className="text-sm text-slate-500 py-4 text-center">
@@ -752,7 +851,7 @@ export default function FinanzuebersichtPage() {
               </p>
             ) : (
               <div className="space-y-2">
-                {overview.plannedInvestments.map((inv) => (
+                {overview.plannedInvestments.slice(0, 5).map((inv) => (
                   <button
                     key={inv.id}
                     type="button"
@@ -795,7 +894,7 @@ export default function FinanzuebersichtPage() {
           setExpenseOpen(open);
           if (!open) setEditingExpense(null);
         }}
-        onSaved={loadOverview}
+        onSaved={refreshOverview}
         expense={editingExpense}
       />
       <InvestmentFormDialog
@@ -804,9 +903,24 @@ export default function FinanzuebersichtPage() {
           setInvestmentOpen(open);
           if (!open) setEditingInvestment(null);
         }}
-        onSaved={loadOverview}
+        onSaved={refreshOverview}
         investment={editingInvestment}
       />
     </div>
+  );
+}
+
+export default function FinanzuebersichtPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex items-center justify-center gap-2 py-16 text-slate-500">
+          <Loader2 className="h-5 w-5 animate-spin" />
+          Finanzübersicht wird geladen…
+        </div>
+      }
+    >
+      <FinanzuebersichtContent />
+    </Suspense>
   );
 }

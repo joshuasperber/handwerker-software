@@ -84,7 +84,22 @@ export async function getSession(): Promise<SessionUser | null> {
 }
 
 export function applySessionCookie(response: NextResponse, token: string): void {
+  // Altes Cookie entfernen, damit nur noch eine Session gilt
+  response.cookies.set(LEGACY_COOKIE_NAME, "", {
+    ...SESSION_COOKIE_OPTIONS,
+    maxAge: 0,
+  });
   response.cookies.set(COOKIE_NAME, token, SESSION_COOKIE_OPTIONS);
+}
+
+/** Beide Session-Cookies zuverlässig löschen (path/secure/sameSite müssen matchen). */
+export function clearSessionCookiesOnResponse(response: NextResponse): void {
+  const cleared = {
+    ...SESSION_COOKIE_OPTIONS,
+    maxAge: 0,
+  };
+  response.cookies.set(COOKIE_NAME, "", cleared);
+  response.cookies.set(LEGACY_COOKIE_NAME, "", cleared);
 }
 
 export async function setSessionCookie(token: string): Promise<void> {
@@ -94,8 +109,8 @@ export async function setSessionCookie(token: string): Promise<void> {
 
 export async function clearSessionCookie(): Promise<void> {
   const cookieStore = await cookies();
-  cookieStore.delete({ name: COOKIE_NAME, path: "/" });
-  cookieStore.delete({ name: LEGACY_COOKIE_NAME, path: "/" });
+  cookieStore.set(COOKIE_NAME, "", { ...SESSION_COOKIE_OPTIONS, maxAge: 0 });
+  cookieStore.set(LEGACY_COOKIE_NAME, "", { ...SESSION_COOKIE_OPTIONS, maxAge: 0 });
 }
 
 export { COOKIE_NAME, LEGACY_COOKIE_NAME };

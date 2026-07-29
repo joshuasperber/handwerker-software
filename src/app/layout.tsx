@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
 import { SwrProvider } from "@/components/providers/swr-provider";
+import { CookieNotice } from "@/components/legal/cookie-notice";
 
 export const metadata: Metadata = {
   title: "JoMaster – Software für Handwerksbetriebe",
@@ -33,6 +34,7 @@ export default function RootLayout({
         <SwrProvider>
           <TooltipProvider>{children}</TooltipProvider>
           <Toaster position="top-right" richColors closeButton />
+          <CookieNotice />
         </SwrProvider>
       </body>
     </html>

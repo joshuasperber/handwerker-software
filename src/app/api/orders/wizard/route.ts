@@ -11,6 +11,7 @@ export async function POST(request: NextRequest) {
   const {
     customerId,
     propertyId,
+    projectId,
     title,
     orderTypeId,
     orderTypeCustom,
@@ -20,6 +21,7 @@ export async function POST(request: NextRequest) {
     serviceIds,
     customServices,
     employeeId,
+    employeeIds,
     scheduledStart,
     scheduledEnd,
     priority,
@@ -36,11 +38,20 @@ export async function POST(request: NextRequest) {
     return apiError("Kunde, Objekt, Titel und mindestens eine Leistung sind Pflicht", 400);
   }
 
+  const resolvedEmployeeIds = [
+    ...new Set(
+      [
+        ...(Array.isArray(employeeIds) ? employeeIds : []),
+        ...(employeeId ? [employeeId] : []),
+      ].filter((id): id is string => typeof id === "string" && id.length > 0)
+    ),
+  ];
+
   const refError = await validateOrderCreateRefs(auth.tenantId, {
     customerId,
     propertyId,
     serviceIds: serviceIds ?? [],
-    employeeId: employeeId || null,
+    employeeIds: resolvedEmployeeIds,
   });
   if (refError) return apiError(refError, 404);
 
@@ -55,6 +66,7 @@ export async function POST(request: NextRequest) {
     const order = await createOrderWithWizardData(auth.tenantId, {
       customerId,
       propertyId,
+      projectId: projectId || null,
       title,
       orderTypeId: orderTypeId || null,
       orderTypeCustom: orderTypeCustom || null,
@@ -63,7 +75,7 @@ export async function POST(request: NextRequest) {
       internalNotes,
       serviceIds: serviceIds ?? [],
       customServices,
-      employeeId,
+      employeeIds: resolvedEmployeeIds,
       scheduledStart,
       scheduledEnd,
       priority,

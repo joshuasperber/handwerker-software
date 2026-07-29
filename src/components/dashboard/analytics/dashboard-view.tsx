@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/card";
 import type { DashboardAnalytics } from "@/lib/dashboard/analytics";
 import { usePermission } from "@/components/auth/can-access";
-import { KpiCards } from "./kpi-cards";
+import { KpiCards, DashboardCalcShortcut } from "./kpi-cards";
 import { RevenueChart } from "./revenue-chart";
 import { OrdersStatusChart } from "./orders-status-chart";
 import { InvoiceStatusChart } from "./invoice-status-chart";
@@ -53,7 +53,7 @@ function ChartCard({
               <Icon className="h-4 w-4 text-[#0d5c63]" />
               {title}
             </CardTitle>
-            {href && linkLabel && (
+            {href && linkLabel ? (
               <Link
                 href={href}
                 className="inline-flex shrink-0 items-center gap-1 text-xs font-medium text-[#0d5c63] hover:underline"
@@ -61,7 +61,7 @@ function ChartCard({
                 {linkLabel}
                 <ArrowUpRight className="h-3.5 w-3.5" />
               </Link>
-            )}
+            ) : null}
           </div>
           <CardDescription>{description}</CardDescription>
         </CardHeader>
@@ -73,6 +73,9 @@ function ChartCard({
 
 export function DashboardView({ data }: { data: DashboardAnalytics }) {
   const canReadInvoices = usePermission("invoices.read");
+  const canReadOrders = usePermission("orders.read");
+  const canReadAppointments = usePermission("appointments.read");
+  const canReadCalculations = usePermission("calculations.read");
 
   return (
     <div className="space-y-6">
@@ -84,6 +87,7 @@ export function DashboardView({ data }: { data: DashboardAnalytics }) {
         </div>
       )}
       <KpiCards kpis={data.kpis} />
+      <DashboardCalcShortcut />
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <ChartCard
@@ -102,6 +106,8 @@ export function DashboardView({ data }: { data: DashboardAnalytics }) {
           description="Verteilung aller Aufträge"
           icon={BarChart3}
           delay={0.1}
+          href={canReadOrders ? "/dashboard/auftraege" : undefined}
+          linkLabel={canReadOrders ? "Aufträge" : undefined}
         >
           <OrdersStatusChart data={data.ordersByStatus} />
         </ChartCard>
@@ -111,8 +117,20 @@ export function DashboardView({ data }: { data: DashboardAnalytics }) {
           description="Status der Kalkulationen / Rechnungen"
           icon={PieChart}
           delay={0.15}
-          href={canReadInvoices ? "/dashboard/rechnungen" : undefined}
-          linkLabel={canReadInvoices ? "Rechnungen" : undefined}
+          href={
+            canReadCalculations
+              ? "/dashboard/kalkulation"
+              : canReadInvoices
+                ? "/dashboard/rechnungen"
+                : undefined
+          }
+          linkLabel={
+            canReadCalculations
+              ? "Zur Kalkulation"
+              : canReadInvoices
+                ? "Rechnungen"
+                : undefined
+          }
         >
           <InvoiceStatusChart data={data.invoiceStatus} />
         </ChartCard>
@@ -122,6 +140,8 @@ export function DashboardView({ data }: { data: DashboardAnalytics }) {
           description="Termine der letzten 8 Wochen"
           icon={CalendarDays}
           delay={0.2}
+          href={canReadAppointments ? "/dashboard/termine" : undefined}
+          linkLabel={canReadAppointments ? "Termine" : undefined}
         >
           <AppointmentsWeekChart data={data.appointmentsPerWeek} />
         </ChartCard>

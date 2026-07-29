@@ -1,8 +1,9 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { requireAuth, apiSuccess, apiError } from "@/lib/api";
+import { requireAuth, apiSuccess, apiError, NO_STORE_HEADERS } from "@/lib/api";
 import { expenseInputSchema } from "@/lib/finance/schemas";
 import { toExpenseDTO } from "@/lib/finance/overview";
+import { parseLocalDateInput } from "@/lib/finance/period";
 import type { ExpenseCategory, Prisma } from "@/generated/prisma/client";
 
 export async function GET(request: NextRequest) {
@@ -18,8 +19,19 @@ export async function GET(request: NextRequest) {
 
   if (from || to) {
     where.expenseDate = {};
-    if (from) where.expenseDate.gte = new Date(from);
-    if (to) where.expenseDate.lte = new Date(to);
+    if (from) where.expenseDate.gte = parseLocalDateInput(from);
+    if (to) {
+      const toDate = parseLocalDateInput(to);
+      where.expenseDate.lte = new Date(
+        toDate.getFullYear(),
+        toDate.getMonth(),
+        toDate.getDate(),
+        23,
+        59,
+        59,
+        999
+      );
+    }
   }
   if (category) where.category = category as ExpenseCategory;
 
@@ -28,7 +40,13 @@ export async function GET(request: NextRequest) {
     orderBy: { expenseDate: "desc" },
   });
 
-  return apiSuccess(expenses.map(toExpenseDTO));
+  return apiSuccess(expenses.map(toExpenseDTO), 200, NO_STORE_HEADERS);
+}
+
+function parseExpenseDate(value: string): Date {
+  const local = parseLocalDateInput(value);
+  // Mittag lokal speichern, damit UTC-Verschiebungen den Kalendertag nicht ändern
+  return new Date(local.getFullYear(), local.getMonth(), local.getDate(), 12, 0, 0, 0);
 }
 
 export async function POST(request: NextRequest) {
@@ -56,18 +74,19 @@ export async function POST(request: NextRequest) {
       netAmount: data.netAmount,
       vatAmount: data.vatAmount,
       grossAmount: data.grossAmount,
-      expenseDate: new Date(data.expenseDate),
+      expenseDate: parseExpenseDate(data.expenseDate),
       paymentStatus: data.paymentStatus,
       supplier: data.supplier ?? null,
-      orderId: data.orderId ?? null,
-      customerId: data.customerId ?? null,
+      orderId: data.orderId || null,
+      customerId: data.customerId || null,
+      projectId: data.projectId || null,
       internalNote: data.internalNote ?? null,
       isInvestment: data.isInvestment,
       createdById: auth.id,
     },
   });
 
-  return apiSuccess(toExpenseDTO(expense), 201);
+  return apiSuccess(toExpenseDTO(expense), 201, NO_STORE_HEADERS);
 }
 
 async function handleMultipartCreate(
@@ -103,23 +122,32 @@ async function handleMultipartCreate(
     receiptStorageKey?: string;
     receiptSizeBytes?: number;
   } = {};
+  let receiptWarning: string | null = null;
 
   if (file instanceof File && file.size > 0) {
     const validation = validateUpload(file.type, file.size);
     if (!validation.ok) return apiError(validation.error);
 
     if (!isStorageConfigured()) {
-      return apiError("Datei-Speicher nicht konfiguriert", 503);
+      // Ausgabe trotzdem speichern — Beleg kann später nachgereicht werden
+      receiptWarning =
+        "Ausgabe gespeichert, aber Beleg konnte nicht hochgeladen werden (Datei-Speicher nicht konfiguriert).";
+    } else {
+      try {
+        const buffer = Buffer.from(await file.arrayBuffer());
+        const uploaded = await uploadFile(buffer, file.name, file.type, "expense-receipts");
+        receiptFields = {
+          receiptFileName: file.name,
+          receiptMimeType: file.type,
+          receiptStorageKey: uploaded.key,
+          receiptSizeBytes: file.size,
+        };
+      } catch (err) {
+        console.error("[finance/expenses] receipt upload failed", err);
+        receiptWarning =
+          "Ausgabe gespeichert, aber Beleg-Upload ist fehlgeschlagen. Bitte Beleg später erneut hochladen.";
+      }
     }
-
-    const buffer = Buffer.from(await file.arrayBuffer());
-    const uploaded = await uploadFile(buffer, file.name, file.type, "expense-receipts");
-    receiptFields = {
-      receiptFileName: file.name,
-      receiptMimeType: file.type,
-      receiptStorageKey: uploaded.key,
-      receiptSizeBytes: file.size,
-    };
   }
 
   const data = parsed.data;
@@ -131,11 +159,12 @@ async function handleMultipartCreate(
       netAmount: data.netAmount,
       vatAmount: data.vatAmount,
       grossAmount: data.grossAmount,
-      expenseDate: new Date(data.expenseDate),
+      expenseDate: parseExpenseDate(data.expenseDate),
       paymentStatus: data.paymentStatus,
       supplier: data.supplier ?? null,
-      orderId: data.orderId ?? null,
-      customerId: data.customerId ?? null,
+      orderId: data.orderId || null,
+      customerId: data.customerId || null,
+      projectId: data.projectId || null,
       internalNote: data.internalNote ?? null,
       isInvestment: data.isInvestment,
       createdById: userId,
@@ -143,5 +172,9 @@ async function handleMultipartCreate(
     },
   });
 
-  return apiSuccess(toExpenseDTO(expense), 201);
+  const dto = toExpenseDTO(expense);
+  if (receiptWarning) {
+    return apiSuccess({ ...dto, receiptWarning }, 201, NO_STORE_HEADERS);
+  }
+  return apiSuccess(dto, 201, NO_STORE_HEADERS);
 }

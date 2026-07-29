@@ -19,7 +19,9 @@ export function DashboardNavLink({
 }) {
   const pathname = usePathname();
   const active =
-    href === "/dashboard" ? pathname === "/dashboard" : pathname.startsWith(href);
+    href === "/dashboard"
+      ? pathname === "/dashboard"
+      : pathname === href || pathname.startsWith(`${href}/`);
   const showBadge = typeof badge === "number" && badge > 0;
 
   return (

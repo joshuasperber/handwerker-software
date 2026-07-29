@@ -35,6 +35,12 @@ export interface DocumentCalcInput {
   laborItems: { description: string; totalNet: number; isVisibleToCustomer: boolean }[];
   materialItems: { name: string; totalSalesNet: number; isVisibleToCustomer: boolean }[];
   travelCost: { totalNet: number; isVisibleToCustomer: boolean } | null;
+  /** Zusatzkosten / Projektpositionen (sichtbar auf Kundenrechnung). */
+  additionalItems?: {
+    description: string;
+    totalNet: number;
+    isVisibleToCustomer: boolean;
+  }[];
   customer: {
     firstName: string;
     lastName: string;
@@ -122,6 +128,9 @@ export function calcVisibleLinesSum(calc: DocumentCalcInput): number {
   for (const l of calc.laborItems.filter((x) => x.isVisibleToCustomer)) sum += l.totalNet;
   for (const m of calc.materialItems.filter((x) => x.isVisibleToCustomer)) sum += m.totalSalesNet;
   if (calc.travelCost?.isVisibleToCustomer) sum += calc.travelCost.totalNet;
+  for (const a of (calc.additionalItems ?? []).filter((x) => x.isVisibleToCustomer)) {
+    sum += a.totalNet;
+  }
   return sum;
 }
 
@@ -170,6 +179,11 @@ export function buildCustomerDocumentHtml(
         `<tr><td>Anfahrt / Fahrtkosten</td><td style="text-align:right">${formatEuro(calc.travelCost.totalNet)}</td></tr>`
       );
     }
+    for (const a of (calc.additionalItems ?? []).filter((x) => x.isVisibleToCustomer)) {
+      visibleLines.push(
+        `<tr><td>${escapeHtml(a.description)}</td><td style="text-align:right">${formatEuro(a.totalNet)}</td></tr>`
+      );
+    }
 
     if (visibleLines.length === 0 && calc.netSalesPrice > 0) {
       visibleLines.push(
@@ -177,7 +191,7 @@ export function buildCustomerDocumentHtml(
       );
     } else if (hiddenAmount > 0.01) {
       visibleLines.push(
-        `<tr><td>Projektpauschale (Material, Maschinen, Beschaffung, Gemeinkosten, Wagnis &amp; Gewinn)</td><td style="text-align:right">${formatEuro(hiddenAmount)}</td></tr>`
+        `<tr><td>Projektpauschale (Gemeinkosten, Wagnis &amp; Gewinn)</td><td style="text-align:right">${formatEuro(hiddenAmount)}</td></tr>`
       );
     }
   }

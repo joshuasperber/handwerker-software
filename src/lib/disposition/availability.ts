@@ -42,7 +42,7 @@ export async function getEmployeeAvailability(tenantId: string, date: Date) {
       absenceType: e.absences[0]?.type,
       appointmentsToday: e.appointments.map((a) => ({
         id: a.id,
-        orderNumber: a.order.orderNumber,
+        orderNumber: a.order?.orderNumber ?? a.title ?? "Termin",
         startTime: a.startTime,
         endTime: a.endTime,
       })),

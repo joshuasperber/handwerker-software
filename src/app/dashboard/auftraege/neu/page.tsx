@@ -20,6 +20,8 @@ import {
   type InventoryArticleOption,
 } from "@/components/orders/order-material-editor";
 import { OrderTypeSelect } from "@/components/orders/order-type-select";
+import { ProjectAssignField } from "@/components/orders/project-assign-field";
+import { EmployeeMultiSelect } from "@/components/orders/employee-multi-select";
 import { articlePriceForCalculation } from "@/lib/inventory/units";
 
 interface CustomService {
@@ -92,9 +94,10 @@ export default function NeuerAuftragPage() {
     description: "",
     customerId: "",
     propertyId: "",
+    projectId: "",
     serviceIds: [] as string[],
     customServices: [] as CustomService[],
-    employeeId: "",
+    employeeIds: [] as string[],
     scheduledStart: "",
     scheduledEnd: "",
     confirmMaterial: false,
@@ -306,6 +309,7 @@ export default function NeuerAuftragPage() {
       ...f,
       customerId,
       propertyId: primary?.id ?? first?.id ?? "",
+      projectId: "",
       newSite: { label: "Baustelle", street: "", zipCode: "", city: "", travelZoneId: "" },
     }));
   }
@@ -325,6 +329,7 @@ export default function NeuerAuftragPage() {
         orderTypeId: form.orderTypeId,
         orderTypeCustom: form.orderTypeIsOther ? form.orderTypeCustom : undefined,
         description: form.description,
+        projectId: form.projectId || undefined,
         serviceIds: form.serviceIds,
         customServices: form.customServices
           .filter((c) => c.name.trim())
@@ -335,7 +340,7 @@ export default function NeuerAuftragPage() {
             unitPriceCents: c.price != null ? Math.round(c.price * 100) : undefined,
             notes: c.notes || undefined,
           })),
-        employeeId: form.employeeId || undefined,
+        employeeIds: form.employeeIds,
         scheduledStart: form.scheduledStart || undefined,
         scheduledEnd: form.scheduledEnd || undefined,
         confirmMaterial: form.confirmMaterial,
@@ -775,6 +780,21 @@ export default function NeuerAuftragPage() {
               )}
             </>
           )}
+          {(form.customerId || form.createNewCustomer) && (
+            <div className="mt-4 border-t border-slate-100 pt-4">
+              <ProjectAssignField
+                customerId={form.createNewCustomer ? null : form.customerId || null}
+                value={form.projectId}
+                onChange={(projectId) => setForm((f) => ({ ...f, projectId }))}
+                allowCreate={!form.createNewCustomer}
+              />
+              {form.createNewCustomer && (
+                <p className="mt-1 text-xs text-slate-400">
+                  Bei neuem Kunden kann das Projekt nach dem Anlegen in der Auftragsdetailansicht zugeordnet werden.
+                </p>
+              )}
+            </div>
+          )}
         </Card>
       )}
 
@@ -886,20 +906,23 @@ export default function NeuerAuftragPage() {
 
       {step === 4 && (
         <Card title="Termin & Mitarbeiter (optional)">
-          {form.scheduledStart && !form.employeeId && (
+          {form.scheduledStart && form.employeeIds.length === 0 && (
             <p className="mb-3 text-sm text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
-              Hinweis: Ohne Monteur-Zuweisung erscheint der Termin nicht im Monteur-Tagesplan.
+              Hinweis: Ohne Mitarbeiter-Zuweisung erscheint der Termin nicht im Monteur-Tagesplan.
             </p>
           )}
-          <div className="grid gap-3 sm:grid-cols-2">
-            <div>
-              <label className="text-sm font-medium">Monteur</label>
-              <select className="w-full h-10 rounded-lg border mt-1 px-3 text-sm" value={form.employeeId} onChange={(e) => setForm({ ...form, employeeId: e.target.value })}>
-                <option value="">Später zuweisen</option>
-                {employees.map((e) => (
-                  <option key={e.id} value={e.id}>{e.user.firstName} {e.user.lastName}</option>
-                ))}
-              </select>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="sm:col-span-2">
+              <EmployeeMultiSelect
+                label="Mitarbeiter (Mehrfachauswahl)"
+                employees={employees.map((e) => ({
+                  id: e.id,
+                  firstName: e.user.firstName,
+                  lastName: e.user.lastName,
+                }))}
+                value={form.employeeIds}
+                onChange={(ids) => setForm({ ...form, employeeIds: ids })}
+              />
             </div>
             <Input label="Beginn" type="datetime-local" value={form.scheduledStart} onChange={(e) => setForm({ ...form, scheduledStart: e.target.value })} />
             <Input label="Ende" type="datetime-local" value={form.scheduledEnd} onChange={(e) => setForm({ ...form, scheduledEnd: e.target.value })} />
@@ -912,9 +935,19 @@ export default function NeuerAuftragPage() {
           <ul className="text-sm space-y-2 mb-4">
             <li className="flex gap-2"><Check className="h-4 w-4 text-green-600" /> {form.orderTypeIsOther && form.orderTypeCustom.trim() ? form.orderTypeCustom.trim() : (form.orderTypeName || "Auftragstyp")}</li>
             <li className="flex gap-2"><Check className="h-4 w-4 text-green-600" /> {form.title || "—"}</li>
+            <li className="flex gap-2">
+              <Check className="h-4 w-4 text-green-600" />{" "}
+              {form.projectId ? "Projekt zugeordnet" : "Ohne Projekt"}
+            </li>
             <li className="flex gap-2"><Check className="h-4 w-4 text-green-600" /> {form.serviceIds.length + form.customServices.filter((c) => c.name.trim()).length} Leistung(en){hasCustomService ? ` (inkl. ${form.customServices.filter((c) => c.name.trim()).length} sonstige)` : ""}</li>
             <li className="flex gap-2"><Check className="h-4 w-4 text-green-600" /> {materialLines.filter((l) => l.name.trim()).length} Materialposition(en)</li>
             <li className="flex gap-2"><Check className="h-4 w-4 text-green-600" /> Phasen werden automatisch erzeugt</li>
+            <li className="flex gap-2">
+              <Check className="h-4 w-4 text-green-600" />{" "}
+              {form.employeeIds.length
+                ? `${form.employeeIds.length} Mitarbeiter zugewiesen`
+                : "Keine Mitarbeiter zugewiesen"}
+            </li>
           </ul>
           <label className="flex items-start gap-2 text-sm">
             <input type="checkbox" className="mt-1" checked={form.confirmMaterial} onChange={(e) => setForm({ ...form, confirmMaterial: e.target.checked })} />

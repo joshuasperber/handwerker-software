@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { Compass, Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { LegalInlineLinks } from "@/components/legal/legal-footer";
 
 export default function NotFound() {
   return (
-    <div className="flex min-h-[70vh] w-full items-center justify-center p-4">
+    <div className="flex min-h-[70vh] w-full flex-col items-center justify-center p-4">
       <div className="w-full max-w-md rounded-xl bg-white p-6 text-center shadow-sm ring-1 ring-slate-900/10 sm:p-8">
         <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-slate-100 text-slate-500">
           <Compass className="h-6 w-6" />
@@ -24,6 +25,7 @@ export default function NotFound() {
             </Link>
           </Button>
         </div>
+        <LegalInlineLinks className="mt-6" />
       </div>
     </div>
   );

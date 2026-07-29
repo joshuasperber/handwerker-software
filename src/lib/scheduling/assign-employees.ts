@@ -3,6 +3,7 @@ import { findEmployeeScheduleConflict } from "@/lib/disposition/schedule-conflic
 import { queueAssignmentNotification } from "@/lib/inngest/dispatch";
 import { logger } from "@/lib/logger";
 import { syncPhaseAppointments } from "@/lib/scheduling/sync-phase-appointments";
+import { ensureOrderAssignee } from "@/lib/orders/assignees";
 
 export interface AssignEmployeesInput {
   tenantId: string;
@@ -86,9 +87,10 @@ export async function assignEmployeesToOrder(
     }
 
     if (!slotStart || !slotEnd) {
+      await ensureOrderAssignee(input.orderId, employeeId);
       result.skipped.push({
         employeeId,
-        reason: "Kein Termin — nur Phase zugewiesen",
+        reason: "Zuweisung ohne Kalendertermin",
       });
       continue;
     }
@@ -141,6 +143,7 @@ export async function assignEmployeesToOrder(
       });
       result.created.push(created.id);
     }
+    await ensureOrderAssignee(input.orderId, employeeId);
   }
 
   if (slotStart && slotEnd) {

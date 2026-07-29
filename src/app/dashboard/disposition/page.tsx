@@ -113,7 +113,7 @@ export default function DispositionPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-4">
         <div className="flex items-center gap-2">
           <h1 className="text-2xl font-bold text-slate-900">Disposition</h1>
           <InfoButton title="Disposition">
@@ -129,13 +129,13 @@ export default function DispositionPage() {
         </div>
         <div className="flex flex-wrap gap-2">
           <Link href="/dashboard/leitstand">
-            <Button variant="outline" size="lg">Leitstand</Button>
+            <Button variant="outline" size="sm">Leitstand</Button>
           </Link>
           <Link href="/dashboard/disposition/fahrzeuge">
-            <Button variant="outline" size="lg">Fahrzeuge</Button>
+            <Button variant="outline" size="sm">Fahrzeuge</Button>
           </Link>
           <Link href="/dashboard/disposition/teams">
-            <Button variant="outline" size="lg">Teams verwalten</Button>
+            <Button variant="outline" size="sm">Teams verwalten</Button>
           </Link>
         </div>
       </div>

@@ -210,6 +210,11 @@ export async function createOrderWithWizardData(
       unitPriceCents?: number;
       notes?: string;
     }[];
+    /** Optional: Auftrag einem bestehenden Projekt zuordnen */
+    projectId?: string | null;
+    /** Ein oder mehrere Mitarbeiter (Mehrfachzuweisung). */
+    employeeIds?: string[];
+    /** @deprecated Nutze employeeIds */
     employeeId?: string;
     scheduledStart?: string;
     scheduledEnd?: string;
@@ -230,6 +235,21 @@ export async function createOrderWithWizardData(
     throw new Error(typeAssignment.error);
   }
 
+  const projectId: string | null = data.projectId?.trim() || null;
+  if (projectId) {
+    const project = await prisma.project.findFirst({
+      where: { id: projectId, tenantId },
+      select: { id: true, customerId: true, status: true },
+    });
+    if (!project) throw new Error("Projekt nicht gefunden");
+    if (project.customerId !== data.customerId) {
+      throw new Error("Projekt gehört zu einem anderen Kunden");
+    }
+    if (project.status === "STORNIERT") {
+      throw new Error("Storniertes Projekt kann nicht zugeordnet werden");
+    }
+  }
+
   const customServiceCreates = (data.customServices ?? [])
     .filter((c) => c.name?.trim())
     .map((c) => ({
@@ -248,6 +268,7 @@ export async function createOrderWithWizardData(
       tenantId,
       customerId: data.customerId,
       propertyId: data.propertyId,
+      projectId,
       orderNumber: generateOrderNumber(),
       title: data.title,
       orderType: typeAssignment.orderType,
@@ -273,6 +294,7 @@ export async function createOrderWithWizardData(
     include: {
       customer: true,
       property: true,
+      project: { select: { id: true, name: true } },
       phases: true,
       services: { include: { service: true } },
       orderTypeDefinition: true,
@@ -330,7 +352,30 @@ export async function createOrderWithWizardData(
   // Sobald ein Termin gesetzt ist, wird ein Kalendereintrag erzeugt – auch ohne
   // zugewiesenen Monteur. So erscheint der Auftrag direkt im Team-Kalender und
   // kann später per Drag-and-drop einem Mitarbeiter zugeordnet werden.
-  if (data.scheduledStart) {
+  const employeeIds = [
+    ...new Set(
+      [
+        ...(data.employeeIds ?? []),
+        ...(data.employeeId ? [data.employeeId] : []),
+      ].filter(Boolean)
+    ),
+  ];
+
+  if (employeeIds.length) {
+    const { setOrderAssignees } = await import("@/lib/orders/assignees");
+    await setOrderAssignees({
+      tenantId,
+      orderId: order.id,
+      employeeIds,
+      syncAppointments: Boolean(data.scheduledStart),
+      startTime: data.scheduledStart ? new Date(data.scheduledStart) : null,
+      endTime: data.scheduledEnd
+        ? new Date(data.scheduledEnd)
+        : data.scheduledStart
+          ? new Date(new Date(data.scheduledStart).getTime() + 2 * 60 * 60 * 1000)
+          : null,
+    });
+  } else if (data.scheduledStart) {
     const start = new Date(data.scheduledStart);
     const end = data.scheduledEnd
       ? new Date(data.scheduledEnd)
@@ -339,7 +384,7 @@ export async function createOrderWithWizardData(
       data: {
         tenantId,
         orderId: order.id,
-        employeeId: data.employeeId || null,
+        employeeId: null,
         startTime: start,
         endTime: end,
         status: "GEPLANT",
@@ -352,10 +397,15 @@ export async function createOrderWithWizardData(
     include: {
       customer: true,
       property: true,
+      project: { select: { id: true, name: true } },
       phases: { orderBy: { sortOrder: "asc" } },
       services: { include: { service: true } },
       materialLines: { include: { article: true, reservations: true } },
       appointments: { include: { employee: { include: { user: true } } } },
+      assignees: {
+        include: { employee: { include: { user: true } } },
+      },
+      orderTypeDefinition: true,
     },
   });
 }

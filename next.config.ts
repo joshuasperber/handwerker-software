@@ -7,6 +7,35 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: path.resolve(__dirname),
   },
+  async headers() {
+    return [
+      {
+        // Sensible Finanzdaten niemals im Browser-/Proxy-Cache ablegen
+        source: "/api/finance/:path*",
+        headers: [
+          { key: "Cache-Control", value: "private, no-store, max-age=0" },
+        ],
+      },
+      {
+        source: "/api/customers/:path*",
+        headers: [
+          { key: "Cache-Control", value: "private, no-store, max-age=0" },
+        ],
+      },
+      {
+        source: "/api/employees/:path*",
+        headers: [
+          { key: "Cache-Control", value: "private, no-store, max-age=0" },
+        ],
+      },
+      {
+        source: "/api/invoices/:path*",
+        headers: [
+          { key: "Cache-Control", value: "private, no-store, max-age=0" },
+        ],
+      },
+    ];
+  },
 };
 
 const sentryEnabled = Boolean(

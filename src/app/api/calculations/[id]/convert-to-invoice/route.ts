@@ -17,6 +17,7 @@ import {
   type InvoiceActionMode,
 } from "@/lib/documents/invoice-lifecycle";
 import type { Prisma } from "@/generated/prisma/client";
+import { parseIssueDateInput, shiftDueDateForIssueChange } from "@/lib/documents/issue-date";
 
 async function findActiveInvoices(
   tenantId: string,
@@ -105,6 +106,7 @@ export async function POST(
   const previewOnly = body.preview === true;
   const mode = body.mode as InvoiceActionMode | undefined;
   const documentId = typeof body.documentId === "string" ? body.documentId : undefined;
+  const requestedIssueDate = parseIssueDateInput(body.issueDate);
 
   const loaded = await loadCalculationForDocument(auth.tenantId, id);
   if (!loaded) return apiError("Kalkulation nicht gefunden", 404);
@@ -144,7 +146,7 @@ export async function POST(
     });
   }
 
-  const issueDate = new Date();
+  const issueDate = requestedIssueDate ?? new Date();
   const terms = loaded.company.paymentTermsDays;
   const dueDate =
     terms != null ? new Date(issueDate.getTime() + terms * 24 * 60 * 60 * 1000) : null;
@@ -181,18 +183,28 @@ export async function POST(
     });
     if (!full) return apiError("Rechnung nicht gefunden", 404);
 
+    const effectiveIssue = requestedIssueDate ?? full.issueDate;
+    const issueChanged =
+      effectiveIssue.getFullYear() !== full.issueDate.getFullYear() ||
+      effectiveIssue.getMonth() !== full.issueDate.getMonth() ||
+      effectiveIssue.getDate() !== full.issueDate.getDate();
+    const nextDue = issueChanged
+      ? shiftDueDateForIssueChange(full.issueDate, effectiveIssue, full.dueDate) ?? dueDate
+      : full.dueDate ?? dueDate;
+
     const snapshot = buildDocumentSnapshot(
       "INVOICE",
       loaded.calc,
       loaded.company,
       full.documentNumber,
-      full.issueDate
+      effectiveIssue
     );
 
     const doc = await prisma.calculationDocument.update({
       where: { id: full.id },
       data: {
-        dueDate: full.dueDate ?? dueDate,
+        issueDate: effectiveIssue,
+        dueDate: nextDue,
         netAmount: loaded.calc.netSalesPrice,
         vatAmount: loaded.calc.vatAmount,
         grossAmount: loaded.calc.grossSalesPrice,
@@ -209,11 +221,15 @@ export async function POST(
       userId: auth.id,
       entityType: "CalculationDocument",
       entityId: doc.id,
-      action: "INVOICE_UPDATED",
+      action: issueChanged ? "INVOICE_UPDATED_WITH_ISSUE_DATE" : "INVOICE_UPDATED",
+      oldValues: issueChanged
+        ? { issueDate: full.issueDate.toISOString() }
+        : null,
       newValues: {
         documentNumber: doc.documentNumber,
         grossAmount: doc.grossAmount,
         mode: "update",
+        issueDate: doc.issueDate.toISOString(),
       },
       ipAddress: getClientIp(request),
     });
@@ -288,6 +304,7 @@ export async function POST(
         documentNumber: doc.documentNumber,
         grossAmount: doc.grossAmount,
         mode: mode ?? "create",
+        issueDate: doc.issueDate.toISOString(),
         replacesDocumentId: mode === "correction" ? primary?.id : undefined,
       },
       ipAddress: getClientIp(request),

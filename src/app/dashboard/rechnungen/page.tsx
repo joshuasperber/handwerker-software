@@ -21,6 +21,7 @@ import { fetchJson } from "@/lib/fetch-json";
 import { saveJson } from "@/lib/save-toast";
 import { CanAccess } from "@/components/auth/can-access";
 import { AmountModeToggle } from "@/components/finance/amount-mode-toggle";
+import { LoadingOverlay } from "@/components/ui/loading-overlay";
 import {
   amountModeLabel,
   pickAmount,
@@ -36,7 +37,23 @@ import {
   BellRing,
   AlertTriangle,
   FileCode2,
+  Loader2,
+  CalendarDays,
+  MoreHorizontal,
 } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { formatIssueDateInput } from "@/lib/documents/issue-date";
+import {
+  ISSUE_DATE_CHANGE_WARNING,
+  issueDateChangeNeedsConfirmation,
+} from "@/lib/documents/invoice-lifecycle";
 
 interface DocItem {
   id: string;
@@ -116,6 +133,10 @@ export default function RechnungenPage() {
   const [busy, setBusy] = useState(false);
 
   const [cancelDoc, setCancelDoc] = useState<DocItem | null>(null);
+  const [sendDoc, setSendDoc] = useState<DocItem | null>(null);
+  const [issueDateDoc, setIssueDateDoc] = useState<DocItem | null>(null);
+  const [issueDateValue, setIssueDateValue] = useState("");
+  const [issueDateConfirmOpen, setIssueDateConfirmOpen] = useState(false);
   const [cancelReason, setCancelReason] = useState("");
 
   const load = useCallback(async () => {
@@ -147,6 +168,43 @@ export default function RechnungenPage() {
     setPayDate(new Date().toISOString().slice(0, 10));
     setPayMethod("UEBERWEISUNG");
     setPayNote("");
+  }
+
+  function openIssueDateEditor(doc: DocItem) {
+    setIssueDateDoc(doc);
+    setIssueDateValue(formatIssueDateInput(doc.issueDate));
+  }
+
+  async function saveIssueDate(confirmed = false) {
+    if (!issueDateDoc || !issueDateValue) return;
+    const needsWarning = issueDateChangeNeedsConfirmation(issueDateDoc);
+    if (needsWarning && !confirmed) {
+      setIssueDateConfirmOpen(true);
+      return;
+    }
+
+    setBusy(true);
+    const res = await saveJson(
+      `/api/documents/${issueDateDoc.id}`,
+      {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          issueDate: issueDateValue,
+          confirmIssueDateChange: needsWarning ? true : undefined,
+        }),
+      },
+      {
+        loading: "Rechnungsdatum wird gespeichert …",
+        success: "Rechnungsdatum aktualisiert",
+      }
+    );
+    setBusy(false);
+    if (res.success) {
+      setIssueDateDoc(null);
+      setIssueDateConfirmOpen(false);
+      load();
+    }
   }
 
   async function submitPayment() {
@@ -194,7 +252,6 @@ export default function RechnungenPage() {
   }
 
   async function sendInvoice(doc: DocItem) {
-    if (!confirm(`Rechnung ${doc.documentNumber} per E-Mail an den Kunden senden?`)) return;
     const res = await saveJson(
       `/api/documents/${doc.id}/send`,
       { method: "POST" },
@@ -230,15 +287,22 @@ export default function RechnungenPage() {
 
   return (
     <div>
+      <LoadingOverlay open={busy} label="Vorgang läuft …" />
+
       <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
         <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
           <Receipt className="h-7 w-7 text-[#0d5c63]" />
           Rechnungen &amp; Belege
           <InfoButton title="Rechnungsübersicht">
             <p>
-              Zentrales Register aller Angebote und Rechnungen. Rechnungen sind
-              unveränderlich (Snapshot zum Erstellzeitpunkt) und werden über einen
-              lückenlosen, fortlaufenden Nummernkreis erzeugt (GoBD).
+              Zentrales Register aller Angebote und Rechnungen. Rechnungen speichern
+              einen Snapshot zum Rechnungsdatum und werden über einen lückenlosen,
+              fortlaufenden Nummernkreis erzeugt (GoBD).
+            </p>
+            <p className="mt-2">
+              Der Umsatz wird dem Monat des Rechnungsdatums zugeordnet – nicht dem
+              Speicher- oder Zahlungsdatum (außer in den Finanzeinstellungen auf
+              Zahlungseingang umgestellt).
             </p>
             <p className="mt-2">
               Offene Posten = Bruttobetrag minus erfasste Zahlungen. Überfällig =
@@ -362,7 +426,130 @@ export default function RechnungenPage() {
         )}
       </div>
 
-      <Card className="!p-0 overflow-x-auto">
+      {/* Mobile cards */}
+      <div className="space-y-3 md:hidden mb-4">
+        {loading ? (
+          <div className="flex items-center justify-center gap-2 py-12 text-slate-500">
+            <Loader2 className="h-5 w-5 animate-spin" />
+            Wird geladen …
+          </div>
+        ) : items.length === 0 ? (
+          <Card className="!p-6 text-center text-sm text-slate-500">Keine Belege gefunden.</Card>
+        ) : (
+          items.map((doc) => {
+            const isInvoice = doc.documentType === "INVOICE";
+            const open = isInvoice && doc.status !== "STORNIERT" && doc.openAmount > 0;
+            return (
+              <Card key={doc.id} className="!p-4 space-y-3">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="min-w-0">
+                    <p className="font-mono text-xs text-slate-500">{doc.documentNumber}</p>
+                    <p className="font-medium text-slate-900 truncate">{doc.customerName}</p>
+                    <p className="text-xs text-slate-500 mt-0.5">
+                      {TYPE_LABEL[doc.documentType]} · {formatDate(doc.issueDate)}
+                    </p>
+                  </div>
+                  <Badge className={STATUS_STYLES[doc.status]}>{STATUS_LABEL[doc.status]}</Badge>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-slate-500">{amountModeLabel(amountMode)}</span>
+                  <span className="font-semibold tabular-nums">
+                    {formatEuro(
+                      pickAmount(amountMode, {
+                        net: doc.netAmount,
+                        gross: doc.isReverseCharge ? doc.netAmount : doc.grossAmount,
+                      })
+                    )}
+                  </span>
+                </div>
+                {isInvoice && (
+                  <div className="flex justify-between text-sm">
+                    <span className="text-slate-500">Offen</span>
+                    <span className={doc.overdue ? "font-medium text-rose-600" : ""}>
+                      {formatEuro(doc.openAmount)}
+                    </span>
+                  </div>
+                )}
+                <div className="flex gap-2 pt-1">
+                  <Button asChild variant="outline" size="sm" className="min-h-10 flex-1">
+                    <a href={`/api/documents/${doc.id}?format=html`} target="_blank" rel="noreferrer">
+                      Ansehen
+                    </a>
+                  </Button>
+                  <CanAccess permission="invoices.payments">
+                    {open && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="min-h-10 flex-1 text-emerald-700"
+                        onClick={() => openPayment(doc)}
+                      >
+                        Zahlung
+                      </Button>
+                    )}
+                  </CanAccess>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="min-h-10 shrink-0"
+                        aria-label="Weitere Aktionen"
+                      >
+                        <MoreHorizontal className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-56">
+                      <DropdownMenuItem asChild>
+                        <a href={`/api/documents/${doc.id}/pdf`} target="_blank" rel="noreferrer">
+                          <Download className="h-4 w-4 mr-2" /> PDF herunterladen
+                        </a>
+                      </DropdownMenuItem>
+                      {isInvoice && (
+                        <DropdownMenuItem asChild>
+                          <a href={`/api/documents/${doc.id}/einvoice`} target="_blank" rel="noreferrer">
+                            <FileCode2 className="h-4 w-4 mr-2" /> E-Rechnung (XML)
+                          </a>
+                        </DropdownMenuItem>
+                      )}
+                      <CanAccess permission="invoices.write">
+                        {isInvoice && doc.status !== "STORNIERT" && (
+                          <>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem onClick={() => openIssueDateEditor(doc)}>
+                              <CalendarDays className="h-4 w-4 mr-2" /> Rechnungsdatum ändern
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => setSendDoc(doc)}>
+                              <Send className="h-4 w-4 mr-2" /> Per E-Mail senden
+                            </DropdownMenuItem>
+                            {doc.overdue && (
+                              <DropdownMenuItem
+                                className="text-amber-700"
+                                onClick={() => createDunning(doc)}
+                              >
+                                <BellRing className="h-4 w-4 mr-2" /> Mahnung erstellen
+                              </DropdownMenuItem>
+                            )}
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem
+                              className="text-rose-700 focus:text-rose-700"
+                              onClick={() => setCancelDoc(doc)}
+                            >
+                              <Ban className="h-4 w-4 mr-2" /> Stornieren
+                            </DropdownMenuItem>
+                          </>
+                        )}
+                      </CanAccess>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+              </Card>
+            );
+          })
+        )}
+      </div>
+
+      <Card className="!p-0 overflow-x-auto hidden md:block">
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-slate-200 bg-slate-50 text-left text-xs text-slate-500">
@@ -414,7 +601,25 @@ export default function RechnungenPage() {
                       {TYPE_LABEL[doc.documentType]}
                     </td>
                     <td className="px-3 py-2">{doc.customerName}</td>
-                    <td className="px-3 py-2">{formatDate(doc.issueDate)}</td>
+                    <td className="px-3 py-2">
+                      <button
+                        type="button"
+                        className="text-left hover:text-[#0d5c63] hover:underline disabled:hover:no-underline disabled:hover:text-inherit"
+                        disabled={doc.documentType !== "INVOICE" || doc.status === "STORNIERT"}
+                        onClick={() => {
+                          if (doc.documentType === "INVOICE" && doc.status !== "STORNIERT") {
+                            openIssueDateEditor(doc);
+                          }
+                        }}
+                        title={
+                          doc.documentType === "INVOICE" && doc.status !== "STORNIERT"
+                            ? "Rechnungsdatum ändern"
+                            : undefined
+                        }
+                      >
+                        {formatDate(doc.issueDate)}
+                      </button>
+                    </td>
                     <td className="px-3 py-2">
                       {doc.dueDate ? (
                         <span className={doc.overdue ? "text-rose-600 font-medium" : ""}>
@@ -462,28 +667,6 @@ export default function RechnungenPage() {
                             <FileText className="h-4 w-4" />
                           </Button>
                         </a>
-                        <a
-                          href={`/api/documents/${doc.id}/pdf`}
-                          target="_blank"
-                          rel="noreferrer"
-                          title="PDF herunterladen"
-                        >
-                          <Button variant="ghost" size="icon" className="h-8 w-8">
-                            <Download className="h-4 w-4" />
-                          </Button>
-                        </a>
-                        {isInvoice && (
-                          <a
-                            href={`/api/documents/${doc.id}/einvoice`}
-                            target="_blank"
-                            rel="noreferrer"
-                            title="E-Rechnung (XML)"
-                          >
-                            <Button variant="ghost" size="icon" className="h-8 w-8">
-                              <FileCode2 className="h-4 w-4" />
-                            </Button>
-                          </a>
-                        )}
                         <CanAccess permission="invoices.payments">
                           {open && (
                             <Button
@@ -497,41 +680,68 @@ export default function RechnungenPage() {
                             </Button>
                           )}
                         </CanAccess>
-                        <CanAccess permission="invoices.write">
-                          {isInvoice && doc.status !== "STORNIERT" && (
-                            <>
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                className="h-8 w-8"
-                                title="Per E-Mail senden"
-                                onClick={() => sendInvoice(doc)}
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-8 w-8"
+                              aria-label="Weitere Aktionen"
+                            >
+                              <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end" className="w-56">
+                            <DropdownMenuItem asChild>
+                              <a
+                                href={`/api/documents/${doc.id}/pdf`}
+                                target="_blank"
+                                rel="noreferrer"
                               >
-                                <Send className="h-4 w-4" />
-                              </Button>
-                              {doc.overdue && (
-                                <Button
-                                  variant="ghost"
-                                  size="icon"
-                                  className="h-8 w-8 text-amber-700"
-                                  title="Mahnung erstellen"
-                                  onClick={() => createDunning(doc)}
+                                <Download className="h-4 w-4 mr-2" /> PDF herunterladen
+                              </a>
+                            </DropdownMenuItem>
+                            {isInvoice && (
+                              <DropdownMenuItem asChild>
+                                <a
+                                  href={`/api/documents/${doc.id}/einvoice`}
+                                  target="_blank"
+                                  rel="noreferrer"
                                 >
-                                  <BellRing className="h-4 w-4" />
-                                </Button>
+                                  <FileCode2 className="h-4 w-4 mr-2" /> E-Rechnung (XML)
+                                </a>
+                              </DropdownMenuItem>
+                            )}
+                            <CanAccess permission="invoices.write">
+                              {isInvoice && doc.status !== "STORNIERT" && (
+                                <>
+                                  <DropdownMenuSeparator />
+                                  <DropdownMenuItem onClick={() => openIssueDateEditor(doc)}>
+                                    <CalendarDays className="h-4 w-4 mr-2" /> Rechnungsdatum ändern
+                                  </DropdownMenuItem>
+                                  <DropdownMenuItem onClick={() => setSendDoc(doc)}>
+                                    <Send className="h-4 w-4 mr-2" /> Per E-Mail senden
+                                  </DropdownMenuItem>
+                                  {doc.overdue && (
+                                    <DropdownMenuItem
+                                      className="text-amber-700"
+                                      onClick={() => createDunning(doc)}
+                                    >
+                                      <BellRing className="h-4 w-4 mr-2" /> Mahnung erstellen
+                                    </DropdownMenuItem>
+                                  )}
+                                  <DropdownMenuSeparator />
+                                  <DropdownMenuItem
+                                    className="text-rose-700 focus:text-rose-700"
+                                    onClick={() => setCancelDoc(doc)}
+                                  >
+                                    <Ban className="h-4 w-4 mr-2" /> Stornieren
+                                  </DropdownMenuItem>
+                                </>
                               )}
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                className="h-8 w-8 text-rose-700"
-                                title="Stornieren"
-                                onClick={() => setCancelDoc(doc)}
-                              >
-                                <Ban className="h-4 w-4" />
-                              </Button>
-                            </>
-                          )}
-                        </CanAccess>
+                            </CanAccess>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
                       </div>
                     </td>
                   </tr>
@@ -625,6 +835,81 @@ export default function RechnungenPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      {/* Rechnungsdatum ändern */}
+      <Dialog
+        open={!!issueDateDoc && !issueDateConfirmOpen}
+        onOpenChange={(o) => {
+          if (!o) setIssueDateDoc(null);
+        }}
+      >
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Rechnungsdatum – {issueDateDoc?.documentNumber}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-2">
+            <Label htmlFor="edit-issue-date">Rechnungsdatum</Label>
+            <Input
+              id="edit-issue-date"
+              type="date"
+              value={issueDateValue}
+              onChange={(e) => setIssueDateValue(e.target.value)}
+            />
+            <p className="text-xs text-slate-500">
+              Der Umsatz erscheint im Monat dieses Datums (Dashboard, Finanz- und
+              Umsatzübersicht).
+            </p>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIssueDateDoc(null)} disabled={busy}>
+              Abbrechen
+            </Button>
+            <Button
+              variant="action"
+              onClick={() => saveIssueDate(false)}
+              disabled={busy || !issueDateValue}
+            >
+              {busy ? "Speichern…" : "Datum speichern"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <ConfirmDialog
+        open={issueDateConfirmOpen}
+        onOpenChange={setIssueDateConfirmOpen}
+        title="Rechnungsdatum ändern?"
+        description={ISSUE_DATE_CHANGE_WARNING}
+        confirmLabel="Trotzdem ändern"
+        cancelLabel="Abbrechen"
+        variant="action"
+        icon={<AlertTriangle className="h-5 w-5" />}
+        loading={busy}
+        onConfirm={() => saveIssueDate(true)}
+      />
+
+      <ConfirmDialog
+        open={sendDoc !== null}
+        onOpenChange={(open) => {
+          if (!open) setSendDoc(null);
+        }}
+        title="Rechnung senden?"
+        description={
+          sendDoc
+            ? `Rechnung ${sendDoc.documentNumber} wird per E-Mail an den Kunden gesendet.`
+            : ""
+        }
+        confirmLabel="Senden"
+        cancelLabel="Abbrechen"
+        variant="action"
+        icon={<Send className="h-5 w-5" />}
+        onConfirm={async () => {
+          if (sendDoc) {
+            const doc = sendDoc;
+            setSendDoc(null);
+            await sendInvoice(doc);
+          }
+        }}
+      />
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { z } from "zod";
-import { requireAuth, apiSuccess, apiError } from "@/lib/api";
+import { requireAuth, apiSuccess, apiError, NO_STORE_HEADERS } from "@/lib/api";
 import { getOrCreateFinanceSettings, updateFinanceSettings } from "@/lib/finance/settings";
 
 const nullableNumber = z
@@ -33,7 +33,7 @@ export async function GET() {
   if (auth instanceof Response) return auth;
 
   const settings = await getOrCreateFinanceSettings(auth.tenantId);
-  return apiSuccess(settings);
+  return apiSuccess(settings, 200, NO_STORE_HEADERS);
 }
 
 export async function PATCH(request: NextRequest) {
@@ -47,5 +47,5 @@ export async function PATCH(request: NextRequest) {
   }
 
   const settings = await updateFinanceSettings(auth.tenantId, parsed.data);
-  return apiSuccess(settings);
+  return apiSuccess(settings, 200, NO_STORE_HEADERS);
 }

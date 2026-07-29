@@ -42,7 +42,7 @@ export async function PATCH(
     ABGESCHLOSSEN: "ABGESCHLOSSEN",
   };
 
-  if (orderStatusMap[status]) {
+  if (orderStatusMap[status] && appointment.orderId && appointment.order) {
     let newOrderStatus = orderStatusMap[status];
     if (status === "ABGESCHLOSSEN") {
       const allDone = areOrderChecklistsComplete(appointment.order.checklists);

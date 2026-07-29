@@ -14,6 +14,7 @@ import { Pencil, Search } from "lucide-react";
 interface Employee {
   id: string;
   color: string;
+  hourlyWageNet?: number | null;
   operationalStatus: string;
   user: { firstName: string; lastName: string; email: string; role: string; phone: string | null; address: string | null; isActive: boolean };
   qualifications: { name: string }[];
@@ -31,6 +32,7 @@ const EMPTY_FORM = {
   address: "",
   color: "#3b82f6",
   qualifications: "",
+  hourlyWageNet: "",
   isActive: true,
 };
 
@@ -67,6 +69,7 @@ export default function MitarbeiterPage() {
       address: emp.user.address ?? "",
       color: emp.color,
       qualifications: emp.qualifications.map((q) => q.name).join(", "),
+      hourlyWageNet: emp.hourlyWageNet != null ? String(emp.hourlyWageNet) : "",
       isActive: emp.user.isActive,
     });
     setError("");
@@ -93,6 +96,9 @@ export default function MitarbeiterPage() {
       address: form.address || undefined,
       color: form.color,
       isActive: form.isActive,
+      hourlyWageNet: form.hourlyWageNet.trim()
+        ? Number(form.hourlyWageNet.replace(",", "."))
+        : null,
       qualifications: form.qualifications
         ? form.qualifications.split(",").map((s) => s.trim()).filter(Boolean)
         : [],
@@ -203,6 +209,13 @@ export default function MitarbeiterPage() {
             </div>
             <Input label="Telefon" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
             <Input label="Adresse" value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} className="sm:col-span-2" />
+            <Input
+              label="Stundenlohn netto (€)"
+              inputMode="decimal"
+              value={form.hourlyWageNet}
+              onChange={(e) => setForm({ ...form, hourlyWageNet: e.target.value })}
+              placeholder="z. B. 28,50"
+            />
             <div>
               <label className="text-sm font-medium">Kalenderfarbe</label>
               <div className="flex items-center gap-2 mt-1">
@@ -248,12 +261,17 @@ export default function MitarbeiterPage() {
                 </div>
               </div>
               <CanAccess permission="employees.write">
-                <Button size="sm" variant="outline" onClick={() => startEdit(emp)}>
-                  <Pencil className="h-3.5 w-3.5" />
+                <Button size="sm" variant="outline" className="min-h-10 min-w-10" onClick={() => startEdit(emp)}>
+                  <Pencil className="h-4 w-4" />
                 </Button>
               </CanAccess>
             </div>
             <p className="mt-3 text-sm text-slate-400">{emp.user.email}</p>
+            {emp.hourlyWageNet != null && (
+              <p className="mt-1 text-xs text-slate-500">
+                Stundenlohn: {emp.hourlyWageNet.toFixed(2)} €
+              </p>
+            )}
             {emp.qualifications.length > 0 && (
               <div className="mt-3 flex flex-wrap gap-1">
                 {emp.qualifications.map((q) => (

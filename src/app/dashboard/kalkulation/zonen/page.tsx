@@ -10,6 +10,8 @@ import { Card } from "@/components/ui/card";
 import { ChevronLeft, Plus, Pencil, Trash2, X, Check } from "lucide-react";
 import { formatEuro } from "@/lib/utils";
 import { CanAccess } from "@/components/auth/can-access";
+import { toast } from "sonner";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 
 interface Zone {
   id: string;
@@ -32,6 +34,7 @@ export default function ZonenverwaltungPage() {
   const [createForm, setCreateForm] = useState<typeof EMPTY>(EMPTY);
   const [editId, setEditId] = useState<string | null>(null);
   const [editForm, setEditForm] = useState<typeof EMPTY>(EMPTY);
+  const [removeTarget, setRemoveTarget] = useState<Zone | null>(null);
 
   function load() {
     fetch("/api/travel-zones")
@@ -110,10 +113,10 @@ export default function ZonenverwaltungPage() {
   }
 
   async function remove(z: Zone) {
-    if (!confirm(`Zone "${z.name}" wirklich löschen?`)) return;
     const res = await fetch(`/api/travel-zones/${z.id}`, { method: "DELETE" });
     const d = await res.json();
-    if (d.success && d.data?.message) alert(d.data.message);
+    if (d.success) toast.success(d.data?.message ?? "Zone gelöscht");
+    else toast.error(d.error ?? "Zone konnte nicht gelöscht werden");
     load();
   }
 
@@ -208,7 +211,7 @@ export default function ZonenverwaltungPage() {
                         <Button variant="ghost" size="icon-sm" onClick={() => startEdit(z)}>
                           <Pencil className="h-4 w-4" />
                         </Button>
-                        <Button variant="ghost" size="icon-sm" className="text-red-600" onClick={() => remove(z)}>
+                        <Button variant="ghost" size="icon-sm" className="text-red-600" onClick={() => setRemoveTarget(z)}>
                           <Trash2 className="h-4 w-4" />
                         </Button>
                       </div>
@@ -220,6 +223,25 @@ export default function ZonenverwaltungPage() {
           </div>
         )}
       </Card>
+
+      <ConfirmDialog
+        open={removeTarget !== null}
+        onOpenChange={(open) => {
+          if (!open) setRemoveTarget(null);
+        }}
+        title="Zone löschen?"
+        description={removeTarget ? `Zone „${removeTarget.name}“ wird gelöscht.` : ""}
+        confirmLabel="Löschen"
+        cancelLabel="Abbrechen"
+        variant="destructive"
+        onConfirm={async () => {
+          if (removeTarget) {
+            const target = removeTarget;
+            setRemoveTarget(null);
+            await remove(target);
+          }
+        }}
+      />
     </div>
   );
 }

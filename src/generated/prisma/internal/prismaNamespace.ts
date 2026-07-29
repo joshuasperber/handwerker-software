@@ -399,6 +399,7 @@ export const ModelName = {
   ServiceArea: 'ServiceArea',
   OrderTypeDefinition: 'OrderTypeDefinition',
   Order: 'Order',
+  OrderAssignee: 'OrderAssignee',
   OrderService: 'OrderService',
   Appointment: 'Appointment',
   ChecklistTemplate: 'ChecklistTemplate',
@@ -479,7 +480,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "tenant" | "user" | "customer" | "taxExemptionCertificate" | "property" | "service" | "serviceQuestion" | "serviceQualification" | "employee" | "employeeQualification" | "workingHours" | "employeeWorkingHours" | "serviceArea" | "orderTypeDefinition" | "order" | "orderService" | "appointment" | "checklistTemplate" | "checklistItem" | "orderChecklist" | "fileUpload" | "timeEntry" | "materialUsage" | "message" | "auditLog" | "notificationLog" | "notification" | "notificationSettings" | "companySettings" | "monthlyFixedCost" | "overheadSettings" | "machine" | "travelZone" | "calculation" | "laborItem" | "materialItem" | "machineUsageItem" | "procurementCost" | "travelCost" | "additionalCostItem" | "riskSettings" | "profitSettings" | "incomeTaxSettings" | "vATSettings" | "calculationDocument" | "documentSequence" | "payment" | "dunningNotice" | "article" | "storageLocation" | "stockBalance" | "stockMovement" | "reservation" | "serviceMaterialTemplate" | "orderPhase" | "orderMaterialLine" | "purchaseOrder" | "purchaseOrderLine" | "delivery" | "manualReorderSuggestion" | "team" | "teamMember" | "vehicle" | "employeeAbsence" | "planMarker" | "staffAssignmentRequest" | "invitation" | "orderShare" | "financeSettings" | "expense" | "plannedInvestment" | "jobRun" | "loginAttempt" | "aiChatSession" | "aiChatMessage" | "project" | "projectMember" | "projectNote" | "projectFile" | "projectCost"
+    modelProps: "tenant" | "user" | "customer" | "taxExemptionCertificate" | "property" | "service" | "serviceQuestion" | "serviceQualification" | "employee" | "employeeQualification" | "workingHours" | "employeeWorkingHours" | "serviceArea" | "orderTypeDefinition" | "order" | "orderAssignee" | "orderService" | "appointment" | "checklistTemplate" | "checklistItem" | "orderChecklist" | "fileUpload" | "timeEntry" | "materialUsage" | "message" | "auditLog" | "notificationLog" | "notification" | "notificationSettings" | "companySettings" | "monthlyFixedCost" | "overheadSettings" | "machine" | "travelZone" | "calculation" | "laborItem" | "materialItem" | "machineUsageItem" | "procurementCost" | "travelCost" | "additionalCostItem" | "riskSettings" | "profitSettings" | "incomeTaxSettings" | "vATSettings" | "calculationDocument" | "documentSequence" | "payment" | "dunningNotice" | "article" | "storageLocation" | "stockBalance" | "stockMovement" | "reservation" | "serviceMaterialTemplate" | "orderPhase" | "orderMaterialLine" | "purchaseOrder" | "purchaseOrderLine" | "delivery" | "manualReorderSuggestion" | "team" | "teamMember" | "vehicle" | "employeeAbsence" | "planMarker" | "staffAssignmentRequest" | "invitation" | "orderShare" | "financeSettings" | "expense" | "plannedInvestment" | "jobRun" | "loginAttempt" | "aiChatSession" | "aiChatMessage" | "project" | "projectMember" | "projectNote" | "projectFile" | "projectCost"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1590,6 +1591,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.OrderCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.OrderCountAggregateOutputType> | number
+        }
+      }
+    }
+    OrderAssignee: {
+      payload: Prisma.$OrderAssigneePayload<ExtArgs>
+      fields: Prisma.OrderAssigneeFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.OrderAssigneeFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrderAssigneePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.OrderAssigneeFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrderAssigneePayload>
+        }
+        findFirst: {
+          args: Prisma.OrderAssigneeFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrderAssigneePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.OrderAssigneeFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrderAssigneePayload>
+        }
+        findMany: {
+          args: Prisma.OrderAssigneeFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrderAssigneePayload>[]
+        }
+        create: {
+          args: Prisma.OrderAssigneeCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrderAssigneePayload>
+        }
+        createMany: {
+          args: Prisma.OrderAssigneeCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.OrderAssigneeCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrderAssigneePayload>[]
+        }
+        delete: {
+          args: Prisma.OrderAssigneeDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrderAssigneePayload>
+        }
+        update: {
+          args: Prisma.OrderAssigneeUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrderAssigneePayload>
+        }
+        deleteMany: {
+          args: Prisma.OrderAssigneeDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.OrderAssigneeUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.OrderAssigneeUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrderAssigneePayload>[]
+        }
+        upsert: {
+          args: Prisma.OrderAssigneeUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrderAssigneePayload>
+        }
+        aggregate: {
+          args: Prisma.OrderAssigneeAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateOrderAssignee>
+        }
+        groupBy: {
+          args: Prisma.OrderAssigneeGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.OrderAssigneeGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.OrderAssigneeCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.OrderAssigneeCountAggregateOutputType> | number
         }
       }
     }
@@ -6597,6 +6672,7 @@ export const EmployeeScalarFieldEnum = {
   tenantId: 'tenantId',
   userId: 'userId',
   color: 'color',
+  hourlyWageNet: 'hourlyWageNet',
   operationalStatus: 'operationalStatus',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -6699,6 +6775,16 @@ export const OrderScalarFieldEnum = {
 export type OrderScalarFieldEnum = (typeof OrderScalarFieldEnum)[keyof typeof OrderScalarFieldEnum]
 
 
+export const OrderAssigneeScalarFieldEnum = {
+  id: 'id',
+  orderId: 'orderId',
+  employeeId: 'employeeId',
+  createdAt: 'createdAt'
+} as const
+
+export type OrderAssigneeScalarFieldEnum = (typeof OrderAssigneeScalarFieldEnum)[keyof typeof OrderAssigneeScalarFieldEnum]
+
+
 export const OrderServiceScalarFieldEnum = {
   id: 'id',
   orderId: 'orderId',
@@ -6719,6 +6805,12 @@ export const AppointmentScalarFieldEnum = {
   orderId: 'orderId',
   orderPhaseId: 'orderPhaseId',
   employeeId: 'employeeId',
+  title: 'title',
+  color: 'color',
+  projectId: 'projectId',
+  teamId: 'teamId',
+  vehicleId: 'vehicleId',
+  addressText: 'addressText',
   startTime: 'startTime',
   endTime: 'endTime',
   status: 'status',
@@ -7055,6 +7147,8 @@ export const CalculationScalarFieldEnum = {
   useFixedPrice: 'useFixedPrice',
   fixedPriceNet: 'fixedPriceNet',
   fixedPriceLabel: 'fixedPriceLabel',
+  overheadPercentOverride: 'overheadPercentOverride',
+  overheadAmountOverride: 'overheadAmountOverride',
   snapshotJson: 'snapshotJson',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -7156,6 +7250,8 @@ export const TravelCostScalarFieldEnum = {
   tollFeesNet: 'tollFeesNet',
   otherTravelCostsNet: 'otherTravelCostsNet',
   totalNet: 'totalNet',
+  totalIsManual: 'totalIsManual',
+  manualTotalNet: 'manualTotalNet',
   calculationMode: 'calculationMode',
   isVisibleToCustomer: 'isVisibleToCustomer',
   createdAt: 'createdAt',
@@ -7838,6 +7934,8 @@ export const ProjectCostScalarFieldEnum = {
   paidAmount: 'paidAmount',
   isReimbursable: 'isReimbursable',
   isBillable: 'isBillable',
+  invoicedAt: 'invoicedAt',
+  invoicedCalculationId: 'invoicedCalculationId',
   expenseId: 'expenseId',
   articleId: 'articleId',
   createdById: 'createdById',
@@ -8810,6 +8908,7 @@ export type GlobalOmitConfig = {
   serviceArea?: Prisma.ServiceAreaOmit
   orderTypeDefinition?: Prisma.OrderTypeDefinitionOmit
   order?: Prisma.OrderOmit
+  orderAssignee?: Prisma.OrderAssigneeOmit
   orderService?: Prisma.OrderServiceOmit
   appointment?: Prisma.AppointmentOmit
   checklistTemplate?: Prisma.ChecklistTemplateOmit

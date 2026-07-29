@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Share2, MessageSquare, LogOut, Wrench } from "lucide-react";
+import { Share2, MessageSquare, Wrench } from "lucide-react";
+import { LogoutButton } from "@/components/auth/logout-button";
 
 const LINKS = [
   { href: "/portal", label: "Geteilt mit mir", icon: Share2 },
@@ -21,14 +22,7 @@ export function PortalNav({ name }: { name: string }) {
           </div>
           <span className="font-semibold text-slate-900 truncate">{name}</span>
         </div>
-        <form action="/api/auth/logout" method="POST">
-          <button
-            type="submit"
-            className="flex items-center gap-1 text-sm text-slate-500 hover:text-slate-800"
-          >
-            <LogOut className="h-4 w-4" /> Abmelden
-          </button>
-        </form>
+        <LogoutButton className="flex items-center gap-1 text-sm text-slate-500 hover:text-slate-800 disabled:opacity-60" />
       </div>
       <nav className="mx-auto max-w-3xl px-4 flex gap-1">
         {LINKS.map(({ href, label, icon: Icon }) => {

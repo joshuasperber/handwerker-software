@@ -333,11 +333,16 @@ export function calcOverhead(params: {
   directCosts: number;
   overheadPercent?: number;
   additionalOverheadPercent?: number;
+  manualAmount?: number | null;
 }): { amount: number; hourlyRate: number } {
   const hourlyRate =
     params.productiveHoursPerMonth > 0
       ? params.monthlyFixedCostsTotal / params.productiveHoursPerMonth
       : 0;
+
+  if (params.manualAmount != null && Number.isFinite(params.manualAmount)) {
+    return { amount: roundMoney(Number(params.manualAmount)), hourlyRate: roundMoney(hourlyRate) };
+  }
 
   let amount = 0;
 

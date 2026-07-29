@@ -56,6 +56,8 @@ export type ProjectCostMinAggregateOutputType = {
   paidAmount: number | null
   isReimbursable: boolean | null
   isBillable: boolean | null
+  invoicedAt: Date | null
+  invoicedCalculationId: string | null
   expenseId: string | null
   articleId: string | null
   createdById: string | null
@@ -77,6 +79,8 @@ export type ProjectCostMaxAggregateOutputType = {
   paidAmount: number | null
   isReimbursable: boolean | null
   isBillable: boolean | null
+  invoicedAt: Date | null
+  invoicedCalculationId: string | null
   expenseId: string | null
   articleId: string | null
   createdById: string | null
@@ -98,6 +102,8 @@ export type ProjectCostCountAggregateOutputType = {
   paidAmount: number
   isReimbursable: number
   isBillable: number
+  invoicedAt: number
+  invoicedCalculationId: number
   expenseId: number
   articleId: number
   createdById: number
@@ -137,6 +143,8 @@ export type ProjectCostMinAggregateInputType = {
   paidAmount?: true
   isReimbursable?: true
   isBillable?: true
+  invoicedAt?: true
+  invoicedCalculationId?: true
   expenseId?: true
   articleId?: true
   createdById?: true
@@ -158,6 +166,8 @@ export type ProjectCostMaxAggregateInputType = {
   paidAmount?: true
   isReimbursable?: true
   isBillable?: true
+  invoicedAt?: true
+  invoicedCalculationId?: true
   expenseId?: true
   articleId?: true
   createdById?: true
@@ -179,6 +189,8 @@ export type ProjectCostCountAggregateInputType = {
   paidAmount?: true
   isReimbursable?: true
   isBillable?: true
+  invoicedAt?: true
+  invoicedCalculationId?: true
   expenseId?: true
   articleId?: true
   createdById?: true
@@ -287,6 +299,8 @@ export type ProjectCostGroupByOutputType = {
   paidAmount: number
   isReimbursable: boolean
   isBillable: boolean
+  invoicedAt: Date | null
+  invoicedCalculationId: string | null
   expenseId: string | null
   articleId: string | null
   createdById: string | null
@@ -331,6 +345,8 @@ export type ProjectCostWhereInput = {
   paidAmount?: Prisma.FloatFilter<"ProjectCost"> | number
   isReimbursable?: Prisma.BoolFilter<"ProjectCost"> | boolean
   isBillable?: Prisma.BoolFilter<"ProjectCost"> | boolean
+  invoicedAt?: Prisma.DateTimeNullableFilter<"ProjectCost"> | Date | string | null
+  invoicedCalculationId?: Prisma.StringNullableFilter<"ProjectCost"> | string | null
   expenseId?: Prisma.StringNullableFilter<"ProjectCost"> | string | null
   articleId?: Prisma.StringNullableFilter<"ProjectCost"> | string | null
   createdById?: Prisma.StringNullableFilter<"ProjectCost"> | string | null
@@ -357,6 +373,8 @@ export type ProjectCostOrderByWithRelationInput = {
   paidAmount?: Prisma.SortOrder
   isReimbursable?: Prisma.SortOrder
   isBillable?: Prisma.SortOrder
+  invoicedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  invoicedCalculationId?: Prisma.SortOrderInput | Prisma.SortOrder
   expenseId?: Prisma.SortOrderInput | Prisma.SortOrder
   articleId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdById?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -386,6 +404,8 @@ export type ProjectCostWhereUniqueInput = Prisma.AtLeast<{
   paidAmount?: Prisma.FloatFilter<"ProjectCost"> | number
   isReimbursable?: Prisma.BoolFilter<"ProjectCost"> | boolean
   isBillable?: Prisma.BoolFilter<"ProjectCost"> | boolean
+  invoicedAt?: Prisma.DateTimeNullableFilter<"ProjectCost"> | Date | string | null
+  invoicedCalculationId?: Prisma.StringNullableFilter<"ProjectCost"> | string | null
   expenseId?: Prisma.StringNullableFilter<"ProjectCost"> | string | null
   articleId?: Prisma.StringNullableFilter<"ProjectCost"> | string | null
   createdById?: Prisma.StringNullableFilter<"ProjectCost"> | string | null
@@ -412,6 +432,8 @@ export type ProjectCostOrderByWithAggregationInput = {
   paidAmount?: Prisma.SortOrder
   isReimbursable?: Prisma.SortOrder
   isBillable?: Prisma.SortOrder
+  invoicedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  invoicedCalculationId?: Prisma.SortOrderInput | Prisma.SortOrder
   expenseId?: Prisma.SortOrderInput | Prisma.SortOrder
   articleId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdById?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -441,6 +463,8 @@ export type ProjectCostScalarWhereWithAggregatesInput = {
   paidAmount?: Prisma.FloatWithAggregatesFilter<"ProjectCost"> | number
   isReimbursable?: Prisma.BoolWithAggregatesFilter<"ProjectCost"> | boolean
   isBillable?: Prisma.BoolWithAggregatesFilter<"ProjectCost"> | boolean
+  invoicedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"ProjectCost"> | Date | string | null
+  invoicedCalculationId?: Prisma.StringNullableWithAggregatesFilter<"ProjectCost"> | string | null
   expenseId?: Prisma.StringNullableWithAggregatesFilter<"ProjectCost"> | string | null
   articleId?: Prisma.StringNullableWithAggregatesFilter<"ProjectCost"> | string | null
   createdById?: Prisma.StringNullableWithAggregatesFilter<"ProjectCost"> | string | null
@@ -460,6 +484,8 @@ export type ProjectCostCreateInput = {
   paidAmount?: number
   isReimbursable?: boolean
   isBillable?: boolean
+  invoicedAt?: Date | string | null
+  invoicedCalculationId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   project: Prisma.ProjectCreateNestedOneWithoutCostsInput
@@ -483,6 +509,8 @@ export type ProjectCostUncheckedCreateInput = {
   paidAmount?: number
   isReimbursable?: boolean
   isBillable?: boolean
+  invoicedAt?: Date | string | null
+  invoicedCalculationId?: string | null
   expenseId?: string | null
   articleId?: string | null
   createdById?: string | null
@@ -502,6 +530,8 @@ export type ProjectCostUpdateInput = {
   paidAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   isReimbursable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBillable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  invoicedCalculationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   project?: Prisma.ProjectUpdateOneRequiredWithoutCostsNestedInput
@@ -525,6 +555,8 @@ export type ProjectCostUncheckedUpdateInput = {
   paidAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   isReimbursable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBillable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  invoicedCalculationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expenseId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   articleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -546,6 +578,8 @@ export type ProjectCostCreateManyInput = {
   paidAmount?: number
   isReimbursable?: boolean
   isBillable?: boolean
+  invoicedAt?: Date | string | null
+  invoicedCalculationId?: string | null
   expenseId?: string | null
   articleId?: string | null
   createdById?: string | null
@@ -565,6 +599,8 @@ export type ProjectCostUpdateManyMutationInput = {
   paidAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   isReimbursable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBillable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  invoicedCalculationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -583,6 +619,8 @@ export type ProjectCostUncheckedUpdateManyInput = {
   paidAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   isReimbursable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBillable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  invoicedCalculationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expenseId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   articleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -614,6 +652,8 @@ export type ProjectCostCountOrderByAggregateInput = {
   paidAmount?: Prisma.SortOrder
   isReimbursable?: Prisma.SortOrder
   isBillable?: Prisma.SortOrder
+  invoicedAt?: Prisma.SortOrder
+  invoicedCalculationId?: Prisma.SortOrder
   expenseId?: Prisma.SortOrder
   articleId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
@@ -643,6 +683,8 @@ export type ProjectCostMaxOrderByAggregateInput = {
   paidAmount?: Prisma.SortOrder
   isReimbursable?: Prisma.SortOrder
   isBillable?: Prisma.SortOrder
+  invoicedAt?: Prisma.SortOrder
+  invoicedCalculationId?: Prisma.SortOrder
   expenseId?: Prisma.SortOrder
   articleId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
@@ -664,6 +706,8 @@ export type ProjectCostMinOrderByAggregateInput = {
   paidAmount?: Prisma.SortOrder
   isReimbursable?: Prisma.SortOrder
   isBillable?: Prisma.SortOrder
+  invoicedAt?: Prisma.SortOrder
+  invoicedCalculationId?: Prisma.SortOrder
   expenseId?: Prisma.SortOrder
   articleId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
@@ -905,6 +949,8 @@ export type ProjectCostCreateWithoutCreatedByInput = {
   paidAmount?: number
   isReimbursable?: boolean
   isBillable?: boolean
+  invoicedAt?: Date | string | null
+  invoicedCalculationId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   project: Prisma.ProjectCreateNestedOneWithoutCostsInput
@@ -927,6 +973,8 @@ export type ProjectCostUncheckedCreateWithoutCreatedByInput = {
   paidAmount?: number
   isReimbursable?: boolean
   isBillable?: boolean
+  invoicedAt?: Date | string | null
+  invoicedCalculationId?: string | null
   expenseId?: string | null
   articleId?: string | null
   createdAt?: Date | string
@@ -976,6 +1024,8 @@ export type ProjectCostScalarWhereInput = {
   paidAmount?: Prisma.FloatFilter<"ProjectCost"> | number
   isReimbursable?: Prisma.BoolFilter<"ProjectCost"> | boolean
   isBillable?: Prisma.BoolFilter<"ProjectCost"> | boolean
+  invoicedAt?: Prisma.DateTimeNullableFilter<"ProjectCost"> | Date | string | null
+  invoicedCalculationId?: Prisma.StringNullableFilter<"ProjectCost"> | string | null
   expenseId?: Prisma.StringNullableFilter<"ProjectCost"> | string | null
   articleId?: Prisma.StringNullableFilter<"ProjectCost"> | string | null
   createdById?: Prisma.StringNullableFilter<"ProjectCost"> | string | null
@@ -995,6 +1045,8 @@ export type ProjectCostCreateWithoutOrderInput = {
   paidAmount?: number
   isReimbursable?: boolean
   isBillable?: boolean
+  invoicedAt?: Date | string | null
+  invoicedCalculationId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   project: Prisma.ProjectCreateNestedOneWithoutCostsInput
@@ -1016,6 +1068,8 @@ export type ProjectCostUncheckedCreateWithoutOrderInput = {
   paidAmount?: number
   isReimbursable?: boolean
   isBillable?: boolean
+  invoicedAt?: Date | string | null
+  invoicedCalculationId?: string | null
   expenseId?: string | null
   articleId?: string | null
   createdById?: string | null
@@ -1061,6 +1115,8 @@ export type ProjectCostCreateWithoutArticleInput = {
   paidAmount?: number
   isReimbursable?: boolean
   isBillable?: boolean
+  invoicedAt?: Date | string | null
+  invoicedCalculationId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   project: Prisma.ProjectCreateNestedOneWithoutCostsInput
@@ -1083,6 +1139,8 @@ export type ProjectCostUncheckedCreateWithoutArticleInput = {
   paidAmount?: number
   isReimbursable?: boolean
   isBillable?: boolean
+  invoicedAt?: Date | string | null
+  invoicedCalculationId?: string | null
   expenseId?: string | null
   createdById?: string | null
   createdAt?: Date | string
@@ -1127,6 +1185,8 @@ export type ProjectCostCreateWithoutExpenseInput = {
   paidAmount?: number
   isReimbursable?: boolean
   isBillable?: boolean
+  invoicedAt?: Date | string | null
+  invoicedCalculationId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   project: Prisma.ProjectCreateNestedOneWithoutCostsInput
@@ -1149,6 +1209,8 @@ export type ProjectCostUncheckedCreateWithoutExpenseInput = {
   paidAmount?: number
   isReimbursable?: boolean
   isBillable?: boolean
+  invoicedAt?: Date | string | null
+  invoicedCalculationId?: string | null
   articleId?: string | null
   createdById?: string | null
   createdAt?: Date | string
@@ -1193,6 +1255,8 @@ export type ProjectCostCreateWithoutProjectInput = {
   paidAmount?: number
   isReimbursable?: boolean
   isBillable?: boolean
+  invoicedAt?: Date | string | null
+  invoicedCalculationId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   order?: Prisma.OrderCreateNestedOneWithoutProjectCostsInput
@@ -1214,6 +1278,8 @@ export type ProjectCostUncheckedCreateWithoutProjectInput = {
   paidAmount?: number
   isReimbursable?: boolean
   isBillable?: boolean
+  invoicedAt?: Date | string | null
+  invoicedCalculationId?: string | null
   expenseId?: string | null
   articleId?: string | null
   createdById?: string | null
@@ -1261,6 +1327,8 @@ export type ProjectCostCreateManyCreatedByInput = {
   paidAmount?: number
   isReimbursable?: boolean
   isBillable?: boolean
+  invoicedAt?: Date | string | null
+  invoicedCalculationId?: string | null
   expenseId?: string | null
   articleId?: string | null
   createdAt?: Date | string
@@ -1279,6 +1347,8 @@ export type ProjectCostUpdateWithoutCreatedByInput = {
   paidAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   isReimbursable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBillable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  invoicedCalculationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   project?: Prisma.ProjectUpdateOneRequiredWithoutCostsNestedInput
@@ -1301,6 +1371,8 @@ export type ProjectCostUncheckedUpdateWithoutCreatedByInput = {
   paidAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   isReimbursable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBillable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  invoicedCalculationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expenseId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   articleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1321,6 +1393,8 @@ export type ProjectCostUncheckedUpdateManyWithoutCreatedByInput = {
   paidAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   isReimbursable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBillable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  invoicedCalculationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expenseId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   articleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1340,6 +1414,8 @@ export type ProjectCostCreateManyOrderInput = {
   paidAmount?: number
   isReimbursable?: boolean
   isBillable?: boolean
+  invoicedAt?: Date | string | null
+  invoicedCalculationId?: string | null
   expenseId?: string | null
   articleId?: string | null
   createdById?: string | null
@@ -1359,6 +1435,8 @@ export type ProjectCostUpdateWithoutOrderInput = {
   paidAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   isReimbursable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBillable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  invoicedCalculationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   project?: Prisma.ProjectUpdateOneRequiredWithoutCostsNestedInput
@@ -1380,6 +1458,8 @@ export type ProjectCostUncheckedUpdateWithoutOrderInput = {
   paidAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   isReimbursable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBillable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  invoicedCalculationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expenseId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   articleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1400,6 +1480,8 @@ export type ProjectCostUncheckedUpdateManyWithoutOrderInput = {
   paidAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   isReimbursable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBillable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  invoicedCalculationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expenseId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   articleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1421,6 +1503,8 @@ export type ProjectCostCreateManyArticleInput = {
   paidAmount?: number
   isReimbursable?: boolean
   isBillable?: boolean
+  invoicedAt?: Date | string | null
+  invoicedCalculationId?: string | null
   expenseId?: string | null
   createdById?: string | null
   createdAt?: Date | string
@@ -1439,6 +1523,8 @@ export type ProjectCostUpdateWithoutArticleInput = {
   paidAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   isReimbursable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBillable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  invoicedCalculationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   project?: Prisma.ProjectUpdateOneRequiredWithoutCostsNestedInput
@@ -1461,6 +1547,8 @@ export type ProjectCostUncheckedUpdateWithoutArticleInput = {
   paidAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   isReimbursable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBillable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  invoicedCalculationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expenseId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1481,6 +1569,8 @@ export type ProjectCostUncheckedUpdateManyWithoutArticleInput = {
   paidAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   isReimbursable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBillable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  invoicedCalculationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expenseId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1501,6 +1591,8 @@ export type ProjectCostCreateManyExpenseInput = {
   paidAmount?: number
   isReimbursable?: boolean
   isBillable?: boolean
+  invoicedAt?: Date | string | null
+  invoicedCalculationId?: string | null
   articleId?: string | null
   createdById?: string | null
   createdAt?: Date | string
@@ -1519,6 +1611,8 @@ export type ProjectCostUpdateWithoutExpenseInput = {
   paidAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   isReimbursable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBillable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  invoicedCalculationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   project?: Prisma.ProjectUpdateOneRequiredWithoutCostsNestedInput
@@ -1541,6 +1635,8 @@ export type ProjectCostUncheckedUpdateWithoutExpenseInput = {
   paidAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   isReimbursable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBillable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  invoicedCalculationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   articleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1561,6 +1657,8 @@ export type ProjectCostUncheckedUpdateManyWithoutExpenseInput = {
   paidAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   isReimbursable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBillable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  invoicedCalculationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   articleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1580,6 +1678,8 @@ export type ProjectCostCreateManyProjectInput = {
   paidAmount?: number
   isReimbursable?: boolean
   isBillable?: boolean
+  invoicedAt?: Date | string | null
+  invoicedCalculationId?: string | null
   expenseId?: string | null
   articleId?: string | null
   createdById?: string | null
@@ -1599,6 +1699,8 @@ export type ProjectCostUpdateWithoutProjectInput = {
   paidAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   isReimbursable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBillable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  invoicedCalculationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   order?: Prisma.OrderUpdateOneWithoutProjectCostsNestedInput
@@ -1620,6 +1722,8 @@ export type ProjectCostUncheckedUpdateWithoutProjectInput = {
   paidAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   isReimbursable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBillable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  invoicedCalculationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expenseId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   articleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1640,6 +1744,8 @@ export type ProjectCostUncheckedUpdateManyWithoutProjectInput = {
   paidAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   isReimbursable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBillable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  invoicedCalculationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expenseId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   articleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1663,6 +1769,8 @@ export type ProjectCostSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   paidAmount?: boolean
   isReimbursable?: boolean
   isBillable?: boolean
+  invoicedAt?: boolean
+  invoicedCalculationId?: boolean
   expenseId?: boolean
   articleId?: boolean
   createdById?: boolean
@@ -1689,6 +1797,8 @@ export type ProjectCostSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   paidAmount?: boolean
   isReimbursable?: boolean
   isBillable?: boolean
+  invoicedAt?: boolean
+  invoicedCalculationId?: boolean
   expenseId?: boolean
   articleId?: boolean
   createdById?: boolean
@@ -1715,6 +1825,8 @@ export type ProjectCostSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   paidAmount?: boolean
   isReimbursable?: boolean
   isBillable?: boolean
+  invoicedAt?: boolean
+  invoicedCalculationId?: boolean
   expenseId?: boolean
   articleId?: boolean
   createdById?: boolean
@@ -1741,6 +1853,8 @@ export type ProjectCostSelectScalar = {
   paidAmount?: boolean
   isReimbursable?: boolean
   isBillable?: boolean
+  invoicedAt?: boolean
+  invoicedCalculationId?: boolean
   expenseId?: boolean
   articleId?: boolean
   createdById?: boolean
@@ -1748,7 +1862,7 @@ export type ProjectCostSelectScalar = {
   updatedAt?: boolean
 }
 
-export type ProjectCostOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "projectId" | "orderId" | "source" | "description" | "quantity" | "unit" | "netAmount" | "vatAmount" | "grossAmount" | "paidAmount" | "isReimbursable" | "isBillable" | "expenseId" | "articleId" | "createdById" | "createdAt" | "updatedAt", ExtArgs["result"]["projectCost"]>
+export type ProjectCostOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "projectId" | "orderId" | "source" | "description" | "quantity" | "unit" | "netAmount" | "vatAmount" | "grossAmount" | "paidAmount" | "isReimbursable" | "isBillable" | "invoicedAt" | "invoicedCalculationId" | "expenseId" | "articleId" | "createdById" | "createdAt" | "updatedAt", ExtArgs["result"]["projectCost"]>
 export type ProjectCostInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
   order?: boolean | Prisma.ProjectCost$orderArgs<ExtArgs>
@@ -1794,6 +1908,11 @@ export type $ProjectCostPayload<ExtArgs extends runtime.Types.Extensions.Interna
     paidAmount: number
     isReimbursable: boolean
     isBillable: boolean
+    /**
+     * Gesetzt, sobald die Position in eine Projekt-Abschlusskalkulation übernommen wurde
+     */
+    invoicedAt: Date | null
+    invoicedCalculationId: string | null
     expenseId: string | null
     articleId: string | null
     createdById: string | null
@@ -2240,6 +2359,8 @@ export interface ProjectCostFieldRefs {
   readonly paidAmount: Prisma.FieldRef<"ProjectCost", 'Float'>
   readonly isReimbursable: Prisma.FieldRef<"ProjectCost", 'Boolean'>
   readonly isBillable: Prisma.FieldRef<"ProjectCost", 'Boolean'>
+  readonly invoicedAt: Prisma.FieldRef<"ProjectCost", 'DateTime'>
+  readonly invoicedCalculationId: Prisma.FieldRef<"ProjectCost", 'String'>
   readonly expenseId: Prisma.FieldRef<"ProjectCost", 'String'>
   readonly articleId: Prisma.FieldRef<"ProjectCost", 'String'>
   readonly createdById: Prisma.FieldRef<"ProjectCost", 'String'>

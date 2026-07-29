@@ -93,6 +93,11 @@ export type OrderTypeDefinition = Prisma.OrderTypeDefinitionModel
  */
 export type Order = Prisma.OrderModel
 /**
+ * Model OrderAssignee
+ * 
+ */
+export type OrderAssignee = Prisma.OrderAssigneeModel
+/**
  * Model OrderService
  * 
  */

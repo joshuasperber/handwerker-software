@@ -8,6 +8,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { InfoButton } from "@/components/ui/info-button";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { toast } from "sonner";
 import { BUILDING_EXEMPTION_INFO } from "@/lib/tax/treatment";
 import { ChevronLeft, MapPin, Mail, Phone, Trash2, Star, Pencil, Plus, X, Check } from "lucide-react";
 
@@ -102,6 +104,9 @@ export default function KundeDetailPage() {
   const [editPropId, setEditPropId] = useState<string | null>(null);
   const [editProp, setEditProp] = useState({ ...EMPTY_PROP });
   const [propError, setPropError] = useState("");
+  const [confirmRemove, setConfirmRemove] = useState(false);
+  const [removeProp, setRemoveProp] = useState<Property | null>(null);
+  const [removing, setRemoving] = useState(false);
 
   function load() {
     fetch(`/api/customers/${id}`).then((r) => r.json()).then((d) => {
@@ -218,19 +223,31 @@ export default function KundeDetailPage() {
   }
 
   async function removeProperty(p: Property) {
-    if (!confirm(`Adresse "${p.label}" wirklich löschen?`)) return;
+    setRemoving(true);
     const res = await fetch(`/api/properties/${p.id}`, { method: "DELETE" });
     const d = await res.json();
-    if (d.success && d.data?.message) alert(d.data.message);
+    setRemoving(false);
+    setRemoveProp(null);
+    if (d.success) {
+      toast.success(d.data?.message ?? "Adresse gelöscht");
+    } else {
+      toast.error(d.error ?? "Adresse konnte nicht gelöscht werden");
+    }
     load();
   }
 
   async function remove() {
-    if (!confirm("Kunde wirklich löschen?")) return;
+    setRemoving(true);
     const res = await fetch(`/api/customers/${id}`, { method: "DELETE" });
     const data = await res.json();
-    if (data.success) router.push("/dashboard/kunden");
-    else alert(data.error);
+    setRemoving(false);
+    setConfirmRemove(false);
+    if (data.success) {
+      toast.success("Kunde gelöscht");
+      router.push("/dashboard/kunden");
+    } else {
+      toast.error(data.error ?? "Kunde konnte nicht gelöscht werden");
+    }
   }
 
   function zoneLabel(p: Property) {
@@ -248,9 +265,9 @@ export default function KundeDetailPage() {
         <ChevronLeft className="h-4 w-4" /> Zurück zu Kunden
       </Link>
 
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-slate-900">{customer.firstName} {customer.lastName}</h1>
-        <Button variant="outline" size="sm" onClick={remove} className="text-red-600">
+      <div className="flex flex-wrap items-center justify-between gap-2 mb-6">
+        <h1 className="text-2xl font-bold text-slate-900 break-words min-w-0">{customer.firstName} {customer.lastName}</h1>
+        <Button variant="outline" size="sm" onClick={() => setConfirmRemove(true)} className="text-red-600 shrink-0">
           <Trash2 className="h-4 w-4 mr-1" /> Löschen
         </Button>
       </div>
@@ -418,7 +435,7 @@ export default function KundeDetailPage() {
                         <Button variant="ghost" size="icon-sm" onClick={() => startEditProp(p)} title="Bearbeiten">
                           <Pencil className="h-4 w-4" />
                         </Button>
-                        <Button variant="ghost" size="icon-sm" className="text-red-600" onClick={() => removeProperty(p)} title="Löschen">
+                        <Button variant="ghost" size="icon-sm" className="text-red-600" onClick={() => setRemoveProp(p)} title="Löschen">
                           <Trash2 className="h-4 w-4" />
                         </Button>
                       </div>
@@ -483,6 +500,29 @@ export default function KundeDetailPage() {
           </Card>
         </div>
       </div>
+
+      <ConfirmDialog
+        open={confirmRemove}
+        onOpenChange={setConfirmRemove}
+        title="Kunde löschen?"
+        description={`${customer.firstName} ${customer.lastName} wird unwiderruflich gelöscht.`}
+        confirmLabel="Kunde löschen"
+        cancelLabel="Abbrechen"
+        variant="destructive"
+        loading={removing}
+        onConfirm={remove}
+      />
+      <ConfirmDialog
+        open={removeProp !== null}
+        onOpenChange={(open) => { if (!open) setRemoveProp(null); }}
+        title="Adresse löschen?"
+        description={removeProp ? `Adresse „${removeProp.label}" wird gelöscht.` : ""}
+        confirmLabel="Adresse löschen"
+        cancelLabel="Abbrechen"
+        variant="destructive"
+        loading={removing}
+        onConfirm={() => { if (removeProp) void removeProperty(removeProp); }}
+      />
     </div>
   );
 }

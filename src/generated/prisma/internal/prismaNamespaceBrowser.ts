@@ -66,6 +66,7 @@ export const ModelName = {
   ServiceArea: 'ServiceArea',
   OrderTypeDefinition: 'OrderTypeDefinition',
   Order: 'Order',
+  OrderAssignee: 'OrderAssignee',
   OrderService: 'OrderService',
   Appointment: 'Appointment',
   ChecklistTemplate: 'ChecklistTemplate',
@@ -304,6 +305,7 @@ export const EmployeeScalarFieldEnum = {
   tenantId: 'tenantId',
   userId: 'userId',
   color: 'color',
+  hourlyWageNet: 'hourlyWageNet',
   operationalStatus: 'operationalStatus',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -406,6 +408,16 @@ export const OrderScalarFieldEnum = {
 export type OrderScalarFieldEnum = (typeof OrderScalarFieldEnum)[keyof typeof OrderScalarFieldEnum]
 
 
+export const OrderAssigneeScalarFieldEnum = {
+  id: 'id',
+  orderId: 'orderId',
+  employeeId: 'employeeId',
+  createdAt: 'createdAt'
+} as const
+
+export type OrderAssigneeScalarFieldEnum = (typeof OrderAssigneeScalarFieldEnum)[keyof typeof OrderAssigneeScalarFieldEnum]
+
+
 export const OrderServiceScalarFieldEnum = {
   id: 'id',
   orderId: 'orderId',
@@ -426,6 +438,12 @@ export const AppointmentScalarFieldEnum = {
   orderId: 'orderId',
   orderPhaseId: 'orderPhaseId',
   employeeId: 'employeeId',
+  title: 'title',
+  color: 'color',
+  projectId: 'projectId',
+  teamId: 'teamId',
+  vehicleId: 'vehicleId',
+  addressText: 'addressText',
   startTime: 'startTime',
   endTime: 'endTime',
   status: 'status',
@@ -762,6 +780,8 @@ export const CalculationScalarFieldEnum = {
   useFixedPrice: 'useFixedPrice',
   fixedPriceNet: 'fixedPriceNet',
   fixedPriceLabel: 'fixedPriceLabel',
+  overheadPercentOverride: 'overheadPercentOverride',
+  overheadAmountOverride: 'overheadAmountOverride',
   snapshotJson: 'snapshotJson',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -863,6 +883,8 @@ export const TravelCostScalarFieldEnum = {
   tollFeesNet: 'tollFeesNet',
   otherTravelCostsNet: 'otherTravelCostsNet',
   totalNet: 'totalNet',
+  totalIsManual: 'totalIsManual',
+  manualTotalNet: 'manualTotalNet',
   calculationMode: 'calculationMode',
   isVisibleToCustomer: 'isVisibleToCustomer',
   createdAt: 'createdAt',
@@ -1545,6 +1567,8 @@ export const ProjectCostScalarFieldEnum = {
   paidAmount: 'paidAmount',
   isReimbursable: 'isReimbursable',
   isBillable: 'isBillable',
+  invoicedAt: 'invoicedAt',
+  invoicedCalculationId: 'invoicedCalculationId',
   expenseId: 'expenseId',
   articleId: 'articleId',
   createdById: 'createdById',

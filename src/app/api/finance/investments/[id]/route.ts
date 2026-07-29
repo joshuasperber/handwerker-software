@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { requireAuth, apiSuccess, apiError } from "@/lib/api";
+import { requireAuth, apiSuccess, apiError, NO_STORE_HEADERS } from "@/lib/api";
 import { investmentInputSchema } from "@/lib/finance/schemas";
 import {
   INVESTMENT_CATEGORY_LABELS,
@@ -66,7 +66,7 @@ export async function PATCH(
     },
   });
 
-  return apiSuccess(toInvestmentDTO(item));
+  return apiSuccess(toInvestmentDTO(item), 200, NO_STORE_HEADERS);
 }
 
 export async function DELETE(
@@ -83,5 +83,5 @@ export async function DELETE(
   if (!existing) return apiError("Investition nicht gefunden", 404);
 
   await prisma.plannedInvestment.delete({ where: { id } });
-  return apiSuccess({ deleted: true });
+  return apiSuccess({ deleted: true }, 200, NO_STORE_HEADERS);
 }

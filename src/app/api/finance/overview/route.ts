@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { requireAuth, apiSuccess, apiError } from "@/lib/api";
+import { requireAuth, apiSuccess, apiError, NO_STORE_HEADERS } from "@/lib/api";
 import { getFinanceOverview } from "@/lib/finance/overview";
 import type { FinancePeriodPreset } from "@/lib/finance/types";
 
@@ -26,7 +26,8 @@ export async function GET(request: NextRequest) {
       from,
       to,
     });
-    return apiSuccess(data);
+    // Finanzdaten: nur In-Memory (SWR), nie HTTP-/Browser-Cache
+    return apiSuccess(data, 200, NO_STORE_HEADERS);
   } catch (err) {
     console.error("[finance/overview]", err);
     const devDetail =

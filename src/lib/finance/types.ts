@@ -109,6 +109,7 @@ export interface ExpenseDTO {
   supplier: string | null;
   orderId: string | null;
   customerId: string | null;
+  projectId: string | null;
   internalNote: string | null;
   hasReceipt: boolean;
   receiptFileName: string | null;

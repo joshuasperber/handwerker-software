@@ -31,14 +31,16 @@ export function getVisibleLineItems(calc: DocumentCalcInput): DocLine[] {
   if (calc.travelCost?.isVisibleToCustomer) {
     lines.push({ label: "Anfahrt / Fahrtkosten", amount: calc.travelCost.totalNet });
   }
+  for (const a of (calc.additionalItems ?? []).filter((x) => x.isVisibleToCustomer)) {
+    lines.push({ label: a.description, amount: a.totalNet });
+  }
 
   const hiddenAmount = calcHiddenAmount(calc);
   if (lines.length === 0 && calc.netSalesPrice !== 0) {
     lines.push({ label: calc.title ?? "Leistungspauschale", amount: calc.netSalesPrice });
   } else if (Math.abs(hiddenAmount) > 0.01) {
     lines.push({
-      label:
-        "Projektpauschale (Material, Maschinen, Beschaffung, Gemeinkosten, Wagnis & Gewinn)",
+      label: "Projektpauschale (Gemeinkosten, Wagnis & Gewinn)",
       amount: hiddenAmount,
     });
   }
