@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAuth, apiSuccess, apiError } from "@/lib/api";
 import { recalculateCalculationRecord } from "@/lib/calculation/recalculate-db";
+import { suggestTaxTreatmentForCustomer } from "@/lib/tax/treatment";
 
 const includeFull = {
   laborItems: true,
@@ -50,11 +51,56 @@ export async function PUT(
   });
   if (!existing) return apiError("Kalkulation nicht gefunden", 404);
 
-  if (body.title != null) {
+  if (body.title != null || body.currentStep != null || body.customerId !== undefined) {
     await prisma.calculation.update({
       where: { id },
-      data: { title: body.title, currentStep: body.currentStep, customerId: body.customerId },
+      data: {
+        ...(body.title != null ? { title: body.title } : {}),
+        ...(body.currentStep != null ? { currentStep: body.currentStep } : {}),
+        ...(body.customerId !== undefined
+          ? { customerId: body.customerId ? String(body.customerId) : null }
+          : {}),
+      },
     });
+  }
+
+  // Bei Kundenwechsel: Steuerbehandlung vorschlagen (ohne automatische Bestätigung).
+  if (body.customerId !== undefined && body.vat == null) {
+    const customer = body.customerId
+      ? await prisma.customer.findFirst({
+          where: { id: String(body.customerId), tenantId: auth.tenantId },
+          select: { customerType: true, company: true, vatId: true },
+        })
+      : null;
+    const suggestion = suggestTaxTreatmentForCustomer(customer);
+    if (suggestion) {
+      const existingVat = await prisma.vATSettings.findUnique({
+        where: { calculationId: id },
+        select: { vatRatePercent: true },
+      });
+      const company = await prisma.companySettings.findUnique({
+        where: { tenantId: auth.tenantId },
+        select: { defaultVatRate: true },
+      });
+      const vatRatePercent =
+        existingVat?.vatRatePercent ?? company?.defaultVatRate ?? 19;
+      await prisma.vATSettings.upsert({
+        where: { calculationId: id },
+        create: {
+          calculationId: id,
+          vatRatePercent,
+          taxTreatment: suggestion.taxTreatment,
+          reverseCharge: suggestion.reverseCharge,
+          reverseChargeConfirmed: false,
+          includeSection13bNote: true,
+        },
+        update: {
+          taxTreatment: suggestion.taxTreatment,
+          reverseCharge: suggestion.reverseCharge,
+          reverseChargeConfirmed: false,
+        },
+      });
+    }
   }
 
   if (body.laborItems) {

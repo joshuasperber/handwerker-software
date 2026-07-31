@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -31,6 +31,7 @@ import {
   REVERSE_CHARGE_WARNING,
   BUILDING_EXEMPTION_INFO,
   reverseChargeWarnings,
+  suggestTaxTreatmentForCustomer,
   type TaxTreatment,
 } from "@/lib/tax/treatment";
 import { calcMaterialItemSales, calcMaterialTotal } from "@/lib/calculation/formulas";
@@ -66,9 +67,23 @@ type InventoryArticleOption = {
 
 export default function KalkulationWizardPage() {
   const { id } = useParams();
-  const [step, setStep] = useState(0);
+  const searchParams = useSearchParams();
+  const [step, setStep] = useState(() => {
+    const raw = Number(searchParams.get("step"));
+    return Number.isFinite(raw) && raw >= 0 && raw < STEPS.length ? raw : 0;
+  });
   const [calc, setCalc] = useState<CalcData | null>(null);
-  const [customers, setCustomers] = useState<{ id: string; firstName: string; lastName: string }[]>([]);
+  const [customers, setCustomers] = useState<
+    {
+      id: string;
+      firstName: string;
+      lastName: string;
+      company?: string | null;
+      customerType?: string;
+      vatId?: string | null;
+      taxNotes?: string | null;
+    }[]
+  >([]);
   const [machines, setMachines] = useState<{ id: string; name: string; calculatedHourlyRateNet: number }[]>([]);
   const [articles, setArticles] = useState<InventoryArticleOption[]>([]);
   const [defaultMarkup, setDefaultMarkup] = useState(25);
@@ -300,15 +315,67 @@ export default function KalkulationWizardPage() {
           {step === 0 && (
             <Card title="Kunde & Einsatzort">
               <select
-                className="w-full h-10 rounded-lg border border-slate-300 px-3 text-sm mb-4"
+                className="mb-3 h-11 w-full rounded-2xl border border-slate-300 px-3.5 text-sm"
                 value={calc.customerId ?? ""}
-                onChange={(e) => setCalc({ ...calc, customerId: e.target.value || null })}
+                onChange={(e) => {
+                  const nextId = e.target.value || null;
+                  setCalc({ ...calc, customerId: nextId });
+                  const selected = customers.find((c) => c.id === nextId);
+                  const suggestion = suggestTaxTreatmentForCustomer(selected);
+                  if (suggestion) {
+                    toast.message("Steuer-Vorschlag", { description: suggestion.reason });
+                  }
+                }}
               >
                 <option value="">Kunde wählen...</option>
-                {customers.map((c) => (
-                  <option key={c.id} value={c.id}>{c.firstName} {c.lastName}</option>
-                ))}
+                {customers.map((c) => {
+                  const label =
+                    c.customerType === "GEWERBLICH" && c.company?.trim()
+                      ? `${c.company} · ${c.firstName} ${c.lastName}`
+                      : `${c.firstName} ${c.lastName}${c.company ? ` · ${c.company}` : ""}`;
+                  return (
+                    <option key={c.id} value={c.id}>
+                      {c.customerType === "GEWERBLICH" ? "Business: " : ""}
+                      {label}
+                    </option>
+                  );
+                })}
               </select>
+              {(() => {
+                const selected = customers.find((c) => c.id === calc.customerId);
+                if (!selected) return null;
+                const suggestion = suggestTaxTreatmentForCustomer(selected);
+                return (
+                  <div className="mb-3 space-y-2">
+                    {selected.customerType === "GEWERBLICH" && (
+                      <p className="rounded-xl bg-[#0d5c63]/5 px-3 py-2 text-xs text-[#0d5c63]">
+                        Business-Kunde
+                        {selected.vatId ? ` · USt-IdNr. ${selected.vatId}` : " · ohne USt-IdNr."}
+                        {suggestion?.reverseCharge
+                          ? " — Reverse-Charge vorgeschlagen (0 % USt nach Bestätigung)."
+                          : " — Standard-Umsatzsteuer, sofern nicht manuell umgestellt."}
+                      </p>
+                    )}
+                    {selected.taxNotes?.trim() && (
+                      <p className="rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900">
+                        Steuerhinweis aus Kundenstamm: {selected.taxNotes}
+                      </p>
+                    )}
+                  </div>
+                );
+              })()}
+              <Button
+                variant="action"
+                disabled={saving}
+                onClick={() =>
+                  save({
+                    title: calc.title ?? "Neue Kalkulation",
+                    customerId: calc.customerId ?? null,
+                  })
+                }
+              >
+                <Save className="mr-1 h-4 w-4" /> Kunde speichern
+              </Button>
             </Card>
           )}
 
@@ -900,6 +967,7 @@ function TaxTreatmentEditor({
   const treatment = (vat.taxTreatment ?? "STANDARD_VAT") as TaxTreatment;
   const customer = calc.customer as CalcData | null;
   const rcWarnings = treatment === "REVERSE_CHARGE" ? reverseChargeWarnings(customer) : [];
+  const taxSuggestion = suggestTaxTreatmentForCustomer(customer);
 
   function update(patch: CalcData) {
     onChange({ ...vat, ...patch });
@@ -907,6 +975,11 @@ function TaxTreatmentEditor({
 
   return (
     <div className="space-y-4">
+      {taxSuggestion && (
+        <p className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-600">
+          {taxSuggestion.reason}
+        </p>
+      )}
       <div>
         <label className="text-sm font-medium">Steuerliche Rechnungsart</label>
         <select

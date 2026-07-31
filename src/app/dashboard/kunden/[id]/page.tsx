@@ -283,22 +283,33 @@ export default function KundeDetailPage() {
                 onChange={(e) => setForm({ ...form, customerType: e.target.value as "PRIVAT" | "GEWERBLICH" })}
               >
                 <option value="PRIVAT">Privatkunde</option>
-                <option value="GEWERBLICH">Gewerblicher Kunde / Unternehmen</option>
+                <option value="GEWERBLICH">Business-Kunde / Unternehmen</option>
               </select>
               <p className="text-xs text-slate-500 mt-1">
-                Gewerblich markieren entfernt nicht automatisch die Umsatzsteuer — es werden nur zusätzliche Felder freigeschaltet.
+                Business-Kunde schaltet Firmenfelder frei. Mit USt-IdNr. schlägt die Kalkulation
+                Reverse-Charge (0&nbsp;% USt) vor — bitte dort bewusst bestätigen.
               </p>
             </div>
+            {form.customerType === "GEWERBLICH" && (
+              <Input label="Firmenname *" value={form.company} onChange={(e) => setForm({ ...form, company: e.target.value })} />
+            )}
             <div className="grid grid-cols-2 gap-3">
-              <Input label="Vorname" value={form.firstName} onChange={(e) => setForm({ ...form, firstName: e.target.value })} />
-              <Input label="Nachname" value={form.lastName} onChange={(e) => setForm({ ...form, lastName: e.target.value })} />
+              <Input
+                label={form.customerType === "GEWERBLICH" ? "Ansprechpartner Vorname" : "Vorname"}
+                value={form.firstName}
+                onChange={(e) => setForm({ ...form, firstName: e.target.value })}
+              />
+              <Input
+                label={form.customerType === "GEWERBLICH" ? "Ansprechpartner Nachname" : "Nachname"}
+                value={form.lastName}
+                onChange={(e) => setForm({ ...form, lastName: e.target.value })}
+              />
             </div>
             <Input label="E-Mail" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
             <Input label="Telefon" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
             {form.customerType === "GEWERBLICH" && (
               <>
-                <Input label="Firmenname" value={form.company} onChange={(e) => setForm({ ...form, company: e.target.value })} />
-                <Input label="Ansprechpartner" value={form.contactPerson} onChange={(e) => setForm({ ...form, contactPerson: e.target.value })} />
+                <Input label="Weiterer Ansprechpartner" value={form.contactPerson} onChange={(e) => setForm({ ...form, contactPerson: e.target.value })} />
                 <div className="grid grid-cols-2 gap-3">
                   <Input label="USt-IdNr." value={form.vatId} onChange={(e) => setForm({ ...form, vatId: e.target.value })} />
                   <Input label="Steuernummer" value={form.taxNumber} onChange={(e) => setForm({ ...form, taxNumber: e.target.value })} />

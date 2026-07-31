@@ -112,7 +112,7 @@ export function reverseChargeWarnings(customer: CommercialCustomerCheck | null |
     return warnings;
   }
   if (customer.customerType !== "GEWERBLICH") {
-    warnings.push("Der Kunde ist nicht als gewerblich markiert. Reverse-Charge ist in der Regel nur für gewerbliche Leistungsempfänger relevant.");
+    warnings.push("Der Kunde ist nicht als Business-/Gewerbekunde markiert. Reverse-Charge ist in der Regel nur für gewerbliche Leistungsempfänger relevant.");
   }
   if (!customer.company?.trim()) {
     warnings.push("Firmenname fehlt im Kundenstamm.");
@@ -121,4 +121,39 @@ export function reverseChargeWarnings(customer: CommercialCustomerCheck | null |
     warnings.push("USt-IdNr. des Kunden fehlt — für Reverse-Charge oft erforderlich.");
   }
   return warnings;
+}
+
+/**
+ * Vorschlag für die steuerliche Behandlung anhand des Kundenstamms.
+ * Keine automatische Entscheidung — Reverse-Charge bleibt unbestätigt.
+ */
+export function suggestTaxTreatmentForCustomer(
+  customer: CommercialCustomerCheck | null | undefined
+): {
+  taxTreatment: TaxTreatment;
+  reverseCharge: boolean;
+  reason: string;
+} | null {
+  if (!customer) return null;
+  if (customer.customerType === "GEWERBLICH" && customer.vatId?.trim()) {
+    return {
+      taxTreatment: "REVERSE_CHARGE",
+      reverseCharge: true,
+      reason:
+        "Business-Kunde mit USt-IdNr.: Reverse-Charge (§ 13b) vorgeschlagen. Bitte in „Steuer & Ergebnis“ bewusst bestätigen — der Steuersatz auf der Rechnung wird dann 0 % (netto).",
+    };
+  }
+  if (customer.customerType === "GEWERBLICH") {
+    return {
+      taxTreatment: "STANDARD_VAT",
+      reverseCharge: false,
+      reason:
+        "Business-Kunde ohne USt-IdNr.: Standard-Umsatzsteuer bleibt aktiv. Bei Bauleistungen/§ 13b ggf. manuell auf Reverse-Charge umstellen und USt-IdNr. nachtragen.",
+    };
+  }
+  return {
+    taxTreatment: "STANDARD_VAT",
+    reverseCharge: false,
+    reason: "Privatkunde: Standardrechnung mit Umsatzsteuer.",
+  };
 }
