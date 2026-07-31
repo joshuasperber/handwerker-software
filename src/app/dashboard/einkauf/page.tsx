@@ -373,8 +373,8 @@ export default function EinkaufPage() {
       )}
 
       <Card title="Alle Bestellungen" className="mt-6">
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
+        <div className="overflow-x-auto overscroll-x-contain touch-pan-x [scrollbar-width:thin]">
+          <table className="w-full min-w-[480px] text-sm">
             <thead>
               <tr className="text-left text-slate-500 border-b">
                 <th className="pb-2 pl-3 pr-4">Nummer</th>

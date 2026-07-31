@@ -467,33 +467,36 @@ export function CalendarCreateDialog({
               </select>
             </div>
 
-            <div className="grid grid-cols-3 gap-2">
-              <div className="space-y-1.5 col-span-3 sm:col-span-1">
+            <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+              <div className="min-w-0 space-y-1.5">
                 <Label htmlFor="cal-date">Datum *</Label>
                 <Input
                   id="cal-date"
                   type="date"
+                  className="min-w-0 w-full"
                   required
                   value={dateStr}
                   onChange={(e) => setDateStr(e.target.value)}
                 />
               </div>
-              <div className="space-y-1.5">
+              <div className="min-w-0 space-y-1.5">
                 <Label htmlFor="cal-start">Start *</Label>
                 <Input
                   id="cal-start"
                   type="time"
+                  className="min-w-0 w-full"
                   required
                   step={900}
                   value={startTime}
                   onChange={(e) => setStartTime(e.target.value)}
                 />
               </div>
-              <div className="space-y-1.5">
+              <div className="min-w-0 space-y-1.5">
                 <Label htmlFor="cal-end">Ende *</Label>
                 <Input
                   id="cal-end"
                   type="time"
+                  className="min-w-0 w-full"
                   required
                   step={900}
                   value={endTime}

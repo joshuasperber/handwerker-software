@@ -7,10 +7,12 @@ import { Input } from "@/components/ui/input";
 import { NumberInput } from "@/components/ui/number-input";
 import { Card } from "@/components/ui/card";
 import { InfoButton } from "@/components/ui/info-button";
-import { ChevronLeft, Save, FileText, Cog, MapPin } from "lucide-react";
+import { ChevronLeft, Save, FileText, Cog, MapPin, Pencil, Trash2, Check, X } from "lucide-react";
 import { formatEuro } from "@/lib/utils";
 import { CanAccess } from "@/components/auth/can-access";
 import { NavActionCard } from "@/components/ui/nav-action-card";
+import { toast } from "sonner";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 
 interface CompanyForm {
   companyName: string;
@@ -77,6 +79,11 @@ export default function KalkulationEinstellungenPage() {
   const [saving, setSaving] = useState(false);
   const [newCostName, setNewCostName] = useState("");
   const [newCostAmount, setNewCostAmount] = useState<number | null>(null);
+  const [editCostId, setEditCostId] = useState<string | null>(null);
+  const [editCostName, setEditCostName] = useState("");
+  const [editCostAmount, setEditCostAmount] = useState<number | null>(null);
+  const [deleteCost, setDeleteCost] = useState<FixedCostRow | null>(null);
+  const [costBusy, setCostBusy] = useState(false);
 
   useEffect(() => {
     fetch("/api/company-settings")
@@ -158,7 +165,53 @@ export default function KalkulationEinstellungenPage() {
       setMonthlyTotal((t) => t + d.data.amountNet);
       setNewCostName("");
       setNewCostAmount(null);
+      toast.success("Fixkosten hinzugefügt");
+    } else {
+      toast.error(d.error ?? "Speichern fehlgeschlagen");
     }
+  }
+
+  function startEditCost(c: FixedCostRow) {
+    setEditCostId(c.id);
+    setEditCostName(c.name);
+    setEditCostAmount(c.amountNet);
+  }
+
+  async function saveEditCost() {
+    if (!editCostId || !editCostName.trim() || editCostAmount == null) return;
+    setCostBusy(true);
+    const prev = fixedCosts.find((c) => c.id === editCostId);
+    const res = await fetch(`/api/fixed-costs/${editCostId}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: editCostName.trim(), amountNet: editCostAmount }),
+    });
+    const d = await res.json();
+    setCostBusy(false);
+    if (!d.success) {
+      toast.error(d.error ?? "Speichern fehlgeschlagen");
+      return;
+    }
+    setFixedCosts((list) => list.map((c) => (c.id === editCostId ? { ...c, ...d.data } : c)));
+    if (prev) setMonthlyTotal((t) => t - prev.amountNet + Number(d.data.amountNet));
+    setEditCostId(null);
+    toast.success("Fixkosten aktualisiert");
+  }
+
+  async function removeFixedCost() {
+    if (!deleteCost) return;
+    setCostBusy(true);
+    const res = await fetch(`/api/fixed-costs/${deleteCost.id}`, { method: "DELETE" });
+    const d = await res.json();
+    setCostBusy(false);
+    if (!d.success) {
+      toast.error(d.error ?? "Löschen fehlgeschlagen");
+      return;
+    }
+    setFixedCosts((list) => list.filter((c) => c.id !== deleteCost.id));
+    setMonthlyTotal((t) => t - deleteCost.amountNet);
+    setDeleteCost(null);
+    toast.success("Fixkosten gelöscht");
   }
 
   const hourlyOverhead = productiveHours > 0 ? monthlyTotal / productiveHours : 0;
@@ -236,7 +289,7 @@ export default function KalkulationEinstellungenPage() {
           />
           <label className="text-sm font-medium block mt-4 mb-1">Berechnungsmodus</label>
           <select
-            className="w-full h-10 rounded-lg border border-slate-300 px-3 text-sm"
+            className="h-11 w-full rounded-2xl border border-slate-300 px-3.5 text-sm"
             value={overheadMode}
             onChange={(e) => setOverheadMode(e.target.value)}
           >
@@ -249,10 +302,64 @@ export default function KalkulationEinstellungenPage() {
 
       <Card title="Monatliche Fixkosten" className="mt-6">
         <div className="space-y-2 mb-4">
+          {fixedCosts.length === 0 && (
+            <p className="text-sm text-slate-500 py-2">Noch keine Fixkosten hinterlegt.</p>
+          )}
           {fixedCosts.map((c) => (
-            <div key={c.id} className="flex justify-between text-sm py-2 border-b border-slate-50">
-              <span>{c.name} <span className="text-slate-400">({c.category})</span></span>
-              <span className="font-medium">{formatEuro(c.amountNet)}</span>
+            <div key={c.id} className="flex items-center justify-between gap-2 text-sm py-2 border-b border-slate-50">
+              {editCostId === c.id ? (
+                <div className="flex flex-1 flex-wrap items-end gap-2">
+                  <Input
+                    label="Bezeichnung"
+                    value={editCostName}
+                    onChange={(e) => setEditCostName(e.target.value)}
+                    className="flex-1 min-w-[120px]"
+                  />
+                  <NumberInput
+                    label="Betrag netto"
+                    suffix="€"
+                    value={editCostAmount}
+                    onValueChange={setEditCostAmount}
+                    className="w-32"
+                  />
+                  <Button size="sm" variant="action" disabled={costBusy} onClick={saveEditCost}>
+                    <Check className="h-4 w-4" />
+                  </Button>
+                  <Button size="sm" variant="outline" onClick={() => setEditCostId(null)}>
+                    <X className="h-4 w-4" />
+                  </Button>
+                </div>
+              ) : (
+                <>
+                  <span className="min-w-0">
+                    {c.name} <span className="text-slate-400">({c.category})</span>
+                  </span>
+                  <div className="flex items-center gap-2 shrink-0">
+                    <span className="font-medium">{formatEuro(c.amountNet)}</span>
+                    <CanAccess permission="calculations.settings">
+                      <Button
+                        type="button"
+                        size="icon-sm"
+                        variant="ghost"
+                        aria-label="Bearbeiten"
+                        onClick={() => startEditCost(c)}
+                      >
+                        <Pencil className="h-3.5 w-3.5" />
+                      </Button>
+                      <Button
+                        type="button"
+                        size="icon-sm"
+                        variant="ghost"
+                        className="text-red-600"
+                        aria-label="Löschen"
+                        onClick={() => setDeleteCost(c)}
+                      >
+                        <Trash2 className="h-3.5 w-3.5" />
+                      </Button>
+                    </CanAccess>
+                  </div>
+                </>
+              )}
             </div>
           ))}
         </div>
@@ -264,6 +371,24 @@ export default function KalkulationEinstellungenPage() {
         </div>
         </CanAccess>
       </Card>
+
+      <ConfirmDialog
+        open={deleteCost !== null}
+        onOpenChange={(open) => {
+          if (!open) setDeleteCost(null);
+        }}
+        title="Fixkosten löschen?"
+        description={
+          deleteCost
+            ? `„${deleteCost.name}“ (${formatEuro(deleteCost.amountNet)}) wird entfernt.`
+            : ""
+        }
+        confirmLabel="Löschen"
+        cancelLabel="Abbrechen"
+        variant="destructive"
+        loading={costBusy}
+        onConfirm={removeFixedCost}
+      />
 
       <CanAccess permission="calculations.settings">
         <Card

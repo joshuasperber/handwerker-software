@@ -819,8 +819,8 @@ export default function ProjektDetailPage() {
                 Keine Aufträge im Projekt.
               </p>
             ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
+              <div className="overflow-x-auto overscroll-x-contain touch-pan-x [scrollbar-width:thin]">
+                <table className="w-full min-w-[720px] text-sm">
                   <thead>
                     <tr className="border-b border-slate-100 text-left text-xs text-slate-500">
                       <th className="px-4 py-2 font-medium">Auftrag</th>
@@ -1154,8 +1154,9 @@ export default function ProjektDetailPage() {
             </Card>
           </CanAccess>
 
-          <Card className="!p-0 overflow-x-auto">
-            <table className="w-full text-sm">
+          <Card className="!p-0 overflow-hidden">
+            <div className="overflow-x-auto overscroll-x-contain touch-pan-x [scrollbar-width:thin]">
+            <table className="w-full min-w-[640px] text-sm">
               <thead>
                 <tr className="border-b bg-slate-50 text-left text-xs text-slate-500">
                   <th className="px-3 py-2">Position</th>
@@ -1209,6 +1210,7 @@ export default function ProjektDetailPage() {
                 )}
               </tbody>
             </table>
+            </div>
           </Card>
         </div>
       )}

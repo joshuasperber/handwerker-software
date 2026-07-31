@@ -362,20 +362,22 @@ function FinanzuebersichtContent() {
             </div>
             {preset === "custom" && (
               <>
-                <div className="grid gap-2">
+                <div className="grid min-w-0 gap-2">
                   <Label htmlFor="from">Von</Label>
                   <Input
                     id="from"
                     type="date"
+                    className="min-w-0 w-full"
                     value={customFrom}
                     onChange={(e) => setCustomFrom(e.target.value)}
                   />
                 </div>
-                <div className="grid gap-2">
+                <div className="grid min-w-0 gap-2">
                   <Label htmlFor="to">Bis</Label>
                   <Input
                     id="to"
                     type="date"
+                    className="min-w-0 w-full"
                     value={customTo}
                     onChange={(e) => setCustomTo(e.target.value)}
                   />
@@ -755,7 +757,7 @@ function FinanzuebersichtContent() {
               </p>
             ) : (
               <>
-                <div className="hidden md:block">
+                <div className="hidden md:block overflow-x-auto overscroll-x-contain touch-pan-x [scrollbar-width:thin]">
                   <table className="w-full min-w-[640px] text-sm">
                     <thead>
                       <tr className="border-b border-slate-100 text-left text-xs text-slate-500">

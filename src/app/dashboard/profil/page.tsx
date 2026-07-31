@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { ROLE_LABELS } from "@/lib/utils";
 import { saveJson } from "@/lib/save-toast";
 import { fetchJson } from "@/lib/fetch-json";
-import { AlertTriangle, ShieldCheck, Upload, X } from "lucide-react";
+import { AlertTriangle, Loader2, ShieldCheck, Upload, X } from "lucide-react";
 
 interface Profile {
   id: string;
@@ -19,14 +19,15 @@ interface Profile {
   phone: string | null;
   address: string | null;
   avatarUrl: string | null;
+  hasAvatar?: boolean;
   role: string;
   mustChangePassword: boolean;
 }
 
 const MAX_AVATAR_DIMENSION = 256;
 
-/** Liest ein Bild ein und skaliert es client-seitig zu einer kleinen Data-URL. */
-function fileToAvatarDataUrl(file: File): Promise<string> {
+/** Liest ein Bild ein und skaliert es client-seitig zu einem JPEG-Blob. */
+function fileToAvatarBlob(file: File): Promise<Blob> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onerror = () => reject(new Error("Datei konnte nicht gelesen werden"));
@@ -46,7 +47,14 @@ function fileToAvatarDataUrl(file: File): Promise<string> {
         const ctx = canvas.getContext("2d");
         if (!ctx) return reject(new Error("Canvas nicht verfügbar"));
         ctx.drawImage(img, 0, 0, width, height);
-        resolve(canvas.toDataURL("image/jpeg", 0.85));
+        canvas.toBlob(
+          (blob) => {
+            if (!blob) return reject(new Error("Bildkomprimierung fehlgeschlagen"));
+            resolve(blob);
+          },
+          "image/jpeg",
+          0.85
+        );
       };
       img.src = reader.result as string;
     };
@@ -59,6 +67,7 @@ export default function ProfilPage() {
   const searchParams = useSearchParams();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
+  const [avatarBusy, setAvatarBusy] = useState(false);
 
   const [form, setForm] = useState({
     firstName: "",
@@ -99,13 +108,60 @@ export default function ProfilPage() {
       toast.error("Bitte eine Bilddatei auswählen");
       return;
     }
+
+    setAvatarBusy(true);
+    const toastId = toast.loading("Profilbild wird gespeichert …");
     try {
-      const dataUrl = await fileToAvatarDataUrl(file);
-      setForm((f) => ({ ...f, avatarUrl: dataUrl }));
+      const blob = await fileToAvatarBlob(file);
+      const body = new FormData();
+      body.append("file", blob, "avatar.jpg");
+
+      const res = await fetchJson<{ avatarUrl: string | null; hasAvatar: boolean }>(
+        "/api/profile/avatar",
+        { method: "POST", body }
+      );
+
+      if (!res.success || !res.data?.avatarUrl) {
+        toast.error(res.error ?? "Profilbild konnte nicht gespeichert werden", {
+          id: toastId,
+        });
+        return;
+      }
+
+      setForm((f) => ({ ...f, avatarUrl: res.data!.avatarUrl }));
+      setProfile((p) =>
+        p ? { ...p, avatarUrl: res.data!.avatarUrl, hasAvatar: true } : p
+      );
+      toast.success("Profilbild gespeichert", { id: toastId });
+      router.refresh();
     } catch {
-      toast.error("Bild konnte nicht verarbeitet werden");
+      toast.error("Bild konnte nicht verarbeitet werden", { id: toastId });
     } finally {
+      setAvatarBusy(false);
       if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  }
+
+  async function removeAvatar() {
+    setAvatarBusy(true);
+    const toastId = toast.loading("Profilbild wird entfernt …");
+    try {
+      const res = await fetchJson<{ avatarUrl: null; hasAvatar: boolean }>(
+        "/api/profile/avatar",
+        { method: "DELETE" }
+      );
+      if (!res.success) {
+        toast.error(res.error ?? "Profilbild konnte nicht entfernt werden", {
+          id: toastId,
+        });
+        return;
+      }
+      setForm((f) => ({ ...f, avatarUrl: null }));
+      setProfile((p) => (p ? { ...p, avatarUrl: null, hasAvatar: false } : p));
+      toast.success("Profilbild entfernt", { id: toastId });
+      router.refresh();
+    } finally {
+      setAvatarBusy(false);
     }
   }
 
@@ -122,13 +178,21 @@ export default function ProfilPage() {
           email: form.email,
           phone: form.phone,
           address: form.address,
-          avatarUrl: form.avatarUrl,
         }),
       },
       { success: "Profil gespeichert" }
     );
     if (data.success && data.data) {
       setProfile(data.data);
+      setForm((f) => ({
+        ...f,
+        firstName: data.data!.firstName,
+        lastName: data.data!.lastName,
+        email: data.data!.email,
+        phone: data.data!.phone ?? "",
+        address: data.data!.address ?? "",
+        avatarUrl: data.data!.avatarUrl,
+      }));
       router.refresh();
     }
   }
@@ -193,7 +257,6 @@ export default function ProfilPage() {
         </div>
       )}
 
-      {/* Persönliche Daten */}
       <Card title="Persönliche Daten">
         <form onSubmit={saveProfile} className="space-y-4">
           <div className="flex flex-wrap items-center gap-4">
@@ -213,8 +276,9 @@ export default function ProfilPage() {
               {form.avatarUrl && (
                 <button
                   type="button"
-                  onClick={() => setForm((f) => ({ ...f, avatarUrl: null }))}
-                  className="absolute -right-1 -top-1 flex h-6 w-6 items-center justify-center rounded-full bg-white text-slate-500 ring-1 ring-slate-200 hover:text-red-600"
+                  onClick={() => void removeAvatar()}
+                  disabled={avatarBusy}
+                  className="absolute -right-1 -top-1 flex h-6 w-6 items-center justify-center rounded-full bg-white text-slate-500 ring-1 ring-slate-200 hover:text-red-600 disabled:opacity-50"
                   aria-label="Profilbild entfernen"
                 >
                   <X className="h-3.5 w-3.5" />
@@ -228,16 +292,25 @@ export default function ProfilPage() {
                 accept="image/*"
                 onChange={handleAvatarChange}
                 className="hidden"
+                disabled={avatarBusy}
               />
               <Button
                 type="button"
                 variant="outline"
                 size="sm"
+                disabled={avatarBusy}
                 onClick={() => fileInputRef.current?.click()}
               >
-                <Upload className="mr-2 h-4 w-4" /> Profilbild wählen
+                {avatarBusy ? (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : (
+                  <Upload className="mr-2 h-4 w-4" />
+                )}
+                Profilbild wählen
               </Button>
-              <p className="mt-1 text-xs text-slate-400">Optional · JPG/PNG</p>
+              <p className="mt-1 text-xs text-slate-400">
+                Wird sofort gespeichert · JPG/PNG
+              </p>
             </div>
           </div>
 
@@ -286,7 +359,6 @@ export default function ProfilPage() {
         </form>
       </Card>
 
-      {/* Passwort ändern */}
       <Card title="Passwort ändern">
         <form onSubmit={changePassword} className="space-y-4">
           {pwError && <p className="text-sm text-red-600">{pwError}</p>}

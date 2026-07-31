@@ -82,4 +82,19 @@ describe("isAppointmentOverdue", () => {
       false
     );
   });
+
+  it("ignores appointments whose order is already billed or done", () => {
+    assert.equal(
+      isAppointmentOverdue("2026-06-11T10:00:00.000Z", "GEPLANT", now, "ABGERECHNET"),
+      false
+    );
+    assert.equal(
+      isAppointmentOverdue("2026-06-11T10:00:00.000Z", "GEPLANT", now, "ABGESCHLOSSEN"),
+      false
+    );
+    assert.equal(
+      isAppointmentOverdue("2026-06-11T10:00:00.000Z", "GEPLANT", now, "EINGEPLANT"),
+      true
+    );
+  });
 });

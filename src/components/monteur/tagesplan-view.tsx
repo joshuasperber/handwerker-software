@@ -326,7 +326,7 @@ function MonteurTagesplanViewContent() {
           type="date"
           value={selectedDate}
           onChange={(e) => setSelectedDate(e.target.value)}
-          className="mt-2 min-h-[44px] rounded-lg border border-slate-300 px-3 text-sm w-full"
+          className="mt-2 h-11 w-full min-w-0 rounded-2xl border border-slate-300 bg-white px-3.5 text-sm shadow-sm appearance-none"
         />
         <Button
           size="touch"
@@ -550,7 +550,12 @@ function MonteurTagesplanViewContent() {
                   })()}
                 </div>
                 <div className="flex flex-col items-end gap-1 shrink-0">
-                  {isAppointmentOverdue(apt.startTime, apt.status) && (
+                  {isAppointmentOverdue(
+                    apt.startTime,
+                    apt.status,
+                    undefined,
+                    apt.order?.status
+                  ) && (
                     <Badge status="UEBERFAELLIG" label="Überfällig" />
                   )}
                   <Badge status={apt.status} label={APPOINTMENT_STATUS_LABELS[apt.status] ?? apt.status} />

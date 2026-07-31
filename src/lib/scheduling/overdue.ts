@@ -39,13 +39,18 @@ export function isOrderOverdue(
 /**
  * Termin überfällig: vergangener Kalendertag oder heute geplant,
  * Startzeit vorbei, Status noch GEPLANT (nicht unterwegs/in Arbeit).
+ * Termine mit bereits erledigtem/abgerechnetem Auftrag zählen nicht.
  */
 export function isAppointmentOverdue(
   startTime: string | Date | null | undefined,
   status: string,
-  now = new Date()
+  now = new Date(),
+  orderStatus?: string | null
 ): boolean {
   if (TERMINAL_APPOINTMENT_STATUSES.includes(status as AppointmentStatus)) {
+    return false;
+  }
+  if (orderStatus && DONE_ORDER_STATUSES.includes(orderStatus)) {
     return false;
   }
   const date = toDate(startTime);
@@ -82,11 +87,26 @@ export function buildAppointmentOverdueWhere(
   return {
     tenantId,
     status: { notIn: TERMINAL_APPOINTMENT_STATUSES },
-    OR: [
-      { startTime: { lt: dayStart } },
+    AND: [
+      // Bereits abgerechnete / abgeschlossene Aufträge nicht mehr als überfällig zeigen
       {
-        startTime: { gte: dayStart, lt: now },
-        status: "GEPLANT",
+        OR: [
+          { orderId: null },
+          {
+            order: {
+              is: { status: { notIn: DONE_ORDER_STATUSES as OrderStatus[] } },
+            },
+          },
+        ],
+      },
+      {
+        OR: [
+          { startTime: { lt: dayStart } },
+          {
+            startTime: { gte: dayStart, lt: now },
+            status: "GEPLANT",
+          },
+        ],
       },
     ],
   };

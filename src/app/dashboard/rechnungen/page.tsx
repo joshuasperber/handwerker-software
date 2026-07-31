@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { DateInput, selectFieldClasses } from "@/components/ui/date-input";
 import {
   Dialog,
   DialogContent,
@@ -16,7 +17,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { InfoButton } from "@/components/ui/info-button";
-import { formatEuro, formatDate } from "@/lib/utils";
+import { cn, formatEuro, formatDate } from "@/lib/utils";
 import { fetchJson } from "@/lib/fetch-json";
 import { saveJson } from "@/lib/save-toast";
 import { CanAccess } from "@/components/auth/can-access";
@@ -125,6 +126,8 @@ export default function RechnungenPage() {
   const [q, setQ] = useState("");
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
+  /** Schnellfilter über die KPI-Karten oben */
+  const [quickFilter, setQuickFilter] = useState<"open" | "overdue" | "list" | "all" | null>(null);
 
   const [payDoc, setPayDoc] = useState<DocItem | null>(null);
   const [payAmount, setPayAmount] = useState("");
@@ -162,6 +165,18 @@ export default function RechnungenPage() {
     const t = setTimeout(load, 250);
     return () => clearTimeout(t);
   }, [load]);
+
+  const visibleItems = useMemo(() => {
+    if (quickFilter === "open") {
+      return items.filter(
+        (i) => i.documentType === "INVOICE" && i.status !== "STORNIERT" && i.openAmount > 0
+      );
+    }
+    if (quickFilter === "overdue") {
+      return items.filter((i) => i.documentType === "INVOICE" && i.overdue);
+    }
+    return items;
+  }, [items, quickFilter]);
 
   function openPayment(doc: DocItem) {
     setPayDoc(doc);
@@ -332,33 +347,103 @@ export default function RechnungenPage() {
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
-        <Card className="!p-4">
-          <p className="text-xs text-slate-500">Offene Posten</p>
-          <p className="text-xl font-bold text-amber-700">{formatEuro(summary?.openSum ?? 0)}</p>
-          <p className="text-xs text-slate-400">{summary?.revenueOpenCount ?? 0} Rechnungen</p>
-        </Card>
-        <Card className="!p-4">
-          <p className="text-xs text-slate-500">Überfällig</p>
-          <p className="text-xl font-bold text-rose-700">{formatEuro(summary?.overdueSum ?? 0)}</p>
-          <p className="text-xs text-slate-400">{summary?.overdueCount ?? 0} überfällig</p>
-        </Card>
-        <Card className="!p-4">
-          <p className="text-xs text-slate-500">
-            Summe Liste ({amountModeLabel(amountMode).toLowerCase()})
-          </p>
-          <p className="text-xl font-bold text-slate-900">{formatEuro(totalPrimary)}</p>
-          <p className="text-xs text-slate-400">
-            USt {formatEuro(summary?.vatSum ?? 0)}
-            {amountMode === "gross"
-              ? ` · Netto ${formatEuro(summary?.netSum ?? 0)}`
-              : ` · Brutto ${formatEuro(summary?.grossSum ?? 0)}`}
-          </p>
-        </Card>
-        <Card className="!p-4">
-          <p className="text-xs text-slate-500">Belege gesamt</p>
-          <p className="text-xl font-bold text-slate-900">{summary?.count ?? 0}</p>
-        </Card>
+        {(
+          [
+            {
+              key: "open" as const,
+              label: "Offene Posten",
+              value: formatEuro(summary?.openSum ?? 0),
+              sub: `${summary?.revenueOpenCount ?? 0} Rechnungen`,
+              valueClass: "text-amber-700",
+              onClick: () => {
+                setType("INVOICE");
+                setStatus("");
+                setQuickFilter((f) => (f === "open" ? null : "open"));
+              },
+            },
+            {
+              key: "overdue" as const,
+              label: "Überfällig",
+              value: formatEuro(summary?.overdueSum ?? 0),
+              sub: `${summary?.overdueCount ?? 0} überfällig`,
+              valueClass: "text-rose-700",
+              onClick: () => {
+                setType("INVOICE");
+                setStatus("");
+                setQuickFilter((f) => (f === "overdue" ? null : "overdue"));
+              },
+            },
+            {
+              key: "list" as const,
+              label: `Summe Liste (${amountModeLabel(amountMode).toLowerCase()})`,
+              value: formatEuro(totalPrimary),
+              sub: `USt ${formatEuro(summary?.vatSum ?? 0)}${
+                amountMode === "gross"
+                  ? ` · Netto ${formatEuro(summary?.netSum ?? 0)}`
+                  : ` · Brutto ${formatEuro(summary?.grossSum ?? 0)}`
+              }`,
+              valueClass: "text-slate-900",
+              onClick: () => {
+                setType("INVOICE");
+                setStatus("");
+                setQuickFilter((f) => (f === "list" ? null : "list"));
+              },
+            },
+            {
+              key: "all" as const,
+              label: "Belege gesamt",
+              value: String(summary?.count ?? 0),
+              sub: quickFilter ? "Filter aktiv – tippen zum Zurücksetzen" : "Alle Belege",
+              valueClass: "text-slate-900",
+              onClick: () => {
+                setType("");
+                setStatus("");
+                setQuickFilter((f) => (f === "all" ? null : "all"));
+              },
+            },
+          ] as const
+        ).map((kpi) => {
+          const active = quickFilter === kpi.key;
+          return (
+            <button
+              key={kpi.key}
+              type="button"
+              onClick={kpi.onClick}
+              className={cn(
+                "rounded-xl border bg-white p-4 text-left shadow-sm transition-all",
+                "hover:border-[#0d5c63]/40 hover:shadow-md active:scale-[0.98]",
+                active
+                  ? "border-[#0d5c63] ring-2 ring-[#0d5c63]/25"
+                  : "border-slate-200"
+              )}
+            >
+              <p className="text-xs text-slate-500">{kpi.label}</p>
+              <p className={cn("text-xl font-bold", kpi.valueClass)}>{kpi.value}</p>
+              <p className="text-xs text-slate-400">{kpi.sub}</p>
+            </button>
+          );
+        })}
       </div>
+
+      {quickFilter && (
+        <p className="mb-3 text-xs text-[#0d5c63]">
+          {quickFilter === "open" && "Anzeige: nur offene Rechnungen"}
+          {quickFilter === "overdue" && "Anzeige: nur überfällige Rechnungen"}
+          {quickFilter === "list" && "Anzeige: Rechnungen (volle Liste)"}
+          {quickFilter === "all" && "Anzeige: alle Belege"}
+          {" · "}
+          <button
+            type="button"
+            className="underline"
+            onClick={() => {
+              setQuickFilter(null);
+              setType("INVOICE");
+            }}
+          >
+            Filter zurücksetzen
+          </button>
+        </p>
+      )}
 
       <Card className="!p-4 mb-4 space-y-3">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -376,25 +461,31 @@ export default function RechnungenPage() {
             <span className="text-[11px] text-slate-400">Nur Anzeige</span>
           </div>
         </div>
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-          <div>
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="min-w-0">
             <Label className="text-xs">Typ</Label>
             <select
               value={type}
-              onChange={(e) => setType(e.target.value)}
-              className="block h-9 w-full rounded-md border border-slate-300 bg-white px-2 text-sm"
+              onChange={(e) => {
+                setType(e.target.value);
+                setQuickFilter(null);
+              }}
+              className={cn(selectFieldClasses, "mt-1")}
             >
               <option value="">Alle</option>
               <option value="INVOICE">Rechnungen</option>
               <option value="OFFER">Angebote</option>
             </select>
           </div>
-          <div>
+          <div className="min-w-0">
             <Label className="text-xs">Status</Label>
             <select
               value={status}
-              onChange={(e) => setStatus(e.target.value)}
-              className="block h-9 w-full rounded-md border border-slate-300 bg-white px-2 text-sm"
+              onChange={(e) => {
+                setStatus(e.target.value);
+                setQuickFilter(null);
+              }}
+              className={cn(selectFieldClasses, "mt-1")}
             >
               <option value="">Alle</option>
               <option value="OFFEN">Offen</option>
@@ -403,24 +494,16 @@ export default function RechnungenPage() {
               <option value="STORNIERT">Storniert</option>
             </select>
           </div>
-          <div>
-            <Label className="text-xs">Von</Label>
-            <Input
-              type="date"
-              value={from}
-              onChange={(e) => setFrom(e.target.value)}
-              className="h-9 w-full"
-            />
-          </div>
-          <div>
-            <Label className="text-xs">Bis</Label>
-            <Input
-              type="date"
-              value={to}
-              onChange={(e) => setTo(e.target.value)}
-              className="h-9 w-full"
-            />
-          </div>
+          <DateInput
+            label="Von"
+            value={from}
+            onChange={(e) => setFrom(e.target.value)}
+          />
+          <DateInput
+            label="Bis"
+            value={to}
+            onChange={(e) => setTo(e.target.value)}
+          />
         </div>
         {(from || to) && (
           <Button
@@ -445,10 +528,10 @@ export default function RechnungenPage() {
             <Loader2 className="h-5 w-5 animate-spin" />
             Wird geladen …
           </div>
-        ) : items.length === 0 ? (
+        ) : visibleItems.length === 0 ? (
           <Card className="!p-6 text-center text-sm text-slate-500">Keine Belege gefunden.</Card>
         ) : (
-          items.map((doc) => {
+          visibleItems.map((doc) => {
             const isInvoice = doc.documentType === "INVOICE";
             const open = isInvoice && doc.status !== "STORNIERT" && doc.openAmount > 0;
             return (
@@ -561,8 +644,9 @@ export default function RechnungenPage() {
         )}
       </div>
 
-      <Card className="!p-0 overflow-x-auto hidden md:block">
-        <table className="w-full text-sm">
+      <Card className="!p-0 hidden md:block overflow-hidden">
+        <div className="overflow-x-auto overscroll-x-contain touch-pan-x [scrollbar-width:thin]">
+        <table className="w-full min-w-[800px] text-sm">
           <thead>
             <tr className="border-b border-slate-200 bg-slate-50 text-left text-xs text-slate-500">
               <th className="px-3 py-2">Nr.</th>
@@ -583,14 +667,14 @@ export default function RechnungenPage() {
                   Wird geladen …
                 </td>
               </tr>
-            ) : items.length === 0 ? (
+            ) : visibleItems.length === 0 ? (
               <tr>
                 <td colSpan={9} className="px-3 py-8 text-center text-slate-400">
                   Keine Belege gefunden.
                 </td>
               </tr>
             ) : (
-              items.map((doc) => {
+              visibleItems.map((doc) => {
                 const isInvoice = doc.documentType === "INVOICE";
                 const open = isInvoice && doc.status !== "STORNIERT" && doc.openAmount > 0;
                 return (
@@ -762,6 +846,7 @@ export default function RechnungenPage() {
             )}
           </tbody>
         </table>
+        </div>
       </Card>
 
       {/* Zahlung erfassen */}

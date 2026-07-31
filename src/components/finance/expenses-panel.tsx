@@ -146,20 +146,22 @@ export function ExpensesPanel({
 
       <Card className="!p-4">
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          <div className="grid gap-2">
+          <div className="grid min-w-0 gap-2">
             <Label htmlFor="exp-from">Von</Label>
             <Input
               id="exp-from"
               type="date"
+              className="min-w-0 w-full"
               value={from}
               onChange={(e) => setFrom(e.target.value)}
             />
           </div>
-          <div className="grid gap-2">
+          <div className="grid min-w-0 gap-2">
             <Label htmlFor="exp-to">Bis</Label>
             <Input
               id="exp-to"
               type="date"
+              className="min-w-0 w-full"
               value={to}
               onChange={(e) => setTo(e.target.value)}
             />
@@ -211,7 +213,7 @@ export function ExpensesPanel({
             </p>
           ) : (
             <>
-              <div className="hidden md:block">
+              <div className="hidden md:block overflow-x-auto overscroll-x-contain touch-pan-x">
                 <table className="w-full min-w-[720px] text-sm">
                   <thead>
                     <tr className="border-b border-slate-100 text-left text-xs text-slate-500">

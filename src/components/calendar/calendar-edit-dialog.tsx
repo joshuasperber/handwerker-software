@@ -208,36 +208,39 @@ export function CalendarEditDialog({
                 </div>
               </div>
 
-              <div className="grid grid-cols-3 gap-2">
-                <div className="space-y-1.5 col-span-3 sm:col-span-1">
+              <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+                <div className="min-w-0 space-y-1.5">
                   <Label htmlFor="edit-date">Datum</Label>
                   <Input
                     id="edit-date"
                     type="date"
+                    className="min-w-0 w-full"
                     value={dateStr}
                     onChange={(e) => setDateStr(e.target.value)}
                     disabled={!canEdit}
                     required
                   />
                 </div>
-                <div className="space-y-1.5">
+                <div className="min-w-0 space-y-1.5">
                   <Label htmlFor="edit-start">Start</Label>
                   <Input
                     id="edit-start"
                     type="time"
                     step={900}
+                    className="min-w-0 w-full"
                     value={startTime}
                     onChange={(e) => setStartTime(e.target.value)}
                     disabled={!canEdit}
                     required
                   />
                 </div>
-                <div className="space-y-1.5">
+                <div className="min-w-0 space-y-1.5">
                   <Label htmlFor="edit-end">Ende</Label>
                   <Input
                     id="edit-end"
                     type="time"
                     step={900}
+                    className="min-w-0 w-full"
                     value={endTime}
                     onChange={(e) => setEndTime(e.target.value)}
                     disabled={!canEdit}

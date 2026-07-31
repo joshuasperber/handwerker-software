@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { InfoButton } from "@/components/ui/info-button";
 import { Users, Truck, AlertCircle, UserX } from "lucide-react";
 import { formatDateTime } from "@/lib/utils";
-import { isAppointmentOverdue } from "@/lib/scheduling/overdue";
+import { isOrderOverdue } from "@/lib/scheduling/overdue";
 import { MATERIAL_STATUS_LABELS } from "@/lib/inventory/formulas";
 import { Button } from "@/components/ui/button";
 import { CanAccess } from "@/components/auth/can-access";
@@ -38,6 +38,7 @@ interface TodayOrder {
   title: string;
   customer: string;
   address: string;
+  status: string;
   materialStatus: string;
   materialAmpel: string;
   employees: string[];
@@ -210,7 +211,7 @@ export default function DispositionPage() {
         <Card title="Heutige Einsätze">
           <div className="divide-y divide-slate-50">
             {todayOrders.map((o) => {
-              const overdue = o.scheduledStart && isAppointmentOverdue(o.scheduledStart, "GEPLANT");
+              const overdue = o.scheduledStart && isOrderOverdue(o.scheduledStart, o.status);
               return (
               <Link
                 key={o.id}

@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { PHASE_STATUS_LABELS } from "@/lib/utils";
-import { isAppointmentOverdue } from "@/lib/scheduling/overdue";
+import { isAppointmentOverdue, isOrderOverdue } from "@/lib/scheduling/overdue";
 import { AssignOrderButton } from "@/components/disposition/assign-employees-panel";
 
 interface BoardOrder {
@@ -57,6 +57,7 @@ interface WeekAppointment {
   orderPhase?: { id: string; name: string } | null;
   order: {
     orderNumber: string;
+    status: string;
     customer: { firstName: string; lastName: string } | null;
     team: { id: string; name: string } | null;
     vehicle: { name: string } | null;
@@ -182,7 +183,7 @@ export default function LeitstandPage() {
             </h2>
             <div className="grid gap-3 sm:grid-cols-2">
               {orders.map((o) => {
-                const overdue = o.scheduledStart && isAppointmentOverdue(o.scheduledStart, "GEPLANT");
+                const overdue = o.scheduledStart && isOrderOverdue(o.scheduledStart, o.status);
                 return (
                 <div key={o.id} className="rounded-xl bg-slate-900 ring-1 ring-slate-800 p-4">
                   <div className="flex items-center justify-between gap-2">
@@ -392,7 +393,12 @@ function WeekTimeline({ appointments, now }: { appointments: WeekAppointment[]; 
                       ? `${a.order.customer.lastName}`
                       : "";
                     const label = `${phaseLabel}${customerLabel || a.order?.orderNumber || ""}`;
-                    const overdue = isAppointmentOverdue(a.startTime, a.status);
+                    const overdue = isAppointmentOverdue(
+                      a.startTime,
+                      a.status,
+                      undefined,
+                      a.order?.status
+                    );
                     return (
                       <div
                         key={a.id}

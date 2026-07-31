@@ -3,6 +3,7 @@ import { SessionProvider } from "@/components/auth/can-access";
 import { DashboardShell } from "@/components/dashboard/dashboard-shell";
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { toAvatarSrc } from "@/lib/avatar";
 import { canAccessDashboard, canAccessMonteurApp, getDashboardNavItems, getRoleHomePath } from "@/lib/permissions";
 import { ROLE_LABELS } from "@/lib/utils";
 
@@ -21,13 +22,12 @@ export default async function DashboardLayout({
   try {
     const dbUser = await prisma.user.findFirst({
       where: { id: session.id, tenantId: session.tenantId },
-      select: { avatarUrl: true },
+      select: { avatarUrl: true, updatedAt: true },
     });
-    const rawAvatar = dbUser?.avatarUrl ?? null;
-    const avatarUrl = rawAvatar?.startsWith("data:")
-      ? "/api/profile/avatar"
-      : rawAvatar;
-    sessionWithAvatar = { ...session, avatarUrl };
+    sessionWithAvatar = {
+      ...session,
+      avatarUrl: toAvatarSrc(dbUser?.avatarUrl, dbUser?.updatedAt),
+    };
   } catch (error) {
     console.error("[dashboard/layout] avatar load failed:", error);
   }

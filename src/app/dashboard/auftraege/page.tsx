@@ -216,8 +216,8 @@ export default function AuftraegePage() {
 
       {/* Desktop table */}
       <Card className="hidden md:block !p-0 overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
+        <div className="overflow-x-auto overscroll-x-contain touch-pan-x [scrollbar-width:thin]">
+          <table className="w-full min-w-[720px] text-sm">
             <thead>
               <tr className="border-b border-slate-100 text-left text-slate-500 bg-slate-50/80">
                 <th className="py-3 pl-4 pr-4 font-medium">Nr.</th>

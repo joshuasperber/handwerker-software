@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { NumberInput } from "@/components/ui/number-input";
 import { Card } from "@/components/ui/card";
+import { selectFieldClasses } from "@/components/ui/date-input";
 import { CanAccess } from "@/components/auth/can-access";
 import { AddButton } from "@/components/ui/add-button";
 import { saveJson } from "@/lib/save-toast";
@@ -20,7 +21,7 @@ import {
   CUSTOM_UNIT_VALUE,
   normalizeUnitLabel,
 } from "@/lib/inventory/units";
-import { formatEuro } from "@/lib/utils";
+import { cn, formatEuro } from "@/lib/utils";
 import {
   MOVEMENT_TYPE_LABELS,
   REASON_LABELS,
@@ -181,6 +182,15 @@ export default function InventarPage() {
   } | null>(null);
   const [dndQty, setDndQty] = useState<number | null>(null);
   const [dndMsg, setDndMsg] = useState("");
+  /** Drag&Drop nur mit Maus – auf Touch blockiert draggable sonst das horizontale Scrollen. */
+  const [finePointer, setFinePointer] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(pointer: fine)");
+    const update = () => setFinePointer(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
   const [form, setForm] = useState({
     name: "",
     unit: "Stück",
@@ -510,7 +520,7 @@ export default function InventarPage() {
             <div>
               <label className="text-sm font-medium text-foreground">Einheit</label>
               <select
-                className="w-full mt-1.5 h-10 rounded-lg border border-slate-300 px-3 text-sm"
+                className={cn(selectFieldClasses, "mt-1.5")}
                 value={unitMode === "custom" ? CUSTOM_UNIT_VALUE : form.unit}
                 onChange={(e) => {
                   if (e.target.value === CUSTOM_UNIT_VALUE) {
@@ -550,7 +560,7 @@ export default function InventarPage() {
             <div className="flex flex-col gap-1.5 sm:col-span-2">
               <label className="text-sm font-medium text-foreground">Ziellager für Anfangsbestand</label>
               <select
-                className="h-10 rounded-lg border border-slate-300 px-3 text-sm"
+                className={selectFieldClasses}
                 value={form.initialLocationId}
                 onChange={(e) => setForm({ ...form, initialLocationId: e.target.value })}
               >
@@ -657,7 +667,7 @@ export default function InventarPage() {
                     <div>
                       <label className="text-sm font-medium">Typ</label>
                       <select
-                        className="w-full mt-1 h-10 rounded-lg border border-slate-300 px-3 text-sm"
+                        className={cn(selectFieldClasses, "mt-1")}
                         value={locationForm.locationType}
                         onChange={(e) => setLocationForm({ ...locationForm, locationType: e.target.value })}
                       >
@@ -729,11 +739,14 @@ export default function InventarPage() {
                 ) : (
                   <>
                     <p className="text-xs text-slate-400 mb-2 flex items-center gap-1">
-                      <ArrowRightLeft className="h-3.5 w-3.5" />
-                      Tipp: Zeile auf ein anderes Lager links ziehen, um schnell umzubuchen.
+                      <ArrowRightLeft className="h-3.5 w-3.5 shrink-0" />
+                      <span>
+                        Tabelle seitlich wischen für alle Spalten.
+                        {finePointer && " Am Desktop: Zeile auf ein anderes Lager ziehen zum Umbuchen."}
+                      </span>
                     </p>
-                    <div className="overflow-x-auto mb-4">
-                    <table className="w-full min-w-[480px] text-sm">
+                    <div className="mb-4 -mx-1 max-w-full overflow-x-auto overscroll-x-contain touch-pan-x pb-1 [scrollbar-width:thin]">
+                    <table className="w-full min-w-[640px] text-sm">
                       <thead>
                         <tr className="text-left text-slate-500 border-b">
                           <th className="pb-2 pl-3 pr-4">Artikel</th>
@@ -745,7 +758,7 @@ export default function InventarPage() {
                       </thead>
                       <tbody className="divide-y divide-slate-50">
                         {locationDetail.stock.map((s) => {
-                          const canDrag = s.available > 0;
+                          const canDrag = s.available > 0 && finePointer;
                           return (
                             <tr
                               key={s.articleId}
@@ -821,7 +834,7 @@ export default function InventarPage() {
                   <form onSubmit={assignStockToLocation} className="rounded-xl border border-slate-200 p-4 space-y-3 bg-slate-50">
                     <p className="text-sm font-medium">Bestand manuell buchen</p>
                     <select
-                      className="w-full h-10 rounded-lg border border-slate-300 px-3 text-sm"
+                      className={selectFieldClasses}
                       value={stockForm.movementType}
                       onChange={(e) =>
                         setStockForm({
@@ -835,7 +848,7 @@ export default function InventarPage() {
                       <option value="KORREKTUR">Ist-Bestand setzen</option>
                     </select>
                     <select
-                      className="w-full h-10 rounded-lg border border-slate-300 px-3 text-sm"
+                      className={selectFieldClasses}
                       value={stockForm.articleId}
                       onChange={(e) => setStockForm({ ...stockForm, articleId: e.target.value })}
                       required
@@ -871,7 +884,7 @@ export default function InventarPage() {
                       <ArrowRightLeft className="h-4 w-4" /> Umbuchung zwischen Lagern
                     </p>
                     <select
-                      className="w-full h-10 rounded-lg border border-slate-300 px-3 text-sm"
+                      className={selectFieldClasses}
                       value={transferForm.articleId}
                       onChange={(e) => setTransferForm({ ...transferForm, articleId: e.target.value })}
                       required
@@ -882,7 +895,7 @@ export default function InventarPage() {
                       ))}
                     </select>
                     <select
-                      className="w-full h-10 rounded-lg border border-slate-300 px-3 text-sm"
+                      className={selectFieldClasses}
                       value={transferForm.fromLocationId}
                       onChange={(e) => setTransferForm({ ...transferForm, fromLocationId: e.target.value })}
                       required
@@ -893,7 +906,7 @@ export default function InventarPage() {
                       ))}
                     </select>
                     <select
-                      className="w-full h-10 rounded-lg border border-slate-300 px-3 text-sm"
+                      className={selectFieldClasses}
                       value={transferForm.toLocationId}
                       onChange={(e) => setTransferForm({ ...transferForm, toLocationId: e.target.value })}
                       required
@@ -930,8 +943,8 @@ export default function InventarPage() {
           </div>
         ) : (
           <>
-            <div className="hidden md:block overflow-x-auto">
-              <table className="w-full text-sm">
+            <div className="hidden md:block overflow-x-auto overscroll-x-contain touch-pan-x [scrollbar-width:thin]">
+              <table className="w-full min-w-[720px] text-sm">
                 <thead>
                   <tr className="border-b text-left text-slate-500">
                     <th className="pb-3 pl-3 pr-4 font-medium">Artikel</th>

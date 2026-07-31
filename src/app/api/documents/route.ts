@@ -42,6 +42,8 @@ export async function GET(request: Request) {
   const q = searchParams.get("q")?.trim();
   const fromParam = searchParams.get("from");
   const toParam = searchParams.get("to");
+  const openOnly = searchParams.get("open") === "1";
+  const overdueOnly = searchParams.get("overdue") === "1";
 
   const issueDateFilter: Prisma.DateTimeFilter | undefined =
     fromParam || toParam
@@ -88,7 +90,15 @@ export async function GET(request: Request) {
   });
 
   const now = new Date();
-  const items = docs.map((d) => toDocumentListItem(d, now));
+  let items = docs.map((d) => toDocumentListItem(d, now));
+
+  if (overdueOnly) {
+    items = items.filter((i) => i.documentType === "INVOICE" && i.overdue);
+  } else if (openOnly) {
+    items = items.filter(
+      (i) => i.documentType === "INVOICE" && i.status !== "STORNIERT" && i.openAmount > 0
+    );
+  }
 
   const invoices = items.filter((i) => i.documentType === "INVOICE" && i.status !== "STORNIERT");
   const summary = {

@@ -197,7 +197,7 @@ export default function TeamStundenPage() {
 
         <div className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
           <select
-            className="h-9 rounded-lg border border-slate-300 px-2 text-sm"
+            className="h-11 w-full min-w-0 rounded-2xl border border-slate-300 bg-white px-3.5 text-sm shadow-sm"
             value={employeeId}
             onChange={(e) => setEmployeeId(e.target.value)}
           >
@@ -209,7 +209,7 @@ export default function TeamStundenPage() {
             ))}
           </select>
           <select
-            className="h-9 rounded-lg border border-slate-300 px-2 text-sm"
+            className="h-11 w-full min-w-0 rounded-2xl border border-slate-300 bg-white px-3.5 text-sm shadow-sm"
             value={status}
             onChange={(e) => setStatus(e.target.value)}
           >
@@ -219,7 +219,7 @@ export default function TeamStundenPage() {
             <option value="APPROVED">Freigegeben</option>
           </select>
           <select
-            className="h-9 rounded-lg border border-slate-300 px-2 text-sm"
+            className="h-11 w-full min-w-0 rounded-2xl border border-slate-300 bg-white px-3.5 text-sm shadow-sm"
             value={orderId}
             onChange={(e) => setOrderId(e.target.value)}
           >
@@ -232,7 +232,7 @@ export default function TeamStundenPage() {
             ))}
           </select>
           <select
-            className="h-9 rounded-lg border border-slate-300 px-2 text-sm"
+            className="h-11 w-full min-w-0 rounded-2xl border border-slate-300 bg-white px-3.5 text-sm shadow-sm"
             value={projectId}
             onChange={(e) => setProjectId(e.target.value)}
           >
@@ -247,7 +247,7 @@ export default function TeamStundenPage() {
             placeholder="Suche Tätigkeit / Notiz…"
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            className="h-9"
+            className="h-11"
           />
         </div>
 

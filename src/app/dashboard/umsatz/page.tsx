@@ -405,20 +405,22 @@ export default function UmsatzuebersichtPage() {
           </div>
           {preset === "custom" && (
             <>
-              <div className="grid gap-2">
+              <div className="grid min-w-0 gap-2">
                 <Label htmlFor="rev-from">Von</Label>
                 <Input
                   id="rev-from"
                   type="date"
+                  className="min-w-0 w-full"
                   value={customFrom}
                   onChange={(e) => setCustomFrom(e.target.value)}
                 />
               </div>
-              <div className="grid gap-2">
+              <div className="grid min-w-0 gap-2">
                 <Label htmlFor="rev-to">Bis</Label>
                 <Input
                   id="rev-to"
                   type="date"
+                  className="min-w-0 w-full"
                   value={customTo}
                   onChange={(e) => setCustomTo(e.target.value)}
                 />
@@ -540,7 +542,7 @@ export default function UmsatzuebersichtPage() {
                   {amountModeLabel(mode).toLowerCase()}
                 </p>
               </div>
-              <div className="overflow-x-auto">
+              <div className="overflow-x-auto overscroll-x-contain touch-pan-x [scrollbar-width:thin]">
                 <table className="w-full min-w-[640px] text-sm">
                   <thead>
                     <tr className="border-b border-slate-100 bg-slate-50 text-left text-xs text-slate-500">
