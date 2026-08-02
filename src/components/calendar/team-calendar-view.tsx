@@ -19,7 +19,16 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 import { usePermission, useSession } from "@/components/auth/can-access";
 import { toast } from "sonner";
 
-export function TeamCalendarView({ title = "Termine" }: { title?: string }) {
+export function TeamCalendarView({
+  title = "Termine",
+  orderLinkBase = "/dashboard/auftraege",
+  compactHeader = false,
+}: {
+  title?: string;
+  /** Basis-URL für Auftrags-Links (Verwaltung vs. Arbeitsansicht). */
+  orderLinkBase?: string;
+  compactHeader?: boolean;
+}) {
   const canEdit = usePermission("appointments.write");
   const session = useSession();
   const [anchorDate, setAnchorDate] = useState(new Date());
@@ -71,19 +80,67 @@ export function TeamCalendarView({ title = "Termine" }: { title?: string }) {
   }, [anchorDate, view]);
 
   useEffect(() => {
+    function applyEmployeeList(
+      list: { id: string; user: { id?: string; firstName: string; lastName: string }; color: string }[]
+    ) {
+      setEmployees(list);
+      setSelectedEmployeeIds((prev) => {
+        if (prev.length) return prev;
+        const own = list.find((e) => e.user?.id === session.id);
+        // Arbeitsansicht: standardmäßig alle Mitarbeiter sichtbar
+        return own ? list.map((e) => e.id) : list.map((e) => e.id);
+      });
+    }
+
     fetch("/api/employees")
       .then((r) => r.json())
       .then((d) => {
-        if (!d.success) return;
-        setEmployees(d.data);
-        setSelectedEmployeeIds((prev) => {
-          if (prev.length) return prev;
-          const own = d.data.find(
-            (e: { user: { id?: string } }) => e.user?.id === session.id
-          );
-          return own ? [own.id] : d.data.map((e: { id: string }) => e.id);
-        });
+        if (d.success && Array.isArray(d.data) && d.data.length) {
+          applyEmployeeList(d.data);
+          return;
+        }
+        // Fallback für Monteure ohne employees.read
+        return fetch("/api/monteur/colleagues")
+          .then((r) => r.json())
+          .then((c) => {
+            if (!c.success) return;
+            const rows = Array.isArray(c.data) ? c.data : c.data?.colleagues ?? [];
+            const meId = Array.isArray(c.data) ? null : c.data?.meEmployeeId;
+            const mapped = rows
+              .filter((e: { kind?: string }) => e.kind !== "partner")
+              .map(
+                (e: {
+                  id: string;
+                  userId?: string;
+                  firstName: string;
+                  lastName: string;
+                  color: string;
+                }) => ({
+                  id: e.id,
+                  color: e.color,
+                  user: {
+                    id: e.userId,
+                    firstName: e.firstName,
+                    lastName: e.lastName,
+                  },
+                })
+              );
+            // Eigenes Profil ergänzen, falls API es auslässt
+            if (meId && !mapped.some((e: { id: string }) => e.id === meId)) {
+              mapped.unshift({
+                id: meId,
+                color: "#0d5c63",
+                user: {
+                  id: session.id,
+                  firstName: session.firstName,
+                  lastName: session.lastName,
+                },
+              });
+            }
+            applyEmployeeList(mapped);
+          });
       });
+
     fetch("/api/teams")
       .then((r) => r.json())
       .then((d) => {
@@ -109,7 +166,7 @@ export function TeamCalendarView({ title = "Termine" }: { title?: string }) {
           }))
         );
       });
-  }, [session.id]);
+  }, [session.id, session.firstName, session.lastName]);
 
   useEffect(() => {
     loadAppointments();
@@ -170,12 +227,18 @@ export function TeamCalendarView({ title = "Termine" }: { title?: string }) {
   });
 
   return (
-    <div className="flex flex-col h-[calc(100vh-7rem)] min-h-0 -mx-2 sm:-mx-0">
+    <div
+      className={`flex min-h-0 flex-col -mx-2 sm:-mx-0 ${
+        compactHeader ? "h-[calc(100vh-11rem)]" : "h-[calc(100vh-7rem)]"
+      }`}
+    >
       <div className="shrink-0 mb-4 px-2 sm:px-0">
-        <h1 className="text-2xl font-bold text-slate-900">{title}</h1>
+        <h1 className={`${compactHeader ? "text-xl" : "text-2xl"} font-bold text-slate-900`}>
+          {title}
+        </h1>
         <p className="text-sm text-slate-500 mt-1">
-          Moderner Team-Kalender{canEdit ? "" : " (nur Ansicht)"}
-          {canEdit ? " · Tippen/Klicken für neuen Termin" : ""}
+          Wo sind Ihre Mitarbeiter? Termine, Orte und Einsatzzeiten
+          {canEdit ? " · Tippen/Klicken für neuen Termin" : " (nur Ansicht)"}
         </p>
       </div>
 
@@ -254,7 +317,7 @@ export function TeamCalendarView({ title = "Termine" }: { title?: string }) {
                     <>
                       {" · "}
                       <Link
-                        href={`/dashboard/auftraege/${a.order.id}`}
+                        href={`${orderLinkBase}/${a.order.id}`}
                         className="text-[#0d5c63] hover:underline"
                         onClick={(e) => e.stopPropagation()}
                       >

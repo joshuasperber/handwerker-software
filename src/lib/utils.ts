@@ -203,8 +203,10 @@ export const VEHICLE_STATUS_BADGE: Record<string, string> = {
 export const ROLE_LABELS: Record<string, string> = {
   ADMIN: "Administrator",
   MEISTER: "Meister",
+  TEAMLEITER: "Teamleiter",
   BUERO: "Büro",
   MONTEUR: "Monteur",
+  AUSHILFE: "Aushilfe / Subunternehmer",
   KUNDE: "Kunde",
   GAST: "Gast (eingeladen)",
 };

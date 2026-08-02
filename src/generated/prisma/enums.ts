@@ -12,13 +12,39 @@
 export const UserRole = {
   ADMIN: 'ADMIN',
   MEISTER: 'MEISTER',
+  TEAMLEITER: 'TEAMLEITER',
   BUERO: 'BUERO',
   MONTEUR: 'MONTEUR',
+  AUSHILFE: 'AUSHILFE',
   KUNDE: 'KUNDE',
   GAST: 'GAST'
 } as const
 
 export type UserRole = (typeof UserRole)[keyof typeof UserRole]
+
+
+export const WorkRequestStatus = {
+  DRAFT: 'DRAFT',
+  SUBMITTED: 'SUBMITTED',
+  ACCEPTED: 'ACCEPTED',
+  REJECTED: 'REJECTED',
+  CONVERTED: 'CONVERTED',
+  ARCHIVED: 'ARCHIVED'
+} as const
+
+export type WorkRequestStatus = (typeof WorkRequestStatus)[keyof typeof WorkRequestStatus]
+
+
+export const WorkRequestType = {
+  ZUSATZARBEIT: 'ZUSATZARBEIT',
+  NEUE_ANFRAGE: 'NEUE_ANFRAGE',
+  MATERIAL_FEHLT: 'MATERIAL_FEHLT',
+  SCHADEN: 'SCHADEN',
+  RUECKFRAGE: 'RUECKFRAGE',
+  SONSTIGES: 'SONSTIGES'
+} as const
+
+export type WorkRequestType = (typeof WorkRequestType)[keyof typeof WorkRequestType]
 
 
 export const InvitationStatus = {

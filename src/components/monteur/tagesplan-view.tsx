@@ -11,7 +11,7 @@ import { getCurrentPhase, phaseAssigneeLabel, type PhaseSummary } from "@/lib/ph
 import { calcPickupWithReserve } from "@/lib/monteur/pickup-list";
 import {
   MapPin, Phone, Navigation, CheckCircle, Camera, Package,
-  Car, MapPinned, Play, Pause, Layers, Users, Plus,
+  Car, MapPinned, Play, Pause, Layers, Users, Plus, CalendarDays,
 } from "lucide-react";
 import { format } from "date-fns";
 import { de } from "date-fns/locale";
@@ -35,26 +35,32 @@ interface MaterialLine {
   reservations?: { status: string; storageLocation?: { name: string } }[];
 }
 
+interface AppointmentOrder {
+  id: string;
+  orderNumber: string;
+  status: string;
+  description: string | null;
+  materialStatus?: string;
+  customer: { firstName: string; lastName: string; phone: string | null };
+  property: { street: string; zipCode: string; city: string };
+  services: { service: { name: string } | null; customName?: string | null }[];
+  checklists: { id: string; label: string; isChecked: boolean }[];
+  materialLines?: MaterialLine[];
+  phases?: PhaseSummary[];
+  team?: { id: string; name: string } | null;
+  vehicle?: { id: string; name: string; licensePlate: string | null } | null;
+}
+
 interface Appointment {
   id: string;
   startTime: string;
   endTime: string;
   status: string;
-  order: {
-    id: string;
-    orderNumber: string;
-    status: string;
-    description: string | null;
-    materialStatus?: string;
-    customer: { firstName: string; lastName: string; phone: string | null };
-    property: { street: string; zipCode: string; city: string };
-    services: { service: { name: string } | null; customName?: string | null }[];
-    checklists: { id: string; label: string; isChecked: boolean }[];
-    materialLines?: MaterialLine[];
-    phases?: PhaseSummary[];
-    team?: { id: string; name: string } | null;
-    vehicle?: { id: string; name: string; licensePlate: string | null } | null;
-  };
+  order: AppointmentOrder | null;
+}
+
+function hasOrder(a: Appointment): a is Appointment & { order: AppointmentOrder } {
+  return a.order != null;
 }
 
 const STATUS_ACTIONS = [
@@ -118,21 +124,27 @@ function MonteurTagesplanViewContent() {
       .then((d) => { if (d.success) setOwnCustomers(d.data); });
   }, [showOwnAppt]);
 
-  const nextAppointment = appointments.find(
+  const appointmentsWithOrder = appointments.filter(hasOrder);
+
+  const nextAppointment = appointmentsWithOrder.find(
     (a) => !["ABGESCHLOSSEN", "STORNIERT"].includes(a.status)
   );
 
   const teamOptions = Array.from(
     new Map(
-      appointments.filter((a) => a.order.team).map((a) => [a.order.team!.id, a.order.team!.name])
+      appointmentsWithOrder
+        .filter((a) => a.order.team)
+        .map((a) => [a.order.team!.id, a.order.team!.name])
     ).entries()
   );
   const vehicleOptions = Array.from(
     new Map(
-      appointments.filter((a) => a.order.vehicle).map((a) => [a.order.vehicle!.id, a.order.vehicle!.name])
+      appointmentsWithOrder
+        .filter((a) => a.order.vehicle)
+        .map((a) => [a.order.vehicle!.id, a.order.vehicle!.name])
     ).entries()
   );
-  const filteredAppointments = appointments.filter(
+  const filteredAppointments = appointmentsWithOrder.filter(
     (a) =>
       (teamFilter === "all" || a.order.team?.id === teamFilter) &&
       (vehicleFilter === "all" || a.order.vehicle?.id === vehicleFilter)
@@ -259,7 +271,7 @@ function MonteurTagesplanViewContent() {
     }
   }
 
-  async function completeOrder(apt: Appointment) {
+  async function completeOrder(apt: Appointment & { order: AppointmentOrder }) {
     setCompletionError((prev) => ({ ...prev, [apt.id]: "" }));
     setCompletionMsg((prev) => ({ ...prev, [apt.id]: "" }));
 
@@ -301,7 +313,7 @@ function MonteurTagesplanViewContent() {
     }
   }
 
-  function checklistProgress(apt: Appointment) {
+  function checklistProgress(apt: Appointment & { order: AppointmentOrder }) {
     const items = apt.order.checklists ?? [];
     if (!items.length) return { done: true, label: "Keine Checkliste nötig" };
     const checked = items.filter((c) => c.isChecked).length;
@@ -328,17 +340,24 @@ function MonteurTagesplanViewContent() {
           onChange={(e) => setSelectedDate(e.target.value)}
           className="mt-2 h-11 w-full min-w-0 rounded-2xl border border-slate-300 bg-white px-3.5 text-sm shadow-sm appearance-none"
         />
-        <Button
-          size="touch"
-          variant="outline"
-          className="mt-2 w-full"
-          onClick={() => {
-            setOwnForm((prev) => ({ ...prev, workDay: defaultWorkDayTimes() }));
-            setShowOwnAppt(true);
-          }}
-        >
-          <Plus className="h-4 w-4 mr-1" /> Eigener Termin
-        </Button>
+        <div className="mt-2 grid grid-cols-2 gap-2">
+          <Button asChild size="touch" variant="outline" className="w-full">
+            <Link href="/monteur/kalender">
+              <CalendarDays className="h-4 w-4 mr-1" /> Team-Kalender
+            </Link>
+          </Button>
+          <Button
+            size="touch"
+            variant="outline"
+            className="w-full"
+            onClick={() => {
+              setOwnForm((prev) => ({ ...prev, workDay: defaultWorkDayTimes() }));
+              setShowOwnAppt(true);
+            }}
+          >
+            <Plus className="h-4 w-4 mr-1" /> Eigener Termin
+          </Button>
+        </div>
       </div>
 
       {showOwnAppt && (

@@ -337,6 +337,7 @@ export type TenantWhereInput = {
   plannedInvestments?: Prisma.PlannedInvestmentListRelationFilter
   aiChatSessions?: Prisma.AiChatSessionListRelationFilter
   projects?: Prisma.ProjectListRelationFilter
+  workRequests?: Prisma.WorkRequestListRelationFilter
 }
 
 export type TenantOrderByWithRelationInput = {
@@ -396,6 +397,7 @@ export type TenantOrderByWithRelationInput = {
   plannedInvestments?: Prisma.PlannedInvestmentOrderByRelationAggregateInput
   aiChatSessions?: Prisma.AiChatSessionOrderByRelationAggregateInput
   projects?: Prisma.ProjectOrderByRelationAggregateInput
+  workRequests?: Prisma.WorkRequestOrderByRelationAggregateInput
 }
 
 export type TenantWhereUniqueInput = Prisma.AtLeast<{
@@ -458,6 +460,7 @@ export type TenantWhereUniqueInput = Prisma.AtLeast<{
   plannedInvestments?: Prisma.PlannedInvestmentListRelationFilter
   aiChatSessions?: Prisma.AiChatSessionListRelationFilter
   projects?: Prisma.ProjectListRelationFilter
+  workRequests?: Prisma.WorkRequestListRelationFilter
 }, "id" | "slug">
 
 export type TenantOrderByWithAggregationInput = {
@@ -561,6 +564,7 @@ export type TenantCreateInput = {
   plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateInput = {
@@ -620,6 +624,7 @@ export type TenantUncheckedCreateInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUpdateInput = {
@@ -679,6 +684,7 @@ export type TenantUpdateInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateInput = {
@@ -738,6 +744,7 @@ export type TenantUncheckedUpdateInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateManyInput = {
@@ -898,6 +905,20 @@ export type TenantUpdateOneRequiredWithoutUsersNestedInput = {
   upsert?: Prisma.TenantUpsertWithoutUsersInput
   connect?: Prisma.TenantWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.TenantUpdateToOneWithWhereWithoutUsersInput, Prisma.TenantUpdateWithoutUsersInput>, Prisma.TenantUncheckedUpdateWithoutUsersInput>
+}
+
+export type TenantCreateNestedOneWithoutWorkRequestsInput = {
+  create?: Prisma.XOR<Prisma.TenantCreateWithoutWorkRequestsInput, Prisma.TenantUncheckedCreateWithoutWorkRequestsInput>
+  connectOrCreate?: Prisma.TenantCreateOrConnectWithoutWorkRequestsInput
+  connect?: Prisma.TenantWhereUniqueInput
+}
+
+export type TenantUpdateOneRequiredWithoutWorkRequestsNestedInput = {
+  create?: Prisma.XOR<Prisma.TenantCreateWithoutWorkRequestsInput, Prisma.TenantUncheckedCreateWithoutWorkRequestsInput>
+  connectOrCreate?: Prisma.TenantCreateOrConnectWithoutWorkRequestsInput
+  upsert?: Prisma.TenantUpsertWithoutWorkRequestsInput
+  connect?: Prisma.TenantWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TenantUpdateToOneWithWhereWithoutWorkRequestsInput, Prisma.TenantUpdateWithoutWorkRequestsInput>, Prisma.TenantUncheckedUpdateWithoutWorkRequestsInput>
 }
 
 export type TenantCreateNestedOneWithoutCustomersInput = {
@@ -1518,6 +1539,7 @@ export type TenantCreateWithoutUsersInput = {
   plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutUsersInput = {
@@ -1576,6 +1598,7 @@ export type TenantUncheckedCreateWithoutUsersInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutUsersInput = {
@@ -1650,6 +1673,7 @@ export type TenantUpdateWithoutUsersInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutUsersInput = {
@@ -1668,6 +1692,259 @@ export type TenantUncheckedUpdateWithoutUsersInput = {
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  customers?: Prisma.CustomerUncheckedUpdateManyWithoutTenantNestedInput
+  properties?: Prisma.PropertyUncheckedUpdateManyWithoutTenantNestedInput
+  services?: Prisma.ServiceUncheckedUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedUpdateManyWithoutTenantNestedInput
+  employees?: Prisma.EmployeeUncheckedUpdateManyWithoutTenantNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutTenantNestedInput
+  appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutTenantNestedInput
+  checklistTemplates?: Prisma.ChecklistTemplateUncheckedUpdateManyWithoutTenantNestedInput
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutTenantNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutTenantNestedInput
+  serviceAreas?: Prisma.ServiceAreaUncheckedUpdateManyWithoutTenantNestedInput
+  workingHours?: Prisma.WorkingHoursUncheckedUpdateManyWithoutTenantNestedInput
+  notifications?: Prisma.NotificationLogUncheckedUpdateManyWithoutTenantNestedInput
+  companySettings?: Prisma.CompanySettingsUncheckedUpdateOneWithoutTenantNestedInput
+  monthlyFixedCosts?: Prisma.MonthlyFixedCostUncheckedUpdateManyWithoutTenantNestedInput
+  overheadSettings?: Prisma.OverheadSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  machines?: Prisma.MachineUncheckedUpdateManyWithoutTenantNestedInput
+  travelZones?: Prisma.TravelZoneUncheckedUpdateManyWithoutTenantNestedInput
+  calculations?: Prisma.CalculationUncheckedUpdateManyWithoutTenantNestedInput
+  articles?: Prisma.ArticleUncheckedUpdateManyWithoutTenantNestedInput
+  storageLocations?: Prisma.StorageLocationUncheckedUpdateManyWithoutTenantNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutTenantNestedInput
+  staffAssignmentRequests?: Prisma.StaffAssignmentRequestUncheckedUpdateManyWithoutTenantNestedInput
+  deliveries?: Prisma.DeliveryUncheckedUpdateManyWithoutTenantNestedInput
+  manualReorderSuggestions?: Prisma.ManualReorderSuggestionUncheckedUpdateManyWithoutTenantNestedInput
+  teams?: Prisma.TeamUncheckedUpdateManyWithoutTenantNestedInput
+  vehicles?: Prisma.VehicleUncheckedUpdateManyWithoutTenantNestedInput
+  invitations?: Prisma.InvitationUncheckedUpdateManyWithoutTenantNestedInput
+  orderShares?: Prisma.OrderShareUncheckedUpdateManyWithoutTenantNestedInput
+  documentSequences?: Prisma.DocumentSequenceUncheckedUpdateManyWithoutTenantNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutTenantNestedInput
+  dunningNotices?: Prisma.DunningNoticeUncheckedUpdateManyWithoutTenantNestedInput
+  inAppNotifications?: Prisma.NotificationUncheckedUpdateManyWithoutTenantNestedInput
+  notificationSettings?: Prisma.NotificationSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUncheckedUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUncheckedUpdateManyWithoutTenantNestedInput
+}
+
+export type TenantCreateWithoutWorkRequestsInput = {
+  id?: string
+  slug: string
+  name: string
+  email: string
+  phone?: string | null
+  address?: string | null
+  city?: string | null
+  zipCode?: string | null
+  logoUrl?: string | null
+  primaryColor?: string
+  privacyPolicyUrl?: string | null
+  imprintUrl?: string | null
+  bufferMinutes?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserCreateNestedManyWithoutTenantInput
+  customers?: Prisma.CustomerCreateNestedManyWithoutTenantInput
+  properties?: Prisma.PropertyCreateNestedManyWithoutTenantInput
+  services?: Prisma.ServiceCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionCreateNestedManyWithoutTenantInput
+  employees?: Prisma.EmployeeCreateNestedManyWithoutTenantInput
+  orders?: Prisma.OrderCreateNestedManyWithoutTenantInput
+  appointments?: Prisma.AppointmentCreateNestedManyWithoutTenantInput
+  checklistTemplates?: Prisma.ChecklistTemplateCreateNestedManyWithoutTenantInput
+  messages?: Prisma.MessageCreateNestedManyWithoutTenantInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutTenantInput
+  serviceAreas?: Prisma.ServiceAreaCreateNestedManyWithoutTenantInput
+  workingHours?: Prisma.WorkingHoursCreateNestedManyWithoutTenantInput
+  notifications?: Prisma.NotificationLogCreateNestedManyWithoutTenantInput
+  companySettings?: Prisma.CompanySettingsCreateNestedOneWithoutTenantInput
+  monthlyFixedCosts?: Prisma.MonthlyFixedCostCreateNestedManyWithoutTenantInput
+  overheadSettings?: Prisma.OverheadSettingsCreateNestedOneWithoutTenantInput
+  machines?: Prisma.MachineCreateNestedManyWithoutTenantInput
+  travelZones?: Prisma.TravelZoneCreateNestedManyWithoutTenantInput
+  calculations?: Prisma.CalculationCreateNestedManyWithoutTenantInput
+  articles?: Prisma.ArticleCreateNestedManyWithoutTenantInput
+  storageLocations?: Prisma.StorageLocationCreateNestedManyWithoutTenantInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutTenantInput
+  staffAssignmentRequests?: Prisma.StaffAssignmentRequestCreateNestedManyWithoutTenantInput
+  deliveries?: Prisma.DeliveryCreateNestedManyWithoutTenantInput
+  manualReorderSuggestions?: Prisma.ManualReorderSuggestionCreateNestedManyWithoutTenantInput
+  teams?: Prisma.TeamCreateNestedManyWithoutTenantInput
+  vehicles?: Prisma.VehicleCreateNestedManyWithoutTenantInput
+  invitations?: Prisma.InvitationCreateNestedManyWithoutTenantInput
+  orderShares?: Prisma.OrderShareCreateNestedManyWithoutTenantInput
+  documentSequences?: Prisma.DocumentSequenceCreateNestedManyWithoutTenantInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutTenantInput
+  dunningNotices?: Prisma.DunningNoticeCreateNestedManyWithoutTenantInput
+  inAppNotifications?: Prisma.NotificationCreateNestedManyWithoutTenantInput
+  notificationSettings?: Prisma.NotificationSettingsCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
+}
+
+export type TenantUncheckedCreateWithoutWorkRequestsInput = {
+  id?: string
+  slug: string
+  name: string
+  email: string
+  phone?: string | null
+  address?: string | null
+  city?: string | null
+  zipCode?: string | null
+  logoUrl?: string | null
+  primaryColor?: string
+  privacyPolicyUrl?: string | null
+  imprintUrl?: string | null
+  bufferMinutes?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutTenantInput
+  customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutTenantInput
+  properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutTenantInput
+  services?: Prisma.ServiceUncheckedCreateNestedManyWithoutTenantInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUncheckedCreateNestedManyWithoutTenantInput
+  employees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutTenantInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutTenantInput
+  appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutTenantInput
+  checklistTemplates?: Prisma.ChecklistTemplateUncheckedCreateNestedManyWithoutTenantInput
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutTenantInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutTenantInput
+  serviceAreas?: Prisma.ServiceAreaUncheckedCreateNestedManyWithoutTenantInput
+  workingHours?: Prisma.WorkingHoursUncheckedCreateNestedManyWithoutTenantInput
+  notifications?: Prisma.NotificationLogUncheckedCreateNestedManyWithoutTenantInput
+  companySettings?: Prisma.CompanySettingsUncheckedCreateNestedOneWithoutTenantInput
+  monthlyFixedCosts?: Prisma.MonthlyFixedCostUncheckedCreateNestedManyWithoutTenantInput
+  overheadSettings?: Prisma.OverheadSettingsUncheckedCreateNestedOneWithoutTenantInput
+  machines?: Prisma.MachineUncheckedCreateNestedManyWithoutTenantInput
+  travelZones?: Prisma.TravelZoneUncheckedCreateNestedManyWithoutTenantInput
+  calculations?: Prisma.CalculationUncheckedCreateNestedManyWithoutTenantInput
+  articles?: Prisma.ArticleUncheckedCreateNestedManyWithoutTenantInput
+  storageLocations?: Prisma.StorageLocationUncheckedCreateNestedManyWithoutTenantInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutTenantInput
+  staffAssignmentRequests?: Prisma.StaffAssignmentRequestUncheckedCreateNestedManyWithoutTenantInput
+  deliveries?: Prisma.DeliveryUncheckedCreateNestedManyWithoutTenantInput
+  manualReorderSuggestions?: Prisma.ManualReorderSuggestionUncheckedCreateNestedManyWithoutTenantInput
+  teams?: Prisma.TeamUncheckedCreateNestedManyWithoutTenantInput
+  vehicles?: Prisma.VehicleUncheckedCreateNestedManyWithoutTenantInput
+  invitations?: Prisma.InvitationUncheckedCreateNestedManyWithoutTenantInput
+  orderShares?: Prisma.OrderShareUncheckedCreateNestedManyWithoutTenantInput
+  documentSequences?: Prisma.DocumentSequenceUncheckedCreateNestedManyWithoutTenantInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutTenantInput
+  dunningNotices?: Prisma.DunningNoticeUncheckedCreateNestedManyWithoutTenantInput
+  inAppNotifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutTenantInput
+  notificationSettings?: Prisma.NotificationSettingsUncheckedCreateNestedOneWithoutTenantInput
+  jobRuns?: Prisma.JobRunUncheckedCreateNestedManyWithoutTenantInput
+  financeSettings?: Prisma.FinanceSettingsUncheckedCreateNestedOneWithoutTenantInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
+  aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
+}
+
+export type TenantCreateOrConnectWithoutWorkRequestsInput = {
+  where: Prisma.TenantWhereUniqueInput
+  create: Prisma.XOR<Prisma.TenantCreateWithoutWorkRequestsInput, Prisma.TenantUncheckedCreateWithoutWorkRequestsInput>
+}
+
+export type TenantUpsertWithoutWorkRequestsInput = {
+  update: Prisma.XOR<Prisma.TenantUpdateWithoutWorkRequestsInput, Prisma.TenantUncheckedUpdateWithoutWorkRequestsInput>
+  create: Prisma.XOR<Prisma.TenantCreateWithoutWorkRequestsInput, Prisma.TenantUncheckedCreateWithoutWorkRequestsInput>
+  where?: Prisma.TenantWhereInput
+}
+
+export type TenantUpdateToOneWithWhereWithoutWorkRequestsInput = {
+  where?: Prisma.TenantWhereInput
+  data: Prisma.XOR<Prisma.TenantUpdateWithoutWorkRequestsInput, Prisma.TenantUncheckedUpdateWithoutWorkRequestsInput>
+}
+
+export type TenantUpdateWithoutWorkRequestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUpdateManyWithoutTenantNestedInput
+  customers?: Prisma.CustomerUpdateManyWithoutTenantNestedInput
+  properties?: Prisma.PropertyUpdateManyWithoutTenantNestedInput
+  services?: Prisma.ServiceUpdateManyWithoutTenantNestedInput
+  orderTypeDefinitions?: Prisma.OrderTypeDefinitionUpdateManyWithoutTenantNestedInput
+  employees?: Prisma.EmployeeUpdateManyWithoutTenantNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutTenantNestedInput
+  appointments?: Prisma.AppointmentUpdateManyWithoutTenantNestedInput
+  checklistTemplates?: Prisma.ChecklistTemplateUpdateManyWithoutTenantNestedInput
+  messages?: Prisma.MessageUpdateManyWithoutTenantNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutTenantNestedInput
+  serviceAreas?: Prisma.ServiceAreaUpdateManyWithoutTenantNestedInput
+  workingHours?: Prisma.WorkingHoursUpdateManyWithoutTenantNestedInput
+  notifications?: Prisma.NotificationLogUpdateManyWithoutTenantNestedInput
+  companySettings?: Prisma.CompanySettingsUpdateOneWithoutTenantNestedInput
+  monthlyFixedCosts?: Prisma.MonthlyFixedCostUpdateManyWithoutTenantNestedInput
+  overheadSettings?: Prisma.OverheadSettingsUpdateOneWithoutTenantNestedInput
+  machines?: Prisma.MachineUpdateManyWithoutTenantNestedInput
+  travelZones?: Prisma.TravelZoneUpdateManyWithoutTenantNestedInput
+  calculations?: Prisma.CalculationUpdateManyWithoutTenantNestedInput
+  articles?: Prisma.ArticleUpdateManyWithoutTenantNestedInput
+  storageLocations?: Prisma.StorageLocationUpdateManyWithoutTenantNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutTenantNestedInput
+  staffAssignmentRequests?: Prisma.StaffAssignmentRequestUpdateManyWithoutTenantNestedInput
+  deliveries?: Prisma.DeliveryUpdateManyWithoutTenantNestedInput
+  manualReorderSuggestions?: Prisma.ManualReorderSuggestionUpdateManyWithoutTenantNestedInput
+  teams?: Prisma.TeamUpdateManyWithoutTenantNestedInput
+  vehicles?: Prisma.VehicleUpdateManyWithoutTenantNestedInput
+  invitations?: Prisma.InvitationUpdateManyWithoutTenantNestedInput
+  orderShares?: Prisma.OrderShareUpdateManyWithoutTenantNestedInput
+  documentSequences?: Prisma.DocumentSequenceUpdateManyWithoutTenantNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutTenantNestedInput
+  dunningNotices?: Prisma.DunningNoticeUpdateManyWithoutTenantNestedInput
+  inAppNotifications?: Prisma.NotificationUpdateManyWithoutTenantNestedInput
+  notificationSettings?: Prisma.NotificationSettingsUpdateOneWithoutTenantNestedInput
+  jobRuns?: Prisma.JobRunUpdateManyWithoutTenantNestedInput
+  financeSettings?: Prisma.FinanceSettingsUpdateOneWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
+  aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
+}
+
+export type TenantUncheckedUpdateWithoutWorkRequestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
+  privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUncheckedUpdateManyWithoutTenantNestedInput
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutTenantNestedInput
   properties?: Prisma.PropertyUncheckedUpdateManyWithoutTenantNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutTenantNestedInput
@@ -1766,6 +2043,7 @@ export type TenantCreateWithoutCustomersInput = {
   plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutCustomersInput = {
@@ -1824,6 +2102,7 @@ export type TenantUncheckedCreateWithoutCustomersInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutCustomersInput = {
@@ -1898,6 +2177,7 @@ export type TenantUpdateWithoutCustomersInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutCustomersInput = {
@@ -1956,6 +2236,7 @@ export type TenantUncheckedUpdateWithoutCustomersInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutPropertiesInput = {
@@ -2014,6 +2295,7 @@ export type TenantCreateWithoutPropertiesInput = {
   plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutPropertiesInput = {
@@ -2072,6 +2354,7 @@ export type TenantUncheckedCreateWithoutPropertiesInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutPropertiesInput = {
@@ -2146,6 +2429,7 @@ export type TenantUpdateWithoutPropertiesInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutPropertiesInput = {
@@ -2204,6 +2488,7 @@ export type TenantUncheckedUpdateWithoutPropertiesInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutServicesInput = {
@@ -2262,6 +2547,7 @@ export type TenantCreateWithoutServicesInput = {
   plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutServicesInput = {
@@ -2320,6 +2606,7 @@ export type TenantUncheckedCreateWithoutServicesInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutServicesInput = {
@@ -2394,6 +2681,7 @@ export type TenantUpdateWithoutServicesInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutServicesInput = {
@@ -2452,6 +2740,7 @@ export type TenantUncheckedUpdateWithoutServicesInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutEmployeesInput = {
@@ -2510,6 +2799,7 @@ export type TenantCreateWithoutEmployeesInput = {
   plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutEmployeesInput = {
@@ -2568,6 +2858,7 @@ export type TenantUncheckedCreateWithoutEmployeesInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutEmployeesInput = {
@@ -2642,6 +2933,7 @@ export type TenantUpdateWithoutEmployeesInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutEmployeesInput = {
@@ -2700,6 +2992,7 @@ export type TenantUncheckedUpdateWithoutEmployeesInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutWorkingHoursInput = {
@@ -2758,6 +3051,7 @@ export type TenantCreateWithoutWorkingHoursInput = {
   plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutWorkingHoursInput = {
@@ -2816,6 +3110,7 @@ export type TenantUncheckedCreateWithoutWorkingHoursInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutWorkingHoursInput = {
@@ -2890,6 +3185,7 @@ export type TenantUpdateWithoutWorkingHoursInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutWorkingHoursInput = {
@@ -2948,6 +3244,7 @@ export type TenantUncheckedUpdateWithoutWorkingHoursInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutServiceAreasInput = {
@@ -3006,6 +3303,7 @@ export type TenantCreateWithoutServiceAreasInput = {
   plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutServiceAreasInput = {
@@ -3064,6 +3362,7 @@ export type TenantUncheckedCreateWithoutServiceAreasInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutServiceAreasInput = {
@@ -3138,6 +3437,7 @@ export type TenantUpdateWithoutServiceAreasInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutServiceAreasInput = {
@@ -3196,6 +3496,7 @@ export type TenantUncheckedUpdateWithoutServiceAreasInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutOrderTypeDefinitionsInput = {
@@ -3254,6 +3555,7 @@ export type TenantCreateWithoutOrderTypeDefinitionsInput = {
   plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutOrderTypeDefinitionsInput = {
@@ -3312,6 +3614,7 @@ export type TenantUncheckedCreateWithoutOrderTypeDefinitionsInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutOrderTypeDefinitionsInput = {
@@ -3386,6 +3689,7 @@ export type TenantUpdateWithoutOrderTypeDefinitionsInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutOrderTypeDefinitionsInput = {
@@ -3444,6 +3748,7 @@ export type TenantUncheckedUpdateWithoutOrderTypeDefinitionsInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutOrdersInput = {
@@ -3502,6 +3807,7 @@ export type TenantCreateWithoutOrdersInput = {
   plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutOrdersInput = {
@@ -3560,6 +3866,7 @@ export type TenantUncheckedCreateWithoutOrdersInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutOrdersInput = {
@@ -3634,6 +3941,7 @@ export type TenantUpdateWithoutOrdersInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutOrdersInput = {
@@ -3692,6 +4000,7 @@ export type TenantUncheckedUpdateWithoutOrdersInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutAppointmentsInput = {
@@ -3750,6 +4059,7 @@ export type TenantCreateWithoutAppointmentsInput = {
   plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutAppointmentsInput = {
@@ -3808,6 +4118,7 @@ export type TenantUncheckedCreateWithoutAppointmentsInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutAppointmentsInput = {
@@ -3882,6 +4193,7 @@ export type TenantUpdateWithoutAppointmentsInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutAppointmentsInput = {
@@ -3940,6 +4252,7 @@ export type TenantUncheckedUpdateWithoutAppointmentsInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutChecklistTemplatesInput = {
@@ -3998,6 +4311,7 @@ export type TenantCreateWithoutChecklistTemplatesInput = {
   plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutChecklistTemplatesInput = {
@@ -4056,6 +4370,7 @@ export type TenantUncheckedCreateWithoutChecklistTemplatesInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutChecklistTemplatesInput = {
@@ -4130,6 +4445,7 @@ export type TenantUpdateWithoutChecklistTemplatesInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutChecklistTemplatesInput = {
@@ -4188,6 +4504,7 @@ export type TenantUncheckedUpdateWithoutChecklistTemplatesInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutMessagesInput = {
@@ -4246,6 +4563,7 @@ export type TenantCreateWithoutMessagesInput = {
   plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutMessagesInput = {
@@ -4304,6 +4622,7 @@ export type TenantUncheckedCreateWithoutMessagesInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutMessagesInput = {
@@ -4378,6 +4697,7 @@ export type TenantUpdateWithoutMessagesInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutMessagesInput = {
@@ -4436,6 +4756,7 @@ export type TenantUncheckedUpdateWithoutMessagesInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutAuditLogsInput = {
@@ -4494,6 +4815,7 @@ export type TenantCreateWithoutAuditLogsInput = {
   plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutAuditLogsInput = {
@@ -4552,6 +4874,7 @@ export type TenantUncheckedCreateWithoutAuditLogsInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutAuditLogsInput = {
@@ -4626,6 +4949,7 @@ export type TenantUpdateWithoutAuditLogsInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutAuditLogsInput = {
@@ -4684,6 +5008,7 @@ export type TenantUncheckedUpdateWithoutAuditLogsInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutNotificationsInput = {
@@ -4742,6 +5067,7 @@ export type TenantCreateWithoutNotificationsInput = {
   plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutNotificationsInput = {
@@ -4800,6 +5126,7 @@ export type TenantUncheckedCreateWithoutNotificationsInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutNotificationsInput = {
@@ -4874,6 +5201,7 @@ export type TenantUpdateWithoutNotificationsInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutNotificationsInput = {
@@ -4932,6 +5260,7 @@ export type TenantUncheckedUpdateWithoutNotificationsInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutInAppNotificationsInput = {
@@ -4990,6 +5319,7 @@ export type TenantCreateWithoutInAppNotificationsInput = {
   plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutInAppNotificationsInput = {
@@ -5048,6 +5378,7 @@ export type TenantUncheckedCreateWithoutInAppNotificationsInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutInAppNotificationsInput = {
@@ -5122,6 +5453,7 @@ export type TenantUpdateWithoutInAppNotificationsInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutInAppNotificationsInput = {
@@ -5180,6 +5512,7 @@ export type TenantUncheckedUpdateWithoutInAppNotificationsInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutNotificationSettingsInput = {
@@ -5238,6 +5571,7 @@ export type TenantCreateWithoutNotificationSettingsInput = {
   plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutNotificationSettingsInput = {
@@ -5296,6 +5630,7 @@ export type TenantUncheckedCreateWithoutNotificationSettingsInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutNotificationSettingsInput = {
@@ -5370,6 +5705,7 @@ export type TenantUpdateWithoutNotificationSettingsInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutNotificationSettingsInput = {
@@ -5428,6 +5764,7 @@ export type TenantUncheckedUpdateWithoutNotificationSettingsInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutCompanySettingsInput = {
@@ -5486,6 +5823,7 @@ export type TenantCreateWithoutCompanySettingsInput = {
   plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutCompanySettingsInput = {
@@ -5544,6 +5882,7 @@ export type TenantUncheckedCreateWithoutCompanySettingsInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutCompanySettingsInput = {
@@ -5618,6 +5957,7 @@ export type TenantUpdateWithoutCompanySettingsInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutCompanySettingsInput = {
@@ -5676,6 +6016,7 @@ export type TenantUncheckedUpdateWithoutCompanySettingsInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutMonthlyFixedCostsInput = {
@@ -5734,6 +6075,7 @@ export type TenantCreateWithoutMonthlyFixedCostsInput = {
   plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutMonthlyFixedCostsInput = {
@@ -5792,6 +6134,7 @@ export type TenantUncheckedCreateWithoutMonthlyFixedCostsInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutMonthlyFixedCostsInput = {
@@ -5866,6 +6209,7 @@ export type TenantUpdateWithoutMonthlyFixedCostsInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutMonthlyFixedCostsInput = {
@@ -5924,6 +6268,7 @@ export type TenantUncheckedUpdateWithoutMonthlyFixedCostsInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutOverheadSettingsInput = {
@@ -5982,6 +6327,7 @@ export type TenantCreateWithoutOverheadSettingsInput = {
   plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutOverheadSettingsInput = {
@@ -6040,6 +6386,7 @@ export type TenantUncheckedCreateWithoutOverheadSettingsInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutOverheadSettingsInput = {
@@ -6114,6 +6461,7 @@ export type TenantUpdateWithoutOverheadSettingsInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutOverheadSettingsInput = {
@@ -6172,6 +6520,7 @@ export type TenantUncheckedUpdateWithoutOverheadSettingsInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutMachinesInput = {
@@ -6230,6 +6579,7 @@ export type TenantCreateWithoutMachinesInput = {
   plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutMachinesInput = {
@@ -6288,6 +6638,7 @@ export type TenantUncheckedCreateWithoutMachinesInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutMachinesInput = {
@@ -6362,6 +6713,7 @@ export type TenantUpdateWithoutMachinesInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutMachinesInput = {
@@ -6420,6 +6772,7 @@ export type TenantUncheckedUpdateWithoutMachinesInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutTravelZonesInput = {
@@ -6478,6 +6831,7 @@ export type TenantCreateWithoutTravelZonesInput = {
   plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutTravelZonesInput = {
@@ -6536,6 +6890,7 @@ export type TenantUncheckedCreateWithoutTravelZonesInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutTravelZonesInput = {
@@ -6610,6 +6965,7 @@ export type TenantUpdateWithoutTravelZonesInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutTravelZonesInput = {
@@ -6668,6 +7024,7 @@ export type TenantUncheckedUpdateWithoutTravelZonesInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutCalculationsInput = {
@@ -6726,6 +7083,7 @@ export type TenantCreateWithoutCalculationsInput = {
   plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutCalculationsInput = {
@@ -6784,6 +7142,7 @@ export type TenantUncheckedCreateWithoutCalculationsInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutCalculationsInput = {
@@ -6858,6 +7217,7 @@ export type TenantUpdateWithoutCalculationsInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutCalculationsInput = {
@@ -6916,6 +7276,7 @@ export type TenantUncheckedUpdateWithoutCalculationsInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutDocumentSequencesInput = {
@@ -6974,6 +7335,7 @@ export type TenantCreateWithoutDocumentSequencesInput = {
   plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutDocumentSequencesInput = {
@@ -7032,6 +7394,7 @@ export type TenantUncheckedCreateWithoutDocumentSequencesInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutDocumentSequencesInput = {
@@ -7106,6 +7469,7 @@ export type TenantUpdateWithoutDocumentSequencesInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutDocumentSequencesInput = {
@@ -7164,6 +7528,7 @@ export type TenantUncheckedUpdateWithoutDocumentSequencesInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutPaymentsInput = {
@@ -7222,6 +7587,7 @@ export type TenantCreateWithoutPaymentsInput = {
   plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutPaymentsInput = {
@@ -7280,6 +7646,7 @@ export type TenantUncheckedCreateWithoutPaymentsInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutPaymentsInput = {
@@ -7354,6 +7721,7 @@ export type TenantUpdateWithoutPaymentsInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutPaymentsInput = {
@@ -7412,6 +7780,7 @@ export type TenantUncheckedUpdateWithoutPaymentsInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutDunningNoticesInput = {
@@ -7470,6 +7839,7 @@ export type TenantCreateWithoutDunningNoticesInput = {
   plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutDunningNoticesInput = {
@@ -7528,6 +7898,7 @@ export type TenantUncheckedCreateWithoutDunningNoticesInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutDunningNoticesInput = {
@@ -7602,6 +7973,7 @@ export type TenantUpdateWithoutDunningNoticesInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutDunningNoticesInput = {
@@ -7660,6 +8032,7 @@ export type TenantUncheckedUpdateWithoutDunningNoticesInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutArticlesInput = {
@@ -7718,6 +8091,7 @@ export type TenantCreateWithoutArticlesInput = {
   plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutArticlesInput = {
@@ -7776,6 +8150,7 @@ export type TenantUncheckedCreateWithoutArticlesInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutArticlesInput = {
@@ -7850,6 +8225,7 @@ export type TenantUpdateWithoutArticlesInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutArticlesInput = {
@@ -7908,6 +8284,7 @@ export type TenantUncheckedUpdateWithoutArticlesInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutStorageLocationsInput = {
@@ -7966,6 +8343,7 @@ export type TenantCreateWithoutStorageLocationsInput = {
   plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutStorageLocationsInput = {
@@ -8024,6 +8402,7 @@ export type TenantUncheckedCreateWithoutStorageLocationsInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutStorageLocationsInput = {
@@ -8098,6 +8477,7 @@ export type TenantUpdateWithoutStorageLocationsInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutStorageLocationsInput = {
@@ -8156,6 +8536,7 @@ export type TenantUncheckedUpdateWithoutStorageLocationsInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutPurchaseOrdersInput = {
@@ -8214,6 +8595,7 @@ export type TenantCreateWithoutPurchaseOrdersInput = {
   plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutPurchaseOrdersInput = {
@@ -8272,6 +8654,7 @@ export type TenantUncheckedCreateWithoutPurchaseOrdersInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutPurchaseOrdersInput = {
@@ -8346,6 +8729,7 @@ export type TenantUpdateWithoutPurchaseOrdersInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutPurchaseOrdersInput = {
@@ -8404,6 +8788,7 @@ export type TenantUncheckedUpdateWithoutPurchaseOrdersInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutDeliveriesInput = {
@@ -8462,6 +8847,7 @@ export type TenantCreateWithoutDeliveriesInput = {
   plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutDeliveriesInput = {
@@ -8520,6 +8906,7 @@ export type TenantUncheckedCreateWithoutDeliveriesInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutDeliveriesInput = {
@@ -8594,6 +8981,7 @@ export type TenantUpdateWithoutDeliveriesInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutDeliveriesInput = {
@@ -8652,6 +9040,7 @@ export type TenantUncheckedUpdateWithoutDeliveriesInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutManualReorderSuggestionsInput = {
@@ -8710,6 +9099,7 @@ export type TenantCreateWithoutManualReorderSuggestionsInput = {
   plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutManualReorderSuggestionsInput = {
@@ -8768,6 +9158,7 @@ export type TenantUncheckedCreateWithoutManualReorderSuggestionsInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutManualReorderSuggestionsInput = {
@@ -8842,6 +9233,7 @@ export type TenantUpdateWithoutManualReorderSuggestionsInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutManualReorderSuggestionsInput = {
@@ -8900,6 +9292,7 @@ export type TenantUncheckedUpdateWithoutManualReorderSuggestionsInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutTeamsInput = {
@@ -8958,6 +9351,7 @@ export type TenantCreateWithoutTeamsInput = {
   plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutTeamsInput = {
@@ -9016,6 +9410,7 @@ export type TenantUncheckedCreateWithoutTeamsInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutTeamsInput = {
@@ -9090,6 +9485,7 @@ export type TenantUpdateWithoutTeamsInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutTeamsInput = {
@@ -9148,6 +9544,7 @@ export type TenantUncheckedUpdateWithoutTeamsInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutVehiclesInput = {
@@ -9206,6 +9603,7 @@ export type TenantCreateWithoutVehiclesInput = {
   plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutVehiclesInput = {
@@ -9264,6 +9662,7 @@ export type TenantUncheckedCreateWithoutVehiclesInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutVehiclesInput = {
@@ -9338,6 +9737,7 @@ export type TenantUpdateWithoutVehiclesInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutVehiclesInput = {
@@ -9396,6 +9796,7 @@ export type TenantUncheckedUpdateWithoutVehiclesInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutStaffAssignmentRequestsInput = {
@@ -9454,6 +9855,7 @@ export type TenantCreateWithoutStaffAssignmentRequestsInput = {
   plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutStaffAssignmentRequestsInput = {
@@ -9512,6 +9914,7 @@ export type TenantUncheckedCreateWithoutStaffAssignmentRequestsInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutStaffAssignmentRequestsInput = {
@@ -9586,6 +9989,7 @@ export type TenantUpdateWithoutStaffAssignmentRequestsInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutStaffAssignmentRequestsInput = {
@@ -9644,6 +10048,7 @@ export type TenantUncheckedUpdateWithoutStaffAssignmentRequestsInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutInvitationsInput = {
@@ -9702,6 +10107,7 @@ export type TenantCreateWithoutInvitationsInput = {
   plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutInvitationsInput = {
@@ -9760,6 +10166,7 @@ export type TenantUncheckedCreateWithoutInvitationsInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutInvitationsInput = {
@@ -9834,6 +10241,7 @@ export type TenantUpdateWithoutInvitationsInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutInvitationsInput = {
@@ -9892,6 +10300,7 @@ export type TenantUncheckedUpdateWithoutInvitationsInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutOrderSharesInput = {
@@ -9950,6 +10359,7 @@ export type TenantCreateWithoutOrderSharesInput = {
   plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutOrderSharesInput = {
@@ -10008,6 +10418,7 @@ export type TenantUncheckedCreateWithoutOrderSharesInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutOrderSharesInput = {
@@ -10082,6 +10493,7 @@ export type TenantUpdateWithoutOrderSharesInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutOrderSharesInput = {
@@ -10140,6 +10552,7 @@ export type TenantUncheckedUpdateWithoutOrderSharesInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutFinanceSettingsInput = {
@@ -10198,6 +10611,7 @@ export type TenantCreateWithoutFinanceSettingsInput = {
   plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutFinanceSettingsInput = {
@@ -10256,6 +10670,7 @@ export type TenantUncheckedCreateWithoutFinanceSettingsInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutFinanceSettingsInput = {
@@ -10330,6 +10745,7 @@ export type TenantUpdateWithoutFinanceSettingsInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutFinanceSettingsInput = {
@@ -10388,6 +10804,7 @@ export type TenantUncheckedUpdateWithoutFinanceSettingsInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutExpensesInput = {
@@ -10446,6 +10863,7 @@ export type TenantCreateWithoutExpensesInput = {
   plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutExpensesInput = {
@@ -10504,6 +10922,7 @@ export type TenantUncheckedCreateWithoutExpensesInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutExpensesInput = {
@@ -10578,6 +10997,7 @@ export type TenantUpdateWithoutExpensesInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutExpensesInput = {
@@ -10636,6 +11056,7 @@ export type TenantUncheckedUpdateWithoutExpensesInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutPlannedInvestmentsInput = {
@@ -10694,6 +11115,7 @@ export type TenantCreateWithoutPlannedInvestmentsInput = {
   expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutPlannedInvestmentsInput = {
@@ -10752,6 +11174,7 @@ export type TenantUncheckedCreateWithoutPlannedInvestmentsInput = {
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutPlannedInvestmentsInput = {
@@ -10826,6 +11249,7 @@ export type TenantUpdateWithoutPlannedInvestmentsInput = {
   expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutPlannedInvestmentsInput = {
@@ -10884,6 +11308,7 @@ export type TenantUncheckedUpdateWithoutPlannedInvestmentsInput = {
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutJobRunsInput = {
@@ -10942,6 +11367,7 @@ export type TenantCreateWithoutJobRunsInput = {
   plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutJobRunsInput = {
@@ -11000,6 +11426,7 @@ export type TenantUncheckedCreateWithoutJobRunsInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutJobRunsInput = {
@@ -11074,6 +11501,7 @@ export type TenantUpdateWithoutJobRunsInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutJobRunsInput = {
@@ -11132,6 +11560,7 @@ export type TenantUncheckedUpdateWithoutJobRunsInput = {
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutAiChatSessionsInput = {
@@ -11190,6 +11619,7 @@ export type TenantCreateWithoutAiChatSessionsInput = {
   expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
   plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutAiChatSessionsInput = {
@@ -11248,6 +11678,7 @@ export type TenantUncheckedCreateWithoutAiChatSessionsInput = {
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutAiChatSessionsInput = {
@@ -11322,6 +11753,7 @@ export type TenantUpdateWithoutAiChatSessionsInput = {
   expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
   plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutAiChatSessionsInput = {
@@ -11380,6 +11812,7 @@ export type TenantUncheckedUpdateWithoutAiChatSessionsInput = {
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutProjectsInput = {
@@ -11438,6 +11871,7 @@ export type TenantCreateWithoutProjectsInput = {
   expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
   plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutProjectsInput = {
@@ -11496,6 +11930,7 @@ export type TenantUncheckedCreateWithoutProjectsInput = {
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutTenantInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedCreateNestedManyWithoutTenantInput
+  workRequests?: Prisma.WorkRequestUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutProjectsInput = {
@@ -11570,6 +12005,7 @@ export type TenantUpdateWithoutProjectsInput = {
   expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
   plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutProjectsInput = {
@@ -11628,6 +12064,7 @@ export type TenantUncheckedUpdateWithoutProjectsInput = {
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
   plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput
   aiChatSessions?: Prisma.AiChatSessionUncheckedUpdateManyWithoutTenantNestedInput
+  workRequests?: Prisma.WorkRequestUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 
@@ -11673,6 +12110,7 @@ export type TenantCountOutputType = {
   plannedInvestments: number
   aiChatSessions: number
   projects: number
+  workRequests: number
 }
 
 export type TenantCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -11713,6 +12151,7 @@ export type TenantCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions
   plannedInvestments?: boolean | TenantCountOutputTypeCountPlannedInvestmentsArgs
   aiChatSessions?: boolean | TenantCountOutputTypeCountAiChatSessionsArgs
   projects?: boolean | TenantCountOutputTypeCountProjectsArgs
+  workRequests?: boolean | TenantCountOutputTypeCountWorkRequestsArgs
 }
 
 /**
@@ -11984,6 +12423,13 @@ export type TenantCountOutputTypeCountProjectsArgs<ExtArgs extends runtime.Types
   where?: Prisma.ProjectWhereInput
 }
 
+/**
+ * TenantCountOutputType without action
+ */
+export type TenantCountOutputTypeCountWorkRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.WorkRequestWhereInput
+}
+
 
 export type TenantSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -12042,6 +12488,7 @@ export type TenantSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   plannedInvestments?: boolean | Prisma.Tenant$plannedInvestmentsArgs<ExtArgs>
   aiChatSessions?: boolean | Prisma.Tenant$aiChatSessionsArgs<ExtArgs>
   projects?: boolean | Prisma.Tenant$projectsArgs<ExtArgs>
+  workRequests?: boolean | Prisma.Tenant$workRequestsArgs<ExtArgs>
   _count?: boolean | Prisma.TenantCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["tenant"]>
 
@@ -12142,6 +12589,7 @@ export type TenantInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   plannedInvestments?: boolean | Prisma.Tenant$plannedInvestmentsArgs<ExtArgs>
   aiChatSessions?: boolean | Prisma.Tenant$aiChatSessionsArgs<ExtArgs>
   projects?: boolean | Prisma.Tenant$projectsArgs<ExtArgs>
+  workRequests?: boolean | Prisma.Tenant$workRequestsArgs<ExtArgs>
   _count?: boolean | Prisma.TenantCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type TenantIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -12191,6 +12639,7 @@ export type $TenantPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     plannedInvestments: Prisma.$PlannedInvestmentPayload<ExtArgs>[]
     aiChatSessions: Prisma.$AiChatSessionPayload<ExtArgs>[]
     projects: Prisma.$ProjectPayload<ExtArgs>[]
+    workRequests: Prisma.$WorkRequestPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -12643,6 +13092,7 @@ export interface Prisma__TenantClient<T, Null = never, ExtArgs extends runtime.T
   plannedInvestments<T extends Prisma.Tenant$plannedInvestmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tenant$plannedInvestmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PlannedInvestmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   aiChatSessions<T extends Prisma.Tenant$aiChatSessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tenant$aiChatSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AiChatSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   projects<T extends Prisma.Tenant$projectsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tenant$projectsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  workRequests<T extends Prisma.Tenant$workRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tenant$workRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WorkRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -14041,6 +14491,30 @@ export type Tenant$projectsArgs<ExtArgs extends runtime.Types.Extensions.Interna
   take?: number
   skip?: number
   distinct?: Prisma.ProjectScalarFieldEnum | Prisma.ProjectScalarFieldEnum[]
+}
+
+/**
+ * Tenant.workRequests
+ */
+export type Tenant$workRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the WorkRequest
+   */
+  select?: Prisma.WorkRequestSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the WorkRequest
+   */
+  omit?: Prisma.WorkRequestOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.WorkRequestInclude<ExtArgs> | null
+  where?: Prisma.WorkRequestWhereInput
+  orderBy?: Prisma.WorkRequestOrderByWithRelationInput | Prisma.WorkRequestOrderByWithRelationInput[]
+  cursor?: Prisma.WorkRequestWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.WorkRequestScalarFieldEnum | Prisma.WorkRequestScalarFieldEnum[]
 }
 
 /**

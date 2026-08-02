@@ -10,10 +10,32 @@ datasource db {
 enum UserRole {
   ADMIN
   MEISTER
+  /// Teamleiter — primär Arbeitsansicht mit Teamfunktionen
+  TEAMLEITER
   BUERO
   MONTEUR
+  /// Stark eingeschränkte Feldrolle
+  AUSHILFE
   KUNDE
   GAST
+}
+
+enum WorkRequestStatus {
+  DRAFT
+  SUBMITTED
+  ACCEPTED
+  REJECTED
+  CONVERTED
+  ARCHIVED
+}
+
+enum WorkRequestType {
+  ZUSATZARBEIT
+  NEUE_ANFRAGE
+  MATERIAL_FEHLT
+  SCHADEN
+  RUECKFRAGE
+  SONSTIGES
 }
 
 enum InvitationStatus {
@@ -167,6 +189,7 @@ model Tenant {
   plannedInvestments   PlannedInvestment[]
   aiChatSessions       AiChatSession[]
   projects             Project[]
+  workRequests         WorkRequest[]
 }
 
 model User {
@@ -183,6 +206,8 @@ model User {
   address      String?
   avatarUrl    String?
   role         UserRole
+  /// Büro darf Rollen/Rechte verwalten (Admin hat dies immer).
+  canManageRoles Boolean @default(false)
   isActive     Boolean  @default(true)
   mustChangePassword Boolean @default(false)
   sessionVersion     Int      @default(0)
@@ -209,10 +234,45 @@ model User {
   projectNotesCreated   ProjectNote[]
   projectFilesUploaded  ProjectFile[]
   projectCostsCreated   ProjectCost[]
+  workRequestsCreated   WorkRequest[] @relation("WorkRequestCreator")
+  workRequestsReviewed  WorkRequest[] @relation("WorkRequestReviewer")
 
   @@unique([tenantId, email])
   @@index([tenantId, role])
   @@index([supabaseUserId])
+}
+
+/// Feldmeldung / Zusatzarbeit vom Monteur an Büro/Admin.
+model WorkRequest {
+  id              String            @id @default(cuid())
+  tenantId        String
+  type            WorkRequestType   @default(ZUSATZARBEIT)
+  status          WorkRequestStatus @default(SUBMITTED)
+  title           String
+  description     String
+  urgency         OrderPriority     @default(NORMAL)
+  estimatedHours  Float?
+  materialNotes   String?
+  addressNote     String?
+  orderId         String?
+  customerId      String?
+  createdById     String
+  reviewedById    String?
+  reviewedAt      DateTime?
+  reviewNote      String?
+  convertedOrderId String?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  tenant    Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  order     Order?    @relation(fields: [orderId], references: [id], onDelete: SetNull)
+  customer  Customer? @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  createdBy User      @relation("WorkRequestCreator", fields: [createdById], references: [id], onDelete: Cascade)
+  reviewedBy User?    @relation("WorkRequestReviewer", fields: [reviewedById], references: [id], onDelete: SetNull)
+
+  @@index([tenantId, status, createdAt])
+  @@index([createdById])
+  @@index([orderId])
 }
 
 model Customer {
@@ -249,6 +309,7 @@ model Customer {
   expenses Expense[]
   stockMovements StockMovement[]
   projects Project[]
+  workRequests WorkRequest[]
 
   @@unique([tenantId, email])
   @@index([tenantId])
@@ -498,6 +559,7 @@ model Order {
   projectFiles  ProjectFile[]
   projectCosts  ProjectCost[]
   assignees     OrderAssignee[]
+  workRequests  WorkRequest[]
 
   @@unique([tenantId, orderNumber])
   @@index([tenantId, status])

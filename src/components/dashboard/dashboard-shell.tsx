@@ -132,13 +132,14 @@ export function DashboardShell({
   navItems,
   session,
   roleLabel,
-  canAccessMonteur,
+  canSwitchToWork,
 }: {
   children: ReactNode;
   navItems: DashboardNavItem[];
   session: DashboardSession;
   roleLabel: string;
-  canAccessMonteur: boolean;
+  /** Bewusster Wechsel zur Arbeitsansicht — nur bei Doppelzugriff. */
+  canSwitchToWork: boolean;
 }) {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
@@ -152,10 +153,25 @@ export function DashboardShell({
         <header className="hidden h-14 items-center justify-between gap-4 border-b border-slate-200 bg-white px-6 lg:flex">
           <DashboardSearch className="max-w-lg flex-1" />
           <div className="flex shrink-0 items-center gap-4 text-sm text-slate-500">
-            {canAccessMonteur && (
-              <Link href="/monteur" className="text-[#0d5c63] hover:underline">
-                Monteur-App
-              </Link>
+            <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-slate-500">
+              Verwaltung
+            </span>
+            {canSwitchToWork && (
+              <button
+                type="button"
+                className="text-[#0d5c63] hover:underline"
+                onClick={() => {
+                  void fetch("/api/app-view", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ view: "arbeit" }),
+                  }).then(() => {
+                    window.location.href = "/monteur/heute";
+                  });
+                }}
+              >
+                Zur Arbeitsansicht wechseln
+              </button>
             )}
             <NotificationBell />
             <span>
@@ -197,10 +213,22 @@ export function DashboardShell({
           <DashboardSearch className="min-w-0 flex-1" />
           <div className="flex shrink-0 items-center gap-2">
             <NotificationBell />
-            {canAccessMonteur && (
-              <Link href="/monteur" className="shrink-0 text-sm text-[#0d5c63]">
-                Monteur
-              </Link>
+            {canSwitchToWork && (
+              <button
+                type="button"
+                className="shrink-0 text-sm text-[#0d5c63]"
+                onClick={() => {
+                  void fetch("/api/app-view", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ view: "arbeit" }),
+                  }).then(() => {
+                    window.location.href = "/monteur/heute";
+                  });
+                }}
+              >
+                Arbeit
+              </button>
             )}
           </div>
         </header>

@@ -63,7 +63,7 @@ export function LoginForm({ errorCode }: { errorCode?: string }) {
       }
 
       // Hard navigation: Cookie ist gesetzt, keine doppelte Soft-Navigation
-      const target = json.data?.redirectTo ?? "/dashboard";
+      const target = json.data?.redirectTo ?? "/monteur/heute";
       window.location.assign(target);
     } catch {
       setError(ERROR_MESSAGES.server);

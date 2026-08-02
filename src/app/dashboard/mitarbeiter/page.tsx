@@ -5,10 +5,11 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ROLE_LABELS } from "@/lib/utils";
-import { CanAccess } from "@/components/auth/can-access";
+import { CanAccess, usePermission, useSession } from "@/components/auth/can-access";
 import { AddButton } from "@/components/ui/add-button";
 import { saveJson } from "@/lib/save-toast";
 import { swrKeys, useApiSWR } from "@/lib/swr";
+import { ASSIGNABLE_STAFF_ROLES } from "@/lib/permissions";
 import { Pencil, Search } from "lucide-react";
 
 interface Employee {
@@ -16,11 +17,20 @@ interface Employee {
   color: string;
   hourlyWageNet?: number | null;
   operationalStatus: string;
-  user: { firstName: string; lastName: string; email: string; role: string; phone: string | null; address: string | null; isActive: boolean };
+  user: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    role: string;
+    phone: string | null;
+    address: string | null;
+    isActive: boolean;
+    canManageRoles?: boolean;
+  };
   qualifications: { name: string }[];
 }
 
-const ROLES = ["MONTEUR", "MEISTER", "BUERO", "ADMIN"];
+const ROLES = ASSIGNABLE_STAFF_ROLES;
 
 const EMPTY_FORM = {
   firstName: "",
@@ -34,9 +44,12 @@ const EMPTY_FORM = {
   qualifications: "",
   hourlyWageNet: "",
   isActive: true,
+  canManageRoles: false,
 };
 
 export default function MitarbeiterPage() {
+  const session = useSession();
+  const canManageRoles = usePermission("roles.manage");
   const { data: employees = [], mutate } = useApiSWR<Employee[]>(swrKeys.employees());
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -45,6 +58,10 @@ export default function MitarbeiterPage() {
   const [search, setSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState("");
   const [activeFilter, setActiveFilter] = useState<"all" | "active" | "inactive">("active");
+
+  const roleOptions = canManageRoles
+    ? ROLES.filter((r) => r !== "ADMIN" || session.role === "ADMIN")
+    : (["MONTEUR", "AUSHILFE"] as const);
 
   function load() {
     void mutate();
@@ -71,6 +88,7 @@ export default function MitarbeiterPage() {
       qualifications: emp.qualifications.map((q) => q.name).join(", "),
       hourlyWageNet: emp.hourlyWageNet != null ? String(emp.hourlyWageNet) : "",
       isActive: emp.user.isActive,
+      canManageRoles: emp.user.canManageRoles ?? false,
     });
     setError("");
     setShowForm(true);
@@ -102,6 +120,9 @@ export default function MitarbeiterPage() {
       qualifications: form.qualifications
         ? form.qualifications.split(",").map((s) => s.trim()).filter(Boolean)
         : [],
+      ...(canManageRoles && form.role === "BUERO"
+        ? { canManageRoles: form.canManageRoles }
+        : {}),
       ...(form.password ? { password: form.password } : {}),
     };
 
@@ -201,12 +222,43 @@ export default function MitarbeiterPage() {
             />
             <div>
               <label className="text-sm font-medium">Rolle *</label>
-              <select className="w-full h-10 rounded-lg border mt-1 px-3 text-sm" value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value })}>
-                {ROLES.map((r) => (
+              <select
+                className="w-full h-10 rounded-lg border mt-1 px-3 text-sm"
+                value={form.role}
+                onChange={(e) =>
+                  setForm({
+                    ...form,
+                    role: e.target.value,
+                    canManageRoles: e.target.value === "BUERO" ? form.canManageRoles : false,
+                  })
+                }
+                disabled={Boolean(editingId) && !canManageRoles}
+              >
+                {(editingId && !canManageRoles
+                  ? [form.role]
+                  : Array.from(new Set([...roleOptions, form.role]))
+                ).map((r) => (
                   <option key={r} value={r}>{ROLE_LABELS[r] ?? r}</option>
                 ))}
               </select>
+              {!canManageRoles && (
+                <p className="mt-1 text-xs text-slate-500">
+                  Rollenänderungen nur mit Berechtigung „Rollen & Rechte verwalten“.
+                </p>
+              )}
             </div>
+            {canManageRoles && form.role === "BUERO" && (
+              <div className="flex items-end">
+                <label className="flex items-center gap-2 text-sm">
+                  <input
+                    type="checkbox"
+                    checked={form.canManageRoles}
+                    onChange={(e) => setForm({ ...form, canManageRoles: e.target.checked })}
+                  />
+                  Darf Rollen und Rechte verwalten
+                </label>
+              </div>
+            )}
             <Input label="Telefon" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
             <Input label="Adresse" value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} className="sm:col-span-2" />
             <Input
@@ -255,6 +307,9 @@ export default function MitarbeiterPage() {
                 <div className="min-w-0">
                   <h3 className="font-semibold truncate">{emp.user.firstName} {emp.user.lastName}</h3>
                   <p className="text-sm text-slate-500">{ROLE_LABELS[emp.user.role]}</p>
+                  {emp.user.canManageRoles && emp.user.role === "BUERO" && (
+                    <span className="text-xs text-[#0d5c63]">Rollenverwaltung</span>
+                  )}
                   {!emp.user.isActive && (
                     <span className="text-xs text-red-500">Deaktiviert</span>
                   )}

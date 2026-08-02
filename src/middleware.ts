@@ -4,11 +4,10 @@ import { verifySession } from "@/lib/auth-session";
 import {
   hasPermission,
   getRoleHomePath,
-  canAccessDashboard,
-  canAccessMonteurApp,
+  canAccessManagementView,
+  canAccessWorkView,
   canAccessGuestPortal,
   canAccessCustomerPortal,
-  isMonteurExcludedDashboardPath,
   type Permission,
 } from "@/lib/permissions";
 
@@ -25,6 +24,8 @@ function getDashboardPermission(
   if (pathname.startsWith("/dashboard/einkauf")) return "inventory.read";
   if (pathname.startsWith("/dashboard/disposition")) return "appointments.read";
   if (pathname.startsWith("/dashboard/leitstand")) return "appointments.read";
+  if (pathname.startsWith("/dashboard/eingang")) return "work_requests.manage";
+  if (pathname.startsWith("/dashboard/rollen")) return "roles.manage";
   if (pathname.startsWith("/dashboard/kalkulation/einstellungen")) return "calculations.settings";
   if (pathname.startsWith("/dashboard/kalkulation/zonen")) return "calculations.settings";
   if (pathname.startsWith("/dashboard/kalkulation")) return "calculations.read";
@@ -44,10 +45,39 @@ function getDashboardPermission(
   if (pathname.startsWith("/dashboard/einstellungen")) return "tenant.manage";
   if (pathname.startsWith("/dashboard/nachrichten")) return "messages.read";
   if (pathname.startsWith("/dashboard/ki-assistent")) return "ai.chat";
-  // Längere Prefixe ZUERST — sonst matcht /dashboard/stunden auch /dashboard/stundenzettel
   if (pathname.startsWith("/dashboard/stundenzettel")) return "monteur.own";
   if (pathname.startsWith("/dashboard/stunden")) return "time_entries.read";
   return "deny";
+}
+
+/** Map /work/* → /monteur/* (freundliche Alias-URLs). */
+function rewriteWorkAlias(pathname: string): string | null {
+  if (!pathname.startsWith("/work")) return null;
+  const map: Record<string, string> = {
+    "/work": "/monteur/heute",
+    "/work/today": "/monteur/heute",
+    "/work/heute": "/monteur/heute",
+    "/work/orders": "/monteur/auftraege",
+    "/work/auftraege": "/monteur/auftraege",
+    "/work/times": "/monteur/zeiten",
+    "/work/zeiten": "/monteur/zeiten",
+    "/work/assistant": "/monteur/assistent",
+    "/work/assistent": "/monteur/assistent",
+    "/work/more": "/monteur/mehr",
+    "/work/mehr": "/monteur/mehr",
+    "/work/profile": "/monteur/profil",
+    "/work/profil": "/monteur/profil",
+    "/work/calendar": "/monteur/kalender",
+    "/work/kalender": "/monteur/kalender",
+  };
+  if (map[pathname]) return map[pathname];
+  if (pathname.startsWith("/work/orders/")) {
+    return `/monteur/auftrag/${pathname.slice("/work/orders/".length)}`;
+  }
+  if (pathname.startsWith("/work/auftraege/")) {
+    return `/monteur/auftrag/${pathname.slice("/work/auftraege/".length)}`;
+  }
+  return `/monteur${pathname.slice("/work".length)}` || "/monteur/heute";
 }
 
 export async function middleware(request: NextRequest) {
@@ -64,28 +94,44 @@ export async function middleware(request: NextRequest) {
     }
   }
 
+  // Alias /work → /monteur (sichtbare URL umschreiben, gleiche App)
+  const workTarget = rewriteWorkAlias(pathname);
+  if (workTarget) {
+    const url = request.nextUrl.clone();
+    url.pathname = workTarget;
+    return NextResponse.redirect(url);
+  }
+
   if (pathname.startsWith("/dashboard")) {
     if (!session) return NextResponse.redirect(new URL("/login", request.url));
     if (session.role === "GAST") return NextResponse.redirect(new URL("/portal", request.url));
     if (session.role === "KUNDE") return NextResponse.redirect(new URL("/kunde", request.url));
-    if (!canAccessDashboard(session.role)) {
-      return NextResponse.redirect(new URL(getRoleHomePath(session.role), request.url));
+
+    // Feldrollen: gar keine Verwaltungsansicht — auch kein Profil unter /dashboard.
+    if (!canAccessManagementView(session.role)) {
+      if (pathname.startsWith("/dashboard/profil")) {
+        const qs = request.nextUrl.search;
+        return NextResponse.redirect(new URL(`/monteur/profil${qs}`, request.url));
+      }
+      return NextResponse.redirect(new URL("/monteur/heute", request.url));
     }
-    if (session.role === "MONTEUR" && isMonteurExcludedDashboardPath(pathname)) {
-      return NextResponse.redirect(new URL("/dashboard", request.url));
-    }
+
+    // Office: Reiter bleiben in der Verwaltung — kein heimlicher Wechsel zur Arbeit.
     const perm = getDashboardPermission(pathname);
     if (perm === "deny") {
       return NextResponse.redirect(new URL("/dashboard", request.url));
     }
-    if (perm !== null && !hasPermission(session.role, perm)) {
+    if (
+      perm !== null &&
+      !hasPermission(session.role, perm, { canManageRoles: session.canManageRoles })
+    ) {
       return NextResponse.redirect(new URL("/dashboard", request.url));
     }
   }
 
   if (pathname.startsWith("/monteur")) {
     if (!session) return NextResponse.redirect(new URL("/login", request.url));
-    if (!canAccessMonteurApp(session.role)) {
+    if (!canAccessWorkView(session.role)) {
       return NextResponse.redirect(new URL(getRoleHomePath(session.role), request.url));
     }
   }
@@ -108,5 +154,12 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/monteur/:path*", "/portal/:path*", "/kunde/:path*"],
+  matcher: [
+    "/dashboard/:path*",
+    "/monteur/:path*",
+    "/work",
+    "/work/:path*",
+    "/portal/:path*",
+    "/kunde/:path*",
+  ],
 };

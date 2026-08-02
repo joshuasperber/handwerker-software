@@ -52,6 +52,11 @@ export type Tenant = Prisma.TenantModel
  */
 export type User = Prisma.UserModel
 /**
+ * Model WorkRequest
+ * Feldmeldung / Zusatzarbeit vom Monteur an Büro/Admin.
+ */
+export type WorkRequest = Prisma.WorkRequestModel
+/**
  * Model Customer
  * 
  */

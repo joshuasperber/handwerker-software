@@ -76,6 +76,7 @@ export async function GET(request: NextRequest) {
     where: {
       tenantId: auth.tenantId,
       status: { not: "STORNIERT" },
+      orderId: { not: null },
       startTime: { gte: rangeStart, lte: rangeEnd },
       OR: [
         { employeeId: employee.id },
@@ -181,6 +182,7 @@ export async function GET(request: NextRequest) {
     })) as unknown as ScheduleEntry[];
 
   const merged = [...appointments, ...synthetic, ...assigneeSynthetic]
+    .filter((a) => a.order != null)
     .filter((a, i, arr) => arr.findIndex((x) => x.id === a.id) === i)
     .sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime());
 

@@ -69,18 +69,18 @@ export function MessagesInbox({
   useEffect(() => { load(); }, [filter]);
 
   useEffect(() => {
-    fetchJson<{ id: string; orderNumber: string; customer: { lastName: string } }[]>(ordersApiUrl)
-      .then((d) => {
-        if (d.success && d.data) {
-          setOrders(
-            d.data.slice(0, 30).map((o) => ({
-              id: o.id,
-              orderNumber: o.orderNumber,
-              label: `${o.orderNumber} · ${o.customer?.lastName ?? ""}`,
-            }))
-          );
-        }
-      });
+    type OrderLite = { id: string; orderNumber: string; customer: { lastName: string } };
+    fetchJson<OrderLite[] | { orders: OrderLite[] }>(ordersApiUrl).then((d) => {
+      if (!d.success || !d.data) return;
+      const list = Array.isArray(d.data) ? d.data : d.data.orders ?? [];
+      setOrders(
+        list.slice(0, 30).map((o) => ({
+          id: o.id,
+          orderNumber: o.orderNumber,
+          label: `${o.orderNumber} · ${o.customer?.lastName ?? ""}`,
+        }))
+      );
+    });
   }, [ordersApiUrl]);
 
   useEffect(() => {

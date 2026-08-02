@@ -25,8 +25,10 @@ export function useSession(): SessionUser {
 }
 
 export function usePermission(permission: Permission): boolean {
-  const { role } = useSession();
-  return hasPermission(role, permission);
+  const session = useSession();
+  return hasPermission(session.role, permission, {
+    canManageRoles: session.canManageRoles,
+  });
 }
 
 export function CanAccess({

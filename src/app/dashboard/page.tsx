@@ -1,9 +1,9 @@
 import { Suspense } from "react";
+import { redirect } from "next/navigation";
 import { AddButton } from "@/components/ui/add-button";
 import { getSession } from "@/lib/auth";
-import { hasPermission } from "@/lib/permissions";
+import { canAccessManagementView, hasPermission } from "@/lib/permissions";
 import { getDashboardAnalytics } from "@/lib/dashboard/analytics";
-import { MonteurDashboardOverview } from "@/components/dashboard/monteur-overview";
 import { DashboardView } from "@/components/dashboard/analytics/dashboard-view";
 import { DashboardSkeleton } from "@/components/dashboard/analytics/dashboard-skeleton";
 import { OnboardingChecklist } from "@/components/dashboard/onboarding-checklist";
@@ -36,8 +36,8 @@ async function DashboardData({ tenantId }: { tenantId: string }) {
 export default async function DashboardPage() {
   const session = await getSession();
 
-  if (session?.role === "MONTEUR") {
-    return <MonteurDashboardOverview />;
+  if (session && !canAccessManagementView(session.role)) {
+    redirect("/monteur/heute");
   }
 
   const canCreateOrder = session

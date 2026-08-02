@@ -53,6 +53,7 @@ export const AnyNull = runtime.AnyNull
 export const ModelName = {
   Tenant: 'Tenant',
   User: 'User',
+  WorkRequest: 'WorkRequest',
   Customer: 'Customer',
   TaxExemptionCertificate: 'TaxExemptionCertificate',
   Property: 'Property',
@@ -183,6 +184,7 @@ export const UserScalarFieldEnum = {
   address: 'address',
   avatarUrl: 'avatarUrl',
   role: 'role',
+  canManageRoles: 'canManageRoles',
   isActive: 'isActive',
   mustChangePassword: 'mustChangePassword',
   sessionVersion: 'sessionVersion',
@@ -192,6 +194,31 @@ export const UserScalarFieldEnum = {
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const WorkRequestScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  type: 'type',
+  status: 'status',
+  title: 'title',
+  description: 'description',
+  urgency: 'urgency',
+  estimatedHours: 'estimatedHours',
+  materialNotes: 'materialNotes',
+  addressNote: 'addressNote',
+  orderId: 'orderId',
+  customerId: 'customerId',
+  createdById: 'createdById',
+  reviewedById: 'reviewedById',
+  reviewedAt: 'reviewedAt',
+  reviewNote: 'reviewNote',
+  convertedOrderId: 'convertedOrderId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type WorkRequestScalarFieldEnum = (typeof WorkRequestScalarFieldEnum)[keyof typeof WorkRequestScalarFieldEnum]
 
 
 export const CustomerScalarFieldEnum = {

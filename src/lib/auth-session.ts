@@ -25,6 +25,8 @@ export interface SessionUser {
   avatarUrl?: string | null;
   mustChangePassword?: boolean;
   sessionVersion?: number;
+  /** Explizite Büro-Berechtigung zur Rollenverwaltung. */
+  canManageRoles?: boolean;
 }
 
 function getSecret() {
@@ -43,6 +45,7 @@ export async function createSession(user: SessionUser): Promise<string> {
     role: user.role,
     mustChangePassword: user.mustChangePassword ?? false,
     sessionVersion: user.sessionVersion ?? 0,
+    canManageRoles: user.canManageRoles ?? false,
   })
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
@@ -68,6 +71,7 @@ export async function verifySession(token: string): Promise<SessionUser | null> 
       avatarUrl: null,
       mustChangePassword: (payload.mustChangePassword as boolean) ?? false,
       sessionVersion: (payload.sessionVersion as number) ?? 0,
+      canManageRoles: (payload.canManageRoles as boolean) ?? false,
     };
   } catch {
     return null;

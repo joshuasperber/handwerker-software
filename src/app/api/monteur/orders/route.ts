@@ -9,9 +9,11 @@ const orderSelect = {
   orderNumber: true,
   status: true,
   title: true,
+  scheduledStart: true,
   createdAt: true,
   updatedAt: true,
   customer: { select: { firstName: true, lastName: true } },
+  property: { select: { street: true, zipCode: true, city: true } },
 } as const;
 
 type OrderRow = {
@@ -19,9 +21,11 @@ type OrderRow = {
   orderNumber: string;
   status: string;
   title: string | null;
+  scheduledStart: Date | null;
   createdAt: Date;
   updatedAt: Date;
   customer: { firstName: string; lastName: string };
+  property: { street: string; zipCode: string; city: string } | null;
 };
 
 function sortNewestFirst(orders: OrderRow[]) {

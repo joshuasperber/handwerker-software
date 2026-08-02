@@ -4,8 +4,8 @@ import { requireAuth, apiSuccess, apiError } from "@/lib/api";
 import { hashPassword } from "@/lib/auth";
 import { bumpSessionVersion } from "@/lib/auth/session-version";
 import type { UserRole } from "@/generated/prisma/client";
-
-const ALLOWED_ROLES: UserRole[] = ["ADMIN", "MEISTER", "BUERO", "MONTEUR"];
+import { ASSIGNABLE_STAFF_ROLES, hasPermission } from "@/lib/permissions";
+import { createAuditLog } from "@/lib/audit";
 
 export async function GET(
   _request: NextRequest,
@@ -53,24 +53,58 @@ export async function PATCH(
     isActive,
     operationalStatus,
     hourlyWageNet,
+    canManageRoles,
   } = body;
 
-  if (role && !ALLOWED_ROLES.includes(role)) {
-    return apiError("Ungültige Rolle", 400);
+  const canManageRoleAssignments = hasPermission(auth.role, "roles.manage", {
+    canManageRoles: auth.canManageRoles,
+  });
+
+  if (role !== undefined && role !== employee.user.role) {
+    if (!ASSIGNABLE_STAFF_ROLES.includes(role as UserRole)) {
+      return apiError("Ungültige Rolle", 400);
+    }
+    if (!canManageRoleAssignments) {
+      return apiError("Keine Berechtigung, Rollen zu ändern", 403);
+    }
+    if (role === "ADMIN" && auth.role !== "ADMIN") {
+      return apiError("Nur Administratoren können Admin-Rollen vergeben", 403);
+    }
+    if (employee.userId === auth.id) {
+      return apiError("Die eigene Rolle kann nicht selbst geändert werden", 403);
+    }
   }
-  if (role === "ADMIN" && auth.role !== "ADMIN") {
-    return apiError("Nur Administratoren können Admin-Rollen vergeben", 403);
+
+  if (canManageRoles !== undefined) {
+    if (!canManageRoleAssignments) {
+      return apiError("Keine Berechtigung für Rollenverwaltung", 403);
+    }
+    if (employee.userId === auth.id) {
+      return apiError("Das eigene Rollenverwaltungsrecht kann nicht selbst geändert werden", 403);
+    }
   }
 
   if (email && email.toLowerCase() !== employee.user.email) {
     const existing = await prisma.user.findFirst({
-      where: { tenantId: auth.tenantId, email: email.toLowerCase(), NOT: { id: employee.userId } },
+      where: {
+        tenantId: auth.tenantId,
+        email: email.toLowerCase(),
+        NOT: { id: employee.userId },
+      },
     });
     if (existing) return apiError("E-Mail bereits vergeben", 400);
   }
 
   const roleChanged = role !== undefined && role !== employee.user.role;
   const deactivate = isActive === false && employee.user.isActive;
+
+  const nextRole = (role ?? employee.user.role) as UserRole;
+  let nextCanManageRoles = employee.user.canManageRoles;
+  if (canManageRoles !== undefined) {
+    nextCanManageRoles = Boolean(canManageRoles) && nextRole === "BUERO";
+  } else if (roleChanged && nextRole !== "BUERO") {
+    nextCanManageRoles = false;
+  }
 
   if (password) {
     const { createSupabaseAuthUser, updateSupabaseAuthPassword } = await import(
@@ -109,6 +143,9 @@ export async function PATCH(
       ...(phone !== undefined ? { phone: phone || null } : {}),
       ...(address !== undefined ? { address: address || null } : {}),
       ...(role !== undefined ? { role } : {}),
+      ...(canManageRoles !== undefined || roleChanged
+        ? { canManageRoles: nextCanManageRoles }
+        : {}),
       ...(isActive !== undefined ? { isActive } : {}),
       ...(password
         ? { passwordHash: await hashPassword(password), mustChangePassword: true }
@@ -116,8 +153,26 @@ export async function PATCH(
     },
   });
 
-  if (password || roleChanged || deactivate) {
+  if (password || roleChanged || deactivate || canManageRoles !== undefined) {
     await bumpSessionVersion(employee.userId);
+  }
+
+  if (roleChanged || canManageRoles !== undefined) {
+    await createAuditLog({
+      tenantId: auth.tenantId,
+      userId: auth.id,
+      entityType: "User",
+      entityId: employee.userId,
+      action: "ROLE_CHANGE",
+      oldValues: {
+        role: employee.user.role,
+        canManageRoles: employee.user.canManageRoles,
+      },
+      newValues: {
+        role: nextRole,
+        canManageRoles: nextCanManageRoles,
+      },
+    });
   }
 
   if (qualifications !== undefined) {

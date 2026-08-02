@@ -4,7 +4,7 @@ import { getEmployeeForUser } from "@/lib/monteur-access";
 
 /** Kunden für Monteur-Self-Service (nur aus eigenen Aufträgen/Terminen). */
 export async function GET() {
-  const auth = await requireAuth("monteur.create_own");
+  const auth = await requireAuth("monteur.own");
   if (auth instanceof Response) return auth;
 
   const employee = await getEmployeeForUser(auth);

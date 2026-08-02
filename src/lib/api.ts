@@ -41,7 +41,7 @@ export async function requireAuth(
 
   const active = await prisma.user.findFirst({
     where: { id: session.id, tenantId: session.tenantId, isActive: true },
-    select: { id: true, sessionVersion: true, role: true },
+    select: { id: true, sessionVersion: true, role: true, canManageRoles: true },
   });
   if (!active) {
     return apiError("Nicht authentifiziert", 401);
@@ -56,10 +56,20 @@ export async function requireAuth(
     return apiError("Sitzung abgelaufen — bitte erneut anmelden", 401);
   }
 
-  if (permission && !hasPermission(session.role, permission)) {
+  const sessionWithFlags: SessionUser = {
+    ...session,
+    canManageRoles: active.canManageRoles,
+  };
+
+  if (
+    permission &&
+    !hasPermission(sessionWithFlags.role, permission, {
+      canManageRoles: sessionWithFlags.canManageRoles,
+    })
+  ) {
     return apiError("Keine Berechtigung", 403);
   }
-  return session;
+  return sessionWithFlags;
 }
 
 export function getClientIp(request: Request): string | undefined {

@@ -2,89 +2,123 @@ import { prisma } from "@/lib/prisma";
 import { requireAuth, apiSuccess } from "@/lib/api";
 import { getEmployeeForUser } from "@/lib/monteur-access";
 
-/** Kollegen aus gemeinsamen Teams und Aufträgen (read-only). */
+export type ColleagueKind = "mitarbeiter" | "partner";
+
+/**
+ * Team in der Arbeitsansicht:
+ * - Alle aktiven Unternehmens-Mitarbeiter (nicht nur gemeinsames Team)
+ * - Unternehmenspartner (GAST)
+ */
 export async function GET() {
   const auth = await requireAuth("monteur.own");
   if (auth instanceof Response) return auth;
 
-  const employee = await getEmployeeForUser(auth);
-  if (!employee) return apiSuccess([]);
+  const me = await getEmployeeForUser(auth);
 
-  const myTeamIds = await prisma.teamMember.findMany({
-    where: { employeeId: employee.id },
-    select: { teamId: true },
-  });
+  const myTeamIds = me
+    ? (
+        await prisma.teamMember.findMany({
+          where: { employeeId: me.id },
+          select: { teamId: true },
+        })
+      ).map((t) => t.teamId)
+    : [];
 
-  const myOrderIds = await prisma.appointment.findMany({
-    where: { employeeId: employee.id, tenantId: auth.tenantId },
-    select: { orderId: true },
-    distinct: ["orderId"],
-  });
-
-  const colleagueIds = new Set<string>();
-
-  if (myTeamIds.length > 0) {
-    const teamMembers = await prisma.teamMember.findMany({
-      where: {
-        teamId: { in: myTeamIds.map((t) => t.teamId) },
-        employeeId: { not: employee.id },
-      },
-      select: { employeeId: true },
-    });
-    for (const m of teamMembers) colleagueIds.add(m.employeeId);
-  }
-
-  const linkedOrderIds = myOrderIds
-    .map((o) => o.orderId)
-    .filter((id): id is string => Boolean(id));
-  if (linkedOrderIds.length > 0) {
-    const orderColleagues = await prisma.appointment.findMany({
-      where: {
-        orderId: { in: linkedOrderIds },
-        employeeId: { not: employee.id },
-        tenantId: auth.tenantId,
-      },
-      select: { employeeId: true },
-      distinct: ["employeeId"],
-    });
-    for (const a of orderColleagues) {
-      if (a.employeeId) colleagueIds.add(a.employeeId);
-    }
-  }
-
-  if (colleagueIds.size === 0) return apiSuccess([]);
-
-  const colleagues = await prisma.employee.findMany({
+  const staff = await prisma.employee.findMany({
     where: {
-      id: { in: [...colleagueIds] },
       tenantId: auth.tenantId,
+      user: { isActive: true, role: { notIn: ["KUNDE", "GAST"] } },
+      ...(me ? { id: { not: me.id } } : {}),
     },
     include: {
       user: {
         select: {
+          id: true,
           firstName: true,
           lastName: true,
           email: true,
-          avatarUrl: true,
+          phone: true,
+          role: true,
         },
       },
       teamMemberships: {
-        include: { team: { select: { name: true } } },
+        include: { team: { select: { id: true, name: true } } },
       },
     },
     orderBy: { user: { lastName: "asc" } },
   });
 
-  return apiSuccess(
-    colleagues.map((e) => ({
+  const teamColleagueIds = new Set<string>();
+  if (myTeamIds.length) {
+    for (const e of staff) {
+      if (e.teamMemberships.some((m) => myTeamIds.includes(m.team.id))) {
+        teamColleagueIds.add(e.id);
+      }
+    }
+  }
+
+  const partners = await prisma.user.findMany({
+    where: {
+      tenantId: auth.tenantId,
+      isActive: true,
+      role: "GAST",
+      id: { not: auth.id },
+    },
+    select: {
+      id: true,
+      firstName: true,
+      lastName: true,
+      email: true,
+      phone: true,
+      role: true,
+    },
+    orderBy: [{ lastName: "asc" }, { firstName: "asc" }],
+  });
+
+  const staffRows = staff.map((e) => {
+    const isTeamColleague = teamColleagueIds.has(e.id);
+    return {
       id: e.id,
+      userId: e.user.id,
+      kind: "mitarbeiter" as ColleagueKind,
       firstName: e.user.firstName,
       lastName: e.user.lastName,
       email: e.user.email,
-      phone: null as string | null,
+      phone: e.user.phone,
+      role: e.user.role,
       color: e.color,
       operationalStatus: e.operationalStatus,
       teams: e.teamMemberships.map((m) => m.team.name),
-    }))
-  );
+      isTeamColleague,
+      group: isTeamColleague ? ("team" as const) : ("company" as const),
+    };
+  });
+
+  // Teamkollegen zuerst, dann restliche Unternehmenskollegen
+  staffRows.sort((a, b) => {
+    if (a.isTeamColleague !== b.isTeamColleague) return a.isTeamColleague ? -1 : 1;
+    return a.lastName.localeCompare(b.lastName, "de");
+  });
+
+  const partnerRows = partners.map((u) => ({
+    id: `partner-${u.id}`,
+    userId: u.id,
+    kind: "partner" as ColleagueKind,
+    firstName: u.firstName,
+    lastName: u.lastName,
+    email: u.email,
+    phone: u.phone,
+    role: u.role,
+    color: "#64748b",
+    operationalStatus: "PARTNER",
+    teams: ["Unternehmenspartner"],
+    isTeamColleague: false,
+    group: "partner" as const,
+  }));
+
+  return apiSuccess({
+    meEmployeeId: me?.id ?? null,
+    hasTeamColleagues: teamColleagueIds.size > 0,
+    colleagues: [...staffRows, ...partnerRows],
+  });
 }

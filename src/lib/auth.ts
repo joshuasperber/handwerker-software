@@ -54,6 +54,7 @@ function toSessionUser(user: {
   avatarUrl: string | null;
   mustChangePassword: boolean;
   sessionVersion: number;
+  canManageRoles?: boolean;
 }): SessionUser {
   return {
     id: user.id,
@@ -65,6 +66,7 @@ function toSessionUser(user: {
     avatarUrl: user.avatarUrl,
     mustChangePassword: user.mustChangePassword,
     sessionVersion: user.sessionVersion,
+    canManageRoles: user.canManageRoles ?? false,
   };
 }
 

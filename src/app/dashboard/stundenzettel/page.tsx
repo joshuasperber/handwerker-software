@@ -7,7 +7,12 @@ import { StundenzettelView } from "@/components/monteur/stundenzettel-view";
 export default async function DashboardStundenzettelPage() {
   const session = await getSession();
   if (!session) redirect("/login");
-  if (!hasPermission(session.role, "monteur.own")) redirect("/dashboard");
+  if (
+    !hasPermission(session.role, "monteur.own") &&
+    !hasPermission(session.role, "time_entries.read")
+  ) {
+    redirect("/dashboard");
+  }
 
   return (
     <Suspense fallback={<div className="p-6 text-sm text-slate-500">Stundenzettel wird geladen …</div>}>

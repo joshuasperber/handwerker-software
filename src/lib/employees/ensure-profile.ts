@@ -2,7 +2,14 @@ import { prisma } from "@/lib/prisma";
 import { pickDistinctEmployeeColor } from "@/lib/employee-colors";
 import type { UserRole } from "@/generated/prisma/client";
 
-const ROLES_WITH_EMPLOYEE_PROFILE: UserRole[] = ["ADMIN", "MEISTER", "BUERO", "MONTEUR"];
+const ROLES_WITH_EMPLOYEE_PROFILE: UserRole[] = [
+  "ADMIN",
+  "MEISTER",
+  "TEAMLEITER",
+  "BUERO",
+  "MONTEUR",
+  "AUSHILFE",
+];
 
 /** Legt ein Mitarbeiterprofil an, falls der Nutzer noch keins hat (z. B. nach Einladung). */
 export async function ensureEmployeeProfile(userId: string, tenantId: string, role: UserRole) {

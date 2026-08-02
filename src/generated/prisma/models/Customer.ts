@@ -327,6 +327,7 @@ export type CustomerWhereInput = {
   expenses?: Prisma.ExpenseListRelationFilter
   stockMovements?: Prisma.StockMovementListRelationFilter
   projects?: Prisma.ProjectListRelationFilter
+  workRequests?: Prisma.WorkRequestListRelationFilter
 }
 
 export type CustomerOrderByWithRelationInput = {
@@ -361,6 +362,7 @@ export type CustomerOrderByWithRelationInput = {
   expenses?: Prisma.ExpenseOrderByRelationAggregateInput
   stockMovements?: Prisma.StockMovementOrderByRelationAggregateInput
   projects?: Prisma.ProjectOrderByRelationAggregateInput
+  workRequests?: Prisma.WorkRequestOrderByRelationAggregateInput
 }
 
 export type CustomerWhereUniqueInput = Prisma.AtLeast<{
@@ -399,6 +401,7 @@ export type CustomerWhereUniqueInput = Prisma.AtLeast<{
   expenses?: Prisma.ExpenseListRelationFilter
   stockMovements?: Prisma.StockMovementListRelationFilter
   projects?: Prisma.ProjectListRelationFilter
+  workRequests?: Prisma.WorkRequestListRelationFilter
 }, "id" | "userId" | "tenantId_email">
 
 export type CustomerOrderByWithAggregationInput = {
@@ -487,6 +490,7 @@ export type CustomerCreateInput = {
   expenses?: Prisma.ExpenseCreateNestedManyWithoutCustomerInput
   stockMovements?: Prisma.StockMovementCreateNestedManyWithoutCustomerInput
   projects?: Prisma.ProjectCreateNestedManyWithoutCustomerInput
+  workRequests?: Prisma.WorkRequestCreateNestedManyWithoutCustomerInput
 }
 
 export type CustomerUncheckedCreateInput = {
@@ -519,6 +523,7 @@ export type CustomerUncheckedCreateInput = {
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutCustomerInput
   stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutCustomerInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCustomerInput
+  workRequests?: Prisma.WorkRequestUncheckedCreateNestedManyWithoutCustomerInput
 }
 
 export type CustomerUpdateInput = {
@@ -551,6 +556,7 @@ export type CustomerUpdateInput = {
   expenses?: Prisma.ExpenseUpdateManyWithoutCustomerNestedInput
   stockMovements?: Prisma.StockMovementUpdateManyWithoutCustomerNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutCustomerNestedInput
+  workRequests?: Prisma.WorkRequestUpdateManyWithoutCustomerNestedInput
 }
 
 export type CustomerUncheckedUpdateInput = {
@@ -583,6 +589,7 @@ export type CustomerUncheckedUpdateInput = {
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutCustomerNestedInput
   stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutCustomerNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutCustomerNestedInput
+  workRequests?: Prisma.WorkRequestUncheckedUpdateManyWithoutCustomerNestedInput
 }
 
 export type CustomerCreateManyInput = {
@@ -832,6 +839,22 @@ export type CustomerUncheckedUpdateOneWithoutUserNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.CustomerUpdateToOneWithWhereWithoutUserInput, Prisma.CustomerUpdateWithoutUserInput>, Prisma.CustomerUncheckedUpdateWithoutUserInput>
 }
 
+export type CustomerCreateNestedOneWithoutWorkRequestsInput = {
+  create?: Prisma.XOR<Prisma.CustomerCreateWithoutWorkRequestsInput, Prisma.CustomerUncheckedCreateWithoutWorkRequestsInput>
+  connectOrCreate?: Prisma.CustomerCreateOrConnectWithoutWorkRequestsInput
+  connect?: Prisma.CustomerWhereUniqueInput
+}
+
+export type CustomerUpdateOneWithoutWorkRequestsNestedInput = {
+  create?: Prisma.XOR<Prisma.CustomerCreateWithoutWorkRequestsInput, Prisma.CustomerUncheckedCreateWithoutWorkRequestsInput>
+  connectOrCreate?: Prisma.CustomerCreateOrConnectWithoutWorkRequestsInput
+  upsert?: Prisma.CustomerUpsertWithoutWorkRequestsInput
+  disconnect?: Prisma.CustomerWhereInput | boolean
+  delete?: Prisma.CustomerWhereInput | boolean
+  connect?: Prisma.CustomerWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CustomerUpdateToOneWithWhereWithoutWorkRequestsInput, Prisma.CustomerUpdateWithoutWorkRequestsInput>, Prisma.CustomerUncheckedUpdateWithoutWorkRequestsInput>
+}
+
 export type EnumCustomerTypeFieldUpdateOperationsInput = {
   set?: $Enums.CustomerType
 }
@@ -969,6 +992,7 @@ export type CustomerCreateWithoutTenantInput = {
   expenses?: Prisma.ExpenseCreateNestedManyWithoutCustomerInput
   stockMovements?: Prisma.StockMovementCreateNestedManyWithoutCustomerInput
   projects?: Prisma.ProjectCreateNestedManyWithoutCustomerInput
+  workRequests?: Prisma.WorkRequestCreateNestedManyWithoutCustomerInput
 }
 
 export type CustomerUncheckedCreateWithoutTenantInput = {
@@ -1000,6 +1024,7 @@ export type CustomerUncheckedCreateWithoutTenantInput = {
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutCustomerInput
   stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutCustomerInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCustomerInput
+  workRequests?: Prisma.WorkRequestUncheckedCreateNestedManyWithoutCustomerInput
 }
 
 export type CustomerCreateOrConnectWithoutTenantInput = {
@@ -1085,6 +1110,7 @@ export type CustomerCreateWithoutUserInput = {
   expenses?: Prisma.ExpenseCreateNestedManyWithoutCustomerInput
   stockMovements?: Prisma.StockMovementCreateNestedManyWithoutCustomerInput
   projects?: Prisma.ProjectCreateNestedManyWithoutCustomerInput
+  workRequests?: Prisma.WorkRequestCreateNestedManyWithoutCustomerInput
 }
 
 export type CustomerUncheckedCreateWithoutUserInput = {
@@ -1116,6 +1142,7 @@ export type CustomerUncheckedCreateWithoutUserInput = {
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutCustomerInput
   stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutCustomerInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCustomerInput
+  workRequests?: Prisma.WorkRequestUncheckedCreateNestedManyWithoutCustomerInput
 }
 
 export type CustomerCreateOrConnectWithoutUserInput = {
@@ -1163,11 +1190,157 @@ export type CustomerUpdateWithoutUserInput = {
   expenses?: Prisma.ExpenseUpdateManyWithoutCustomerNestedInput
   stockMovements?: Prisma.StockMovementUpdateManyWithoutCustomerNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutCustomerNestedInput
+  workRequests?: Prisma.WorkRequestUpdateManyWithoutCustomerNestedInput
 }
 
 export type CustomerUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  company?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerType?: Prisma.EnumCustomerTypeFieldUpdateOperationsInput | $Enums.CustomerType
+  contactPerson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingStreet?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingZipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gdprConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  gdprConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationEmailTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  properties?: Prisma.PropertyUncheckedUpdateManyWithoutCustomerNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutCustomerNestedInput
+  calculations?: Prisma.CalculationUncheckedUpdateManyWithoutCustomerNestedInput
+  taxExemptionCertificate?: Prisma.TaxExemptionCertificateUncheckedUpdateOneWithoutCustomerNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutCustomerNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutCustomerNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutCustomerNestedInput
+  workRequests?: Prisma.WorkRequestUncheckedUpdateManyWithoutCustomerNestedInput
+}
+
+export type CustomerCreateWithoutWorkRequestsInput = {
+  id?: string
+  firstName: string
+  lastName: string
+  email: string
+  phone?: string | null
+  company?: string | null
+  customerType?: $Enums.CustomerType
+  contactPerson?: string | null
+  vatId?: string | null
+  taxNumber?: string | null
+  billingStreet?: string | null
+  billingZipCode?: string | null
+  billingCity?: string | null
+  taxNotes?: string | null
+  notes?: string | null
+  gdprConsent?: boolean
+  gdprConsentAt?: Date | string | null
+  bookingConfirmationEmailTemplate?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tenant: Prisma.TenantCreateNestedOneWithoutCustomersInput
+  user?: Prisma.UserCreateNestedOneWithoutCustomerInput
+  properties?: Prisma.PropertyCreateNestedManyWithoutCustomerInput
+  orders?: Prisma.OrderCreateNestedManyWithoutCustomerInput
+  calculations?: Prisma.CalculationCreateNestedManyWithoutCustomerInput
+  taxExemptionCertificate?: Prisma.TaxExemptionCertificateCreateNestedOneWithoutCustomerInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutCustomerInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutCustomerInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutCustomerInput
+}
+
+export type CustomerUncheckedCreateWithoutWorkRequestsInput = {
+  id?: string
+  tenantId: string
+  userId?: string | null
+  firstName: string
+  lastName: string
+  email: string
+  phone?: string | null
+  company?: string | null
+  customerType?: $Enums.CustomerType
+  contactPerson?: string | null
+  vatId?: string | null
+  taxNumber?: string | null
+  billingStreet?: string | null
+  billingZipCode?: string | null
+  billingCity?: string | null
+  taxNotes?: string | null
+  notes?: string | null
+  gdprConsent?: boolean
+  gdprConsentAt?: Date | string | null
+  bookingConfirmationEmailTemplate?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutCustomerInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutCustomerInput
+  calculations?: Prisma.CalculationUncheckedCreateNestedManyWithoutCustomerInput
+  taxExemptionCertificate?: Prisma.TaxExemptionCertificateUncheckedCreateNestedOneWithoutCustomerInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutCustomerInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutCustomerInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCustomerInput
+}
+
+export type CustomerCreateOrConnectWithoutWorkRequestsInput = {
+  where: Prisma.CustomerWhereUniqueInput
+  create: Prisma.XOR<Prisma.CustomerCreateWithoutWorkRequestsInput, Prisma.CustomerUncheckedCreateWithoutWorkRequestsInput>
+}
+
+export type CustomerUpsertWithoutWorkRequestsInput = {
+  update: Prisma.XOR<Prisma.CustomerUpdateWithoutWorkRequestsInput, Prisma.CustomerUncheckedUpdateWithoutWorkRequestsInput>
+  create: Prisma.XOR<Prisma.CustomerCreateWithoutWorkRequestsInput, Prisma.CustomerUncheckedCreateWithoutWorkRequestsInput>
+  where?: Prisma.CustomerWhereInput
+}
+
+export type CustomerUpdateToOneWithWhereWithoutWorkRequestsInput = {
+  where?: Prisma.CustomerWhereInput
+  data: Prisma.XOR<Prisma.CustomerUpdateWithoutWorkRequestsInput, Prisma.CustomerUncheckedUpdateWithoutWorkRequestsInput>
+}
+
+export type CustomerUpdateWithoutWorkRequestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  company?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerType?: Prisma.EnumCustomerTypeFieldUpdateOperationsInput | $Enums.CustomerType
+  contactPerson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingStreet?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingZipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gdprConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  gdprConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bookingConfirmationEmailTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutCustomersNestedInput
+  user?: Prisma.UserUpdateOneWithoutCustomerNestedInput
+  properties?: Prisma.PropertyUpdateManyWithoutCustomerNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutCustomerNestedInput
+  calculations?: Prisma.CalculationUpdateManyWithoutCustomerNestedInput
+  taxExemptionCertificate?: Prisma.TaxExemptionCertificateUpdateOneWithoutCustomerNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutCustomerNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutCustomerNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutCustomerNestedInput
+}
+
+export type CustomerUncheckedUpdateWithoutWorkRequestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1225,6 +1398,7 @@ export type CustomerCreateWithoutTaxExemptionCertificateInput = {
   expenses?: Prisma.ExpenseCreateNestedManyWithoutCustomerInput
   stockMovements?: Prisma.StockMovementCreateNestedManyWithoutCustomerInput
   projects?: Prisma.ProjectCreateNestedManyWithoutCustomerInput
+  workRequests?: Prisma.WorkRequestCreateNestedManyWithoutCustomerInput
 }
 
 export type CustomerUncheckedCreateWithoutTaxExemptionCertificateInput = {
@@ -1256,6 +1430,7 @@ export type CustomerUncheckedCreateWithoutTaxExemptionCertificateInput = {
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutCustomerInput
   stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutCustomerInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCustomerInput
+  workRequests?: Prisma.WorkRequestUncheckedCreateNestedManyWithoutCustomerInput
 }
 
 export type CustomerCreateOrConnectWithoutTaxExemptionCertificateInput = {
@@ -1303,6 +1478,7 @@ export type CustomerUpdateWithoutTaxExemptionCertificateInput = {
   expenses?: Prisma.ExpenseUpdateManyWithoutCustomerNestedInput
   stockMovements?: Prisma.StockMovementUpdateManyWithoutCustomerNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutCustomerNestedInput
+  workRequests?: Prisma.WorkRequestUpdateManyWithoutCustomerNestedInput
 }
 
 export type CustomerUncheckedUpdateWithoutTaxExemptionCertificateInput = {
@@ -1334,6 +1510,7 @@ export type CustomerUncheckedUpdateWithoutTaxExemptionCertificateInput = {
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutCustomerNestedInput
   stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutCustomerNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutCustomerNestedInput
+  workRequests?: Prisma.WorkRequestUncheckedUpdateManyWithoutCustomerNestedInput
 }
 
 export type CustomerCreateWithoutPropertiesInput = {
@@ -1365,6 +1542,7 @@ export type CustomerCreateWithoutPropertiesInput = {
   expenses?: Prisma.ExpenseCreateNestedManyWithoutCustomerInput
   stockMovements?: Prisma.StockMovementCreateNestedManyWithoutCustomerInput
   projects?: Prisma.ProjectCreateNestedManyWithoutCustomerInput
+  workRequests?: Prisma.WorkRequestCreateNestedManyWithoutCustomerInput
 }
 
 export type CustomerUncheckedCreateWithoutPropertiesInput = {
@@ -1396,6 +1574,7 @@ export type CustomerUncheckedCreateWithoutPropertiesInput = {
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutCustomerInput
   stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutCustomerInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCustomerInput
+  workRequests?: Prisma.WorkRequestUncheckedCreateNestedManyWithoutCustomerInput
 }
 
 export type CustomerCreateOrConnectWithoutPropertiesInput = {
@@ -1443,6 +1622,7 @@ export type CustomerUpdateWithoutPropertiesInput = {
   expenses?: Prisma.ExpenseUpdateManyWithoutCustomerNestedInput
   stockMovements?: Prisma.StockMovementUpdateManyWithoutCustomerNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutCustomerNestedInput
+  workRequests?: Prisma.WorkRequestUpdateManyWithoutCustomerNestedInput
 }
 
 export type CustomerUncheckedUpdateWithoutPropertiesInput = {
@@ -1474,6 +1654,7 @@ export type CustomerUncheckedUpdateWithoutPropertiesInput = {
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutCustomerNestedInput
   stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutCustomerNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutCustomerNestedInput
+  workRequests?: Prisma.WorkRequestUncheckedUpdateManyWithoutCustomerNestedInput
 }
 
 export type CustomerCreateWithoutOrdersInput = {
@@ -1505,6 +1686,7 @@ export type CustomerCreateWithoutOrdersInput = {
   expenses?: Prisma.ExpenseCreateNestedManyWithoutCustomerInput
   stockMovements?: Prisma.StockMovementCreateNestedManyWithoutCustomerInput
   projects?: Prisma.ProjectCreateNestedManyWithoutCustomerInput
+  workRequests?: Prisma.WorkRequestCreateNestedManyWithoutCustomerInput
 }
 
 export type CustomerUncheckedCreateWithoutOrdersInput = {
@@ -1536,6 +1718,7 @@ export type CustomerUncheckedCreateWithoutOrdersInput = {
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutCustomerInput
   stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutCustomerInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCustomerInput
+  workRequests?: Prisma.WorkRequestUncheckedCreateNestedManyWithoutCustomerInput
 }
 
 export type CustomerCreateOrConnectWithoutOrdersInput = {
@@ -1583,6 +1766,7 @@ export type CustomerUpdateWithoutOrdersInput = {
   expenses?: Prisma.ExpenseUpdateManyWithoutCustomerNestedInput
   stockMovements?: Prisma.StockMovementUpdateManyWithoutCustomerNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutCustomerNestedInput
+  workRequests?: Prisma.WorkRequestUpdateManyWithoutCustomerNestedInput
 }
 
 export type CustomerUncheckedUpdateWithoutOrdersInput = {
@@ -1614,6 +1798,7 @@ export type CustomerUncheckedUpdateWithoutOrdersInput = {
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutCustomerNestedInput
   stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutCustomerNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutCustomerNestedInput
+  workRequests?: Prisma.WorkRequestUncheckedUpdateManyWithoutCustomerNestedInput
 }
 
 export type CustomerCreateWithoutCalculationsInput = {
@@ -1645,6 +1830,7 @@ export type CustomerCreateWithoutCalculationsInput = {
   expenses?: Prisma.ExpenseCreateNestedManyWithoutCustomerInput
   stockMovements?: Prisma.StockMovementCreateNestedManyWithoutCustomerInput
   projects?: Prisma.ProjectCreateNestedManyWithoutCustomerInput
+  workRequests?: Prisma.WorkRequestCreateNestedManyWithoutCustomerInput
 }
 
 export type CustomerUncheckedCreateWithoutCalculationsInput = {
@@ -1676,6 +1862,7 @@ export type CustomerUncheckedCreateWithoutCalculationsInput = {
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutCustomerInput
   stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutCustomerInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCustomerInput
+  workRequests?: Prisma.WorkRequestUncheckedCreateNestedManyWithoutCustomerInput
 }
 
 export type CustomerCreateOrConnectWithoutCalculationsInput = {
@@ -1723,6 +1910,7 @@ export type CustomerUpdateWithoutCalculationsInput = {
   expenses?: Prisma.ExpenseUpdateManyWithoutCustomerNestedInput
   stockMovements?: Prisma.StockMovementUpdateManyWithoutCustomerNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutCustomerNestedInput
+  workRequests?: Prisma.WorkRequestUpdateManyWithoutCustomerNestedInput
 }
 
 export type CustomerUncheckedUpdateWithoutCalculationsInput = {
@@ -1754,6 +1942,7 @@ export type CustomerUncheckedUpdateWithoutCalculationsInput = {
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutCustomerNestedInput
   stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutCustomerNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutCustomerNestedInput
+  workRequests?: Prisma.WorkRequestUncheckedUpdateManyWithoutCustomerNestedInput
 }
 
 export type CustomerCreateWithoutStockMovementsInput = {
@@ -1785,6 +1974,7 @@ export type CustomerCreateWithoutStockMovementsInput = {
   taxExemptionCertificate?: Prisma.TaxExemptionCertificateCreateNestedOneWithoutCustomerInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutCustomerInput
   projects?: Prisma.ProjectCreateNestedManyWithoutCustomerInput
+  workRequests?: Prisma.WorkRequestCreateNestedManyWithoutCustomerInput
 }
 
 export type CustomerUncheckedCreateWithoutStockMovementsInput = {
@@ -1816,6 +2006,7 @@ export type CustomerUncheckedCreateWithoutStockMovementsInput = {
   taxExemptionCertificate?: Prisma.TaxExemptionCertificateUncheckedCreateNestedOneWithoutCustomerInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutCustomerInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCustomerInput
+  workRequests?: Prisma.WorkRequestUncheckedCreateNestedManyWithoutCustomerInput
 }
 
 export type CustomerCreateOrConnectWithoutStockMovementsInput = {
@@ -1863,6 +2054,7 @@ export type CustomerUpdateWithoutStockMovementsInput = {
   taxExemptionCertificate?: Prisma.TaxExemptionCertificateUpdateOneWithoutCustomerNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutCustomerNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutCustomerNestedInput
+  workRequests?: Prisma.WorkRequestUpdateManyWithoutCustomerNestedInput
 }
 
 export type CustomerUncheckedUpdateWithoutStockMovementsInput = {
@@ -1894,6 +2086,7 @@ export type CustomerUncheckedUpdateWithoutStockMovementsInput = {
   taxExemptionCertificate?: Prisma.TaxExemptionCertificateUncheckedUpdateOneWithoutCustomerNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutCustomerNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutCustomerNestedInput
+  workRequests?: Prisma.WorkRequestUncheckedUpdateManyWithoutCustomerNestedInput
 }
 
 export type CustomerCreateWithoutExpensesInput = {
@@ -1925,6 +2118,7 @@ export type CustomerCreateWithoutExpensesInput = {
   taxExemptionCertificate?: Prisma.TaxExemptionCertificateCreateNestedOneWithoutCustomerInput
   stockMovements?: Prisma.StockMovementCreateNestedManyWithoutCustomerInput
   projects?: Prisma.ProjectCreateNestedManyWithoutCustomerInput
+  workRequests?: Prisma.WorkRequestCreateNestedManyWithoutCustomerInput
 }
 
 export type CustomerUncheckedCreateWithoutExpensesInput = {
@@ -1956,6 +2150,7 @@ export type CustomerUncheckedCreateWithoutExpensesInput = {
   taxExemptionCertificate?: Prisma.TaxExemptionCertificateUncheckedCreateNestedOneWithoutCustomerInput
   stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutCustomerInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutCustomerInput
+  workRequests?: Prisma.WorkRequestUncheckedCreateNestedManyWithoutCustomerInput
 }
 
 export type CustomerCreateOrConnectWithoutExpensesInput = {
@@ -2003,6 +2198,7 @@ export type CustomerUpdateWithoutExpensesInput = {
   taxExemptionCertificate?: Prisma.TaxExemptionCertificateUpdateOneWithoutCustomerNestedInput
   stockMovements?: Prisma.StockMovementUpdateManyWithoutCustomerNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutCustomerNestedInput
+  workRequests?: Prisma.WorkRequestUpdateManyWithoutCustomerNestedInput
 }
 
 export type CustomerUncheckedUpdateWithoutExpensesInput = {
@@ -2034,6 +2230,7 @@ export type CustomerUncheckedUpdateWithoutExpensesInput = {
   taxExemptionCertificate?: Prisma.TaxExemptionCertificateUncheckedUpdateOneWithoutCustomerNestedInput
   stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutCustomerNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutCustomerNestedInput
+  workRequests?: Prisma.WorkRequestUncheckedUpdateManyWithoutCustomerNestedInput
 }
 
 export type CustomerCreateWithoutProjectsInput = {
@@ -2065,6 +2262,7 @@ export type CustomerCreateWithoutProjectsInput = {
   taxExemptionCertificate?: Prisma.TaxExemptionCertificateCreateNestedOneWithoutCustomerInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutCustomerInput
   stockMovements?: Prisma.StockMovementCreateNestedManyWithoutCustomerInput
+  workRequests?: Prisma.WorkRequestCreateNestedManyWithoutCustomerInput
 }
 
 export type CustomerUncheckedCreateWithoutProjectsInput = {
@@ -2096,6 +2294,7 @@ export type CustomerUncheckedCreateWithoutProjectsInput = {
   taxExemptionCertificate?: Prisma.TaxExemptionCertificateUncheckedCreateNestedOneWithoutCustomerInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutCustomerInput
   stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutCustomerInput
+  workRequests?: Prisma.WorkRequestUncheckedCreateNestedManyWithoutCustomerInput
 }
 
 export type CustomerCreateOrConnectWithoutProjectsInput = {
@@ -2143,6 +2342,7 @@ export type CustomerUpdateWithoutProjectsInput = {
   taxExemptionCertificate?: Prisma.TaxExemptionCertificateUpdateOneWithoutCustomerNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutCustomerNestedInput
   stockMovements?: Prisma.StockMovementUpdateManyWithoutCustomerNestedInput
+  workRequests?: Prisma.WorkRequestUpdateManyWithoutCustomerNestedInput
 }
 
 export type CustomerUncheckedUpdateWithoutProjectsInput = {
@@ -2174,6 +2374,7 @@ export type CustomerUncheckedUpdateWithoutProjectsInput = {
   taxExemptionCertificate?: Prisma.TaxExemptionCertificateUncheckedUpdateOneWithoutCustomerNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutCustomerNestedInput
   stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutCustomerNestedInput
+  workRequests?: Prisma.WorkRequestUncheckedUpdateManyWithoutCustomerNestedInput
 }
 
 export type CustomerCreateManyTenantInput = {
@@ -2229,6 +2430,7 @@ export type CustomerUpdateWithoutTenantInput = {
   expenses?: Prisma.ExpenseUpdateManyWithoutCustomerNestedInput
   stockMovements?: Prisma.StockMovementUpdateManyWithoutCustomerNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutCustomerNestedInput
+  workRequests?: Prisma.WorkRequestUpdateManyWithoutCustomerNestedInput
 }
 
 export type CustomerUncheckedUpdateWithoutTenantInput = {
@@ -2260,6 +2462,7 @@ export type CustomerUncheckedUpdateWithoutTenantInput = {
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutCustomerNestedInput
   stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutCustomerNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutCustomerNestedInput
+  workRequests?: Prisma.WorkRequestUncheckedUpdateManyWithoutCustomerNestedInput
 }
 
 export type CustomerUncheckedUpdateManyWithoutTenantInput = {
@@ -2298,6 +2501,7 @@ export type CustomerCountOutputType = {
   expenses: number
   stockMovements: number
   projects: number
+  workRequests: number
 }
 
 export type CustomerCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2307,6 +2511,7 @@ export type CustomerCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensio
   expenses?: boolean | CustomerCountOutputTypeCountExpensesArgs
   stockMovements?: boolean | CustomerCountOutputTypeCountStockMovementsArgs
   projects?: boolean | CustomerCountOutputTypeCountProjectsArgs
+  workRequests?: boolean | CustomerCountOutputTypeCountWorkRequestsArgs
 }
 
 /**
@@ -2361,6 +2566,13 @@ export type CustomerCountOutputTypeCountProjectsArgs<ExtArgs extends runtime.Typ
   where?: Prisma.ProjectWhereInput
 }
 
+/**
+ * CustomerCountOutputType without action
+ */
+export type CustomerCountOutputTypeCountWorkRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.WorkRequestWhereInput
+}
+
 
 export type CustomerSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -2394,6 +2606,7 @@ export type CustomerSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   expenses?: boolean | Prisma.Customer$expensesArgs<ExtArgs>
   stockMovements?: boolean | Prisma.Customer$stockMovementsArgs<ExtArgs>
   projects?: boolean | Prisma.Customer$projectsArgs<ExtArgs>
+  workRequests?: boolean | Prisma.Customer$workRequestsArgs<ExtArgs>
   _count?: boolean | Prisma.CustomerCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["customer"]>
 
@@ -2487,6 +2700,7 @@ export type CustomerInclude<ExtArgs extends runtime.Types.Extensions.InternalArg
   expenses?: boolean | Prisma.Customer$expensesArgs<ExtArgs>
   stockMovements?: boolean | Prisma.Customer$stockMovementsArgs<ExtArgs>
   projects?: boolean | Prisma.Customer$projectsArgs<ExtArgs>
+  workRequests?: boolean | Prisma.Customer$workRequestsArgs<ExtArgs>
   _count?: boolean | Prisma.CustomerCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type CustomerIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2510,6 +2724,7 @@ export type $CustomerPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     expenses: Prisma.$ExpensePayload<ExtArgs>[]
     stockMovements: Prisma.$StockMovementPayload<ExtArgs>[]
     projects: Prisma.$ProjectPayload<ExtArgs>[]
+    workRequests: Prisma.$WorkRequestPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2940,6 +3155,7 @@ export interface Prisma__CustomerClient<T, Null = never, ExtArgs extends runtime
   expenses<T extends Prisma.Customer$expensesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Customer$expensesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExpensePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   stockMovements<T extends Prisma.Customer$stockMovementsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Customer$stockMovementsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StockMovementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   projects<T extends Prisma.Customer$projectsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Customer$projectsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  workRequests<T extends Prisma.Customer$workRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Customer$workRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WorkRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3571,6 +3787,30 @@ export type Customer$projectsArgs<ExtArgs extends runtime.Types.Extensions.Inter
   take?: number
   skip?: number
   distinct?: Prisma.ProjectScalarFieldEnum | Prisma.ProjectScalarFieldEnum[]
+}
+
+/**
+ * Customer.workRequests
+ */
+export type Customer$workRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the WorkRequest
+   */
+  select?: Prisma.WorkRequestSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the WorkRequest
+   */
+  omit?: Prisma.WorkRequestOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.WorkRequestInclude<ExtArgs> | null
+  where?: Prisma.WorkRequestWhereInput
+  orderBy?: Prisma.WorkRequestOrderByWithRelationInput | Prisma.WorkRequestOrderByWithRelationInput[]
+  cursor?: Prisma.WorkRequestWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.WorkRequestScalarFieldEnum | Prisma.WorkRequestScalarFieldEnum[]
 }
 
 /**

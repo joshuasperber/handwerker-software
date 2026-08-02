@@ -386,6 +386,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 export const ModelName = {
   Tenant: 'Tenant',
   User: 'User',
+  WorkRequest: 'WorkRequest',
   Customer: 'Customer',
   TaxExemptionCertificate: 'TaxExemptionCertificate',
   Property: 'Property',
@@ -480,7 +481,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "tenant" | "user" | "customer" | "taxExemptionCertificate" | "property" | "service" | "serviceQuestion" | "serviceQualification" | "employee" | "employeeQualification" | "workingHours" | "employeeWorkingHours" | "serviceArea" | "orderTypeDefinition" | "order" | "orderAssignee" | "orderService" | "appointment" | "checklistTemplate" | "checklistItem" | "orderChecklist" | "fileUpload" | "timeEntry" | "materialUsage" | "message" | "auditLog" | "notificationLog" | "notification" | "notificationSettings" | "companySettings" | "monthlyFixedCost" | "overheadSettings" | "machine" | "travelZone" | "calculation" | "laborItem" | "materialItem" | "machineUsageItem" | "procurementCost" | "travelCost" | "additionalCostItem" | "riskSettings" | "profitSettings" | "incomeTaxSettings" | "vATSettings" | "calculationDocument" | "documentSequence" | "payment" | "dunningNotice" | "article" | "storageLocation" | "stockBalance" | "stockMovement" | "reservation" | "serviceMaterialTemplate" | "orderPhase" | "orderMaterialLine" | "purchaseOrder" | "purchaseOrderLine" | "delivery" | "manualReorderSuggestion" | "team" | "teamMember" | "vehicle" | "employeeAbsence" | "planMarker" | "staffAssignmentRequest" | "invitation" | "orderShare" | "financeSettings" | "expense" | "plannedInvestment" | "jobRun" | "loginAttempt" | "aiChatSession" | "aiChatMessage" | "project" | "projectMember" | "projectNote" | "projectFile" | "projectCost"
+    modelProps: "tenant" | "user" | "workRequest" | "customer" | "taxExemptionCertificate" | "property" | "service" | "serviceQuestion" | "serviceQualification" | "employee" | "employeeQualification" | "workingHours" | "employeeWorkingHours" | "serviceArea" | "orderTypeDefinition" | "order" | "orderAssignee" | "orderService" | "appointment" | "checklistTemplate" | "checklistItem" | "orderChecklist" | "fileUpload" | "timeEntry" | "materialUsage" | "message" | "auditLog" | "notificationLog" | "notification" | "notificationSettings" | "companySettings" | "monthlyFixedCost" | "overheadSettings" | "machine" | "travelZone" | "calculation" | "laborItem" | "materialItem" | "machineUsageItem" | "procurementCost" | "travelCost" | "additionalCostItem" | "riskSettings" | "profitSettings" | "incomeTaxSettings" | "vATSettings" | "calculationDocument" | "documentSequence" | "payment" | "dunningNotice" | "article" | "storageLocation" | "stockBalance" | "stockMovement" | "reservation" | "serviceMaterialTemplate" | "orderPhase" | "orderMaterialLine" | "purchaseOrder" | "purchaseOrderLine" | "delivery" | "manualReorderSuggestion" | "team" | "teamMember" | "vehicle" | "employeeAbsence" | "planMarker" | "staffAssignmentRequest" | "invitation" | "orderShare" | "financeSettings" | "expense" | "plannedInvestment" | "jobRun" | "loginAttempt" | "aiChatSession" | "aiChatMessage" | "project" | "projectMember" | "projectNote" | "projectFile" | "projectCost"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -629,6 +630,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.UserCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.UserCountAggregateOutputType> | number
+        }
+      }
+    }
+    WorkRequest: {
+      payload: Prisma.$WorkRequestPayload<ExtArgs>
+      fields: Prisma.WorkRequestFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.WorkRequestFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkRequestPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.WorkRequestFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkRequestPayload>
+        }
+        findFirst: {
+          args: Prisma.WorkRequestFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkRequestPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.WorkRequestFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkRequestPayload>
+        }
+        findMany: {
+          args: Prisma.WorkRequestFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkRequestPayload>[]
+        }
+        create: {
+          args: Prisma.WorkRequestCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkRequestPayload>
+        }
+        createMany: {
+          args: Prisma.WorkRequestCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.WorkRequestCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkRequestPayload>[]
+        }
+        delete: {
+          args: Prisma.WorkRequestDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkRequestPayload>
+        }
+        update: {
+          args: Prisma.WorkRequestUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkRequestPayload>
+        }
+        deleteMany: {
+          args: Prisma.WorkRequestDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.WorkRequestUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.WorkRequestUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkRequestPayload>[]
+        }
+        upsert: {
+          args: Prisma.WorkRequestUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkRequestPayload>
+        }
+        aggregate: {
+          args: Prisma.WorkRequestAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateWorkRequest>
+        }
+        groupBy: {
+          args: Prisma.WorkRequestGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WorkRequestGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.WorkRequestCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WorkRequestCountAggregateOutputType> | number
         }
       }
     }
@@ -6550,6 +6625,7 @@ export const UserScalarFieldEnum = {
   address: 'address',
   avatarUrl: 'avatarUrl',
   role: 'role',
+  canManageRoles: 'canManageRoles',
   isActive: 'isActive',
   mustChangePassword: 'mustChangePassword',
   sessionVersion: 'sessionVersion',
@@ -6559,6 +6635,31 @@ export const UserScalarFieldEnum = {
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const WorkRequestScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  type: 'type',
+  status: 'status',
+  title: 'title',
+  description: 'description',
+  urgency: 'urgency',
+  estimatedHours: 'estimatedHours',
+  materialNotes: 'materialNotes',
+  addressNote: 'addressNote',
+  orderId: 'orderId',
+  customerId: 'customerId',
+  createdById: 'createdById',
+  reviewedById: 'reviewedById',
+  reviewedAt: 'reviewedAt',
+  reviewNote: 'reviewNote',
+  convertedOrderId: 'convertedOrderId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type WorkRequestScalarFieldEnum = (typeof WorkRequestScalarFieldEnum)[keyof typeof WorkRequestScalarFieldEnum]
 
 
 export const CustomerScalarFieldEnum = {
@@ -8057,16 +8158,44 @@ export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel,
 
 
 /**
- * Reference to a field of type 'CustomerType'
+ * Reference to a field of type 'WorkRequestType'
  */
-export type EnumCustomerTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CustomerType'>
+export type EnumWorkRequestTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WorkRequestType'>
     
 
 
 /**
- * Reference to a field of type 'CustomerType[]'
+ * Reference to a field of type 'WorkRequestType[]'
  */
-export type ListEnumCustomerTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CustomerType[]'>
+export type ListEnumWorkRequestTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WorkRequestType[]'>
+    
+
+
+/**
+ * Reference to a field of type 'WorkRequestStatus'
+ */
+export type EnumWorkRequestStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WorkRequestStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'WorkRequestStatus[]'
+ */
+export type ListEnumWorkRequestStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WorkRequestStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'OrderPriority'
+ */
+export type EnumOrderPriorityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OrderPriority'>
+    
+
+
+/**
+ * Reference to a field of type 'OrderPriority[]'
+ */
+export type ListEnumOrderPriorityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OrderPriority[]'>
     
 
 
@@ -8081,6 +8210,20 @@ export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, '
  * Reference to a field of type 'Float[]'
  */
 export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
+    
+
+
+/**
+ * Reference to a field of type 'CustomerType'
+ */
+export type EnumCustomerTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CustomerType'>
+    
+
+
+/**
+ * Reference to a field of type 'CustomerType[]'
+ */
+export type ListEnumCustomerTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CustomerType[]'>
     
 
 
@@ -8151,20 +8294,6 @@ export type EnumOrderStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$Pris
  * Reference to a field of type 'OrderStatus[]'
  */
 export type ListEnumOrderStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OrderStatus[]'>
-    
-
-
-/**
- * Reference to a field of type 'OrderPriority'
- */
-export type EnumOrderPriorityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OrderPriority'>
-    
-
-
-/**
- * Reference to a field of type 'OrderPriority[]'
- */
-export type ListEnumOrderPriorityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OrderPriority[]'>
     
 
 
@@ -8895,6 +9024,7 @@ export type PrismaClientOptions = ({
 export type GlobalOmitConfig = {
   tenant?: Prisma.TenantOmit
   user?: Prisma.UserOmit
+  workRequest?: Prisma.WorkRequestOmit
   customer?: Prisma.CustomerOmit
   taxExemptionCertificate?: Prisma.TaxExemptionCertificateOmit
   property?: Prisma.PropertyOmit

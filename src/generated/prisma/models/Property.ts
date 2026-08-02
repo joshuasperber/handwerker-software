@@ -687,14 +687,6 @@ export type PropertyUncheckedUpdateManyWithoutCustomerNestedInput = {
   deleteMany?: Prisma.PropertyScalarWhereInput | Prisma.PropertyScalarWhereInput[]
 }
 
-export type NullableFloatFieldUpdateOperationsInput = {
-  set?: number | null
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
 export type PropertyCreateNestedOneWithoutOrdersInput = {
   create?: Prisma.XOR<Prisma.PropertyCreateWithoutOrdersInput, Prisma.PropertyUncheckedCreateWithoutOrdersInput>
   connectOrCreate?: Prisma.PropertyCreateOrConnectWithoutOrdersInput

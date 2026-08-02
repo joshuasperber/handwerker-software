@@ -6,7 +6,8 @@ import {
   applySessionCookie,
 } from "@/lib/auth";
 import { apiSuccess, apiError, getClientIp } from "@/lib/api";
-import { getRoleHomePath } from "@/lib/role-routing";
+import { canUsePreferredViewCookie, getRoleHomePath } from "@/lib/role-routing";
+import { WORK_VIEW_COOKIE } from "@/lib/work-view";
 import {
   isLoginRateLimited,
   recordLoginAttempt,
@@ -114,18 +115,44 @@ export async function POST(request: NextRequest) {
 
     const token = await createSession(user);
 
+    const { parseAppViewMode } = await import("@/lib/work-view");
+    const cookieView = parseAppViewMode(request.cookies.get(WORK_VIEW_COOKIE)?.value);
+    const preferredView = canUsePreferredViewCookie(user.role) ? cookieView : null;
     const home = getRoleHomePath(user.role, {
       mustChangePassword: user.mustChangePassword,
+      preferredView,
     });
+
+    // Cookie an Startansicht anpassen — verhindert, dass Monteure in „verwaltung“ hängen bleiben.
+    const viewCookie =
+      home.startsWith("/monteur") ? "arbeit" : home.startsWith("/dashboard") ? "verwaltung" : null;
 
     if (jsonClient) {
       const response = apiSuccess({ user, redirectTo: home });
       applySessionCookie(response, token);
+      if (viewCookie) {
+        response.cookies.set(WORK_VIEW_COOKIE, viewCookie, {
+          httpOnly: false,
+          sameSite: "lax",
+          path: "/",
+          maxAge: 60 * 60 * 24 * 365,
+          secure: process.env.NODE_ENV === "production",
+        });
+      }
       return response;
     }
 
     const response = NextResponse.redirect(new URL(home, request.url), 303);
     applySessionCookie(response, token);
+    if (viewCookie) {
+      response.cookies.set(WORK_VIEW_COOKIE, viewCookie, {
+        httpOnly: false,
+        sameSite: "lax",
+        path: "/",
+        maxAge: 60 * 60 * 24 * 365,
+        secure: process.env.NODE_ENV === "production",
+      });
+    }
     return response;
   } catch (err) {
     logger.error("login failed", { route: "/api/auth/login" }, err);
