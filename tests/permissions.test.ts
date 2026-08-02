@@ -33,9 +33,15 @@ describe("isMonteurExcludedDashboardPath", () => {
 });
 
 describe("getDashboardNavItems", () => {
-  it("hides auftraege from MONTEUR nav", () => {
-    const hrefs = getDashboardNavItems("MONTEUR").map((item) => item.href);
-    assert.equal(hrefs.includes("/dashboard/auftraege"), false);
+  it("returns no dashboard nav for field roles", () => {
+    assert.deepEqual(getDashboardNavItems("MONTEUR"), []);
+    assert.deepEqual(getDashboardNavItems("TEAMLEITER"), []);
+    assert.deepEqual(getDashboardNavItems("AUSHILFE"), []);
+  });
+
+  it("includes core office items for ADMIN", () => {
+    const hrefs = getDashboardNavItems("ADMIN").map((item) => item.href);
+    assert.equal(hrefs.includes("/dashboard/auftraege"), true);
     assert.equal(hrefs.includes("/dashboard/nachrichten"), true);
   });
 });
