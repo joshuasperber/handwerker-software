@@ -51,6 +51,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { EInvoiceExportDialog } from "@/components/documents/einvoice-export-dialog";
 import { formatIssueDateInput } from "@/lib/documents/issue-date";
 import {
   ISSUE_DATE_CHANGE_WARNING,
@@ -138,6 +139,7 @@ export default function RechnungenPage() {
 
   const [cancelDoc, setCancelDoc] = useState<DocItem | null>(null);
   const [sendDoc, setSendDoc] = useState<DocItem | null>(null);
+  const [einvoiceDoc, setEinvoiceDoc] = useState<DocItem | null>(null);
   const [issueDateDoc, setIssueDateDoc] = useState<DocItem | null>(null);
   const [issueDateValue, setIssueDateValue] = useState("");
   const [issueDateConfirmOpen, setIssueDateConfirmOpen] = useState(false);
@@ -601,10 +603,8 @@ export default function RechnungenPage() {
                         </a>
                       </DropdownMenuItem>
                       {isInvoice && (
-                        <DropdownMenuItem asChild>
-                          <a href={`/api/documents/${doc.id}/einvoice`} target="_blank" rel="noreferrer">
-                            <FileCode2 className="h-4 w-4 mr-2" /> E-Rechnung (XML)
-                          </a>
+                        <DropdownMenuItem onClick={() => setEinvoiceDoc(doc)}>
+                          <FileCode2 className="h-4 w-4 mr-2" /> E-Rechnung prüfen/exportieren
                         </DropdownMenuItem>
                       )}
                       <CanAccess permission="invoices.write">
@@ -615,7 +615,7 @@ export default function RechnungenPage() {
                               <CalendarDays className="h-4 w-4 mr-2" /> Rechnungsdatum ändern
                             </DropdownMenuItem>
                             <DropdownMenuItem onClick={() => setSendDoc(doc)}>
-                              <Send className="h-4 w-4 mr-2" /> Per E-Mail senden
+                              <Send className="h-4 w-4 mr-2" /> Per E-Mail senden (PDF)
                             </DropdownMenuItem>
                             {doc.overdue && (
                               <DropdownMenuItem
@@ -798,14 +798,8 @@ export default function RechnungenPage() {
                               </a>
                             </DropdownMenuItem>
                             {isInvoice && (
-                              <DropdownMenuItem asChild>
-                                <a
-                                  href={`/api/documents/${doc.id}/einvoice`}
-                                  target="_blank"
-                                  rel="noreferrer"
-                                >
-                                  <FileCode2 className="h-4 w-4 mr-2" /> E-Rechnung (XML)
-                                </a>
+                              <DropdownMenuItem onClick={() => setEinvoiceDoc(doc)}>
+                                <FileCode2 className="h-4 w-4 mr-2" /> E-Rechnung prüfen/exportieren
                               </DropdownMenuItem>
                             )}
                             <CanAccess permission="invoices.write">
@@ -992,7 +986,7 @@ export default function RechnungenPage() {
         title="Rechnung senden?"
         description={
           sendDoc
-            ? `Rechnung ${sendDoc.documentNumber} wird per E-Mail an den Kunden gesendet.`
+            ? `Rechnung ${sendDoc.documentNumber} wird als PDF per E-Mail an den Kunden gesendet. E-Rechnungen werden nicht automatisch mitgeschickt.`
             : ""
         }
         confirmLabel="Senden"
@@ -1005,6 +999,18 @@ export default function RechnungenPage() {
             setSendDoc(null);
             await sendInvoice(doc);
           }
+        }}
+      />
+
+      <EInvoiceExportDialog
+        open={einvoiceDoc !== null}
+        documentId={einvoiceDoc?.id ?? null}
+        documentNumber={einvoiceDoc?.documentNumber}
+        onOpenChange={(open) => {
+          if (!open) setEinvoiceDoc(null);
+        }}
+        onExported={() => {
+          void load();
         }}
       />
     </div>

@@ -12,6 +12,7 @@ const PERIOD_PRESETS: FinancePeriodPreset[] = [
 
 const SETTINGS_DEFAULTS: FinanceSettingsDTO = {
   estimatedTaxRate: 30,
+  reservePercent: null,
   revenueBasis: "ISSUE_DATE",
   includeUnpaidInvoices: false,
   defaultPeriodPreset: "current_month",
@@ -21,6 +22,10 @@ const SETTINGS_DEFAULTS: FinanceSettingsDTO = {
   lowExpenseRatioThreshold: 0.15,
   highRevenueThreshold: 3000,
   lowLiquidityWarningThreshold: null,
+  vatRegistered: true,
+  kleinunternehmer: false,
+  hasTaxAdvisor: false,
+  profileNote: null,
 };
 
 function normalizePeriodPreset(value: string | null | undefined): FinancePeriodPreset {
@@ -36,6 +41,8 @@ function toFinanceSettingsDTO(settings: Record<string, unknown>): FinanceSetting
       typeof settings.estimatedTaxRate === "number"
         ? settings.estimatedTaxRate
         : SETTINGS_DEFAULTS.estimatedTaxRate,
+    reservePercent:
+      typeof settings.reservePercent === "number" ? settings.reservePercent : null,
     revenueBasis:
       settings.revenueBasis === "PAYMENT_DATE" || settings.revenueBasis === "ISSUE_DATE"
         ? settings.revenueBasis
@@ -72,6 +79,14 @@ function toFinanceSettingsDTO(settings: Record<string, unknown>): FinanceSetting
       typeof settings.lowLiquidityWarningThreshold === "number"
         ? settings.lowLiquidityWarningThreshold
         : null,
+    vatRegistered:
+      settings.vatRegistered === undefined
+        ? SETTINGS_DEFAULTS.vatRegistered
+        : Boolean(settings.vatRegistered),
+    kleinunternehmer: Boolean(settings.kleinunternehmer ?? false),
+    hasTaxAdvisor: Boolean(settings.hasTaxAdvisor ?? false),
+    profileNote:
+      typeof settings.profileNote === "string" ? settings.profileNote : null,
   };
 }
 
@@ -157,6 +172,7 @@ export async function getOrCreateFinanceSettings(
 
 export type FinanceSettingsUpdate = Partial<{
   estimatedTaxRate: number;
+  reservePercent: number | null;
   revenueBasis: FinanceRevenueBasis;
   includeUnpaidInvoices: boolean;
   defaultPeriodPreset: FinancePeriodPreset;
@@ -166,6 +182,10 @@ export type FinanceSettingsUpdate = Partial<{
   lowExpenseRatioThreshold: number;
   highRevenueThreshold: number;
   lowLiquidityWarningThreshold: number | null;
+  vatRegistered: boolean;
+  kleinunternehmer: boolean;
+  hasTaxAdvisor: boolean;
+  profileNote: string | null;
 }>;
 
 export async function updateFinanceSettings(

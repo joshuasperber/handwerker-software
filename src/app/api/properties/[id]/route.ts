@@ -38,6 +38,22 @@ export async function PATCH(
         ...(body.zipCode !== undefined ? { zipCode: String(body.zipCode) } : {}),
         ...(body.city !== undefined ? { city: String(body.city) } : {}),
         ...(body.notes !== undefined ? { notes: body.notes || null } : {}),
+        ...(body.latitude !== undefined
+          ? {
+              latitude:
+                body.latitude == null || body.latitude === ""
+                  ? null
+                  : Number(body.latitude),
+            }
+          : {}),
+        ...(body.longitude !== undefined
+          ? {
+              longitude:
+                body.longitude == null || body.longitude === ""
+                  ? null
+                  : Number(body.longitude),
+            }
+          : {}),
         ...(body.isPrimary !== undefined ? { isPrimary: body.isPrimary === true } : {}),
         ...(body.isActive !== undefined ? { isActive: body.isActive === true } : {}),
         ...(body.travelZoneId !== undefined

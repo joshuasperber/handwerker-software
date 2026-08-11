@@ -38,7 +38,7 @@ export function CreateCalculationDialog({
   const [mode, setMode] = useState<Mode>("detail");
   const [amountMode, setAmountMode] = useState<AmountMode>("net");
   const [fixedPrice, setFixedPrice] = useState<number | null>(null);
-  const [fixedLabel, setFixedLabel] = useState("Festpreis");
+  const [fixedLabel, setFixedLabel] = useState("Pauschalpreis");
   const [customerId, setCustomerId] = useState("");
   const [customers, setCustomers] = useState<CustomerOption[]>([]);
   const [busy, setBusy] = useState(false);
@@ -66,7 +66,8 @@ export function CreateCalculationDialog({
             body: JSON.stringify({
               useFixedPrice: true,
               fixedPriceNet: fixedPrice,
-              fixedPriceLabel: fixedLabel.trim() || "Festpreis",
+              fixedPriceLabel: fixedLabel.trim() || "Pauschalpreis",
+              fixedPriceDisplayMode: "SINGLE_LINE",
               amountMode,
               customerId: customerId || undefined,
             }),

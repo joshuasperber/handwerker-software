@@ -22,6 +22,10 @@ import {
 import { OrderTypeSelect } from "@/components/orders/order-type-select";
 import { ProjectAssignField } from "@/components/orders/project-assign-field";
 import { EmployeeMultiSelect } from "@/components/orders/employee-multi-select";
+import { FixedPriceEditor } from "@/components/calculation/fixed-price-editor";
+import type { FixedPriceDisplayMode } from "@/lib/calculation/fixed-price";
+import { suggestFixedPriceLabel } from "@/lib/calculation/fixed-price";
+import { AddressFields } from "@/components/ui/address-fields";
 import { articlePriceForCalculation } from "@/lib/inventory/units";
 
 interface CustomService {
@@ -101,6 +105,10 @@ export default function NeuerAuftragPage() {
     scheduledStart: "",
     scheduledEnd: "",
     confirmMaterial: false,
+    useFixedPrice: false,
+    fixedPriceNet: null as number | null,
+    fixedPriceLabel: "",
+    fixedPriceDisplayMode: "SINGLE_LINE" as FixedPriceDisplayMode,
     createNewCustomer: false,
     sameSiteAsBilling: true,
     newCustomer: {
@@ -315,6 +323,15 @@ export default function NeuerAuftragPage() {
   }
 
   async function submit() {
+    if (
+      form.useFixedPrice &&
+      (form.fixedPriceNet == null ||
+        !Number.isFinite(form.fixedPriceNet) ||
+        form.fixedPriceNet < 0)
+    ) {
+      setError("Bitte einen gültigen Festpreis angeben (0,00 € ist erlaubt).");
+      return;
+    }
     setSaving(true);
     setError("");
     const ids = await ensureCustomer();
@@ -344,6 +361,13 @@ export default function NeuerAuftragPage() {
         scheduledStart: form.scheduledStart || undefined,
         scheduledEnd: form.scheduledEnd || undefined,
         confirmMaterial: form.confirmMaterial,
+        useFixedPrice: form.useFixedPrice,
+        fixedPriceNet: form.useFixedPrice ? form.fixedPriceNet : null,
+        fixedPriceLabel: form.useFixedPrice
+          ? form.fixedPriceLabel.trim() ||
+            suggestFixedPriceLabel(form.title || form.orderTypeName)
+          : null,
+        fixedPriceDisplayMode: form.fixedPriceDisplayMode,
         materialLines: materialLines
           .filter((l) => l.name.trim())
           .map((l) => ({
@@ -493,39 +517,25 @@ export default function NeuerAuftragPage() {
               </div>
               <div className="rounded-lg border border-slate-200 p-3 space-y-3">
                 <p className="text-sm font-medium text-slate-800">Rechnungsadresse *</p>
-                <div className="grid gap-3 sm:grid-cols-2">
-                  <Input
-                    label="Straße *"
-                    className="sm:col-span-2"
-                    value={form.newCustomer.billingStreet}
-                    onChange={(e) =>
-                      setForm({
-                        ...form,
-                        newCustomer: { ...form.newCustomer, billingStreet: e.target.value },
-                      })
-                    }
-                  />
-                  <Input
-                    label="PLZ *"
-                    value={form.newCustomer.billingZipCode}
-                    onChange={(e) =>
-                      setForm({
-                        ...form,
-                        newCustomer: { ...form.newCustomer, billingZipCode: e.target.value },
-                      })
-                    }
-                  />
-                  <Input
-                    label="Ort *"
-                    value={form.newCustomer.billingCity}
-                    onChange={(e) =>
-                      setForm({
-                        ...form,
-                        newCustomer: { ...form.newCustomer, billingCity: e.target.value },
-                      })
-                    }
-                  />
-                </div>
+                <AddressFields
+                  required
+                  value={{
+                    street: form.newCustomer.billingStreet,
+                    zipCode: form.newCustomer.billingZipCode,
+                    city: form.newCustomer.billingCity,
+                  }}
+                  onChange={(addr) =>
+                    setForm({
+                      ...form,
+                      newCustomer: {
+                        ...form.newCustomer,
+                        billingStreet: addr.street,
+                        billingZipCode: addr.zipCode,
+                        billingCity: addr.city,
+                      },
+                    })
+                  }
+                />
               </div>
               <label className="flex items-start gap-2 text-sm">
                 <input
@@ -552,34 +562,23 @@ export default function NeuerAuftragPage() {
                       }
                       placeholder="z. B. Baustelle Friedrichstraße"
                     />
-                    <Input
-                      label="Straße *"
+                    <AddressFields
+                      required
                       className="sm:col-span-2"
-                      value={form.newCustomer.siteStreet}
-                      onChange={(e) =>
+                      value={{
+                        street: form.newCustomer.siteStreet,
+                        zipCode: form.newCustomer.siteZipCode,
+                        city: form.newCustomer.siteCity,
+                      }}
+                      onChange={(addr) =>
                         setForm({
                           ...form,
-                          newCustomer: { ...form.newCustomer, siteStreet: e.target.value },
-                        })
-                      }
-                    />
-                    <Input
-                      label="PLZ *"
-                      value={form.newCustomer.siteZipCode}
-                      onChange={(e) =>
-                        setForm({
-                          ...form,
-                          newCustomer: { ...form.newCustomer, siteZipCode: e.target.value },
-                        })
-                      }
-                    />
-                    <Input
-                      label="Ort *"
-                      value={form.newCustomer.siteCity}
-                      onChange={(e) =>
-                        setForm({
-                          ...form,
-                          newCustomer: { ...form.newCustomer, siteCity: e.target.value },
+                          newCustomer: {
+                            ...form.newCustomer,
+                            siteStreet: addr.street,
+                            siteZipCode: addr.zipCode,
+                            siteCity: addr.city,
+                          },
                         })
                       }
                     />
@@ -716,26 +715,24 @@ export default function NeuerAuftragPage() {
                           }
                           placeholder="z. B. Baustelle Friedrichstraße"
                         />
-                        <Input
-                          label="Straße *"
+                        <AddressFields
+                          required
                           className="sm:col-span-2"
-                          value={form.newSite.street}
-                          onChange={(e) =>
-                            setForm({ ...form, newSite: { ...form.newSite, street: e.target.value } })
-                          }
-                        />
-                        <Input
-                          label="PLZ *"
-                          value={form.newSite.zipCode}
-                          onChange={(e) =>
-                            setForm({ ...form, newSite: { ...form.newSite, zipCode: e.target.value } })
-                          }
-                        />
-                        <Input
-                          label="Ort *"
-                          value={form.newSite.city}
-                          onChange={(e) =>
-                            setForm({ ...form, newSite: { ...form.newSite, city: e.target.value } })
+                          value={{
+                            street: form.newSite.street,
+                            zipCode: form.newSite.zipCode,
+                            city: form.newSite.city,
+                          }}
+                          onChange={(addr) =>
+                            setForm({
+                              ...form,
+                              newSite: {
+                                ...form.newSite,
+                                street: addr.street,
+                                zipCode: addr.zipCode,
+                                city: addr.city,
+                              },
+                            })
                           }
                         />
                         <div className="sm:col-span-2">
@@ -872,6 +869,27 @@ export default function NeuerAuftragPage() {
                 </div>
               ))}
             </div>
+          </div>
+
+          <div className="mt-6 pt-4 border-t border-slate-200">
+            <FixedPriceEditor
+              useFixedPrice={form.useFixedPrice}
+              fixedPriceNet={form.fixedPriceNet}
+              fixedPriceLabel={form.fixedPriceLabel}
+              fixedPriceDisplayMode={form.fixedPriceDisplayMode}
+              calculatedNet={0}
+              profitAmount={0}
+              directCosts={0}
+              onChange={(next) =>
+                setForm((f) => ({
+                  ...f,
+                  useFixedPrice: next.useFixedPrice,
+                  fixedPriceNet: next.fixedPriceNet,
+                  fixedPriceLabel: next.fixedPriceLabel ?? "",
+                  fixedPriceDisplayMode: next.fixedPriceDisplayMode,
+                }))
+              }
+            />
           </div>
         </Card>
       )}

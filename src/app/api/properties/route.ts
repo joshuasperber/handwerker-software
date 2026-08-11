@@ -6,11 +6,25 @@ export async function POST(request: Request) {
   if (auth instanceof Response) return auth;
 
   const body = await request.json();
-  const { customerId, label, street, zipCode, city, notes, travelZoneId } = body;
+  const { customerId, label, street, zipCode, city, notes, travelZoneId, latitude, longitude } =
+    body;
 
   if (!customerId || !street || !zipCode || !city) {
     return apiError("Kunde, Straße, PLZ und Ort sind Pflicht", 400);
   }
+
+  const lat =
+    latitude == null || latitude === ""
+      ? null
+      : Number.isFinite(Number(latitude))
+        ? Number(latitude)
+        : null;
+  const lon =
+    longitude == null || longitude === ""
+      ? null
+      : Number.isFinite(Number(longitude))
+        ? Number(longitude)
+        : null;
 
   const customer = await prisma.customer.findFirst({
     where: { id: customerId, tenantId: auth.tenantId },
@@ -39,6 +53,8 @@ export async function POST(request: Request) {
         zipCode,
         city,
         notes,
+        latitude: lat,
+        longitude: lon,
         isPrimary,
         isActive: body.isActive !== false,
         travelZoneId: travelZoneId || null,

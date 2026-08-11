@@ -1,15 +1,14 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAuth, apiSuccess, apiError, NO_STORE_HEADERS } from "@/lib/api";
-import { expenseInputSchema } from "@/lib/finance/schemas";
+import { expensePatchSchema } from "@/lib/finance/schemas";
 import { toExpenseDTO } from "@/lib/finance/overview";
-import { parseLocalDateInput } from "@/lib/finance/period";
+import {
+  mapExpensePrismaError,
+  parseExpenseDate,
+  resolveExpenseRelations,
+} from "@/lib/finance/expense-persist";
 import { deleteFile } from "@/lib/storage";
-
-function parseExpenseDate(value: string): Date {
-  const local = parseLocalDateInput(value);
-  return new Date(local.getFullYear(), local.getMonth(), local.getDate(), 12, 0, 0, 0);
-}
 
 export async function GET(
   _request: NextRequest,
@@ -40,35 +39,64 @@ export async function PATCH(
   });
   if (!existing) return apiError("Ausgabe nicht gefunden", 404);
 
-  const body = await request.json();
-  const parsed = expenseInputSchema.partial().safeParse(body);
+  let body: unknown;
+  try {
+    body = await request.json();
+  } catch {
+    return apiError("Ungültige JSON-Daten");
+  }
+
+  const parsed = expensePatchSchema.safeParse(body);
   if (!parsed.success) {
     return apiError(parsed.error.issues[0]?.message ?? "Ungültige Eingabe");
   }
 
   const data = parsed.data;
-  const expense = await prisma.expense.update({
-    where: { id },
-    data: {
-      ...(data.category !== undefined && { category: data.category }),
-      ...(data.description !== undefined && { description: data.description }),
-      ...(data.netAmount !== undefined && { netAmount: data.netAmount }),
-      ...(data.vatAmount !== undefined && { vatAmount: data.vatAmount }),
-      ...(data.grossAmount !== undefined && { grossAmount: data.grossAmount }),
-      ...(data.expenseDate !== undefined && {
-        expenseDate: parseExpenseDate(data.expenseDate),
-      }),
-      ...(data.paymentStatus !== undefined && { paymentStatus: data.paymentStatus }),
-      ...(data.supplier !== undefined && { supplier: data.supplier }),
-      ...(data.orderId !== undefined && { orderId: data.orderId || null }),
-      ...(data.customerId !== undefined && { customerId: data.customerId || null }),
-      ...(data.projectId !== undefined && { projectId: data.projectId || null }),
-      ...(data.internalNote !== undefined && { internalNote: data.internalNote }),
-      ...(data.isInvestment !== undefined && { isInvestment: data.isInvestment }),
-    },
-  });
+  try {
+    const refs =
+      data.orderId !== undefined ||
+      data.projectId !== undefined ||
+      data.customerId !== undefined
+        ? await resolveExpenseRelations(auth.tenantId, {
+            orderId: data.orderId !== undefined ? data.orderId : existing.orderId,
+            projectId: data.projectId !== undefined ? data.projectId : existing.projectId,
+            customerId:
+              data.customerId !== undefined ? data.customerId : existing.customerId,
+          })
+        : null;
 
-  return apiSuccess(toExpenseDTO(expense), 200, NO_STORE_HEADERS);
+    const expense = await prisma.expense.update({
+      where: { id },
+      data: {
+        ...(data.category !== undefined && { category: data.category }),
+        ...(data.description !== undefined && { description: data.description }),
+        ...(data.netAmount !== undefined && { netAmount: data.netAmount }),
+        ...(data.vatAmount !== undefined && { vatAmount: data.vatAmount }),
+        ...(data.grossAmount !== undefined && { grossAmount: data.grossAmount }),
+        ...(data.expenseDate !== undefined && {
+          expenseDate: parseExpenseDate(data.expenseDate),
+        }),
+        ...(data.paymentStatus !== undefined && { paymentStatus: data.paymentStatus }),
+        ...(data.supplier !== undefined && {
+          supplier: data.supplier?.trim() || null,
+        }),
+        ...(refs && {
+          orderId: refs.orderId,
+          projectId: refs.projectId,
+          customerId: refs.customerId,
+        }),
+        ...(data.internalNote !== undefined && {
+          internalNote: data.internalNote?.trim() || null,
+        }),
+        ...(data.isInvestment !== undefined && { isInvestment: data.isInvestment }),
+      },
+    });
+
+    return apiSuccess(toExpenseDTO(expense), 200, NO_STORE_HEADERS);
+  } catch (err) {
+    console.error("[finance/expenses PATCH]", err);
+    return apiError(mapExpensePrismaError(err), 500);
+  }
 }
 
 export async function DELETE(
@@ -92,6 +120,11 @@ export async function DELETE(
     }
   }
 
-  await prisma.expense.delete({ where: { id } });
-  return apiSuccess({ deleted: true }, 200, NO_STORE_HEADERS);
+  try {
+    await prisma.expense.delete({ where: { id } });
+    return apiSuccess({ deleted: true }, 200, NO_STORE_HEADERS);
+  } catch (err) {
+    console.error("[finance/expenses DELETE]", err);
+    return apiError(mapExpensePrismaError(err), 500);
+  }
 }

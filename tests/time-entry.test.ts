@@ -165,6 +165,9 @@ describe("order time summary", () => {
     assert.equal(summary.actualHours, 7);
     assert.equal(summary.deltaHours, 5);
     assert.equal(summary.laborCostNet, 4 * 30 + 3 * 25);
+    // Ø Lohn (30+25)/2 = 27.5 → geplant 2 h × 27.5
+    assert.equal(summary.plannedLaborCostNet, 55);
+    assert.equal(summary.laborCostDelta, 4 * 30 + 3 * 25 - 55);
     assert.equal(summary.byEmployee.length, 2);
   });
 

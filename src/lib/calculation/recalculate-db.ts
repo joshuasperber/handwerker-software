@@ -240,7 +240,13 @@ export async function recalculateCalculationRecord(calculationId: string, tenant
       snapshotJson: result as object,
     },
     include: {
-      laborItems: true,
+      laborItems: {
+        include: {
+          employee: {
+            include: { user: { select: { id: true, firstName: true, lastName: true } } },
+          },
+        },
+      },
       materialItems: true,
       machineUsages: true,
       procurementCosts: true,

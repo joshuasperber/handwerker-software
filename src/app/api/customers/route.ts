@@ -77,6 +77,16 @@ export async function POST(request: Request) {
                 street: body.property.street,
                 zipCode: body.property.zipCode,
                 city: body.property.city,
+                latitude:
+                  body.property.latitude != null &&
+                  Number.isFinite(Number(body.property.latitude))
+                    ? Number(body.property.latitude)
+                    : null,
+                longitude:
+                  body.property.longitude != null &&
+                  Number.isFinite(Number(body.property.longitude))
+                    ? Number(body.property.longitude)
+                    : null,
                 // Bei der Erstanlage ist die erste Adresse immer die Hauptadresse.
                 isPrimary: true,
                 isActive: true,

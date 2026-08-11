@@ -55,6 +55,25 @@ describe("expenseInputSchema", () => {
     assert.equal(parsed.success, true);
   });
 
+  it("coerces string amounts and empty ids", () => {
+    const parsed = expenseInputSchema.safeParse({
+      category: "FUEL",
+      description: "Tanken",
+      netAmount: "42.5",
+      vatAmount: "8.08",
+      grossAmount: "50.58",
+      expenseDate: "2026-07-28",
+      orderId: "",
+      projectId: "__none__",
+    });
+    assert.equal(parsed.success, true);
+    if (parsed.success) {
+      assert.equal(parsed.data.netAmount, 42.5);
+      assert.equal(parsed.data.orderId, null);
+      assert.equal(parsed.data.projectId, null);
+    }
+  });
+
   it("requires description", () => {
     const parsed = expenseInputSchema.safeParse({
       category: "MATERIAL",

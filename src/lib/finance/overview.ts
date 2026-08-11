@@ -66,6 +66,7 @@ function toExpenseDTO(expense: {
 interface RevenueResult {
   net: number;
   gross: number;
+  vat: number;
   invoiceCount: number;
 }
 
@@ -134,7 +135,12 @@ function computeRevenueFromInvoices(
     }
   }
 
-  return { net, gross, invoiceCount };
+  return {
+    net,
+    gross,
+    vat: Math.max(0, Math.round((gross - net) * 100) / 100),
+    invoiceCount,
+  };
 }
 
 export async function getFinanceOverview(
@@ -245,6 +251,7 @@ export async function getFinanceOverview(
 
   const expenseNet = expenses.reduce((s, e) => s + e.netAmount, 0);
   const expenseGross = expenses.reduce((s, e) => s + e.grossAmount, 0);
+  const expenseVat = expenses.reduce((s, e) => s + e.vatAmount, 0);
   const withReceipt = expenses.filter((e) => e.receiptStorageKey).length;
   const withoutReceipt = expenses.length - withReceipt;
 
@@ -279,10 +286,22 @@ export async function getFinanceOverview(
 
   const estimatedNetProfit = revenue.net - expenseNet;
   const estimatedTax = Math.max(0, estimatedNetProfit * (settings.estimatedTaxRate / 100));
+  const reservePercentUsed =
+    settings.reservePercent != null && Number.isFinite(settings.reservePercent)
+      ? settings.reservePercent
+      : settings.estimatedTaxRate;
+  const recommendedReserve = Math.max(
+    0,
+    estimatedNetProfit * (reservePercentUsed / 100)
+  );
+
+  const paidInPeriod = allInvoices.filter((inv) => {
+    if (inv.status !== "BEZAHLT") return false;
+    return inv.issueDate >= period.from && inv.issueDate <= period.to;
+  });
 
   const openItems = openInvoiceDocs.map((doc) => toDocumentListItem(doc, now));
   const overdueItems = openItems.filter((i) => i.overdue);
-  const paidInvoices = allInvoices.filter((i) => i.status === "BEZAHLT");
   const canceledInvoices = allInvoices.filter((i) => i.status === "STORNIERT");
   const openInvoiceSum = openItems.reduce((s, i) => s + i.openAmount, 0);
 
@@ -379,6 +398,7 @@ export async function getFinanceOverview(
     revenue: {
       net: revenue.net,
       gross: revenue.gross,
+      vat: revenue.vat,
       invoiceCount: revenue.invoiceCount,
       basis: settings.revenueBasis,
       includesUnpaid: settings.includeUnpaidInvoices,
@@ -386,6 +406,7 @@ export async function getFinanceOverview(
     expenses: {
       net: expenseNet,
       gross: expenseGross,
+      vat: expenseVat,
       count: expenses.length,
       withReceipt,
       withoutReceipt,
@@ -396,10 +417,13 @@ export async function getFinanceOverview(
       isEstimate: true,
       targetNet,
       targetDelta,
+      formulaLabel: "Einnahmen (netto) − Ausgaben (netto)",
     },
     tax: {
       estimatedRate: settings.estimatedTaxRate,
       estimatedAmount: estimatedTax,
+      recommendedReserve,
+      reservePercentUsed,
       isEstimate: true,
     },
     invoices: {
@@ -407,8 +431,8 @@ export async function getFinanceOverview(
       openSum: openInvoiceSum,
       overdueCount: overdueItems.length,
       overdueSum: overdueItems.reduce((s, i) => s + i.openAmount, 0),
-      paidCount: paidInvoices.length,
-      paidSum: paidInvoices.reduce((s, i) => s + i.grossAmount, 0),
+      paidCount: paidInPeriod.length,
+      paidSum: paidInPeriod.reduce((s, i) => s + i.grossAmount, 0),
       canceledCount: canceledInvoices.length,
     },
     inventorySales: {

@@ -13,6 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { AddressSuggestInput } from "@/components/ui/address-suggest-input";
 import { OrderTypeSelect } from "@/components/orders/order-type-select";
 import { saveJson } from "@/lib/save-toast";
 import { usePermission } from "@/components/auth/can-access";
@@ -422,12 +423,11 @@ export function CalendarCreateDialog({
 
             {mode === "standalone" && (
               <div className="space-y-1.5">
-                <Label htmlFor="cal-address">Adresse (optional)</Label>
-                <Input
-                  id="cal-address"
+                <AddressSuggestInput
+                  label="Adresse (optional)"
                   value={addressText}
-                  onChange={(e) => setAddressText(e.target.value)}
-                  placeholder="Straße, Ort…"
+                  onChange={setAddressText}
+                  placeholder="Straße, PLZ Ort…"
                 />
               </div>
             )}

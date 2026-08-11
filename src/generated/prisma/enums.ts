@@ -288,6 +288,24 @@ export const TravelCalculationMode = {
 export type TravelCalculationMode = (typeof TravelCalculationMode)[keyof typeof TravelCalculationMode]
 
 
+export const FixedPriceDisplayMode = {
+  SINGLE_LINE: 'SINGLE_LINE',
+  POSITIONS_WITH_PRICES: 'POSITIONS_WITH_PRICES',
+  DESCRIPTION_ONLY: 'DESCRIPTION_ONLY'
+} as const
+
+export type FixedPriceDisplayMode = (typeof FixedPriceDisplayMode)[keyof typeof FixedPriceDisplayMode]
+
+
+export const LaborInvoiceMode = {
+  INTERNAL: 'INTERNAL',
+  ITEMIZED: 'ITEMIZED',
+  SUMMARIZED: 'SUMMARIZED'
+} as const
+
+export type LaborInvoiceMode = (typeof LaborInvoiceMode)[keyof typeof LaborInvoiceMode]
+
+
 export const CalculationStatus = {
   DRAFT: 'DRAFT',
   CALCULATED: 'CALCULATED',

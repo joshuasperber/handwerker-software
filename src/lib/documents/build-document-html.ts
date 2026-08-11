@@ -6,6 +6,13 @@ import {
   hasBillingAddress,
   siteDiffersFromBilling,
 } from "@/lib/addresses/billing-vs-site";
+import {
+  buildFixedPriceDocumentLines,
+  resolveFixedPriceDisplayMode,
+  resolveFixedPriceLabel,
+  type FixedPriceDisplayMode,
+} from "@/lib/calculation/fixed-price";
+import { buildLaborCustomerLines, resolveLaborInvoiceMode } from "@/lib/calculation/labor-costs";
 
 export interface DocumentCalcInput {
   title: string | null;
@@ -17,9 +24,11 @@ export interface DocumentCalcInput {
   vatNote?: string | null;
   invoiceTaxNotice?: string | null;
   section13bNote?: string | null;
-  /** Wenn true: eine Festpreis-Position statt Einzelpositionen (interne Kalkulation bleibt). */
+  /** Wenn true: Festpreis steuert Kundenbetrag (interne Kalkulation bleibt). */
   useFixedPrice?: boolean;
   fixedPriceLabel?: string | null;
+  fixedPriceDisplayMode?: FixedPriceDisplayMode | string | null;
+  laborInvoiceMode?: string | null;
   /** Intern kalkulierter Netto (vor Festpreis-Override), für interne Aufschlüsselung. */
   calculatedNetSalesPrice?: number;
   laborTotal: number;
@@ -32,7 +41,13 @@ export interface DocumentCalcInput {
   overheadAmount: number;
   riskAmount: number;
   profitAmount: number;
-  laborItems: { description: string; totalNet: number; isVisibleToCustomer: boolean }[];
+  laborItems: {
+    description: string;
+    hours?: number;
+    totalNet: number;
+    isVisibleToCustomer: boolean;
+    employeeName?: string | null;
+  }[];
   materialItems: { name: string; totalSalesNet: number; isVisibleToCustomer: boolean }[];
   travelCost: { totalNet: number; isVisibleToCustomer: boolean } | null;
   /** Zusatzkosten / Projektpositionen (sichtbar auf Kundenrechnung). */
@@ -125,7 +140,13 @@ function customerDisplayName(calc: DocumentCalcInput): string {
 
 export function calcVisibleLinesSum(calc: DocumentCalcInput): number {
   let sum = 0;
-  for (const l of calc.laborItems.filter((x) => x.isVisibleToCustomer)) sum += l.totalNet;
+  if (!calc.useFixedPrice) {
+    for (const l of buildLaborCustomerLines(calc.laborInvoiceMode, calc.laborItems, {
+      useFixedPrice: false,
+    })) {
+      sum += l.amount;
+    }
+  }
   for (const m of calc.materialItems.filter((x) => x.isVisibleToCustomer)) sum += m.totalSalesNet;
   if (calc.travelCost?.isVisibleToCustomer) sum += calc.travelCost.totalNet;
   for (const a of (calc.additionalItems ?? []).filter((x) => x.isVisibleToCustomer)) {
@@ -157,15 +178,25 @@ export function buildCustomerDocumentHtml(
     : "Kunde";
   const isReverseCharge = calc.isReverseCharge ?? calc.taxTreatment === "REVERSE_CHARGE";
 
-  const positionRows: { label: string; amount: number }[] = [];
+  const positionRows: { label: string; amount: number | null; emphasis?: boolean }[] = [];
   if (calc.useFixedPrice) {
-    positionRows.push({
-      label: escapeHtml(calc.fixedPriceLabel?.trim() || "Festpreis"),
-      amount: calc.netSalesPrice,
-    });
+    for (const row of buildFixedPriceDocumentLines({
+      fixedPriceNet: calc.netSalesPrice,
+      fixedPriceLabel: calc.fixedPriceLabel,
+      fixedPriceDisplayMode: calc.fixedPriceDisplayMode,
+      source: calc,
+    })) {
+      positionRows.push({
+        label: escapeHtml(row.label),
+        amount: row.amount,
+        emphasis: row.emphasis,
+      });
+    }
   } else {
-    for (const l of calc.laborItems.filter((x) => x.isVisibleToCustomer)) {
-      positionRows.push({ label: escapeHtml(l.description), amount: l.totalNet });
+    for (const l of buildLaborCustomerLines(calc.laborInvoiceMode, calc.laborItems, {
+      useFixedPrice: false,
+    })) {
+      positionRows.push({ label: escapeHtml(l.label), amount: l.amount });
     }
     for (const m of calc.materialItems.filter((x) => x.isVisibleToCustomer)) {
       positionRows.push({ label: escapeHtml(m.name), amount: m.totalSalesNet });
@@ -192,10 +223,10 @@ export function buildCustomerDocumentHtml(
 
   const visibleLines = positionRows.map(
     (row, i) =>
-      `<tr>
+      `<tr${row.emphasis ? ' class="emphasis"' : ""}>
         <td class="pos-nr">${i + 1}</td>
         <td>${row.label}</td>
-        <td class="amount">${formatEuro(row.amount)}</td>
+        <td class="amount">${row.amount == null ? "—" : formatEuro(row.amount)}</td>
       </tr>`
   );
 
@@ -285,8 +316,16 @@ export function buildCustomerDocumentHtml(
        <div class="totals-row"><span>Umsatzsteuer ${vatRatePercent} %</span><span>${formatEuro(calc.vatAmount)}</span></div>
        <div class="totals-grand"><span>Gesamtbetrag</span><span>${formatEuro(calc.grossSalesPrice)}</span></div>`;
 
+  const fixedLabel = resolveFixedPriceLabel(calc.fixedPriceLabel);
+  const fixedMode = resolveFixedPriceDisplayMode(calc.fixedPriceDisplayMode);
   const totalsSubline = calc.useFixedPrice
-    ? `<div class="totals-row muted"><span>Abrechnung als Festpreis (${escapeHtml(calc.fixedPriceLabel?.trim() || "Festpreis")})</span><span></span></div>`
+    ? `<div class="totals-row muted"><span>Vereinbarter Festpreis (${escapeHtml(fixedLabel)}${
+        fixedMode === "POSITIONS_WITH_PRICES"
+          ? " · Positionen informativ"
+          : fixedMode === "DESCRIPTION_ONLY"
+            ? " · ohne Einzelpreise"
+            : ""
+      })</span><span>${formatEuro(calc.netSalesPrice)}</span></div>`
     : hiddenAmount > 0.01
       ? `<div class="totals-row muted"><span>Sichtbare Positionen</span><span>${formatEuro(visibleSum)}</span></div>
          <div class="totals-row muted"><span>Pauschale / Kostenanteile</span><span>${formatEuro(hiddenAmount)}</span></div>`
@@ -359,6 +398,7 @@ export function buildCustomerDocumentHtml(
     tr:nth-child(even) td{background:#fafcfd}
     .pos-nr{color:#94a3b8;font-size:13px}
     .amount{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+    tr.emphasis td{font-weight:600}
     .totals{margin-left:auto;max-width:340px;font-size:14px}
     .totals-row{display:flex;justify-content:space-between;gap:24px;padding:5px 10px}
     .totals-row.muted{color:#64748b;font-size:13px}

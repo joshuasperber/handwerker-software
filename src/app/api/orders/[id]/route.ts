@@ -29,6 +29,22 @@ export async function GET(
     });
 
     if (!order) return apiError("Auftrag nicht gefunden", 404);
+
+    const { canViewEmployeeWages } = await import("@/lib/employees/wage-access");
+    if (!canViewEmployeeWages(auth.role)) {
+      return apiSuccess({
+        ...order,
+        timeEntries: order.timeEntries.map((t) => ({
+          ...t,
+          employee: {
+            ...t.employee,
+            hourlyWageNet: null,
+            billingHourlyRateNet: null,
+          },
+        })),
+      });
+    }
+
     return apiSuccess(order);
   } catch (err) {
     console.error("[orders/[id] GET]", err);
@@ -56,7 +72,27 @@ export async function PATCH(
 
   await ensureOrderPhases(id);
 
-  const { status, priority, description, internalNotes, scheduledStart, scheduledEnd, teamId, vehicleId, completionResult, customerConfirmationStatus, orderTypeId, orderTypeCustom, title, projectId } = body;
+  const {
+    status,
+    priority,
+    description,
+    internalNotes,
+    scheduledStart,
+    scheduledEnd,
+    teamId,
+    vehicleId,
+    completionResult,
+    customerConfirmationStatus,
+    orderTypeId,
+    orderTypeCustom,
+    title,
+    projectId,
+    useFixedPrice,
+    fixedPriceNet,
+    fixedPriceLabel,
+    fixedPriceDisplayMode,
+    ensureCalculation,
+  } = body;
 
   let typePatch: {
     orderType?: typeof existing.orderType;
@@ -109,6 +145,46 @@ export async function PATCH(
     }
   }
 
+  let fixedPricePatch: {
+    useFixedPrice?: boolean;
+    fixedPriceNet?: number | null;
+    fixedPriceLabel?: string | null;
+    fixedPriceDisplayMode?: "SINGLE_LINE" | "POSITIONS_WITH_PRICES" | "DESCRIPTION_ONLY";
+  } = {};
+
+  if (
+    useFixedPrice != null ||
+    fixedPriceNet !== undefined ||
+    fixedPriceLabel !== undefined ||
+    fixedPriceDisplayMode !== undefined
+  ) {
+    const { normalizeFixedPriceFields, suggestFixedPriceLabel } = await import(
+      "@/lib/calculation/fixed-price"
+    );
+    const normalized = normalizeFixedPriceFields({
+      useFixedPrice: useFixedPrice != null ? Boolean(useFixedPrice) : existing.useFixedPrice,
+      fixedPriceNet:
+        fixedPriceNet === null
+          ? null
+          : fixedPriceNet !== undefined
+            ? Number(fixedPriceNet)
+            : existing.fixedPriceNet,
+      fixedPriceLabel:
+        fixedPriceLabel === null
+          ? null
+          : fixedPriceLabel !== undefined
+            ? String(fixedPriceLabel)
+            : existing.fixedPriceLabel,
+      fixedPriceDisplayMode:
+        fixedPriceDisplayMode !== undefined
+          ? String(fixedPriceDisplayMode)
+          : existing.fixedPriceDisplayMode,
+      fallbackLabel: suggestFixedPriceLabel(title ?? existing.title),
+    });
+    if ("error" in normalized) return apiError(normalized.error, 400);
+    fixedPricePatch = normalized;
+  }
+
   const order = await prisma.order.update({
     where: { id },
     data: {
@@ -127,9 +203,41 @@ export async function PATCH(
       ...(status === "ABGESCHLOSSEN" || status === "ABRECHNUNGSBEREIT" ? { completedAt: new Date() } : {}),
       ...(status === "ABGERECHNET" ? { invoicedAt: new Date() } : {}),
       ...typePatch,
+      ...fixedPricePatch,
     },
     include: ORDER_DETAIL_INCLUDE,
   });
+
+  if (Object.keys(fixedPricePatch).length > 0) {
+    const { syncFixedPriceToOrderCalculation } = await import(
+      "@/lib/calculation/sync-fixed-price"
+    );
+    const { createCalculationFromOrder } = await import("@/lib/calculation/build-from-order");
+    let synced = await syncFixedPriceToOrderCalculation(
+      auth.tenantId,
+      id,
+      fixedPricePatch as {
+        useFixedPrice: boolean;
+        fixedPriceNet: number | null;
+        fixedPriceLabel: string | null;
+        fixedPriceDisplayMode: "SINGLE_LINE" | "POSITIONS_WITH_PRICES" | "DESCRIPTION_ONLY";
+      }
+    );
+    if (!synced && ensureCalculation && fixedPricePatch.useFixedPrice) {
+      const created = await createCalculationFromOrder(auth.tenantId, id);
+      synced = created.calculation.id;
+      await syncFixedPriceToOrderCalculation(
+        auth.tenantId,
+        id,
+        fixedPricePatch as {
+          useFixedPrice: boolean;
+          fixedPriceNet: number | null;
+          fixedPriceLabel: string | null;
+          fixedPriceDisplayMode: "SINGLE_LINE" | "POSITIONS_WITH_PRICES" | "DESCRIPTION_ONLY";
+        }
+      );
+    }
+  }
 
   if (status && status !== existing.status) {
     await auditOrderStatusChange(auth, id, existing.status, status, ip);

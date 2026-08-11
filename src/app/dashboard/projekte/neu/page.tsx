@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { AddressFields } from "@/components/ui/address-fields";
 import {
   Select,
   SelectContent,
@@ -149,32 +150,24 @@ export default function NeuesProjektPage() {
             </Select>
           </div>
 
-          <div className="grid gap-3 sm:grid-cols-3">
-            <div className="grid gap-2 sm:col-span-2">
-              <Label htmlFor="street">Projektadresse</Label>
-              <Input
-                id="street"
-                value={form.addressStreet}
-                onChange={(e) => setForm({ ...form, addressStreet: e.target.value })}
-                placeholder="Straße"
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="zip">PLZ</Label>
-              <Input
-                id="zip"
-                value={form.addressZip}
-                onChange={(e) => setForm({ ...form, addressZip: e.target.value })}
-              />
-            </div>
-            <div className="grid gap-2 sm:col-span-3">
-              <Label htmlFor="city">Ort</Label>
-              <Input
-                id="city"
-                value={form.addressCity}
-                onChange={(e) => setForm({ ...form, addressCity: e.target.value })}
-              />
-            </div>
+          <div className="space-y-2">
+            <Label>Projektadresse</Label>
+            <AddressFields
+              streetLabel="Straße"
+              value={{
+                street: form.addressStreet,
+                zipCode: form.addressZip,
+                city: form.addressCity,
+              }}
+              onChange={(addr) =>
+                setForm({
+                  ...form,
+                  addressStreet: addr.street,
+                  addressZip: addr.zipCode,
+                  addressCity: addr.city,
+                })
+              }
+            />
           </div>
 
           <div className="grid gap-3 sm:grid-cols-3">

@@ -78,6 +78,10 @@ export async function POST(request: NextRequest) {
 
   let fixedPriceNet: number | null = null;
   let fixedPriceLabel: string | null = null;
+  let fixedPriceDisplayMode:
+    | "SINGLE_LINE"
+    | "POSITIONS_WITH_PRICES"
+    | "DESCRIPTION_ONLY" = "SINGLE_LINE";
   let resolvedTitle = typeof title === "string" && title.trim() ? title.trim() : "Neue Kalkulation";
 
   if (useFixedPrice) {
@@ -92,6 +96,10 @@ export async function POST(request: NextRequest) {
         : roundMoney(rawAmount);
     fixedPriceLabel = resolveFixedPriceLabel(
       typeof body.fixedPriceLabel === "string" ? body.fixedPriceLabel : null
+    );
+    const { resolveFixedPriceDisplayMode } = await import("@/lib/calculation/fixed-price");
+    fixedPriceDisplayMode = resolveFixedPriceDisplayMode(
+      typeof body.fixedPriceDisplayMode === "string" ? body.fixedPriceDisplayMode : null
     );
     if (!title?.trim()) {
       resolvedTitle = `${fixedPriceLabel} ${fixedPriceNet.toLocaleString("de-DE", {
@@ -110,6 +118,7 @@ export async function POST(request: NextRequest) {
       useFixedPrice,
       fixedPriceNet,
       fixedPriceLabel,
+      fixedPriceDisplayMode,
       riskSettings: {
         create: {
           riskLevel: "NORMAL",

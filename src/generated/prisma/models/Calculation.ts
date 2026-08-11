@@ -119,6 +119,8 @@ export type CalculationMinAggregateOutputType = {
   useFixedPrice: boolean | null
   fixedPriceNet: number | null
   fixedPriceLabel: string | null
+  fixedPriceDisplayMode: $Enums.FixedPriceDisplayMode | null
+  laborInvoiceMode: $Enums.LaborInvoiceMode | null
   overheadPercentOverride: number | null
   overheadAmountOverride: number | null
   createdAt: Date | null
@@ -160,6 +162,8 @@ export type CalculationMaxAggregateOutputType = {
   useFixedPrice: boolean | null
   fixedPriceNet: number | null
   fixedPriceLabel: string | null
+  fixedPriceDisplayMode: $Enums.FixedPriceDisplayMode | null
+  laborInvoiceMode: $Enums.LaborInvoiceMode | null
   overheadPercentOverride: number | null
   overheadAmountOverride: number | null
   createdAt: Date | null
@@ -201,6 +205,8 @@ export type CalculationCountAggregateOutputType = {
   useFixedPrice: number
   fixedPriceNet: number
   fixedPriceLabel: number
+  fixedPriceDisplayMode: number
+  laborInvoiceMode: number
   overheadPercentOverride: number
   overheadAmountOverride: number
   snapshotJson: number
@@ -303,6 +309,8 @@ export type CalculationMinAggregateInputType = {
   useFixedPrice?: true
   fixedPriceNet?: true
   fixedPriceLabel?: true
+  fixedPriceDisplayMode?: true
+  laborInvoiceMode?: true
   overheadPercentOverride?: true
   overheadAmountOverride?: true
   createdAt?: true
@@ -344,6 +352,8 @@ export type CalculationMaxAggregateInputType = {
   useFixedPrice?: true
   fixedPriceNet?: true
   fixedPriceLabel?: true
+  fixedPriceDisplayMode?: true
+  laborInvoiceMode?: true
   overheadPercentOverride?: true
   overheadAmountOverride?: true
   createdAt?: true
@@ -385,6 +395,8 @@ export type CalculationCountAggregateInputType = {
   useFixedPrice?: true
   fixedPriceNet?: true
   fixedPriceLabel?: true
+  fixedPriceDisplayMode?: true
+  laborInvoiceMode?: true
   overheadPercentOverride?: true
   overheadAmountOverride?: true
   snapshotJson?: true
@@ -514,6 +526,8 @@ export type CalculationGroupByOutputType = {
   useFixedPrice: boolean
   fixedPriceNet: number | null
   fixedPriceLabel: string | null
+  fixedPriceDisplayMode: $Enums.FixedPriceDisplayMode
+  laborInvoiceMode: $Enums.LaborInvoiceMode
   overheadPercentOverride: number | null
   overheadAmountOverride: number | null
   snapshotJson: runtime.JsonValue | null
@@ -579,6 +593,8 @@ export type CalculationWhereInput = {
   useFixedPrice?: Prisma.BoolFilter<"Calculation"> | boolean
   fixedPriceNet?: Prisma.FloatNullableFilter<"Calculation"> | number | null
   fixedPriceLabel?: Prisma.StringNullableFilter<"Calculation"> | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFilter<"Calculation"> | $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: Prisma.EnumLaborInvoiceModeFilter<"Calculation"> | $Enums.LaborInvoiceMode
   overheadPercentOverride?: Prisma.FloatNullableFilter<"Calculation"> | number | null
   overheadAmountOverride?: Prisma.FloatNullableFilter<"Calculation"> | number | null
   snapshotJson?: Prisma.JsonNullableFilter<"Calculation">
@@ -636,6 +652,8 @@ export type CalculationOrderByWithRelationInput = {
   useFixedPrice?: Prisma.SortOrder
   fixedPriceNet?: Prisma.SortOrderInput | Prisma.SortOrder
   fixedPriceLabel?: Prisma.SortOrderInput | Prisma.SortOrder
+  fixedPriceDisplayMode?: Prisma.SortOrder
+  laborInvoiceMode?: Prisma.SortOrder
   overheadPercentOverride?: Prisma.SortOrderInput | Prisma.SortOrder
   overheadAmountOverride?: Prisma.SortOrderInput | Prisma.SortOrder
   snapshotJson?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -696,6 +714,8 @@ export type CalculationWhereUniqueInput = Prisma.AtLeast<{
   useFixedPrice?: Prisma.BoolFilter<"Calculation"> | boolean
   fixedPriceNet?: Prisma.FloatNullableFilter<"Calculation"> | number | null
   fixedPriceLabel?: Prisma.StringNullableFilter<"Calculation"> | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFilter<"Calculation"> | $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: Prisma.EnumLaborInvoiceModeFilter<"Calculation"> | $Enums.LaborInvoiceMode
   overheadPercentOverride?: Prisma.FloatNullableFilter<"Calculation"> | number | null
   overheadAmountOverride?: Prisma.FloatNullableFilter<"Calculation"> | number | null
   snapshotJson?: Prisma.JsonNullableFilter<"Calculation">
@@ -753,6 +773,8 @@ export type CalculationOrderByWithAggregationInput = {
   useFixedPrice?: Prisma.SortOrder
   fixedPriceNet?: Prisma.SortOrderInput | Prisma.SortOrder
   fixedPriceLabel?: Prisma.SortOrderInput | Prisma.SortOrder
+  fixedPriceDisplayMode?: Prisma.SortOrder
+  laborInvoiceMode?: Prisma.SortOrder
   overheadPercentOverride?: Prisma.SortOrderInput | Prisma.SortOrder
   overheadAmountOverride?: Prisma.SortOrderInput | Prisma.SortOrder
   snapshotJson?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -803,6 +825,8 @@ export type CalculationScalarWhereWithAggregatesInput = {
   useFixedPrice?: Prisma.BoolWithAggregatesFilter<"Calculation"> | boolean
   fixedPriceNet?: Prisma.FloatNullableWithAggregatesFilter<"Calculation"> | number | null
   fixedPriceLabel?: Prisma.StringNullableWithAggregatesFilter<"Calculation"> | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeWithAggregatesFilter<"Calculation"> | $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: Prisma.EnumLaborInvoiceModeWithAggregatesFilter<"Calculation"> | $Enums.LaborInvoiceMode
   overheadPercentOverride?: Prisma.FloatNullableWithAggregatesFilter<"Calculation"> | number | null
   overheadAmountOverride?: Prisma.FloatNullableWithAggregatesFilter<"Calculation"> | number | null
   snapshotJson?: Prisma.JsonNullableWithAggregatesFilter<"Calculation">
@@ -841,6 +865,8 @@ export type CalculationCreateInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: $Enums.LaborInvoiceMode
   overheadPercentOverride?: number | null
   overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -898,6 +924,8 @@ export type CalculationUncheckedCreateInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: $Enums.LaborInvoiceMode
   overheadPercentOverride?: number | null
   overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -947,6 +975,8 @@ export type CalculationUpdateInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: Prisma.EnumLaborInvoiceModeFieldUpdateOperationsInput | $Enums.LaborInvoiceMode
   overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1004,6 +1034,8 @@ export type CalculationUncheckedUpdateInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: Prisma.EnumLaborInvoiceModeFieldUpdateOperationsInput | $Enums.LaborInvoiceMode
   overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1057,6 +1089,8 @@ export type CalculationCreateManyInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: $Enums.LaborInvoiceMode
   overheadPercentOverride?: number | null
   overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1095,6 +1129,8 @@ export type CalculationUpdateManyMutationInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: Prisma.EnumLaborInvoiceModeFieldUpdateOperationsInput | $Enums.LaborInvoiceMode
   overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1137,6 +1173,8 @@ export type CalculationUncheckedUpdateManyInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: Prisma.EnumLaborInvoiceModeFieldUpdateOperationsInput | $Enums.LaborInvoiceMode
   overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1189,6 +1227,8 @@ export type CalculationCountOrderByAggregateInput = {
   useFixedPrice?: Prisma.SortOrder
   fixedPriceNet?: Prisma.SortOrder
   fixedPriceLabel?: Prisma.SortOrder
+  fixedPriceDisplayMode?: Prisma.SortOrder
+  laborInvoiceMode?: Prisma.SortOrder
   overheadPercentOverride?: Prisma.SortOrder
   overheadAmountOverride?: Prisma.SortOrder
   snapshotJson?: Prisma.SortOrder
@@ -1260,6 +1300,8 @@ export type CalculationMaxOrderByAggregateInput = {
   useFixedPrice?: Prisma.SortOrder
   fixedPriceNet?: Prisma.SortOrder
   fixedPriceLabel?: Prisma.SortOrder
+  fixedPriceDisplayMode?: Prisma.SortOrder
+  laborInvoiceMode?: Prisma.SortOrder
   overheadPercentOverride?: Prisma.SortOrder
   overheadAmountOverride?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -1301,6 +1343,8 @@ export type CalculationMinOrderByAggregateInput = {
   useFixedPrice?: Prisma.SortOrder
   fixedPriceNet?: Prisma.SortOrder
   fixedPriceLabel?: Prisma.SortOrder
+  fixedPriceDisplayMode?: Prisma.SortOrder
+  laborInvoiceMode?: Prisma.SortOrder
   overheadPercentOverride?: Prisma.SortOrder
   overheadAmountOverride?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -1469,6 +1513,10 @@ export type CalculationUncheckedUpdateManyWithoutOrderNestedInput = {
 
 export type EnumCalculationStatusFieldUpdateOperationsInput = {
   set?: $Enums.CalculationStatus
+}
+
+export type EnumLaborInvoiceModeFieldUpdateOperationsInput = {
+  set?: $Enums.LaborInvoiceMode
 }
 
 export type CalculationCreateNestedOneWithoutLaborItemsInput = {
@@ -1698,6 +1746,8 @@ export type CalculationCreateWithoutTenantInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: $Enums.LaborInvoiceMode
   overheadPercentOverride?: number | null
   overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1753,6 +1803,8 @@ export type CalculationUncheckedCreateWithoutTenantInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: $Enums.LaborInvoiceMode
   overheadPercentOverride?: number | null
   overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1835,6 +1887,8 @@ export type CalculationScalarWhereInput = {
   useFixedPrice?: Prisma.BoolFilter<"Calculation"> | boolean
   fixedPriceNet?: Prisma.FloatNullableFilter<"Calculation"> | number | null
   fixedPriceLabel?: Prisma.StringNullableFilter<"Calculation"> | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFilter<"Calculation"> | $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: Prisma.EnumLaborInvoiceModeFilter<"Calculation"> | $Enums.LaborInvoiceMode
   overheadPercentOverride?: Prisma.FloatNullableFilter<"Calculation"> | number | null
   overheadAmountOverride?: Prisma.FloatNullableFilter<"Calculation"> | number | null
   snapshotJson?: Prisma.JsonNullableFilter<"Calculation">
@@ -1873,6 +1927,8 @@ export type CalculationCreateWithoutCustomerInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: $Enums.LaborInvoiceMode
   overheadPercentOverride?: number | null
   overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1928,6 +1984,8 @@ export type CalculationUncheckedCreateWithoutCustomerInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: $Enums.LaborInvoiceMode
   overheadPercentOverride?: number | null
   overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -2003,6 +2061,8 @@ export type CalculationCreateWithoutOrderInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: $Enums.LaborInvoiceMode
   overheadPercentOverride?: number | null
   overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -2058,6 +2118,8 @@ export type CalculationUncheckedCreateWithoutOrderInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: $Enums.LaborInvoiceMode
   overheadPercentOverride?: number | null
   overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -2133,6 +2195,8 @@ export type CalculationCreateWithoutLaborItemsInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: $Enums.LaborInvoiceMode
   overheadPercentOverride?: number | null
   overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -2189,6 +2253,8 @@ export type CalculationUncheckedCreateWithoutLaborItemsInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: $Enums.LaborInvoiceMode
   overheadPercentOverride?: number | null
   overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -2253,6 +2319,8 @@ export type CalculationUpdateWithoutLaborItemsInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: Prisma.EnumLaborInvoiceModeFieldUpdateOperationsInput | $Enums.LaborInvoiceMode
   overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -2309,6 +2377,8 @@ export type CalculationUncheckedUpdateWithoutLaborItemsInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: Prisma.EnumLaborInvoiceModeFieldUpdateOperationsInput | $Enums.LaborInvoiceMode
   overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -2357,6 +2427,8 @@ export type CalculationCreateWithoutMaterialItemsInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: $Enums.LaborInvoiceMode
   overheadPercentOverride?: number | null
   overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -2413,6 +2485,8 @@ export type CalculationUncheckedCreateWithoutMaterialItemsInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: $Enums.LaborInvoiceMode
   overheadPercentOverride?: number | null
   overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -2477,6 +2551,8 @@ export type CalculationUpdateWithoutMaterialItemsInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: Prisma.EnumLaborInvoiceModeFieldUpdateOperationsInput | $Enums.LaborInvoiceMode
   overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -2533,6 +2609,8 @@ export type CalculationUncheckedUpdateWithoutMaterialItemsInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: Prisma.EnumLaborInvoiceModeFieldUpdateOperationsInput | $Enums.LaborInvoiceMode
   overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -2581,6 +2659,8 @@ export type CalculationCreateWithoutMachineUsagesInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: $Enums.LaborInvoiceMode
   overheadPercentOverride?: number | null
   overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -2637,6 +2717,8 @@ export type CalculationUncheckedCreateWithoutMachineUsagesInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: $Enums.LaborInvoiceMode
   overheadPercentOverride?: number | null
   overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -2701,6 +2783,8 @@ export type CalculationUpdateWithoutMachineUsagesInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: Prisma.EnumLaborInvoiceModeFieldUpdateOperationsInput | $Enums.LaborInvoiceMode
   overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -2757,6 +2841,8 @@ export type CalculationUncheckedUpdateWithoutMachineUsagesInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: Prisma.EnumLaborInvoiceModeFieldUpdateOperationsInput | $Enums.LaborInvoiceMode
   overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -2805,6 +2891,8 @@ export type CalculationCreateWithoutProcurementCostsInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: $Enums.LaborInvoiceMode
   overheadPercentOverride?: number | null
   overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -2861,6 +2949,8 @@ export type CalculationUncheckedCreateWithoutProcurementCostsInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: $Enums.LaborInvoiceMode
   overheadPercentOverride?: number | null
   overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -2925,6 +3015,8 @@ export type CalculationUpdateWithoutProcurementCostsInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: Prisma.EnumLaborInvoiceModeFieldUpdateOperationsInput | $Enums.LaborInvoiceMode
   overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -2981,6 +3073,8 @@ export type CalculationUncheckedUpdateWithoutProcurementCostsInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: Prisma.EnumLaborInvoiceModeFieldUpdateOperationsInput | $Enums.LaborInvoiceMode
   overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -3029,6 +3123,8 @@ export type CalculationCreateWithoutTravelCostInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: $Enums.LaborInvoiceMode
   overheadPercentOverride?: number | null
   overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -3085,6 +3181,8 @@ export type CalculationUncheckedCreateWithoutTravelCostInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: $Enums.LaborInvoiceMode
   overheadPercentOverride?: number | null
   overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -3149,6 +3247,8 @@ export type CalculationUpdateWithoutTravelCostInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: Prisma.EnumLaborInvoiceModeFieldUpdateOperationsInput | $Enums.LaborInvoiceMode
   overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -3205,6 +3305,8 @@ export type CalculationUncheckedUpdateWithoutTravelCostInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: Prisma.EnumLaborInvoiceModeFieldUpdateOperationsInput | $Enums.LaborInvoiceMode
   overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -3253,6 +3355,8 @@ export type CalculationCreateWithoutAdditionalItemsInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: $Enums.LaborInvoiceMode
   overheadPercentOverride?: number | null
   overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -3309,6 +3413,8 @@ export type CalculationUncheckedCreateWithoutAdditionalItemsInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: $Enums.LaborInvoiceMode
   overheadPercentOverride?: number | null
   overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -3373,6 +3479,8 @@ export type CalculationUpdateWithoutAdditionalItemsInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: Prisma.EnumLaborInvoiceModeFieldUpdateOperationsInput | $Enums.LaborInvoiceMode
   overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -3429,6 +3537,8 @@ export type CalculationUncheckedUpdateWithoutAdditionalItemsInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: Prisma.EnumLaborInvoiceModeFieldUpdateOperationsInput | $Enums.LaborInvoiceMode
   overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -3477,6 +3587,8 @@ export type CalculationCreateWithoutRiskSettingsInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: $Enums.LaborInvoiceMode
   overheadPercentOverride?: number | null
   overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -3533,6 +3645,8 @@ export type CalculationUncheckedCreateWithoutRiskSettingsInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: $Enums.LaborInvoiceMode
   overheadPercentOverride?: number | null
   overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -3597,6 +3711,8 @@ export type CalculationUpdateWithoutRiskSettingsInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: Prisma.EnumLaborInvoiceModeFieldUpdateOperationsInput | $Enums.LaborInvoiceMode
   overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -3653,6 +3769,8 @@ export type CalculationUncheckedUpdateWithoutRiskSettingsInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: Prisma.EnumLaborInvoiceModeFieldUpdateOperationsInput | $Enums.LaborInvoiceMode
   overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -3701,6 +3819,8 @@ export type CalculationCreateWithoutProfitSettingsInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: $Enums.LaborInvoiceMode
   overheadPercentOverride?: number | null
   overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -3757,6 +3877,8 @@ export type CalculationUncheckedCreateWithoutProfitSettingsInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: $Enums.LaborInvoiceMode
   overheadPercentOverride?: number | null
   overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -3821,6 +3943,8 @@ export type CalculationUpdateWithoutProfitSettingsInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: Prisma.EnumLaborInvoiceModeFieldUpdateOperationsInput | $Enums.LaborInvoiceMode
   overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -3877,6 +4001,8 @@ export type CalculationUncheckedUpdateWithoutProfitSettingsInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: Prisma.EnumLaborInvoiceModeFieldUpdateOperationsInput | $Enums.LaborInvoiceMode
   overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -3925,6 +4051,8 @@ export type CalculationCreateWithoutIncomeTaxSettingsInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: $Enums.LaborInvoiceMode
   overheadPercentOverride?: number | null
   overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -3981,6 +4109,8 @@ export type CalculationUncheckedCreateWithoutIncomeTaxSettingsInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: $Enums.LaborInvoiceMode
   overheadPercentOverride?: number | null
   overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -4045,6 +4175,8 @@ export type CalculationUpdateWithoutIncomeTaxSettingsInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: Prisma.EnumLaborInvoiceModeFieldUpdateOperationsInput | $Enums.LaborInvoiceMode
   overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -4101,6 +4233,8 @@ export type CalculationUncheckedUpdateWithoutIncomeTaxSettingsInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: Prisma.EnumLaborInvoiceModeFieldUpdateOperationsInput | $Enums.LaborInvoiceMode
   overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -4149,6 +4283,8 @@ export type CalculationCreateWithoutVatSettingsInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: $Enums.LaborInvoiceMode
   overheadPercentOverride?: number | null
   overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -4205,6 +4341,8 @@ export type CalculationUncheckedCreateWithoutVatSettingsInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: $Enums.LaborInvoiceMode
   overheadPercentOverride?: number | null
   overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -4269,6 +4407,8 @@ export type CalculationUpdateWithoutVatSettingsInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: Prisma.EnumLaborInvoiceModeFieldUpdateOperationsInput | $Enums.LaborInvoiceMode
   overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -4325,6 +4465,8 @@ export type CalculationUncheckedUpdateWithoutVatSettingsInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: Prisma.EnumLaborInvoiceModeFieldUpdateOperationsInput | $Enums.LaborInvoiceMode
   overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -4373,6 +4515,8 @@ export type CalculationCreateWithoutDocumentsInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: $Enums.LaborInvoiceMode
   overheadPercentOverride?: number | null
   overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -4429,6 +4573,8 @@ export type CalculationUncheckedCreateWithoutDocumentsInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: $Enums.LaborInvoiceMode
   overheadPercentOverride?: number | null
   overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -4493,6 +4639,8 @@ export type CalculationUpdateWithoutDocumentsInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: Prisma.EnumLaborInvoiceModeFieldUpdateOperationsInput | $Enums.LaborInvoiceMode
   overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -4549,6 +4697,8 @@ export type CalculationUncheckedUpdateWithoutDocumentsInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: Prisma.EnumLaborInvoiceModeFieldUpdateOperationsInput | $Enums.LaborInvoiceMode
   overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -4597,6 +4747,8 @@ export type CalculationCreateWithoutProjectInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: $Enums.LaborInvoiceMode
   overheadPercentOverride?: number | null
   overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -4652,6 +4804,8 @@ export type CalculationUncheckedCreateWithoutProjectInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: $Enums.LaborInvoiceMode
   overheadPercentOverride?: number | null
   overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -4730,6 +4884,8 @@ export type CalculationCreateManyTenantInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: $Enums.LaborInvoiceMode
   overheadPercentOverride?: number | null
   overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -4768,6 +4924,8 @@ export type CalculationUpdateWithoutTenantInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: Prisma.EnumLaborInvoiceModeFieldUpdateOperationsInput | $Enums.LaborInvoiceMode
   overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -4823,6 +4981,8 @@ export type CalculationUncheckedUpdateWithoutTenantInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: Prisma.EnumLaborInvoiceModeFieldUpdateOperationsInput | $Enums.LaborInvoiceMode
   overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -4875,6 +5035,8 @@ export type CalculationUncheckedUpdateManyWithoutTenantInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: Prisma.EnumLaborInvoiceModeFieldUpdateOperationsInput | $Enums.LaborInvoiceMode
   overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -4916,6 +5078,8 @@ export type CalculationCreateManyCustomerInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: $Enums.LaborInvoiceMode
   overheadPercentOverride?: number | null
   overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -4954,6 +5118,8 @@ export type CalculationUpdateWithoutCustomerInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: Prisma.EnumLaborInvoiceModeFieldUpdateOperationsInput | $Enums.LaborInvoiceMode
   overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -5009,6 +5175,8 @@ export type CalculationUncheckedUpdateWithoutCustomerInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: Prisma.EnumLaborInvoiceModeFieldUpdateOperationsInput | $Enums.LaborInvoiceMode
   overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -5061,6 +5229,8 @@ export type CalculationUncheckedUpdateManyWithoutCustomerInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: Prisma.EnumLaborInvoiceModeFieldUpdateOperationsInput | $Enums.LaborInvoiceMode
   overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -5102,6 +5272,8 @@ export type CalculationCreateManyOrderInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: $Enums.LaborInvoiceMode
   overheadPercentOverride?: number | null
   overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -5140,6 +5312,8 @@ export type CalculationUpdateWithoutOrderInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: Prisma.EnumLaborInvoiceModeFieldUpdateOperationsInput | $Enums.LaborInvoiceMode
   overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -5195,6 +5369,8 @@ export type CalculationUncheckedUpdateWithoutOrderInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: Prisma.EnumLaborInvoiceModeFieldUpdateOperationsInput | $Enums.LaborInvoiceMode
   overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -5247,6 +5423,8 @@ export type CalculationUncheckedUpdateManyWithoutOrderInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: Prisma.EnumLaborInvoiceModeFieldUpdateOperationsInput | $Enums.LaborInvoiceMode
   overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -5288,6 +5466,8 @@ export type CalculationCreateManyProjectInput = {
   useFixedPrice?: boolean
   fixedPriceNet?: number | null
   fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: $Enums.LaborInvoiceMode
   overheadPercentOverride?: number | null
   overheadAmountOverride?: number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -5326,6 +5506,8 @@ export type CalculationUpdateWithoutProjectInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: Prisma.EnumLaborInvoiceModeFieldUpdateOperationsInput | $Enums.LaborInvoiceMode
   overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -5381,6 +5563,8 @@ export type CalculationUncheckedUpdateWithoutProjectInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: Prisma.EnumLaborInvoiceModeFieldUpdateOperationsInput | $Enums.LaborInvoiceMode
   overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -5433,6 +5617,8 @@ export type CalculationUncheckedUpdateManyWithoutProjectInput = {
   useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
+  laborInvoiceMode?: Prisma.EnumLaborInvoiceModeFieldUpdateOperationsInput | $Enums.LaborInvoiceMode
   overheadPercentOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   overheadAmountOverride?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   snapshotJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -5551,6 +5737,8 @@ export type CalculationSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   useFixedPrice?: boolean
   fixedPriceNet?: boolean
   fixedPriceLabel?: boolean
+  fixedPriceDisplayMode?: boolean
+  laborInvoiceMode?: boolean
   overheadPercentOverride?: boolean
   overheadAmountOverride?: boolean
   snapshotJson?: boolean
@@ -5609,6 +5797,8 @@ export type CalculationSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   useFixedPrice?: boolean
   fixedPriceNet?: boolean
   fixedPriceLabel?: boolean
+  fixedPriceDisplayMode?: boolean
+  laborInvoiceMode?: boolean
   overheadPercentOverride?: boolean
   overheadAmountOverride?: boolean
   snapshotJson?: boolean
@@ -5655,6 +5845,8 @@ export type CalculationSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   useFixedPrice?: boolean
   fixedPriceNet?: boolean
   fixedPriceLabel?: boolean
+  fixedPriceDisplayMode?: boolean
+  laborInvoiceMode?: boolean
   overheadPercentOverride?: boolean
   overheadAmountOverride?: boolean
   snapshotJson?: boolean
@@ -5701,6 +5893,8 @@ export type CalculationSelectScalar = {
   useFixedPrice?: boolean
   fixedPriceNet?: boolean
   fixedPriceLabel?: boolean
+  fixedPriceDisplayMode?: boolean
+  laborInvoiceMode?: boolean
   overheadPercentOverride?: boolean
   overheadAmountOverride?: boolean
   snapshotJson?: boolean
@@ -5708,7 +5902,7 @@ export type CalculationSelectScalar = {
   updatedAt?: boolean
 }
 
-export type CalculationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "customerId" | "orderId" | "projectId" | "title" | "status" | "currentStep" | "laborTotal" | "materialTotal" | "machineTotal" | "procurementTotal" | "travelTotal" | "additionalTotal" | "directCosts" | "overheadAmount" | "incomeTaxOwnerAmount" | "subtotalBeforeRisk" | "riskAmount" | "subtotalAfterRisk" | "profitAmount" | "netSalesPrice" | "vatAmount" | "grossSalesPrice" | "contributionMargin" | "contributionMarginRate" | "marginPercent" | "minimumPrice" | "profitAfterTaxEstimate" | "totalBillableHours" | "profitabilityStatus" | "useFixedPrice" | "fixedPriceNet" | "fixedPriceLabel" | "overheadPercentOverride" | "overheadAmountOverride" | "snapshotJson" | "createdAt" | "updatedAt", ExtArgs["result"]["calculation"]>
+export type CalculationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "customerId" | "orderId" | "projectId" | "title" | "status" | "currentStep" | "laborTotal" | "materialTotal" | "machineTotal" | "procurementTotal" | "travelTotal" | "additionalTotal" | "directCosts" | "overheadAmount" | "incomeTaxOwnerAmount" | "subtotalBeforeRisk" | "riskAmount" | "subtotalAfterRisk" | "profitAmount" | "netSalesPrice" | "vatAmount" | "grossSalesPrice" | "contributionMargin" | "contributionMarginRate" | "marginPercent" | "minimumPrice" | "profitAfterTaxEstimate" | "totalBillableHours" | "profitabilityStatus" | "useFixedPrice" | "fixedPriceNet" | "fixedPriceLabel" | "fixedPriceDisplayMode" | "laborInvoiceMode" | "overheadPercentOverride" | "overheadAmountOverride" | "snapshotJson" | "createdAt" | "updatedAt", ExtArgs["result"]["calculation"]>
 export type CalculationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   customer?: boolean | Prisma.Calculation$customerArgs<ExtArgs>
@@ -5797,6 +5991,11 @@ export type $CalculationPayload<ExtArgs extends runtime.Types.Extensions.Interna
     useFixedPrice: boolean
     fixedPriceNet: number | null
     fixedPriceLabel: string | null
+    fixedPriceDisplayMode: $Enums.FixedPriceDisplayMode
+    /**
+     * Wie Arbeitspositionen auf Angebot/Rechnung erscheinen (bei Festpreis immer intern)
+     */
+    laborInvoiceMode: $Enums.LaborInvoiceMode
     /**
      * Pro-Kalkulation: Gemeinkosten überschreiben (null = Tenant-Standard)
      */
@@ -6277,6 +6476,8 @@ export interface CalculationFieldRefs {
   readonly useFixedPrice: Prisma.FieldRef<"Calculation", 'Boolean'>
   readonly fixedPriceNet: Prisma.FieldRef<"Calculation", 'Float'>
   readonly fixedPriceLabel: Prisma.FieldRef<"Calculation", 'String'>
+  readonly fixedPriceDisplayMode: Prisma.FieldRef<"Calculation", 'FixedPriceDisplayMode'>
+  readonly laborInvoiceMode: Prisma.FieldRef<"Calculation", 'LaborInvoiceMode'>
   readonly overheadPercentOverride: Prisma.FieldRef<"Calculation", 'Float'>
   readonly overheadAmountOverride: Prisma.FieldRef<"Calculation", 'Float'>
   readonly snapshotJson: Prisma.FieldRef<"Calculation", 'Json'>

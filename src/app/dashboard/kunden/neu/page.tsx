@@ -7,6 +7,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { AddressFields } from "@/components/ui/address-fields";
 import { saveJson } from "@/lib/save-toast";
 import { cn } from "@/lib/utils";
 import { Building2, ChevronLeft, User } from "lucide-react";
@@ -40,6 +41,8 @@ export default function NeuerKundePage() {
     street: "",
     zipCode: "",
     city: "",
+    latitude: null as number | null,
+    longitude: null as number | null,
     propertyLabel: "Hauptadresse",
     travelZoneId: "",
     notes: "",
@@ -78,6 +81,8 @@ export default function NeuerKundePage() {
                 street: form.street,
                 zipCode: form.zipCode,
                 city: form.city,
+                latitude: form.latitude,
+                longitude: form.longitude,
                 travelZoneId: form.travelZoneId || undefined,
               }
             : undefined,
@@ -237,9 +242,26 @@ export default function NeuerKundePage() {
                 ))}
               </select>
             </div>
-            <Input label="Straße" value={form.street} onChange={(e) => setForm({ ...form, street: e.target.value })} className="sm:col-span-2" />
-            <Input label="PLZ" value={form.zipCode} onChange={(e) => setForm({ ...form, zipCode: e.target.value })} />
-            <Input label="Ort" value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} />
+            <AddressFields
+              className="sm:col-span-2"
+              value={{
+                street: form.street,
+                zipCode: form.zipCode,
+                city: form.city,
+                latitude: form.latitude,
+                longitude: form.longitude,
+              }}
+              onChange={(addr) =>
+                setForm({
+                  ...form,
+                  street: addr.street,
+                  zipCode: addr.zipCode,
+                  city: addr.city,
+                  latitude: addr.latitude ?? null,
+                  longitude: addr.longitude ?? null,
+                })
+              }
+            />
           </div>
           <Button type="submit" variant="action" className="mt-4" disabled={saving}>
             {saving ? "Wird angelegt …" : isBusiness ? "Business-Kunde anlegen" : "Kunde anlegen"}

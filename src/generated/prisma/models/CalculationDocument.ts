@@ -62,6 +62,7 @@ export type CalculationDocumentMinAggregateOutputType = {
   cancelOfId: string | null
   eInvoiceFormat: string | null
   eInvoiceStorageKey: string | null
+  eInvoiceGeneratedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -88,6 +89,7 @@ export type CalculationDocumentMaxAggregateOutputType = {
   cancelOfId: string | null
   eInvoiceFormat: string | null
   eInvoiceStorageKey: string | null
+  eInvoiceGeneratedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -115,6 +117,7 @@ export type CalculationDocumentCountAggregateOutputType = {
   cancelOfId: number
   eInvoiceFormat: number
   eInvoiceStorageKey: number
+  eInvoiceGeneratedAt: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -157,6 +160,7 @@ export type CalculationDocumentMinAggregateInputType = {
   cancelOfId?: true
   eInvoiceFormat?: true
   eInvoiceStorageKey?: true
+  eInvoiceGeneratedAt?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -183,6 +187,7 @@ export type CalculationDocumentMaxAggregateInputType = {
   cancelOfId?: true
   eInvoiceFormat?: true
   eInvoiceStorageKey?: true
+  eInvoiceGeneratedAt?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -210,6 +215,7 @@ export type CalculationDocumentCountAggregateInputType = {
   cancelOfId?: true
   eInvoiceFormat?: true
   eInvoiceStorageKey?: true
+  eInvoiceGeneratedAt?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -324,6 +330,7 @@ export type CalculationDocumentGroupByOutputType = {
   cancelOfId: string | null
   eInvoiceFormat: string | null
   eInvoiceStorageKey: string | null
+  eInvoiceGeneratedAt: Date | null
   createdAt: Date
   updatedAt: Date
   _count: CalculationDocumentCountAggregateOutputType | null
@@ -374,6 +381,7 @@ export type CalculationDocumentWhereInput = {
   cancelOfId?: Prisma.StringNullableFilter<"CalculationDocument"> | string | null
   eInvoiceFormat?: Prisma.StringNullableFilter<"CalculationDocument"> | string | null
   eInvoiceStorageKey?: Prisma.StringNullableFilter<"CalculationDocument"> | string | null
+  eInvoiceGeneratedAt?: Prisma.DateTimeNullableFilter<"CalculationDocument"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"CalculationDocument"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CalculationDocument"> | Date | string
   calculation?: Prisma.XOR<Prisma.CalculationScalarRelationFilter, Prisma.CalculationWhereInput>
@@ -406,6 +414,7 @@ export type CalculationDocumentOrderByWithRelationInput = {
   cancelOfId?: Prisma.SortOrderInput | Prisma.SortOrder
   eInvoiceFormat?: Prisma.SortOrderInput | Prisma.SortOrder
   eInvoiceStorageKey?: Prisma.SortOrderInput | Prisma.SortOrder
+  eInvoiceGeneratedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   calculation?: Prisma.CalculationOrderByWithRelationInput
@@ -441,6 +450,7 @@ export type CalculationDocumentWhereUniqueInput = Prisma.AtLeast<{
   cancelOfId?: Prisma.StringNullableFilter<"CalculationDocument"> | string | null
   eInvoiceFormat?: Prisma.StringNullableFilter<"CalculationDocument"> | string | null
   eInvoiceStorageKey?: Prisma.StringNullableFilter<"CalculationDocument"> | string | null
+  eInvoiceGeneratedAt?: Prisma.DateTimeNullableFilter<"CalculationDocument"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"CalculationDocument"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CalculationDocument"> | Date | string
   calculation?: Prisma.XOR<Prisma.CalculationScalarRelationFilter, Prisma.CalculationWhereInput>
@@ -473,6 +483,7 @@ export type CalculationDocumentOrderByWithAggregationInput = {
   cancelOfId?: Prisma.SortOrderInput | Prisma.SortOrder
   eInvoiceFormat?: Prisma.SortOrderInput | Prisma.SortOrder
   eInvoiceStorageKey?: Prisma.SortOrderInput | Prisma.SortOrder
+  eInvoiceGeneratedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.CalculationDocumentCountOrderByAggregateInput
@@ -508,6 +519,7 @@ export type CalculationDocumentScalarWhereWithAggregatesInput = {
   cancelOfId?: Prisma.StringNullableWithAggregatesFilter<"CalculationDocument"> | string | null
   eInvoiceFormat?: Prisma.StringNullableWithAggregatesFilter<"CalculationDocument"> | string | null
   eInvoiceStorageKey?: Prisma.StringNullableWithAggregatesFilter<"CalculationDocument"> | string | null
+  eInvoiceGeneratedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"CalculationDocument"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"CalculationDocument"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"CalculationDocument"> | Date | string
 }
@@ -533,6 +545,7 @@ export type CalculationDocumentCreateInput = {
   cancelReason?: string | null
   eInvoiceFormat?: string | null
   eInvoiceStorageKey?: string | null
+  eInvoiceGeneratedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   calculation: Prisma.CalculationCreateNestedOneWithoutDocumentsInput
@@ -565,6 +578,7 @@ export type CalculationDocumentUncheckedCreateInput = {
   cancelOfId?: string | null
   eInvoiceFormat?: string | null
   eInvoiceStorageKey?: string | null
+  eInvoiceGeneratedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   cancellations?: Prisma.CalculationDocumentUncheckedCreateNestedManyWithoutCancelOfInput
@@ -593,6 +607,7 @@ export type CalculationDocumentUpdateInput = {
   cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eInvoiceFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eInvoiceStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eInvoiceGeneratedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   calculation?: Prisma.CalculationUpdateOneRequiredWithoutDocumentsNestedInput
@@ -625,6 +640,7 @@ export type CalculationDocumentUncheckedUpdateInput = {
   cancelOfId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eInvoiceFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eInvoiceStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eInvoiceGeneratedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   cancellations?: Prisma.CalculationDocumentUncheckedUpdateManyWithoutCancelOfNestedInput
@@ -655,6 +671,7 @@ export type CalculationDocumentCreateManyInput = {
   cancelOfId?: string | null
   eInvoiceFormat?: string | null
   eInvoiceStorageKey?: string | null
+  eInvoiceGeneratedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -680,6 +697,7 @@ export type CalculationDocumentUpdateManyMutationInput = {
   cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eInvoiceFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eInvoiceStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eInvoiceGeneratedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -707,6 +725,7 @@ export type CalculationDocumentUncheckedUpdateManyInput = {
   cancelOfId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eInvoiceFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eInvoiceStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eInvoiceGeneratedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -749,6 +768,7 @@ export type CalculationDocumentCountOrderByAggregateInput = {
   cancelOfId?: Prisma.SortOrder
   eInvoiceFormat?: Prisma.SortOrder
   eInvoiceStorageKey?: Prisma.SortOrder
+  eInvoiceGeneratedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -782,6 +802,7 @@ export type CalculationDocumentMaxOrderByAggregateInput = {
   cancelOfId?: Prisma.SortOrder
   eInvoiceFormat?: Prisma.SortOrder
   eInvoiceStorageKey?: Prisma.SortOrder
+  eInvoiceGeneratedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -808,6 +829,7 @@ export type CalculationDocumentMinOrderByAggregateInput = {
   cancelOfId?: Prisma.SortOrder
   eInvoiceFormat?: Prisma.SortOrder
   eInvoiceStorageKey?: Prisma.SortOrder
+  eInvoiceGeneratedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -981,6 +1003,7 @@ export type CalculationDocumentCreateWithoutCalculationInput = {
   cancelReason?: string | null
   eInvoiceFormat?: string | null
   eInvoiceStorageKey?: string | null
+  eInvoiceGeneratedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   cancelOf?: Prisma.CalculationDocumentCreateNestedOneWithoutCancellationsInput
@@ -1011,6 +1034,7 @@ export type CalculationDocumentUncheckedCreateWithoutCalculationInput = {
   cancelOfId?: string | null
   eInvoiceFormat?: string | null
   eInvoiceStorageKey?: string | null
+  eInvoiceGeneratedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   cancellations?: Prisma.CalculationDocumentUncheckedCreateNestedManyWithoutCancelOfInput
@@ -1070,6 +1094,7 @@ export type CalculationDocumentScalarWhereInput = {
   cancelOfId?: Prisma.StringNullableFilter<"CalculationDocument"> | string | null
   eInvoiceFormat?: Prisma.StringNullableFilter<"CalculationDocument"> | string | null
   eInvoiceStorageKey?: Prisma.StringNullableFilter<"CalculationDocument"> | string | null
+  eInvoiceGeneratedAt?: Prisma.DateTimeNullableFilter<"CalculationDocument"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"CalculationDocument"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CalculationDocument"> | Date | string
 }
@@ -1095,6 +1120,7 @@ export type CalculationDocumentCreateWithoutCancellationsInput = {
   cancelReason?: string | null
   eInvoiceFormat?: string | null
   eInvoiceStorageKey?: string | null
+  eInvoiceGeneratedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   calculation: Prisma.CalculationCreateNestedOneWithoutDocumentsInput
@@ -1126,6 +1152,7 @@ export type CalculationDocumentUncheckedCreateWithoutCancellationsInput = {
   cancelOfId?: string | null
   eInvoiceFormat?: string | null
   eInvoiceStorageKey?: string | null
+  eInvoiceGeneratedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutDocumentInput
@@ -1158,6 +1185,7 @@ export type CalculationDocumentCreateWithoutCancelOfInput = {
   cancelReason?: string | null
   eInvoiceFormat?: string | null
   eInvoiceStorageKey?: string | null
+  eInvoiceGeneratedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   calculation: Prisma.CalculationCreateNestedOneWithoutDocumentsInput
@@ -1188,6 +1216,7 @@ export type CalculationDocumentUncheckedCreateWithoutCancelOfInput = {
   cancelReason?: string | null
   eInvoiceFormat?: string | null
   eInvoiceStorageKey?: string | null
+  eInvoiceGeneratedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   cancellations?: Prisma.CalculationDocumentUncheckedCreateNestedManyWithoutCancelOfInput
@@ -1237,6 +1266,7 @@ export type CalculationDocumentUpdateWithoutCancellationsInput = {
   cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eInvoiceFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eInvoiceStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eInvoiceGeneratedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   calculation?: Prisma.CalculationUpdateOneRequiredWithoutDocumentsNestedInput
@@ -1268,6 +1298,7 @@ export type CalculationDocumentUncheckedUpdateWithoutCancellationsInput = {
   cancelOfId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eInvoiceFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eInvoiceStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eInvoiceGeneratedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutDocumentNestedInput
@@ -1311,6 +1342,7 @@ export type CalculationDocumentCreateWithoutPaymentsInput = {
   cancelReason?: string | null
   eInvoiceFormat?: string | null
   eInvoiceStorageKey?: string | null
+  eInvoiceGeneratedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   calculation: Prisma.CalculationCreateNestedOneWithoutDocumentsInput
@@ -1342,6 +1374,7 @@ export type CalculationDocumentUncheckedCreateWithoutPaymentsInput = {
   cancelOfId?: string | null
   eInvoiceFormat?: string | null
   eInvoiceStorageKey?: string | null
+  eInvoiceGeneratedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   cancellations?: Prisma.CalculationDocumentUncheckedCreateNestedManyWithoutCancelOfInput
@@ -1385,6 +1418,7 @@ export type CalculationDocumentUpdateWithoutPaymentsInput = {
   cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eInvoiceFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eInvoiceStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eInvoiceGeneratedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   calculation?: Prisma.CalculationUpdateOneRequiredWithoutDocumentsNestedInput
@@ -1416,6 +1450,7 @@ export type CalculationDocumentUncheckedUpdateWithoutPaymentsInput = {
   cancelOfId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eInvoiceFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eInvoiceStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eInvoiceGeneratedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   cancellations?: Prisma.CalculationDocumentUncheckedUpdateManyWithoutCancelOfNestedInput
@@ -1443,6 +1478,7 @@ export type CalculationDocumentCreateWithoutDunningNoticesInput = {
   cancelReason?: string | null
   eInvoiceFormat?: string | null
   eInvoiceStorageKey?: string | null
+  eInvoiceGeneratedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   calculation: Prisma.CalculationCreateNestedOneWithoutDocumentsInput
@@ -1474,6 +1510,7 @@ export type CalculationDocumentUncheckedCreateWithoutDunningNoticesInput = {
   cancelOfId?: string | null
   eInvoiceFormat?: string | null
   eInvoiceStorageKey?: string | null
+  eInvoiceGeneratedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   cancellations?: Prisma.CalculationDocumentUncheckedCreateNestedManyWithoutCancelOfInput
@@ -1517,6 +1554,7 @@ export type CalculationDocumentUpdateWithoutDunningNoticesInput = {
   cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eInvoiceFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eInvoiceStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eInvoiceGeneratedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   calculation?: Prisma.CalculationUpdateOneRequiredWithoutDocumentsNestedInput
@@ -1548,6 +1586,7 @@ export type CalculationDocumentUncheckedUpdateWithoutDunningNoticesInput = {
   cancelOfId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eInvoiceFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eInvoiceStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eInvoiceGeneratedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   cancellations?: Prisma.CalculationDocumentUncheckedUpdateManyWithoutCancelOfNestedInput
@@ -1576,6 +1615,7 @@ export type CalculationDocumentCreateManyCalculationInput = {
   cancelOfId?: string | null
   eInvoiceFormat?: string | null
   eInvoiceStorageKey?: string | null
+  eInvoiceGeneratedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1601,6 +1641,7 @@ export type CalculationDocumentUpdateWithoutCalculationInput = {
   cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eInvoiceFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eInvoiceStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eInvoiceGeneratedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   cancelOf?: Prisma.CalculationDocumentUpdateOneWithoutCancellationsNestedInput
@@ -1631,6 +1672,7 @@ export type CalculationDocumentUncheckedUpdateWithoutCalculationInput = {
   cancelOfId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eInvoiceFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eInvoiceStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eInvoiceGeneratedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   cancellations?: Prisma.CalculationDocumentUncheckedUpdateManyWithoutCancelOfNestedInput
@@ -1660,6 +1702,7 @@ export type CalculationDocumentUncheckedUpdateManyWithoutCalculationInput = {
   cancelOfId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eInvoiceFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eInvoiceStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eInvoiceGeneratedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1686,6 +1729,7 @@ export type CalculationDocumentCreateManyCancelOfInput = {
   cancelReason?: string | null
   eInvoiceFormat?: string | null
   eInvoiceStorageKey?: string | null
+  eInvoiceGeneratedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1711,6 +1755,7 @@ export type CalculationDocumentUpdateWithoutCancelOfInput = {
   cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eInvoiceFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eInvoiceStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eInvoiceGeneratedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   calculation?: Prisma.CalculationUpdateOneRequiredWithoutDocumentsNestedInput
@@ -1741,6 +1786,7 @@ export type CalculationDocumentUncheckedUpdateWithoutCancelOfInput = {
   cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eInvoiceFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eInvoiceStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eInvoiceGeneratedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   cancellations?: Prisma.CalculationDocumentUncheckedUpdateManyWithoutCancelOfNestedInput
@@ -1770,6 +1816,7 @@ export type CalculationDocumentUncheckedUpdateManyWithoutCancelOfInput = {
   cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eInvoiceFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eInvoiceStorageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eInvoiceGeneratedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1846,6 +1893,7 @@ export type CalculationDocumentSelect<ExtArgs extends runtime.Types.Extensions.I
   cancelOfId?: boolean
   eInvoiceFormat?: boolean
   eInvoiceStorageKey?: boolean
+  eInvoiceGeneratedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   calculation?: boolean | Prisma.CalculationDefaultArgs<ExtArgs>
@@ -1879,6 +1927,7 @@ export type CalculationDocumentSelectCreateManyAndReturn<ExtArgs extends runtime
   cancelOfId?: boolean
   eInvoiceFormat?: boolean
   eInvoiceStorageKey?: boolean
+  eInvoiceGeneratedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   calculation?: boolean | Prisma.CalculationDefaultArgs<ExtArgs>
@@ -1908,6 +1957,7 @@ export type CalculationDocumentSelectUpdateManyAndReturn<ExtArgs extends runtime
   cancelOfId?: boolean
   eInvoiceFormat?: boolean
   eInvoiceStorageKey?: boolean
+  eInvoiceGeneratedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   calculation?: boolean | Prisma.CalculationDefaultArgs<ExtArgs>
@@ -1937,11 +1987,12 @@ export type CalculationDocumentSelectScalar = {
   cancelOfId?: boolean
   eInvoiceFormat?: boolean
   eInvoiceStorageKey?: boolean
+  eInvoiceGeneratedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type CalculationDocumentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "calculationId" | "documentType" | "documentNumber" | "status" | "issueDate" | "dueDate" | "customerNote" | "internalNote" | "pdfStorageKey" | "sentAt" | "netAmount" | "vatAmount" | "grossAmount" | "paidAmount" | "paidAt" | "dataSnapshotJson" | "canceledAt" | "cancelReason" | "cancelOfId" | "eInvoiceFormat" | "eInvoiceStorageKey" | "createdAt" | "updatedAt", ExtArgs["result"]["calculationDocument"]>
+export type CalculationDocumentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "calculationId" | "documentType" | "documentNumber" | "status" | "issueDate" | "dueDate" | "customerNote" | "internalNote" | "pdfStorageKey" | "sentAt" | "netAmount" | "vatAmount" | "grossAmount" | "paidAmount" | "paidAt" | "dataSnapshotJson" | "canceledAt" | "cancelReason" | "cancelOfId" | "eInvoiceFormat" | "eInvoiceStorageKey" | "eInvoiceGeneratedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["calculationDocument"]>
 export type CalculationDocumentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   calculation?: boolean | Prisma.CalculationDefaultArgs<ExtArgs>
   cancelOf?: boolean | Prisma.CalculationDocument$cancelOfArgs<ExtArgs>
@@ -1991,6 +2042,7 @@ export type $CalculationDocumentPayload<ExtArgs extends runtime.Types.Extensions
     cancelOfId: string | null
     eInvoiceFormat: string | null
     eInvoiceStorageKey: string | null
+    eInvoiceGeneratedAt: Date | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["calculationDocument"]>
@@ -2443,6 +2495,7 @@ export interface CalculationDocumentFieldRefs {
   readonly cancelOfId: Prisma.FieldRef<"CalculationDocument", 'String'>
   readonly eInvoiceFormat: Prisma.FieldRef<"CalculationDocument", 'String'>
   readonly eInvoiceStorageKey: Prisma.FieldRef<"CalculationDocument", 'String'>
+  readonly eInvoiceGeneratedAt: Prisma.FieldRef<"CalculationDocument", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"CalculationDocument", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"CalculationDocument", 'DateTime'>
 }

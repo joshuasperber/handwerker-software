@@ -409,6 +409,10 @@ model Employee {
   color               String   @default("#3b82f6")
   /** Interner Stundenlohn (netto) für Auftragskosten aus Zeiterfassung */
   hourlyWageNet       Float?
+  /** Externer Verrechnungssatz (netto) für Kalkulation/Rechnung */
+  billingHourlyRateNet Float?
+  /** Vorschlag für Tätigkeit in Kalkulation/Stundenzettel */
+  defaultActivity     String?
   operationalStatus   EmployeeOperationalStatus @default(VERFUEGBAR)
   createdAt           DateTime @default(now())
   updatedAt           DateTime @updatedAt
@@ -428,6 +432,7 @@ model Employee {
   stockMovements  StockMovement[]
   projectMemberships ProjectMember[]
   orderAssignments OrderAssignee[]
+  laborItems      LaborItem[]
 }
 
 model EmployeeQualification {
@@ -528,6 +533,11 @@ model Order {
   teamId          String?
   vehicleId       String?
   projectId       String?
+  /// Festpreis direkt am Auftrag (wird in verknüpfte Kalkulation übernommen)
+  useFixedPrice           Boolean @default(false)
+  fixedPriceNet           Float?
+  fixedPriceLabel         String?
+  fixedPriceDisplayMode   FixedPriceDisplayMode @default(SINGLE_LINE)
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
 
@@ -940,6 +950,26 @@ enum TravelCalculationMode {
   FORMULA
 }
 
+/// Kundendarstellung bei Festpreis-Abrechnung (interne Kalkulation bleibt erhalten).
+enum FixedPriceDisplayMode {
+  /// Eine Festpreisposition mit Betrag
+  SINGLE_LINE
+  /// Interne Positionen mit Einzelpreisen + verbindlicher Festpreis als Gesamtbetrag
+  POSITIONS_WITH_PRICES
+  /// Positionen nur als Leistungsbeschreibung ohne Einzelpreise + Festpreis gesamt
+  DESCRIPTION_ONLY
+}
+
+/// Wie Arbeitszeit/Mitarbeiterkosten auf Angebot/Rechnung erscheinen.
+enum LaborInvoiceMode {
+  /// Nur intern (Kalkulation/Kontrolle), nicht auf Kundendokument
+  INTERNAL
+  /// Jede Arbeitsposition einzeln
+  ITEMIZED
+  /// Alle Arbeitsstunden als eine Position
+  SUMMARIZED
+}
+
 enum CalculationStatus {
   DRAFT
   CALCULATED
@@ -1136,6 +1166,9 @@ model Calculation {
   useFixedPrice           Boolean @default(false)
   fixedPriceNet           Float?
   fixedPriceLabel         String?
+  fixedPriceDisplayMode   FixedPriceDisplayMode @default(SINGLE_LINE)
+  /// Wie Arbeitspositionen auf Angebot/Rechnung erscheinen (bei Festpreis immer intern)
+  laborInvoiceMode        LaborInvoiceMode @default(ITEMIZED)
 
   /// Pro-Kalkulation: Gemeinkosten überschreiben (null = Tenant-Standard)
   overheadPercentOverride Float?
@@ -1169,17 +1202,28 @@ model Calculation {
 model LaborItem {
   id                   String    @id @default(cuid())
   calculationId        String
+  employeeId           String?
   description          String
   laborType            LaborType @default(ONSITE_WORK)
+  /// Geplante Stunden
   hours                Float
+  /// Tatsächliche Stunden (z. B. aus Stundenzettel); null = noch nicht gesetzt
+  actualHours          Float?
+  /// Verrechnungssatz (extern / Verkauf)
   hourlyRateNet        Float
+  /// Interner Stundenlohn-Snapshot (Kostenkontrolle)
+  internalHourlyWageNet Float?
   quantityWorkers      Int       @default(1)
   totalNet             Float     @default(0)
+  notes                String?
   isVisibleToCustomer  Boolean   @default(true)
   createdAt            DateTime  @default(now())
   updatedAt            DateTime  @updatedAt
 
   calculation Calculation @relation(fields: [calculationId], references: [id], onDelete: Cascade)
+  employee    Employee?   @relation(fields: [employeeId], references: [id], onDelete: SetNull)
+
+  @@index([employeeId])
 }
 
 model MaterialItem {
@@ -1369,9 +1413,10 @@ model CalculationDocument {
   cancelReason String?
   cancelOfId   String?
 
-  // E-Rechnung
-  eInvoiceFormat     String?
-  eInvoiceStorageKey String?
+  // E-Rechnung (Export-Nachweis – keine automatische Umwandlung bestehender Rechnungen)
+  eInvoiceFormat      String?
+  eInvoiceStorageKey  String?
+  eInvoiceGeneratedAt DateTime?
 
   createdAt      DateTime                @default(now())
   updatedAt      DateTime                @updatedAt
@@ -2069,6 +2114,8 @@ model FinanceSettings {
   tenantId                     String              @unique
   /** Geschätzter Steuersatz in % (unverbindlich) */
   estimatedTaxRate             Float               @default(30)
+  /** Gewünschter Rücklagenprozentsatz vom geschätzten Gewinn (unverbindlich; null = Steuersatz) */
+  reservePercent               Float?
   revenueBasis                 FinanceRevenueBasis @default(ISSUE_DATE)
   includeUnpaidInvoices        Boolean             @default(false)
   /** Standard-Betrachtungszeitraum: current_month | last_quarter | current_year */
@@ -2085,6 +2132,14 @@ model FinanceSettings {
   highRevenueThreshold         Float               @default(3000)
   /** Optionale Warnschwelle für niedrige Liquidität (offene Forderungen vs. Orientierung) */
   lowLiquidityWarningThreshold Float?
+  /** Umsatzsteuerpflicht (Orientierung) */
+  vatRegistered                Boolean             @default(true)
+  /** Kleinunternehmerregelung (Orientierung) */
+  kleinunternehmer             Boolean             @default(false)
+  /** Steuerberater vorhanden */
+  hasTaxAdvisor                Boolean             @default(false)
+  /** Interne Notiz zum Finanzprofil */
+  profileNote                  String?
   createdAt                    DateTime            @default(now())
   updatedAt                    DateTime            @updatedAt
 

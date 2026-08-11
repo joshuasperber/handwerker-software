@@ -20,8 +20,18 @@ export type OrderModel = runtime.Types.Result.DefaultSelection<Prisma.$OrderPayl
 
 export type AggregateOrder = {
   _count: OrderCountAggregateOutputType | null
+  _avg: OrderAvgAggregateOutputType | null
+  _sum: OrderSumAggregateOutputType | null
   _min: OrderMinAggregateOutputType | null
   _max: OrderMaxAggregateOutputType | null
+}
+
+export type OrderAvgAggregateOutputType = {
+  fixedPriceNet: number | null
+}
+
+export type OrderSumAggregateOutputType = {
+  fixedPriceNet: number | null
 }
 
 export type OrderMinAggregateOutputType = {
@@ -51,6 +61,10 @@ export type OrderMinAggregateOutputType = {
   teamId: string | null
   vehicleId: string | null
   projectId: string | null
+  useFixedPrice: boolean | null
+  fixedPriceNet: number | null
+  fixedPriceLabel: string | null
+  fixedPriceDisplayMode: $Enums.FixedPriceDisplayMode | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -82,6 +96,10 @@ export type OrderMaxAggregateOutputType = {
   teamId: string | null
   vehicleId: string | null
   projectId: string | null
+  useFixedPrice: boolean | null
+  fixedPriceNet: number | null
+  fixedPriceLabel: string | null
+  fixedPriceDisplayMode: $Enums.FixedPriceDisplayMode | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -114,11 +132,23 @@ export type OrderCountAggregateOutputType = {
   teamId: number
   vehicleId: number
   projectId: number
+  useFixedPrice: number
+  fixedPriceNet: number
+  fixedPriceLabel: number
+  fixedPriceDisplayMode: number
   createdAt: number
   updatedAt: number
   _all: number
 }
 
+
+export type OrderAvgAggregateInputType = {
+  fixedPriceNet?: true
+}
+
+export type OrderSumAggregateInputType = {
+  fixedPriceNet?: true
+}
 
 export type OrderMinAggregateInputType = {
   id?: true
@@ -147,6 +177,10 @@ export type OrderMinAggregateInputType = {
   teamId?: true
   vehicleId?: true
   projectId?: true
+  useFixedPrice?: true
+  fixedPriceNet?: true
+  fixedPriceLabel?: true
+  fixedPriceDisplayMode?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -178,6 +212,10 @@ export type OrderMaxAggregateInputType = {
   teamId?: true
   vehicleId?: true
   projectId?: true
+  useFixedPrice?: true
+  fixedPriceNet?: true
+  fixedPriceLabel?: true
+  fixedPriceDisplayMode?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -210,6 +248,10 @@ export type OrderCountAggregateInputType = {
   teamId?: true
   vehicleId?: true
   projectId?: true
+  useFixedPrice?: true
+  fixedPriceNet?: true
+  fixedPriceLabel?: true
+  fixedPriceDisplayMode?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -253,6 +295,18 @@ export type OrderAggregateArgs<ExtArgs extends runtime.Types.Extensions.Internal
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: OrderAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: OrderSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: OrderMinAggregateInputType
@@ -283,6 +337,8 @@ export type OrderGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
   take?: number
   skip?: number
   _count?: OrderCountAggregateInputType | true
+  _avg?: OrderAvgAggregateInputType
+  _sum?: OrderSumAggregateInputType
   _min?: OrderMinAggregateInputType
   _max?: OrderMaxAggregateInputType
 }
@@ -315,9 +371,15 @@ export type OrderGroupByOutputType = {
   teamId: string | null
   vehicleId: string | null
   projectId: string | null
+  useFixedPrice: boolean
+  fixedPriceNet: number | null
+  fixedPriceLabel: string | null
+  fixedPriceDisplayMode: $Enums.FixedPriceDisplayMode
   createdAt: Date
   updatedAt: Date
   _count: OrderCountAggregateOutputType | null
+  _avg: OrderAvgAggregateOutputType | null
+  _sum: OrderSumAggregateOutputType | null
   _min: OrderMinAggregateOutputType | null
   _max: OrderMaxAggregateOutputType | null
 }
@@ -368,6 +430,10 @@ export type OrderWhereInput = {
   teamId?: Prisma.StringNullableFilter<"Order"> | string | null
   vehicleId?: Prisma.StringNullableFilter<"Order"> | string | null
   projectId?: Prisma.StringNullableFilter<"Order"> | string | null
+  useFixedPrice?: Prisma.BoolFilter<"Order"> | boolean
+  fixedPriceNet?: Prisma.FloatNullableFilter<"Order"> | number | null
+  fixedPriceLabel?: Prisma.StringNullableFilter<"Order"> | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFilter<"Order"> | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeFilter<"Order"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Order"> | Date | string
   tenant?: Prisma.XOR<Prisma.TenantScalarRelationFilter, Prisma.TenantWhereInput>
@@ -429,6 +495,10 @@ export type OrderOrderByWithRelationInput = {
   teamId?: Prisma.SortOrderInput | Prisma.SortOrder
   vehicleId?: Prisma.SortOrderInput | Prisma.SortOrder
   projectId?: Prisma.SortOrderInput | Prisma.SortOrder
+  useFixedPrice?: Prisma.SortOrder
+  fixedPriceNet?: Prisma.SortOrderInput | Prisma.SortOrder
+  fixedPriceLabel?: Prisma.SortOrderInput | Prisma.SortOrder
+  fixedPriceDisplayMode?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   tenant?: Prisma.TenantOrderByWithRelationInput
@@ -494,6 +564,10 @@ export type OrderWhereUniqueInput = Prisma.AtLeast<{
   teamId?: Prisma.StringNullableFilter<"Order"> | string | null
   vehicleId?: Prisma.StringNullableFilter<"Order"> | string | null
   projectId?: Prisma.StringNullableFilter<"Order"> | string | null
+  useFixedPrice?: Prisma.BoolFilter<"Order"> | boolean
+  fixedPriceNet?: Prisma.FloatNullableFilter<"Order"> | number | null
+  fixedPriceLabel?: Prisma.StringNullableFilter<"Order"> | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFilter<"Order"> | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeFilter<"Order"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Order"> | Date | string
   tenant?: Prisma.XOR<Prisma.TenantScalarRelationFilter, Prisma.TenantWhereInput>
@@ -555,11 +629,17 @@ export type OrderOrderByWithAggregationInput = {
   teamId?: Prisma.SortOrderInput | Prisma.SortOrder
   vehicleId?: Prisma.SortOrderInput | Prisma.SortOrder
   projectId?: Prisma.SortOrderInput | Prisma.SortOrder
+  useFixedPrice?: Prisma.SortOrder
+  fixedPriceNet?: Prisma.SortOrderInput | Prisma.SortOrder
+  fixedPriceLabel?: Prisma.SortOrderInput | Prisma.SortOrder
+  fixedPriceDisplayMode?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.OrderCountOrderByAggregateInput
+  _avg?: Prisma.OrderAvgOrderByAggregateInput
   _max?: Prisma.OrderMaxOrderByAggregateInput
   _min?: Prisma.OrderMinOrderByAggregateInput
+  _sum?: Prisma.OrderSumOrderByAggregateInput
 }
 
 export type OrderScalarWhereWithAggregatesInput = {
@@ -593,6 +673,10 @@ export type OrderScalarWhereWithAggregatesInput = {
   teamId?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
   vehicleId?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
   projectId?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
+  useFixedPrice?: Prisma.BoolWithAggregatesFilter<"Order"> | boolean
+  fixedPriceNet?: Prisma.FloatNullableWithAggregatesFilter<"Order"> | number | null
+  fixedPriceLabel?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeWithAggregatesFilter<"Order"> | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Order"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Order"> | Date | string
 }
@@ -618,6 +702,10 @@ export type OrderCreateInput = {
   bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutOrdersInput
@@ -679,6 +767,10 @@ export type OrderUncheckedCreateInput = {
   teamId?: string | null
   vehicleId?: string | null
   projectId?: string | null
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
   createdAt?: Date | string
   updatedAt?: Date | string
   services?: Prisma.OrderServiceUncheckedCreateNestedManyWithoutOrderInput
@@ -726,6 +818,10 @@ export type OrderUpdateInput = {
   bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutOrdersNestedInput
@@ -787,6 +883,10 @@ export type OrderUncheckedUpdateInput = {
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   services?: Prisma.OrderServiceUncheckedUpdateManyWithoutOrderNestedInput
@@ -841,6 +941,10 @@ export type OrderCreateManyInput = {
   teamId?: string | null
   vehicleId?: string | null
   projectId?: string | null
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -866,6 +970,10 @@ export type OrderUpdateManyMutationInput = {
   bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -898,6 +1006,10 @@ export type OrderUncheckedUpdateManyInput = {
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -950,8 +1062,16 @@ export type OrderCountOrderByAggregateInput = {
   teamId?: Prisma.SortOrder
   vehicleId?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
+  useFixedPrice?: Prisma.SortOrder
+  fixedPriceNet?: Prisma.SortOrder
+  fixedPriceLabel?: Prisma.SortOrder
+  fixedPriceDisplayMode?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type OrderAvgOrderByAggregateInput = {
+  fixedPriceNet?: Prisma.SortOrder
 }
 
 export type OrderMaxOrderByAggregateInput = {
@@ -981,6 +1101,10 @@ export type OrderMaxOrderByAggregateInput = {
   teamId?: Prisma.SortOrder
   vehicleId?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
+  useFixedPrice?: Prisma.SortOrder
+  fixedPriceNet?: Prisma.SortOrder
+  fixedPriceLabel?: Prisma.SortOrder
+  fixedPriceDisplayMode?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -1012,8 +1136,16 @@ export type OrderMinOrderByAggregateInput = {
   teamId?: Prisma.SortOrder
   vehicleId?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
+  useFixedPrice?: Prisma.SortOrder
+  fixedPriceNet?: Prisma.SortOrder
+  fixedPriceLabel?: Prisma.SortOrder
+  fixedPriceDisplayMode?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type OrderSumOrderByAggregateInput = {
+  fixedPriceNet?: Prisma.SortOrder
 }
 
 export type OrderScalarRelationFilter = {
@@ -1223,6 +1355,10 @@ export type NullableEnumCompletionResultFieldUpdateOperationsInput = {
 
 export type EnumCustomerConfirmationStatusFieldUpdateOperationsInput = {
   set?: $Enums.CustomerConfirmationStatus
+}
+
+export type EnumFixedPriceDisplayModeFieldUpdateOperationsInput = {
+  set?: $Enums.FixedPriceDisplayMode
 }
 
 export type OrderCreateNestedOneWithoutAssigneesInput = {
@@ -1686,6 +1822,10 @@ export type OrderCreateWithoutTenantInput = {
   bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
   createdAt?: Date | string
   updatedAt?: Date | string
   customer: Prisma.CustomerCreateNestedOneWithoutOrdersInput
@@ -1745,6 +1885,10 @@ export type OrderUncheckedCreateWithoutTenantInput = {
   teamId?: string | null
   vehicleId?: string | null
   projectId?: string | null
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
   createdAt?: Date | string
   updatedAt?: Date | string
   services?: Prisma.OrderServiceUncheckedCreateNestedManyWithoutOrderInput
@@ -1828,6 +1972,10 @@ export type OrderScalarWhereInput = {
   teamId?: Prisma.StringNullableFilter<"Order"> | string | null
   vehicleId?: Prisma.StringNullableFilter<"Order"> | string | null
   projectId?: Prisma.StringNullableFilter<"Order"> | string | null
+  useFixedPrice?: Prisma.BoolFilter<"Order"> | boolean
+  fixedPriceNet?: Prisma.FloatNullableFilter<"Order"> | number | null
+  fixedPriceLabel?: Prisma.StringNullableFilter<"Order"> | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFilter<"Order"> | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeFilter<"Order"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Order"> | Date | string
 }
@@ -1853,6 +2001,10 @@ export type OrderCreateWithoutWorkRequestsInput = {
   bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutOrdersInput
@@ -1913,6 +2065,10 @@ export type OrderUncheckedCreateWithoutWorkRequestsInput = {
   teamId?: string | null
   vehicleId?: string | null
   projectId?: string | null
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
   createdAt?: Date | string
   updatedAt?: Date | string
   services?: Prisma.OrderServiceUncheckedCreateNestedManyWithoutOrderInput
@@ -1975,6 +2131,10 @@ export type OrderUpdateWithoutWorkRequestsInput = {
   bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutOrdersNestedInput
@@ -2035,6 +2195,10 @@ export type OrderUncheckedUpdateWithoutWorkRequestsInput = {
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   services?: Prisma.OrderServiceUncheckedUpdateManyWithoutOrderNestedInput
@@ -2081,6 +2245,10 @@ export type OrderCreateWithoutCustomerInput = {
   bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutOrdersInput
@@ -2140,6 +2308,10 @@ export type OrderUncheckedCreateWithoutCustomerInput = {
   teamId?: string | null
   vehicleId?: string | null
   projectId?: string | null
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
   createdAt?: Date | string
   updatedAt?: Date | string
   services?: Prisma.OrderServiceUncheckedCreateNestedManyWithoutOrderInput
@@ -2213,6 +2385,10 @@ export type OrderCreateWithoutPropertyInput = {
   bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutOrdersInput
@@ -2272,6 +2448,10 @@ export type OrderUncheckedCreateWithoutPropertyInput = {
   teamId?: string | null
   vehicleId?: string | null
   projectId?: string | null
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
   createdAt?: Date | string
   updatedAt?: Date | string
   services?: Prisma.OrderServiceUncheckedCreateNestedManyWithoutOrderInput
@@ -2345,6 +2525,10 @@ export type OrderCreateWithoutOrderTypeDefinitionInput = {
   bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutOrdersInput
@@ -2404,6 +2588,10 @@ export type OrderUncheckedCreateWithoutOrderTypeDefinitionInput = {
   teamId?: string | null
   vehicleId?: string | null
   projectId?: string | null
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
   createdAt?: Date | string
   updatedAt?: Date | string
   services?: Prisma.OrderServiceUncheckedCreateNestedManyWithoutOrderInput
@@ -2477,6 +2665,10 @@ export type OrderCreateWithoutAssigneesInput = {
   bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutOrdersInput
@@ -2537,6 +2729,10 @@ export type OrderUncheckedCreateWithoutAssigneesInput = {
   teamId?: string | null
   vehicleId?: string | null
   projectId?: string | null
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
   createdAt?: Date | string
   updatedAt?: Date | string
   services?: Prisma.OrderServiceUncheckedCreateNestedManyWithoutOrderInput
@@ -2599,6 +2795,10 @@ export type OrderUpdateWithoutAssigneesInput = {
   bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutOrdersNestedInput
@@ -2659,6 +2859,10 @@ export type OrderUncheckedUpdateWithoutAssigneesInput = {
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   services?: Prisma.OrderServiceUncheckedUpdateManyWithoutOrderNestedInput
@@ -2705,6 +2909,10 @@ export type OrderCreateWithoutServicesInput = {
   bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutOrdersInput
@@ -2765,6 +2973,10 @@ export type OrderUncheckedCreateWithoutServicesInput = {
   teamId?: string | null
   vehicleId?: string | null
   projectId?: string | null
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
   createdAt?: Date | string
   updatedAt?: Date | string
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutOrderInput
@@ -2827,6 +3039,10 @@ export type OrderUpdateWithoutServicesInput = {
   bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutOrdersNestedInput
@@ -2887,6 +3103,10 @@ export type OrderUncheckedUpdateWithoutServicesInput = {
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutOrderNestedInput
@@ -2933,6 +3153,10 @@ export type OrderCreateWithoutAppointmentsInput = {
   bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutOrdersInput
@@ -2993,6 +3217,10 @@ export type OrderUncheckedCreateWithoutAppointmentsInput = {
   teamId?: string | null
   vehicleId?: string | null
   projectId?: string | null
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
   createdAt?: Date | string
   updatedAt?: Date | string
   services?: Prisma.OrderServiceUncheckedCreateNestedManyWithoutOrderInput
@@ -3055,6 +3283,10 @@ export type OrderUpdateWithoutAppointmentsInput = {
   bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutOrdersNestedInput
@@ -3115,6 +3347,10 @@ export type OrderUncheckedUpdateWithoutAppointmentsInput = {
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   services?: Prisma.OrderServiceUncheckedUpdateManyWithoutOrderNestedInput
@@ -3161,6 +3397,10 @@ export type OrderCreateWithoutChecklistsInput = {
   bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutOrdersInput
@@ -3221,6 +3461,10 @@ export type OrderUncheckedCreateWithoutChecklistsInput = {
   teamId?: string | null
   vehicleId?: string | null
   projectId?: string | null
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
   createdAt?: Date | string
   updatedAt?: Date | string
   services?: Prisma.OrderServiceUncheckedCreateNestedManyWithoutOrderInput
@@ -3283,6 +3527,10 @@ export type OrderUpdateWithoutChecklistsInput = {
   bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutOrdersNestedInput
@@ -3343,6 +3591,10 @@ export type OrderUncheckedUpdateWithoutChecklistsInput = {
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   services?: Prisma.OrderServiceUncheckedUpdateManyWithoutOrderNestedInput
@@ -3389,6 +3641,10 @@ export type OrderCreateWithoutFilesInput = {
   bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutOrdersInput
@@ -3449,6 +3705,10 @@ export type OrderUncheckedCreateWithoutFilesInput = {
   teamId?: string | null
   vehicleId?: string | null
   projectId?: string | null
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
   createdAt?: Date | string
   updatedAt?: Date | string
   services?: Prisma.OrderServiceUncheckedCreateNestedManyWithoutOrderInput
@@ -3511,6 +3771,10 @@ export type OrderUpdateWithoutFilesInput = {
   bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutOrdersNestedInput
@@ -3571,6 +3835,10 @@ export type OrderUncheckedUpdateWithoutFilesInput = {
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   services?: Prisma.OrderServiceUncheckedUpdateManyWithoutOrderNestedInput
@@ -3617,6 +3885,10 @@ export type OrderCreateWithoutTimeEntriesInput = {
   bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutOrdersInput
@@ -3677,6 +3949,10 @@ export type OrderUncheckedCreateWithoutTimeEntriesInput = {
   teamId?: string | null
   vehicleId?: string | null
   projectId?: string | null
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
   createdAt?: Date | string
   updatedAt?: Date | string
   services?: Prisma.OrderServiceUncheckedCreateNestedManyWithoutOrderInput
@@ -3739,6 +4015,10 @@ export type OrderUpdateWithoutTimeEntriesInput = {
   bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutOrdersNestedInput
@@ -3799,6 +4079,10 @@ export type OrderUncheckedUpdateWithoutTimeEntriesInput = {
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   services?: Prisma.OrderServiceUncheckedUpdateManyWithoutOrderNestedInput
@@ -3845,6 +4129,10 @@ export type OrderCreateWithoutMaterialUsagesInput = {
   bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutOrdersInput
@@ -3905,6 +4193,10 @@ export type OrderUncheckedCreateWithoutMaterialUsagesInput = {
   teamId?: string | null
   vehicleId?: string | null
   projectId?: string | null
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
   createdAt?: Date | string
   updatedAt?: Date | string
   services?: Prisma.OrderServiceUncheckedCreateNestedManyWithoutOrderInput
@@ -3967,6 +4259,10 @@ export type OrderUpdateWithoutMaterialUsagesInput = {
   bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutOrdersNestedInput
@@ -4027,6 +4323,10 @@ export type OrderUncheckedUpdateWithoutMaterialUsagesInput = {
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   services?: Prisma.OrderServiceUncheckedUpdateManyWithoutOrderNestedInput
@@ -4073,6 +4373,10 @@ export type OrderCreateWithoutMessagesInput = {
   bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutOrdersInput
@@ -4133,6 +4437,10 @@ export type OrderUncheckedCreateWithoutMessagesInput = {
   teamId?: string | null
   vehicleId?: string | null
   projectId?: string | null
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
   createdAt?: Date | string
   updatedAt?: Date | string
   services?: Prisma.OrderServiceUncheckedCreateNestedManyWithoutOrderInput
@@ -4195,6 +4503,10 @@ export type OrderUpdateWithoutMessagesInput = {
   bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutOrdersNestedInput
@@ -4255,6 +4567,10 @@ export type OrderUncheckedUpdateWithoutMessagesInput = {
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   services?: Prisma.OrderServiceUncheckedUpdateManyWithoutOrderNestedInput
@@ -4301,6 +4617,10 @@ export type OrderCreateWithoutCalculationsInput = {
   bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutOrdersInput
@@ -4361,6 +4681,10 @@ export type OrderUncheckedCreateWithoutCalculationsInput = {
   teamId?: string | null
   vehicleId?: string | null
   projectId?: string | null
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
   createdAt?: Date | string
   updatedAt?: Date | string
   services?: Prisma.OrderServiceUncheckedCreateNestedManyWithoutOrderInput
@@ -4423,6 +4747,10 @@ export type OrderUpdateWithoutCalculationsInput = {
   bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutOrdersNestedInput
@@ -4483,6 +4811,10 @@ export type OrderUncheckedUpdateWithoutCalculationsInput = {
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   services?: Prisma.OrderServiceUncheckedUpdateManyWithoutOrderNestedInput
@@ -4529,6 +4861,10 @@ export type OrderCreateWithoutStockMovementsInput = {
   bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutOrdersInput
@@ -4589,6 +4925,10 @@ export type OrderUncheckedCreateWithoutStockMovementsInput = {
   teamId?: string | null
   vehicleId?: string | null
   projectId?: string | null
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
   createdAt?: Date | string
   updatedAt?: Date | string
   services?: Prisma.OrderServiceUncheckedCreateNestedManyWithoutOrderInput
@@ -4651,6 +4991,10 @@ export type OrderUpdateWithoutStockMovementsInput = {
   bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutOrdersNestedInput
@@ -4711,6 +5055,10 @@ export type OrderUncheckedUpdateWithoutStockMovementsInput = {
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   services?: Prisma.OrderServiceUncheckedUpdateManyWithoutOrderNestedInput
@@ -4757,6 +5105,10 @@ export type OrderCreateWithoutReservationsInput = {
   bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutOrdersInput
@@ -4817,6 +5169,10 @@ export type OrderUncheckedCreateWithoutReservationsInput = {
   teamId?: string | null
   vehicleId?: string | null
   projectId?: string | null
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
   createdAt?: Date | string
   updatedAt?: Date | string
   services?: Prisma.OrderServiceUncheckedCreateNestedManyWithoutOrderInput
@@ -4879,6 +5235,10 @@ export type OrderUpdateWithoutReservationsInput = {
   bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutOrdersNestedInput
@@ -4939,6 +5299,10 @@ export type OrderUncheckedUpdateWithoutReservationsInput = {
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   services?: Prisma.OrderServiceUncheckedUpdateManyWithoutOrderNestedInput
@@ -4985,6 +5349,10 @@ export type OrderCreateWithoutPhasesInput = {
   bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutOrdersInput
@@ -5045,6 +5413,10 @@ export type OrderUncheckedCreateWithoutPhasesInput = {
   teamId?: string | null
   vehicleId?: string | null
   projectId?: string | null
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
   createdAt?: Date | string
   updatedAt?: Date | string
   services?: Prisma.OrderServiceUncheckedCreateNestedManyWithoutOrderInput
@@ -5107,6 +5479,10 @@ export type OrderUpdateWithoutPhasesInput = {
   bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutOrdersNestedInput
@@ -5167,6 +5543,10 @@ export type OrderUncheckedUpdateWithoutPhasesInput = {
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   services?: Prisma.OrderServiceUncheckedUpdateManyWithoutOrderNestedInput
@@ -5213,6 +5593,10 @@ export type OrderCreateWithoutMaterialLinesInput = {
   bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutOrdersInput
@@ -5273,6 +5657,10 @@ export type OrderUncheckedCreateWithoutMaterialLinesInput = {
   teamId?: string | null
   vehicleId?: string | null
   projectId?: string | null
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
   createdAt?: Date | string
   updatedAt?: Date | string
   services?: Prisma.OrderServiceUncheckedCreateNestedManyWithoutOrderInput
@@ -5335,6 +5723,10 @@ export type OrderUpdateWithoutMaterialLinesInput = {
   bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutOrdersNestedInput
@@ -5395,6 +5787,10 @@ export type OrderUncheckedUpdateWithoutMaterialLinesInput = {
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   services?: Prisma.OrderServiceUncheckedUpdateManyWithoutOrderNestedInput
@@ -5441,6 +5837,10 @@ export type OrderCreateWithoutPurchaseOrdersInput = {
   bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutOrdersInput
@@ -5501,6 +5901,10 @@ export type OrderUncheckedCreateWithoutPurchaseOrdersInput = {
   teamId?: string | null
   vehicleId?: string | null
   projectId?: string | null
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
   createdAt?: Date | string
   updatedAt?: Date | string
   services?: Prisma.OrderServiceUncheckedCreateNestedManyWithoutOrderInput
@@ -5563,6 +5967,10 @@ export type OrderUpdateWithoutPurchaseOrdersInput = {
   bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutOrdersNestedInput
@@ -5623,6 +6031,10 @@ export type OrderUncheckedUpdateWithoutPurchaseOrdersInput = {
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   services?: Prisma.OrderServiceUncheckedUpdateManyWithoutOrderNestedInput
@@ -5669,6 +6081,10 @@ export type OrderCreateWithoutTeamInput = {
   bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutOrdersInput
@@ -5728,6 +6144,10 @@ export type OrderUncheckedCreateWithoutTeamInput = {
   invoicedAt?: Date | string | null
   vehicleId?: string | null
   projectId?: string | null
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
   createdAt?: Date | string
   updatedAt?: Date | string
   services?: Prisma.OrderServiceUncheckedCreateNestedManyWithoutOrderInput
@@ -5801,6 +6221,10 @@ export type OrderCreateWithoutVehicleInput = {
   bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutOrdersInput
@@ -5860,6 +6284,10 @@ export type OrderUncheckedCreateWithoutVehicleInput = {
   invoicedAt?: Date | string | null
   teamId?: string | null
   projectId?: string | null
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
   createdAt?: Date | string
   updatedAt?: Date | string
   services?: Prisma.OrderServiceUncheckedCreateNestedManyWithoutOrderInput
@@ -5933,6 +6361,10 @@ export type OrderCreateWithoutPlanMarkersInput = {
   bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutOrdersInput
@@ -5993,6 +6425,10 @@ export type OrderUncheckedCreateWithoutPlanMarkersInput = {
   teamId?: string | null
   vehicleId?: string | null
   projectId?: string | null
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
   createdAt?: Date | string
   updatedAt?: Date | string
   services?: Prisma.OrderServiceUncheckedCreateNestedManyWithoutOrderInput
@@ -6055,6 +6491,10 @@ export type OrderUpdateWithoutPlanMarkersInput = {
   bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutOrdersNestedInput
@@ -6115,6 +6555,10 @@ export type OrderUncheckedUpdateWithoutPlanMarkersInput = {
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   services?: Prisma.OrderServiceUncheckedUpdateManyWithoutOrderNestedInput
@@ -6161,6 +6605,10 @@ export type OrderCreateWithoutStaffRequestsInput = {
   bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutOrdersInput
@@ -6221,6 +6669,10 @@ export type OrderUncheckedCreateWithoutStaffRequestsInput = {
   teamId?: string | null
   vehicleId?: string | null
   projectId?: string | null
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
   createdAt?: Date | string
   updatedAt?: Date | string
   services?: Prisma.OrderServiceUncheckedCreateNestedManyWithoutOrderInput
@@ -6283,6 +6735,10 @@ export type OrderUpdateWithoutStaffRequestsInput = {
   bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutOrdersNestedInput
@@ -6343,6 +6799,10 @@ export type OrderUncheckedUpdateWithoutStaffRequestsInput = {
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   services?: Prisma.OrderServiceUncheckedUpdateManyWithoutOrderNestedInput
@@ -6389,6 +6849,10 @@ export type OrderCreateWithoutSharesInput = {
   bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutOrdersInput
@@ -6449,6 +6913,10 @@ export type OrderUncheckedCreateWithoutSharesInput = {
   teamId?: string | null
   vehicleId?: string | null
   projectId?: string | null
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
   createdAt?: Date | string
   updatedAt?: Date | string
   services?: Prisma.OrderServiceUncheckedCreateNestedManyWithoutOrderInput
@@ -6511,6 +6979,10 @@ export type OrderUpdateWithoutSharesInput = {
   bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutOrdersNestedInput
@@ -6571,6 +7043,10 @@ export type OrderUncheckedUpdateWithoutSharesInput = {
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   services?: Prisma.OrderServiceUncheckedUpdateManyWithoutOrderNestedInput
@@ -6617,6 +7093,10 @@ export type OrderCreateWithoutExpensesInput = {
   bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutOrdersInput
@@ -6677,6 +7157,10 @@ export type OrderUncheckedCreateWithoutExpensesInput = {
   teamId?: string | null
   vehicleId?: string | null
   projectId?: string | null
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
   createdAt?: Date | string
   updatedAt?: Date | string
   services?: Prisma.OrderServiceUncheckedCreateNestedManyWithoutOrderInput
@@ -6739,6 +7223,10 @@ export type OrderUpdateWithoutExpensesInput = {
   bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutOrdersNestedInput
@@ -6799,6 +7287,10 @@ export type OrderUncheckedUpdateWithoutExpensesInput = {
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   services?: Prisma.OrderServiceUncheckedUpdateManyWithoutOrderNestedInput
@@ -6845,6 +7337,10 @@ export type OrderCreateWithoutProjectInput = {
   bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutOrdersInput
@@ -6904,6 +7400,10 @@ export type OrderUncheckedCreateWithoutProjectInput = {
   invoicedAt?: Date | string | null
   teamId?: string | null
   vehicleId?: string | null
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
   createdAt?: Date | string
   updatedAt?: Date | string
   services?: Prisma.OrderServiceUncheckedCreateNestedManyWithoutOrderInput
@@ -6977,6 +7477,10 @@ export type OrderCreateWithoutProjectNotesInput = {
   bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutOrdersInput
@@ -7037,6 +7541,10 @@ export type OrderUncheckedCreateWithoutProjectNotesInput = {
   teamId?: string | null
   vehicleId?: string | null
   projectId?: string | null
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
   createdAt?: Date | string
   updatedAt?: Date | string
   services?: Prisma.OrderServiceUncheckedCreateNestedManyWithoutOrderInput
@@ -7099,6 +7607,10 @@ export type OrderUpdateWithoutProjectNotesInput = {
   bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutOrdersNestedInput
@@ -7159,6 +7671,10 @@ export type OrderUncheckedUpdateWithoutProjectNotesInput = {
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   services?: Prisma.OrderServiceUncheckedUpdateManyWithoutOrderNestedInput
@@ -7205,6 +7721,10 @@ export type OrderCreateWithoutProjectFilesInput = {
   bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutOrdersInput
@@ -7265,6 +7785,10 @@ export type OrderUncheckedCreateWithoutProjectFilesInput = {
   teamId?: string | null
   vehicleId?: string | null
   projectId?: string | null
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
   createdAt?: Date | string
   updatedAt?: Date | string
   services?: Prisma.OrderServiceUncheckedCreateNestedManyWithoutOrderInput
@@ -7327,6 +7851,10 @@ export type OrderUpdateWithoutProjectFilesInput = {
   bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutOrdersNestedInput
@@ -7387,6 +7915,10 @@ export type OrderUncheckedUpdateWithoutProjectFilesInput = {
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   services?: Prisma.OrderServiceUncheckedUpdateManyWithoutOrderNestedInput
@@ -7433,6 +7965,10 @@ export type OrderCreateWithoutProjectCostsInput = {
   bookingConfirmationSentAt?: Date | string | null
   completedAt?: Date | string | null
   invoicedAt?: Date | string | null
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutOrdersInput
@@ -7493,6 +8029,10 @@ export type OrderUncheckedCreateWithoutProjectCostsInput = {
   teamId?: string | null
   vehicleId?: string | null
   projectId?: string | null
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
   createdAt?: Date | string
   updatedAt?: Date | string
   services?: Prisma.OrderServiceUncheckedCreateNestedManyWithoutOrderInput
@@ -7555,6 +8095,10 @@ export type OrderUpdateWithoutProjectCostsInput = {
   bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutOrdersNestedInput
@@ -7615,6 +8159,10 @@ export type OrderUncheckedUpdateWithoutProjectCostsInput = {
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   services?: Prisma.OrderServiceUncheckedUpdateManyWithoutOrderNestedInput
@@ -7667,6 +8215,10 @@ export type OrderCreateManyTenantInput = {
   teamId?: string | null
   vehicleId?: string | null
   projectId?: string | null
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -7692,6 +8244,10 @@ export type OrderUpdateWithoutTenantInput = {
   bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   customer?: Prisma.CustomerUpdateOneRequiredWithoutOrdersNestedInput
@@ -7751,6 +8307,10 @@ export type OrderUncheckedUpdateWithoutTenantInput = {
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   services?: Prisma.OrderServiceUncheckedUpdateManyWithoutOrderNestedInput
@@ -7804,6 +8364,10 @@ export type OrderUncheckedUpdateManyWithoutTenantInput = {
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -7835,6 +8399,10 @@ export type OrderCreateManyCustomerInput = {
   teamId?: string | null
   vehicleId?: string | null
   projectId?: string | null
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -7860,6 +8428,10 @@ export type OrderUpdateWithoutCustomerInput = {
   bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutOrdersNestedInput
@@ -7919,6 +8491,10 @@ export type OrderUncheckedUpdateWithoutCustomerInput = {
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   services?: Prisma.OrderServiceUncheckedUpdateManyWithoutOrderNestedInput
@@ -7972,6 +8548,10 @@ export type OrderUncheckedUpdateManyWithoutCustomerInput = {
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -8003,6 +8583,10 @@ export type OrderCreateManyPropertyInput = {
   teamId?: string | null
   vehicleId?: string | null
   projectId?: string | null
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -8028,6 +8612,10 @@ export type OrderUpdateWithoutPropertyInput = {
   bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutOrdersNestedInput
@@ -8087,6 +8675,10 @@ export type OrderUncheckedUpdateWithoutPropertyInput = {
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   services?: Prisma.OrderServiceUncheckedUpdateManyWithoutOrderNestedInput
@@ -8140,6 +8732,10 @@ export type OrderUncheckedUpdateManyWithoutPropertyInput = {
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -8171,6 +8767,10 @@ export type OrderCreateManyOrderTypeDefinitionInput = {
   teamId?: string | null
   vehicleId?: string | null
   projectId?: string | null
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -8196,6 +8796,10 @@ export type OrderUpdateWithoutOrderTypeDefinitionInput = {
   bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutOrdersNestedInput
@@ -8255,6 +8859,10 @@ export type OrderUncheckedUpdateWithoutOrderTypeDefinitionInput = {
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   services?: Prisma.OrderServiceUncheckedUpdateManyWithoutOrderNestedInput
@@ -8308,6 +8916,10 @@ export type OrderUncheckedUpdateManyWithoutOrderTypeDefinitionInput = {
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -8339,6 +8951,10 @@ export type OrderCreateManyTeamInput = {
   invoicedAt?: Date | string | null
   vehicleId?: string | null
   projectId?: string | null
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -8364,6 +8980,10 @@ export type OrderUpdateWithoutTeamInput = {
   bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutOrdersNestedInput
@@ -8423,6 +9043,10 @@ export type OrderUncheckedUpdateWithoutTeamInput = {
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   services?: Prisma.OrderServiceUncheckedUpdateManyWithoutOrderNestedInput
@@ -8476,6 +9100,10 @@ export type OrderUncheckedUpdateManyWithoutTeamInput = {
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -8507,6 +9135,10 @@ export type OrderCreateManyVehicleInput = {
   invoicedAt?: Date | string | null
   teamId?: string | null
   projectId?: string | null
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -8532,6 +9164,10 @@ export type OrderUpdateWithoutVehicleInput = {
   bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutOrdersNestedInput
@@ -8591,6 +9227,10 @@ export type OrderUncheckedUpdateWithoutVehicleInput = {
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   services?: Prisma.OrderServiceUncheckedUpdateManyWithoutOrderNestedInput
@@ -8644,6 +9284,10 @@ export type OrderUncheckedUpdateManyWithoutVehicleInput = {
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -8675,6 +9319,10 @@ export type OrderCreateManyProjectInput = {
   invoicedAt?: Date | string | null
   teamId?: string | null
   vehicleId?: string | null
+  useFixedPrice?: boolean
+  fixedPriceNet?: number | null
+  fixedPriceLabel?: string | null
+  fixedPriceDisplayMode?: $Enums.FixedPriceDisplayMode
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -8700,6 +9348,10 @@ export type OrderUpdateWithoutProjectInput = {
   bookingConfirmationSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutOrdersNestedInput
@@ -8759,6 +9411,10 @@ export type OrderUncheckedUpdateWithoutProjectInput = {
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   services?: Prisma.OrderServiceUncheckedUpdateManyWithoutOrderNestedInput
@@ -8812,6 +9468,10 @@ export type OrderUncheckedUpdateManyWithoutProjectInput = {
   invoicedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  useFixedPrice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fixedPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fixedPriceLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fixedPriceDisplayMode?: Prisma.EnumFixedPriceDisplayModeFieldUpdateOperationsInput | $Enums.FixedPriceDisplayMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -9064,6 +9724,10 @@ export type OrderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   teamId?: boolean
   vehicleId?: boolean
   projectId?: boolean
+  useFixedPrice?: boolean
+  fixedPriceNet?: boolean
+  fixedPriceLabel?: boolean
+  fixedPriceDisplayMode?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
@@ -9126,6 +9790,10 @@ export type OrderSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   teamId?: boolean
   vehicleId?: boolean
   projectId?: boolean
+  useFixedPrice?: boolean
+  fixedPriceNet?: boolean
+  fixedPriceLabel?: boolean
+  fixedPriceDisplayMode?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
@@ -9165,6 +9833,10 @@ export type OrderSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   teamId?: boolean
   vehicleId?: boolean
   projectId?: boolean
+  useFixedPrice?: boolean
+  fixedPriceNet?: boolean
+  fixedPriceLabel?: boolean
+  fixedPriceDisplayMode?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
@@ -9204,11 +9876,15 @@ export type OrderSelectScalar = {
   teamId?: boolean
   vehicleId?: boolean
   projectId?: boolean
+  useFixedPrice?: boolean
+  fixedPriceNet?: boolean
+  fixedPriceLabel?: boolean
+  fixedPriceDisplayMode?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type OrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "customerId" | "propertyId" | "orderNumber" | "title" | "orderType" | "orderTypeId" | "orderTypeLabel" | "orderTypeCustom" | "status" | "priority" | "materialStatus" | "completionResult" | "customerConfirmationStatus" | "description" | "internalNotes" | "customerNotes" | "questionAnswers" | "scheduledStart" | "scheduledEnd" | "bookingConfirmationSentAt" | "completedAt" | "invoicedAt" | "teamId" | "vehicleId" | "projectId" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
+export type OrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "customerId" | "propertyId" | "orderNumber" | "title" | "orderType" | "orderTypeId" | "orderTypeLabel" | "orderTypeCustom" | "status" | "priority" | "materialStatus" | "completionResult" | "customerConfirmationStatus" | "description" | "internalNotes" | "customerNotes" | "questionAnswers" | "scheduledStart" | "scheduledEnd" | "bookingConfirmationSentAt" | "completedAt" | "invoicedAt" | "teamId" | "vehicleId" | "projectId" | "useFixedPrice" | "fixedPriceNet" | "fixedPriceLabel" | "fixedPriceDisplayMode" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
 export type OrderInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   customer?: boolean | Prisma.CustomerDefaultArgs<ExtArgs>
@@ -9330,6 +10006,13 @@ export type $OrderPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     teamId: string | null
     vehicleId: string | null
     projectId: string | null
+    /**
+     * Festpreis direkt am Auftrag (wird in verknüpfte Kalkulation übernommen)
+     */
+    useFixedPrice: boolean
+    fixedPriceNet: number | null
+    fixedPriceLabel: string | null
+    fixedPriceDisplayMode: $Enums.FixedPriceDisplayMode
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["order"]>
@@ -9811,6 +10494,10 @@ export interface OrderFieldRefs {
   readonly teamId: Prisma.FieldRef<"Order", 'String'>
   readonly vehicleId: Prisma.FieldRef<"Order", 'String'>
   readonly projectId: Prisma.FieldRef<"Order", 'String'>
+  readonly useFixedPrice: Prisma.FieldRef<"Order", 'Boolean'>
+  readonly fixedPriceNet: Prisma.FieldRef<"Order", 'Float'>
+  readonly fixedPriceLabel: Prisma.FieldRef<"Order", 'String'>
+  readonly fixedPriceDisplayMode: Prisma.FieldRef<"Order", 'FixedPriceDisplayMode'>
   readonly createdAt: Prisma.FieldRef<"Order", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Order", 'DateTime'>
 }

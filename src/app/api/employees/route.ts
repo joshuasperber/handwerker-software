@@ -25,7 +25,17 @@ export async function GET() {
     },
   });
 
-  return apiSuccess(employees);
+  const { canViewEmployeeWages, redactEmployeeWages } = await import(
+    "@/lib/employees/wage-access"
+  );
+  if (canViewEmployeeWages(auth.role)) {
+    return apiSuccess(employees);
+  }
+  return apiSuccess(
+    employees.map((e) =>
+      redactEmployeeWages(e as unknown as Record<string, unknown>, auth.role)
+    )
+  );
 }
 
 export async function POST(request: NextRequest) {
@@ -44,6 +54,9 @@ export async function POST(request: NextRequest) {
     color,
     qualifications,
     canManageRoles,
+    hourlyWageNet,
+    billingHourlyRateNet,
+    defaultActivity,
   } = body;
 
   if (!email || !firstName || !lastName || !role) {
@@ -115,11 +128,20 @@ export async function POST(request: NextRequest) {
     },
   });
 
+  const parseMoney = (v: unknown) =>
+    v === null || v === undefined || v === "" ? null : Number(v);
+
   const employee = await prisma.employee.create({
     data: {
       tenantId: auth.tenantId,
       userId: user.id,
       color: employeeColor,
+      hourlyWageNet: parseMoney(hourlyWageNet),
+      billingHourlyRateNet: parseMoney(billingHourlyRateNet),
+      defaultActivity:
+        typeof defaultActivity === "string" && defaultActivity.trim()
+          ? defaultActivity.trim()
+          : null,
       qualifications: qualifications?.length
         ? { create: qualifications.map((name: string) => ({ name })) }
         : undefined,

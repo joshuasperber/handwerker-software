@@ -144,10 +144,28 @@ export function OrderBillingSection({
         ) : (
           <>
             <div className="flex flex-wrap items-center gap-3">
-              <p className="text-lg font-bold text-[#0d5c63]">
-                Netto {formatEuro((calc?.netSalesPrice as number) ?? 0)} · Brutto{" "}
-                {formatEuro((calc?.grossSalesPrice as number) ?? 0)}
-              </p>
+              {(() => {
+                const useFixed = Boolean(calc?.useFixedPrice);
+                const fixedNet =
+                  useFixed && calc?.fixedPriceNet != null
+                    ? Number(calc.fixedPriceNet)
+                    : null;
+                const net = fixedNet ?? Number(calc?.netSalesPrice ?? 0);
+                const vatRate =
+                  Number(calc?.vatAmount ?? 0) > 0 && Number(calc?.netSalesPrice ?? 0) > 0
+                    ? Number(calc?.vatAmount) / Number(calc?.netSalesPrice)
+                    : 0.19;
+                const gross =
+                  fixedNet != null
+                    ? Math.round((fixedNet + fixedNet * vatRate) * 100) / 100
+                    : Number(calc?.grossSalesPrice ?? 0);
+                return (
+                  <p className="text-lg font-bold text-[#0d5c63]">
+                    {useFixed ? "Festpreis " : ""}
+                    Netto {formatEuro(net)} · Brutto {formatEuro(gross)}
+                  </p>
+                );
+              })()}
               <Link
                 href={`/dashboard/kalkulation/${calculationId}`}
                 className="text-sm text-[#0d5c63] hover:underline"

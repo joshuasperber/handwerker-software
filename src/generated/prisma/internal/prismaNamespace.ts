@@ -6774,6 +6774,8 @@ export const EmployeeScalarFieldEnum = {
   userId: 'userId',
   color: 'color',
   hourlyWageNet: 'hourlyWageNet',
+  billingHourlyRateNet: 'billingHourlyRateNet',
+  defaultActivity: 'defaultActivity',
   operationalStatus: 'operationalStatus',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -6869,6 +6871,10 @@ export const OrderScalarFieldEnum = {
   teamId: 'teamId',
   vehicleId: 'vehicleId',
   projectId: 'projectId',
+  useFixedPrice: 'useFixedPrice',
+  fixedPriceNet: 'fixedPriceNet',
+  fixedPriceLabel: 'fixedPriceLabel',
+  fixedPriceDisplayMode: 'fixedPriceDisplayMode',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -7248,6 +7254,8 @@ export const CalculationScalarFieldEnum = {
   useFixedPrice: 'useFixedPrice',
   fixedPriceNet: 'fixedPriceNet',
   fixedPriceLabel: 'fixedPriceLabel',
+  fixedPriceDisplayMode: 'fixedPriceDisplayMode',
+  laborInvoiceMode: 'laborInvoiceMode',
   overheadPercentOverride: 'overheadPercentOverride',
   overheadAmountOverride: 'overheadAmountOverride',
   snapshotJson: 'snapshotJson',
@@ -7261,12 +7269,16 @@ export type CalculationScalarFieldEnum = (typeof CalculationScalarFieldEnum)[key
 export const LaborItemScalarFieldEnum = {
   id: 'id',
   calculationId: 'calculationId',
+  employeeId: 'employeeId',
   description: 'description',
   laborType: 'laborType',
   hours: 'hours',
+  actualHours: 'actualHours',
   hourlyRateNet: 'hourlyRateNet',
+  internalHourlyWageNet: 'internalHourlyWageNet',
   quantityWorkers: 'quantityWorkers',
   totalNet: 'totalNet',
+  notes: 'notes',
   isVisibleToCustomer: 'isVisibleToCustomer',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -7463,6 +7475,7 @@ export const CalculationDocumentScalarFieldEnum = {
   cancelOfId: 'cancelOfId',
   eInvoiceFormat: 'eInvoiceFormat',
   eInvoiceStorageKey: 'eInvoiceStorageKey',
+  eInvoiceGeneratedAt: 'eInvoiceGeneratedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -7845,6 +7858,7 @@ export const FinanceSettingsScalarFieldEnum = {
   id: 'id',
   tenantId: 'tenantId',
   estimatedTaxRate: 'estimatedTaxRate',
+  reservePercent: 'reservePercent',
   revenueBasis: 'revenueBasis',
   includeUnpaidInvoices: 'includeUnpaidInvoices',
   defaultPeriodPreset: 'defaultPeriodPreset',
@@ -7854,6 +7868,10 @@ export const FinanceSettingsScalarFieldEnum = {
   lowExpenseRatioThreshold: 'lowExpenseRatioThreshold',
   highRevenueThreshold: 'highRevenueThreshold',
   lowLiquidityWarningThreshold: 'lowLiquidityWarningThreshold',
+  vatRegistered: 'vatRegistered',
+  kleinunternehmer: 'kleinunternehmer',
+  hasTaxAdvisor: 'hasTaxAdvisor',
+  profileNote: 'profileNote',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -8340,6 +8358,20 @@ export type ListEnumCustomerConfirmationStatusFieldRefInput<$PrismaModel> = Fiel
 
 
 /**
+ * Reference to a field of type 'FixedPriceDisplayMode'
+ */
+export type EnumFixedPriceDisplayModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FixedPriceDisplayMode'>
+    
+
+
+/**
+ * Reference to a field of type 'FixedPriceDisplayMode[]'
+ */
+export type ListEnumFixedPriceDisplayModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FixedPriceDisplayMode[]'>
+    
+
+
+/**
  * Reference to a field of type 'AppointmentStatus'
  */
 export type EnumAppointmentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AppointmentStatus'>
@@ -8462,6 +8494,20 @@ export type EnumCalculationStatusFieldRefInput<$PrismaModel> = FieldRefInputType
  * Reference to a field of type 'CalculationStatus[]'
  */
 export type ListEnumCalculationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CalculationStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'LaborInvoiceMode'
+ */
+export type EnumLaborInvoiceModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LaborInvoiceMode'>
+    
+
+
+/**
+ * Reference to a field of type 'LaborInvoiceMode[]'
+ */
+export type ListEnumLaborInvoiceModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LaborInvoiceMode[]'>
     
 
 

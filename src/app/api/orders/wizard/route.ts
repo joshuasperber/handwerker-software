@@ -27,6 +27,10 @@ export async function POST(request: NextRequest) {
     priority,
     confirmMaterial,
     materialLines: rawMaterialLines,
+    useFixedPrice,
+    fixedPriceNet,
+    fixedPriceLabel,
+    fixedPriceDisplayMode,
   } = body;
 
   const hasCatalog = Array.isArray(serviceIds) && serviceIds.length > 0;
@@ -81,6 +85,11 @@ export async function POST(request: NextRequest) {
       priority,
       confirmMaterial: Boolean(confirmMaterial),
       materialLines,
+      useFixedPrice: Boolean(useFixedPrice),
+      fixedPriceNet: fixedPriceNet != null ? Number(fixedPriceNet) : null,
+      fixedPriceLabel: typeof fixedPriceLabel === "string" ? fixedPriceLabel : null,
+      fixedPriceDisplayMode:
+        typeof fixedPriceDisplayMode === "string" ? fixedPriceDisplayMode : null,
     });
     return apiSuccess(order, 201);
   } catch (e) {

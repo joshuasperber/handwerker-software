@@ -84,6 +84,8 @@ export interface FinanceWarningThresholds {
 
 export interface FinanceSettingsDTO {
   estimatedTaxRate: number;
+  /** Gewünschte Rücklage in % vom geschätzten Gewinn; null → Steuersatz */
+  reservePercent: number | null;
   revenueBasis: FinanceRevenueBasis;
   includeUnpaidInvoices: boolean;
   defaultPeriodPreset: FinancePeriodPreset;
@@ -93,6 +95,10 @@ export interface FinanceSettingsDTO {
   lowExpenseRatioThreshold: number;
   highRevenueThreshold: number;
   lowLiquidityWarningThreshold: number | null;
+  vatRegistered: boolean;
+  kleinunternehmer: boolean;
+  hasTaxAdvisor: boolean;
+  profileNote: string | null;
 }
 
 export interface ExpenseDTO {
@@ -167,6 +173,7 @@ export interface FinanceOverview {
   revenue: {
     net: number;
     gross: number;
+    vat: number;
     invoiceCount: number;
     basis: FinanceRevenueBasis;
     includesUnpaid: boolean;
@@ -174,6 +181,7 @@ export interface FinanceOverview {
   expenses: {
     net: number;
     gross: number;
+    vat: number;
     count: number;
     withReceipt: number;
     withoutReceipt: number;
@@ -184,10 +192,15 @@ export interface FinanceOverview {
     isEstimate: true;
     targetNet: number | null;
     targetDelta: number | null;
+    /** Nachvollziehbare Formel für die UI */
+    formulaLabel: string;
   };
   tax: {
     estimatedRate: number;
     estimatedAmount: number;
+    /** Empfohlene Rücklage (unverbindlich) */
+    recommendedReserve: number;
+    reservePercentUsed: number;
     isEstimate: true;
   };
   invoices: InvoiceSummary;

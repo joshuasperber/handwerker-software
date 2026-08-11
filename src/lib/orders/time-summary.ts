@@ -20,6 +20,9 @@ export type OrderTimeSummary = {
   actualHours: number;
   deltaHours: number;
   laborCostNet: number | null;
+  /** Geschätzte Personalkosten für geplante Stunden (Ø Lohn der gebuchten MA). */
+  plannedLaborCostNet: number | null;
+  laborCostDelta: number | null;
   missingWageCount: number;
   byEmployee: Array<{
     employeeId: string;
@@ -146,19 +149,39 @@ export function summarizeOrderTimeEntries(
     };
   });
 
+  const byEmployee = Array.from(byEmployeeMap.values()).map((row) => ({
+    employeeId: row.employeeId,
+    name: row.name,
+    hours: Math.round(row.hours * 100) / 100,
+    hourlyWageNet: row.hourlyWageNet,
+    laborCostNet: row.hasWage ? Math.round(row.laborCostNet * 100) / 100 : null,
+  }));
+
+  const wages = byEmployee
+    .map((r) => r.hourlyWageNet)
+    .filter((w): w is number => w != null && Number.isFinite(w));
+  const avgWage =
+    wages.length > 0 ? wages.reduce((s, w) => s + w, 0) / wages.length : null;
+  const plannedRounded = Math.round(plannedHours * 100) / 100;
+  const plannedLaborCostNet =
+    avgWage != null && plannedRounded > 0
+      ? Math.round(plannedRounded * avgWage * 100) / 100
+      : null;
+  const actualCost = hasAnyWage ? Math.round(laborCostNet * 100) / 100 : null;
+  const laborCostDelta =
+    actualCost != null && plannedLaborCostNet != null
+      ? Math.round((actualCost - plannedLaborCostNet) * 100) / 100
+      : null;
+
   return {
-    plannedHours: Math.round(plannedHours * 100) / 100,
+    plannedHours: plannedRounded,
     actualHours: Math.round(actualHours * 100) / 100,
     deltaHours: Math.round((actualHours - plannedHours) * 100) / 100,
-    laborCostNet: hasAnyWage ? Math.round(laborCostNet * 100) / 100 : null,
+    laborCostNet: actualCost,
+    plannedLaborCostNet,
+    laborCostDelta,
     missingWageCount,
-    byEmployee: Array.from(byEmployeeMap.values()).map((row) => ({
-      employeeId: row.employeeId,
-      name: row.name,
-      hours: Math.round(row.hours * 100) / 100,
-      hourlyWageNet: row.hourlyWageNet,
-      laborCostNet: row.hasWage ? Math.round(row.laborCostNet * 100) / 100 : null,
-    })),
+    byEmployee,
     entries: mapped,
   };
 }

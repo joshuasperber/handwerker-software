@@ -135,10 +135,16 @@ export function ExpenseFormDialog({
         fetchJson<Array<{ id: string; name: string }>>("/api/projects"),
       ]);
       if (cancelled) return;
-      if (ordersRes.success && ordersRes.data) {
-        setOrders(ordersRes.data.slice(0, 80));
+      if (ordersRes.success && Array.isArray(ordersRes.data)) {
+        setOrders(
+          ordersRes.data.slice(0, 80).map((o) => ({
+            id: o.id,
+            orderNumber: o.orderNumber ?? o.id,
+            title: o.title ?? "",
+          }))
+        );
       }
-      if (projectsRes.success && projectsRes.data) {
+      if (projectsRes.success && Array.isArray(projectsRes.data)) {
         setProjects(
           projectsRes.data.slice(0, 80).map((p) => ({ id: p.id, name: p.name }))
         );
@@ -213,11 +219,15 @@ export function ExpenseFormDialog({
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload),
           },
-          { success: "Ausgabe aktualisiert" }
+          {
+            loading: "Ausgabe wird gespeichert …",
+            success: "Ausgabe aktualisiert",
+            error: "Ausgabe konnte nicht aktualisiert werden",
+          }
         );
         savedOk = Boolean(result.success);
       } else {
-        // Immer zuerst JSON speichern — Beleg danach separat, damit Speicherfehler den Beleg nicht blockieren
+        // Immer zuerst JSON speichern — Beleg danach separat
         const result = await saveJson<{ id: string }>(
           "/api/finance/expenses",
           {
@@ -225,7 +235,11 @@ export function ExpenseFormDialog({
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload),
           },
-          { success: "Ausgabe gespeichert" }
+          {
+            loading: "Ausgabe wird gespeichert …",
+            success: "Ausgabe gespeichert",
+            error: "Ausgabe konnte nicht gespeichert werden",
+          }
         );
         savedOk = Boolean(result.success);
         if (result.success && result.data?.id) {
@@ -245,8 +259,9 @@ export function ExpenseFormDialog({
           }
         );
         if (!receiptResult.success) {
-          // Ausgabe bleibt gespeichert — Nutzer kann Beleg später nachreichen
-          toast.message("Ausgabe ist gespeichert. Beleg bitte später erneut hochladen.");
+          toast.message(
+            "Ausgabe ist gespeichert. Beleg bitte später erneut hochladen."
+          );
         }
       }
 
@@ -254,6 +269,12 @@ export function ExpenseFormDialog({
         onOpenChange(false);
         onSaved();
       }
+    } catch (err) {
+      toast.error(
+        err instanceof Error
+          ? err.message
+          : "Unerwarteter Fehler beim Speichern der Ausgabe"
+      );
     } finally {
       setSaving(false);
     }
@@ -461,15 +482,23 @@ export function ExpenseFormDialog({
             />
           </div>
 
-          <label className="flex items-center gap-2 text-sm">
-            <input
-              type="checkbox"
-              checked={isInvestment}
-              onChange={(e) => setIsInvestment(e.target.checked)}
-              className="rounded border-slate-300"
-            />
-            Größere Anschaffung / Investition
-          </label>
+          <div className="space-y-1">
+            <label className="flex items-center gap-2 text-sm">
+              <input
+                type="checkbox"
+                checked={isInvestment}
+                onChange={(e) => setIsInvestment(e.target.checked)}
+                className="rounded border-slate-300"
+              />
+              Größere Anschaffung / Investition kennzeichnen
+            </label>
+            {isInvestment && (
+              <p className="text-[11px] text-slate-500 pl-6">
+                Nur Dokumentation. Größere Anschaffungen können steuerlich abgeschrieben werden —
+                bitte mit dem Steuerberater prüfen. Keine automatische Steuerentscheidung.
+              </p>
+            )}
+          </div>
 
           <div className="grid gap-2">
             <Label>Beleg-Upload (Foto oder PDF)</Label>
@@ -546,7 +575,12 @@ export function ExpenseFormDialog({
             >
               Abbrechen
             </Button>
-            <Button onClick={handleSubmit} disabled={busy} className="w-full sm:w-auto">
+            <Button
+              type="button"
+              onClick={() => void handleSubmit()}
+              disabled={busy}
+              className="w-full sm:w-auto"
+            >
               {saving ? "Speichern…" : "Speichern"}
             </Button>
           </div>

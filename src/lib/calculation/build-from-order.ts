@@ -113,6 +113,11 @@ export async function createCalculationFromOrder(tenantId: string, orderId: stri
       customerId: order.customerId,
       projectId: order.projectId ?? undefined,
       title: `Kalkulation ${order.orderNumber}`,
+      // Festpreis vom Auftrag übernehmen – interne Positionen bleiben erhalten.
+      useFixedPrice: Boolean(order.useFixedPrice),
+      fixedPriceNet: order.useFixedPrice ? order.fixedPriceNet : order.fixedPriceNet,
+      fixedPriceLabel: order.fixedPriceLabel,
+      fixedPriceDisplayMode: order.fixedPriceDisplayMode,
       ...(laborCreates.length ? { laborItems: { create: laborCreates } } : {}),
       ...(materialCreates.length ? { materialItems: { create: materialCreates } } : {}),
       ...(additionalCreates.length ? { additionalItems: { create: additionalCreates } } : {}),

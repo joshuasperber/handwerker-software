@@ -21,6 +21,15 @@ export async function GET(
   });
 
   if (!employee) return apiError("Mitarbeiter nicht gefunden", 404);
+
+  const { canViewEmployeeWages, redactEmployeeWages } = await import(
+    "@/lib/employees/wage-access"
+  );
+  if (!canViewEmployeeWages(auth.role)) {
+    return apiSuccess(
+      redactEmployeeWages(employee as unknown as Record<string, unknown>, auth.role)
+    );
+  }
   return apiSuccess(employee);
 }
 
@@ -53,6 +62,8 @@ export async function PATCH(
     isActive,
     operationalStatus,
     hourlyWageNet,
+    billingHourlyRateNet,
+    defaultActivity,
     canManageRoles,
   } = body;
 
@@ -195,6 +206,22 @@ export async function PATCH(
               hourlyWageNet === null || hourlyWageNet === ""
                 ? null
                 : Number(hourlyWageNet),
+          }
+        : {}),
+      ...(billingHourlyRateNet !== undefined
+        ? {
+            billingHourlyRateNet:
+              billingHourlyRateNet === null || billingHourlyRateNet === ""
+                ? null
+                : Number(billingHourlyRateNet),
+          }
+        : {}),
+      ...(defaultActivity !== undefined
+        ? {
+            defaultActivity:
+              typeof defaultActivity === "string" && defaultActivity.trim()
+                ? defaultActivity.trim()
+                : null,
           }
         : {}),
     },

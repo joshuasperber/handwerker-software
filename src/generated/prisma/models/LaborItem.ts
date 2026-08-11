@@ -28,14 +28,18 @@ export type AggregateLaborItem = {
 
 export type LaborItemAvgAggregateOutputType = {
   hours: number | null
+  actualHours: number | null
   hourlyRateNet: number | null
+  internalHourlyWageNet: number | null
   quantityWorkers: number | null
   totalNet: number | null
 }
 
 export type LaborItemSumAggregateOutputType = {
   hours: number | null
+  actualHours: number | null
   hourlyRateNet: number | null
+  internalHourlyWageNet: number | null
   quantityWorkers: number | null
   totalNet: number | null
 }
@@ -43,12 +47,16 @@ export type LaborItemSumAggregateOutputType = {
 export type LaborItemMinAggregateOutputType = {
   id: string | null
   calculationId: string | null
+  employeeId: string | null
   description: string | null
   laborType: $Enums.LaborType | null
   hours: number | null
+  actualHours: number | null
   hourlyRateNet: number | null
+  internalHourlyWageNet: number | null
   quantityWorkers: number | null
   totalNet: number | null
+  notes: string | null
   isVisibleToCustomer: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -57,12 +65,16 @@ export type LaborItemMinAggregateOutputType = {
 export type LaborItemMaxAggregateOutputType = {
   id: string | null
   calculationId: string | null
+  employeeId: string | null
   description: string | null
   laborType: $Enums.LaborType | null
   hours: number | null
+  actualHours: number | null
   hourlyRateNet: number | null
+  internalHourlyWageNet: number | null
   quantityWorkers: number | null
   totalNet: number | null
+  notes: string | null
   isVisibleToCustomer: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -71,12 +83,16 @@ export type LaborItemMaxAggregateOutputType = {
 export type LaborItemCountAggregateOutputType = {
   id: number
   calculationId: number
+  employeeId: number
   description: number
   laborType: number
   hours: number
+  actualHours: number
   hourlyRateNet: number
+  internalHourlyWageNet: number
   quantityWorkers: number
   totalNet: number
+  notes: number
   isVisibleToCustomer: number
   createdAt: number
   updatedAt: number
@@ -86,14 +102,18 @@ export type LaborItemCountAggregateOutputType = {
 
 export type LaborItemAvgAggregateInputType = {
   hours?: true
+  actualHours?: true
   hourlyRateNet?: true
+  internalHourlyWageNet?: true
   quantityWorkers?: true
   totalNet?: true
 }
 
 export type LaborItemSumAggregateInputType = {
   hours?: true
+  actualHours?: true
   hourlyRateNet?: true
+  internalHourlyWageNet?: true
   quantityWorkers?: true
   totalNet?: true
 }
@@ -101,12 +121,16 @@ export type LaborItemSumAggregateInputType = {
 export type LaborItemMinAggregateInputType = {
   id?: true
   calculationId?: true
+  employeeId?: true
   description?: true
   laborType?: true
   hours?: true
+  actualHours?: true
   hourlyRateNet?: true
+  internalHourlyWageNet?: true
   quantityWorkers?: true
   totalNet?: true
+  notes?: true
   isVisibleToCustomer?: true
   createdAt?: true
   updatedAt?: true
@@ -115,12 +139,16 @@ export type LaborItemMinAggregateInputType = {
 export type LaborItemMaxAggregateInputType = {
   id?: true
   calculationId?: true
+  employeeId?: true
   description?: true
   laborType?: true
   hours?: true
+  actualHours?: true
   hourlyRateNet?: true
+  internalHourlyWageNet?: true
   quantityWorkers?: true
   totalNet?: true
+  notes?: true
   isVisibleToCustomer?: true
   createdAt?: true
   updatedAt?: true
@@ -129,12 +157,16 @@ export type LaborItemMaxAggregateInputType = {
 export type LaborItemCountAggregateInputType = {
   id?: true
   calculationId?: true
+  employeeId?: true
   description?: true
   laborType?: true
   hours?: true
+  actualHours?: true
   hourlyRateNet?: true
+  internalHourlyWageNet?: true
   quantityWorkers?: true
   totalNet?: true
+  notes?: true
   isVisibleToCustomer?: true
   createdAt?: true
   updatedAt?: true
@@ -230,12 +262,16 @@ export type LaborItemGroupByArgs<ExtArgs extends runtime.Types.Extensions.Intern
 export type LaborItemGroupByOutputType = {
   id: string
   calculationId: string
+  employeeId: string | null
   description: string
   laborType: $Enums.LaborType
   hours: number
+  actualHours: number | null
   hourlyRateNet: number
+  internalHourlyWageNet: number | null
   quantityWorkers: number
   totalNet: number
+  notes: string | null
   isVisibleToCustomer: boolean
   createdAt: Date
   updatedAt: Date
@@ -267,31 +303,41 @@ export type LaborItemWhereInput = {
   NOT?: Prisma.LaborItemWhereInput | Prisma.LaborItemWhereInput[]
   id?: Prisma.StringFilter<"LaborItem"> | string
   calculationId?: Prisma.StringFilter<"LaborItem"> | string
+  employeeId?: Prisma.StringNullableFilter<"LaborItem"> | string | null
   description?: Prisma.StringFilter<"LaborItem"> | string
   laborType?: Prisma.EnumLaborTypeFilter<"LaborItem"> | $Enums.LaborType
   hours?: Prisma.FloatFilter<"LaborItem"> | number
+  actualHours?: Prisma.FloatNullableFilter<"LaborItem"> | number | null
   hourlyRateNet?: Prisma.FloatFilter<"LaborItem"> | number
+  internalHourlyWageNet?: Prisma.FloatNullableFilter<"LaborItem"> | number | null
   quantityWorkers?: Prisma.IntFilter<"LaborItem"> | number
   totalNet?: Prisma.FloatFilter<"LaborItem"> | number
+  notes?: Prisma.StringNullableFilter<"LaborItem"> | string | null
   isVisibleToCustomer?: Prisma.BoolFilter<"LaborItem"> | boolean
   createdAt?: Prisma.DateTimeFilter<"LaborItem"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"LaborItem"> | Date | string
   calculation?: Prisma.XOR<Prisma.CalculationScalarRelationFilter, Prisma.CalculationWhereInput>
+  employee?: Prisma.XOR<Prisma.EmployeeNullableScalarRelationFilter, Prisma.EmployeeWhereInput> | null
 }
 
 export type LaborItemOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   calculationId?: Prisma.SortOrder
+  employeeId?: Prisma.SortOrderInput | Prisma.SortOrder
   description?: Prisma.SortOrder
   laborType?: Prisma.SortOrder
   hours?: Prisma.SortOrder
+  actualHours?: Prisma.SortOrderInput | Prisma.SortOrder
   hourlyRateNet?: Prisma.SortOrder
+  internalHourlyWageNet?: Prisma.SortOrderInput | Prisma.SortOrder
   quantityWorkers?: Prisma.SortOrder
   totalNet?: Prisma.SortOrder
+  notes?: Prisma.SortOrderInput | Prisma.SortOrder
   isVisibleToCustomer?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   calculation?: Prisma.CalculationOrderByWithRelationInput
+  employee?: Prisma.EmployeeOrderByWithRelationInput
 }
 
 export type LaborItemWhereUniqueInput = Prisma.AtLeast<{
@@ -300,27 +346,36 @@ export type LaborItemWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.LaborItemWhereInput[]
   NOT?: Prisma.LaborItemWhereInput | Prisma.LaborItemWhereInput[]
   calculationId?: Prisma.StringFilter<"LaborItem"> | string
+  employeeId?: Prisma.StringNullableFilter<"LaborItem"> | string | null
   description?: Prisma.StringFilter<"LaborItem"> | string
   laborType?: Prisma.EnumLaborTypeFilter<"LaborItem"> | $Enums.LaborType
   hours?: Prisma.FloatFilter<"LaborItem"> | number
+  actualHours?: Prisma.FloatNullableFilter<"LaborItem"> | number | null
   hourlyRateNet?: Prisma.FloatFilter<"LaborItem"> | number
+  internalHourlyWageNet?: Prisma.FloatNullableFilter<"LaborItem"> | number | null
   quantityWorkers?: Prisma.IntFilter<"LaborItem"> | number
   totalNet?: Prisma.FloatFilter<"LaborItem"> | number
+  notes?: Prisma.StringNullableFilter<"LaborItem"> | string | null
   isVisibleToCustomer?: Prisma.BoolFilter<"LaborItem"> | boolean
   createdAt?: Prisma.DateTimeFilter<"LaborItem"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"LaborItem"> | Date | string
   calculation?: Prisma.XOR<Prisma.CalculationScalarRelationFilter, Prisma.CalculationWhereInput>
+  employee?: Prisma.XOR<Prisma.EmployeeNullableScalarRelationFilter, Prisma.EmployeeWhereInput> | null
 }, "id">
 
 export type LaborItemOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   calculationId?: Prisma.SortOrder
+  employeeId?: Prisma.SortOrderInput | Prisma.SortOrder
   description?: Prisma.SortOrder
   laborType?: Prisma.SortOrder
   hours?: Prisma.SortOrder
+  actualHours?: Prisma.SortOrderInput | Prisma.SortOrder
   hourlyRateNet?: Prisma.SortOrder
+  internalHourlyWageNet?: Prisma.SortOrderInput | Prisma.SortOrder
   quantityWorkers?: Prisma.SortOrder
   totalNet?: Prisma.SortOrder
+  notes?: Prisma.SortOrderInput | Prisma.SortOrder
   isVisibleToCustomer?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -337,12 +392,16 @@ export type LaborItemScalarWhereWithAggregatesInput = {
   NOT?: Prisma.LaborItemScalarWhereWithAggregatesInput | Prisma.LaborItemScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"LaborItem"> | string
   calculationId?: Prisma.StringWithAggregatesFilter<"LaborItem"> | string
+  employeeId?: Prisma.StringNullableWithAggregatesFilter<"LaborItem"> | string | null
   description?: Prisma.StringWithAggregatesFilter<"LaborItem"> | string
   laborType?: Prisma.EnumLaborTypeWithAggregatesFilter<"LaborItem"> | $Enums.LaborType
   hours?: Prisma.FloatWithAggregatesFilter<"LaborItem"> | number
+  actualHours?: Prisma.FloatNullableWithAggregatesFilter<"LaborItem"> | number | null
   hourlyRateNet?: Prisma.FloatWithAggregatesFilter<"LaborItem"> | number
+  internalHourlyWageNet?: Prisma.FloatNullableWithAggregatesFilter<"LaborItem"> | number | null
   quantityWorkers?: Prisma.IntWithAggregatesFilter<"LaborItem"> | number
   totalNet?: Prisma.FloatWithAggregatesFilter<"LaborItem"> | number
+  notes?: Prisma.StringNullableWithAggregatesFilter<"LaborItem"> | string | null
   isVisibleToCustomer?: Prisma.BoolWithAggregatesFilter<"LaborItem"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"LaborItem"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"LaborItem"> | Date | string
@@ -353,24 +412,32 @@ export type LaborItemCreateInput = {
   description: string
   laborType?: $Enums.LaborType
   hours: number
+  actualHours?: number | null
   hourlyRateNet: number
+  internalHourlyWageNet?: number | null
   quantityWorkers?: number
   totalNet?: number
+  notes?: string | null
   isVisibleToCustomer?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   calculation: Prisma.CalculationCreateNestedOneWithoutLaborItemsInput
+  employee?: Prisma.EmployeeCreateNestedOneWithoutLaborItemsInput
 }
 
 export type LaborItemUncheckedCreateInput = {
   id?: string
   calculationId: string
+  employeeId?: string | null
   description: string
   laborType?: $Enums.LaborType
   hours: number
+  actualHours?: number | null
   hourlyRateNet: number
+  internalHourlyWageNet?: number | null
   quantityWorkers?: number
   totalNet?: number
+  notes?: string | null
   isVisibleToCustomer?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -381,24 +448,32 @@ export type LaborItemUpdateInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   laborType?: Prisma.EnumLaborTypeFieldUpdateOperationsInput | $Enums.LaborType
   hours?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualHours?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   hourlyRateNet?: Prisma.FloatFieldUpdateOperationsInput | number
+  internalHourlyWageNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   quantityWorkers?: Prisma.IntFieldUpdateOperationsInput | number
   totalNet?: Prisma.FloatFieldUpdateOperationsInput | number
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isVisibleToCustomer?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   calculation?: Prisma.CalculationUpdateOneRequiredWithoutLaborItemsNestedInput
+  employee?: Prisma.EmployeeUpdateOneWithoutLaborItemsNestedInput
 }
 
 export type LaborItemUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   calculationId?: Prisma.StringFieldUpdateOperationsInput | string
+  employeeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.StringFieldUpdateOperationsInput | string
   laborType?: Prisma.EnumLaborTypeFieldUpdateOperationsInput | $Enums.LaborType
   hours?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualHours?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   hourlyRateNet?: Prisma.FloatFieldUpdateOperationsInput | number
+  internalHourlyWageNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   quantityWorkers?: Prisma.IntFieldUpdateOperationsInput | number
   totalNet?: Prisma.FloatFieldUpdateOperationsInput | number
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isVisibleToCustomer?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -407,12 +482,16 @@ export type LaborItemUncheckedUpdateInput = {
 export type LaborItemCreateManyInput = {
   id?: string
   calculationId: string
+  employeeId?: string | null
   description: string
   laborType?: $Enums.LaborType
   hours: number
+  actualHours?: number | null
   hourlyRateNet: number
+  internalHourlyWageNet?: number | null
   quantityWorkers?: number
   totalNet?: number
+  notes?: string | null
   isVisibleToCustomer?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -423,9 +502,12 @@ export type LaborItemUpdateManyMutationInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   laborType?: Prisma.EnumLaborTypeFieldUpdateOperationsInput | $Enums.LaborType
   hours?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualHours?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   hourlyRateNet?: Prisma.FloatFieldUpdateOperationsInput | number
+  internalHourlyWageNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   quantityWorkers?: Prisma.IntFieldUpdateOperationsInput | number
   totalNet?: Prisma.FloatFieldUpdateOperationsInput | number
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isVisibleToCustomer?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -434,12 +516,16 @@ export type LaborItemUpdateManyMutationInput = {
 export type LaborItemUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   calculationId?: Prisma.StringFieldUpdateOperationsInput | string
+  employeeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.StringFieldUpdateOperationsInput | string
   laborType?: Prisma.EnumLaborTypeFieldUpdateOperationsInput | $Enums.LaborType
   hours?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualHours?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   hourlyRateNet?: Prisma.FloatFieldUpdateOperationsInput | number
+  internalHourlyWageNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   quantityWorkers?: Prisma.IntFieldUpdateOperationsInput | number
   totalNet?: Prisma.FloatFieldUpdateOperationsInput | number
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isVisibleToCustomer?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -458,12 +544,16 @@ export type LaborItemOrderByRelationAggregateInput = {
 export type LaborItemCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   calculationId?: Prisma.SortOrder
+  employeeId?: Prisma.SortOrder
   description?: Prisma.SortOrder
   laborType?: Prisma.SortOrder
   hours?: Prisma.SortOrder
+  actualHours?: Prisma.SortOrder
   hourlyRateNet?: Prisma.SortOrder
+  internalHourlyWageNet?: Prisma.SortOrder
   quantityWorkers?: Prisma.SortOrder
   totalNet?: Prisma.SortOrder
+  notes?: Prisma.SortOrder
   isVisibleToCustomer?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -471,7 +561,9 @@ export type LaborItemCountOrderByAggregateInput = {
 
 export type LaborItemAvgOrderByAggregateInput = {
   hours?: Prisma.SortOrder
+  actualHours?: Prisma.SortOrder
   hourlyRateNet?: Prisma.SortOrder
+  internalHourlyWageNet?: Prisma.SortOrder
   quantityWorkers?: Prisma.SortOrder
   totalNet?: Prisma.SortOrder
 }
@@ -479,12 +571,16 @@ export type LaborItemAvgOrderByAggregateInput = {
 export type LaborItemMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   calculationId?: Prisma.SortOrder
+  employeeId?: Prisma.SortOrder
   description?: Prisma.SortOrder
   laborType?: Prisma.SortOrder
   hours?: Prisma.SortOrder
+  actualHours?: Prisma.SortOrder
   hourlyRateNet?: Prisma.SortOrder
+  internalHourlyWageNet?: Prisma.SortOrder
   quantityWorkers?: Prisma.SortOrder
   totalNet?: Prisma.SortOrder
+  notes?: Prisma.SortOrder
   isVisibleToCustomer?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -493,12 +589,16 @@ export type LaborItemMaxOrderByAggregateInput = {
 export type LaborItemMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   calculationId?: Prisma.SortOrder
+  employeeId?: Prisma.SortOrder
   description?: Prisma.SortOrder
   laborType?: Prisma.SortOrder
   hours?: Prisma.SortOrder
+  actualHours?: Prisma.SortOrder
   hourlyRateNet?: Prisma.SortOrder
+  internalHourlyWageNet?: Prisma.SortOrder
   quantityWorkers?: Prisma.SortOrder
   totalNet?: Prisma.SortOrder
+  notes?: Prisma.SortOrder
   isVisibleToCustomer?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -506,9 +606,53 @@ export type LaborItemMinOrderByAggregateInput = {
 
 export type LaborItemSumOrderByAggregateInput = {
   hours?: Prisma.SortOrder
+  actualHours?: Prisma.SortOrder
   hourlyRateNet?: Prisma.SortOrder
+  internalHourlyWageNet?: Prisma.SortOrder
   quantityWorkers?: Prisma.SortOrder
   totalNet?: Prisma.SortOrder
+}
+
+export type LaborItemCreateNestedManyWithoutEmployeeInput = {
+  create?: Prisma.XOR<Prisma.LaborItemCreateWithoutEmployeeInput, Prisma.LaborItemUncheckedCreateWithoutEmployeeInput> | Prisma.LaborItemCreateWithoutEmployeeInput[] | Prisma.LaborItemUncheckedCreateWithoutEmployeeInput[]
+  connectOrCreate?: Prisma.LaborItemCreateOrConnectWithoutEmployeeInput | Prisma.LaborItemCreateOrConnectWithoutEmployeeInput[]
+  createMany?: Prisma.LaborItemCreateManyEmployeeInputEnvelope
+  connect?: Prisma.LaborItemWhereUniqueInput | Prisma.LaborItemWhereUniqueInput[]
+}
+
+export type LaborItemUncheckedCreateNestedManyWithoutEmployeeInput = {
+  create?: Prisma.XOR<Prisma.LaborItemCreateWithoutEmployeeInput, Prisma.LaborItemUncheckedCreateWithoutEmployeeInput> | Prisma.LaborItemCreateWithoutEmployeeInput[] | Prisma.LaborItemUncheckedCreateWithoutEmployeeInput[]
+  connectOrCreate?: Prisma.LaborItemCreateOrConnectWithoutEmployeeInput | Prisma.LaborItemCreateOrConnectWithoutEmployeeInput[]
+  createMany?: Prisma.LaborItemCreateManyEmployeeInputEnvelope
+  connect?: Prisma.LaborItemWhereUniqueInput | Prisma.LaborItemWhereUniqueInput[]
+}
+
+export type LaborItemUpdateManyWithoutEmployeeNestedInput = {
+  create?: Prisma.XOR<Prisma.LaborItemCreateWithoutEmployeeInput, Prisma.LaborItemUncheckedCreateWithoutEmployeeInput> | Prisma.LaborItemCreateWithoutEmployeeInput[] | Prisma.LaborItemUncheckedCreateWithoutEmployeeInput[]
+  connectOrCreate?: Prisma.LaborItemCreateOrConnectWithoutEmployeeInput | Prisma.LaborItemCreateOrConnectWithoutEmployeeInput[]
+  upsert?: Prisma.LaborItemUpsertWithWhereUniqueWithoutEmployeeInput | Prisma.LaborItemUpsertWithWhereUniqueWithoutEmployeeInput[]
+  createMany?: Prisma.LaborItemCreateManyEmployeeInputEnvelope
+  set?: Prisma.LaborItemWhereUniqueInput | Prisma.LaborItemWhereUniqueInput[]
+  disconnect?: Prisma.LaborItemWhereUniqueInput | Prisma.LaborItemWhereUniqueInput[]
+  delete?: Prisma.LaborItemWhereUniqueInput | Prisma.LaborItemWhereUniqueInput[]
+  connect?: Prisma.LaborItemWhereUniqueInput | Prisma.LaborItemWhereUniqueInput[]
+  update?: Prisma.LaborItemUpdateWithWhereUniqueWithoutEmployeeInput | Prisma.LaborItemUpdateWithWhereUniqueWithoutEmployeeInput[]
+  updateMany?: Prisma.LaborItemUpdateManyWithWhereWithoutEmployeeInput | Prisma.LaborItemUpdateManyWithWhereWithoutEmployeeInput[]
+  deleteMany?: Prisma.LaborItemScalarWhereInput | Prisma.LaborItemScalarWhereInput[]
+}
+
+export type LaborItemUncheckedUpdateManyWithoutEmployeeNestedInput = {
+  create?: Prisma.XOR<Prisma.LaborItemCreateWithoutEmployeeInput, Prisma.LaborItemUncheckedCreateWithoutEmployeeInput> | Prisma.LaborItemCreateWithoutEmployeeInput[] | Prisma.LaborItemUncheckedCreateWithoutEmployeeInput[]
+  connectOrCreate?: Prisma.LaborItemCreateOrConnectWithoutEmployeeInput | Prisma.LaborItemCreateOrConnectWithoutEmployeeInput[]
+  upsert?: Prisma.LaborItemUpsertWithWhereUniqueWithoutEmployeeInput | Prisma.LaborItemUpsertWithWhereUniqueWithoutEmployeeInput[]
+  createMany?: Prisma.LaborItemCreateManyEmployeeInputEnvelope
+  set?: Prisma.LaborItemWhereUniqueInput | Prisma.LaborItemWhereUniqueInput[]
+  disconnect?: Prisma.LaborItemWhereUniqueInput | Prisma.LaborItemWhereUniqueInput[]
+  delete?: Prisma.LaborItemWhereUniqueInput | Prisma.LaborItemWhereUniqueInput[]
+  connect?: Prisma.LaborItemWhereUniqueInput | Prisma.LaborItemWhereUniqueInput[]
+  update?: Prisma.LaborItemUpdateWithWhereUniqueWithoutEmployeeInput | Prisma.LaborItemUpdateWithWhereUniqueWithoutEmployeeInput[]
+  updateMany?: Prisma.LaborItemUpdateManyWithWhereWithoutEmployeeInput | Prisma.LaborItemUpdateManyWithWhereWithoutEmployeeInput[]
+  deleteMany?: Prisma.LaborItemScalarWhereInput | Prisma.LaborItemScalarWhereInput[]
 }
 
 export type LaborItemCreateNestedManyWithoutCalculationInput = {
@@ -557,27 +701,116 @@ export type EnumLaborTypeFieldUpdateOperationsInput = {
   set?: $Enums.LaborType
 }
 
-export type LaborItemCreateWithoutCalculationInput = {
+export type LaborItemCreateWithoutEmployeeInput = {
   id?: string
   description: string
   laborType?: $Enums.LaborType
   hours: number
+  actualHours?: number | null
   hourlyRateNet: number
+  internalHourlyWageNet?: number | null
   quantityWorkers?: number
   totalNet?: number
+  notes?: string | null
+  isVisibleToCustomer?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  calculation: Prisma.CalculationCreateNestedOneWithoutLaborItemsInput
+}
+
+export type LaborItemUncheckedCreateWithoutEmployeeInput = {
+  id?: string
+  calculationId: string
+  description: string
+  laborType?: $Enums.LaborType
+  hours: number
+  actualHours?: number | null
+  hourlyRateNet: number
+  internalHourlyWageNet?: number | null
+  quantityWorkers?: number
+  totalNet?: number
+  notes?: string | null
   isVisibleToCustomer?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
-export type LaborItemUncheckedCreateWithoutCalculationInput = {
+export type LaborItemCreateOrConnectWithoutEmployeeInput = {
+  where: Prisma.LaborItemWhereUniqueInput
+  create: Prisma.XOR<Prisma.LaborItemCreateWithoutEmployeeInput, Prisma.LaborItemUncheckedCreateWithoutEmployeeInput>
+}
+
+export type LaborItemCreateManyEmployeeInputEnvelope = {
+  data: Prisma.LaborItemCreateManyEmployeeInput | Prisma.LaborItemCreateManyEmployeeInput[]
+  skipDuplicates?: boolean
+}
+
+export type LaborItemUpsertWithWhereUniqueWithoutEmployeeInput = {
+  where: Prisma.LaborItemWhereUniqueInput
+  update: Prisma.XOR<Prisma.LaborItemUpdateWithoutEmployeeInput, Prisma.LaborItemUncheckedUpdateWithoutEmployeeInput>
+  create: Prisma.XOR<Prisma.LaborItemCreateWithoutEmployeeInput, Prisma.LaborItemUncheckedCreateWithoutEmployeeInput>
+}
+
+export type LaborItemUpdateWithWhereUniqueWithoutEmployeeInput = {
+  where: Prisma.LaborItemWhereUniqueInput
+  data: Prisma.XOR<Prisma.LaborItemUpdateWithoutEmployeeInput, Prisma.LaborItemUncheckedUpdateWithoutEmployeeInput>
+}
+
+export type LaborItemUpdateManyWithWhereWithoutEmployeeInput = {
+  where: Prisma.LaborItemScalarWhereInput
+  data: Prisma.XOR<Prisma.LaborItemUpdateManyMutationInput, Prisma.LaborItemUncheckedUpdateManyWithoutEmployeeInput>
+}
+
+export type LaborItemScalarWhereInput = {
+  AND?: Prisma.LaborItemScalarWhereInput | Prisma.LaborItemScalarWhereInput[]
+  OR?: Prisma.LaborItemScalarWhereInput[]
+  NOT?: Prisma.LaborItemScalarWhereInput | Prisma.LaborItemScalarWhereInput[]
+  id?: Prisma.StringFilter<"LaborItem"> | string
+  calculationId?: Prisma.StringFilter<"LaborItem"> | string
+  employeeId?: Prisma.StringNullableFilter<"LaborItem"> | string | null
+  description?: Prisma.StringFilter<"LaborItem"> | string
+  laborType?: Prisma.EnumLaborTypeFilter<"LaborItem"> | $Enums.LaborType
+  hours?: Prisma.FloatFilter<"LaborItem"> | number
+  actualHours?: Prisma.FloatNullableFilter<"LaborItem"> | number | null
+  hourlyRateNet?: Prisma.FloatFilter<"LaborItem"> | number
+  internalHourlyWageNet?: Prisma.FloatNullableFilter<"LaborItem"> | number | null
+  quantityWorkers?: Prisma.IntFilter<"LaborItem"> | number
+  totalNet?: Prisma.FloatFilter<"LaborItem"> | number
+  notes?: Prisma.StringNullableFilter<"LaborItem"> | string | null
+  isVisibleToCustomer?: Prisma.BoolFilter<"LaborItem"> | boolean
+  createdAt?: Prisma.DateTimeFilter<"LaborItem"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"LaborItem"> | Date | string
+}
+
+export type LaborItemCreateWithoutCalculationInput = {
   id?: string
   description: string
   laborType?: $Enums.LaborType
   hours: number
+  actualHours?: number | null
   hourlyRateNet: number
+  internalHourlyWageNet?: number | null
   quantityWorkers?: number
   totalNet?: number
+  notes?: string | null
+  isVisibleToCustomer?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  employee?: Prisma.EmployeeCreateNestedOneWithoutLaborItemsInput
+}
+
+export type LaborItemUncheckedCreateWithoutCalculationInput = {
+  id?: string
+  employeeId?: string | null
+  description: string
+  laborType?: $Enums.LaborType
+  hours: number
+  actualHours?: number | null
+  hourlyRateNet: number
+  internalHourlyWageNet?: number | null
+  quantityWorkers?: number
+  totalNet?: number
+  notes?: string | null
   isVisibleToCustomer?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -609,31 +842,86 @@ export type LaborItemUpdateManyWithWhereWithoutCalculationInput = {
   data: Prisma.XOR<Prisma.LaborItemUpdateManyMutationInput, Prisma.LaborItemUncheckedUpdateManyWithoutCalculationInput>
 }
 
-export type LaborItemScalarWhereInput = {
-  AND?: Prisma.LaborItemScalarWhereInput | Prisma.LaborItemScalarWhereInput[]
-  OR?: Prisma.LaborItemScalarWhereInput[]
-  NOT?: Prisma.LaborItemScalarWhereInput | Prisma.LaborItemScalarWhereInput[]
-  id?: Prisma.StringFilter<"LaborItem"> | string
-  calculationId?: Prisma.StringFilter<"LaborItem"> | string
-  description?: Prisma.StringFilter<"LaborItem"> | string
-  laborType?: Prisma.EnumLaborTypeFilter<"LaborItem"> | $Enums.LaborType
-  hours?: Prisma.FloatFilter<"LaborItem"> | number
-  hourlyRateNet?: Prisma.FloatFilter<"LaborItem"> | number
-  quantityWorkers?: Prisma.IntFilter<"LaborItem"> | number
-  totalNet?: Prisma.FloatFilter<"LaborItem"> | number
-  isVisibleToCustomer?: Prisma.BoolFilter<"LaborItem"> | boolean
-  createdAt?: Prisma.DateTimeFilter<"LaborItem"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"LaborItem"> | Date | string
+export type LaborItemCreateManyEmployeeInput = {
+  id?: string
+  calculationId: string
+  description: string
+  laborType?: $Enums.LaborType
+  hours: number
+  actualHours?: number | null
+  hourlyRateNet: number
+  internalHourlyWageNet?: number | null
+  quantityWorkers?: number
+  totalNet?: number
+  notes?: string | null
+  isVisibleToCustomer?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type LaborItemUpdateWithoutEmployeeInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  laborType?: Prisma.EnumLaborTypeFieldUpdateOperationsInput | $Enums.LaborType
+  hours?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualHours?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  hourlyRateNet?: Prisma.FloatFieldUpdateOperationsInput | number
+  internalHourlyWageNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  quantityWorkers?: Prisma.IntFieldUpdateOperationsInput | number
+  totalNet?: Prisma.FloatFieldUpdateOperationsInput | number
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isVisibleToCustomer?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  calculation?: Prisma.CalculationUpdateOneRequiredWithoutLaborItemsNestedInput
+}
+
+export type LaborItemUncheckedUpdateWithoutEmployeeInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  calculationId?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  laborType?: Prisma.EnumLaborTypeFieldUpdateOperationsInput | $Enums.LaborType
+  hours?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualHours?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  hourlyRateNet?: Prisma.FloatFieldUpdateOperationsInput | number
+  internalHourlyWageNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  quantityWorkers?: Prisma.IntFieldUpdateOperationsInput | number
+  totalNet?: Prisma.FloatFieldUpdateOperationsInput | number
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isVisibleToCustomer?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type LaborItemUncheckedUpdateManyWithoutEmployeeInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  calculationId?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  laborType?: Prisma.EnumLaborTypeFieldUpdateOperationsInput | $Enums.LaborType
+  hours?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualHours?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  hourlyRateNet?: Prisma.FloatFieldUpdateOperationsInput | number
+  internalHourlyWageNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  quantityWorkers?: Prisma.IntFieldUpdateOperationsInput | number
+  totalNet?: Prisma.FloatFieldUpdateOperationsInput | number
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isVisibleToCustomer?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type LaborItemCreateManyCalculationInput = {
   id?: string
+  employeeId?: string | null
   description: string
   laborType?: $Enums.LaborType
   hours: number
+  actualHours?: number | null
   hourlyRateNet: number
+  internalHourlyWageNet?: number | null
   quantityWorkers?: number
   totalNet?: number
+  notes?: string | null
   isVisibleToCustomer?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -644,22 +932,30 @@ export type LaborItemUpdateWithoutCalculationInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   laborType?: Prisma.EnumLaborTypeFieldUpdateOperationsInput | $Enums.LaborType
   hours?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualHours?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   hourlyRateNet?: Prisma.FloatFieldUpdateOperationsInput | number
+  internalHourlyWageNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   quantityWorkers?: Prisma.IntFieldUpdateOperationsInput | number
   totalNet?: Prisma.FloatFieldUpdateOperationsInput | number
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isVisibleToCustomer?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  employee?: Prisma.EmployeeUpdateOneWithoutLaborItemsNestedInput
 }
 
 export type LaborItemUncheckedUpdateWithoutCalculationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  employeeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.StringFieldUpdateOperationsInput | string
   laborType?: Prisma.EnumLaborTypeFieldUpdateOperationsInput | $Enums.LaborType
   hours?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualHours?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   hourlyRateNet?: Prisma.FloatFieldUpdateOperationsInput | number
+  internalHourlyWageNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   quantityWorkers?: Prisma.IntFieldUpdateOperationsInput | number
   totalNet?: Prisma.FloatFieldUpdateOperationsInput | number
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isVisibleToCustomer?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -667,12 +963,16 @@ export type LaborItemUncheckedUpdateWithoutCalculationInput = {
 
 export type LaborItemUncheckedUpdateManyWithoutCalculationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  employeeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.StringFieldUpdateOperationsInput | string
   laborType?: Prisma.EnumLaborTypeFieldUpdateOperationsInput | $Enums.LaborType
   hours?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualHours?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   hourlyRateNet?: Prisma.FloatFieldUpdateOperationsInput | number
+  internalHourlyWageNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   quantityWorkers?: Prisma.IntFieldUpdateOperationsInput | number
   totalNet?: Prisma.FloatFieldUpdateOperationsInput | number
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isVisibleToCustomer?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -683,87 +983,126 @@ export type LaborItemUncheckedUpdateManyWithoutCalculationInput = {
 export type LaborItemSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   calculationId?: boolean
+  employeeId?: boolean
   description?: boolean
   laborType?: boolean
   hours?: boolean
+  actualHours?: boolean
   hourlyRateNet?: boolean
+  internalHourlyWageNet?: boolean
   quantityWorkers?: boolean
   totalNet?: boolean
+  notes?: boolean
   isVisibleToCustomer?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   calculation?: boolean | Prisma.CalculationDefaultArgs<ExtArgs>
+  employee?: boolean | Prisma.LaborItem$employeeArgs<ExtArgs>
 }, ExtArgs["result"]["laborItem"]>
 
 export type LaborItemSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   calculationId?: boolean
+  employeeId?: boolean
   description?: boolean
   laborType?: boolean
   hours?: boolean
+  actualHours?: boolean
   hourlyRateNet?: boolean
+  internalHourlyWageNet?: boolean
   quantityWorkers?: boolean
   totalNet?: boolean
+  notes?: boolean
   isVisibleToCustomer?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   calculation?: boolean | Prisma.CalculationDefaultArgs<ExtArgs>
+  employee?: boolean | Prisma.LaborItem$employeeArgs<ExtArgs>
 }, ExtArgs["result"]["laborItem"]>
 
 export type LaborItemSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   calculationId?: boolean
+  employeeId?: boolean
   description?: boolean
   laborType?: boolean
   hours?: boolean
+  actualHours?: boolean
   hourlyRateNet?: boolean
+  internalHourlyWageNet?: boolean
   quantityWorkers?: boolean
   totalNet?: boolean
+  notes?: boolean
   isVisibleToCustomer?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   calculation?: boolean | Prisma.CalculationDefaultArgs<ExtArgs>
+  employee?: boolean | Prisma.LaborItem$employeeArgs<ExtArgs>
 }, ExtArgs["result"]["laborItem"]>
 
 export type LaborItemSelectScalar = {
   id?: boolean
   calculationId?: boolean
+  employeeId?: boolean
   description?: boolean
   laborType?: boolean
   hours?: boolean
+  actualHours?: boolean
   hourlyRateNet?: boolean
+  internalHourlyWageNet?: boolean
   quantityWorkers?: boolean
   totalNet?: boolean
+  notes?: boolean
   isVisibleToCustomer?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type LaborItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "calculationId" | "description" | "laborType" | "hours" | "hourlyRateNet" | "quantityWorkers" | "totalNet" | "isVisibleToCustomer" | "createdAt" | "updatedAt", ExtArgs["result"]["laborItem"]>
+export type LaborItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "calculationId" | "employeeId" | "description" | "laborType" | "hours" | "actualHours" | "hourlyRateNet" | "internalHourlyWageNet" | "quantityWorkers" | "totalNet" | "notes" | "isVisibleToCustomer" | "createdAt" | "updatedAt", ExtArgs["result"]["laborItem"]>
 export type LaborItemInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   calculation?: boolean | Prisma.CalculationDefaultArgs<ExtArgs>
+  employee?: boolean | Prisma.LaborItem$employeeArgs<ExtArgs>
 }
 export type LaborItemIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   calculation?: boolean | Prisma.CalculationDefaultArgs<ExtArgs>
+  employee?: boolean | Prisma.LaborItem$employeeArgs<ExtArgs>
 }
 export type LaborItemIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   calculation?: boolean | Prisma.CalculationDefaultArgs<ExtArgs>
+  employee?: boolean | Prisma.LaborItem$employeeArgs<ExtArgs>
 }
 
 export type $LaborItemPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "LaborItem"
   objects: {
     calculation: Prisma.$CalculationPayload<ExtArgs>
+    employee: Prisma.$EmployeePayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     calculationId: string
+    employeeId: string | null
     description: string
     laborType: $Enums.LaborType
+    /**
+     * Geplante Stunden
+     */
     hours: number
+    /**
+     * Tatsächliche Stunden (z. B. aus Stundenzettel); null = noch nicht gesetzt
+     */
+    actualHours: number | null
+    /**
+     * Verrechnungssatz (extern / Verkauf)
+     */
     hourlyRateNet: number
+    /**
+     * Interner Stundenlohn-Snapshot (Kostenkontrolle)
+     */
+    internalHourlyWageNet: number | null
     quantityWorkers: number
     totalNet: number
+    notes: string | null
     isVisibleToCustomer: boolean
     createdAt: Date
     updatedAt: Date
@@ -1162,6 +1501,7 @@ readonly fields: LaborItemFieldRefs;
 export interface Prisma__LaborItemClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   calculation<T extends Prisma.CalculationDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CalculationDefaultArgs<ExtArgs>>): Prisma.Prisma__CalculationClient<runtime.Types.Result.GetResult<Prisma.$CalculationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  employee<T extends Prisma.LaborItem$employeeArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LaborItem$employeeArgs<ExtArgs>>): Prisma.Prisma__EmployeeClient<runtime.Types.Result.GetResult<Prisma.$EmployeePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1193,12 +1533,16 @@ export interface Prisma__LaborItemClient<T, Null = never, ExtArgs extends runtim
 export interface LaborItemFieldRefs {
   readonly id: Prisma.FieldRef<"LaborItem", 'String'>
   readonly calculationId: Prisma.FieldRef<"LaborItem", 'String'>
+  readonly employeeId: Prisma.FieldRef<"LaborItem", 'String'>
   readonly description: Prisma.FieldRef<"LaborItem", 'String'>
   readonly laborType: Prisma.FieldRef<"LaborItem", 'LaborType'>
   readonly hours: Prisma.FieldRef<"LaborItem", 'Float'>
+  readonly actualHours: Prisma.FieldRef<"LaborItem", 'Float'>
   readonly hourlyRateNet: Prisma.FieldRef<"LaborItem", 'Float'>
+  readonly internalHourlyWageNet: Prisma.FieldRef<"LaborItem", 'Float'>
   readonly quantityWorkers: Prisma.FieldRef<"LaborItem", 'Int'>
   readonly totalNet: Prisma.FieldRef<"LaborItem", 'Float'>
+  readonly notes: Prisma.FieldRef<"LaborItem", 'String'>
   readonly isVisibleToCustomer: Prisma.FieldRef<"LaborItem", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"LaborItem", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"LaborItem", 'DateTime'>
@@ -1600,6 +1944,25 @@ export type LaborItemDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Int
    * Limit how many LaborItems to delete.
    */
   limit?: number
+}
+
+/**
+ * LaborItem.employee
+ */
+export type LaborItem$employeeArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Employee
+   */
+  select?: Prisma.EmployeeSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Employee
+   */
+  omit?: Prisma.EmployeeOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EmployeeInclude<ExtArgs> | null
+  where?: Prisma.EmployeeWhereInput
 }
 
 /**

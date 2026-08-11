@@ -46,11 +46,17 @@ import {
   PiggyBank,
   Loader2,
   Target,
+  ChevronLeft,
+  ChevronRight,
+  Download,
 } from "lucide-react";
 
 import {
   FINANCE_PERIOD_LABELS,
   FINANCE_PERIOD_PRESETS,
+  isSingleMonthPeriod,
+  shiftMonthPeriod,
+  parseLocalDateInput,
 } from "@/lib/finance/period";
 
 const ExpenseCategoryChart = lazy(() =>
@@ -150,6 +156,7 @@ function FinanzuebersichtContent() {
   const [editingInvestment, setEditingInvestment] = useState<PlannedInvestmentDTO | null>(null);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [taxRate, setTaxRate] = useState("30");
+  const [reservePercent, setReservePercent] = useState("");
   const [revenueBasis, setRevenueBasis] = useState<"ISSUE_DATE" | "PAYMENT_DATE">("ISSUE_DATE");
   const [includeUnpaid, setIncludeUnpaid] = useState(false);
   const [defaultPeriod, setDefaultPeriod] = useState<
@@ -158,6 +165,10 @@ function FinanzuebersichtContent() {
   const [profitTarget, setProfitTarget] = useState("");
   const [highProfitThreshold, setHighProfitThreshold] = useState("5000");
   const [lowLiquidityThreshold, setLowLiquidityThreshold] = useState("");
+  const [vatRegistered, setVatRegistered] = useState(true);
+  const [kleinunternehmer, setKleinunternehmer] = useState(false);
+  const [hasTaxAdvisor, setHasTaxAdvisor] = useState(false);
+  const [profileNote, setProfileNote] = useState("");
 
   const queryString = useMemo(() => {
     const params = new URLSearchParams({ preset });
@@ -189,6 +200,7 @@ function FinanzuebersichtContent() {
 
   const syncSettingsFromOverview = useCallback((s: FinanceOverview["settings"]) => {
     setTaxRate(String(s.estimatedTaxRate));
+    setReservePercent(s.reservePercent != null ? String(s.reservePercent) : "");
     setRevenueBasis(s.revenueBasis);
     setIncludeUnpaid(s.includeUnpaidInvoices);
     setDefaultPeriod(
@@ -201,6 +213,10 @@ function FinanzuebersichtContent() {
     setLowLiquidityThreshold(
       s.lowLiquidityWarningThreshold != null ? String(s.lowLiquidityWarningThreshold) : ""
     );
+    setVatRegistered(s.vatRegistered !== false);
+    setKleinunternehmer(Boolean(s.kleinunternehmer));
+    setHasTaxAdvisor(Boolean(s.hasTaxAdvisor));
+    setProfileNote(s.profileNote ?? "");
   }, []);
 
   useEffect(() => {
@@ -220,7 +236,10 @@ function FinanzuebersichtContent() {
 
   const saveSettings = async () => {
     const rate = parseFloat(taxRate.replace(",", "."));
-    if (Number.isNaN(rate) || rate < 0 || rate > 100) return;
+    if (Number.isNaN(rate) || rate < 0 || rate > 100) {
+      return;
+    }
+    const reserve = parseOptionalNumber(reservePercent);
 
     const res = await saveJson(
       "/api/finance/settings",
@@ -229,12 +248,17 @@ function FinanzuebersichtContent() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           estimatedTaxRate: rate,
+          reservePercent: reserve,
           revenueBasis,
           includeUnpaidInvoices: includeUnpaid,
           defaultPeriodPreset: defaultPeriod,
           monthlyProfitTargetNet: parseOptionalNumber(profitTarget),
           highProfitWarningThreshold: parseOptionalNumber(highProfitThreshold),
           lowLiquidityWarningThreshold: parseOptionalNumber(lowLiquidityThreshold),
+          vatRegistered,
+          kleinunternehmer,
+          hasTaxAdvisor,
+          profileNote: profileNote.trim() || null,
         }),
       },
       { success: "Finanzprofil gespeichert" }
@@ -245,6 +269,48 @@ function FinanzuebersichtContent() {
       await mutate();
     }
   };
+
+  const shiftMonth = (delta: number) => {
+    const ref = overview
+      ? parseLocalDateInput(overview.period.from.slice(0, 10))
+      : new Date();
+    const next = shiftMonthPeriod(ref, delta);
+    setPreset("custom");
+    setCustomFrom(
+      `${next.from.getFullYear()}-${String(next.from.getMonth() + 1).padStart(2, "0")}-01`
+    );
+    const last = next.to;
+    setCustomTo(
+      `${last.getFullYear()}-${String(last.getMonth() + 1).padStart(2, "0")}-${String(last.getDate()).padStart(2, "0")}`
+    );
+  };
+
+  const exportHref = useMemo(() => {
+    const params = new URLSearchParams({ preset, section: "all" });
+    if (preset === "custom") {
+      if (customFrom) params.set("from", customFrom);
+      if (customTo) params.set("to", customTo);
+    }
+    return `/api/finance/export?${params.toString()}`;
+  }, [preset, customFrom, customTo]);
+
+  const canNavigateMonths = (() => {
+    if (preset === "current_month" || preset === "last_month") return true;
+    if (preset !== "custom") return false;
+    if (customFrom && customTo) {
+      return isSingleMonthPeriod(
+        parseLocalDateInput(customFrom),
+        parseLocalDateInput(customTo)
+      );
+    }
+    if (overview) {
+      return isSingleMonthPeriod(
+        parseLocalDateInput(overview.period.from.slice(0, 10)),
+        parseLocalDateInput(overview.period.to.slice(0, 10))
+      );
+    }
+    return false;
+  })();
 
   const chartData =
     overview?.expenses.byCategory.map((c) => ({
@@ -347,18 +413,42 @@ function FinanzuebersichtContent() {
           <div className="grid flex-1 grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
             <div className="grid gap-2">
               <Label>Zeitraum</Label>
-              <Select value={preset} onValueChange={(v) => setPreset(v as FinancePeriodPreset)}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {PERIOD_OPTIONS.map((o) => (
-                    <SelectItem key={o.value} value={o.value}>
-                      {o.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <div className="flex gap-1">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="icon"
+                  className="shrink-0"
+                  disabled={!canNavigateMonths}
+                  onClick={() => shiftMonth(-1)}
+                  aria-label="Vorheriger Monat"
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </Button>
+                <Select value={preset} onValueChange={(v) => setPreset(v as FinancePeriodPreset)}>
+                  <SelectTrigger className="flex-1">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {PERIOD_OPTIONS.map((o) => (
+                      <SelectItem key={o.value} value={o.value}>
+                        {o.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="icon"
+                  className="shrink-0"
+                  disabled={!canNavigateMonths}
+                  onClick={() => shiftMonth(1)}
+                  aria-label="Nächster Monat"
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+              </div>
             </div>
             {preset === "custom" && (
               <>
@@ -385,23 +475,31 @@ function FinanzuebersichtContent() {
               </>
             )}
           </div>
-          <CanAccess permission="invoices.write">
-            <Button
-              variant="outline"
-              size="sm"
-              className="gap-2"
-              onClick={() => {
-                setSettingsOpen((v) => {
-                  const next = !v;
-                  if (next && overview) syncSettingsFromOverview(overview.settings);
-                  return next;
-                });
-              }}
-            >
-              <Settings2 className="h-4 w-4" />
-              Finanzprofil
+          <div className="flex flex-wrap gap-2">
+            <Button asChild variant="outline" size="sm" className="gap-2">
+              <a href={exportHref}>
+                <Download className="h-4 w-4" />
+                CSV-Export
+              </a>
             </Button>
-          </CanAccess>
+            <CanAccess permission="invoices.write">
+              <Button
+                variant="outline"
+                size="sm"
+                className="gap-2"
+                onClick={() => {
+                  setSettingsOpen((v) => {
+                    const next = !v;
+                    if (next && overview) syncSettingsFromOverview(overview.settings);
+                    return next;
+                  });
+                }}
+              >
+                <Settings2 className="h-4 w-4" />
+                Finanzprofil
+              </Button>
+            </CanAccess>
+          </div>
         </div>
 
         {settingsOpen && (
@@ -421,6 +519,17 @@ function FinanzuebersichtContent() {
                   inputMode="decimal"
                   value={taxRate}
                   onChange={(e) => setTaxRate(e.target.value)}
+                  placeholder="z. B. 30"
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="reserve-pct">Rücklagenprozentsatz (%)</Label>
+                <Input
+                  id="reserve-pct"
+                  inputMode="decimal"
+                  value={reservePercent}
+                  onChange={(e) => setReservePercent(e.target.value)}
+                  placeholder="leer = wie Steuersatz"
                 />
               </div>
               <div className="grid gap-2">
@@ -510,10 +619,49 @@ function FinanzuebersichtContent() {
                   onChange={(e) => setIncludeUnpaid(e.target.checked)}
                   className="rounded border-slate-300"
                 />
-                Unbezahlte Rechnungen einbeziehen
+                Unbezahlte Rechnungen in die Umsatzschätzung einbeziehen
               </label>
+              <label className="flex items-center gap-2 text-sm">
+                <input
+                  type="checkbox"
+                  checked={vatRegistered}
+                  onChange={(e) => setVatRegistered(e.target.checked)}
+                  className="rounded border-slate-300"
+                />
+                Umsatzsteuerpflicht (Orientierung)
+              </label>
+              <label className="flex items-center gap-2 text-sm">
+                <input
+                  type="checkbox"
+                  checked={kleinunternehmer}
+                  onChange={(e) => setKleinunternehmer(e.target.checked)}
+                  className="rounded border-slate-300"
+                />
+                Kleinunternehmerregelung (Orientierung)
+              </label>
+              <label className="flex items-center gap-2 text-sm">
+                <input
+                  type="checkbox"
+                  checked={hasTaxAdvisor}
+                  onChange={(e) => setHasTaxAdvisor(e.target.checked)}
+                  className="rounded border-slate-300"
+                />
+                Steuerberater vorhanden
+              </label>
+              <div className="grid gap-2 sm:col-span-2 lg:col-span-3">
+                <Label htmlFor="profile-note">Notiz zum Finanzprofil</Label>
+                <Input
+                  id="profile-note"
+                  value={profileNote}
+                  onChange={(e) => setProfileNote(e.target.value)}
+                  placeholder="optional"
+                />
+              </div>
             </div>
-            <Button size="sm" onClick={saveSettings}>
+            <p className="text-[11px] text-slate-500">
+              {FINANCE_DISCLAIMERS.taxEstimate}
+            </p>
+            <Button size="sm" onClick={() => void saveSettings()}>
               Profil speichern
             </Button>
           </div>
@@ -542,17 +690,17 @@ function FinanzuebersichtContent() {
 
       {overview && (
         <>
-          <div className="grid grid-cols-2 gap-3 lg:grid-cols-5">
+          <div className="grid grid-cols-2 gap-3 lg:grid-cols-3 xl:grid-cols-6">
             <KpiCard
-              label="Umsatz / Einnahmen (netto)"
+              label="Umsatz netto"
               value={formatEuro(overview.revenue.net)}
-              sub={`${overview.revenue.invoiceCount} Rechnung(en) · brutto ${formatEuro(overview.revenue.gross)}`}
+              sub={`Brutto ${formatEuro(overview.revenue.gross)} · USt ${formatEuro(overview.revenue.vat ?? overview.revenue.gross - overview.revenue.net)} · ${overview.revenue.invoiceCount} RE`}
               icon={TrendingUp}
               accent="text-emerald-700"
               onClick={() => router.push("/dashboard/umsatz")}
             />
             <KpiCard
-              label="Ausgaben (netto)"
+              label="Ausgaben netto"
               value={formatEuro(overview.expenses.net)}
               sub={`${overview.expenses.count} erfasst · ${overview.expenses.withReceipt} mit Beleg`}
               icon={TrendingDown}
@@ -560,9 +708,9 @@ function FinanzuebersichtContent() {
               onClick={() => setView("ausgaben")}
             />
             <KpiCard
-              label="Investitionen"
+              label="Investitionen geplant"
               value={formatEuro(investmentTotal)}
-              sub={`${overview.plannedInvestments.length} geplant`}
+              sub={`${overview.plannedInvestments.length} offen`}
               icon={PiggyBank}
               accent="text-sky-800"
               onClick={() => setView("investitionen")}
@@ -570,27 +718,49 @@ function FinanzuebersichtContent() {
             <KpiCard
               label="Geschätzter Gewinn"
               value={formatEuro(overview.profit.estimatedNet)}
-              sub={
-                overview.profit.targetNet != null
-                  ? `Orientierungsziel ${formatEuro(overview.profit.targetNet)}${
-                      overview.profit.targetDelta != null
-                        ? ` · Diff. ${formatEuro(overview.profit.targetDelta)}`
-                        : ""
-                    }`
-                  : "Schätzung · Einnahmen minus Ausgaben"
-              }
+              sub={overview.profit.formulaLabel ?? "Einnahmen − Ausgaben"}
               icon={Calculator}
-              onClick={() => router.push("/dashboard/kalkulation")}
             />
             <KpiCard
               label="Geschätzte Steuerlast"
               value={formatEuro(overview.tax.estimatedAmount)}
-              sub={`${overview.tax.estimatedRate} % · nur Schätzung`}
+              sub={`${overview.tax.estimatedRate} % · unverbindlich`}
               icon={Receipt}
               accent="text-amber-700"
-              onClick={() => router.push("/dashboard/rechnungen")}
+            />
+            <KpiCard
+              label="Empfohlene Rücklage"
+              value={formatEuro(overview.tax.recommendedReserve ?? overview.tax.estimatedAmount)}
+              sub={`${overview.tax.reservePercentUsed ?? overview.tax.estimatedRate} % vom geschätzten Gewinn`}
+              icon={Target}
+              accent="text-[#0d5c63]"
             />
           </div>
+
+          <Card className="!p-4">
+            <h2 className="text-sm font-semibold text-slate-700 mb-2">Gewinnübersicht (Orientierung)</h2>
+            <div className="grid gap-2 text-sm sm:grid-cols-3">
+              <div className="rounded-lg bg-emerald-50 p-3">
+                <p className="text-xs text-emerald-800">Einnahmen netto</p>
+                <p className="font-semibold text-emerald-900">{formatEuro(overview.revenue.net)}</p>
+              </div>
+              <div className="rounded-lg bg-rose-50 p-3">
+                <p className="text-xs text-rose-800">− Ausgaben netto</p>
+                <p className="font-semibold text-rose-900">{formatEuro(overview.expenses.net)}</p>
+              </div>
+              <div className="rounded-lg bg-slate-100 p-3">
+                <p className="text-xs text-slate-600">= Geschätzter Gewinn</p>
+                <p className="font-semibold text-slate-900">
+                  {formatEuro(overview.profit.estimatedNet)}
+                </p>
+              </div>
+            </div>
+            <p className="text-[11px] text-slate-500 mt-2">
+              {FINANCE_DISCLAIMERS.taxEstimate} Unbezahlte Rechnungen:{" "}
+              {overview.revenue.includesUnpaid ? "einbezogen" : "nicht einbezogen"} (im Finanzprofil
+              umschaltbar).
+            </p>
+          </Card>
 
           {overview.profit.targetNet != null && overview.profit.targetNet > 0 && (
             <Card className="!p-4">
@@ -670,8 +840,10 @@ function FinanzuebersichtContent() {
                   </span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-slate-600">Bezahlt (gesamt)</span>
-                  <span>{overview.invoices.paidCount}</span>
+                  <span className="text-slate-600">Bezahlt (Zeitraum, nach Rechnungsdatum)</span>
+                  <span>
+                    {overview.invoices.paidCount} · {formatEuro(overview.invoices.paidSum)}
+                  </span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-slate-600">Storniert (gesamt)</span>
@@ -884,8 +1056,26 @@ function FinanzuebersichtContent() {
 
           <FinanceDisclaimer compact />
 
-          <Card className="border-dashed !p-4 text-center text-sm text-slate-500">
-            Export für Steuerberater (CSV/PDF/ZIP) ist für eine spätere Version geplant.
+          <Card className="!p-4">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <h2 className="text-sm font-semibold text-slate-700">Export für Steuerberater</h2>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  CSV mit Ausgaben, Investitionen und Rechnungen im gewählten Zeitraum. Kein
+                  automatischer Versand an Dritte.
+                </p>
+              </div>
+              <Button asChild variant="outline" className="gap-2 shrink-0">
+                <a href={exportHref}>
+                  <Download className="h-4 w-4" />
+                  CSV herunterladen
+                </a>
+              </Button>
+            </div>
+            <p className="text-[11px] text-slate-400 mt-2">
+              PDF/ZIP mit Belegen und DATEV sind für eine spätere Version vorgesehen. Taxfix wird
+              vorerst nicht angebunden.
+            </p>
           </Card>
         </>
       )}

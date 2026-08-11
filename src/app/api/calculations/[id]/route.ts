@@ -5,7 +5,13 @@ import { recalculateCalculationRecord } from "@/lib/calculation/recalculate-db";
 import { suggestTaxTreatmentForCustomer } from "@/lib/tax/treatment";
 
 const includeFull = {
-  laborItems: true,
+  laborItems: {
+    include: {
+      employee: {
+        include: { user: { select: { id: true, firstName: true, lastName: true } } },
+      },
+    },
+  },
   materialItems: true,
   machineUsages: { include: { machine: true } },
   procurementCosts: true,
@@ -103,18 +109,51 @@ export async function PUT(
     }
   }
 
+  if (body.laborInvoiceMode !== undefined) {
+    const { resolveLaborInvoiceMode } = await import("@/lib/calculation/labor-costs");
+    await prisma.calculation.update({
+      where: { id },
+      data: { laborInvoiceMode: resolveLaborInvoiceMode(String(body.laborInvoiceMode)) },
+    });
+  }
+
   if (body.laborItems) {
     await prisma.laborItem.deleteMany({ where: { calculationId: id } });
     await prisma.laborItem.createMany({
-      data: body.laborItems.map((l: Record<string, unknown>) => ({
-        calculationId: id,
-        description: String(l.description ?? "Arbeit"),
-        laborType: l.laborType ?? "ONSITE_WORK",
-        hours: Number(l.hours),
-        hourlyRateNet: Number(l.hourlyRateNet),
-        quantityWorkers: Number(l.quantityWorkers ?? 1),
-        isVisibleToCustomer: l.isVisibleToCustomer !== false,
-      })),
+      data: body.laborItems.map((l: Record<string, unknown>) => {
+        const employeeId =
+          typeof l.employeeId === "string" && l.employeeId.trim()
+            ? l.employeeId.trim()
+            : null;
+        const actualRaw = l.actualHours;
+        const actualHours =
+          actualRaw === null || actualRaw === undefined || actualRaw === ""
+            ? null
+            : Number(actualRaw);
+        const wageRaw = l.internalHourlyWageNet;
+        const internalHourlyWageNet =
+          wageRaw === null || wageRaw === undefined || wageRaw === ""
+            ? null
+            : Number(wageRaw);
+        return {
+          calculationId: id,
+          employeeId,
+          description: String(l.description ?? "Arbeit"),
+          laborType: (l.laborType as never) ?? "ONSITE_WORK",
+          hours: Number(l.hours),
+          actualHours:
+            actualHours != null && Number.isFinite(actualHours) ? actualHours : null,
+          hourlyRateNet: Number(l.hourlyRateNet),
+          internalHourlyWageNet:
+            internalHourlyWageNet != null && Number.isFinite(internalHourlyWageNet)
+              ? internalHourlyWageNet
+              : null,
+          quantityWorkers: employeeId ? 1 : Number(l.quantityWorkers ?? 1),
+          notes:
+            typeof l.notes === "string" && l.notes.trim() ? l.notes.trim() : null,
+          isVisibleToCustomer: l.isVisibleToCustomer !== false,
+        };
+      }),
     });
   }
 
@@ -371,35 +410,44 @@ export async function PUT(
   if (
     body.useFixedPrice != null ||
     body.fixedPriceNet !== undefined ||
-    body.fixedPriceLabel !== undefined
+    body.fixedPriceLabel !== undefined ||
+    body.fixedPriceDisplayMode !== undefined
   ) {
-    const useFixedPrice =
-      body.useFixedPrice != null ? Boolean(body.useFixedPrice) : existing.useFixedPrice;
-    const fixedPriceNet =
-      body.fixedPriceNet === null
-        ? null
-        : body.fixedPriceNet !== undefined
-          ? Number(body.fixedPriceNet)
-          : existing.fixedPriceNet;
-    const fixedPriceLabel =
-      body.fixedPriceLabel === null
-        ? null
-        : body.fixedPriceLabel !== undefined
-          ? String(body.fixedPriceLabel).trim() || null
-          : existing.fixedPriceLabel;
-
-    if (useFixedPrice && (fixedPriceNet == null || !Number.isFinite(fixedPriceNet) || fixedPriceNet < 0)) {
-      return apiError("Bitte einen gültigen Festpreis in € angeben (0,00 € ist erlaubt).", 400);
-    }
+    const { normalizeFixedPriceFields } = await import("@/lib/calculation/fixed-price");
+    const { syncFixedPriceToOrder } = await import("@/lib/calculation/sync-fixed-price");
+    const normalized = normalizeFixedPriceFields({
+      useFixedPrice:
+        body.useFixedPrice != null ? Boolean(body.useFixedPrice) : existing.useFixedPrice,
+      fixedPriceNet:
+        body.fixedPriceNet === null
+          ? null
+          : body.fixedPriceNet !== undefined
+            ? Number(body.fixedPriceNet)
+            : existing.fixedPriceNet,
+      fixedPriceLabel:
+        body.fixedPriceLabel === null
+          ? null
+          : body.fixedPriceLabel !== undefined
+            ? String(body.fixedPriceLabel)
+            : existing.fixedPriceLabel,
+      fixedPriceDisplayMode:
+        body.fixedPriceDisplayMode !== undefined
+          ? String(body.fixedPriceDisplayMode)
+          : existing.fixedPriceDisplayMode,
+    });
+    if ("error" in normalized) return apiError(normalized.error, 400);
 
     await prisma.calculation.update({
       where: { id },
       data: {
-        useFixedPrice,
-        fixedPriceNet: useFixedPrice ? fixedPriceNet : fixedPriceNet,
-        fixedPriceLabel,
+        useFixedPrice: normalized.useFixedPrice,
+        fixedPriceNet: normalized.fixedPriceNet,
+        fixedPriceLabel: normalized.fixedPriceLabel,
+        fixedPriceDisplayMode: normalized.fixedPriceDisplayMode,
       },
     });
+
+    await syncFixedPriceToOrder(auth.tenantId, existing.orderId, normalized);
   }
 
   const result = await recalculateCalculationRecord(id, auth.tenantId);

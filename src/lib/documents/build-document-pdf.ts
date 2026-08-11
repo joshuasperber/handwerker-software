@@ -1,6 +1,7 @@
 import { PDFDocument, StandardFonts, rgb, type PDFFont, type PDFPage } from "pdf-lib";
 import type { DocumentSnapshot } from "./snapshot";
 import { getVisibleLineItems } from "./line-items";
+import { buildFixedPriceDocumentLines } from "@/lib/calculation/fixed-price";
 import {
   formatBillingAddressLines,
   formatSiteAddressLines,
@@ -217,13 +218,22 @@ export async function buildDocumentPdf(snapshot: DocumentSnapshot): Promise<Uint
   page.drawLine({ start: { x: MARGIN, y }, end: { x: amountX, y }, thickness: 1.2, color: TEAL });
   y -= 16;
 
-  const lines = getVisibleLineItems(calc);
+  const lines = calc.useFixedPrice
+    ? buildFixedPriceDocumentLines({
+        fixedPriceNet: calc.netSalesPrice,
+        fixedPriceLabel: calc.fixedPriceLabel,
+        fixedPriceDisplayMode: calc.fixedPriceDisplayMode,
+        source: calc,
+      }).map((l) => ({ label: l.label, amount: l.amount }))
+    : getVisibleLineItems(calc).map((l) => ({ label: l.label, amount: l.amount as number | null }));
   for (const item of lines) {
     const labelLines = wrap(item.label, font, 10, CONTENT_W - 110);
     ensureSpace(labelLines.length * 13 + 6);
     labelLines.forEach((ll, idx) => {
       text(ll, MARGIN, y, { size: 10 });
-      if (idx === 0) rightText(money(item.amount), amountX, y, { size: 10 });
+      if (idx === 0) {
+        rightText(item.amount == null ? "-" : money(item.amount), amountX, y, { size: 10 });
+      }
       y -= 13;
     });
     page.drawLine({ start: { x: MARGIN, y: y + 4 }, end: { x: amountX, y: y + 4 }, thickness: 0.5, color: LINE });

@@ -3,7 +3,8 @@ import {
   calcVisibleLinesSum,
   calcHiddenAmount,
 } from "./build-document-html";
-import { resolveFixedPriceLabel } from "@/lib/calculation/fixed-price";
+import { buildFixedPriceDocumentLines } from "@/lib/calculation/fixed-price";
+import { buildLaborCustomerLines } from "@/lib/calculation/labor-costs";
 
 export interface DocLine {
   label: string;
@@ -16,14 +17,22 @@ export interface DocLine {
  */
 export function getVisibleLineItems(calc: DocumentCalcInput): DocLine[] {
   if (calc.useFixedPrice) {
-    const label = resolveFixedPriceLabel(calc.fixedPriceLabel);
-    return [{ label: `${label} – ${formatFixedPriceAmount(calc.netSalesPrice)}`, amount: calc.netSalesPrice }];
+    return buildFixedPriceDocumentLines({
+      fixedPriceNet: calc.netSalesPrice,
+      fixedPriceLabel: calc.fixedPriceLabel,
+      fixedPriceDisplayMode: calc.fixedPriceDisplayMode,
+      source: calc,
+    })
+      .filter((l) => l.amount != null)
+      .map((l) => ({ label: l.label, amount: l.amount as number }));
   }
 
   const lines: DocLine[] = [];
 
-  for (const l of calc.laborItems.filter((x) => x.isVisibleToCustomer)) {
-    lines.push({ label: l.description, amount: l.totalNet });
+  for (const l of buildLaborCustomerLines(calc.laborInvoiceMode, calc.laborItems, {
+    useFixedPrice: false,
+  })) {
+    lines.push(l);
   }
   for (const m of calc.materialItems.filter((x) => x.isVisibleToCustomer)) {
     lines.push({ label: m.name, amount: m.totalSalesNet });
@@ -46,14 +55,6 @@ export function getVisibleLineItems(calc: DocumentCalcInput): DocLine[] {
   }
 
   return lines;
-}
-
-/** Kompakte Euro-Darstellung für die Positionsbezeichnung „Festpreis – X €“. */
-function formatFixedPriceAmount(amount: number): string {
-  return new Intl.NumberFormat("de-DE", {
-    style: "currency",
-    currency: "EUR",
-  }).format(amount);
 }
 
 export { calcVisibleLinesSum };

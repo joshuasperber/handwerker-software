@@ -16,6 +16,8 @@ interface Employee {
   id: string;
   color: string;
   hourlyWageNet?: number | null;
+  billingHourlyRateNet?: number | null;
+  defaultActivity?: string | null;
   operationalStatus: string;
   user: {
     firstName: string;
@@ -43,6 +45,8 @@ const EMPTY_FORM = {
   color: "#3b82f6",
   qualifications: "",
   hourlyWageNet: "",
+  billingHourlyRateNet: "",
+  defaultActivity: "",
   isActive: true,
   canManageRoles: false,
 };
@@ -87,6 +91,9 @@ export default function MitarbeiterPage() {
       color: emp.color,
       qualifications: emp.qualifications.map((q) => q.name).join(", "),
       hourlyWageNet: emp.hourlyWageNet != null ? String(emp.hourlyWageNet) : "",
+      billingHourlyRateNet:
+        emp.billingHourlyRateNet != null ? String(emp.billingHourlyRateNet) : "",
+      defaultActivity: emp.defaultActivity ?? "",
       isActive: emp.user.isActive,
       canManageRoles: emp.user.canManageRoles ?? false,
     });
@@ -117,6 +124,10 @@ export default function MitarbeiterPage() {
       hourlyWageNet: form.hourlyWageNet.trim()
         ? Number(form.hourlyWageNet.replace(",", "."))
         : null,
+      billingHourlyRateNet: form.billingHourlyRateNet.trim()
+        ? Number(form.billingHourlyRateNet.replace(",", "."))
+        : null,
+      defaultActivity: form.defaultActivity.trim() || null,
       qualifications: form.qualifications
         ? form.qualifications.split(",").map((s) => s.trim()).filter(Boolean)
         : [],
@@ -262,11 +273,25 @@ export default function MitarbeiterPage() {
             <Input label="Telefon" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
             <Input label="Adresse" value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} className="sm:col-span-2" />
             <Input
-              label="Stundenlohn netto (€)"
+              label="Interner Stundenlohn netto (€)"
               inputMode="decimal"
               value={form.hourlyWageNet}
               onChange={(e) => setForm({ ...form, hourlyWageNet: e.target.value })}
-              placeholder="z. B. 28,50"
+              placeholder="z. B. 28,50 – nur intern"
+            />
+            <Input
+              label="Verrechnungssatz netto (€)"
+              inputMode="decimal"
+              value={form.billingHourlyRateNet}
+              onChange={(e) => setForm({ ...form, billingHourlyRateNet: e.target.value })}
+              placeholder="z. B. 68 – für Kalkulation/Rechnung"
+            />
+            <Input
+              label="Standardtätigkeit"
+              value={form.defaultActivity}
+              onChange={(e) => setForm({ ...form, defaultActivity: e.target.value })}
+              placeholder="z. B. Montagearbeiten"
+              className="sm:col-span-2"
             />
             <div>
               <label className="text-sm font-medium">Kalenderfarbe</label>
@@ -324,7 +349,10 @@ export default function MitarbeiterPage() {
             <p className="mt-3 text-sm text-slate-400">{emp.user.email}</p>
             {emp.hourlyWageNet != null && (
               <p className="mt-1 text-xs text-slate-500">
-                Stundenlohn: {emp.hourlyWageNet.toFixed(2)} €
+                Intern: {emp.hourlyWageNet.toFixed(2)} €/Std.
+                {emp.billingHourlyRateNet != null
+                  ? ` · Verrechnung: ${emp.billingHourlyRateNet.toFixed(2)} €/Std.`
+                  : ""}
               </p>
             )}
             {emp.qualifications.length > 0 && (

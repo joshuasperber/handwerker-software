@@ -28,6 +28,7 @@ export type AggregateFinanceSettings = {
 
 export type FinanceSettingsAvgAggregateOutputType = {
   estimatedTaxRate: number | null
+  reservePercent: number | null
   monthlyProfitTargetNet: number | null
   highProfitWarningThreshold: number | null
   profitSpikeFactor: number | null
@@ -38,6 +39,7 @@ export type FinanceSettingsAvgAggregateOutputType = {
 
 export type FinanceSettingsSumAggregateOutputType = {
   estimatedTaxRate: number | null
+  reservePercent: number | null
   monthlyProfitTargetNet: number | null
   highProfitWarningThreshold: number | null
   profitSpikeFactor: number | null
@@ -50,6 +52,7 @@ export type FinanceSettingsMinAggregateOutputType = {
   id: string | null
   tenantId: string | null
   estimatedTaxRate: number | null
+  reservePercent: number | null
   revenueBasis: $Enums.FinanceRevenueBasis | null
   includeUnpaidInvoices: boolean | null
   defaultPeriodPreset: string | null
@@ -59,6 +62,10 @@ export type FinanceSettingsMinAggregateOutputType = {
   lowExpenseRatioThreshold: number | null
   highRevenueThreshold: number | null
   lowLiquidityWarningThreshold: number | null
+  vatRegistered: boolean | null
+  kleinunternehmer: boolean | null
+  hasTaxAdvisor: boolean | null
+  profileNote: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -67,6 +74,7 @@ export type FinanceSettingsMaxAggregateOutputType = {
   id: string | null
   tenantId: string | null
   estimatedTaxRate: number | null
+  reservePercent: number | null
   revenueBasis: $Enums.FinanceRevenueBasis | null
   includeUnpaidInvoices: boolean | null
   defaultPeriodPreset: string | null
@@ -76,6 +84,10 @@ export type FinanceSettingsMaxAggregateOutputType = {
   lowExpenseRatioThreshold: number | null
   highRevenueThreshold: number | null
   lowLiquidityWarningThreshold: number | null
+  vatRegistered: boolean | null
+  kleinunternehmer: boolean | null
+  hasTaxAdvisor: boolean | null
+  profileNote: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -84,6 +96,7 @@ export type FinanceSettingsCountAggregateOutputType = {
   id: number
   tenantId: number
   estimatedTaxRate: number
+  reservePercent: number
   revenueBasis: number
   includeUnpaidInvoices: number
   defaultPeriodPreset: number
@@ -93,6 +106,10 @@ export type FinanceSettingsCountAggregateOutputType = {
   lowExpenseRatioThreshold: number
   highRevenueThreshold: number
   lowLiquidityWarningThreshold: number
+  vatRegistered: number
+  kleinunternehmer: number
+  hasTaxAdvisor: number
+  profileNote: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -101,6 +118,7 @@ export type FinanceSettingsCountAggregateOutputType = {
 
 export type FinanceSettingsAvgAggregateInputType = {
   estimatedTaxRate?: true
+  reservePercent?: true
   monthlyProfitTargetNet?: true
   highProfitWarningThreshold?: true
   profitSpikeFactor?: true
@@ -111,6 +129,7 @@ export type FinanceSettingsAvgAggregateInputType = {
 
 export type FinanceSettingsSumAggregateInputType = {
   estimatedTaxRate?: true
+  reservePercent?: true
   monthlyProfitTargetNet?: true
   highProfitWarningThreshold?: true
   profitSpikeFactor?: true
@@ -123,6 +142,7 @@ export type FinanceSettingsMinAggregateInputType = {
   id?: true
   tenantId?: true
   estimatedTaxRate?: true
+  reservePercent?: true
   revenueBasis?: true
   includeUnpaidInvoices?: true
   defaultPeriodPreset?: true
@@ -132,6 +152,10 @@ export type FinanceSettingsMinAggregateInputType = {
   lowExpenseRatioThreshold?: true
   highRevenueThreshold?: true
   lowLiquidityWarningThreshold?: true
+  vatRegistered?: true
+  kleinunternehmer?: true
+  hasTaxAdvisor?: true
+  profileNote?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -140,6 +164,7 @@ export type FinanceSettingsMaxAggregateInputType = {
   id?: true
   tenantId?: true
   estimatedTaxRate?: true
+  reservePercent?: true
   revenueBasis?: true
   includeUnpaidInvoices?: true
   defaultPeriodPreset?: true
@@ -149,6 +174,10 @@ export type FinanceSettingsMaxAggregateInputType = {
   lowExpenseRatioThreshold?: true
   highRevenueThreshold?: true
   lowLiquidityWarningThreshold?: true
+  vatRegistered?: true
+  kleinunternehmer?: true
+  hasTaxAdvisor?: true
+  profileNote?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -157,6 +186,7 @@ export type FinanceSettingsCountAggregateInputType = {
   id?: true
   tenantId?: true
   estimatedTaxRate?: true
+  reservePercent?: true
   revenueBasis?: true
   includeUnpaidInvoices?: true
   defaultPeriodPreset?: true
@@ -166,6 +196,10 @@ export type FinanceSettingsCountAggregateInputType = {
   lowExpenseRatioThreshold?: true
   highRevenueThreshold?: true
   lowLiquidityWarningThreshold?: true
+  vatRegistered?: true
+  kleinunternehmer?: true
+  hasTaxAdvisor?: true
+  profileNote?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -261,6 +295,7 @@ export type FinanceSettingsGroupByOutputType = {
   id: string
   tenantId: string
   estimatedTaxRate: number
+  reservePercent: number | null
   revenueBasis: $Enums.FinanceRevenueBasis
   includeUnpaidInvoices: boolean
   defaultPeriodPreset: string
@@ -270,6 +305,10 @@ export type FinanceSettingsGroupByOutputType = {
   lowExpenseRatioThreshold: number
   highRevenueThreshold: number
   lowLiquidityWarningThreshold: number | null
+  vatRegistered: boolean
+  kleinunternehmer: boolean
+  hasTaxAdvisor: boolean
+  profileNote: string | null
   createdAt: Date
   updatedAt: Date
   _count: FinanceSettingsCountAggregateOutputType | null
@@ -301,6 +340,7 @@ export type FinanceSettingsWhereInput = {
   id?: Prisma.StringFilter<"FinanceSettings"> | string
   tenantId?: Prisma.StringFilter<"FinanceSettings"> | string
   estimatedTaxRate?: Prisma.FloatFilter<"FinanceSettings"> | number
+  reservePercent?: Prisma.FloatNullableFilter<"FinanceSettings"> | number | null
   revenueBasis?: Prisma.EnumFinanceRevenueBasisFilter<"FinanceSettings"> | $Enums.FinanceRevenueBasis
   includeUnpaidInvoices?: Prisma.BoolFilter<"FinanceSettings"> | boolean
   defaultPeriodPreset?: Prisma.StringFilter<"FinanceSettings"> | string
@@ -310,6 +350,10 @@ export type FinanceSettingsWhereInput = {
   lowExpenseRatioThreshold?: Prisma.FloatFilter<"FinanceSettings"> | number
   highRevenueThreshold?: Prisma.FloatFilter<"FinanceSettings"> | number
   lowLiquidityWarningThreshold?: Prisma.FloatNullableFilter<"FinanceSettings"> | number | null
+  vatRegistered?: Prisma.BoolFilter<"FinanceSettings"> | boolean
+  kleinunternehmer?: Prisma.BoolFilter<"FinanceSettings"> | boolean
+  hasTaxAdvisor?: Prisma.BoolFilter<"FinanceSettings"> | boolean
+  profileNote?: Prisma.StringNullableFilter<"FinanceSettings"> | string | null
   createdAt?: Prisma.DateTimeFilter<"FinanceSettings"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"FinanceSettings"> | Date | string
   tenant?: Prisma.XOR<Prisma.TenantScalarRelationFilter, Prisma.TenantWhereInput>
@@ -319,6 +363,7 @@ export type FinanceSettingsOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   tenantId?: Prisma.SortOrder
   estimatedTaxRate?: Prisma.SortOrder
+  reservePercent?: Prisma.SortOrderInput | Prisma.SortOrder
   revenueBasis?: Prisma.SortOrder
   includeUnpaidInvoices?: Prisma.SortOrder
   defaultPeriodPreset?: Prisma.SortOrder
@@ -328,6 +373,10 @@ export type FinanceSettingsOrderByWithRelationInput = {
   lowExpenseRatioThreshold?: Prisma.SortOrder
   highRevenueThreshold?: Prisma.SortOrder
   lowLiquidityWarningThreshold?: Prisma.SortOrderInput | Prisma.SortOrder
+  vatRegistered?: Prisma.SortOrder
+  kleinunternehmer?: Prisma.SortOrder
+  hasTaxAdvisor?: Prisma.SortOrder
+  profileNote?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   tenant?: Prisma.TenantOrderByWithRelationInput
@@ -340,6 +389,7 @@ export type FinanceSettingsWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.FinanceSettingsWhereInput[]
   NOT?: Prisma.FinanceSettingsWhereInput | Prisma.FinanceSettingsWhereInput[]
   estimatedTaxRate?: Prisma.FloatFilter<"FinanceSettings"> | number
+  reservePercent?: Prisma.FloatNullableFilter<"FinanceSettings"> | number | null
   revenueBasis?: Prisma.EnumFinanceRevenueBasisFilter<"FinanceSettings"> | $Enums.FinanceRevenueBasis
   includeUnpaidInvoices?: Prisma.BoolFilter<"FinanceSettings"> | boolean
   defaultPeriodPreset?: Prisma.StringFilter<"FinanceSettings"> | string
@@ -349,6 +399,10 @@ export type FinanceSettingsWhereUniqueInput = Prisma.AtLeast<{
   lowExpenseRatioThreshold?: Prisma.FloatFilter<"FinanceSettings"> | number
   highRevenueThreshold?: Prisma.FloatFilter<"FinanceSettings"> | number
   lowLiquidityWarningThreshold?: Prisma.FloatNullableFilter<"FinanceSettings"> | number | null
+  vatRegistered?: Prisma.BoolFilter<"FinanceSettings"> | boolean
+  kleinunternehmer?: Prisma.BoolFilter<"FinanceSettings"> | boolean
+  hasTaxAdvisor?: Prisma.BoolFilter<"FinanceSettings"> | boolean
+  profileNote?: Prisma.StringNullableFilter<"FinanceSettings"> | string | null
   createdAt?: Prisma.DateTimeFilter<"FinanceSettings"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"FinanceSettings"> | Date | string
   tenant?: Prisma.XOR<Prisma.TenantScalarRelationFilter, Prisma.TenantWhereInput>
@@ -358,6 +412,7 @@ export type FinanceSettingsOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   tenantId?: Prisma.SortOrder
   estimatedTaxRate?: Prisma.SortOrder
+  reservePercent?: Prisma.SortOrderInput | Prisma.SortOrder
   revenueBasis?: Prisma.SortOrder
   includeUnpaidInvoices?: Prisma.SortOrder
   defaultPeriodPreset?: Prisma.SortOrder
@@ -367,6 +422,10 @@ export type FinanceSettingsOrderByWithAggregationInput = {
   lowExpenseRatioThreshold?: Prisma.SortOrder
   highRevenueThreshold?: Prisma.SortOrder
   lowLiquidityWarningThreshold?: Prisma.SortOrderInput | Prisma.SortOrder
+  vatRegistered?: Prisma.SortOrder
+  kleinunternehmer?: Prisma.SortOrder
+  hasTaxAdvisor?: Prisma.SortOrder
+  profileNote?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.FinanceSettingsCountOrderByAggregateInput
@@ -383,6 +442,7 @@ export type FinanceSettingsScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"FinanceSettings"> | string
   tenantId?: Prisma.StringWithAggregatesFilter<"FinanceSettings"> | string
   estimatedTaxRate?: Prisma.FloatWithAggregatesFilter<"FinanceSettings"> | number
+  reservePercent?: Prisma.FloatNullableWithAggregatesFilter<"FinanceSettings"> | number | null
   revenueBasis?: Prisma.EnumFinanceRevenueBasisWithAggregatesFilter<"FinanceSettings"> | $Enums.FinanceRevenueBasis
   includeUnpaidInvoices?: Prisma.BoolWithAggregatesFilter<"FinanceSettings"> | boolean
   defaultPeriodPreset?: Prisma.StringWithAggregatesFilter<"FinanceSettings"> | string
@@ -392,6 +452,10 @@ export type FinanceSettingsScalarWhereWithAggregatesInput = {
   lowExpenseRatioThreshold?: Prisma.FloatWithAggregatesFilter<"FinanceSettings"> | number
   highRevenueThreshold?: Prisma.FloatWithAggregatesFilter<"FinanceSettings"> | number
   lowLiquidityWarningThreshold?: Prisma.FloatNullableWithAggregatesFilter<"FinanceSettings"> | number | null
+  vatRegistered?: Prisma.BoolWithAggregatesFilter<"FinanceSettings"> | boolean
+  kleinunternehmer?: Prisma.BoolWithAggregatesFilter<"FinanceSettings"> | boolean
+  hasTaxAdvisor?: Prisma.BoolWithAggregatesFilter<"FinanceSettings"> | boolean
+  profileNote?: Prisma.StringNullableWithAggregatesFilter<"FinanceSettings"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"FinanceSettings"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"FinanceSettings"> | Date | string
 }
@@ -399,6 +463,7 @@ export type FinanceSettingsScalarWhereWithAggregatesInput = {
 export type FinanceSettingsCreateInput = {
   id?: string
   estimatedTaxRate?: number
+  reservePercent?: number | null
   revenueBasis?: $Enums.FinanceRevenueBasis
   includeUnpaidInvoices?: boolean
   defaultPeriodPreset?: string
@@ -408,6 +473,10 @@ export type FinanceSettingsCreateInput = {
   lowExpenseRatioThreshold?: number
   highRevenueThreshold?: number
   lowLiquidityWarningThreshold?: number | null
+  vatRegistered?: boolean
+  kleinunternehmer?: boolean
+  hasTaxAdvisor?: boolean
+  profileNote?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutFinanceSettingsInput
@@ -417,6 +486,7 @@ export type FinanceSettingsUncheckedCreateInput = {
   id?: string
   tenantId: string
   estimatedTaxRate?: number
+  reservePercent?: number | null
   revenueBasis?: $Enums.FinanceRevenueBasis
   includeUnpaidInvoices?: boolean
   defaultPeriodPreset?: string
@@ -426,6 +496,10 @@ export type FinanceSettingsUncheckedCreateInput = {
   lowExpenseRatioThreshold?: number
   highRevenueThreshold?: number
   lowLiquidityWarningThreshold?: number | null
+  vatRegistered?: boolean
+  kleinunternehmer?: boolean
+  hasTaxAdvisor?: boolean
+  profileNote?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -433,6 +507,7 @@ export type FinanceSettingsUncheckedCreateInput = {
 export type FinanceSettingsUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   estimatedTaxRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  reservePercent?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   revenueBasis?: Prisma.EnumFinanceRevenueBasisFieldUpdateOperationsInput | $Enums.FinanceRevenueBasis
   includeUnpaidInvoices?: Prisma.BoolFieldUpdateOperationsInput | boolean
   defaultPeriodPreset?: Prisma.StringFieldUpdateOperationsInput | string
@@ -442,6 +517,10 @@ export type FinanceSettingsUpdateInput = {
   lowExpenseRatioThreshold?: Prisma.FloatFieldUpdateOperationsInput | number
   highRevenueThreshold?: Prisma.FloatFieldUpdateOperationsInput | number
   lowLiquidityWarningThreshold?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  vatRegistered?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  kleinunternehmer?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hasTaxAdvisor?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profileNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutFinanceSettingsNestedInput
@@ -451,6 +530,7 @@ export type FinanceSettingsUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   estimatedTaxRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  reservePercent?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   revenueBasis?: Prisma.EnumFinanceRevenueBasisFieldUpdateOperationsInput | $Enums.FinanceRevenueBasis
   includeUnpaidInvoices?: Prisma.BoolFieldUpdateOperationsInput | boolean
   defaultPeriodPreset?: Prisma.StringFieldUpdateOperationsInput | string
@@ -460,6 +540,10 @@ export type FinanceSettingsUncheckedUpdateInput = {
   lowExpenseRatioThreshold?: Prisma.FloatFieldUpdateOperationsInput | number
   highRevenueThreshold?: Prisma.FloatFieldUpdateOperationsInput | number
   lowLiquidityWarningThreshold?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  vatRegistered?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  kleinunternehmer?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hasTaxAdvisor?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profileNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -468,6 +552,7 @@ export type FinanceSettingsCreateManyInput = {
   id?: string
   tenantId: string
   estimatedTaxRate?: number
+  reservePercent?: number | null
   revenueBasis?: $Enums.FinanceRevenueBasis
   includeUnpaidInvoices?: boolean
   defaultPeriodPreset?: string
@@ -477,6 +562,10 @@ export type FinanceSettingsCreateManyInput = {
   lowExpenseRatioThreshold?: number
   highRevenueThreshold?: number
   lowLiquidityWarningThreshold?: number | null
+  vatRegistered?: boolean
+  kleinunternehmer?: boolean
+  hasTaxAdvisor?: boolean
+  profileNote?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -484,6 +573,7 @@ export type FinanceSettingsCreateManyInput = {
 export type FinanceSettingsUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   estimatedTaxRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  reservePercent?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   revenueBasis?: Prisma.EnumFinanceRevenueBasisFieldUpdateOperationsInput | $Enums.FinanceRevenueBasis
   includeUnpaidInvoices?: Prisma.BoolFieldUpdateOperationsInput | boolean
   defaultPeriodPreset?: Prisma.StringFieldUpdateOperationsInput | string
@@ -493,6 +583,10 @@ export type FinanceSettingsUpdateManyMutationInput = {
   lowExpenseRatioThreshold?: Prisma.FloatFieldUpdateOperationsInput | number
   highRevenueThreshold?: Prisma.FloatFieldUpdateOperationsInput | number
   lowLiquidityWarningThreshold?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  vatRegistered?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  kleinunternehmer?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hasTaxAdvisor?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profileNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -501,6 +595,7 @@ export type FinanceSettingsUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   estimatedTaxRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  reservePercent?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   revenueBasis?: Prisma.EnumFinanceRevenueBasisFieldUpdateOperationsInput | $Enums.FinanceRevenueBasis
   includeUnpaidInvoices?: Prisma.BoolFieldUpdateOperationsInput | boolean
   defaultPeriodPreset?: Prisma.StringFieldUpdateOperationsInput | string
@@ -510,6 +605,10 @@ export type FinanceSettingsUncheckedUpdateManyInput = {
   lowExpenseRatioThreshold?: Prisma.FloatFieldUpdateOperationsInput | number
   highRevenueThreshold?: Prisma.FloatFieldUpdateOperationsInput | number
   lowLiquidityWarningThreshold?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  vatRegistered?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  kleinunternehmer?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hasTaxAdvisor?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profileNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -523,6 +622,7 @@ export type FinanceSettingsCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   tenantId?: Prisma.SortOrder
   estimatedTaxRate?: Prisma.SortOrder
+  reservePercent?: Prisma.SortOrder
   revenueBasis?: Prisma.SortOrder
   includeUnpaidInvoices?: Prisma.SortOrder
   defaultPeriodPreset?: Prisma.SortOrder
@@ -532,12 +632,17 @@ export type FinanceSettingsCountOrderByAggregateInput = {
   lowExpenseRatioThreshold?: Prisma.SortOrder
   highRevenueThreshold?: Prisma.SortOrder
   lowLiquidityWarningThreshold?: Prisma.SortOrder
+  vatRegistered?: Prisma.SortOrder
+  kleinunternehmer?: Prisma.SortOrder
+  hasTaxAdvisor?: Prisma.SortOrder
+  profileNote?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
 export type FinanceSettingsAvgOrderByAggregateInput = {
   estimatedTaxRate?: Prisma.SortOrder
+  reservePercent?: Prisma.SortOrder
   monthlyProfitTargetNet?: Prisma.SortOrder
   highProfitWarningThreshold?: Prisma.SortOrder
   profitSpikeFactor?: Prisma.SortOrder
@@ -550,6 +655,7 @@ export type FinanceSettingsMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   tenantId?: Prisma.SortOrder
   estimatedTaxRate?: Prisma.SortOrder
+  reservePercent?: Prisma.SortOrder
   revenueBasis?: Prisma.SortOrder
   includeUnpaidInvoices?: Prisma.SortOrder
   defaultPeriodPreset?: Prisma.SortOrder
@@ -559,6 +665,10 @@ export type FinanceSettingsMaxOrderByAggregateInput = {
   lowExpenseRatioThreshold?: Prisma.SortOrder
   highRevenueThreshold?: Prisma.SortOrder
   lowLiquidityWarningThreshold?: Prisma.SortOrder
+  vatRegistered?: Prisma.SortOrder
+  kleinunternehmer?: Prisma.SortOrder
+  hasTaxAdvisor?: Prisma.SortOrder
+  profileNote?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -567,6 +677,7 @@ export type FinanceSettingsMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   tenantId?: Prisma.SortOrder
   estimatedTaxRate?: Prisma.SortOrder
+  reservePercent?: Prisma.SortOrder
   revenueBasis?: Prisma.SortOrder
   includeUnpaidInvoices?: Prisma.SortOrder
   defaultPeriodPreset?: Prisma.SortOrder
@@ -576,12 +687,17 @@ export type FinanceSettingsMinOrderByAggregateInput = {
   lowExpenseRatioThreshold?: Prisma.SortOrder
   highRevenueThreshold?: Prisma.SortOrder
   lowLiquidityWarningThreshold?: Prisma.SortOrder
+  vatRegistered?: Prisma.SortOrder
+  kleinunternehmer?: Prisma.SortOrder
+  hasTaxAdvisor?: Prisma.SortOrder
+  profileNote?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
 export type FinanceSettingsSumOrderByAggregateInput = {
   estimatedTaxRate?: Prisma.SortOrder
+  reservePercent?: Prisma.SortOrder
   monthlyProfitTargetNet?: Prisma.SortOrder
   highProfitWarningThreshold?: Prisma.SortOrder
   profitSpikeFactor?: Prisma.SortOrder
@@ -629,6 +745,7 @@ export type EnumFinanceRevenueBasisFieldUpdateOperationsInput = {
 export type FinanceSettingsCreateWithoutTenantInput = {
   id?: string
   estimatedTaxRate?: number
+  reservePercent?: number | null
   revenueBasis?: $Enums.FinanceRevenueBasis
   includeUnpaidInvoices?: boolean
   defaultPeriodPreset?: string
@@ -638,6 +755,10 @@ export type FinanceSettingsCreateWithoutTenantInput = {
   lowExpenseRatioThreshold?: number
   highRevenueThreshold?: number
   lowLiquidityWarningThreshold?: number | null
+  vatRegistered?: boolean
+  kleinunternehmer?: boolean
+  hasTaxAdvisor?: boolean
+  profileNote?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -645,6 +766,7 @@ export type FinanceSettingsCreateWithoutTenantInput = {
 export type FinanceSettingsUncheckedCreateWithoutTenantInput = {
   id?: string
   estimatedTaxRate?: number
+  reservePercent?: number | null
   revenueBasis?: $Enums.FinanceRevenueBasis
   includeUnpaidInvoices?: boolean
   defaultPeriodPreset?: string
@@ -654,6 +776,10 @@ export type FinanceSettingsUncheckedCreateWithoutTenantInput = {
   lowExpenseRatioThreshold?: number
   highRevenueThreshold?: number
   lowLiquidityWarningThreshold?: number | null
+  vatRegistered?: boolean
+  kleinunternehmer?: boolean
+  hasTaxAdvisor?: boolean
+  profileNote?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -677,6 +803,7 @@ export type FinanceSettingsUpdateToOneWithWhereWithoutTenantInput = {
 export type FinanceSettingsUpdateWithoutTenantInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   estimatedTaxRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  reservePercent?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   revenueBasis?: Prisma.EnumFinanceRevenueBasisFieldUpdateOperationsInput | $Enums.FinanceRevenueBasis
   includeUnpaidInvoices?: Prisma.BoolFieldUpdateOperationsInput | boolean
   defaultPeriodPreset?: Prisma.StringFieldUpdateOperationsInput | string
@@ -686,6 +813,10 @@ export type FinanceSettingsUpdateWithoutTenantInput = {
   lowExpenseRatioThreshold?: Prisma.FloatFieldUpdateOperationsInput | number
   highRevenueThreshold?: Prisma.FloatFieldUpdateOperationsInput | number
   lowLiquidityWarningThreshold?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  vatRegistered?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  kleinunternehmer?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hasTaxAdvisor?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profileNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -693,6 +824,7 @@ export type FinanceSettingsUpdateWithoutTenantInput = {
 export type FinanceSettingsUncheckedUpdateWithoutTenantInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   estimatedTaxRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  reservePercent?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   revenueBasis?: Prisma.EnumFinanceRevenueBasisFieldUpdateOperationsInput | $Enums.FinanceRevenueBasis
   includeUnpaidInvoices?: Prisma.BoolFieldUpdateOperationsInput | boolean
   defaultPeriodPreset?: Prisma.StringFieldUpdateOperationsInput | string
@@ -702,6 +834,10 @@ export type FinanceSettingsUncheckedUpdateWithoutTenantInput = {
   lowExpenseRatioThreshold?: Prisma.FloatFieldUpdateOperationsInput | number
   highRevenueThreshold?: Prisma.FloatFieldUpdateOperationsInput | number
   lowLiquidityWarningThreshold?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  vatRegistered?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  kleinunternehmer?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hasTaxAdvisor?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profileNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -712,6 +848,7 @@ export type FinanceSettingsSelect<ExtArgs extends runtime.Types.Extensions.Inter
   id?: boolean
   tenantId?: boolean
   estimatedTaxRate?: boolean
+  reservePercent?: boolean
   revenueBasis?: boolean
   includeUnpaidInvoices?: boolean
   defaultPeriodPreset?: boolean
@@ -721,6 +858,10 @@ export type FinanceSettingsSelect<ExtArgs extends runtime.Types.Extensions.Inter
   lowExpenseRatioThreshold?: boolean
   highRevenueThreshold?: boolean
   lowLiquidityWarningThreshold?: boolean
+  vatRegistered?: boolean
+  kleinunternehmer?: boolean
+  hasTaxAdvisor?: boolean
+  profileNote?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
@@ -730,6 +871,7 @@ export type FinanceSettingsSelectCreateManyAndReturn<ExtArgs extends runtime.Typ
   id?: boolean
   tenantId?: boolean
   estimatedTaxRate?: boolean
+  reservePercent?: boolean
   revenueBasis?: boolean
   includeUnpaidInvoices?: boolean
   defaultPeriodPreset?: boolean
@@ -739,6 +881,10 @@ export type FinanceSettingsSelectCreateManyAndReturn<ExtArgs extends runtime.Typ
   lowExpenseRatioThreshold?: boolean
   highRevenueThreshold?: boolean
   lowLiquidityWarningThreshold?: boolean
+  vatRegistered?: boolean
+  kleinunternehmer?: boolean
+  hasTaxAdvisor?: boolean
+  profileNote?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
@@ -748,6 +894,7 @@ export type FinanceSettingsSelectUpdateManyAndReturn<ExtArgs extends runtime.Typ
   id?: boolean
   tenantId?: boolean
   estimatedTaxRate?: boolean
+  reservePercent?: boolean
   revenueBasis?: boolean
   includeUnpaidInvoices?: boolean
   defaultPeriodPreset?: boolean
@@ -757,6 +904,10 @@ export type FinanceSettingsSelectUpdateManyAndReturn<ExtArgs extends runtime.Typ
   lowExpenseRatioThreshold?: boolean
   highRevenueThreshold?: boolean
   lowLiquidityWarningThreshold?: boolean
+  vatRegistered?: boolean
+  kleinunternehmer?: boolean
+  hasTaxAdvisor?: boolean
+  profileNote?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
@@ -766,6 +917,7 @@ export type FinanceSettingsSelectScalar = {
   id?: boolean
   tenantId?: boolean
   estimatedTaxRate?: boolean
+  reservePercent?: boolean
   revenueBasis?: boolean
   includeUnpaidInvoices?: boolean
   defaultPeriodPreset?: boolean
@@ -775,11 +927,15 @@ export type FinanceSettingsSelectScalar = {
   lowExpenseRatioThreshold?: boolean
   highRevenueThreshold?: boolean
   lowLiquidityWarningThreshold?: boolean
+  vatRegistered?: boolean
+  kleinunternehmer?: boolean
+  hasTaxAdvisor?: boolean
+  profileNote?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type FinanceSettingsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "estimatedTaxRate" | "revenueBasis" | "includeUnpaidInvoices" | "defaultPeriodPreset" | "monthlyProfitTargetNet" | "highProfitWarningThreshold" | "profitSpikeFactor" | "lowExpenseRatioThreshold" | "highRevenueThreshold" | "lowLiquidityWarningThreshold" | "createdAt" | "updatedAt", ExtArgs["result"]["financeSettings"]>
+export type FinanceSettingsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "estimatedTaxRate" | "reservePercent" | "revenueBasis" | "includeUnpaidInvoices" | "defaultPeriodPreset" | "monthlyProfitTargetNet" | "highProfitWarningThreshold" | "profitSpikeFactor" | "lowExpenseRatioThreshold" | "highRevenueThreshold" | "lowLiquidityWarningThreshold" | "vatRegistered" | "kleinunternehmer" | "hasTaxAdvisor" | "profileNote" | "createdAt" | "updatedAt", ExtArgs["result"]["financeSettings"]>
 export type FinanceSettingsInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
 }
@@ -802,6 +958,10 @@ export type $FinanceSettingsPayload<ExtArgs extends runtime.Types.Extensions.Int
      * * Geschätzter Steuersatz in % (unverbindlich)
      */
     estimatedTaxRate: number
+    /**
+     * * Gewünschter Rücklagenprozentsatz vom geschätzten Gewinn (unverbindlich; null = Steuersatz)
+     */
+    reservePercent: number | null
     revenueBasis: $Enums.FinanceRevenueBasis
     includeUnpaidInvoices: boolean
     /**
@@ -832,6 +992,22 @@ export type $FinanceSettingsPayload<ExtArgs extends runtime.Types.Extensions.Int
      * * Optionale Warnschwelle für niedrige Liquidität (offene Forderungen vs. Orientierung)
      */
     lowLiquidityWarningThreshold: number | null
+    /**
+     * * Umsatzsteuerpflicht (Orientierung)
+     */
+    vatRegistered: boolean
+    /**
+     * * Kleinunternehmerregelung (Orientierung)
+     */
+    kleinunternehmer: boolean
+    /**
+     * * Steuerberater vorhanden
+     */
+    hasTaxAdvisor: boolean
+    /**
+     * * Interne Notiz zum Finanzprofil
+     */
+    profileNote: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["financeSettings"]>
@@ -1261,6 +1437,7 @@ export interface FinanceSettingsFieldRefs {
   readonly id: Prisma.FieldRef<"FinanceSettings", 'String'>
   readonly tenantId: Prisma.FieldRef<"FinanceSettings", 'String'>
   readonly estimatedTaxRate: Prisma.FieldRef<"FinanceSettings", 'Float'>
+  readonly reservePercent: Prisma.FieldRef<"FinanceSettings", 'Float'>
   readonly revenueBasis: Prisma.FieldRef<"FinanceSettings", 'FinanceRevenueBasis'>
   readonly includeUnpaidInvoices: Prisma.FieldRef<"FinanceSettings", 'Boolean'>
   readonly defaultPeriodPreset: Prisma.FieldRef<"FinanceSettings", 'String'>
@@ -1270,6 +1447,10 @@ export interface FinanceSettingsFieldRefs {
   readonly lowExpenseRatioThreshold: Prisma.FieldRef<"FinanceSettings", 'Float'>
   readonly highRevenueThreshold: Prisma.FieldRef<"FinanceSettings", 'Float'>
   readonly lowLiquidityWarningThreshold: Prisma.FieldRef<"FinanceSettings", 'Float'>
+  readonly vatRegistered: Prisma.FieldRef<"FinanceSettings", 'Boolean'>
+  readonly kleinunternehmer: Prisma.FieldRef<"FinanceSettings", 'Boolean'>
+  readonly hasTaxAdvisor: Prisma.FieldRef<"FinanceSettings", 'Boolean'>
+  readonly profileNote: Prisma.FieldRef<"FinanceSettings", 'String'>
   readonly createdAt: Prisma.FieldRef<"FinanceSettings", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"FinanceSettings", 'DateTime'>
 }

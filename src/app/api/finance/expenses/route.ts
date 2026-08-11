@@ -4,6 +4,11 @@ import { requireAuth, apiSuccess, apiError, NO_STORE_HEADERS } from "@/lib/api";
 import { expenseInputSchema } from "@/lib/finance/schemas";
 import { toExpenseDTO } from "@/lib/finance/overview";
 import { parseLocalDateInput } from "@/lib/finance/period";
+import {
+  mapExpensePrismaError,
+  parseExpenseDate,
+  resolveExpenseRelations,
+} from "@/lib/finance/expense-persist";
 import type { ExpenseCategory, Prisma } from "@/generated/prisma/client";
 
 export async function GET(request: NextRequest) {
@@ -35,18 +40,16 @@ export async function GET(request: NextRequest) {
   }
   if (category) where.category = category as ExpenseCategory;
 
-  const expenses = await prisma.expense.findMany({
-    where,
-    orderBy: { expenseDate: "desc" },
-  });
-
-  return apiSuccess(expenses.map(toExpenseDTO), 200, NO_STORE_HEADERS);
-}
-
-function parseExpenseDate(value: string): Date {
-  const local = parseLocalDateInput(value);
-  // Mittag lokal speichern, damit UTC-Verschiebungen den Kalendertag nicht ändern
-  return new Date(local.getFullYear(), local.getMonth(), local.getDate(), 12, 0, 0, 0);
+  try {
+    const expenses = await prisma.expense.findMany({
+      where,
+      orderBy: { expenseDate: "desc" },
+    });
+    return apiSuccess(expenses.map(toExpenseDTO), 200, NO_STORE_HEADERS);
+  } catch (err) {
+    console.error("[finance/expenses GET]", err);
+    return apiError(mapExpensePrismaError(err), 500);
+  }
 }
 
 export async function POST(request: NextRequest) {
@@ -59,34 +62,45 @@ export async function POST(request: NextRequest) {
     return handleMultipartCreate(request, auth.tenantId, auth.id);
   }
 
-  const body = await request.json();
+  let body: unknown;
+  try {
+    body = await request.json();
+  } catch {
+    return apiError("Ungültige JSON-Daten");
+  }
+
   const parsed = expenseInputSchema.safeParse(body);
   if (!parsed.success) {
     return apiError(parsed.error.issues[0]?.message ?? "Ungültige Eingabe");
   }
 
   const data = parsed.data;
-  const expense = await prisma.expense.create({
-    data: {
-      tenantId: auth.tenantId,
-      category: data.category,
-      description: data.description,
-      netAmount: data.netAmount,
-      vatAmount: data.vatAmount,
-      grossAmount: data.grossAmount,
-      expenseDate: parseExpenseDate(data.expenseDate),
-      paymentStatus: data.paymentStatus,
-      supplier: data.supplier ?? null,
-      orderId: data.orderId || null,
-      customerId: data.customerId || null,
-      projectId: data.projectId || null,
-      internalNote: data.internalNote ?? null,
-      isInvestment: data.isInvestment,
-      createdById: auth.id,
-    },
-  });
-
-  return apiSuccess(toExpenseDTO(expense), 201, NO_STORE_HEADERS);
+  try {
+    const refs = await resolveExpenseRelations(auth.tenantId, data);
+    const expense = await prisma.expense.create({
+      data: {
+        tenantId: auth.tenantId,
+        category: data.category,
+        description: data.description,
+        netAmount: data.netAmount,
+        vatAmount: data.vatAmount,
+        grossAmount: data.grossAmount,
+        expenseDate: parseExpenseDate(data.expenseDate),
+        paymentStatus: data.paymentStatus,
+        supplier: data.supplier?.trim() || null,
+        orderId: refs.orderId,
+        customerId: refs.customerId,
+        projectId: refs.projectId,
+        internalNote: data.internalNote?.trim() || null,
+        isInvestment: data.isInvestment,
+        createdById: auth.id,
+      },
+    });
+    return apiSuccess(toExpenseDTO(expense), 201, NO_STORE_HEADERS);
+  } catch (err) {
+    console.error("[finance/expenses POST]", err);
+    return apiError(mapExpensePrismaError(err), 500);
+  }
 }
 
 async function handleMultipartCreate(
@@ -129,7 +143,6 @@ async function handleMultipartCreate(
     if (!validation.ok) return apiError(validation.error);
 
     if (!isStorageConfigured()) {
-      // Ausgabe trotzdem speichern — Beleg kann später nachgereicht werden
       receiptWarning =
         "Ausgabe gespeichert, aber Beleg konnte nicht hochgeladen werden (Datei-Speicher nicht konfiguriert).";
     } else {
@@ -151,30 +164,36 @@ async function handleMultipartCreate(
   }
 
   const data = parsed.data;
-  const expense = await prisma.expense.create({
-    data: {
-      tenantId,
-      category: data.category,
-      description: data.description,
-      netAmount: data.netAmount,
-      vatAmount: data.vatAmount,
-      grossAmount: data.grossAmount,
-      expenseDate: parseExpenseDate(data.expenseDate),
-      paymentStatus: data.paymentStatus,
-      supplier: data.supplier ?? null,
-      orderId: data.orderId || null,
-      customerId: data.customerId || null,
-      projectId: data.projectId || null,
-      internalNote: data.internalNote ?? null,
-      isInvestment: data.isInvestment,
-      createdById: userId,
-      ...receiptFields,
-    },
-  });
+  try {
+    const refs = await resolveExpenseRelations(tenantId, data);
+    const expense = await prisma.expense.create({
+      data: {
+        tenantId,
+        category: data.category,
+        description: data.description,
+        netAmount: data.netAmount,
+        vatAmount: data.vatAmount,
+        grossAmount: data.grossAmount,
+        expenseDate: parseExpenseDate(data.expenseDate),
+        paymentStatus: data.paymentStatus,
+        supplier: data.supplier?.trim() || null,
+        orderId: refs.orderId,
+        customerId: refs.customerId,
+        projectId: refs.projectId,
+        internalNote: data.internalNote?.trim() || null,
+        isInvestment: data.isInvestment,
+        createdById: userId,
+        ...receiptFields,
+      },
+    });
 
-  const dto = toExpenseDTO(expense);
-  if (receiptWarning) {
-    return apiSuccess({ ...dto, receiptWarning }, 201, NO_STORE_HEADERS);
+    const dto = toExpenseDTO(expense);
+    if (receiptWarning) {
+      return apiSuccess({ ...dto, receiptWarning }, 201, NO_STORE_HEADERS);
+    }
+    return apiSuccess(dto, 201, NO_STORE_HEADERS);
+  } catch (err) {
+    console.error("[finance/expenses multipart POST]", err);
+    return apiError(mapExpensePrismaError(err), 500);
   }
-  return apiSuccess(dto, 201, NO_STORE_HEADERS);
 }

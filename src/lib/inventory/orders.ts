@@ -222,8 +222,25 @@ export async function createOrderWithWizardData(
     confirmMaterial?: boolean;
     /** Wenn gesetzt (auch leeres Array): ersetzt die automatische Stücklisten-Erzeugung. */
     materialLines?: OrderMaterialLineInput[];
+    useFixedPrice?: boolean;
+    fixedPriceNet?: number | null;
+    fixedPriceLabel?: string | null;
+    fixedPriceDisplayMode?: string | null;
   }
 ) {
+  const { normalizeFixedPriceFields, suggestFixedPriceLabel } = await import(
+    "@/lib/calculation/fixed-price"
+  );
+  const fixedPrice = normalizeFixedPriceFields({
+    useFixedPrice: data.useFixedPrice,
+    fixedPriceNet: data.fixedPriceNet,
+    fixedPriceLabel: data.fixedPriceLabel,
+    fixedPriceDisplayMode: data.fixedPriceDisplayMode,
+    fallbackLabel: suggestFixedPriceLabel(data.title),
+  });
+  if ("error" in fixedPrice) {
+    throw new Error(fixedPrice.error);
+  }
   const { generateOrderNumber } = await import("@/lib/utils");
 
   const typeAssignment = await resolveOrderTypeAssignment(tenantId, {
@@ -281,6 +298,10 @@ export async function createOrderWithWizardData(
       status: data.scheduledStart ? "EINGEPLANT" : "NEUE_ANFRAGE",
       scheduledStart: data.scheduledStart ? new Date(data.scheduledStart) : undefined,
       scheduledEnd: data.scheduledEnd ? new Date(data.scheduledEnd) : undefined,
+      useFixedPrice: fixedPrice.useFixedPrice,
+      fixedPriceNet: fixedPrice.fixedPriceNet,
+      fixedPriceLabel: fixedPrice.fixedPriceLabel,
+      fixedPriceDisplayMode: fixedPrice.fixedPriceDisplayMode,
       services: {
         create: [
           ...data.serviceIds.map((serviceId) => ({ serviceId })),
@@ -390,6 +411,12 @@ export async function createOrderWithWizardData(
         status: "GEPLANT",
       },
     });
+  }
+
+  // Bei Festpreis sofort Kalkulation anlegen (Positionen bleiben intern erhalten).
+  if (fixedPrice.useFixedPrice) {
+    const { createCalculationFromOrder } = await import("@/lib/calculation/build-from-order");
+    await createCalculationFromOrder(tenantId, order.id);
   }
 
   return prisma.order.findUnique({

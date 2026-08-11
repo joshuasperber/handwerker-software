@@ -23,6 +23,10 @@ export async function GET(
       status: true,
       netSalesPrice: true,
       grossSalesPrice: true,
+      useFixedPrice: true,
+      fixedPriceNet: true,
+      fixedPriceLabel: true,
+      fixedPriceDisplayMode: true,
       updatedAt: true,
     },
   });

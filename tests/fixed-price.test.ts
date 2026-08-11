@@ -4,6 +4,8 @@ import {
   compareFixedPrice,
   resolveFixedPriceLabel,
   DEFAULT_FIXED_PRICE_LABEL,
+  buildFixedPriceDocumentLines,
+  resolveFixedPriceDisplayMode,
 } from "../src/lib/calculation/fixed-price";
 import { getVisibleLineItems } from "../src/lib/documents/line-items";
 import type { DocumentCalcInput } from "../src/lib/documents/build-document-html";
@@ -25,7 +27,7 @@ function baseCalc(overrides: Partial<DocumentCalcInput> = {}): DocumentCalcInput
     riskAmount: 0,
     profitAmount: 0,
     laborItems: [
-      { description: "Arbeitszeit", totalNet: 250, isVisibleToCustomer: true },
+      { description: "Montagearbeiten", totalNet: 250, isVisibleToCustomer: true },
     ],
     materialItems: [
       { name: "Tür", totalSalesNet: 100, isVisibleToCustomer: true },
@@ -39,7 +41,7 @@ function baseCalc(overrides: Partial<DocumentCalcInput> = {}): DocumentCalcInput
 }
 
 describe("Festpreis – Vergleich", () => {
-  it("liefert Default-Label Festpreis", () => {
+  it("liefert Default-Label Pauschalpreis", () => {
     assert.equal(resolveFixedPriceLabel(null), DEFAULT_FIXED_PRICE_LABEL);
     assert.equal(resolveFixedPriceLabel("  Pauschalpreis  "), "Pauschalpreis");
   });
@@ -48,7 +50,7 @@ describe("Festpreis – Vergleich", () => {
     const c = compareFixedPrice({
       useFixedPrice: true,
       fixedPriceNet: 500,
-      fixedPriceLabel: "Festpreis",
+      fixedPriceLabel: "Pauschalpreis für Türmontage inklusive Material",
       calculatedNet: 400,
       profitAmount: 50,
       directCosts: 350,
@@ -78,20 +80,53 @@ describe("Festpreis – Dokumentpositionen", () => {
     const lines = getVisibleLineItems(
       baseCalc({
         useFixedPrice: true,
-        fixedPriceLabel: "Festpreis",
+        fixedPriceLabel: "Pauschalpreis für Türmontage inklusive Material",
+        fixedPriceDisplayMode: "SINGLE_LINE",
         netSalesPrice: 500,
         calculatedNetSalesPrice: 400,
       })
     );
     assert.equal(lines.length, 1);
     assert.equal(lines[0].amount, 500);
-    assert.match(lines[0].label, /^Festpreis –/);
+    assert.match(lines[0].label, /Pauschalpreis für Türmontage/);
+  });
+
+  it("zeigt Positionen mit Preisen und Ausgleich zum Festpreis", () => {
+    const lines = buildFixedPriceDocumentLines({
+      fixedPriceNet: 500,
+      fixedPriceLabel: "Pauschalpreis",
+      fixedPriceDisplayMode: "POSITIONS_WITH_PRICES",
+      source: baseCalc(),
+    });
+    assert.ok(lines.some((l) => l.label === "Montagearbeiten"));
+    assert.ok(lines.some((l) => l.label === "Tür"));
+    const sum = lines.reduce((s, l) => s + (l.amount ?? 0), 0);
+    assert.equal(sum, 500);
+  });
+
+  it("zeigt Positionen ohne Einzelpreise und Festpreis gesamt", () => {
+    const lines = buildFixedPriceDocumentLines({
+      fixedPriceNet: 1250,
+      fixedPriceLabel: "Pauschale für Lieferung und Montage",
+      fixedPriceDisplayMode: "DESCRIPTION_ONLY",
+      source: baseCalc(),
+    });
+    assert.ok(lines.some((l) => l.label === "Montagearbeiten" && l.amount == null));
+    const total = lines.find((l) => l.emphasis);
+    assert.ok(total);
+    assert.equal(total?.amount, 1250);
+    assert.match(total!.label, /Festpreis gesamt/);
   });
 
   it("ohne Festpreis bleiben Einzelpositionen sichtbar", () => {
     const lines = getVisibleLineItems(baseCalc());
     assert.ok(lines.length >= 3);
-    assert.ok(lines.some((l) => l.label === "Arbeitszeit"));
+    assert.ok(lines.some((l) => l.label === "Montagearbeiten"));
     assert.ok(lines.some((l) => l.label === "Tür"));
+  });
+
+  it("normalisiert unbekannte Display-Modi", () => {
+    assert.equal(resolveFixedPriceDisplayMode("foo"), "SINGLE_LINE");
+    assert.equal(resolveFixedPriceDisplayMode("DESCRIPTION_ONLY"), "DESCRIPTION_ONLY");
   });
 });

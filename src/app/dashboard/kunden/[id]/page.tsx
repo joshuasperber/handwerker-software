@@ -7,6 +7,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { AddressFields } from "@/components/ui/address-fields";
 import { InfoButton } from "@/components/ui/info-button";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { toast } from "sonner";
@@ -66,7 +67,16 @@ interface CustomerDetail {
   orders: { id: string; orderNumber: string; status: string; createdAt: string }[];
 }
 
-const EMPTY_PROP = { label: "", street: "", zipCode: "", city: "", notes: "", travelZoneId: "" };
+const EMPTY_PROP = {
+  label: "",
+  street: "",
+  zipCode: "",
+  city: "",
+  notes: "",
+  travelZoneId: "",
+  latitude: null as number | null,
+  longitude: null as number | null,
+};
 
 export default function KundeDetailPage() {
   const { id } = useParams();
@@ -199,6 +209,8 @@ export default function KundeDetailPage() {
       city: p.city,
       notes: p.notes ?? "",
       travelZoneId: p.travelZoneId ?? "",
+      latitude: null,
+      longitude: null,
     });
   }
 
@@ -315,11 +327,21 @@ export default function KundeDetailPage() {
                   <Input label="Steuernummer" value={form.taxNumber} onChange={(e) => setForm({ ...form, taxNumber: e.target.value })} />
                 </div>
                 <p className="text-sm font-medium text-slate-700">Rechnungsadresse (optional, abweichend vom Einsatzort)</p>
-                <Input label="Straße" value={form.billingStreet} onChange={(e) => setForm({ ...form, billingStreet: e.target.value })} />
-                <div className="grid grid-cols-2 gap-3">
-                  <Input label="PLZ" value={form.billingZipCode} onChange={(e) => setForm({ ...form, billingZipCode: e.target.value })} />
-                  <Input label="Ort" value={form.billingCity} onChange={(e) => setForm({ ...form, billingCity: e.target.value })} />
-                </div>
+                <AddressFields
+                  value={{
+                    street: form.billingStreet,
+                    zipCode: form.billingZipCode,
+                    city: form.billingCity,
+                  }}
+                  onChange={(addr) =>
+                    setForm({
+                      ...form,
+                      billingStreet: addr.street,
+                      billingZipCode: addr.zipCode,
+                      billingCity: addr.city,
+                    })
+                  }
+                />
                 <Textarea label="Hinweise zur steuerlichen Behandlung" value={form.taxNotes} onChange={(e) => setForm({ ...form, taxNotes: e.target.value })} rows={2} />
               </>
             )}
@@ -396,11 +418,28 @@ export default function KundeDetailPage() {
                 {editPropId === p.id ? (
                   <div className="space-y-2">
                     <Input label="Bezeichnung" value={editProp.label} onChange={(e) => setEditProp({ ...editProp, label: e.target.value })} />
-                    <Input label="Straße" value={editProp.street} onChange={(e) => setEditProp({ ...editProp, street: e.target.value })} />
-                    <div className="grid grid-cols-2 gap-2">
-                      <Input label="PLZ" value={editProp.zipCode} onChange={(e) => setEditProp({ ...editProp, zipCode: e.target.value })} />
-                      <Input label="Ort" value={editProp.city} onChange={(e) => setEditProp({ ...editProp, city: e.target.value })} />
-                    </div>
+                    <AddressFields
+                      showNotes
+                      value={{
+                        street: editProp.street,
+                        zipCode: editProp.zipCode,
+                        city: editProp.city,
+                        notes: editProp.notes,
+                        latitude: editProp.latitude,
+                        longitude: editProp.longitude,
+                      }}
+                      onChange={(addr) =>
+                        setEditProp({
+                          ...editProp,
+                          street: addr.street,
+                          zipCode: addr.zipCode,
+                          city: addr.city,
+                          notes: addr.notes ?? "",
+                          latitude: addr.latitude ?? null,
+                          longitude: addr.longitude ?? null,
+                        })
+                      }
+                    />
                     <div>
                       <label className="text-sm font-medium">Anfahrtszone</label>
                       <select
@@ -471,11 +510,29 @@ export default function KundeDetailPage() {
               <form onSubmit={addProperty} className="mt-4 pt-4 border-t border-slate-100 space-y-2">
                 <p className="text-sm font-medium">Adresse hinzufügen</p>
                 <Input label="Bezeichnung" value={propertyForm.label} onChange={(e) => setPropertyForm({ ...propertyForm, label: e.target.value })} />
-                <Input label="Straße *" value={propertyForm.street} onChange={(e) => setPropertyForm({ ...propertyForm, street: e.target.value })} required />
-                <div className="grid grid-cols-2 gap-2">
-                  <Input label="PLZ *" value={propertyForm.zipCode} onChange={(e) => setPropertyForm({ ...propertyForm, zipCode: e.target.value })} required />
-                  <Input label="Ort *" value={propertyForm.city} onChange={(e) => setPropertyForm({ ...propertyForm, city: e.target.value })} required />
-                </div>
+                <AddressFields
+                  required
+                  showNotes
+                  value={{
+                    street: propertyForm.street,
+                    zipCode: propertyForm.zipCode,
+                    city: propertyForm.city,
+                    notes: propertyForm.notes,
+                    latitude: propertyForm.latitude,
+                    longitude: propertyForm.longitude,
+                  }}
+                  onChange={(addr) =>
+                    setPropertyForm({
+                      ...propertyForm,
+                      street: addr.street,
+                      zipCode: addr.zipCode,
+                      city: addr.city,
+                      notes: addr.notes ?? "",
+                      latitude: addr.latitude ?? null,
+                      longitude: addr.longitude ?? null,
+                    })
+                  }
+                />
                 <div>
                   <label className="text-sm font-medium">Anfahrtszone</label>
                   <select

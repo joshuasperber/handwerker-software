@@ -12,6 +12,7 @@ import { InfoButton } from "@/components/ui/info-button";
 import { SummaryPanel } from "@/components/calculation/summary-panel";
 import { PriceCompositionPanel } from "@/components/calculation/price-composition";
 import { FixedPriceEditor } from "@/components/calculation/fixed-price-editor";
+import { LaborEditor } from "@/components/calculation/labor-editor";
 import {
   InvoiceConflictDialog,
   type ExistingInvoiceInfo,
@@ -23,6 +24,7 @@ import { formatIssueDateInput } from "@/lib/documents/issue-date";
 import { Label } from "@/components/ui/label";
 import { RISK_PERCENT_BY_LEVEL } from "@/lib/calculation/formulas";
 import { formatEuro } from "@/lib/utils";
+import { usePermission } from "@/components/auth/can-access";
 import { ChevronLeft, ChevronRight, Save, FileText, Trash2, Package } from "lucide-react";
 import { toast } from "sonner";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
@@ -68,6 +70,8 @@ type InventoryArticleOption = {
 export default function KalkulationWizardPage() {
   const { id } = useParams();
   const searchParams = useSearchParams();
+  const canViewWages =
+    usePermission("employees.write") || usePermission("calculations.read");
   const [step, setStep] = useState(() => {
     const raw = Number(searchParams.get("step"));
     return Number.isFinite(raw) && raw >= 0 && raw < STEPS.length ? raw : 0;
@@ -380,12 +384,37 @@ export default function KalkulationWizardPage() {
           )}
 
           {step === 1 && (
-            <Card title="Arbeitskosten">
+            <Card title="Mitarbeiter & Arbeitszeit">
               <LaborEditor
                 items={calc.laborItems ?? []}
+                laborInvoiceMode={calc.laborInvoiceMode ?? "ITEMIZED"}
+                orderId={calc.orderId}
+                calculationId={String(id)}
+                canViewWages={canViewWages}
                 onChange={(items) => setCalc({ ...calc, laborItems: items })}
+                onLaborInvoiceModeChange={(mode) =>
+                  setCalc({ ...calc, laborInvoiceMode: mode })
+                }
+                onImported={(next) => {
+                  if (next && typeof next === "object") {
+                    setCalc(next as CalcData);
+                    toast.success("Stundenzettel übernommen");
+                  } else {
+                    load();
+                  }
+                }}
               />
-              <Button className="mt-4" variant="action" onClick={() => save({ laborItems: calc.laborItems })} disabled={saving}>
+              <Button
+                className="mt-4"
+                variant="action"
+                onClick={() =>
+                  save({
+                    laborItems: calc.laborItems,
+                    laborInvoiceMode: calc.laborInvoiceMode ?? "ITEMIZED",
+                  })
+                }
+                disabled={saving}
+              >
                 <Save className="h-4 w-4 mr-1" /> Speichern & berechnen
               </Button>
             </Card>
@@ -632,6 +661,7 @@ export default function KalkulationWizardPage() {
                 useFixedPrice={Boolean(calc.useFixedPrice)}
                 fixedPriceNet={calc.fixedPriceNet}
                 fixedPriceLabel={calc.fixedPriceLabel}
+                fixedPriceDisplayMode={calc.fixedPriceDisplayMode}
                 calculatedNet={calc.netSalesPrice ?? 0}
                 profitAmount={calc.profitAmount ?? 0}
                 directCosts={calc.directCosts ?? 0}
@@ -641,6 +671,7 @@ export default function KalkulationWizardPage() {
                     useFixedPrice: next.useFixedPrice,
                     fixedPriceNet: next.fixedPriceNet,
                     fixedPriceLabel: next.fixedPriceLabel,
+                    fixedPriceDisplayMode: next.fixedPriceDisplayMode,
                   })
                 }
               />
@@ -660,6 +691,7 @@ export default function KalkulationWizardPage() {
                     useFixedPrice: Boolean(calc.useFixedPrice),
                     fixedPriceNet: calc.useFixedPrice ? Number(calc.fixedPriceNet) : calc.fixedPriceNet ?? null,
                     fixedPriceLabel: calc.fixedPriceLabel ?? null,
+                    fixedPriceDisplayMode: calc.fixedPriceDisplayMode ?? "SINGLE_LINE",
                   });
                 }}
                 disabled={saving}
@@ -673,7 +705,13 @@ export default function KalkulationWizardPage() {
             <Card title="Angebot erzeugen">
               <p className="text-sm text-slate-600 mb-4">
                 {calc.useFixedPrice
-                  ? `Aktuell: Festpreis „${calc.fixedPriceLabel?.trim() || "Festpreis"} – ${formatEuro(calc.fixedPriceNet ?? calc.netSalesPrice)}“ auf dem Dokument. Die interne Kalkulation (${formatEuro(calc.netSalesPrice)}) bleibt gespeichert.`
+                  ? `Aktuell: verbindlicher Festpreis „${calc.fixedPriceLabel?.trim() || "Pauschalpreis"}“ mit ${formatEuro(calc.fixedPriceNet ?? calc.netSalesPrice)}. Interne Kalkulation (${formatEuro(calc.netSalesPrice)}) bleibt gespeichert – Darstellung: ${
+                      calc.fixedPriceDisplayMode === "POSITIONS_WITH_PRICES"
+                        ? "Positionen mit Preisen"
+                        : calc.fixedPriceDisplayMode === "DESCRIPTION_ONLY"
+                          ? "Positionen ohne Einzelpreise"
+                          : "eine Festpreisposition"
+                    }.`
                   : "Auf dem Angebot erscheinen die Leistungspositionen (Arbeit, Material, Fahrt usw.). Interne Zuschläge wie Gemeinkosten, Wagnis und Gewinn bleiben verborgen."}
               </p>
               <div className="flex flex-wrap gap-2">
@@ -1120,45 +1158,6 @@ function AdditionalCostEditor({ items, onChange }: { items: CalcData[]; onChange
   );
 }
 
-function LaborEditor({
-  items,
-  onChange,
-}: {
-  items: CalcData[];
-  onChange: (items: CalcData[]) => void;
-}) {
-  const list = items.length ? items : [{ description: "Arbeit vor Ort", hours: 0, hourlyRateNet: 68, quantityWorkers: 1, laborType: "ONSITE_WORK" }];
-
-  return (
-    <div className="space-y-3">
-      {list.map((item, i) => (
-        <div key={i} className="grid grid-cols-2 gap-2 border-b pb-3">
-          <Input label="Beschreibung" value={item.description} onChange={(e) => {
-            const n = [...list]; n[i] = { ...n[i], description: e.target.value }; onChange(n);
-          }} />
-          <NumberInput label="Stunden" min={0} value={item.hours} onValueChange={(v) => {
-            const n = [...list]; n[i] = { ...n[i], hours: v ?? 0 }; onChange(n);
-          }} />
-          <NumberInput label="Stundensatz netto" suffix="€" min={0} value={item.hourlyRateNet} onValueChange={(v) => {
-            const n = [...list]; n[i] = { ...n[i], hourlyRateNet: v ?? 0 }; onChange(n);
-          }} />
-          <NumberInput label="Mitarbeiter" allowDecimal={false} min={1} value={item.quantityWorkers ?? 1} onValueChange={(v) => {
-            const n = [...list]; n[i] = { ...n[i], quantityWorkers: v ?? 1 }; onChange(n);
-          }} />
-          {list.length > 1 && (
-            <PositionRemoveButton
-              label={item.description}
-              onRemove={() => onChange(list.filter((_, idx) => idx !== i))}
-            />
-          )}
-        </div>
-      ))}
-      <Button variant="outline" size="sm" onClick={() => onChange([...list, { description: "Werkstattzeit", hours: 0, hourlyRateNet: 55, quantityWorkers: 1, laborType: "WORKSHOP_WORK" }])}>
-        + Position
-      </Button>
-    </div>
-  );
-}
 
 function MaterialEditor({
   items,

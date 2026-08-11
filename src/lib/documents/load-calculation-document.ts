@@ -6,7 +6,9 @@ export async function loadCalculationForDocument(tenantId: string, calculationId
   const calc = await prisma.calculation.findFirst({
     where: { id: calculationId, tenantId },
     include: {
-      laborItems: true,
+      laborItems: {
+        include: { employee: { include: { user: { select: { firstName: true, lastName: true } } } } },
+      },
       materialItems: true,
       travelCost: true,
       additionalItems: true,
@@ -56,6 +58,8 @@ export async function loadCalculationForDocument(tenantId: string, calculationId
     section13bNote: vatResult.section13bNote,
     useFixedPrice,
     fixedPriceLabel: calc.fixedPriceLabel,
+    fixedPriceDisplayMode: calc.fixedPriceDisplayMode,
+    laborInvoiceMode: calc.laborInvoiceMode,
     calculatedNetSalesPrice: calc.netSalesPrice,
     laborTotal: calc.laborTotal,
     materialTotal: calc.materialTotal,
@@ -67,7 +71,15 @@ export async function loadCalculationForDocument(tenantId: string, calculationId
     overheadAmount: calc.overheadAmount,
     riskAmount: calc.riskAmount,
     profitAmount: calc.profitAmount,
-    laborItems: calc.laborItems,
+    laborItems: calc.laborItems.map((l) => ({
+      description: l.description,
+      hours: l.hours,
+      totalNet: l.totalNet,
+      isVisibleToCustomer: l.isVisibleToCustomer,
+      employeeName: l.employee
+        ? `${l.employee.user.firstName} ${l.employee.user.lastName}`.trim()
+        : null,
+    })),
     materialItems: calc.materialItems,
     travelCost: calc.travelCost,
     additionalItems: calc.additionalItems.map((a) => ({

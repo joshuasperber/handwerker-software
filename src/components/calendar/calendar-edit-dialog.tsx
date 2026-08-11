@@ -14,6 +14,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { AddressSuggestInput } from "@/components/ui/address-suggest-input";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { APPOINTMENT_COLORS, appointmentDisplayTitle } from "@/lib/calendar/appointment-colors";
 import { saveJson } from "@/lib/save-toast";
@@ -335,15 +336,13 @@ export function CalendarEditDialog({
                 </select>
               </div>
 
-              <div className="space-y-1.5">
-                <Label>Adresse</Label>
-                <Input
-                  value={addressText}
-                  onChange={(e) => setAddressText(e.target.value)}
-                  disabled={!canEdit}
-                  placeholder="Optional"
-                />
-              </div>
+              <AddressSuggestInput
+                label="Adresse"
+                value={addressText}
+                onChange={setAddressText}
+                disabled={!canEdit}
+                placeholder="Optional – Straße, PLZ Ort…"
+              />
 
               <div className="space-y-1.5">
                 <Label>Notiz</Label>

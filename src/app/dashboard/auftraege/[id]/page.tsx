@@ -17,6 +17,7 @@ import { TIME_ENTRY_STATUS_LABELS } from "@/lib/time-entry";
 import { PlanViewer } from "@/components/orders/plan-viewer";
 import { PhotoGallery } from "@/components/orders/photo-gallery";
 import { OrderBillingSection } from "@/components/orders/billing-section";
+import { OrderFixedPriceCard } from "@/components/orders/order-fixed-price-card";
 import { OrderDetailHeader } from "@/components/orders/order-detail-header";
 import { ProjectAssignField } from "@/components/orders/project-assign-field";
 import { OrderCustomerSection } from "@/components/orders/order-customer-section";
@@ -39,6 +40,7 @@ import { toast } from "sonner";
 interface OrderDetail {
   id: string;
   orderNumber: string;
+  title?: string | null;
   status: string;
   priority: string;
   customerConfirmationStatus?: string;
@@ -46,6 +48,10 @@ interface OrderDetail {
   internalNotes: string | null;
   scheduledStart: string | null;
   scheduledEnd: string | null;
+  useFixedPrice?: boolean;
+  fixedPriceNet?: number | null;
+  fixedPriceLabel?: string | null;
+  fixedPriceDisplayMode?: string | null;
   customerId?: string;
   projectId?: string | null;
   project?: { id: string; name: string; status?: string } | null;
@@ -108,7 +114,6 @@ interface OrderDetail {
     };
   }[];
   materialUsages: { name: string; quantity: number; unit: string }[];
-  title?: string | null;
   orderType?: string;
   orderTypeId?: string | null;
   orderTypeLabel?: string | null;
@@ -137,6 +142,8 @@ export default function AuftragDetailPage() {
   const { id } = useParams();
   const router = useRouter();
   const canEditPhases = usePermission("orders.write");
+  const canViewWages =
+    usePermission("employees.write") || usePermission("calculations.read");
   const [order, setOrder] = useState<OrderDetail | null>(null);
   const [notes, setNotes] = useState("");
   const [teams, setTeams] = useState<{ id: string; name: string }[]>([]);
@@ -172,7 +179,13 @@ export default function AuftragDetailPage() {
   const [savingType, setSavingType] = useState(false);
   const [savingMaterial, setSavingMaterial] = useState(false);
   const [completing, setCompleting] = useState(false);
-  const [calculation, setCalculation] = useState<{ id: string; title: string | null; netSalesPrice: number } | null>(null);
+  const [calculation, setCalculation] = useState<{
+    id: string;
+    title: string | null;
+    netSalesPrice: number;
+    useFixedPrice?: boolean;
+    fixedPriceNet?: number | null;
+  } | null>(null);
   const [timeline, setTimeline] = useState<{ id: string; at: string; label: string; detail?: string; user?: string }[]>([]);
 
   const [loadError, setLoadError] = useState("");
@@ -635,6 +648,30 @@ export default function AuftragDetailPage() {
       />
       {actionMsg && <p className="text-sm text-slate-600 mb-4">{actionMsg}</p>}
 
+      <CanAccess permission="calculations.write">
+        <OrderFixedPriceCard
+          orderId={order.id}
+          orderTitle={order.title ?? order.orderNumber}
+          initial={{
+            useFixedPrice: Boolean(order.useFixedPrice),
+            fixedPriceNet: order.fixedPriceNet ?? null,
+            fixedPriceLabel: order.fixedPriceLabel ?? null,
+            fixedPriceDisplayMode: order.fixedPriceDisplayMode ?? "SINGLE_LINE",
+          }}
+          calculatedNet={calculation?.netSalesPrice ?? 0}
+          onSaved={() => {
+            loadOrder();
+            // Kalkulation ggf. neu laden (Festpreis-Sync / auto-create)
+            fetch(`/api/orders/${id}/calculation`)
+              .then((r) => r.json())
+              .then((d) => {
+                if (d.success) setCalculation(d.data.calculation);
+              })
+              .catch(() => {});
+          }}
+        />
+      </CanAccess>
+
       <CanAccess permission="calculations.read">
         <OrderBillingSection
           orderId={order.id}
@@ -1092,7 +1129,7 @@ export default function AuftragDetailPage() {
                 </p>
               </div>
               <div>
-                <p className="text-xs text-slate-500">Differenz</p>
+                <p className="text-xs text-slate-500">Abweichung Stunden</p>
                 <p
                   className={`font-semibold ${
                     timeSummary.deltaHours > 0
@@ -1106,14 +1143,32 @@ export default function AuftragDetailPage() {
                   {timeSummary.deltaHours.toFixed(2)} h
                 </p>
               </div>
-              <div>
-                <p className="text-xs text-slate-500">Arbeitskosten</p>
-                <p className="font-semibold">
-                  {timeSummary.laborCostNet != null
-                    ? formatEuro(timeSummary.laborCostNet)
-                    : "—"}
-                </p>
-              </div>
+              {canViewWages && (
+                <div>
+                  <p className="text-xs text-slate-500">Arbeitskosten (Ist)</p>
+                  <p className="font-semibold">
+                    {timeSummary.laborCostNet != null
+                      ? formatEuro(timeSummary.laborCostNet)
+                      : "—"}
+                  </p>
+                  {timeSummary.laborCostDelta != null &&
+                    timeSummary.laborCostDelta !== 0 && (
+                      <p
+                        className={`text-xs ${
+                          timeSummary.laborCostDelta > 0
+                            ? "text-amber-700"
+                            : "text-emerald-700"
+                        }`}
+                      >
+                        {timeSummary.laborCostDelta > 0 ? "+" : ""}
+                        {formatEuro(timeSummary.laborCostDelta)} vs. geplant
+                        {timeSummary.plannedLaborCostNet != null
+                          ? ` (${formatEuro(timeSummary.plannedLaborCostNet)})`
+                          : ""}
+                      </p>
+                    )}
+                </div>
+              )}
             </div>
 
             {timeSummary.byEmployee.length > 0 && (
@@ -1127,11 +1182,12 @@ export default function AuftragDetailPage() {
                     <span>{row.name}</span>
                     <span className="text-slate-600">
                       {row.hours.toFixed(2)} h
-                      {row.laborCostNet != null
-                        ? ` · ${formatEuro(row.laborCostNet)}`
-                        : row.hourlyWageNet == null
-                          ? " · kein Lohn hinterlegt"
-                          : ""}
+                      {canViewWages &&
+                        (row.laborCostNet != null
+                          ? ` · ${formatEuro(row.laborCostNet)}`
+                          : row.hourlyWageNet == null
+                            ? " · kein Lohn hinterlegt"
+                            : "")}
                     </span>
                   </div>
                 ))}
@@ -1158,7 +1214,7 @@ export default function AuftragDetailPage() {
                       {t.endTime ? ` – ${formatDateTime(t.endTime)}` : ""}
                       {" · "}
                       {TIME_ENTRY_STATUS_LABELS[t.status] ?? t.status}
-                      {t.laborCostNet != null
+                      {canViewWages && t.laborCostNet != null
                         ? ` · ${formatEuro(t.laborCostNet)}`
                         : ""}
                     </p>
@@ -1168,15 +1224,25 @@ export default function AuftragDetailPage() {
             )}
 
             <p className="text-[11px] text-slate-400 mt-3">
-              Tatsächliche Stunden können bewusst in Kalkulation/Rechnung übernommen
-              werden — nicht automatisch.
+              Gebuchte Stunden aus dem Stundenzettel. Übernahme in Kalkulation/Rechnung
+              erfolgt bewusst in der Kalkulation — nicht automatisch.
             </p>
-            <Link
-              href="/dashboard/stunden"
-              className="inline-block mt-1 text-xs text-[#0d5c63] underline-offset-2 hover:underline"
-            >
-              Zu Team-Stunden →
-            </Link>
+            <div className="mt-1 flex flex-wrap gap-3 text-xs">
+              <Link
+                href="/dashboard/stunden"
+                className="text-[#0d5c63] underline-offset-2 hover:underline"
+              >
+                Zu Team-Stunden →
+              </Link>
+              {calculation?.id && (
+                <Link
+                  href={`/dashboard/kalkulation/${calculation.id}?step=1`}
+                  className="text-[#0d5c63] underline-offset-2 hover:underline"
+                >
+                  In Kalkulation übernehmen →
+                </Link>
+              )}
+            </div>
           </Card>
 
           {order.materialUsages.length > 0 && (
