@@ -74,7 +74,13 @@ function formatSessionTime(iso: string) {
   });
 }
 
-export function AssistantChat() {
+export function AssistantChat({
+  variant = "default",
+}: {
+  /** work = Arbeitsansicht mobil (ohne doppelten Titel, Höhe inkl. Bottom-Nav) */
+  variant?: "default" | "work";
+}) {
+  const isWork = variant === "work";
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [sessions, setSessions] = useState<SessionSummary[]>([]);
@@ -250,25 +256,53 @@ export function AssistantChat() {
   };
 
   return (
-    <div className="flex flex-col h-[calc(100dvh-7rem)] sm:h-[calc(100dvh-8rem)] lg:h-[calc(100dvh-6rem)]">
+    <div
+      className={cn(
+        "flex flex-col bg-slate-50 sm:bg-transparent",
+        isWork
+          ? "h-[calc(100dvh-3.5rem-4.5rem)]"
+          : "h-[calc(100dvh-7rem)] sm:h-[calc(100dvh-8rem)] lg:h-[calc(100dvh-6rem)]"
+      )}
+    >
       <LoadingOverlay open={loading} label="Assistent antwortet …" />
 
-      <div className="flex items-start justify-between gap-2 mb-3">
+      <div
+        className={cn(
+          "flex items-center justify-between gap-2 shrink-0",
+          isWork
+            ? "border-b border-slate-200 bg-white px-3 py-2.5"
+            : "mb-3 items-start"
+        )}
+      >
         <div className="min-w-0">
-          <h1 className="text-xl sm:text-2xl font-bold text-slate-900 flex items-center gap-2">
-            <Sparkles className="h-5 w-5 sm:h-6 sm:w-6 text-[#0d5c63] shrink-0" />
-            <span className="truncate">Betriebsassistent</span>
-          </h1>
-          <p className="text-xs sm:text-sm text-slate-500 mt-1">
-            Antworten basieren nur auf App-Daten. KI-Antworten können Fehler enthalten und ersetzen
-            keine Steuer-/Rechtsberatung. Details:{" "}
-            <a href="/datenschutz" className="text-[#0d5c63] underline underline-offset-2">
-              Datenschutz
-            </a>
-            .
-          </p>
+          {isWork ? (
+            <>
+              <p className="flex items-center gap-1.5 text-base font-bold text-slate-900">
+                <Sparkles className="h-4 w-4 text-[#0d5c63] shrink-0" />
+                Assistent
+              </p>
+              <p className="text-[11px] text-slate-500 mt-0.5 line-clamp-1">
+                Nur App-Daten · kann Fehler enthalten
+              </p>
+            </>
+          ) : (
+            <>
+              <h1 className="text-xl sm:text-2xl font-bold text-slate-900 flex items-center gap-2">
+                <Sparkles className="h-5 w-5 sm:h-6 sm:w-6 text-[#0d5c63] shrink-0" />
+                <span className="truncate">Betriebsassistent</span>
+              </h1>
+              <p className="text-xs sm:text-sm text-slate-500 mt-1">
+                Antworten basieren nur auf App-Daten. KI-Antworten können Fehler enthalten und ersetzen
+                keine Steuer-/Rechtsberatung. Details:{" "}
+                <a href="/datenschutz" className="text-[#0d5c63] underline underline-offset-2">
+                  Datenschutz
+                </a>
+                .
+              </p>
+            </>
+          )}
         </div>
-        <div className="flex items-center gap-2 shrink-0">
+        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
           <Button
             type="button"
             variant="outline"
@@ -277,7 +311,7 @@ export function AssistantChat() {
             onClick={() => setHistoryOpen(true)}
           >
             <History className="h-4 w-4" />
-            <span className="hidden xs:inline sm:inline">Chats</span>
+            {!isWork && <span className="hidden sm:inline">Chats</span>}
             {sessions.length > 0 && (
               <span className="rounded-full bg-slate-100 px-1.5 text-[10px] font-semibold text-slate-600">
                 {sessions.length}
@@ -292,7 +326,7 @@ export function AssistantChat() {
             className="gap-1 min-h-10"
           >
             <Plus className="h-4 w-4" />
-            <span className="hidden sm:inline">Neu</span>
+            {!isWork && <span className="hidden sm:inline">Neu</span>}
           </Button>
         </div>
       </div>
@@ -365,7 +399,12 @@ export function AssistantChat() {
         </SheetContent>
       </Sheet>
 
-      <Card className="flex flex-col flex-1 min-h-0 overflow-hidden !p-0">
+      <Card
+        className={cn(
+          "flex flex-col flex-1 min-h-0 overflow-hidden !p-0",
+          isWork && "rounded-none border-x-0 border-b-0 shadow-none"
+        )}
+      >
         <div ref={scrollRef} className="flex-1 overflow-y-auto px-3 py-4 sm:px-6 space-y-4">
           {loadingSession && (
             <div className="flex justify-center py-8">

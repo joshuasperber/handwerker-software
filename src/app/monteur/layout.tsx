@@ -9,7 +9,7 @@ import {
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import Image from "next/image";
-import { AlertTriangle } from "lucide-react";
+import { AlertTriangle, PanelLeft } from "lucide-react";
 import { Suspense } from "react";
 import { MonteurBottomNav } from "@/components/monteur/bottom-nav";
 import { NotificationBell } from "@/components/notifications/notification-bell";
@@ -50,33 +50,55 @@ export default async function MonteurLayout({
   return (
     <SessionProvider user={sessionWithFlags}>
       <div className="min-h-screen bg-slate-50 flex flex-col">
-        <header className="sticky top-0 z-10 flex h-14 items-center justify-between border-b border-slate-200 bg-white px-4">
-          <div className="flex items-center gap-2 min-w-0">
+        <header className="sticky top-0 z-30 flex h-14 items-center gap-2 border-b border-slate-200 bg-white px-3 sm:px-4">
+          <Link
+            href="/monteur/heute"
+            className="flex min-w-0 flex-1 items-center gap-2"
+          >
             <Image
               src="/icons/icon-192.png"
-              alt="JoMaster Logo"
+              alt="JoMaster"
               width={28}
               height={28}
-              className="h-7 w-7 rounded-lg"
+              className="h-7 w-7 shrink-0 rounded-lg"
             />
             <div className="min-w-0">
-              <p className="font-bold text-slate-900 leading-tight">Arbeitsansicht</p>
+              <p className="truncate text-sm font-bold leading-tight text-slate-900 sm:text-base">
+                Arbeit
+              </p>
               <p className="truncate text-[10px] uppercase tracking-wide text-slate-400">
                 {ROLE_LABELS[session.role] ?? session.role}
               </p>
             </div>
-          </div>
-          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+          </Link>
+
+          <div className="flex shrink-0 items-center gap-1 sm:gap-2">
             <NotificationBell />
             {showSwitch && (
-              <ViewSwitchLink target="verwaltung" label="Zur Verwaltung wechseln" />
+              <>
+                <ViewSwitchLink
+                  target="verwaltung"
+                  label="Verwaltung"
+                  className="hidden sm:inline text-sm font-medium text-[#0d5c63] hover:underline"
+                />
+                <ViewSwitchLink
+                  target="verwaltung"
+                  label={<PanelLeft className="h-4 w-4" aria-hidden />}
+                  ariaLabel="Zur Verwaltung wechseln"
+                  className="inline-flex sm:hidden h-9 w-9 items-center justify-center rounded-lg text-[#0d5c63] hover:bg-slate-100"
+                />
+              </>
             )}
-            <span className="truncate text-sm text-slate-600" title={`${session.firstName} ${session.lastName}`}>
-              {session.firstName} {session.lastName}
+            <span
+              className="hidden max-w-[7rem] truncate text-sm text-slate-600 md:inline"
+              title={`${session.firstName} ${session.lastName}`}
+            >
+              {session.firstName}
             </span>
             <LogoutButton
               label=""
-              className="rounded-lg p-2 text-slate-400 hover:bg-slate-50 hover:text-red-600 disabled:opacity-60"
+              icon
+              className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-slate-400 hover:bg-slate-50 hover:text-red-600 disabled:opacity-60"
             />
           </div>
         </header>

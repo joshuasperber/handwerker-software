@@ -10,9 +10,10 @@ export default function MonteurKalenderPage() {
     <div className="space-y-3">
       <Link
         href="/monteur/mitarbeiter"
-        className="inline-flex items-center gap-1 text-sm text-[#0d5c63]"
+        className="relative z-20 inline-flex min-h-11 items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 text-sm font-medium text-[#0d5c63] shadow-sm active:scale-[0.98]"
       >
-        <ArrowLeft className="h-4 w-4" /> Team
+        <ArrowLeft className="h-4 w-4 shrink-0" />
+        Zurück zum Team
       </Link>
       <TeamCalendarView
         title="Team-Kalender"

@@ -72,6 +72,19 @@ export async function requireAuth(
   return sessionWithFlags;
 }
 
+/** Auth if user has at least one of the given permissions. */
+export async function requireAuthAny(
+  permissions: Permission[]
+): Promise<SessionUser | NextResponse> {
+  const auth = await requireAuth();
+  if (auth instanceof Response) return auth;
+  const ok = permissions.some((p) =>
+    hasPermission(auth.role, p, { canManageRoles: auth.canManageRoles })
+  );
+  if (!ok) return apiError("Keine Berechtigung", 403);
+  return auth;
+}
+
 export function getClientIp(request: Request): string | undefined {
   const forwarded = request.headers.get("x-forwarded-for");
   return forwarded?.split(",")[0]?.trim();

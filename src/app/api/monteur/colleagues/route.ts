@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { requireAuth, apiSuccess } from "@/lib/api";
+import { requireAuthAny, apiSuccess } from "@/lib/api";
 import { getEmployeeForUser } from "@/lib/monteur-access";
 
 export type ColleagueKind = "mitarbeiter" | "partner";
@@ -10,7 +10,7 @@ export type ColleagueKind = "mitarbeiter" | "partner";
  * - Unternehmenspartner (GAST)
  */
 export async function GET() {
-  const auth = await requireAuth("monteur.own");
+  const auth = await requireAuthAny(["monteur.own", "employees.read"]);
   if (auth instanceof Response) return auth;
 
   const me = await getEmployeeForUser(auth);

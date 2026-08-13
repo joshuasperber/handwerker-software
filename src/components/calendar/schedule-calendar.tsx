@@ -244,10 +244,10 @@ export function ScheduleCalendar({
   const [resizingId, setResizingId] = useState<string | null>(null);
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
 
-  // Auf Mobile/Tablet: Standard Arbeitswoche; Desktop: volle Woche – außer explizite Ansicht
+  // Tag = 1, Mo–Fr = 5, Woche = immer Mo–So (auch mobil), Monat separat
   const isCompact = useMediaQuery("(max-width: 1024px)");
   const dayCount =
-    view === "day" ? 1 : view === "workweek" || (view === "week" && isCompact) ? 5 : 7;
+    view === "day" ? 1 : view === "workweek" ? 5 : 7;
   const hourHeight = isCompact || view === "day" ? 40 : 48;
   const timeColW = isCompact ? 40 : 64;
   const gridHeight = HOURS.length * hourHeight;
@@ -592,7 +592,7 @@ export function ScheduleCalendar({
             >
               <option value="day">Tag</option>
               <option value="workweek">Mo–Fr</option>
-              <option value="week">Woche</option>
+              <option value="week">Woche Mo–So</option>
               <option value="month">Monat</option>
             </select>
             <div className="hidden sm:flex rounded-lg border border-slate-200 overflow-hidden">
@@ -600,7 +600,7 @@ export function ScheduleCalendar({
                 [
                   ["day", "Tag"],
                   ["workweek", "Mo–Fr"],
-                  ["week", "Woche"],
+                  ["week", "Mo–So"],
                   ["month", "Monat"],
                 ] as const
               ).map(([id, label]) => (
@@ -621,7 +621,15 @@ export function ScheduleCalendar({
 
         {view !== "month" ? (
           <div className="flex-1 overflow-auto">
-            <div className={isCompact ? "min-w-0" : "min-w-[800px]"}>
+            <div
+              className={
+                isCompact && dayCount >= 7
+                  ? "min-w-[720px]"
+                  : isCompact
+                    ? "min-w-0"
+                    : "min-w-[800px]"
+              }
+            >
               {/* Kopfzeile: Wochentage */}
               <div className="grid border-b border-slate-100 bg-slate-50 sticky top-0 z-20" style={{ gridTemplateColumns: gridTemplate }}>
                 <div className="border-r border-slate-100" />
@@ -799,7 +807,7 @@ export function ScheduleCalendar({
             <p className="text-[10px] sm:text-xs text-slate-400 px-3 sm:px-4 py-2 border-t border-slate-100">
               {view === "day"
                 ? "Tagesansicht · "
-                : view === "workweek" || isCompact
+                : view === "workweek"
                   ? "Mo–Fr · "
                   : "Mo–So · "}
               Farbe wählbar · Gelb = 17–19 Uhr

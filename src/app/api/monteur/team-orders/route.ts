@@ -1,13 +1,13 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { requireAuth, apiSuccess, apiError } from "@/lib/api";
+import { requireAuthAny, apiSuccess, apiError } from "@/lib/api";
 
 /**
  * Aufträge der Unternehmens-Mitarbeiter für die Team-Ansicht (Arbeitsansicht).
  * Reduzierte Felder — keine Finanzdaten.
  */
 export async function GET(request: NextRequest) {
-  const auth = await requireAuth("monteur.own");
+  const auth = await requireAuthAny(["monteur.own", "employees.read", "orders.read"]);
   if (auth instanceof Response) return auth;
 
   const employeeId = request.nextUrl.searchParams.get("employeeId");

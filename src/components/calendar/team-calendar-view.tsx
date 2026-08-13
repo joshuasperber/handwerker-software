@@ -32,12 +32,7 @@ export function TeamCalendarView({
   const canEdit = usePermission("appointments.write");
   const session = useSession();
   const [anchorDate, setAnchorDate] = useState(new Date());
-  const [view, setView] = useState<CalendarViewMode>(() => {
-    if (typeof window !== "undefined" && window.matchMedia("(max-width: 1024px)").matches) {
-      return "day";
-    }
-    return "week";
-  });
+  const [view, setView] = useState<CalendarViewMode>("week");
   const [appointments, setAppointments] = useState<CalendarAppointment[]>([]);
   const [employees, setEmployees] = useState<
     { id: string; user: { id?: string; firstName: string; lastName: string }; color: string }[]
