@@ -70,8 +70,9 @@ type InventoryArticleOption = {
 export default function KalkulationWizardPage() {
   const { id } = useParams();
   const searchParams = useSearchParams();
-  const canViewWages =
-    usePermission("employees.write") || usePermission("calculations.read");
+  const canWriteEmployees = usePermission("employees.write");
+  const canReadCalculations = usePermission("calculations.read");
+  const canViewWages = canWriteEmployees || canReadCalculations;
   const [step, setStep] = useState(() => {
     const raw = Number(searchParams.get("step"));
     return Number.isFinite(raw) && raw >= 0 && raw < STEPS.length ? raw : 0;

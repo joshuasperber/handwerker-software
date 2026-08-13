@@ -142,8 +142,9 @@ export default function AuftragDetailPage() {
   const { id } = useParams();
   const router = useRouter();
   const canEditPhases = usePermission("orders.write");
-  const canViewWages =
-    usePermission("employees.write") || usePermission("calculations.read");
+  const canWriteEmployees = usePermission("employees.write");
+  const canReadCalculations = usePermission("calculations.read");
+  const canViewWages = canWriteEmployees || canReadCalculations;
   const [order, setOrder] = useState<OrderDetail | null>(null);
   const [notes, setNotes] = useState("");
   const [teams, setTeams] = useState<{ id: string; name: string }[]>([]);
