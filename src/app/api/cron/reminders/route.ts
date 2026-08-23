@@ -2,7 +2,7 @@ import { GET as runDaily, POST as postDaily, maxDuration } from "../daily/route"
 
 export { maxDuration };
 
-/** Stündlich nur Erinnerungen — SMS bleibt vorbereitet, Versand folgt bei Provider-Anschluss. */
+/** Nur Erinnerungen. Auf Vercel Hobby kein eigener Cron — Daily-Job übernimmt das. */
 function remindersOnly(request: Request) {
   const url = new URL(request.url);
   url.searchParams.set("jobs", "reminders");
