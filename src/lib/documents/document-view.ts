@@ -43,7 +43,7 @@ interface RawDoc {
   cancelOfId: string | null;
   pdfStorageKey: string | null;
   eInvoiceFormat: string | null;
-  dataSnapshotJson: unknown;
+  dataSnapshotJson?: unknown;
   calculation: {
     id: string;
     title: string | null;

@@ -8,21 +8,21 @@ export default function ImpressumPage() {
     >
       <section>
         <h2 className="text-lg font-semibold text-slate-900">Angaben zum Anbieter</h2>
-        <p>[Firmenname / Betreiber der JoMaster-Instanz]</p>
-        <p>[Straße Hausnummer]</p>
-        <p>[PLZ Ort]</p>
+        <p>[JoMaster / Joshua Sperber]</p>
+        <p>[Pufendorfstraße 6a]</p>
+        <p>[10249 Berlin]</p>
         <p>Deutschland</p>
       </section>
 
       <section>
         <h2 className="text-lg font-semibold text-slate-900">Kontakt</h2>
-        <p>E-Mail: [kontakt@beispiel.de]</p>
-        <p>Telefon: [Telefonnummer]</p>
+        <p>E-Mail: [joshua.sperber@web.de]</p>
+        <p>Telefon: [+49 15259655035]</p>
       </section>
 
       <section>
         <h2 className="text-lg font-semibold text-slate-900">Vertretungsberechtigt</h2>
-        <p>[Name der vertretungsberechtigten Person]</p>
+        <p>[Joshua Sperber]</p>
       </section>
 
       <section>
@@ -41,14 +41,6 @@ export default function ImpressumPage() {
         <p>[Name], Anschrift wie oben</p>
       </section>
 
-      <section>
-        <h2 className="text-lg font-semibold text-slate-900">Hinweis für Mandanten-Betriebe</h2>
-        <p>
-          Für öffentliche Buchungsseiten einzelner Handwerksbetriebe können zusätzlich die im
-          Betriebsprofil hinterlegten Impressums- und Datenschutz-URLs gelten. Diese App-Seite
-          ersetzt keine betriebsindividuellen Pflichtangaben.
-        </p>
-      </section>
     </LegalPageShell>
   );
 }

@@ -10,6 +10,7 @@ import { ROLE_LABELS } from "@/lib/utils";
 import { saveJson } from "@/lib/save-toast";
 import { fetchJson } from "@/lib/fetch-json";
 import { AlertTriangle, Loader2, ShieldCheck, Upload, X } from "lucide-react";
+import { InfoButton } from "@/components/ui/info-button";
 
 interface Profile {
   id: string;
@@ -242,7 +243,12 @@ export default function ProfilPage() {
 
   return (
     <div className="mx-auto max-w-3xl space-y-6">
-      <h1 className="text-2xl font-bold text-slate-900">Mein Profil</h1>
+      <h1 className="flex items-center gap-2 text-2xl font-bold text-slate-900">
+        Mein Profil
+        <InfoButton title="Mein Profil" ariaLabel="Info zum Profil">
+          <p>Hier stehen Ihre persönlichen Daten. Die Telefonnummer gilt für Sie als Nutzer, nicht für den Betrieb.</p>
+        </InfoButton>
+      </h1>
 
       {mustChange && (
         <div className="flex items-start gap-3 rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 text-amber-800">

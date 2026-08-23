@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { CanAccess } from "@/components/auth/can-access";
+import { InfoButton } from "@/components/ui/info-button";
 import { AddButton } from "@/components/ui/add-button";
 import { saveJson } from "@/lib/save-toast";
 import { ChevronLeft, Trash2, Users, Pencil, RotateCcw, X, Truck } from "lucide-react";
@@ -122,8 +123,12 @@ export default function TeamsPage() {
 
       <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
         <div>
-          <h1 className="text-2xl font-bold">Teams & Kolonnen</h1>
-          <p className="text-sm text-slate-500 mt-1">Feste Arbeitsgruppen für die Einsatzplanung</p>
+          <h1 className="flex items-center gap-2 text-2xl font-bold">
+            Teams & Kolonnen
+            <InfoButton title="Teams & Kolonnen" ariaLabel="Info zu Teams">
+              <p>Feste Arbeitsgruppen für die Einsatzplanung.</p>
+            </InfoButton>
+          </h1>
         </div>
         <CanAccess permission="orders.assign">
           <AddButton onClick={openCreate}>Team anlegen</AddButton>

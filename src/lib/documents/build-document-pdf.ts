@@ -8,6 +8,7 @@ import {
   hasBillingAddress,
   siteDiffersFromBilling,
 } from "@/lib/addresses/billing-vs-site";
+import { resolveStoredImageBytes } from "@/lib/stored-image-server";
 import { fontScaleFactor, hexToRgb, resolveInvoiceDesign } from "./invoice-design";
 
 const GREY = rgb(0.4, 0.45, 0.5);
@@ -60,17 +61,6 @@ function wrap(text: string, font: PDFFont, size: number, maxWidth: number): stri
   return lines.length ? lines : [""];
 }
 
-function dataUrlToBytes(dataUrl: string): { bytes: Uint8Array; type: "png" | "jpg" } | null {
-  const match = /^data:image\/(png|jpe?g);base64,(.+)$/i.exec(dataUrl.trim());
-  if (!match) return null;
-  const type = match[1].toLowerCase().startsWith("p") ? "png" : "jpg";
-  try {
-    const bytes = Uint8Array.from(Buffer.from(match[2], "base64"));
-    return { bytes, type };
-  } catch {
-    return null;
-  }
-}
 
 export async function buildDocumentPdf(snapshot: DocumentSnapshot): Promise<Uint8Array> {
   const { calc, company } = snapshot;
@@ -132,7 +122,7 @@ export async function buildDocumentPdf(snapshot: DocumentSnapshot): Promise<Uint
   let logoH = 0;
   let embeddedLogo: Awaited<ReturnType<typeof pdf.embedPng>> | null = null;
   if (logoUrl) {
-    const img = dataUrlToBytes(logoUrl);
+    const img = await resolveStoredImageBytes(logoUrl);
     if (img) {
       try {
         embeddedLogo = img.type === "png" ? await pdf.embedPng(img.bytes) : await pdf.embedJpg(img.bytes);

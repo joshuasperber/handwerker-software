@@ -182,18 +182,10 @@ export default function SicherheitPage() {
         </Button>
       </div>
 
-      <p className="text-xs text-slate-500">
-        Technische Übersicht — ersetzt keine Rechts- oder Datenschutzberatung.
-      </p>
-
       <Card className="!p-4 space-y-4">
         <h2 className="flex items-center gap-2 text-sm font-semibold text-slate-800">
           <Scale className="h-4 w-4" /> Rechtliche Pflichtangaben
         </h2>
-        <p className="text-sm text-slate-600">
-          Die JoMaster-Seiten sind Platzhalter und müssen vor dem Produktivbetrieb rechtlich geprüft
-          werden. Betriebsspezifische Links gelten zusätzlich für Ihre Buchungsseite.
-        </p>
         <div className="grid gap-2 sm:grid-cols-3">
           <Button asChild variant="outline" size="sm">
             <Link href="/impressum">

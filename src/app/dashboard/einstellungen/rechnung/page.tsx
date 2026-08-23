@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,6 +11,9 @@ import { InfoButton } from "@/components/ui/info-button";
 import { CanAccess } from "@/components/auth/can-access";
 import { saveJson } from "@/lib/save-toast";
 import { fetchJson } from "@/lib/fetch-json";
+import { fileToImageBlob } from "@/lib/client/file-to-image-blob";
+import { INVOICE_LOGO_API, toAbsoluteLogoSrc } from "@/lib/logo";
+import { persistableImageUrl } from "@/lib/stored-image";
 import {
   buildCustomerDocumentHtml,
   type DocumentCalcInput,
@@ -86,34 +89,6 @@ const EMPTY_FORM: InvoiceForm = {
   invoiceTemplate: "STANDARD",
 };
 
-const MAX_LOGO_DIMENSION = 400;
-
-/** Liest ein Bild ein und skaliert es client-seitig zu einer kleinen Data-URL (PNG). */
-function fileToLogoDataUrl(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onerror = () => reject(new Error("Datei konnte nicht gelesen werden"));
-    reader.onload = () => {
-      const img = new Image();
-      img.onerror = () => reject(new Error("Bild konnte nicht geladen werden"));
-      img.onload = () => {
-        const scale = Math.min(1, MAX_LOGO_DIMENSION / Math.max(img.width, img.height));
-        const width = Math.round(img.width * scale);
-        const height = Math.round(img.height * scale);
-        const canvas = document.createElement("canvas");
-        canvas.width = width;
-        canvas.height = height;
-        const ctx = canvas.getContext("2d");
-        if (!ctx) return reject(new Error("Canvas nicht verfügbar"));
-        ctx.drawImage(img, 0, 0, width, height);
-        resolve(canvas.toDataURL("image/png"));
-      };
-      img.src = reader.result as string;
-    };
-    reader.readAsDataURL(file);
-  });
-}
-
 /** Beispielkalkulation für die Live-Vorschau. */
 const SAMPLE_CALC: DocumentCalcInput = {
   title: "Beispielleistung – Badsanierung",
@@ -146,7 +121,9 @@ export default function RechnungseinstellungenPage() {
   const [form, setForm] = useState<InvoiceForm>(EMPTY_FORM);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [logoBusy, setLogoBusy] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const deferredForm = useDeferredValue(form);
 
   useEffect(() => {
     fetchJson<{ company: Partial<InvoiceForm> | null }>("/api/company-settings").then((res) => {
@@ -182,24 +159,62 @@ export default function RechnungseinstellungenPage() {
       toast.error("Bitte eine Bilddatei auswählen");
       return;
     }
+
+    setLogoBusy(true);
+    const toastId = toast.loading("Logo wird gespeichert …");
     try {
-      update("invoiceLogoUrl", await fileToLogoDataUrl(file));
-      toast.success("Logo geladen – bitte speichern, um es zu übernehmen.");
+      const blob = await fileToImageBlob(file);
+      const body = new FormData();
+      body.append("file", blob, "logo.png");
+      const res = await fetchJson<{ invoiceLogoUrl: string | null; hasInvoiceLogo: boolean }>(
+        INVOICE_LOGO_API,
+        { method: "POST", body }
+      );
+      if (!res.success || !res.data?.invoiceLogoUrl) {
+        toast.error(res.error ?? "Logo konnte nicht gespeichert werden", { id: toastId });
+        return;
+      }
+      update("invoiceLogoUrl", res.data.invoiceLogoUrl);
+      toast.success("Logo gespeichert", { id: toastId });
     } catch {
-      toast.error("Logo konnte nicht verarbeitet werden");
+      toast.error("Logo konnte nicht verarbeitet werden", { id: toastId });
     } finally {
+      setLogoBusy(false);
       if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  }
+
+  async function removeLogo() {
+    setLogoBusy(true);
+    const toastId = toast.loading("Logo wird entfernt …");
+    try {
+      const res = await fetchJson<{ invoiceLogoUrl: null; hasInvoiceLogo: boolean }>(
+        INVOICE_LOGO_API,
+        { method: "DELETE" }
+      );
+      if (!res.success) {
+        toast.error(res.error ?? "Logo konnte nicht entfernt werden", { id: toastId });
+        return;
+      }
+      update("invoiceLogoUrl", "");
+      toast.success("Logo entfernt", { id: toastId });
+    } finally {
+      setLogoBusy(false);
     }
   }
 
   async function save() {
     setSaving(true);
+    const { invoiceLogoUrl, ...rest } = form;
+    const persistLogo = persistableImageUrl(invoiceLogoUrl);
     await saveJson(
       "/api/company-settings",
       {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ company: form }),
+        body: JSON.stringify({
+          company: persistLogo !== undefined ? { ...rest, invoiceLogoUrl: persistLogo } : rest,
+        }),
       },
       { loading: "Rechnungseinstellungen werden gespeichert …", success: "Rechnungseinstellungen gespeichert" }
     );
@@ -207,33 +222,39 @@ export default function RechnungseinstellungenPage() {
   }
 
   const previewHtml = useMemo(() => {
+    const origin = typeof window !== "undefined" ? window.location.origin : "";
     const company: DocumentCompanyInput = {
-      companyName: form.companyName || "Mein Handwerksbetrieb",
-      street: form.street,
-      houseNumber: form.houseNumber,
-      postalCode: form.postalCode,
-      city: form.city,
-      phone: form.phone,
-      email: form.email,
-      website: form.website,
-      invoiceLogoUrl: form.invoiceLogoUrl,
-      bankName: form.bankName,
-      iban: form.iban,
-      bic: form.bic,
-      taxNumber: form.taxNumber,
-      vatId: form.vatId,
-      paymentTermsDays: form.paymentTermsDays,
-      invoiceIntroText: form.invoiceIntroText,
-      invoiceFooterText: form.invoiceFooterText,
-      invoiceNotes: form.invoiceNotes,
-      invoiceLegalText: form.invoiceLegalText,
-      invoiceAccentColor: form.invoiceAccentColor,
-      invoiceLayout: form.invoiceLayout,
-      invoiceFontScale: form.invoiceFontScale,
-      invoiceTemplate: form.invoiceTemplate,
+      companyName: deferredForm.companyName || "Mein Handwerksbetrieb",
+      street: deferredForm.street,
+      houseNumber: deferredForm.houseNumber,
+      postalCode: deferredForm.postalCode,
+      city: deferredForm.city,
+      phone: deferredForm.phone,
+      email: deferredForm.email,
+      website: deferredForm.website,
+      invoiceLogoUrl: toAbsoluteLogoSrc(deferredForm.invoiceLogoUrl, origin),
+      bankName: deferredForm.bankName,
+      iban: deferredForm.iban,
+      bic: deferredForm.bic,
+      taxNumber: deferredForm.taxNumber,
+      vatId: deferredForm.vatId,
+      paymentTermsDays: deferredForm.paymentTermsDays,
+      invoiceIntroText: deferredForm.invoiceIntroText,
+      invoiceFooterText: deferredForm.invoiceFooterText,
+      invoiceNotes: deferredForm.invoiceNotes,
+      invoiceLegalText: deferredForm.invoiceLegalText,
+      invoiceAccentColor: deferredForm.invoiceAccentColor,
+      invoiceLayout: deferredForm.invoiceLayout,
+      invoiceFontScale: deferredForm.invoiceFontScale,
+      invoiceTemplate: deferredForm.invoiceTemplate,
     };
     return buildCustomerDocumentHtml("INVOICE", SAMPLE_CALC, company, "RE-2026-0001");
-  }, [form]);
+  }, [deferredForm]);
+
+  const logoUrlFieldValue =
+    form.invoiceLogoUrl.startsWith("data:") || form.invoiceLogoUrl.startsWith("/api/")
+      ? ""
+      : form.invoiceLogoUrl;
 
   if (loading) {
     return <p className="text-sm text-slate-500">Einstellungen werden geladen …</p>;
@@ -277,7 +298,7 @@ export default function RechnungseinstellungenPage() {
               title="Logo"
               action={
                 <InfoButton title="Firmenlogo">
-                  <p>Das Logo erscheint oben auf Angebot und Rechnung. Empfohlen: PNG mit transparentem Hintergrund. Das Bild wird automatisch verkleinert.</p>
+                  <p>Das Logo erscheint oben auf Angebot und Rechnung. Empfohlen: PNG mit transparentem Hintergrund. Das Bild wird automatisch verkleinert und sofort gespeichert.</p>
                 </InfoButton>
               }
             >
@@ -292,11 +313,23 @@ export default function RechnungseinstellungenPage() {
                 </div>
                 <div className="flex flex-col gap-2">
                   <input ref={fileInputRef} type="file" accept="image/*" onChange={handleLogoChange} className="hidden" />
-                  <Button type="button" variant="outline" size="sm" onClick={() => fileInputRef.current?.click()}>
-                    <Upload className="mr-2 h-4 w-4" /> Logo hochladen
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    disabled={logoBusy}
+                    onClick={() => fileInputRef.current?.click()}
+                  >
+                    <Upload className="mr-2 h-4 w-4" /> {logoBusy ? "Speichern …" : "Logo hochladen"}
                   </Button>
                   {form.invoiceLogoUrl && (
-                    <Button type="button" variant="outline" size="sm" onClick={() => update("invoiceLogoUrl", "")}>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      disabled={logoBusy}
+                      onClick={removeLogo}
+                    >
                       <X className="mr-2 h-4 w-4" /> Entfernen
                     </Button>
                   )}
@@ -304,7 +337,7 @@ export default function RechnungseinstellungenPage() {
               </div>
               <Input
                 label="Alternativ: Logo-URL"
-                value={form.invoiceLogoUrl.startsWith("data:") ? "" : form.invoiceLogoUrl}
+                value={logoUrlFieldValue}
                 onChange={(e) => update("invoiceLogoUrl", e.target.value)}
                 placeholder="https://…/logo.png"
                 className="mt-3"

@@ -16,6 +16,7 @@ import { addDays, startOfDay, startOfMonth, endOfMonth, startOfWeek, endOfWeek }
 import { formatDateTime } from "@/lib/utils";
 import { appointmentDisplayTitle } from "@/lib/calendar/appointment-colors";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import { InfoButton } from "@/components/ui/info-button";
 import { usePermission, useSession } from "@/components/auth/can-access";
 import { toast } from "sonner";
 import { fetchJson } from "@/lib/fetch-json";
@@ -238,13 +239,15 @@ export function TeamCalendarView({
       }`}
     >
       <div className="shrink-0 mb-4 px-2 sm:px-0">
-        <h1 className={`${compactHeader ? "text-xl" : "text-2xl"} font-bold text-slate-900`}>
+        <h1 className={`flex items-center gap-2 ${compactHeader ? "text-xl" : "text-2xl"} font-bold text-slate-900`}>
           {title}
+          <InfoButton title={title} ariaLabel={`Info zu ${title}`}>
+            <p>
+              Wo sind Ihre Mitarbeiter? Termine, Orte und Einsatzzeiten
+              {canEdit ? " — tippen oder klicken für einen neuen Termin." : " (nur Ansicht)."}
+            </p>
+          </InfoButton>
         </h1>
-        <p className="text-sm text-slate-500 mt-1">
-          Wo sind Ihre Mitarbeiter? Termine, Orte und Einsatzzeiten
-          {canEdit ? " · Tippen/Klicken für neuen Termin" : " (nur Ansicht)"}
-        </p>
       </div>
 
       <div className="flex-1 min-h-0 px-2 sm:px-0">

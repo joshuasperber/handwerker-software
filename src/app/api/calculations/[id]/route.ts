@@ -22,7 +22,20 @@ const includeFull = {
   incomeTaxSettings: true,
   vatSettings: true,
   customer: true,
-  documents: true,
+  documents: {
+    select: {
+      id: true,
+      documentType: true,
+      documentNumber: true,
+      status: true,
+      issueDate: true,
+      dueDate: true,
+      netAmount: true,
+      vatAmount: true,
+      grossAmount: true,
+      cancelOfId: true,
+    },
+  },
 };
 
 export async function GET(

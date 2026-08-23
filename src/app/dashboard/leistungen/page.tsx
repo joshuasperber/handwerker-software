@@ -9,6 +9,7 @@ import { NumberInput } from "@/components/ui/number-input";
 import { Textarea } from "@/components/ui/textarea";
 import { formatCurrency } from "@/lib/utils";
 import { CanAccess } from "@/components/auth/can-access";
+import { InfoButton } from "@/components/ui/info-button";
 import { AddButton } from "@/components/ui/add-button";
 import { saveJson } from "@/lib/save-toast";
 import { Clock, Trash2, RotateCcw } from "lucide-react";
@@ -182,10 +183,12 @@ export default function LeistungenPage() {
     <div>
       <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Leistungskatalog</h1>
-          <p className="text-sm text-slate-500 mt-1">
-            Leistungen mit Dauer, Preis und Stückliste für Aufträge
-          </p>
+          <h1 className="flex items-center gap-2 text-2xl font-bold text-slate-900">
+            Leistungskatalog
+            <InfoButton title="Leistungskatalog" ariaLabel="Info zum Leistungskatalog">
+              <p>Leistungen mit Dauer, Preis und Stückliste für Aufträge.</p>
+            </InfoButton>
+          </h1>
         </div>
         <CanAccess permission="services.write">
           <AddButton onClick={() => setShowForm(!showForm)}>Leistung hinzufügen</AddButton>

@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { Inbox } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { InfoButton } from "@/components/ui/info-button";
 import { Card } from "@/components/ui/card";
 import { saveJson } from "@/lib/save-toast";
 import { useApiSWR } from "@/lib/swr";
@@ -73,10 +74,10 @@ export default function EingangsboxPage() {
           <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
             <Inbox className="h-7 w-7 text-[#0d5c63]" />
             Eingangsbox
+            <InfoButton title="Eingangsbox" ariaLabel="Info zur Eingangsbox">
+              <p>Anfragen und Meldungen aus der Arbeitsansicht prüfen und übernehmen.</p>
+            </InfoButton>
           </h1>
-          <p className="text-sm text-slate-500">
-            Anfragen und Meldungen aus der Arbeitsansicht prüfen und übernehmen.
-          </p>
         </div>
         <select
           className="h-10 rounded-lg border border-slate-300 px-3 text-sm"

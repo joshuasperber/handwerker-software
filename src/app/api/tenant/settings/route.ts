@@ -1,6 +1,24 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAuth, apiSuccess, apiError } from "@/lib/api";
+import { toTenantLogoSrc } from "@/lib/logo";
+import { hasStoredImage, persistableImageUrl } from "@/lib/stored-image";
+
+function toTenantDTO<
+  T extends { logoUrl: string | null; updatedAt?: Date; slug: string },
+>(tenant: T, bookingUrl: string) {
+  return {
+    ...tenant,
+    logoUrl: toTenantLogoSrc(tenant.logoUrl, tenant.updatedAt) ?? null,
+    hasLogo: hasStoredImage(tenant.logoUrl),
+    bookingUrl,
+  };
+}
+
+function bookingUrlFor(slug: string) {
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "") || "";
+  return `${appUrl}/buchen/${slug}`;
+}
 
 export async function GET() {
   const auth = await requireAuth("tenant.manage");
@@ -22,16 +40,13 @@ export async function GET() {
       privacyPolicyUrl: true,
       imprintUrl: true,
       bufferMinutes: true,
+      updatedAt: true,
     },
   });
 
   if (!tenant) return apiError("Betrieb nicht gefunden", 404);
 
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "") || "";
-  return apiSuccess({
-    ...tenant,
-    bookingUrl: `${appUrl}/buchen/${tenant.slug}`,
-  });
+  return apiSuccess(toTenantDTO(tenant, bookingUrlFor(tenant.slug)));
 }
 
 export async function PUT(request: NextRequest) {
@@ -47,7 +62,7 @@ export async function PUT(request: NextRequest) {
     address: body.address !== undefined ? (body.address || null) : undefined,
     city: body.city !== undefined ? (body.city || null) : undefined,
     zipCode: body.zipCode !== undefined ? (body.zipCode || null) : undefined,
-    logoUrl: body.logoUrl !== undefined ? (body.logoUrl || null) : undefined,
+    logoUrl: persistableImageUrl(body.logoUrl),
     primaryColor:
       typeof body.primaryColor === "string" ? body.primaryColor : undefined,
     privacyPolicyUrl:
@@ -96,9 +111,6 @@ export async function PUT(request: NextRequest) {
         ...(data.zipCode !== undefined
           ? { postalCode: data.zipCode as string | null }
           : {}),
-        ...(data.logoUrl !== undefined
-          ? { invoiceLogoUrl: data.logoUrl as string | null }
-          : {}),
       },
     });
   } else if (data.name) {
@@ -112,11 +124,9 @@ export async function PUT(request: NextRequest) {
         city: (data.city as string | null | undefined) ?? tenant.city,
         postalCode:
           (data.zipCode as string | null | undefined) ?? tenant.zipCode,
-        invoiceLogoUrl:
-          (data.logoUrl as string | null | undefined) ?? tenant.logoUrl,
       },
     });
   }
 
-  return apiSuccess(tenant);
+  return apiSuccess(toTenantDTO(tenant, bookingUrlFor(tenant.slug)));
 }

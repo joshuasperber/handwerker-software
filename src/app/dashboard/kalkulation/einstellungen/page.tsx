@@ -12,6 +12,7 @@ import { formatEuro } from "@/lib/utils";
 import { CanAccess } from "@/components/auth/can-access";
 import { NavActionCard } from "@/components/ui/nav-action-card";
 import { toast } from "sonner";
+import { saveJson } from "@/lib/save-toast";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 
 interface CompanyForm {
@@ -27,16 +28,6 @@ interface CompanyForm {
   defaultProfitPercent: number;
   defaultKilometerRate: number;
   defaultTravelHourlyRate: number;
-  invoiceLogoUrl: string;
-  bankName: string;
-  iban: string;
-  bic: string;
-  taxNumber: string;
-  vatId: string;
-  paymentTermsDays: number;
-  invoiceIntroText: string;
-  invoiceFooterText: string;
-  invoiceNotes: string;
 }
 
 interface FixedCostRow {
@@ -61,16 +52,6 @@ export default function KalkulationEinstellungenPage() {
     defaultProfitPercent: 12,
     defaultKilometerRate: 0.45,
     defaultTravelHourlyRate: 45,
-    invoiceLogoUrl: "",
-    bankName: "",
-    iban: "",
-    bic: "",
-    taxNumber: "",
-    vatId: "",
-    paymentTermsDays: 14,
-    invoiceIntroText: "",
-    invoiceFooterText: "",
-    invoiceNotes: "",
   });
   const [productiveHours, setProductiveHours] = useState(160);
   const [overheadMode, setOverheadMode] = useState("HYBRID");
@@ -104,16 +85,6 @@ export default function KalkulationEinstellungenPage() {
             defaultProfitPercent: d.data.company.defaultProfitPercent,
             defaultKilometerRate: d.data.company.defaultKilometerRate,
             defaultTravelHourlyRate: d.data.company.defaultTravelHourlyRate,
-            invoiceLogoUrl: d.data.company.invoiceLogoUrl ?? "",
-            bankName: d.data.company.bankName ?? "",
-            iban: d.data.company.iban ?? "",
-            bic: d.data.company.bic ?? "",
-            taxNumber: d.data.company.taxNumber ?? "",
-            vatId: d.data.company.vatId ?? "",
-            paymentTermsDays: d.data.company.paymentTermsDays ?? 14,
-            invoiceIntroText: d.data.company.invoiceIntroText ?? "",
-            invoiceFooterText: d.data.company.invoiceFooterText ?? "",
-            invoiceNotes: d.data.company.invoiceNotes ?? "",
           });
         }
         if (d.data.overhead) {
@@ -134,17 +105,24 @@ export default function KalkulationEinstellungenPage() {
 
   async function saveSettings() {
     setSaving(true);
-    await fetch("/api/company-settings", {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        company,
-        overhead: {
-          productiveHoursPerMonth: productiveHours,
-          overheadCalculationMode: overheadMode,
-        },
-      }),
-    });
+    await saveJson(
+      "/api/company-settings",
+      {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          company,
+          overhead: {
+            productiveHoursPerMonth: productiveHours,
+            overheadCalculationMode: overheadMode,
+          },
+        }),
+      },
+      {
+        loading: "Kalkulationseinstellungen werden gespeichert …",
+        success: "Kalkulationseinstellungen gespeichert",
+      }
+    );
     setSaving(false);
   }
 

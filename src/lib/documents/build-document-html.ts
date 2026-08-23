@@ -115,6 +115,10 @@ function escapeHtml(s: string): string {
     .replace(/>/g, "&gt;");
 }
 
+function escapeAttr(s: string): string {
+  return escapeHtml(s).replace(/"/g, "&quot;");
+}
+
 function companyAddress(c: DocumentCompanyInput): string {
   const line1 = [c.street, c.houseNumber].filter(Boolean).join(" ");
   const line2 = [c.postalCode, c.city].filter(Boolean).join(" ");
@@ -246,7 +250,7 @@ export function buildCustomerDocumentHtml(
 
   const logoUrl = company.invoiceLogoUrl || company.logoUrl;
   const logoBlock = logoUrl
-    ? `<img src="${logoUrl}" alt="Logo" class="logo"/>`
+    ? `<img src="${escapeAttr(logoUrl)}" alt="Logo" class="logo"/>`
     : `<div class="logo-fallback">${escapeHtml(company.companyName)}</div>`;
 
   const dueDate =

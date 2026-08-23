@@ -8,6 +8,9 @@ import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { CanAccess } from "@/components/auth/can-access";
 import { saveJson } from "@/lib/save-toast";
+import { fetchJson } from "@/lib/fetch-json";
+import { fileToImageBlob } from "@/lib/client/file-to-image-blob";
+import { TENANT_LOGO_API } from "@/lib/logo";
 import { swrKeys, useApiSWR } from "@/lib/swr";
 import { Copy, Save, Upload, X } from "lucide-react";
 import { SettingsPageHeader } from "@/components/dashboard/settings-page-header";
@@ -21,6 +24,7 @@ type TenantSettings = {
   city: string | null;
   zipCode: string | null;
   logoUrl: string | null;
+  hasLogo?: boolean;
   primaryColor: string;
   privacyPolicyUrl: string | null;
   imprintUrl: string | null;
@@ -28,42 +32,13 @@ type TenantSettings = {
   bookingUrl: string;
 };
 
-const MAX_LOGO_DIMENSION = 400;
-
-function fileToLogoDataUrl(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onerror = () => reject(new Error("Datei konnte nicht gelesen werden"));
-    reader.onload = () => {
-      const img = new Image();
-      img.onerror = () => reject(new Error("Bild konnte nicht geladen werden"));
-      img.onload = () => {
-        const scale = Math.min(
-          1,
-          MAX_LOGO_DIMENSION / Math.max(img.width, img.height)
-        );
-        const width = Math.round(img.width * scale);
-        const height = Math.round(img.height * scale);
-        const canvas = document.createElement("canvas");
-        canvas.width = width;
-        canvas.height = height;
-        const ctx = canvas.getContext("2d");
-        if (!ctx) return reject(new Error("Canvas nicht verfügbar"));
-        ctx.drawImage(img, 0, 0, width, height);
-        resolve(canvas.toDataURL("image/png"));
-      };
-      img.src = reader.result as string;
-    };
-    reader.readAsDataURL(file);
-  });
-}
-
 export default function BetriebEinstellungenPage() {
   const { data, mutate, isLoading } = useApiSWR<TenantSettings>(
     swrKeys.tenantSettings()
   );
   const [form, setForm] = useState<Partial<TenantSettings>>({});
   const [saving, setSaving] = useState(false);
+  const [logoBusy, setLogoBusy] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
   const hydrated = useRef(false);
 
@@ -93,7 +68,6 @@ export default function BetriebEinstellungenPage() {
           address: form.address,
           city: form.city,
           zipCode: form.zipCode,
-          logoUrl: form.logoUrl,
           primaryColor: form.primaryColor,
           privacyPolicyUrl: form.privacyPolicyUrl,
           imprintUrl: form.imprintUrl,
@@ -114,12 +88,51 @@ export default function BetriebEinstellungenPage() {
 
   async function onLogo(file: File | null) {
     if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      toast.error("Bitte eine Bilddatei auswählen");
+      return;
+    }
+    setLogoBusy(true);
+    const toastId = toast.loading("Logo wird gespeichert …");
     try {
-      const url = await fileToLogoDataUrl(file);
-      setField("logoUrl", url);
-      toast.success("Logo geladen — bitte speichern");
+      const blob = await fileToImageBlob(file);
+      const body = new FormData();
+      body.append("file", blob, "logo.png");
+      const res = await fetchJson<{ logoUrl: string | null; hasLogo: boolean }>(
+        TENANT_LOGO_API,
+        { method: "POST", body }
+      );
+      if (!res.success || !res.data?.logoUrl) {
+        toast.error(res.error ?? "Logo konnte nicht gespeichert werden", { id: toastId });
+        return;
+      }
+      setField("logoUrl", res.data.logoUrl);
+      toast.success("Logo gespeichert", { id: toastId });
+      await mutate();
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Logo fehlgeschlagen");
+      toast.error(err instanceof Error ? err.message : "Logo fehlgeschlagen", { id: toastId });
+    } finally {
+      setLogoBusy(false);
+      if (fileRef.current) fileRef.current.value = "";
+    }
+  }
+
+  async function removeLogo() {
+    setLogoBusy(true);
+    const toastId = toast.loading("Logo wird entfernt …");
+    try {
+      const res = await fetchJson<{ logoUrl: null; hasLogo: boolean }>(TENANT_LOGO_API, {
+        method: "DELETE",
+      });
+      if (!res.success) {
+        toast.error(res.error ?? "Logo konnte nicht entfernt werden", { id: toastId });
+        return;
+      }
+      setField("logoUrl", null);
+      toast.success("Logo entfernt", { id: toastId });
+      await mutate();
+    } finally {
+      setLogoBusy(false);
     }
   }
 
@@ -209,17 +222,19 @@ export default function BetriebEinstellungenPage() {
                   type="button"
                   variant="outline"
                   size="sm"
+                  disabled={logoBusy}
                   onClick={() => fileRef.current?.click()}
                 >
                   <Upload className="mr-1.5 h-3.5 w-3.5" />
-                  Hochladen
+                  {logoBusy ? "Speichern…" : "Hochladen"}
                 </Button>
                 {form.logoUrl && (
                   <Button
                     type="button"
                     variant="ghost"
                     size="sm"
-                    onClick={() => setField("logoUrl", null)}
+                    disabled={logoBusy}
+                    onClick={removeLogo}
                   >
                     <X className="mr-1.5 h-3.5 w-3.5" />
                     Entfernen

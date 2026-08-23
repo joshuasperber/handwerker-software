@@ -8,6 +8,7 @@ import { createSupabaseAuthUser } from "@/lib/supabase/auth-users";
 import { isSupabaseAuthConfigured } from "@/lib/supabase/env";
 import { ASSIGNABLE_STAFF_ROLES, hasPermission } from "@/lib/permissions";
 import { createAuditLog } from "@/lib/audit";
+import { employeeListInclude } from "@/lib/employees/list-select";
 
 /** Initialpasswort, mit dem sich jeder neu angelegte Mitarbeiter anmelden kann. */
 const DEFAULT_EMPLOYEE_PASSWORD = "admin1234";
@@ -18,11 +19,7 @@ export async function GET() {
 
   const employees = await prisma.employee.findMany({
     where: { tenantId: auth.tenantId },
-    include: {
-      user: true,
-      qualifications: true,
-      workingHours: true,
-    },
+    include: employeeListInclude,
   });
 
   const { canViewEmployeeWages, redactEmployeeWages } = await import(
@@ -146,7 +143,7 @@ export async function POST(request: NextRequest) {
         ? { create: qualifications.map((name: string) => ({ name })) }
         : undefined,
     },
-    include: { user: true, qualifications: true },
+    include: employeeListInclude,
   });
 
   await createAuditLog({

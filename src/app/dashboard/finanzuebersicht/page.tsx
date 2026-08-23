@@ -287,15 +287,12 @@ function FinanzuebersichtContent() {
               </p>
             </InfoButton>
           </div>
-          <p className="mt-1 text-sm text-slate-500">
-            Umsatz, Ausgaben, Gewinn und unverbindliche Orientierung
-            {isValidating && overview && (
-              <span className="ml-2 inline-flex items-center gap-1 text-slate-400">
-                <Loader2 className="h-3 w-3 animate-spin" />
-                aktualisiert…
-              </span>
-            )}
-          </p>
+          {isValidating && overview ? (
+            <p className="mt-1 inline-flex items-center gap-1 text-sm text-slate-400">
+              <Loader2 className="h-3 w-3 animate-spin" />
+              aktualisiert…
+            </p>
+          ) : null}
         </div>
         <CanAccess permission="invoices.write">
           <div className="flex flex-wrap gap-2">

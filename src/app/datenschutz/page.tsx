@@ -8,7 +8,7 @@ export default function DatenschutzPage() {
     >
       <section>
         <h2 className="text-lg font-semibold text-slate-900">1. Verantwortlicher</h2>
-        <p>[Firmenname], [Adresse], [E-Mail], [Telefon]</p>
+        <p>[JoMaster / Joshua Sperber], [Pufendorfstraße 6a], [10249 Berlin], [joshua.sperber@web.de], [+49 15259655035]</p>
       </section>
 
       <section>

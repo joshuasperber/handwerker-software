@@ -324,9 +324,6 @@ export default function UmsatzuebersichtPage() {
               </p>
             </InfoButton>
           </div>
-          <p className="mt-1 text-sm text-slate-500">
-            Monatsnavigation · Zeitraumfilter · Monatshistorie · Aufträge
-          </p>
         </div>
         <div className="flex flex-col items-start gap-1 sm:items-end">
           <AmountModeToggle mode={mode} onChange={setMode} />

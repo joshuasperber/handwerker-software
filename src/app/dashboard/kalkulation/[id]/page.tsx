@@ -29,6 +29,7 @@ import { usePermission } from "@/components/auth/can-access";
 import { ChevronLeft, ChevronRight, Save, FileText, Trash2, Package } from "lucide-react";
 import { toast } from "sonner";
 import { fetchJson } from "@/lib/fetch-json";
+import { saveJson } from "@/lib/save-toast";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import {
   TAX_TREATMENT_LABELS,
@@ -142,24 +143,20 @@ export default function KalkulationWizardPage() {
 
   async function save(payload: CalcData) {
     setSaving(true);
-    try {
-      const res = await fetch(`/api/calculations/${id}`, {
+    const data = await saveJson<{ calculation?: CalcData } & CalcData>(
+      `/api/calculations/${id}`,
+      {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
-      });
-      const data = await res.json();
-      if (data.success) {
-        setCalc(data.data.calculation ?? data.data);
-        toast.success("Gespeichert & neu berechnet");
-      } else {
-        toast.error(data.error ?? "Speichern fehlgeschlagen");
-      }
-    } catch {
-      toast.error("Speichern fehlgeschlagen");
-    } finally {
-      setSaving(false);
+      },
+      { loading: "Kalkulation wird gespeichert …", success: "Gespeichert & neu berechnet" }
+    );
+    if (data.success && data.data) {
+      const next = data.data.calculation ?? data.data;
+      setCalc((prev) => ({ ...next, documents: prev?.documents ?? next.documents }));
     }
+    setSaving(false);
   }
 
   async function loadExample() {

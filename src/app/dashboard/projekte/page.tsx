@@ -9,6 +9,7 @@ import { AddButton } from "@/components/ui/add-button";
 import { fetchJson } from "@/lib/fetch-json";
 import { formatDate } from "@/lib/utils";
 import { FolderKanban, Search } from "lucide-react";
+import { InfoButton } from "@/components/ui/info-button";
 import { PROJECT_STATUS_LABELS } from "@/lib/projects/types";
 import { toast } from "sonner";
 
@@ -66,10 +67,10 @@ export default function ProjektePage() {
           <h1 className="flex items-center gap-2 text-2xl font-bold text-slate-900">
             <FolderKanban className="h-7 w-7 text-[#0d5c63]" />
             Projekte
+            <InfoButton title="Projekte" ariaLabel="Info zu Projekten">
+              <p>Größere Vorhaben mit mehreren Aufträgen, Fotos, Notizen und Kosten.</p>
+            </InfoButton>
           </h1>
-          <p className="mt-1 text-sm text-slate-500">
-            Größere Vorhaben mit mehreren Aufträgen, Fotos, Notizen und Kosten
-          </p>
         </div>
         <CanAccess permission="orders.write">
           <AddButton href="/dashboard/projekte/neu">Neues Projekt</AddButton>

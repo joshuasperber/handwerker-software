@@ -6,6 +6,7 @@ import { bumpSessionVersion } from "@/lib/auth/session-version";
 import type { UserRole } from "@/generated/prisma/client";
 import { ASSIGNABLE_STAFF_ROLES, hasPermission } from "@/lib/permissions";
 import { createAuditLog } from "@/lib/audit";
+import { employeeListInclude } from "@/lib/employees/list-select";
 
 export async function GET(
   _request: NextRequest,
@@ -17,7 +18,7 @@ export async function GET(
   const { id } = await params;
   const employee = await prisma.employee.findFirst({
     where: { id, tenantId: auth.tenantId },
-    include: { user: true, qualifications: true, workingHours: true },
+    include: employeeListInclude,
   });
 
   if (!employee) return apiError("Mitarbeiter nicht gefunden", 404);
@@ -225,7 +226,7 @@ export async function PATCH(
           }
         : {}),
     },
-    include: { user: true, qualifications: true },
+    include: employeeListInclude,
   });
 
   return apiSuccess(updated);

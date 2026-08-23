@@ -36,22 +36,30 @@ export default function AgbPage() {
       <section>
         <h2 className="text-lg font-semibold text-slate-900">4. Verfügbarkeit & Haftung</h2>
         <p>
-          [Platzhalter für SLA, Haftungsbeschränkungen, höhere Gewalt — juristisch auszuformulieren]
+          Die Software wird mit branchenüblicher Sorgfalt bereitgestellt. Eine ununterbrochene
+          Verfügbarkeit wird nicht zugesichert. Für Schäden, die auf höherer Gewalt, Störungen
+          Dritter (Hosting, Netz, Zahlungs- oder Nachrichtenanbieter) oder unsachgemäßer Nutzung
+          beruhen, wird nicht gehaftet, soweit gesetzlich zulässig. Zwingende Haftung (Vorsatz,
+          grobe Fahrlässigkeit, Verletzung von Leben, Körper, Gesundheit, Produkthaftung) bleibt
+          unberührt.
         </p>
       </section>
 
       <section>
         <h2 className="text-lg font-semibold text-slate-900">5. Datenschutz</h2>
         <p>
-          Ergänzend gilt die Datenschutzerklärung unter /datenschutz. Der Kunde bleibt
-          Verantwortlicher für die in seinem Mandanten verarbeiteten Kundendaten, soweit gesetzlich
-          vorgesehen.
+          Ergänzend gilt die Datenschutzerklärung. Der Betrieb bleibt Verantwortlicher für die in
+          seinem Mandanten verarbeiteten Kundendaten, soweit gesetzlich vorgesehen.
         </p>
       </section>
 
       <section>
-        <h2 className="text-lg font-semibold text-slate-900">6. Schlussbestimmungen</h2>
-        <p>Gerichtsstand / anwendbares Recht: [Platzhalter].</p>
+        <h2 className="text-lg font-semibold text-slate-900">6. Anwendbares Recht und Gerichtsstand</h2>
+        <p>
+          Es gilt das Recht der Bundesrepublik Deutschland unter Ausschluss des UN-Kaufrechts.
+          Ist der Nutzer Kaufmann, juristische Person des öffentlichen Rechts oder hat er keinen
+          allgemeinen Gerichtsstand in Deutschland, ist Gerichtsstand der Sitz des Anbieters.
+        </p>
       </section>
     </LegalPageShell>
   );

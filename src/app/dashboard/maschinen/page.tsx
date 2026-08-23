@@ -171,26 +171,25 @@ export default function MaschinenPage() {
     <div>
       <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Maschinen & Geräte</h1>
-          <p className="text-sm text-slate-500 mt-1">Stundensatz per Amortisation oder einfache Pauschale</p>
+          <h1 className="flex items-center gap-2 text-2xl font-bold text-slate-900">
+            Maschinen & Geräte
+            <InfoButton title="Wie werden Maschinenkosten berechnet?" ariaLabel="Info zu Maschinen">
+              <p>Stundensatz per Amortisation oder einfache Pauschale.</p>
+              <p className="font-medium text-foreground">Amortisation (detailliert)</p>
+              <p>Gesamtkosten = Anschaffung − Restwert + Reparatur + Wartung + Verschleiß + Versicherung + Energie</p>
+              <p>Stundensatz = Gesamtkosten ÷ Nutzungsstunden × (1 + Ausfallrisiko %)</p>
+              <p className="text-xs">Restwert = erwarteter Verkaufswert am Lebensende (nicht der Wert heute). 0 € = volle Anschaffung abschreiben.</p>
+              <p className="font-medium text-foreground">Ersatzrücklage am Lebensende</p>
+              <p>= (Stundensatz × Nutzungsstunden) − Gesamtkosten — der Überschuss für die nächste Maschine, wenn der Stundensatz den Ausfallrisiko-Zuschlag enthält.</p>
+              <p className="text-xs">In der Kalkulation: Stundensatz × Einsatzstunden = Maschinenkosten</p>
+              <p className="font-medium text-foreground">Pauschale (einfach)</p>
+              <p>Sie geben direkt einen €/h-Satz ein – ideal wenn Anschaffungsdaten unbekannt sind. Maschinenkosten = Pauschale × Einsatzstunden (in der Kalkulation bearbeitbar).</p>
+            </InfoButton>
+          </h1>
         </div>
         <CanAccess permission="calculations.settings">
           <AddButton onClick={() => setShowForm(!showForm)}>Maschine hinzufügen</AddButton>
         </CanAccess>
-      </div>
-
-      <div className="flex items-center justify-end mb-4">
-        <InfoButton title="Wie werden Maschinenkosten berechnet?">
-          <p className="font-medium text-foreground">Amortisation (detailliert)</p>
-          <p>Gesamtkosten = Anschaffung − Restwert + Reparatur + Wartung + Verschleiß + Versicherung + Energie</p>
-          <p>Stundensatz = Gesamtkosten ÷ Nutzungsstunden × (1 + Ausfallrisiko %)</p>
-          <p className="text-xs">Restwert = erwarteter Verkaufswert am Lebensende (nicht der Wert heute). 0 € = volle Anschaffung abschreiben.</p>
-          <p className="font-medium text-foreground">Ersatzrücklage am Lebensende</p>
-          <p>= (Stundensatz × Nutzungsstunden) − Gesamtkosten — der Überschuss für die nächste Maschine, wenn der Stundensatz den Ausfallrisiko-Zuschlag enthält.</p>
-          <p className="text-xs">In der Kalkulation: Stundensatz × Einsatzstunden = Maschinenkosten</p>
-          <p className="font-medium text-foreground">Pauschale (einfach)</p>
-          <p>Sie geben direkt einen €/h-Satz ein – ideal wenn Anschaffungsdaten unbekannt sind. Maschinenkosten = Pauschale × Einsatzstunden (in der Kalkulation bearbeitbar).</p>
-        </InfoButton>
       </div>
 
       <CanAccess permission="calculations.settings">

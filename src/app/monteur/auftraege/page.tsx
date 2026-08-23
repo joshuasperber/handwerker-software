@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { fetchJson } from "@/lib/fetch-json";
 import { ORDER_STATUS_LABELS, formatDateTime } from "@/lib/utils";
 import { ClipboardPlus, Loader2, MapPin } from "lucide-react";
+import { InfoButton } from "@/components/ui/info-button";
 
 interface OrderRow {
   id: string;
@@ -56,8 +57,12 @@ export default function MonteurAuftraegePage() {
     <div className="space-y-4">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <h1 className="text-xl font-bold text-slate-900">Meine Aufträge</h1>
-          <p className="text-sm text-slate-500">Nur Ihre zugewiesenen Aufträge</p>
+          <h1 className="flex items-center gap-2 text-xl font-bold text-slate-900">
+            Meine Aufträge
+            <InfoButton title="Meine Aufträge" ariaLabel="Info zu meinen Aufträgen">
+              <p>Nur Ihre zugewiesenen Aufträge.</p>
+            </InfoButton>
+          </h1>
         </div>
         <Button asChild size="sm" variant="outline" className="shrink-0">
           <Link href="/monteur/anfrage">

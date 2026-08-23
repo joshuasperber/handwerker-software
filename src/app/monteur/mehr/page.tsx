@@ -12,6 +12,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { useSession } from "@/components/auth/can-access";
+import { InfoButton } from "@/components/ui/info-button";
 import { canSwitchAppViews } from "@/lib/permissions";
 import { LogoutButton } from "@/components/auth/logout-button";
 import type { UserRole } from "@/generated/prisma/enums";
@@ -71,10 +72,12 @@ export default function MonteurMehrPage() {
   return (
     <div className="space-y-4">
       <div>
-        <h1 className="text-xl font-bold text-slate-900">Mehr</h1>
-        <p className="text-sm text-slate-500">
-          Profil, Nachrichten und weitere Funktionen
-        </p>
+        <h1 className="flex items-center gap-2 text-xl font-bold text-slate-900">
+          Mehr
+          <InfoButton title="Mehr" ariaLabel="Info zu Mehr">
+            <p>Profil, Nachrichten und weitere Funktionen.</p>
+          </InfoButton>
+        </h1>
       </div>
 
       <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white divide-y divide-slate-100">

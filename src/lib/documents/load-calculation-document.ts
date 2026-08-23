@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import type { DocumentCalcInput, DocumentCompanyInput } from "./build-document-html";
 import { calcVatWithTreatment, resolveTaxTreatment } from "@/lib/tax/treatment";
+import { resolveStoredImageToDataUrl } from "@/lib/stored-image-server";
 import { resolveInvoiceDesign } from "./invoice-design";
 
 export async function loadCalculationForDocument(tenantId: string, calculationId: string) {
@@ -98,17 +99,21 @@ export async function loadCalculationForDocument(tenantId: string, calculationId
   };
 
   const design = resolveInvoiceDesign(companySettings ?? {});
+  const [invoiceLogoUrl, tenantLogoUrl] = await Promise.all([
+    resolveStoredImageToDataUrl(companySettings?.invoiceLogoUrl),
+    resolveStoredImageToDataUrl(tenant?.logoUrl),
+  ]);
   const company: DocumentCompanyInput = {
     companyName: companySettings?.companyName ?? tenant?.name ?? "Handwerksbetrieb",
     street: companySettings?.street,
     houseNumber: companySettings?.houseNumber,
     postalCode: companySettings?.postalCode,
     city: companySettings?.city,
-    logoUrl: tenant?.logoUrl,
+    logoUrl: tenantLogoUrl,
     phone: companySettings?.phone ?? tenant?.phone,
     email: companySettings?.email ?? tenant?.email,
     website: companySettings?.website,
-    invoiceLogoUrl: companySettings?.invoiceLogoUrl,
+    invoiceLogoUrl,
     bankName: companySettings?.bankName,
     iban: companySettings?.iban,
     bic: companySettings?.bic,

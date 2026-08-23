@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ClipboardPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { InfoButton } from "@/components/ui/info-button";
 import { Input } from "@/components/ui/input";
 import { saveJson } from "@/lib/save-toast";
 import { useApiSWR } from "@/lib/swr";
@@ -78,10 +79,10 @@ export default function MonteurAnfragePage() {
         <h1 className="text-xl font-bold text-slate-900 flex items-center gap-2">
           <ClipboardPlus className="h-6 w-6 text-[#0d5c63]" />
           Neue Anfrage erfassen
+          <InfoButton title="Neue Anfrage erfassen" ariaLabel="Info zur Anfrage">
+            <p>Zusatzarbeit, Materialbedarf oder Rückfragen an Büro/Admin melden.</p>
+          </InfoButton>
         </h1>
-        <p className="text-sm text-slate-500">
-          Zusatzarbeit, Materialbedarf oder Rückfragen an Büro/Admin melden.
-        </p>
       </div>
 
       <form

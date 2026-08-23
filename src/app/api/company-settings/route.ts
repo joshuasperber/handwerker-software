@@ -6,6 +6,19 @@ import {
   parseInvoiceLayout,
   parseInvoiceTemplate,
 } from "@/lib/documents/invoice-design";
+import { toInvoiceLogoSrc } from "@/lib/logo";
+import { hasStoredImage, persistableImageUrl } from "@/lib/stored-image";
+
+function toCompanyDTO<T extends { invoiceLogoUrl: string | null; updatedAt: Date }>(
+  company: T | null
+) {
+  if (!company) return null;
+  return {
+    ...company,
+    invoiceLogoUrl: toInvoiceLogoSrc(company.invoiceLogoUrl, company.updatedAt) ?? "",
+    hasInvoiceLogo: hasStoredImage(company.invoiceLogoUrl),
+  };
+}
 
 export async function GET() {
   const auth = await requireAuth("calculations.read");
@@ -16,7 +29,7 @@ export async function GET() {
     prisma.overheadSettings.findUnique({ where: { tenantId: auth.tenantId } }),
   ]);
 
-  return apiSuccess({ company, overhead });
+  return apiSuccess({ company: toCompanyDTO(company), overhead });
 }
 
 export async function PUT(request: Request) {
@@ -69,8 +82,8 @@ export async function PUT(request: Request) {
       phone: company.phone !== undefined ? (company.phone || null) : undefined,
       email: company.email !== undefined ? (company.email || null) : undefined,
       website: company.website !== undefined ? (company.website || null) : undefined,
-      // Rechnungs-Personalisierung
-      invoiceLogoUrl: company.invoiceLogoUrl !== undefined ? (company.invoiceLogoUrl || null) : undefined,
+      // Rechnungs-Personalisierung — Logo nur als kurze URL, nie als Data-URL
+      invoiceLogoUrl: persistableImageUrl(company.invoiceLogoUrl),
       bankName: company.bankName !== undefined ? (company.bankName || null) : undefined,
       iban: company.iban !== undefined ? (company.iban || null) : undefined,
       bic: company.bic !== undefined ? (company.bic || null) : undefined,
@@ -139,5 +152,5 @@ export async function PUT(request: Request) {
     return apiError("Keine Daten zum Speichern", 400);
   }
 
-  return apiSuccess({ company: companyRecord, overhead: overheadRecord });
+  return apiSuccess({ company: toCompanyDTO(companyRecord), overhead: overheadRecord });
 }

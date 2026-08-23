@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { CanAccess } from "@/components/auth/can-access";
+import { InfoButton } from "@/components/ui/info-button";
 import { AddButton } from "@/components/ui/add-button";
 import { saveJson } from "@/lib/save-toast";
 import { VEHICLE_STATUS_LABELS, VEHICLE_STATUS_BADGE } from "@/lib/utils";
@@ -132,8 +133,12 @@ export default function FahrzeugePage() {
 
       <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
         <div>
-          <h1 className="text-2xl font-bold">Fahrzeuge / Fuhrpark</h1>
-          <p className="text-sm text-slate-500 mt-1">Autos anlegen, zuweisen und Status pflegen</p>
+          <h1 className="flex items-center gap-2 text-2xl font-bold">
+            Fahrzeuge / Fuhrpark
+            <InfoButton title="Fahrzeuge / Fuhrpark" ariaLabel="Info zum Fuhrpark">
+              <p>Autos anlegen, zuweisen und Status pflegen.</p>
+            </InfoButton>
+          </h1>
         </div>
         <CanAccess permission="orders.assign">
           <AddButton onClick={openCreate}>Fahrzeug anlegen</AddButton>

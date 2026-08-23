@@ -21,7 +21,6 @@ const DOC_SELECT = {
   cancelOfId: true,
   pdfStorageKey: true,
   eInvoiceFormat: true,
-  dataSnapshotJson: true,
   calculation: {
     select: {
       id: true,

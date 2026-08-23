@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { NumberInput } from "@/components/ui/number-input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
+import { InfoButton } from "@/components/ui/info-button";
 import { ChevronLeft, ChevronRight, Check, Plus, Trash2 } from "lucide-react";
 import {
   formatBillingAddressOneLine,
@@ -426,8 +427,12 @@ export default function NeuerAuftragPage() {
         <ChevronLeft className="h-4 w-4" /> Zurück zu Aufträgen
       </Link>
 
-      <h1 className="text-2xl font-bold mb-2">Neuer Auftrag</h1>
-      <p className="text-slate-500 text-sm mb-6">Assistent: Typ → Kunde → Leistung → Material → Termin → Freigabe</p>
+      <h1 className="mb-6 flex items-center gap-2 text-2xl font-bold">
+        Neuer Auftrag
+        <InfoButton title="Neuer Auftrag" ariaLabel="Info zum Auftragsassistenten">
+          <p>Assistent: Typ → Kunde → Leistung → Material → Termin → Freigabe.</p>
+        </InfoButton>
+      </h1>
 
       <div className="flex gap-1 overflow-x-auto mb-6 pb-1">
         {STEPS.map((label, i) => (

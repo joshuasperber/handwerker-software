@@ -48,4 +48,12 @@ describe("toDocumentListItem overdue", () => {
     const item = toDocumentListItem({ ...baseDoc, dueDate: null }, now);
     assert.equal(item.overdue, false);
   });
+
+  it("builds a list item without loading the document snapshot", () => {
+    const { dataSnapshotJson: _omit, ...withoutSnap } = baseDoc;
+    const item = toDocumentListItem(withoutSnap, now);
+    assert.equal(item.customerName, "Max Mustermann");
+    assert.equal(item.taxTreatmentLabel, null);
+    assert.equal(item.isReverseCharge, false);
+  });
 });

@@ -7,6 +7,7 @@ import { getDashboardAnalytics } from "@/lib/dashboard/analytics";
 import { DashboardView } from "@/components/dashboard/analytics/dashboard-view";
 import { DashboardSkeleton } from "@/components/dashboard/analytics/dashboard-skeleton";
 import { OnboardingChecklist } from "@/components/dashboard/onboarding-checklist";
+import { InfoButton } from "@/components/ui/info-button";
 
 export const dynamic = "force-dynamic";
 
@@ -47,12 +48,12 @@ export default async function DashboardPage() {
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-900">Dashboard</h1>
-          <p className="text-sm text-muted-foreground">
-            Überblick über Umsatz, Aufträge, Termine und Rechnungen
-          </p>
-        </div>
+        <h1 className="flex items-center gap-2 text-2xl font-bold text-slate-900">
+          Dashboard
+          <InfoButton title="Dashboard" ariaLabel="Info zum Dashboard">
+            <p>Überblick über Umsatz, Aufträge, Termine und Rechnungen.</p>
+          </InfoButton>
+        </h1>
         {canCreateOrder && (
           <AddButton href="/dashboard/auftraege/neu" className="w-full sm:w-auto">
             Neuer Auftrag

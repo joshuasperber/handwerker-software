@@ -16,6 +16,7 @@ import {
   Users,
 } from "lucide-react";
 import { ORDER_STATUS_LABELS, ROLE_LABELS, formatDateTime } from "@/lib/utils";
+import { InfoButton } from "@/components/ui/info-button";
 
 interface Colleague {
   id: string;
@@ -119,10 +120,12 @@ export default function MonteurMitarbeiterPage() {
     <div className="space-y-4">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <h1 className="text-xl font-bold text-slate-900">Team</h1>
-          <p className="mt-1 text-sm text-slate-500">
-            Kollegen, Partner und Aufträge im Betrieb
-          </p>
+          <h1 className="flex items-center gap-2 text-xl font-bold text-slate-900">
+            Team
+            <InfoButton title="Team" ariaLabel="Info zum Team">
+              <p>Kollegen, Partner und Aufträge im Betrieb.</p>
+            </InfoButton>
+          </h1>
         </div>
         <Link
           href="/monteur/kalender"

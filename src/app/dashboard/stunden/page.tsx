@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { CanAccess } from "@/components/auth/can-access";
+import { InfoButton } from "@/components/ui/info-button";
 import { swrKeys, useApiSWR } from "@/lib/swr";
 import {
   TIME_ENTRY_STATUS_LABELS,
@@ -153,10 +154,12 @@ export default function TeamStundenPage() {
     <div className="space-y-6">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Team-Stunden</h1>
-          <p className="text-sm text-muted-foreground">
-            Alle Stundenzettel einsehen, filtern, prüfen und freigeben
-          </p>
+          <h1 className="flex items-center gap-2 text-2xl font-bold text-slate-900">
+            Team-Stunden
+            <InfoButton title="Team-Stunden" ariaLabel="Info zu Team-Stunden">
+              <p>Alle Stundenzettel einsehen, filtern, prüfen und freigeben.</p>
+            </InfoButton>
+          </h1>
         </div>
         <CanAccess permission="monteur.own">
           <Button asChild variant="outline" size="sm">

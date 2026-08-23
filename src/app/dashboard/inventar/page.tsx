@@ -8,6 +8,7 @@ import { NumberInput } from "@/components/ui/number-input";
 import { Card } from "@/components/ui/card";
 import { selectFieldClasses } from "@/components/ui/date-input";
 import { CanAccess } from "@/components/auth/can-access";
+import { InfoButton } from "@/components/ui/info-button";
 import { AddButton } from "@/components/ui/add-button";
 import { saveJson } from "@/lib/save-toast";
 import { Package, Plus, AlertTriangle, ArrowRightLeft, History, GripVertical, Pencil, PackageMinus, PackagePlus } from "lucide-react";
@@ -445,8 +446,10 @@ export default function InventarPage() {
           <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
             <Package className="h-7 w-7 text-[#0d5c63]" />
             Inventar & Lager
+            <InfoButton title="Inventar & Lager" ariaLabel="Info zu Inventar">
+              <p>Artikel, Bestände, Reservierungen und Lagerwarnungen.</p>
+            </InfoButton>
           </h1>
-          <p className="text-slate-500 mt-1 text-sm">Artikel, Bestände, Reservierungen und Lagerwarnungen</p>
         </div>
         <CanAccess permission="inventory.write">
           <AddButton onClick={() => setShowForm(!showForm)}>Artikel anlegen</AddButton>

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
+import { InfoButton } from "@/components/ui/info-button";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -112,10 +113,12 @@ export default function NeuesProjektPage() {
         >
           <ArrowLeft className="h-4 w-4" /> Zurück
         </Link>
-        <h1 className="text-2xl font-bold text-slate-900">Neues Projekt</h1>
-        <p className="mt-1 text-sm text-slate-500">
-          Größeres Vorhaben anlegen und später Aufträge, Fotos und Kosten verknüpfen
-        </p>
+        <h1 className="flex items-center gap-2 text-2xl font-bold text-slate-900">
+          Neues Projekt
+          <InfoButton title="Neues Projekt" ariaLabel="Info zu neuem Projekt">
+            <p>Größeres Vorhaben anlegen und später Aufträge, Fotos und Kosten verknüpfen.</p>
+          </InfoButton>
+        </h1>
       </div>
 
       <Card className="!p-5">
