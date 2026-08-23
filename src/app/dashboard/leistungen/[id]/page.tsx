@@ -11,6 +11,7 @@ import { CanAccess } from "@/components/auth/can-access";
 import { ChevronLeft, Plus, Trash2, Wrench } from "lucide-react";
 import { toast } from "sonner";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { fetchJson } from "@/lib/fetch-json";
 
 interface TemplateLine {
   id: string;
@@ -39,6 +40,7 @@ export default function LeistungDetailPage() {
   const [templates, setTemplates] = useState<TemplateLine[]>([]);
   const [articles, setArticles] = useState<Article[]>([]);
   const [error, setError] = useState("");
+  const [loadError, setLoadError] = useState("");
   const [deleting, setDeleting] = useState(false);
   const [confirmRemove, setConfirmRemove] = useState(false);
   const [materialForm, setMaterialForm] = useState({ articleId: "", defaultQuantity: 1 });
@@ -46,15 +48,25 @@ export default function LeistungDetailPage() {
 
   const load = useCallback(() => {
     if (!id || typeof id !== "string") return;
+    setLoadError("");
     Promise.all([
-      fetch(`/api/services/${id}`).then((r) => r.json()),
-      fetch(`/api/services/${id}/material-template`).then((r) => r.json()),
-      fetch("/api/articles").then((r) => r.json()),
+      fetchJson<{
+        id: string;
+        name: string;
+        description: string | null;
+        isActive: boolean;
+      }>(`/api/services/${id}`),
+      fetchJson<TemplateLine[]>(`/api/services/${id}/material-template`),
+      fetchJson<Article[]>("/api/articles"),
     ]).then(([s, t, a]) => {
-      if (s.success) setService(s.data);
-      else setService(null);
-      if (t.success) setTemplates(t.data);
-      if (a.success) setArticles(a.data);
+      if (s.success && s.data) {
+        setService(s.data);
+      } else {
+        setService(null);
+        setLoadError(s.error ?? "Leistung konnte nicht geladen werden");
+      }
+      if (t.success && t.data) setTemplates(t.data);
+      if (a.success && a.data) setArticles(a.data);
     });
   }, [id]);
 
@@ -126,7 +138,22 @@ export default function LeistungDetailPage() {
     load();
   }
 
-  if (!service) return <p className="text-slate-500">Laden...</p>;
+  if (!service) {
+    if (loadError) {
+      return (
+        <div className="space-y-3">
+          <Link href="/dashboard/leistungen" className="flex items-center gap-1 text-sm text-[#0d5c63] hover:underline">
+            <ChevronLeft className="h-4 w-4" /> Zurück zu Leistungen
+          </Link>
+          <p className="text-sm text-red-600">{loadError}</p>
+          <Button type="button" variant="outline" size="sm" onClick={load}>
+            Erneut versuchen
+          </Button>
+        </div>
+      );
+    }
+    return <p className="text-slate-500">Wird geladen …</p>;
+  }
 
   const materialLines = templates.filter((t) => !t.isTool);
   const toolLines = templates.filter((t) => t.isTool);

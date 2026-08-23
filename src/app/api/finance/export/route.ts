@@ -94,12 +94,27 @@ export async function GET(request: NextRequest) {
   if (section === "all" || section === "investments") {
     const investments = await prisma.plannedInvestment.findMany({
       where: { tenantId: auth.tenantId },
+      include: {
+        machine: { select: { name: true } },
+        article: { select: { name: true } },
+        project: { select: { name: true } },
+      },
       orderBy: { plannedDate: "asc" },
     });
     parts.push("## Geplante Investitionen");
     parts.push(
       toCsv([
-        ["Titel", "Betrag", "Datum", "Kategorie", "Status", "Notiz"],
+        [
+          "Titel",
+          "Betrag",
+          "Datum",
+          "Kategorie",
+          "Status",
+          "Notiz",
+          "Maschine",
+          "Material",
+          "Projekt",
+        ],
         ...investments.map((i) => [
           i.title,
           i.plannedAmount.toFixed(2),
@@ -107,6 +122,9 @@ export async function GET(request: NextRequest) {
           INVESTMENT_CATEGORY_LABELS[i.category],
           INVESTMENT_STATUS_LABELS[i.status],
           i.note,
+          i.machine?.name ?? "",
+          i.article?.name ?? "",
+          i.project?.name ?? "",
         ]),
       ])
     );

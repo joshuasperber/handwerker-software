@@ -17,6 +17,22 @@ import {
   type DocumentCompanyInput,
 } from "@/lib/documents/build-document-html";
 import { Save, Upload, X, Eye } from "lucide-react";
+import { SettingsPageHeader } from "@/components/dashboard/settings-page-header";
+import { selectFieldClasses } from "@/components/ui/date-input";
+import { Label } from "@/components/ui/label";
+import {
+  DEFAULT_INVOICE_ACCENT,
+  INVOICE_FONT_SCALE_LABELS,
+  INVOICE_FONT_SCALES,
+  INVOICE_LAYOUT_LABELS,
+  INVOICE_LAYOUTS,
+  INVOICE_TEMPLATE_LABELS,
+  INVOICE_TEMPLATES,
+  normalizeHexColor,
+  type InvoiceFontScale,
+  type InvoiceLayout,
+  type InvoiceTemplate,
+} from "@/lib/documents/invoice-design";
 
 interface InvoiceForm {
   companyName: string;
@@ -37,6 +53,11 @@ interface InvoiceForm {
   invoiceIntroText: string;
   invoiceNotes: string;
   invoiceFooterText: string;
+  invoiceLegalText: string;
+  invoiceAccentColor: string;
+  invoiceLayout: InvoiceLayout;
+  invoiceFontScale: InvoiceFontScale;
+  invoiceTemplate: InvoiceTemplate;
 }
 
 const EMPTY_FORM: InvoiceForm = {
@@ -58,6 +79,11 @@ const EMPTY_FORM: InvoiceForm = {
   invoiceIntroText: "",
   invoiceNotes: "",
   invoiceFooterText: "",
+  invoiceLegalText: "",
+  invoiceAccentColor: DEFAULT_INVOICE_ACCENT,
+  invoiceLayout: "LOGO_LEFT",
+  invoiceFontScale: "NORMAL",
+  invoiceTemplate: "STANDARD",
 };
 
 const MAX_LOGO_DIMENSION = 400;
@@ -132,6 +158,10 @@ export default function RechnungseinstellungenPage() {
             Object.keys(EMPTY_FORM).map((key) => {
               const value = (c as Record<string, unknown>)[key];
               if (key === "paymentTermsDays") return [key, value != null ? Number(value) : 14];
+              if (key === "invoiceAccentColor") return [key, normalizeHexColor(value as string | null)];
+              if (key === "invoiceLayout") return [key, value || "LOGO_LEFT"];
+              if (key === "invoiceFontScale") return [key, value || "NORMAL"];
+              if (key === "invoiceTemplate") return [key, value || "STANDARD"];
               return [key, value ?? ""];
             })
           ),
@@ -196,6 +226,11 @@ export default function RechnungseinstellungenPage() {
       invoiceIntroText: form.invoiceIntroText,
       invoiceFooterText: form.invoiceFooterText,
       invoiceNotes: form.invoiceNotes,
+      invoiceLegalText: form.invoiceLegalText,
+      invoiceAccentColor: form.invoiceAccentColor,
+      invoiceLayout: form.invoiceLayout,
+      invoiceFontScale: form.invoiceFontScale,
+      invoiceTemplate: form.invoiceTemplate,
     };
     return buildCustomerDocumentHtml("INVOICE", SAMPLE_CALC, company, "RE-2026-0001");
   }, [form]);
@@ -206,16 +241,11 @@ export default function RechnungseinstellungenPage() {
 
   return (
     <div>
-      <div className="flex items-center gap-2 mb-6">
-        <h1 className="text-2xl font-bold text-slate-900">Rechnungseinstellungen</h1>
-        <InfoButton title="Rechnungseinstellungen">
-          <p>
-            Diese Stammdaten werden automatisch für neue Angebote und Rechnungen verwendet. Bereits
-            erstellte Rechnungen behalten ihre Rechnungsnummer und werden hierdurch nicht verändert.
-          </p>
-          <p>Die Vorschau rechts zeigt mit Beispieldaten, wie Ihre Rechnung aussieht.</p>
-        </InfoButton>
-      </div>
+      <SettingsPageHeader href="/dashboard/einstellungen/rechnung" />
+      <p className="mb-6 max-w-3xl text-xs text-slate-500">
+        Neue Einstellungen gelten für neue Rechnungen. Bereits erstellte Belege behalten ihren
+        gespeicherten Stand. Die Vorschau rechts nutzt Beispieldaten.
+      </p>
 
       <CanAccess
         permission="calculations.settings"
@@ -308,6 +338,87 @@ export default function RechnungseinstellungenPage() {
                 <Textarea label="Einleitungstext (über den Positionen)" value={form.invoiceIntroText} onChange={(e) => update("invoiceIntroText", e.target.value)} rows={2} placeholder="z. B. Sehr geehrte/r {{kundenname}}, vielen Dank für Ihren Auftrag {{auftragsnummer}}." />
                 <Textarea label="Hinweise / Zahlungsbedingungen" value={form.invoiceNotes} onChange={(e) => update("invoiceNotes", e.target.value)} rows={2} placeholder="z. B. Bitte überweisen Sie den Betrag bis zum {{zahlungsziel}} ohne Abzug." />
                 <Textarea label="Fußzeile" value={form.invoiceFooterText} onChange={(e) => update("invoiceFooterText", e.target.value)} rows={2} placeholder="z. B. Vielen Dank für Ihr Vertrauen. {{firmenname}}" />
+                <Textarea label="Rechtliche Hinweise" value={form.invoiceLegalText} onChange={(e) => update("invoiceLegalText", e.target.value)} rows={2} placeholder="z. B. Es gelten unsere AGB. Gerichtsstand …" />
+              </div>
+            </Card>
+
+            <Card
+              title="Design"
+              action={
+                <InfoButton title="Rechnungsdesign">
+                  <p>
+                    Farbe, Logo-Position, Schriftgröße und Vorlage gelten für neue Rechnungen. Die
+                    Live-Vorschau rechts zeigt die Wirkung sofort.
+                  </p>
+                </InfoButton>
+              }
+            >
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="invoice-accent">Akzentfarbe</Label>
+                  <div className="mt-1.5 flex items-center gap-3">
+                    <input
+                      id="invoice-accent"
+                      type="color"
+                      value={normalizeHexColor(form.invoiceAccentColor)}
+                      onChange={(e) => update("invoiceAccentColor", e.target.value)}
+                      className="h-11 w-14 cursor-pointer rounded-lg border border-slate-300 bg-white p-1"
+                    />
+                    <Input
+                      value={form.invoiceAccentColor}
+                      onChange={(e) => update("invoiceAccentColor", e.target.value)}
+                      placeholder="#0d5c63"
+                      className="max-w-[160px]"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <Label htmlFor="invoice-layout">Anordnung Logo / Titel</Label>
+                  <select
+                    id="invoice-layout"
+                    className={`${selectFieldClasses} mt-1.5`}
+                    value={form.invoiceLayout}
+                    onChange={(e) => update("invoiceLayout", e.target.value as InvoiceLayout)}
+                  >
+                    {INVOICE_LAYOUTS.map((layout) => (
+                      <option key={layout} value={layout}>
+                        {INVOICE_LAYOUT_LABELS[layout]}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <div>
+                    <Label htmlFor="invoice-font">Schriftgröße</Label>
+                    <select
+                      id="invoice-font"
+                      className={`${selectFieldClasses} mt-1.5`}
+                      value={form.invoiceFontScale}
+                      onChange={(e) => update("invoiceFontScale", e.target.value as InvoiceFontScale)}
+                    >
+                      {INVOICE_FONT_SCALES.map((scale) => (
+                        <option key={scale} value={scale}>
+                          {INVOICE_FONT_SCALE_LABELS[scale]}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <Label htmlFor="invoice-template">Vorlage</Label>
+                    <select
+                      id="invoice-template"
+                      className={`${selectFieldClasses} mt-1.5`}
+                      value={form.invoiceTemplate}
+                      onChange={(e) => update("invoiceTemplate", e.target.value as InvoiceTemplate)}
+                    >
+                      {INVOICE_TEMPLATES.map((tpl) => (
+                        <option key={tpl} value={tpl}>
+                          {INVOICE_TEMPLATE_LABELS[tpl]}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
               </div>
             </Card>
 
@@ -330,7 +441,7 @@ export default function RechnungseinstellungenPage() {
                 <iframe
                   title="Rechnungsvorschau"
                   srcDoc={previewHtml}
-                  className="h-[600px] w-full bg-white"
+                  className="h-[420px] w-full bg-white sm:h-[600px]"
                 />
               </div>
               <p className="mt-2 text-xs text-slate-400">

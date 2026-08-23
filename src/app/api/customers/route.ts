@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { requireAuth, apiSuccess, apiError } from "@/lib/api";
+import { parseStoredPhone, parseContactPreference, parseBooleanFlag } from "@/lib/customer-contact";
 
 export async function GET() {
   const auth = await requireAuth("customers.read");
@@ -42,18 +43,24 @@ export async function POST(request: Request) {
     );
   }
 
+  const phoneParsed = parseStoredPhone(body.phone);
+  if (!phoneParsed.ok) return apiError(phoneParsed.error, 400);
+
   const customer = await prisma.customer.create({
     data: {
       tenantId: auth.tenantId,
       firstName,
       lastName,
       email: body.email ?? `${firstName}.${lastName}@kunde.local`.toLowerCase(),
-      phone: body.phone,
+      phone: phoneParsed.e164,
       company: company || null,
       customerType,
       contactPerson: body.contactPerson || null,
       vatId: body.vatId || null,
       taxNumber: body.taxNumber || null,
+      contactAllowed: parseBooleanFlag(body.contactAllowed, true) ?? true,
+      appointmentRemindersEnabled: parseBooleanFlag(body.appointmentRemindersEnabled, true) ?? true,
+      preferredContactChannel: parseContactPreference(body.preferredContactChannel) ?? "AUTO",
       billingStreet:
         body.billingStreet ||
         body.property?.street ||

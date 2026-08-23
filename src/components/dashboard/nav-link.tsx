@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { LucideIcon } from "lucide-react";
+import { isNavItemActive } from "@/lib/dashboard-nav";
 
 export function DashboardNavLink({
   href,
@@ -18,16 +19,14 @@ export function DashboardNavLink({
   badge?: number;
 }) {
   const pathname = usePathname();
-  const active =
-    href === "/dashboard"
-      ? pathname === "/dashboard"
-      : pathname === href || pathname.startsWith(`${href}/`);
+  const active = isNavItemActive(pathname, href);
   const showBadge = typeof badge === "number" && badge > 0;
 
   return (
     <Link
       href={href}
       onClick={onClick}
+      aria-current={active ? "page" : undefined}
       className={`flex min-h-12 items-center gap-4 rounded-lg px-5 py-3 text-sm font-medium transition-colors ${
         active
           ? "bg-slate-200 text-slate-900"

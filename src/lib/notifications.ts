@@ -1,6 +1,14 @@
 import nodemailer from "nodemailer";
 import { prisma } from "./prisma";
-import type { NotificationChannel, NotificationType, Prisma } from "@/generated/prisma/client";
+import type {
+  NotificationChannel,
+  NotificationDeliveryStatus,
+  NotificationType,
+  Prisma,
+} from "@/generated/prisma/client";
+import { sendMessagingMessage } from "@/lib/messaging/send";
+import { getMessagingKind } from "@/lib/messaging/config";
+import { parsePhoneNumber } from "@/lib/phone";
 
 export interface EmailAttachment {
   filename: string;
@@ -23,6 +31,13 @@ interface SendNotificationParams {
   inAppTitle?: string;
   inAppLink?: string;
 }
+
+export type DeliverNotificationResult = {
+  sent: boolean;
+  status: NotificationDeliveryStatus;
+  errorMessage: string | null;
+  retryable: boolean;
+};
 
 /** Ersetzt {{platzhalter}} (case-insensitive) im Vorlagentext. */
 export function applyTemplate(template: string, vars: Record<string, string>): string {
@@ -52,16 +67,61 @@ export async function createInAppNotification(params: CreateInAppParams) {
   });
 }
 
-export async function sendNotification(params: SendNotificationParams) {
+export async function sendNotification(params: SendNotificationParams): Promise<boolean> {
+  const result = await deliverNotification(params);
+  return result.sent;
+}
+
+export async function deliverNotification(
+  params: SendNotificationParams
+): Promise<DeliverNotificationResult> {
   const { tenantId, type, channel, recipient, subject, body, metadata, attachments } =
     params;
 
-  let sent = false;
+  let result: DeliverNotificationResult = {
+    sent: false,
+    status: "FAILED",
+    errorMessage: null,
+    retryable: true,
+  };
 
   if (channel === "EMAIL") {
-    sent = await sendEmail(recipient, subject ?? "JoMaster", body, attachments);
-  } else if (channel === "SMS") {
-    sent = await sendSms(recipient, body);
+    const email = await sendEmail(recipient, subject ?? "JoMaster", body, attachments);
+    result = {
+      sent: email.ok,
+      status: email.ok ? "SENT" : "FAILED",
+      errorMessage: email.ok ? null : email.error ?? "E-Mail-Versand fehlgeschlagen.",
+      retryable: !email.ok,
+    };
+  } else if (channel === "SMS" || channel === "WHATSAPP") {
+    const parsed = parsePhoneNumber(recipient);
+    if (!parsed.ok || !parsed.e164) {
+      result = {
+        sent: false,
+        status: "INVALID_PHONE",
+        errorMessage: parsed.ok ? "Keine gültige Telefonnummer." : parsed.error,
+        retryable: false,
+      };
+    } else {
+      const sms = await sendMessagingMessage({
+        toE164: parsed.e164,
+        body,
+        kind: channel === "WHATSAPP" ? "WHATSAPP" : getMessagingKind("SMS"),
+      });
+      result = {
+        sent: sms.ok,
+        status: sms.ok ? "SENT" : "FAILED",
+        errorMessage: sms.ok ? null : sms.error ?? "Nachrichtenversand fehlgeschlagen.",
+        retryable: sms.ok ? false : sms.retryable,
+      };
+    }
+  } else {
+    result = {
+      sent: true,
+      status: "SENT",
+      errorMessage: null,
+      retryable: false,
+    };
   }
 
   await prisma.notificationLog.create({
@@ -72,8 +132,13 @@ export async function sendNotification(params: SendNotificationParams) {
       recipient,
       subject,
       body,
+      status: result.status,
+      errorMessage: result.errorMessage,
+      retryable: result.retryable,
       metadata: (metadata ?? undefined) as Prisma.InputJsonValue | undefined,
     },
+  }).catch((err) => {
+    console.error("[notifications] Protokoll konnte nicht geschrieben werden", err);
   });
 
   if (params.inAppUserIds?.length) {
@@ -89,7 +154,35 @@ export async function sendNotification(params: SendNotificationParams) {
     });
   }
 
-  return sent;
+  return result;
+}
+
+export async function recordNotificationSkip(params: {
+  tenantId: string;
+  type: NotificationType;
+  channel: NotificationChannel;
+  recipient: string;
+  subject?: string;
+  body: string;
+  status: NotificationDeliveryStatus;
+  errorMessage: string;
+  metadata?: Record<string, unknown>;
+  retryable?: boolean;
+}) {
+  await prisma.notificationLog.create({
+    data: {
+      tenantId: params.tenantId,
+      type: params.type,
+      channel: params.channel,
+      recipient: params.recipient,
+      subject: params.subject,
+      body: params.body,
+      status: params.status,
+      errorMessage: params.errorMessage,
+      retryable: params.retryable ?? false,
+      metadata: (params.metadata ?? undefined) as Prisma.InputJsonValue | undefined,
+    },
+  });
 }
 
 async function sendEmail(
@@ -97,7 +190,7 @@ async function sendEmail(
   subject: string,
   body: string,
   attachments?: EmailAttachment[]
-): Promise<boolean> {
+): Promise<{ ok: boolean; error?: string }> {
   const host = process.env.SMTP_HOST;
   if (!host) {
     if (process.env.NODE_ENV === "development") {
@@ -106,8 +199,9 @@ async function sendEmail(
           (attachments?.length ? ` (+${attachments.length} Anhang)` : "") +
           `\n${body}`
       );
+      return { ok: true };
     }
-    return false;
+    return { ok: false, error: "E-Mail-Versand nicht konfiguriert (SMTP_HOST fehlt)." };
   }
 
   try {
@@ -132,42 +226,13 @@ async function sendEmail(
         contentType: a.contentType,
       })),
     });
-    return true;
+    return { ok: true };
   } catch (error) {
     console.error("E-Mail-Versand fehlgeschlagen:", error);
-    return false;
-  }
-}
-
-async function sendSms(to: string, body: string): Promise<boolean> {
-  const sid = process.env.TWILIO_ACCOUNT_SID;
-  if (!sid) {
-    if (process.env.NODE_ENV === "development") {
-      console.log(`[SMS DEV] To: ${to}\n${body}`);
-    }
-    return false;
-  }
-
-  try {
-    const response = await fetch(
-      `https://api.twilio.com/2010-04-01/Accounts/${sid}/Messages.json`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Basic ${Buffer.from(`${sid}:${process.env.TWILIO_AUTH_TOKEN}`).toString("base64")}`,
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-        body: new URLSearchParams({
-          To: to,
-          From: process.env.TWILIO_FROM_NUMBER ?? "",
-          Body: body,
-        }),
-      }
-    );
-    return response.ok;
-  } catch (error) {
-    console.error("SMS send failed:", error);
-    return false;
+    return {
+      ok: false,
+      error: error instanceof Error ? error.message : "E-Mail-Versand fehlgeschlagen.",
+    };
   }
 }
 

@@ -44,13 +44,31 @@ export function buildDocumentSnapshot(
 }
 
 /** Rendert das gespeicherte Dokument deterministisch aus dem Snapshot. */
-export function renderSnapshotHtml(snapshot: DocumentSnapshot): string {
+export function renderSnapshotHtml(
+  snapshot: DocumentSnapshot,
+  options?: { includePrintChrome?: boolean }
+): string {
   const htmlType = snapshot.type === "INVOICE" ? "INVOICE" : "OFFER";
   return buildCustomerDocumentHtml(
     htmlType,
     snapshot.calc,
     snapshot.company,
     snapshot.documentNumber,
-    new Date(snapshot.issueDateISO)
+    new Date(snapshot.issueDateISO),
+    options
   );
+}
+
+/**
+ * Overlay aktueller Firmeneinstellungen auf ein bestehendes Dokument.
+ * Positionen und Beträge bleiben aus dem Snapshot; nur Absender/Design wechseln.
+ */
+export function snapshotWithCurrentCompany(
+  snapshot: DocumentSnapshot,
+  currentCompany: DocumentCompanyInput
+): DocumentSnapshot {
+  return {
+    ...snapshot,
+    company: { ...snapshot.company, ...currentCompany },
+  };
 }

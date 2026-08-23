@@ -11,6 +11,8 @@ import { AddressFields } from "@/components/ui/address-fields";
 import { InfoButton } from "@/components/ui/info-button";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { toast } from "sonner";
+import { saveJson } from "@/lib/save-toast";
+import { fetchJson } from "@/lib/fetch-json";
 import { BUILDING_EXEMPTION_INFO } from "@/lib/tax/treatment";
 import { ChevronLeft, MapPin, Mail, Phone, Trash2, Star, Pencil, Plus, X, Check } from "lucide-react";
 
@@ -62,6 +64,9 @@ interface CustomerDetail {
   taxNotes: string | null;
   notes: string | null;
   bookingConfirmationEmailTemplate: string | null;
+  contactAllowed: boolean;
+  appointmentRemindersEnabled: boolean;
+  preferredContactChannel: "AUTO" | "EMAIL" | "SMS" | "PHONE";
   taxExemptionCertificate: TaxExemptionCertificate | null;
   properties: Property[];
   orders: { id: string; orderNumber: string; status: string; createdAt: string }[];
@@ -99,6 +104,9 @@ export default function KundeDetailPage() {
     taxNotes: "",
     notes: "",
     bookingConfirmationEmailTemplate: "",
+    contactAllowed: true,
+    appointmentRemindersEnabled: true,
+    preferredContactChannel: "AUTO" as "AUTO" | "EMAIL" | "SMS" | "PHONE",
   });
   const [taxCert, setTaxCert] = useState({
     hasCertificate: false,
@@ -117,39 +125,47 @@ export default function KundeDetailPage() {
   const [confirmRemove, setConfirmRemove] = useState(false);
   const [removeProp, setRemoveProp] = useState<Property | null>(null);
   const [removing, setRemoving] = useState(false);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   function load() {
-    fetch(`/api/customers/${id}`).then((r) => r.json()).then((d) => {
-      if (d.success) {
-        setCustomer(d.data);
-        setForm({
-          firstName: d.data.firstName,
-          lastName: d.data.lastName,
-          email: d.data.email,
-          phone: d.data.phone ?? "",
-          company: d.data.company ?? "",
-          customerType: d.data.customerType ?? "PRIVAT",
-          contactPerson: d.data.contactPerson ?? "",
-          vatId: d.data.vatId ?? "",
-          taxNumber: d.data.taxNumber ?? "",
-          billingStreet: d.data.billingStreet ?? "",
-          billingZipCode: d.data.billingZipCode ?? "",
-          billingCity: d.data.billingCity ?? "",
-          taxNotes: d.data.taxNotes ?? "",
-          notes: d.data.notes ?? "",
-          bookingConfirmationEmailTemplate: d.data.bookingConfirmationEmailTemplate ?? "",
-        });
-        const cert = d.data.taxExemptionCertificate;
-        setTaxCert({
-          hasCertificate: cert?.hasCertificate ?? false,
-          issuingTaxOffice: cert?.issuingTaxOffice ?? "",
-          validFrom: cert?.validFrom ? cert.validFrom.slice(0, 10) : "",
-          validTo: cert?.validTo ? cert.validTo.slice(0, 10) : "",
-          certificateNumber: cert?.certificateNumber ?? "",
-          documentFileName: cert?.documentFileName ?? "",
-          notes: cert?.notes ?? "",
-        });
+    fetchJson<CustomerDetail>(`/api/customers/${id}`).then((r) => {
+      if (!r.success || !r.data) {
+        setLoadError(r.error ?? "Kunde nicht gefunden");
+        return;
       }
+      const d = r.data;
+      setLoadError(null);
+      setCustomer(d);
+      setForm({
+        firstName: d.firstName,
+        lastName: d.lastName,
+        email: d.email,
+        phone: d.phone ?? "",
+        company: d.company ?? "",
+        customerType: d.customerType ?? "PRIVAT",
+        contactPerson: d.contactPerson ?? "",
+        vatId: d.vatId ?? "",
+        taxNumber: d.taxNumber ?? "",
+        billingStreet: d.billingStreet ?? "",
+        billingZipCode: d.billingZipCode ?? "",
+        billingCity: d.billingCity ?? "",
+        taxNotes: d.taxNotes ?? "",
+        notes: d.notes ?? "",
+        bookingConfirmationEmailTemplate: d.bookingConfirmationEmailTemplate ?? "",
+        contactAllowed: d.contactAllowed !== false,
+        appointmentRemindersEnabled: d.appointmentRemindersEnabled !== false,
+        preferredContactChannel: d.preferredContactChannel ?? "AUTO",
+      });
+      const cert = d.taxExemptionCertificate;
+      setTaxCert({
+        hasCertificate: cert?.hasCertificate ?? false,
+        issuingTaxOffice: cert?.issuingTaxOffice ?? "",
+        validFrom: cert?.validFrom ? cert.validFrom.slice(0, 10) : "",
+        validTo: cert?.validTo ? cert.validTo.slice(0, 10) : "",
+        certificateNumber: cert?.certificateNumber ?? "",
+        documentFileName: cert?.documentFileName ?? "",
+        notes: cert?.notes ?? "",
+      });
     });
   }
 
@@ -162,7 +178,7 @@ export default function KundeDetailPage() {
 
   async function saveTaxCert(e: React.FormEvent) {
     e.preventDefault();
-    await fetch(`/api/customers/${id}/tax-exemption`, {
+    await saveJson(`/api/customers/${id}/tax-exemption`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(taxCert),
@@ -172,12 +188,12 @@ export default function KundeDetailPage() {
 
   async function save(e: React.FormEvent) {
     e.preventDefault();
-    await fetch(`/api/customers/${id}`, {
+    const res = await saveJson(`/api/customers/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(form),
     });
-    load();
+    if (res.success) load();
   }
 
   async function addProperty(e: React.FormEvent) {
@@ -267,7 +283,17 @@ export default function KundeDetailPage() {
     return p.travelZone.useFormula ? `${p.travelZone.name} (Formel)` : p.travelZone.name;
   }
 
-  if (!customer) return <p className="text-slate-500">Laden...</p>;
+  if (loadError) {
+    return (
+      <div className="space-y-3">
+        <Link href="/dashboard/kunden" className="flex items-center gap-1 text-sm text-[#0d5c63] hover:underline">
+          <ChevronLeft className="h-4 w-4" /> Zurück zu Kunden
+        </Link>
+        <p className="text-sm text-red-600">{loadError}</p>
+      </div>
+    );
+  }
+  if (!customer) return <p className="text-slate-500">Wird geladen …</p>;
 
   const mailtoHref = `mailto:${customer.email}?subject=${encodeURIComponent(`Nachricht von Ihrem Handwerksbetrieb`)}`;
 
@@ -318,7 +344,47 @@ export default function KundeDetailPage() {
               />
             </div>
             <Input label="E-Mail" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
-            <Input label="Telefon" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
+            <Input
+              label="Telefon"
+              value={form.phone}
+              onChange={(e) => setForm({ ...form, phone: e.target.value })}
+              placeholder="+4917612345678"
+            />
+            <p className="text-xs text-slate-500 -mt-1">Internationales Format, z. B. +49… Deutsche Nummern wie 0176… werden automatisch umgewandelt.</p>
+            <label className="flex items-center gap-2 text-sm">
+              <input
+                type="checkbox"
+                checked={form.contactAllowed}
+                onChange={(e) => setForm({ ...form, contactAllowed: e.target.checked })}
+              />
+              Kontakt erlaubt (Termine, Erinnerungen)
+            </label>
+            <label className="flex items-center gap-2 text-sm">
+              <input
+                type="checkbox"
+                checked={form.appointmentRemindersEnabled}
+                onChange={(e) => setForm({ ...form, appointmentRemindersEnabled: e.target.checked })}
+              />
+              Terminerinnerungen aktiv
+            </label>
+            <div>
+              <label className="text-sm font-medium">Bevorzugter Kontaktweg</label>
+              <select
+                className="mt-1 h-10 w-full rounded-lg border px-3 text-sm"
+                value={form.preferredContactChannel}
+                onChange={(e) =>
+                  setForm({
+                    ...form,
+                    preferredContactChannel: e.target.value as "AUTO" | "EMAIL" | "SMS" | "PHONE",
+                  })
+                }
+              >
+                <option value="AUTO">Automatisch (Nachricht bevorzugt, sonst E-Mail)</option>
+                <option value="EMAIL">E-Mail</option>
+                <option value="SMS">Nachricht / SMS</option>
+                <option value="PHONE">Telefon / Nachricht</option>
+              </select>
+            </div>
             {form.customerType === "GEWERBLICH" && (
               <>
                 <Input label="Weiterer Ansprechpartner" value={form.contactPerson} onChange={(e) => setForm({ ...form, contactPerson: e.target.value })} />
@@ -367,6 +433,12 @@ export default function KundeDetailPage() {
             <div className="space-y-2 text-sm text-slate-600">
               <p className="flex items-center gap-2"><Mail className="h-4 w-4" /> {customer.email}</p>
               {customer.phone && <p className="flex items-center gap-2"><Phone className="h-4 w-4" /> {customer.phone}</p>}
+              {(!customer.phone && (!customer.email || String(customer.email).endsWith("@kunde.local"))) && (
+                <p className="text-amber-700">Keine Kontaktdaten vorhanden</p>
+              )}
+              {customer.contactAllowed === false && (
+                <p className="text-amber-700">Kontakt für Erinnerungen ist deaktiviert.</p>
+              )}
             </div>
             <Button asChild variant="outline" size="sm" className="mt-3">
               <a href={mailtoHref}><Mail className="h-4 w-4 mr-1" /> E-Mail schreiben</a>

@@ -11,6 +11,7 @@ import { ChevronLeft, Package, CheckCircle } from "lucide-react";
 import { OrderPhases, type OrderPhaseData } from "@/components/orders/order-phases";
 import { PhotoGallery } from "@/components/orders/photo-gallery";
 import { toast } from "sonner";
+import { fetchJson } from "@/lib/fetch-json";
 
 interface MaterialLine {
   id: string;
@@ -38,20 +39,29 @@ export default function MonteurAuftragPage() {
   const [error, setError] = useState("");
 
   const load = useCallback(() => {
-    fetch(`/api/monteur/orders/${id}`)
-      .then((r) => r.json())
-      .then((d) => {
-        if (d.success) {
-          setOrder(d.data);
-          const init: Record<string, number> = {};
-          for (const line of d.data.materialLines ?? []) {
-            if (!line.isTool) init[line.id] = line.quantityRequired;
-          }
-          setConsumption(init);
-        } else {
-          setError(d.error ?? "Auftrag nicht gefunden");
+    if (!id || typeof id !== "string") return;
+    fetchJson<{
+      orderNumber: string;
+      status: string;
+      description: string | null;
+      materialLines: MaterialLine[];
+      materialUsages: { name: string; quantity: number; unit: string }[];
+      timeEntries: { startTime: string; endTime: string | null }[];
+      phases?: OrderPhaseData[];
+    }>(`/api/monteur/orders/${id}`).then((d) => {
+      if (d.success && d.data) {
+        setError("");
+        setOrder(d.data);
+        const init: Record<string, number> = {};
+        for (const line of d.data.materialLines ?? []) {
+          if (!line.isTool) init[line.id] = line.quantityRequired;
         }
-      });
+        setConsumption(init);
+        return;
+      }
+      setOrder(null);
+      setError(d.error ?? "Auftrag nicht gefunden");
+    });
   }, [id]);
 
   useEffect(() => { load(); }, [load]);
@@ -102,7 +112,22 @@ export default function MonteurAuftragPage() {
     }
   }
 
-  if (!order) return <p className="text-slate-500">Laden...</p>;
+  if (!order) {
+    if (error) {
+      return (
+        <div className="space-y-3">
+          <Link href="/monteur/tagesplan" className="flex items-center gap-1 text-sm text-blue-600">
+            <ChevronLeft className="h-4 w-4" /> Zurück zum Tagesplan
+          </Link>
+          <p className="text-sm text-red-600">{error}</p>
+          <Button type="button" variant="outline" size="sm" onClick={load}>
+            Erneut versuchen
+          </Button>
+        </div>
+      );
+    }
+    return <p className="text-slate-500">Wird geladen …</p>;
+  }
 
   const packLines = (order.materialLines ?? []).filter((l) => !l.isTool);
 

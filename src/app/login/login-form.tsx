@@ -63,7 +63,7 @@ export function LoginForm({ errorCode }: { errorCode?: string }) {
       }
 
       // Hard navigation: Cookie ist gesetzt, keine doppelte Soft-Navigation
-      const target = json.data?.redirectTo ?? "/monteur/heute";
+      const target = json.data?.redirectTo || "/";
       window.location.assign(target);
     } catch {
       setError(ERROR_MESSAGES.server);
@@ -72,7 +72,12 @@ export function LoginForm({ errorCode }: { errorCode?: string }) {
   }
 
   return (
-    <form onSubmit={onSubmit} className="space-y-4">
+    <form
+      method="post"
+      action="/api/auth/login"
+      onSubmit={onSubmit}
+      className="space-y-4"
+    >
       <Input
         label="E-Mail"
         name="email"

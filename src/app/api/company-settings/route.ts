@@ -1,5 +1,11 @@
 import { prisma } from "@/lib/prisma";
 import { requireAuth, apiSuccess, apiError } from "@/lib/api";
+import {
+  normalizeHexColor,
+  parseInvoiceFontScale,
+  parseInvoiceLayout,
+  parseInvoiceTemplate,
+} from "@/lib/documents/invoice-design";
 
 export async function GET() {
   const auth = await requireAuth("calculations.read");
@@ -77,6 +83,22 @@ export async function PUT(request: Request) {
       invoiceFooterText:
         company.invoiceFooterText !== undefined ? (company.invoiceFooterText || null) : undefined,
       invoiceNotes: company.invoiceNotes !== undefined ? (company.invoiceNotes || null) : undefined,
+      invoiceLegalText:
+        company.invoiceLegalText !== undefined ? (company.invoiceLegalText || null) : undefined,
+      invoiceAccentColor:
+        company.invoiceAccentColor !== undefined
+          ? normalizeHexColor(company.invoiceAccentColor)
+          : undefined,
+      invoiceLayout:
+        company.invoiceLayout !== undefined ? parseInvoiceLayout(company.invoiceLayout) : undefined,
+      invoiceFontScale:
+        company.invoiceFontScale !== undefined
+          ? parseInvoiceFontScale(company.invoiceFontScale)
+          : undefined,
+      invoiceTemplate:
+        company.invoiceTemplate !== undefined
+          ? parseInvoiceTemplate(company.invoiceTemplate)
+          : undefined,
     };
 
     companyRecord = companyRecord

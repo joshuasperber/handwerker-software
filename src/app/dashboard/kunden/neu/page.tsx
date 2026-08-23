@@ -175,7 +175,12 @@ export default function NeuerKundePage() {
               required
             />
             <Input label="E-Mail" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
-            <Input label="Telefon" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
+            <Input
+              label="Telefon"
+              value={form.phone}
+              onChange={(e) => setForm({ ...form, phone: e.target.value })}
+              placeholder="+4917612345678"
+            />
             {isBusiness ? (
               <>
                 <Input

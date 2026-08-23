@@ -16,6 +16,7 @@ import {
 import { CanAccess } from "@/components/auth/can-access";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { ExpenseFormDialog } from "@/components/finance/expense-form-dialog";
+import { FinanceDisclaimer } from "@/components/finance/finance-disclaimer";
 import { saveJson } from "@/lib/save-toast";
 import { swrKeys, useApiSWR } from "@/lib/swr";
 import { formatEuro, formatDate } from "@/lib/utils";
@@ -144,6 +145,7 @@ export function ExpensesPanel({
         </CanAccess>
       </div>
 
+      <FinanceDisclaimer compact />
       <Card className="!p-4">
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
           <div className="grid min-w-0 gap-2">

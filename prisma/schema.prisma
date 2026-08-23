@@ -75,7 +75,24 @@ enum AppointmentStatus {
 enum NotificationChannel {
   EMAIL
   SMS
+  WHATSAPP
   IN_APP
+}
+
+enum NotificationDeliveryStatus {
+  SENT
+  FAILED
+  NO_CONTACT
+  INVALID_PHONE
+  DISABLED
+  ALREADY_SENT
+}
+
+enum CustomerContactPreference {
+  AUTO
+  EMAIL
+  SMS
+  PHONE
 }
 
 enum NotificationType {
@@ -295,6 +312,10 @@ model Customer {
   notes       String?
   gdprConsent Boolean  @default(false)
   gdprConsentAt DateTime?
+  /** Operativer Kontakt (Termine, Erinnerungen) — unabhängig von Marketing. */
+  contactAllowed Boolean @default(true)
+  appointmentRemindersEnabled Boolean @default(true)
+  preferredContactChannel CustomerContactPreference @default(AUTO)
   /** Optionale eigene Buchungsbestätigung; null = Tenant-Standard aus Einstellungen */
   bookingConfirmationEmailTemplate String?
   createdAt   DateTime @default(now())
@@ -633,6 +654,9 @@ model Appointment {
   isTentative Boolean           @default(false)
   notes       String?
   reminderSentAt DateTime?
+  reminderStatus NotificationDeliveryStatus?
+  reminderError String?
+  reminderChannel NotificationChannel?
   createdAt   DateTime          @default(now())
   updatedAt   DateTime          @updatedAt
 
@@ -805,11 +829,15 @@ model NotificationLog {
   subject   String?
   body      String
   sentAt    DateTime            @default(now())
+  status    NotificationDeliveryStatus @default(SENT)
+  errorMessage String?
+  retryable Boolean @default(false)
   metadata  Json?
 
   tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 
   @@index([tenantId, sentAt])
+  @@index([tenantId, type, status])
 }
 
 /** In-App-Benachrichtigung fuer einen konkreten Nutzer (Glocke / Benachrichtigungs-Center). */
@@ -851,11 +879,19 @@ model NotificationSettings {
 
   defaultEmail Boolean @default(true)
   defaultSms   Boolean @default(false)
+  /// SMS oder WHATSAPP — konkreter Anbieter bleibt serverseitig (seven.io).
+  messagingMode String @default("SMS")
 
   // Optionale Vorlagen-Texte mit {{platzhaltern}}
   bookingConfirmationEmailTemplate String?
   reminderEmailTemplate String?
+  reminderSmsTemplate   String?
   dunningEmailTemplate  String?
+
+  messagingLastTestAt DateTime?
+  messagingLastTestStatus String?
+  messagingLastTestError String?
+  messagingLastTestChannel String?
 
   updatedAt DateTime @updatedAt
   createdAt DateTime @default(now())
@@ -1041,6 +1077,13 @@ model CompanySettings {
   invoiceIntroText String?
   invoiceFooterText String?
   invoiceNotes     String?
+  invoiceLegalText String?
+
+  // Rechnungsdesign (gilt für neu erstellte Dokumente; bestehende Snapshots bleiben unverändert)
+  invoiceAccentColor String @default("#0d5c63")
+  invoiceLayout      String @default("LOGO_LEFT")
+  invoiceFontScale   String @default("NORMAL")
+  invoiceTemplate    String @default("STANDARD")
 
   createdAt                    DateTime @default(now())
   updatedAt                    DateTime @updatedAt
@@ -1104,6 +1147,7 @@ model Machine {
 
   tenant      Tenant             @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   usageItems  MachineUsageItem[]
+  plannedInvestments PlannedInvestment[]
 
   @@index([tenantId, isActive])
 }
@@ -1618,6 +1662,7 @@ model Article {
   manualReorderSuggestions ManualReorderSuggestion[]
   materialItems    MaterialItem[]
   projectCosts     ProjectCost[]
+  plannedInvestments PlannedInvestment[]
 
   @@index([tenantId, isActive])
   @@index([tenantId, category])
@@ -2192,12 +2237,21 @@ model PlannedInvestment {
   category      PlannedInvestmentCategory
   note          String?
   status        PlannedInvestmentStatus   @default(PLANNED)
+  machineId     String?
+  articleId     String?
+  projectId     String?
   createdAt     DateTime                  @default(now())
   updatedAt     DateTime                  @updatedAt
 
-  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  tenant  Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  machine Machine? @relation(fields: [machineId], references: [id], onDelete: SetNull)
+  article Article? @relation(fields: [articleId], references: [id], onDelete: SetNull)
+  project Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)
 
   @@index([tenantId, status])
+  @@index([machineId])
+  @@index([articleId])
+  @@index([projectId])
 }
 
 // ─── Betrieb: Jobs & Auth-Sicherheit ───
@@ -2327,6 +2381,7 @@ model Project {
   calculations Calculation[]
   expenses     Expense[]
   appointments Appointment[]
+  plannedInvestments PlannedInvestment[]
 
   @@index([tenantId, status])
   @@index([tenantId, createdAt])

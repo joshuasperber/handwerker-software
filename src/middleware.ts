@@ -25,7 +25,8 @@ function getDashboardPermission(
   if (pathname.startsWith("/dashboard/disposition")) return "appointments.read";
   if (pathname.startsWith("/dashboard/leitstand")) return "appointments.read";
   if (pathname.startsWith("/dashboard/eingang")) return "work_requests.manage";
-  if (pathname.startsWith("/dashboard/rollen")) return "roles.manage";
+  if (pathname.startsWith("/dashboard/einstellungen/rollen") || pathname.startsWith("/dashboard/rollen"))
+    return "roles.manage";
   if (pathname.startsWith("/dashboard/kalkulation/einstellungen")) return "calculations.settings";
   if (pathname.startsWith("/dashboard/kalkulation/zonen")) return "calculations.settings";
   if (pathname.startsWith("/dashboard/kalkulation")) return "calculations.read";
@@ -42,6 +43,7 @@ function getDashboardPermission(
   if (pathname.startsWith("/dashboard/einstellungen/benachrichtigungen")) return "notifications.manage";
   if (pathname.startsWith("/dashboard/einstellungen/sicherheit")) return "tenant.manage";
   if (pathname.startsWith("/dashboard/einstellungen/system")) return "notifications.manage";
+  if (pathname.startsWith("/dashboard/einstellungen/assistent")) return "ai.chat";
   if (pathname.startsWith("/dashboard/einstellungen")) return "tenant.manage";
   if (pathname.startsWith("/dashboard/nachrichten")) return "messages.read";
   if (pathname.startsWith("/dashboard/ki-assistent")) return "ai.chat";

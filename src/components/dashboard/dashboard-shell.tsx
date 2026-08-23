@@ -9,6 +9,7 @@ import { DashboardSidebarNav } from "@/components/dashboard/sidebar-nav";
 import { NotificationBell } from "@/components/notifications/notification-bell";
 import { Button } from "@/components/ui/button";
 import { LogoutButton } from "@/components/auth/logout-button";
+import { ViewSwitchLink } from "@/components/auth/view-switch-link";
 import {
   Sheet,
   SheetContent,
@@ -157,21 +158,10 @@ export function DashboardShell({
               Verwaltung
             </span>
             {canSwitchToWork && (
-              <button
-                type="button"
-                className="text-[#0d5c63] hover:underline"
-                onClick={() => {
-                  void fetch("/api/app-view", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ view: "arbeit" }),
-                  }).then(() => {
-                    window.location.href = "/monteur/heute";
-                  });
-                }}
-              >
-                Zur Arbeitsansicht wechseln
-              </button>
+              <ViewSwitchLink
+                target="arbeit"
+                label="Zur Arbeitsansicht wechseln"
+              />
             )}
             <NotificationBell />
             <span>
@@ -180,7 +170,7 @@ export function DashboardShell({
           </div>
         </header>
 
-        <header className="flex h-16 items-center justify-between gap-2 border-b border-slate-200 bg-white px-4 sm:px-6 lg:hidden">
+        <header className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 bg-white px-4 py-2 sm:px-6 lg:hidden">
           <div className="flex min-w-0 items-center gap-2">
             <Sheet open={mobileNavOpen} onOpenChange={setMobileNavOpen}>
               <SheetTrigger asChild>
@@ -210,27 +200,17 @@ export function DashboardShell({
             </Sheet>
             <BrandHomeLink compact />
           </div>
-          <DashboardSearch className="min-w-0 flex-1" />
           <div className="flex shrink-0 items-center gap-2">
             <NotificationBell />
             {canSwitchToWork && (
-              <button
-                type="button"
-                className="shrink-0 text-sm text-[#0d5c63]"
-                onClick={() => {
-                  void fetch("/api/app-view", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ view: "arbeit" }),
-                  }).then(() => {
-                    window.location.href = "/monteur/heute";
-                  });
-                }}
-              >
-                Arbeit
-              </button>
+              <ViewSwitchLink
+                target="arbeit"
+                label="Arbeit"
+                className="inline-flex min-h-10 items-center px-2 text-sm font-medium text-[#0d5c63]"
+              />
             )}
           </div>
+          <DashboardSearch className="min-w-0 w-full basis-full" />
         </header>
 
         <main className="flex-1 overflow-auto p-4 sm:p-6">

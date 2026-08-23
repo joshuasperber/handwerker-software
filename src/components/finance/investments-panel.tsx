@@ -6,10 +6,23 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CanAccess } from "@/components/auth/can-access";
 import { InvestmentFormDialog } from "@/components/finance/investment-form-dialog";
+import { FinanceDisclaimer } from "@/components/finance/finance-disclaimer";
 import { FINANCE_DISCLAIMERS, type PlannedInvestmentDTO } from "@/lib/finance/types";
 import { swrKeys, useApiSWR } from "@/lib/swr";
 import { formatDate, formatEuro } from "@/lib/utils";
 import { ArrowLeft, Loader2, PiggyBank, Plus } from "lucide-react";
+
+function investmentMeta(inv: PlannedInvestmentDTO) {
+  return [
+    inv.categoryLabel,
+    inv.plannedDate ? formatDate(inv.plannedDate) : "Kein Zeitpunkt",
+    inv.machineName ? `Maschine: ${inv.machineName}` : null,
+    inv.articleName ? `Material: ${inv.articleName}` : null,
+    inv.projectName ? `Projekt: ${inv.projectName}` : null,
+  ]
+    .filter(Boolean)
+    .join(" · ");
+}
 
 export function InvestmentsPanel({
   onBack,
@@ -77,8 +90,8 @@ export function InvestmentsPanel({
             <PiggyBank className="h-7 w-7 text-[#0d5c63]" />
             <h1 className="text-2xl font-bold text-slate-900">Investitionen</h1>
           </div>
-          <p className="mt-1 text-sm text-slate-500">
-            Geplante Investitionen
+          <p className="mt-1 max-w-2xl text-sm text-slate-500">
+            {FINANCE_DISCLAIMERS.whenToInvest}
             {isValidating && investments && (
               <span className="ml-2 inline-flex items-center gap-1 text-slate-400">
                 <Loader2 className="h-3 w-3 animate-spin" />
@@ -95,6 +108,8 @@ export function InvestmentsPanel({
         </CanAccess>
       </div>
 
+      <FinanceDisclaimer compact />
+
       {loading && (
         <div className="flex items-center justify-center gap-2 py-16 text-slate-500">
           <Loader2 className="h-5 w-5 animate-spin" />
@@ -107,7 +122,7 @@ export function InvestmentsPanel({
       )}
 
       {investments && (
-        <Card className="!p-4">
+        <Card className="!p-0 overflow-hidden">
           {investments.length === 0 ? (
             <p className="py-8 text-center text-sm text-slate-500">
               Noch keine geplanten Investitionen.{" "}
@@ -122,33 +137,80 @@ export function InvestmentsPanel({
               </CanAccess>
             </p>
           ) : (
-            <div className="space-y-2">
-              {investments.map((inv) => (
-                <button
-                  key={inv.id}
-                  type="button"
-                  onClick={() => openEdit(inv)}
-                  className="w-full flex flex-col gap-1 rounded-lg border border-slate-100 p-3 text-left hover:bg-slate-50 sm:flex-row sm:items-center sm:justify-between"
-                >
-                  <div>
-                    <p className="font-medium text-slate-800">{inv.title}</p>
-                    <p className="text-xs text-slate-500">
-                      {inv.categoryLabel}
-                      {inv.plannedDate && ` · ${formatDate(inv.plannedDate)}`}
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="font-semibold text-slate-800">
-                      {formatEuro(inv.plannedAmount)}
-                    </span>
-                    <Badge variant="outline">{inv.statusLabel}</Badge>
-                  </div>
-                </button>
-              ))}
-            </div>
+            <>
+              <div className="hidden overflow-x-auto md:block">
+                <table className="w-full min-w-[720px] text-sm">
+                  <thead>
+                    <tr className="border-b border-slate-100 text-left text-xs text-slate-500">
+                      <th className="px-4 py-2 font-medium">Investition</th>
+                      <th className="px-4 py-2 font-medium">Kategorie</th>
+                      <th className="px-4 py-2 font-medium text-right">Betrag</th>
+                      <th className="px-4 py-2 font-medium">Zeitpunkt</th>
+                      <th className="px-4 py-2 font-medium">Status</th>
+                      <th className="px-4 py-2 font-medium">Bezug</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {investments.map((inv) => (
+                      <tr
+                        key={inv.id}
+                        className="cursor-pointer border-b border-slate-50 hover:bg-slate-50/50"
+                        onClick={() => openEdit(inv)}
+                      >
+                        <td className="px-4 py-2">
+                          <p className="font-medium text-slate-800">{inv.title}</p>
+                          {inv.note && (
+                            <p className="text-xs text-slate-500 line-clamp-1">{inv.note}</p>
+                          )}
+                        </td>
+                        <td className="px-4 py-2">{inv.categoryLabel}</td>
+                        <td className="px-4 py-2 text-right font-semibold">
+                          {formatEuro(inv.plannedAmount)}
+                        </td>
+                        <td className="px-4 py-2 whitespace-nowrap">
+                          {inv.plannedDate ? formatDate(inv.plannedDate) : "—"}
+                        </td>
+                        <td className="px-4 py-2">
+                          <Badge variant="outline">{inv.statusLabel}</Badge>
+                        </td>
+                        <td className="px-4 py-2 text-xs text-slate-500">
+                          {[inv.machineName, inv.articleName, inv.projectName]
+                            .filter(Boolean)
+                            .join(" · ") || "—"}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <div className="divide-y divide-slate-50 md:hidden">
+                {investments.map((inv) => (
+                  <button
+                    key={inv.id}
+                    type="button"
+                    onClick={() => openEdit(inv)}
+                    className="w-full p-4 text-left hover:bg-slate-50"
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                      <p className="font-medium text-slate-800">{inv.title}</p>
+                      <span className="shrink-0 font-semibold">
+                        {formatEuro(inv.plannedAmount)}
+                      </span>
+                    </div>
+                    <p className="mt-1 text-xs text-slate-500">{investmentMeta(inv)}</p>
+                    <div className="mt-2 flex flex-wrap items-center gap-2">
+                      <Badge variant="outline">{inv.statusLabel}</Badge>
+                      {inv.note && (
+                        <span className="text-xs text-slate-500 line-clamp-2">{inv.note}</span>
+                      )}
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </>
           )}
-          <p className="text-[11px] text-slate-400 mt-3">
-            {FINANCE_DISCLAIMERS.plannedInvestments}
+          <p className="border-t border-slate-100 px-4 py-3 text-[11px] text-slate-400">
+            {FINANCE_DISCLAIMERS.plannedInvestments} {FINANCE_DISCLAIMERS.overview}
           </p>
         </Card>
       )}

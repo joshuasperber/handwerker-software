@@ -6682,6 +6682,9 @@ export const CustomerScalarFieldEnum = {
   notes: 'notes',
   gdprConsent: 'gdprConsent',
   gdprConsentAt: 'gdprConsentAt',
+  contactAllowed: 'contactAllowed',
+  appointmentRemindersEnabled: 'appointmentRemindersEnabled',
+  preferredContactChannel: 'preferredContactChannel',
   bookingConfirmationEmailTemplate: 'bookingConfirmationEmailTemplate',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -6924,6 +6927,9 @@ export const AppointmentScalarFieldEnum = {
   isTentative: 'isTentative',
   notes: 'notes',
   reminderSentAt: 'reminderSentAt',
+  reminderStatus: 'reminderStatus',
+  reminderError: 'reminderError',
+  reminderChannel: 'reminderChannel',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -7059,6 +7065,9 @@ export const NotificationLogScalarFieldEnum = {
   subject: 'subject',
   body: 'body',
   sentAt: 'sentAt',
+  status: 'status',
+  errorMessage: 'errorMessage',
+  retryable: 'retryable',
   metadata: 'metadata'
 } as const
 
@@ -7095,9 +7104,15 @@ export const NotificationSettingsScalarFieldEnum = {
   reorderCheckEnabled: 'reorderCheckEnabled',
   defaultEmail: 'defaultEmail',
   defaultSms: 'defaultSms',
+  messagingMode: 'messagingMode',
   bookingConfirmationEmailTemplate: 'bookingConfirmationEmailTemplate',
   reminderEmailTemplate: 'reminderEmailTemplate',
+  reminderSmsTemplate: 'reminderSmsTemplate',
   dunningEmailTemplate: 'dunningEmailTemplate',
+  messagingLastTestAt: 'messagingLastTestAt',
+  messagingLastTestStatus: 'messagingLastTestStatus',
+  messagingLastTestError: 'messagingLastTestError',
+  messagingLastTestChannel: 'messagingLastTestChannel',
   updatedAt: 'updatedAt',
   createdAt: 'createdAt'
 } as const
@@ -7141,6 +7156,11 @@ export const CompanySettingsScalarFieldEnum = {
   invoiceIntroText: 'invoiceIntroText',
   invoiceFooterText: 'invoiceFooterText',
   invoiceNotes: 'invoiceNotes',
+  invoiceLegalText: 'invoiceLegalText',
+  invoiceAccentColor: 'invoiceAccentColor',
+  invoiceLayout: 'invoiceLayout',
+  invoiceFontScale: 'invoiceFontScale',
+  invoiceTemplate: 'invoiceTemplate',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -7916,6 +7936,9 @@ export const PlannedInvestmentScalarFieldEnum = {
   category: 'category',
   note: 'note',
   status: 'status',
+  machineId: 'machineId',
+  articleId: 'articleId',
+  projectId: 'projectId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -8246,6 +8269,20 @@ export type ListEnumCustomerTypeFieldRefInput<$PrismaModel> = FieldRefInputType<
 
 
 /**
+ * Reference to a field of type 'CustomerContactPreference'
+ */
+export type EnumCustomerContactPreferenceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CustomerContactPreference'>
+    
+
+
+/**
+ * Reference to a field of type 'CustomerContactPreference[]'
+ */
+export type ListEnumCustomerContactPreferenceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CustomerContactPreference[]'>
+    
+
+
+/**
  * Reference to a field of type 'QuestionType'
  */
 export type EnumQuestionTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QuestionType'>
@@ -8386,6 +8423,34 @@ export type ListEnumAppointmentStatusFieldRefInput<$PrismaModel> = FieldRefInput
 
 
 /**
+ * Reference to a field of type 'NotificationDeliveryStatus'
+ */
+export type EnumNotificationDeliveryStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'NotificationDeliveryStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'NotificationDeliveryStatus[]'
+ */
+export type ListEnumNotificationDeliveryStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'NotificationDeliveryStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'NotificationChannel'
+ */
+export type EnumNotificationChannelFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'NotificationChannel'>
+    
+
+
+/**
+ * Reference to a field of type 'NotificationChannel[]'
+ */
+export type ListEnumNotificationChannelFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'NotificationChannel[]'>
+    
+
+
+/**
  * Reference to a field of type 'FileCategory'
  */
 export type EnumFileCategoryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FileCategory'>
@@ -8424,20 +8489,6 @@ export type EnumNotificationTypeFieldRefInput<$PrismaModel> = FieldRefInputType<
  * Reference to a field of type 'NotificationType[]'
  */
 export type ListEnumNotificationTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'NotificationType[]'>
-    
-
-
-/**
- * Reference to a field of type 'NotificationChannel'
- */
-export type EnumNotificationChannelFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'NotificationChannel'>
-    
-
-
-/**
- * Reference to a field of type 'NotificationChannel[]'
- */
-export type ListEnumNotificationChannelFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'NotificationChannel[]'>
     
 
 

@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import type { DocumentCalcInput, DocumentCompanyInput } from "./build-document-html";
 import { calcVatWithTreatment, resolveTaxTreatment } from "@/lib/tax/treatment";
+import { resolveInvoiceDesign } from "./invoice-design";
 
 export async function loadCalculationForDocument(tenantId: string, calculationId: string) {
   const calc = await prisma.calculation.findFirst({
@@ -96,6 +97,7 @@ export async function loadCalculationForDocument(tenantId: string, calculationId
       : null,
   };
 
+  const design = resolveInvoiceDesign(companySettings ?? {});
   const company: DocumentCompanyInput = {
     companyName: companySettings?.companyName ?? tenant?.name ?? "Handwerksbetrieb",
     street: companySettings?.street,
@@ -116,6 +118,11 @@ export async function loadCalculationForDocument(tenantId: string, calculationId
     invoiceIntroText: companySettings?.invoiceIntroText,
     invoiceFooterText: companySettings?.invoiceFooterText,
     invoiceNotes: companySettings?.invoiceNotes,
+    invoiceLegalText: design.invoiceLegalText,
+    invoiceAccentColor: design.invoiceAccentColor,
+    invoiceLayout: design.invoiceLayout,
+    invoiceFontScale: design.invoiceFontScale,
+    invoiceTemplate: design.invoiceTemplate,
   };
 
   return { calc: docCalc, company, orderId: calc.orderId, raw: calc };

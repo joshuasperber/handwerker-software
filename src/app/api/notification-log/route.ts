@@ -19,6 +19,9 @@ export async function GET() {
       recipient: l.recipient,
       subject: l.subject,
       sentAt: l.sentAt.toISOString(),
+      status: l.status,
+      errorMessage: l.errorMessage,
+      retryable: l.retryable,
     }))
   );
 }

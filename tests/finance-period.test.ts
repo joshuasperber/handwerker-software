@@ -7,6 +7,7 @@ import {
   resolveMonthPeriod,
   shiftMonthPeriod,
   toMonthInputValue,
+  FINANCE_PERIOD_LABELS,
 } from "../src/lib/finance/period";
 
 describe("finance period", () => {
@@ -46,5 +47,11 @@ describe("finance period", () => {
       isSingleMonthPeriod(july.from, resolveMonthPeriod(2026, 7).to),
       false
     );
+  });
+
+  it("uses short labels for Quartal and Jahr", () => {
+    assert.equal(FINANCE_PERIOD_LABELS.current_quarter, "Quartal");
+    assert.equal(FINANCE_PERIOD_LABELS.current_year, "Jahr");
+    assert.equal(FINANCE_PERIOD_LABELS.custom, "Frei wählbarer Zeitraum");
   });
 });

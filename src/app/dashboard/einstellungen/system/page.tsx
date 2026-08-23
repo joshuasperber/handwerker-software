@@ -1,13 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, RefreshCw, Server, Database, Mail, HardDrive, Clock } from "lucide-react";
+import { RefreshCw, Database, Mail, HardDrive, Clock } from "lucide-react";
 import { formatDateTime } from "@/lib/utils";
 import { toast } from "sonner";
+import { SettingsPageHeader } from "@/components/dashboard/settings-page-header";
 
 interface HealthCheck {
   status: string;
@@ -111,18 +111,9 @@ export default function SystemStatusPage() {
 
   return (
     <div className="max-w-4xl mx-auto">
-      <Link href="/dashboard/einstellungen/benachrichtigungen" className="text-sm text-[#0d5c63] flex items-center gap-1 mb-4">
-        <ChevronLeft className="h-4 w-4" /> Einstellungen
-      </Link>
-
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2">
-            <Server className="h-7 w-7 text-[#0d5c63]" /> Systemstatus
-          </h1>
-          <p className="text-sm text-slate-500 mt-1">Betrieb, Cron-Jobs und Infrastruktur-Checks</p>
-        </div>
-        <Button variant="outline" onClick={load} disabled={loading}>
+      <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+        <SettingsPageHeader href="/dashboard/einstellungen/system" className="mb-0" />
+        <Button variant="outline" onClick={load} disabled={loading} className="shrink-0">
           <RefreshCw className={`h-4 w-4 mr-1 ${loading ? "animate-spin" : ""}`} /> Aktualisieren
         </Button>
       </div>

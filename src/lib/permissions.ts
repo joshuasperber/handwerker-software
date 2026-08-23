@@ -275,7 +275,7 @@ export type NavSection =
   | null;
 
 export const NAV_SECTION_LABELS: Record<Exclude<NavSection, null>, string> = {
-  betrieb: "Betrieb",
+  betrieb: "Büro",
   material: "Material",
   finanzen: "Finanzen",
   stammdaten: "Stammdaten",
@@ -305,14 +305,15 @@ export const DASHBOARD_NAV_CONFIG: {
   { href: "/dashboard/finanzuebersicht", label: "Finanzübersicht", permission: "invoices.read", section: "finanzen" },
   { href: "/dashboard/kunden", label: "Kunden", permission: "customers.read", section: "stammdaten" },
   { href: "/dashboard/mitarbeiter", label: "Mitarbeiter", permission: "employees.read", section: "stammdaten" },
-  { href: "/dashboard/rollen", label: "Rollen & Rechte", permission: "roles.manage", section: "stammdaten" },
   { href: "/dashboard/leistungen", label: "Leistungen", permission: "services.read", section: "stammdaten" },
   { href: "/dashboard/maschinen", label: "Maschinen", permission: "calculations.settings", section: "stammdaten" },
   { href: "/dashboard/einstellungen/betrieb", label: "Betrieb", permission: "tenant.manage", section: "einstellungen" },
   { href: "/dashboard/einstellungen/rechnung", label: "Rechnungseinstellungen", permission: "calculations.settings", section: "einstellungen" },
   { href: "/dashboard/einstellungen/benachrichtigungen", label: "Benachrichtigungen", permission: "notifications.manage", section: "einstellungen" },
+  { href: "/dashboard/einstellungen/rollen", label: "Rollen & Rechte", permission: "roles.manage", section: "einstellungen" },
   { href: "/dashboard/einstellungen/sicherheit", label: "Sicherheit & Datenschutz", permission: "tenant.manage", section: "einstellungen" },
   { href: "/dashboard/einstellungen/system", label: "Systemstatus", permission: "notifications.manage", section: "einstellungen" },
+  { href: "/dashboard/einstellungen/assistent", label: "Betriebsassistent-Einstellungen", permission: "ai.chat", section: "einstellungen" },
   { href: "/dashboard/ki-assistent", label: "Betriebsassistent", permission: "ai.chat", section: null },
   { href: "/dashboard/profil", label: "Profil", permission: null, section: null },
   { href: "/dashboard/nachrichten", label: "Nachrichten", permission: "messages.read", section: null },
@@ -325,6 +326,7 @@ export const FIELD_EXCLUDED_DASHBOARD_PREFIXES = [
   "/dashboard/termine",
   "/dashboard/kunden",
   "/dashboard/mitarbeiter",
+  "/dashboard/einstellungen/rollen",
   "/dashboard/rollen",
   "/dashboard/eingang",
   "/dashboard/inventar",

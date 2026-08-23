@@ -8,8 +8,8 @@ import {
   hasBillingAddress,
   siteDiffersFromBilling,
 } from "@/lib/addresses/billing-vs-site";
+import { fontScaleFactor, hexToRgb, resolveInvoiceDesign } from "./invoice-design";
 
-const TEAL = rgb(13 / 255, 92 / 255, 99 / 255);
 const GREY = rgb(0.4, 0.45, 0.5);
 const DARK = rgb(0.12, 0.16, 0.2);
 const LINE = rgb(0.88, 0.9, 0.92);
@@ -76,6 +76,14 @@ export async function buildDocumentPdf(snapshot: DocumentSnapshot): Promise<Uint
   const { calc, company } = snapshot;
   const isInvoice = snapshot.type === "INVOICE";
   const titleText = isInvoice ? "Rechnung" : "Angebot";
+  const design = resolveInvoiceDesign(company);
+  const accentRgb = hexToRgb(design.invoiceAccentColor);
+  const accent = rgb(accentRgb.r / 255, accentRgb.g / 255, accentRgb.b / 255);
+  const scale = fontScaleFactor(design.invoiceFontScale);
+  const compact = design.invoiceTemplate === "KOMPAKT";
+  const titleSize = 22 * scale;
+  const bodySize = 10 * scale;
+  const smallSize = 8 * scale;
 
   const pdf = await PDFDocument.create();
   const font = await pdf.embedFont(StandardFonts.Helvetica);
@@ -118,39 +126,75 @@ export async function buildDocumentPdf(snapshot: DocumentSnapshot): Promise<Uint
     }
   };
 
-  // Logo
+  // Logo + Titel je nach Layout
   const logoUrl = company.invoiceLogoUrl || company.logoUrl;
+  let logoW = 0;
+  let logoH = 0;
+  let embeddedLogo: Awaited<ReturnType<typeof pdf.embedPng>> | null = null;
   if (logoUrl) {
     const img = dataUrlToBytes(logoUrl);
     if (img) {
       try {
-        const embedded = img.type === "png" ? await pdf.embedPng(img.bytes) : await pdf.embedJpg(img.bytes);
-        const maxH = 50;
-        const scale = Math.min(maxH / embedded.height, 160 / embedded.width, 1);
-        const w = embedded.width * scale;
-        const h = embedded.height * scale;
-        page.drawImage(embedded, { x: MARGIN, y: y - h, width: w, height: h });
-        y -= h + 10;
+        embeddedLogo = img.type === "png" ? await pdf.embedPng(img.bytes) : await pdf.embedJpg(img.bytes);
+        const maxH = compact ? 40 : 50;
+        const imgScale = Math.min(maxH / embeddedLogo.height, 160 / embeddedLogo.width, 1);
+        logoW = embeddedLogo.width * imgScale;
+        logoH = embeddedLogo.height * imgScale;
       } catch {
-        // Logo nicht einbettbar – ignorieren
+        embeddedLogo = null;
       }
     }
   }
 
-  // Titel
-  text(titleText, MARGIN, y - 18, { size: 22, font: bold, color: TEAL });
-  text(`${snapshot.documentNumber}  ·  ${fmtDate(snapshot.issueDateISO)}`, MARGIN, y - 34, {
-    size: 10,
-    color: GREY,
-  });
-  y -= 60;
+  const drawLogo = (x: number, topY: number) => {
+    if (!embeddedLogo) return;
+    page.drawImage(embeddedLogo, { x, y: topY - logoH, width: logoW, height: logoH });
+  };
+
+  if (design.invoiceLayout === "LOGO_CENTER") {
+    if (embeddedLogo) {
+      drawLogo(MARGIN + (CONTENT_W - logoW) / 2, y);
+      y -= logoH + 8;
+    }
+    const titleW = bold.widthOfTextAtSize(sanitize(titleText), titleSize);
+    text(titleText, MARGIN + (CONTENT_W - titleW) / 2, y - 18, { size: titleSize, font: bold, color: accent });
+    const sub = `${snapshot.documentNumber}  ·  ${fmtDate(snapshot.issueDateISO)}`;
+    const subW = font.widthOfTextAtSize(sanitize(sub), bodySize);
+    text(sub, MARGIN + (CONTENT_W - subW) / 2, y - 34, { size: bodySize, color: GREY });
+    y -= compact ? 48 : 60;
+  } else if (design.invoiceLayout === "LOGO_RIGHT") {
+    text(titleText, MARGIN, y - 18, { size: titleSize, font: bold, color: accent });
+    text(`${snapshot.documentNumber}  ·  ${fmtDate(snapshot.issueDateISO)}`, MARGIN, y - 34, {
+      size: bodySize,
+      color: GREY,
+    });
+    if (embeddedLogo) drawLogo(PAGE_W - MARGIN - logoW, y);
+    y -= Math.max(logoH, 40) + (compact ? 10 : 20);
+  } else {
+    if (embeddedLogo) {
+      drawLogo(MARGIN, y);
+      text(titleText, MARGIN + logoW + 16, y - 18, { size: titleSize, font: bold, color: accent });
+      text(`${snapshot.documentNumber}  ·  ${fmtDate(snapshot.issueDateISO)}`, MARGIN + logoW + 16, y - 34, {
+        size: bodySize,
+        color: GREY,
+      });
+      y -= Math.max(logoH, 40) + (compact ? 10 : 16);
+    } else {
+      text(titleText, MARGIN, y - 18, { size: titleSize, font: bold, color: accent });
+      text(`${snapshot.documentNumber}  ·  ${fmtDate(snapshot.issueDateISO)}`, MARGIN, y - 34, {
+        size: bodySize,
+        color: GREY,
+      });
+      y -= compact ? 48 : 60;
+    }
+  }
 
   // Adressblöcke
   const colRightX = MARGIN + CONTENT_W / 2 + 10;
   let leftY = y;
   let rightY = y;
 
-  text("Auftragnehmer", MARGIN, leftY, { size: 9, font: bold, color: TEAL });
+  text("Auftragnehmer", MARGIN, leftY, { size: 9, font: bold, color: accent });
   leftY -= 14;
   const companyLines = [
     company.companyName,
@@ -162,7 +206,7 @@ export async function buildDocumentPdf(snapshot: DocumentSnapshot): Promise<Uint
     leftY -= 13;
   }
 
-  text(isInvoice ? "Rechnungsempfänger" : "Kunde", colRightX, rightY, { size: 9, font: bold, color: TEAL });
+  text(isInvoice ? "Rechnungsempfänger" : "Kunde", colRightX, rightY, { size: 9, font: bold, color: accent });
   rightY -= 14;
   const customerName = calc.customer
     ? `${calc.customer.firstName} ${calc.customer.lastName}`
@@ -189,7 +233,7 @@ export async function buildDocumentPdf(snapshot: DocumentSnapshot): Promise<Uint
     text(isInvoice ? "Leistungsort" : "Leistungsort / Baustelle", colRightX, rightY, {
       size: 9,
       font: bold,
-      color: TEAL,
+      color: accent,
     });
     rightY -= 14;
     for (const l of siteLines) {
@@ -212,10 +256,10 @@ export async function buildDocumentPdf(snapshot: DocumentSnapshot): Promise<Uint
 
   // Tabelle
   const amountX = PAGE_W - MARGIN;
-  text("Beschreibung", MARGIN, y, { size: 9, font: bold, color: TEAL });
-  rightText("Betrag (netto)", amountX, y, { size: 9, font: bold, color: TEAL });
+  text("Beschreibung", MARGIN, y, { size: 9, font: bold, color: accent });
+  rightText("Betrag (netto)", amountX, y, { size: 9, font: bold, color: accent });
   y -= 6;
-  page.drawLine({ start: { x: MARGIN, y }, end: { x: amountX, y }, thickness: 1.2, color: TEAL });
+  page.drawLine({ start: { x: MARGIN, y }, end: { x: amountX, y }, thickness: 1.2, color: accent });
   y -= 16;
 
   const lines = calc.useFixedPrice
@@ -252,8 +296,8 @@ export async function buildDocumentPdf(snapshot: DocumentSnapshot): Promise<Uint
   y -= 6;
   page.drawLine({ start: { x: sumLabelX - 10, y }, end: { x: amountX, y }, thickness: 0.8, color: LINE });
   y -= 16;
-  rightText("Gesamtbetrag:", sumLabelX, y, { size: 12, font: bold, color: TEAL });
-  rightText(money(calc.grossSalesPrice), amountX, y, { size: 12, font: bold, color: TEAL });
+  rightText("Gesamtbetrag:", sumLabelX, y, { size: 12, font: bold, color: accent });
+  rightText(money(calc.grossSalesPrice), amountX, y, { size: 12, font: bold, color: accent });
   y -= 26;
 
   // Zahlungsinformationen
@@ -290,6 +334,33 @@ export async function buildDocumentPdf(snapshot: DocumentSnapshot): Promise<Uint
     }
   }
 
+  if (company.invoiceNotes) {
+    y -= 8;
+    for (const l of wrap(company.invoiceNotes, font, 10, CONTENT_W)) {
+      ensureSpace(14);
+      text(l, MARGIN, y, { size: 10, color: DARK });
+      y -= 13;
+    }
+  }
+
+  if (company.invoiceFooterText) {
+    y -= 8;
+    for (const l of wrap(company.invoiceFooterText, font, 9, CONTENT_W)) {
+      ensureSpace(13);
+      text(l, MARGIN, y, { size: 9, color: GREY });
+      y -= 12;
+    }
+  }
+
+  if (design.invoiceLegalText) {
+    y -= 6;
+    for (const l of wrap(design.invoiceLegalText, font, 8, CONTENT_W)) {
+      ensureSpace(12);
+      text(l, MARGIN, y, { size: 8, color: GREY });
+      y -= 11;
+    }
+  }
+
   // Fußzeile
   const taxLine = [
     company.taxNumber ? `Steuernr.: ${company.taxNumber}` : "",
@@ -312,8 +383,8 @@ export async function buildDocumentPdf(snapshot: DocumentSnapshot): Promise<Uint
     thickness: 0.5,
     color: LINE,
   });
-  if (contactLine) text(contactLine, MARGIN, footerY + 14, { size: 8, color: GREY });
-  if (taxLine) text(taxLine, MARGIN, footerY, { size: 8, color: GREY });
+  if (contactLine) text(contactLine, MARGIN, footerY + 14, { size: smallSize, color: GREY });
+  if (taxLine) text(taxLine, MARGIN, footerY, { size: smallSize, color: GREY });
 
   return pdf.save();
 }

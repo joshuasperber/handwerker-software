@@ -560,7 +560,7 @@ export function ScheduleCalendar({
             <Button variant="outline" size="sm" onClick={() => navigate(1)}>
               <ChevronRight className="h-4 w-4" />
             </Button>
-            <Button variant="outline" size="sm" className="hidden sm:inline-flex" onClick={() => onAnchorChange(new Date())}>
+            <Button variant="outline" size="sm" onClick={() => onAnchorChange(new Date())}>
               Heute
             </Button>
           </div>

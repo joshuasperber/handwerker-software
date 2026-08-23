@@ -370,6 +370,7 @@ export type MachineWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Machine"> | Date | string
   tenant?: Prisma.XOR<Prisma.TenantScalarRelationFilter, Prisma.TenantWhereInput>
   usageItems?: Prisma.MachineUsageItemListRelationFilter
+  plannedInvestments?: Prisma.PlannedInvestmentListRelationFilter
 }
 
 export type MachineOrderByWithRelationInput = {
@@ -394,6 +395,7 @@ export type MachineOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   tenant?: Prisma.TenantOrderByWithRelationInput
   usageItems?: Prisma.MachineUsageItemOrderByRelationAggregateInput
+  plannedInvestments?: Prisma.PlannedInvestmentOrderByRelationAggregateInput
 }
 
 export type MachineWhereUniqueInput = Prisma.AtLeast<{
@@ -421,6 +423,7 @@ export type MachineWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"Machine"> | Date | string
   tenant?: Prisma.XOR<Prisma.TenantScalarRelationFilter, Prisma.TenantWhereInput>
   usageItems?: Prisma.MachineUsageItemListRelationFilter
+  plannedInvestments?: Prisma.PlannedInvestmentListRelationFilter
 }, "id">
 
 export type MachineOrderByWithAggregationInput = {
@@ -496,6 +499,7 @@ export type MachineCreateInput = {
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutMachinesInput
   usageItems?: Prisma.MachineUsageItemCreateNestedManyWithoutMachineInput
+  plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutMachineInput
 }
 
 export type MachineUncheckedCreateInput = {
@@ -519,6 +523,7 @@ export type MachineUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   usageItems?: Prisma.MachineUsageItemUncheckedCreateNestedManyWithoutMachineInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutMachineInput
 }
 
 export type MachineUpdateInput = {
@@ -542,6 +547,7 @@ export type MachineUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutMachinesNestedInput
   usageItems?: Prisma.MachineUsageItemUpdateManyWithoutMachineNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutMachineNestedInput
 }
 
 export type MachineUncheckedUpdateInput = {
@@ -565,6 +571,7 @@ export type MachineUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   usageItems?: Prisma.MachineUsageItemUncheckedUpdateManyWithoutMachineNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutMachineNestedInput
 }
 
 export type MachineCreateManyInput = {
@@ -803,6 +810,22 @@ export type MachineUpdateOneWithoutUsageItemsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.MachineUpdateToOneWithWhereWithoutUsageItemsInput, Prisma.MachineUpdateWithoutUsageItemsInput>, Prisma.MachineUncheckedUpdateWithoutUsageItemsInput>
 }
 
+export type MachineCreateNestedOneWithoutPlannedInvestmentsInput = {
+  create?: Prisma.XOR<Prisma.MachineCreateWithoutPlannedInvestmentsInput, Prisma.MachineUncheckedCreateWithoutPlannedInvestmentsInput>
+  connectOrCreate?: Prisma.MachineCreateOrConnectWithoutPlannedInvestmentsInput
+  connect?: Prisma.MachineWhereUniqueInput
+}
+
+export type MachineUpdateOneWithoutPlannedInvestmentsNestedInput = {
+  create?: Prisma.XOR<Prisma.MachineCreateWithoutPlannedInvestmentsInput, Prisma.MachineUncheckedCreateWithoutPlannedInvestmentsInput>
+  connectOrCreate?: Prisma.MachineCreateOrConnectWithoutPlannedInvestmentsInput
+  upsert?: Prisma.MachineUpsertWithoutPlannedInvestmentsInput
+  disconnect?: Prisma.MachineWhereInput | boolean
+  delete?: Prisma.MachineWhereInput | boolean
+  connect?: Prisma.MachineWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.MachineUpdateToOneWithWhereWithoutPlannedInvestmentsInput, Prisma.MachineUpdateWithoutPlannedInvestmentsInput>, Prisma.MachineUncheckedUpdateWithoutPlannedInvestmentsInput>
+}
+
 export type MachineCreateWithoutTenantInput = {
   id?: string
   name: string
@@ -823,6 +846,7 @@ export type MachineCreateWithoutTenantInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   usageItems?: Prisma.MachineUsageItemCreateNestedManyWithoutMachineInput
+  plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutMachineInput
 }
 
 export type MachineUncheckedCreateWithoutTenantInput = {
@@ -845,6 +869,7 @@ export type MachineUncheckedCreateWithoutTenantInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   usageItems?: Prisma.MachineUsageItemUncheckedCreateNestedManyWithoutMachineInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutMachineInput
 }
 
 export type MachineCreateOrConnectWithoutTenantInput = {
@@ -918,6 +943,7 @@ export type MachineCreateWithoutUsageItemsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutMachinesInput
+  plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutMachineInput
 }
 
 export type MachineUncheckedCreateWithoutUsageItemsInput = {
@@ -940,6 +966,7 @@ export type MachineUncheckedCreateWithoutUsageItemsInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutMachineInput
 }
 
 export type MachineCreateOrConnectWithoutUsageItemsInput = {
@@ -978,6 +1005,7 @@ export type MachineUpdateWithoutUsageItemsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutMachinesNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutMachineNestedInput
 }
 
 export type MachineUncheckedUpdateWithoutUsageItemsInput = {
@@ -1000,6 +1028,115 @@ export type MachineUncheckedUpdateWithoutUsageItemsInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutMachineNestedInput
+}
+
+export type MachineCreateWithoutPlannedInvestmentsInput = {
+  id?: string
+  name: string
+  machineType?: string | null
+  costMethod?: $Enums.MachineCostMethod
+  flatRatePerHourNet?: number | null
+  purchasePriceNet?: number
+  residualValueNet?: number
+  expectedLifetimeHours?: number
+  expectedRepairCostsNet?: number
+  expectedMaintenanceCostsNet?: number
+  expectedConsumablePartsNet?: number
+  insuranceCostsNet?: number
+  energyCostsTotalNet?: number
+  breakageRiskPercent?: number
+  calculatedHourlyRateNet?: number
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tenant: Prisma.TenantCreateNestedOneWithoutMachinesInput
+  usageItems?: Prisma.MachineUsageItemCreateNestedManyWithoutMachineInput
+}
+
+export type MachineUncheckedCreateWithoutPlannedInvestmentsInput = {
+  id?: string
+  tenantId: string
+  name: string
+  machineType?: string | null
+  costMethod?: $Enums.MachineCostMethod
+  flatRatePerHourNet?: number | null
+  purchasePriceNet?: number
+  residualValueNet?: number
+  expectedLifetimeHours?: number
+  expectedRepairCostsNet?: number
+  expectedMaintenanceCostsNet?: number
+  expectedConsumablePartsNet?: number
+  insuranceCostsNet?: number
+  energyCostsTotalNet?: number
+  breakageRiskPercent?: number
+  calculatedHourlyRateNet?: number
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  usageItems?: Prisma.MachineUsageItemUncheckedCreateNestedManyWithoutMachineInput
+}
+
+export type MachineCreateOrConnectWithoutPlannedInvestmentsInput = {
+  where: Prisma.MachineWhereUniqueInput
+  create: Prisma.XOR<Prisma.MachineCreateWithoutPlannedInvestmentsInput, Prisma.MachineUncheckedCreateWithoutPlannedInvestmentsInput>
+}
+
+export type MachineUpsertWithoutPlannedInvestmentsInput = {
+  update: Prisma.XOR<Prisma.MachineUpdateWithoutPlannedInvestmentsInput, Prisma.MachineUncheckedUpdateWithoutPlannedInvestmentsInput>
+  create: Prisma.XOR<Prisma.MachineCreateWithoutPlannedInvestmentsInput, Prisma.MachineUncheckedCreateWithoutPlannedInvestmentsInput>
+  where?: Prisma.MachineWhereInput
+}
+
+export type MachineUpdateToOneWithWhereWithoutPlannedInvestmentsInput = {
+  where?: Prisma.MachineWhereInput
+  data: Prisma.XOR<Prisma.MachineUpdateWithoutPlannedInvestmentsInput, Prisma.MachineUncheckedUpdateWithoutPlannedInvestmentsInput>
+}
+
+export type MachineUpdateWithoutPlannedInvestmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  machineType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  costMethod?: Prisma.EnumMachineCostMethodFieldUpdateOperationsInput | $Enums.MachineCostMethod
+  flatRatePerHourNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  purchasePriceNet?: Prisma.FloatFieldUpdateOperationsInput | number
+  residualValueNet?: Prisma.FloatFieldUpdateOperationsInput | number
+  expectedLifetimeHours?: Prisma.FloatFieldUpdateOperationsInput | number
+  expectedRepairCostsNet?: Prisma.FloatFieldUpdateOperationsInput | number
+  expectedMaintenanceCostsNet?: Prisma.FloatFieldUpdateOperationsInput | number
+  expectedConsumablePartsNet?: Prisma.FloatFieldUpdateOperationsInput | number
+  insuranceCostsNet?: Prisma.FloatFieldUpdateOperationsInput | number
+  energyCostsTotalNet?: Prisma.FloatFieldUpdateOperationsInput | number
+  breakageRiskPercent?: Prisma.FloatFieldUpdateOperationsInput | number
+  calculatedHourlyRateNet?: Prisma.FloatFieldUpdateOperationsInput | number
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutMachinesNestedInput
+  usageItems?: Prisma.MachineUsageItemUpdateManyWithoutMachineNestedInput
+}
+
+export type MachineUncheckedUpdateWithoutPlannedInvestmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  machineType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  costMethod?: Prisma.EnumMachineCostMethodFieldUpdateOperationsInput | $Enums.MachineCostMethod
+  flatRatePerHourNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  purchasePriceNet?: Prisma.FloatFieldUpdateOperationsInput | number
+  residualValueNet?: Prisma.FloatFieldUpdateOperationsInput | number
+  expectedLifetimeHours?: Prisma.FloatFieldUpdateOperationsInput | number
+  expectedRepairCostsNet?: Prisma.FloatFieldUpdateOperationsInput | number
+  expectedMaintenanceCostsNet?: Prisma.FloatFieldUpdateOperationsInput | number
+  expectedConsumablePartsNet?: Prisma.FloatFieldUpdateOperationsInput | number
+  insuranceCostsNet?: Prisma.FloatFieldUpdateOperationsInput | number
+  energyCostsTotalNet?: Prisma.FloatFieldUpdateOperationsInput | number
+  breakageRiskPercent?: Prisma.FloatFieldUpdateOperationsInput | number
+  calculatedHourlyRateNet?: Prisma.FloatFieldUpdateOperationsInput | number
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  usageItems?: Prisma.MachineUsageItemUncheckedUpdateManyWithoutMachineNestedInput
 }
 
 export type MachineCreateManyTenantInput = {
@@ -1043,6 +1180,7 @@ export type MachineUpdateWithoutTenantInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   usageItems?: Prisma.MachineUsageItemUpdateManyWithoutMachineNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutMachineNestedInput
 }
 
 export type MachineUncheckedUpdateWithoutTenantInput = {
@@ -1065,6 +1203,7 @@ export type MachineUncheckedUpdateWithoutTenantInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   usageItems?: Prisma.MachineUsageItemUncheckedUpdateManyWithoutMachineNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutMachineNestedInput
 }
 
 export type MachineUncheckedUpdateManyWithoutTenantInput = {
@@ -1095,10 +1234,12 @@ export type MachineUncheckedUpdateManyWithoutTenantInput = {
 
 export type MachineCountOutputType = {
   usageItems: number
+  plannedInvestments: number
 }
 
 export type MachineCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   usageItems?: boolean | MachineCountOutputTypeCountUsageItemsArgs
+  plannedInvestments?: boolean | MachineCountOutputTypeCountPlannedInvestmentsArgs
 }
 
 /**
@@ -1116,6 +1257,13 @@ export type MachineCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Exte
  */
 export type MachineCountOutputTypeCountUsageItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.MachineUsageItemWhereInput
+}
+
+/**
+ * MachineCountOutputType without action
+ */
+export type MachineCountOutputTypeCountPlannedInvestmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PlannedInvestmentWhereInput
 }
 
 
@@ -1141,6 +1289,7 @@ export type MachineSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   updatedAt?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   usageItems?: boolean | Prisma.Machine$usageItemsArgs<ExtArgs>
+  plannedInvestments?: boolean | Prisma.Machine$plannedInvestmentsArgs<ExtArgs>
   _count?: boolean | Prisma.MachineCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["machine"]>
 
@@ -1216,6 +1365,7 @@ export type MachineOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
 export type MachineInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   usageItems?: boolean | Prisma.Machine$usageItemsArgs<ExtArgs>
+  plannedInvestments?: boolean | Prisma.Machine$plannedInvestmentsArgs<ExtArgs>
   _count?: boolean | Prisma.MachineCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type MachineIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1230,6 +1380,7 @@ export type $MachinePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
   objects: {
     tenant: Prisma.$TenantPayload<ExtArgs>
     usageItems: Prisma.$MachineUsageItemPayload<ExtArgs>[]
+    plannedInvestments: Prisma.$PlannedInvestmentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1647,6 +1798,7 @@ export interface Prisma__MachineClient<T, Null = never, ExtArgs extends runtime.
   readonly [Symbol.toStringTag]: "PrismaPromise"
   tenant<T extends Prisma.TenantDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TenantDefaultArgs<ExtArgs>>): Prisma.Prisma__TenantClient<runtime.Types.Result.GetResult<Prisma.$TenantPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   usageItems<T extends Prisma.Machine$usageItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Machine$usageItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MachineUsageItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  plannedInvestments<T extends Prisma.Machine$plannedInvestmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Machine$plannedInvestmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PlannedInvestmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2117,6 +2269,30 @@ export type Machine$usageItemsArgs<ExtArgs extends runtime.Types.Extensions.Inte
   take?: number
   skip?: number
   distinct?: Prisma.MachineUsageItemScalarFieldEnum | Prisma.MachineUsageItemScalarFieldEnum[]
+}
+
+/**
+ * Machine.plannedInvestments
+ */
+export type Machine$plannedInvestmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PlannedInvestment
+   */
+  select?: Prisma.PlannedInvestmentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PlannedInvestment
+   */
+  omit?: Prisma.PlannedInvestmentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PlannedInvestmentInclude<ExtArgs> | null
+  where?: Prisma.PlannedInvestmentWhereInput
+  orderBy?: Prisma.PlannedInvestmentOrderByWithRelationInput | Prisma.PlannedInvestmentOrderByWithRelationInput[]
+  cursor?: Prisma.PlannedInvestmentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PlannedInvestmentScalarFieldEnum | Prisma.PlannedInvestmentScalarFieldEnum[]
 }
 
 /**

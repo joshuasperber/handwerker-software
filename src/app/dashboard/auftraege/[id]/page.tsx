@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { formatDateTime, formatEuro, ROLE_LABELS } from "@/lib/utils";
 import { MATERIAL_STATUS_LABELS } from "@/lib/inventory/formulas";
-import { Clock, CheckSquare, Upload, History, CheckCircle, Package } from "lucide-react";
+import { Clock, CheckSquare, Upload, History, CheckCircle, Package, ChevronLeft } from "lucide-react";
 import {
   calcPlannedHours,
   summarizeOrderTimeEntries,
@@ -596,6 +596,9 @@ export default function AuftragDetailPage() {
     if (loadError) {
       return (
         <div className="space-y-3">
+          <Link href="/dashboard/auftraege" className="flex items-center gap-1 text-sm text-[#0d5c63] hover:underline">
+            <ChevronLeft className="h-4 w-4" /> Zurück zu Aufträgen
+          </Link>
           <p className="text-sm text-red-600">{loadError}</p>
           <Button type="button" variant="outline" size="sm" onClick={loadOrder}>
             Erneut versuchen
@@ -603,7 +606,7 @@ export default function AuftragDetailPage() {
         </div>
       );
     }
-    return <div className="text-slate-500">Laden...</div>;
+    return <div className="text-slate-500">Wird geladen …</div>;
   }
 
   const plannedHours = calcPlannedHours({

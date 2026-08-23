@@ -241,6 +241,9 @@ export const CustomerScalarFieldEnum = {
   notes: 'notes',
   gdprConsent: 'gdprConsent',
   gdprConsentAt: 'gdprConsentAt',
+  contactAllowed: 'contactAllowed',
+  appointmentRemindersEnabled: 'appointmentRemindersEnabled',
+  preferredContactChannel: 'preferredContactChannel',
   bookingConfirmationEmailTemplate: 'bookingConfirmationEmailTemplate',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -483,6 +486,9 @@ export const AppointmentScalarFieldEnum = {
   isTentative: 'isTentative',
   notes: 'notes',
   reminderSentAt: 'reminderSentAt',
+  reminderStatus: 'reminderStatus',
+  reminderError: 'reminderError',
+  reminderChannel: 'reminderChannel',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -618,6 +624,9 @@ export const NotificationLogScalarFieldEnum = {
   subject: 'subject',
   body: 'body',
   sentAt: 'sentAt',
+  status: 'status',
+  errorMessage: 'errorMessage',
+  retryable: 'retryable',
   metadata: 'metadata'
 } as const
 
@@ -654,9 +663,15 @@ export const NotificationSettingsScalarFieldEnum = {
   reorderCheckEnabled: 'reorderCheckEnabled',
   defaultEmail: 'defaultEmail',
   defaultSms: 'defaultSms',
+  messagingMode: 'messagingMode',
   bookingConfirmationEmailTemplate: 'bookingConfirmationEmailTemplate',
   reminderEmailTemplate: 'reminderEmailTemplate',
+  reminderSmsTemplate: 'reminderSmsTemplate',
   dunningEmailTemplate: 'dunningEmailTemplate',
+  messagingLastTestAt: 'messagingLastTestAt',
+  messagingLastTestStatus: 'messagingLastTestStatus',
+  messagingLastTestError: 'messagingLastTestError',
+  messagingLastTestChannel: 'messagingLastTestChannel',
   updatedAt: 'updatedAt',
   createdAt: 'createdAt'
 } as const
@@ -700,6 +715,11 @@ export const CompanySettingsScalarFieldEnum = {
   invoiceIntroText: 'invoiceIntroText',
   invoiceFooterText: 'invoiceFooterText',
   invoiceNotes: 'invoiceNotes',
+  invoiceLegalText: 'invoiceLegalText',
+  invoiceAccentColor: 'invoiceAccentColor',
+  invoiceLayout: 'invoiceLayout',
+  invoiceFontScale: 'invoiceFontScale',
+  invoiceTemplate: 'invoiceTemplate',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1475,6 +1495,9 @@ export const PlannedInvestmentScalarFieldEnum = {
   category: 'category',
   note: 'note',
   status: 'status',
+  machineId: 'machineId',
+  articleId: 'articleId',
+  projectId: 'projectId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

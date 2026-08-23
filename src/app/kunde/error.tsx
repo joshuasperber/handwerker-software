@@ -29,7 +29,7 @@ export default function KundeError({
             </h2>
             <p className="text-sm text-muted-foreground">
               Beim Laden dieser Seite ist ein Fehler aufgetreten. Bitte
-              versuche es erneut.
+              versuchen Sie es erneut.
             </p>
           </div>
           <Button onClick={reset} variant="outline">

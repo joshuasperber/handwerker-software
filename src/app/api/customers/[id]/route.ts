@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAuth, apiSuccess, apiError } from "@/lib/api";
+import { parseStoredPhone, parseContactPreference, parseBooleanFlag } from "@/lib/customer-contact";
 
 export async function GET(
   _request: NextRequest,
@@ -40,6 +41,12 @@ export async function PATCH(
   });
   if (!existing) return apiError("Kunde nicht gefunden", 404);
 
+  if (body.phone !== undefined) {
+    const phoneParsed = parseStoredPhone(body.phone);
+    if (!phoneParsed.ok) return apiError(phoneParsed.error, 400);
+    body.phone = phoneParsed.e164;
+  }
+
   const customer = await prisma.customer.update({
     where: { id },
     data: {
@@ -59,6 +66,20 @@ export async function PATCH(
       ...(body.notes !== undefined ? { notes: body.notes } : {}),
       ...(body.bookingConfirmationEmailTemplate !== undefined
         ? { bookingConfirmationEmailTemplate: body.bookingConfirmationEmailTemplate || null }
+        : {}),
+      ...(body.contactAllowed !== undefined
+        ? { contactAllowed: parseBooleanFlag(body.contactAllowed, existing.contactAllowed) }
+        : {}),
+      ...(body.appointmentRemindersEnabled !== undefined
+        ? {
+            appointmentRemindersEnabled: parseBooleanFlag(
+              body.appointmentRemindersEnabled,
+              existing.appointmentRemindersEnabled
+            ),
+          }
+        : {}),
+      ...(parseContactPreference(body.preferredContactChannel)
+        ? { preferredContactChannel: parseContactPreference(body.preferredContactChannel) }
         : {}),
     },
     include: { properties: true, taxExemptionCertificate: true },

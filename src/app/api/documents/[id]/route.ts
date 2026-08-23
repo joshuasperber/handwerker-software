@@ -51,8 +51,9 @@ export async function GET(
   const html = snapshot ? renderSnapshotHtml(snapshot) : null;
 
   if (searchParams.get("format") === "html") {
-    if (!html) return apiError("Kein Snapshot vorhanden", 404);
-    return new Response(html, {
+    if (!snapshot) return apiError("Kein Snapshot vorhanden", 404);
+    const standalone = renderSnapshotHtml(snapshot, { includePrintChrome: true });
+    return new Response(standalone, {
       headers: { "Content-Type": "text/html; charset=utf-8" },
     });
   }

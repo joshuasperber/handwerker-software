@@ -2,35 +2,8 @@ import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAuth, apiSuccess, apiError, NO_STORE_HEADERS } from "@/lib/api";
 import { investmentInputSchema } from "@/lib/finance/schemas";
-import {
-  INVESTMENT_CATEGORY_LABELS,
-  INVESTMENT_STATUS_LABELS,
-  type PlannedInvestmentDTO,
-} from "@/lib/finance/types";
-
-function toInvestmentDTO(inv: {
-  id: string;
-  title: string;
-  plannedAmount: number;
-  plannedDate: Date | null;
-  category: keyof typeof INVESTMENT_CATEGORY_LABELS;
-  note: string | null;
-  status: keyof typeof INVESTMENT_STATUS_LABELS;
-  createdAt: Date;
-}): PlannedInvestmentDTO {
-  return {
-    id: inv.id,
-    title: inv.title,
-    plannedAmount: inv.plannedAmount,
-    plannedDate: inv.plannedDate?.toISOString() ?? null,
-    category: inv.category,
-    categoryLabel: INVESTMENT_CATEGORY_LABELS[inv.category],
-    note: inv.note,
-    status: inv.status,
-    statusLabel: INVESTMENT_STATUS_LABELS[inv.status],
-    createdAt: inv.createdAt.toISOString(),
-  };
-}
+import { INVESTMENT_INCLUDE, toInvestmentDTO } from "@/lib/finance/investment-dto";
+import { resolveInvestmentLinks } from "@/lib/finance/investment-links";
 
 export async function PATCH(
   request: NextRequest,
@@ -52,6 +25,16 @@ export async function PATCH(
   }
 
   const data = parsed.data;
+  const links =
+    data.machineId !== undefined || data.articleId !== undefined || data.projectId !== undefined
+      ? await resolveInvestmentLinks(auth.tenantId, {
+          machineId: data.machineId !== undefined ? data.machineId : existing.machineId,
+          articleId: data.articleId !== undefined ? data.articleId : existing.articleId,
+          projectId: data.projectId !== undefined ? data.projectId : existing.projectId,
+        })
+      : null;
+  if (links && "error" in links) return apiError(links.error);
+
   const item = await prisma.plannedInvestment.update({
     where: { id },
     data: {
@@ -63,7 +46,13 @@ export async function PATCH(
       ...(data.category !== undefined && { category: data.category }),
       ...(data.note !== undefined && { note: data.note }),
       ...(data.status !== undefined && { status: data.status }),
+      ...(links && {
+        machineId: links.machineId,
+        articleId: links.articleId,
+        projectId: links.projectId,
+      }),
     },
+    include: INVESTMENT_INCLUDE,
   });
 
   return apiSuccess(toInvestmentDTO(item), 200, NO_STORE_HEADERS);

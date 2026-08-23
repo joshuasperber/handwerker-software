@@ -9,7 +9,7 @@ export function FinanceWarningsPanel({ warnings }: { warnings: FinanceWarning[] 
   if (warnings.length === 0) {
     return (
       <div className="space-y-2">
-        <h3 className="text-sm font-semibold text-slate-700">Hinweise &amp; Warnungen</h3>
+        <h3 className="text-sm font-semibold text-slate-700">Hinweise / Empfehlungen</h3>
         <p className="text-sm text-slate-500">
           Keine Hinweise für diesen Zeitraum. Alle Hinweise sind unverbindliche Orientierung.
         </p>
@@ -20,7 +20,7 @@ export function FinanceWarningsPanel({ warnings }: { warnings: FinanceWarning[] 
   return (
     <div className="space-y-2">
       <div className="flex items-baseline justify-between gap-2">
-        <h3 className="text-sm font-semibold text-slate-700">Hinweise &amp; Warnungen</h3>
+        <h3 className="text-sm font-semibold text-slate-700">Hinweise / Empfehlungen</h3>
         <span className="text-[11px] text-slate-400">unverbindlich</span>
       </div>
       {warnings.map((w) => (

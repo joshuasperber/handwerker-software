@@ -9,7 +9,8 @@ import { Card } from "@/components/ui/card";
 import { CanAccess } from "@/components/auth/can-access";
 import { saveJson } from "@/lib/save-toast";
 import { swrKeys, useApiSWR } from "@/lib/swr";
-import { ChevronLeft, Copy, Save, Upload, X } from "lucide-react";
+import { Copy, Save, Upload, X } from "lucide-react";
+import { SettingsPageHeader } from "@/components/dashboard/settings-page-header";
 
 type TenantSettings = {
   slug: string;
@@ -140,21 +141,7 @@ export default function BetriebEinstellungenPage() {
   return (
     <CanAccess permission="tenant.manage">
       <div className="mx-auto max-w-2xl space-y-6">
-        <div className="flex items-center gap-3">
-          <Link
-            href="/dashboard"
-            className="rounded-lg p-2 text-slate-500 hover:bg-slate-100"
-          >
-            <ChevronLeft className="h-5 w-5" />
-          </Link>
-          <div>
-            <h1 className="text-2xl font-bold text-slate-900">Betrieb</h1>
-            <p className="text-sm text-muted-foreground">
-              Logo, Adresse, Impressum und Buchungslink — zentral für App und
-              öffentliche Seiten
-            </p>
-          </div>
-        </div>
+        <SettingsPageHeader href="/dashboard/einstellungen/betrieb" />
 
         <form onSubmit={onSave} className="space-y-4">
           <Card title="Stammdaten" className="space-y-3 !p-4">
@@ -249,19 +236,18 @@ export default function BetriebEinstellungenPage() {
             </div>
           </Card>
 
-          <Card title="Rechtliches & Buchung" className="space-y-3 !p-4">
-            <Input
-              label="Datenschutz-URL"
-              value={form.privacyPolicyUrl ?? ""}
-              onChange={(e) => setField("privacyPolicyUrl", e.target.value)}
-              placeholder="https://…"
-            />
-            <Input
-              label="Impressum-URL"
-              value={form.imprintUrl ?? ""}
-              onChange={(e) => setField("imprintUrl", e.target.value)}
-              placeholder="https://…"
-            />
+          <Card title="Rechtliches" className="space-y-3 !p-4">
+            <p className="text-sm text-slate-600">
+              Impressum, Datenschutzerklärung und AGB hinterlegen Sie unter{" "}
+              <Link href="/dashboard/einstellungen/sicherheit" className="text-[#0d5c63] underline">
+                Sicherheit & Datenschutz
+              </Link>
+              . Steuerliche Angaben und Rechnungsadresse stehen unter{" "}
+              <Link href="/dashboard/einstellungen/rechnung" className="text-[#0d5c63] underline">
+                Rechnungseinstellungen
+              </Link>
+              .
+            </p>
             <div>
               <label className="text-sm font-medium text-slate-800">
                 Buchungslink

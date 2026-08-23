@@ -2,13 +2,31 @@ import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { requireAuth, apiSuccess, apiError } from "@/lib/api";
 import { getOrCreateNotificationSettings } from "@/lib/notification-settings";
+import { getEmailChannelStatus, getMessagingKind, getMessagingStatus } from "@/lib/messaging/config";
+
+function errorMessage(err: unknown): string {
+  return err instanceof Error ? err.message : "Unbekannter Serverfehler";
+}
 
 export async function GET() {
   const auth = await requireAuth("notifications.manage");
   if (auth instanceof Response) return auth;
 
-  const settings = await getOrCreateNotificationSettings(auth.tenantId);
-  return apiSuccess(settings);
+  const email = getEmailChannelStatus();
+  try {
+    const settings = await getOrCreateNotificationSettings(auth.tenantId);
+    const messaging = getMessagingStatus(getMessagingKind(settings.messagingMode));
+    return apiSuccess({
+      ...settings,
+      runtime: { email, messaging },
+    });
+  } catch (err) {
+    const messaging = getMessagingStatus("SMS");
+    return apiSuccess({
+      runtime: { email, messaging },
+      loadWarning: errorMessage(err),
+    });
+  }
 }
 
 const schema = z.object({
@@ -25,7 +43,9 @@ const schema = z.object({
   reorderCheckEnabled: z.boolean().optional(),
   defaultEmail: z.boolean().optional(),
   defaultSms: z.boolean().optional(),
+  messagingMode: z.enum(["SMS", "WHATSAPP"]).optional(),
   reminderEmailTemplate: z.string().max(2000).optional().nullable(),
+  reminderSmsTemplate: z.string().max(500).optional().nullable(),
   dunningEmailTemplate: z.string().max(2000).optional().nullable(),
 });
 

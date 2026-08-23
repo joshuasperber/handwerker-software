@@ -55,9 +55,15 @@ export type NotificationSettingsMinAggregateOutputType = {
   reorderCheckEnabled: boolean | null
   defaultEmail: boolean | null
   defaultSms: boolean | null
+  messagingMode: string | null
   bookingConfirmationEmailTemplate: string | null
   reminderEmailTemplate: string | null
+  reminderSmsTemplate: string | null
   dunningEmailTemplate: string | null
+  messagingLastTestAt: Date | null
+  messagingLastTestStatus: string | null
+  messagingLastTestError: string | null
+  messagingLastTestChannel: string | null
   updatedAt: Date | null
   createdAt: Date | null
 }
@@ -77,9 +83,15 @@ export type NotificationSettingsMaxAggregateOutputType = {
   reorderCheckEnabled: boolean | null
   defaultEmail: boolean | null
   defaultSms: boolean | null
+  messagingMode: string | null
   bookingConfirmationEmailTemplate: string | null
   reminderEmailTemplate: string | null
+  reminderSmsTemplate: string | null
   dunningEmailTemplate: string | null
+  messagingLastTestAt: Date | null
+  messagingLastTestStatus: string | null
+  messagingLastTestError: string | null
+  messagingLastTestChannel: string | null
   updatedAt: Date | null
   createdAt: Date | null
 }
@@ -99,9 +111,15 @@ export type NotificationSettingsCountAggregateOutputType = {
   reorderCheckEnabled: number
   defaultEmail: number
   defaultSms: number
+  messagingMode: number
   bookingConfirmationEmailTemplate: number
   reminderEmailTemplate: number
+  reminderSmsTemplate: number
   dunningEmailTemplate: number
+  messagingLastTestAt: number
+  messagingLastTestStatus: number
+  messagingLastTestError: number
+  messagingLastTestChannel: number
   updatedAt: number
   createdAt: number
   _all: number
@@ -137,9 +155,15 @@ export type NotificationSettingsMinAggregateInputType = {
   reorderCheckEnabled?: true
   defaultEmail?: true
   defaultSms?: true
+  messagingMode?: true
   bookingConfirmationEmailTemplate?: true
   reminderEmailTemplate?: true
+  reminderSmsTemplate?: true
   dunningEmailTemplate?: true
+  messagingLastTestAt?: true
+  messagingLastTestStatus?: true
+  messagingLastTestError?: true
+  messagingLastTestChannel?: true
   updatedAt?: true
   createdAt?: true
 }
@@ -159,9 +183,15 @@ export type NotificationSettingsMaxAggregateInputType = {
   reorderCheckEnabled?: true
   defaultEmail?: true
   defaultSms?: true
+  messagingMode?: true
   bookingConfirmationEmailTemplate?: true
   reminderEmailTemplate?: true
+  reminderSmsTemplate?: true
   dunningEmailTemplate?: true
+  messagingLastTestAt?: true
+  messagingLastTestStatus?: true
+  messagingLastTestError?: true
+  messagingLastTestChannel?: true
   updatedAt?: true
   createdAt?: true
 }
@@ -181,9 +211,15 @@ export type NotificationSettingsCountAggregateInputType = {
   reorderCheckEnabled?: true
   defaultEmail?: true
   defaultSms?: true
+  messagingMode?: true
   bookingConfirmationEmailTemplate?: true
   reminderEmailTemplate?: true
+  reminderSmsTemplate?: true
   dunningEmailTemplate?: true
+  messagingLastTestAt?: true
+  messagingLastTestStatus?: true
+  messagingLastTestError?: true
+  messagingLastTestChannel?: true
   updatedAt?: true
   createdAt?: true
   _all?: true
@@ -290,9 +326,15 @@ export type NotificationSettingsGroupByOutputType = {
   reorderCheckEnabled: boolean
   defaultEmail: boolean
   defaultSms: boolean
+  messagingMode: string
   bookingConfirmationEmailTemplate: string | null
   reminderEmailTemplate: string | null
+  reminderSmsTemplate: string | null
   dunningEmailTemplate: string | null
+  messagingLastTestAt: Date | null
+  messagingLastTestStatus: string | null
+  messagingLastTestError: string | null
+  messagingLastTestChannel: string | null
   updatedAt: Date
   createdAt: Date
   _count: NotificationSettingsCountAggregateOutputType | null
@@ -335,9 +377,15 @@ export type NotificationSettingsWhereInput = {
   reorderCheckEnabled?: Prisma.BoolFilter<"NotificationSettings"> | boolean
   defaultEmail?: Prisma.BoolFilter<"NotificationSettings"> | boolean
   defaultSms?: Prisma.BoolFilter<"NotificationSettings"> | boolean
+  messagingMode?: Prisma.StringFilter<"NotificationSettings"> | string
   bookingConfirmationEmailTemplate?: Prisma.StringNullableFilter<"NotificationSettings"> | string | null
   reminderEmailTemplate?: Prisma.StringNullableFilter<"NotificationSettings"> | string | null
+  reminderSmsTemplate?: Prisma.StringNullableFilter<"NotificationSettings"> | string | null
   dunningEmailTemplate?: Prisma.StringNullableFilter<"NotificationSettings"> | string | null
+  messagingLastTestAt?: Prisma.DateTimeNullableFilter<"NotificationSettings"> | Date | string | null
+  messagingLastTestStatus?: Prisma.StringNullableFilter<"NotificationSettings"> | string | null
+  messagingLastTestError?: Prisma.StringNullableFilter<"NotificationSettings"> | string | null
+  messagingLastTestChannel?: Prisma.StringNullableFilter<"NotificationSettings"> | string | null
   updatedAt?: Prisma.DateTimeFilter<"NotificationSettings"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"NotificationSettings"> | Date | string
   tenant?: Prisma.XOR<Prisma.TenantScalarRelationFilter, Prisma.TenantWhereInput>
@@ -358,9 +406,15 @@ export type NotificationSettingsOrderByWithRelationInput = {
   reorderCheckEnabled?: Prisma.SortOrder
   defaultEmail?: Prisma.SortOrder
   defaultSms?: Prisma.SortOrder
+  messagingMode?: Prisma.SortOrder
   bookingConfirmationEmailTemplate?: Prisma.SortOrderInput | Prisma.SortOrder
   reminderEmailTemplate?: Prisma.SortOrderInput | Prisma.SortOrder
+  reminderSmsTemplate?: Prisma.SortOrderInput | Prisma.SortOrder
   dunningEmailTemplate?: Prisma.SortOrderInput | Prisma.SortOrder
+  messagingLastTestAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  messagingLastTestStatus?: Prisma.SortOrderInput | Prisma.SortOrder
+  messagingLastTestError?: Prisma.SortOrderInput | Prisma.SortOrder
+  messagingLastTestChannel?: Prisma.SortOrderInput | Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   tenant?: Prisma.TenantOrderByWithRelationInput
@@ -384,9 +438,15 @@ export type NotificationSettingsWhereUniqueInput = Prisma.AtLeast<{
   reorderCheckEnabled?: Prisma.BoolFilter<"NotificationSettings"> | boolean
   defaultEmail?: Prisma.BoolFilter<"NotificationSettings"> | boolean
   defaultSms?: Prisma.BoolFilter<"NotificationSettings"> | boolean
+  messagingMode?: Prisma.StringFilter<"NotificationSettings"> | string
   bookingConfirmationEmailTemplate?: Prisma.StringNullableFilter<"NotificationSettings"> | string | null
   reminderEmailTemplate?: Prisma.StringNullableFilter<"NotificationSettings"> | string | null
+  reminderSmsTemplate?: Prisma.StringNullableFilter<"NotificationSettings"> | string | null
   dunningEmailTemplate?: Prisma.StringNullableFilter<"NotificationSettings"> | string | null
+  messagingLastTestAt?: Prisma.DateTimeNullableFilter<"NotificationSettings"> | Date | string | null
+  messagingLastTestStatus?: Prisma.StringNullableFilter<"NotificationSettings"> | string | null
+  messagingLastTestError?: Prisma.StringNullableFilter<"NotificationSettings"> | string | null
+  messagingLastTestChannel?: Prisma.StringNullableFilter<"NotificationSettings"> | string | null
   updatedAt?: Prisma.DateTimeFilter<"NotificationSettings"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"NotificationSettings"> | Date | string
   tenant?: Prisma.XOR<Prisma.TenantScalarRelationFilter, Prisma.TenantWhereInput>
@@ -407,9 +467,15 @@ export type NotificationSettingsOrderByWithAggregationInput = {
   reorderCheckEnabled?: Prisma.SortOrder
   defaultEmail?: Prisma.SortOrder
   defaultSms?: Prisma.SortOrder
+  messagingMode?: Prisma.SortOrder
   bookingConfirmationEmailTemplate?: Prisma.SortOrderInput | Prisma.SortOrder
   reminderEmailTemplate?: Prisma.SortOrderInput | Prisma.SortOrder
+  reminderSmsTemplate?: Prisma.SortOrderInput | Prisma.SortOrder
   dunningEmailTemplate?: Prisma.SortOrderInput | Prisma.SortOrder
+  messagingLastTestAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  messagingLastTestStatus?: Prisma.SortOrderInput | Prisma.SortOrder
+  messagingLastTestError?: Prisma.SortOrderInput | Prisma.SortOrder
+  messagingLastTestChannel?: Prisma.SortOrderInput | Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.NotificationSettingsCountOrderByAggregateInput
@@ -437,9 +503,15 @@ export type NotificationSettingsScalarWhereWithAggregatesInput = {
   reorderCheckEnabled?: Prisma.BoolWithAggregatesFilter<"NotificationSettings"> | boolean
   defaultEmail?: Prisma.BoolWithAggregatesFilter<"NotificationSettings"> | boolean
   defaultSms?: Prisma.BoolWithAggregatesFilter<"NotificationSettings"> | boolean
+  messagingMode?: Prisma.StringWithAggregatesFilter<"NotificationSettings"> | string
   bookingConfirmationEmailTemplate?: Prisma.StringNullableWithAggregatesFilter<"NotificationSettings"> | string | null
   reminderEmailTemplate?: Prisma.StringNullableWithAggregatesFilter<"NotificationSettings"> | string | null
+  reminderSmsTemplate?: Prisma.StringNullableWithAggregatesFilter<"NotificationSettings"> | string | null
   dunningEmailTemplate?: Prisma.StringNullableWithAggregatesFilter<"NotificationSettings"> | string | null
+  messagingLastTestAt?: Prisma.DateTimeNullableWithAggregatesFilter<"NotificationSettings"> | Date | string | null
+  messagingLastTestStatus?: Prisma.StringNullableWithAggregatesFilter<"NotificationSettings"> | string | null
+  messagingLastTestError?: Prisma.StringNullableWithAggregatesFilter<"NotificationSettings"> | string | null
+  messagingLastTestChannel?: Prisma.StringNullableWithAggregatesFilter<"NotificationSettings"> | string | null
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"NotificationSettings"> | Date | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"NotificationSettings"> | Date | string
 }
@@ -458,9 +530,15 @@ export type NotificationSettingsCreateInput = {
   reorderCheckEnabled?: boolean
   defaultEmail?: boolean
   defaultSms?: boolean
+  messagingMode?: string
   bookingConfirmationEmailTemplate?: string | null
   reminderEmailTemplate?: string | null
+  reminderSmsTemplate?: string | null
   dunningEmailTemplate?: string | null
+  messagingLastTestAt?: Date | string | null
+  messagingLastTestStatus?: string | null
+  messagingLastTestError?: string | null
+  messagingLastTestChannel?: string | null
   updatedAt?: Date | string
   createdAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutNotificationSettingsInput
@@ -481,9 +559,15 @@ export type NotificationSettingsUncheckedCreateInput = {
   reorderCheckEnabled?: boolean
   defaultEmail?: boolean
   defaultSms?: boolean
+  messagingMode?: string
   bookingConfirmationEmailTemplate?: string | null
   reminderEmailTemplate?: string | null
+  reminderSmsTemplate?: string | null
   dunningEmailTemplate?: string | null
+  messagingLastTestAt?: Date | string | null
+  messagingLastTestStatus?: string | null
+  messagingLastTestError?: string | null
+  messagingLastTestChannel?: string | null
   updatedAt?: Date | string
   createdAt?: Date | string
 }
@@ -502,9 +586,15 @@ export type NotificationSettingsUpdateInput = {
   reorderCheckEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   defaultEmail?: Prisma.BoolFieldUpdateOperationsInput | boolean
   defaultSms?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  messagingMode?: Prisma.StringFieldUpdateOperationsInput | string
   bookingConfirmationEmailTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reminderEmailTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reminderSmsTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dunningEmailTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  messagingLastTestAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  messagingLastTestStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  messagingLastTestError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  messagingLastTestChannel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutNotificationSettingsNestedInput
@@ -525,9 +615,15 @@ export type NotificationSettingsUncheckedUpdateInput = {
   reorderCheckEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   defaultEmail?: Prisma.BoolFieldUpdateOperationsInput | boolean
   defaultSms?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  messagingMode?: Prisma.StringFieldUpdateOperationsInput | string
   bookingConfirmationEmailTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reminderEmailTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reminderSmsTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dunningEmailTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  messagingLastTestAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  messagingLastTestStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  messagingLastTestError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  messagingLastTestChannel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -547,9 +643,15 @@ export type NotificationSettingsCreateManyInput = {
   reorderCheckEnabled?: boolean
   defaultEmail?: boolean
   defaultSms?: boolean
+  messagingMode?: string
   bookingConfirmationEmailTemplate?: string | null
   reminderEmailTemplate?: string | null
+  reminderSmsTemplate?: string | null
   dunningEmailTemplate?: string | null
+  messagingLastTestAt?: Date | string | null
+  messagingLastTestStatus?: string | null
+  messagingLastTestError?: string | null
+  messagingLastTestChannel?: string | null
   updatedAt?: Date | string
   createdAt?: Date | string
 }
@@ -568,9 +670,15 @@ export type NotificationSettingsUpdateManyMutationInput = {
   reorderCheckEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   defaultEmail?: Prisma.BoolFieldUpdateOperationsInput | boolean
   defaultSms?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  messagingMode?: Prisma.StringFieldUpdateOperationsInput | string
   bookingConfirmationEmailTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reminderEmailTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reminderSmsTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dunningEmailTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  messagingLastTestAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  messagingLastTestStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  messagingLastTestError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  messagingLastTestChannel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -590,9 +698,15 @@ export type NotificationSettingsUncheckedUpdateManyInput = {
   reorderCheckEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   defaultEmail?: Prisma.BoolFieldUpdateOperationsInput | boolean
   defaultSms?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  messagingMode?: Prisma.StringFieldUpdateOperationsInput | string
   bookingConfirmationEmailTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reminderEmailTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reminderSmsTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dunningEmailTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  messagingLastTestAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  messagingLastTestStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  messagingLastTestError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  messagingLastTestChannel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -617,9 +731,15 @@ export type NotificationSettingsCountOrderByAggregateInput = {
   reorderCheckEnabled?: Prisma.SortOrder
   defaultEmail?: Prisma.SortOrder
   defaultSms?: Prisma.SortOrder
+  messagingMode?: Prisma.SortOrder
   bookingConfirmationEmailTemplate?: Prisma.SortOrder
   reminderEmailTemplate?: Prisma.SortOrder
+  reminderSmsTemplate?: Prisma.SortOrder
   dunningEmailTemplate?: Prisma.SortOrder
+  messagingLastTestAt?: Prisma.SortOrder
+  messagingLastTestStatus?: Prisma.SortOrder
+  messagingLastTestError?: Prisma.SortOrder
+  messagingLastTestChannel?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -646,9 +766,15 @@ export type NotificationSettingsMaxOrderByAggregateInput = {
   reorderCheckEnabled?: Prisma.SortOrder
   defaultEmail?: Prisma.SortOrder
   defaultSms?: Prisma.SortOrder
+  messagingMode?: Prisma.SortOrder
   bookingConfirmationEmailTemplate?: Prisma.SortOrder
   reminderEmailTemplate?: Prisma.SortOrder
+  reminderSmsTemplate?: Prisma.SortOrder
   dunningEmailTemplate?: Prisma.SortOrder
+  messagingLastTestAt?: Prisma.SortOrder
+  messagingLastTestStatus?: Prisma.SortOrder
+  messagingLastTestError?: Prisma.SortOrder
+  messagingLastTestChannel?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -668,9 +794,15 @@ export type NotificationSettingsMinOrderByAggregateInput = {
   reorderCheckEnabled?: Prisma.SortOrder
   defaultEmail?: Prisma.SortOrder
   defaultSms?: Prisma.SortOrder
+  messagingMode?: Prisma.SortOrder
   bookingConfirmationEmailTemplate?: Prisma.SortOrder
   reminderEmailTemplate?: Prisma.SortOrder
+  reminderSmsTemplate?: Prisma.SortOrder
   dunningEmailTemplate?: Prisma.SortOrder
+  messagingLastTestAt?: Prisma.SortOrder
+  messagingLastTestStatus?: Prisma.SortOrder
+  messagingLastTestError?: Prisma.SortOrder
+  messagingLastTestChannel?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -728,9 +860,15 @@ export type NotificationSettingsCreateWithoutTenantInput = {
   reorderCheckEnabled?: boolean
   defaultEmail?: boolean
   defaultSms?: boolean
+  messagingMode?: string
   bookingConfirmationEmailTemplate?: string | null
   reminderEmailTemplate?: string | null
+  reminderSmsTemplate?: string | null
   dunningEmailTemplate?: string | null
+  messagingLastTestAt?: Date | string | null
+  messagingLastTestStatus?: string | null
+  messagingLastTestError?: string | null
+  messagingLastTestChannel?: string | null
   updatedAt?: Date | string
   createdAt?: Date | string
 }
@@ -749,9 +887,15 @@ export type NotificationSettingsUncheckedCreateWithoutTenantInput = {
   reorderCheckEnabled?: boolean
   defaultEmail?: boolean
   defaultSms?: boolean
+  messagingMode?: string
   bookingConfirmationEmailTemplate?: string | null
   reminderEmailTemplate?: string | null
+  reminderSmsTemplate?: string | null
   dunningEmailTemplate?: string | null
+  messagingLastTestAt?: Date | string | null
+  messagingLastTestStatus?: string | null
+  messagingLastTestError?: string | null
+  messagingLastTestChannel?: string | null
   updatedAt?: Date | string
   createdAt?: Date | string
 }
@@ -786,9 +930,15 @@ export type NotificationSettingsUpdateWithoutTenantInput = {
   reorderCheckEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   defaultEmail?: Prisma.BoolFieldUpdateOperationsInput | boolean
   defaultSms?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  messagingMode?: Prisma.StringFieldUpdateOperationsInput | string
   bookingConfirmationEmailTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reminderEmailTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reminderSmsTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dunningEmailTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  messagingLastTestAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  messagingLastTestStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  messagingLastTestError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  messagingLastTestChannel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -807,9 +957,15 @@ export type NotificationSettingsUncheckedUpdateWithoutTenantInput = {
   reorderCheckEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   defaultEmail?: Prisma.BoolFieldUpdateOperationsInput | boolean
   defaultSms?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  messagingMode?: Prisma.StringFieldUpdateOperationsInput | string
   bookingConfirmationEmailTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reminderEmailTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reminderSmsTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dunningEmailTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  messagingLastTestAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  messagingLastTestStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  messagingLastTestError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  messagingLastTestChannel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -831,9 +987,15 @@ export type NotificationSettingsSelect<ExtArgs extends runtime.Types.Extensions.
   reorderCheckEnabled?: boolean
   defaultEmail?: boolean
   defaultSms?: boolean
+  messagingMode?: boolean
   bookingConfirmationEmailTemplate?: boolean
   reminderEmailTemplate?: boolean
+  reminderSmsTemplate?: boolean
   dunningEmailTemplate?: boolean
+  messagingLastTestAt?: boolean
+  messagingLastTestStatus?: boolean
+  messagingLastTestError?: boolean
+  messagingLastTestChannel?: boolean
   updatedAt?: boolean
   createdAt?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
@@ -854,9 +1016,15 @@ export type NotificationSettingsSelectCreateManyAndReturn<ExtArgs extends runtim
   reorderCheckEnabled?: boolean
   defaultEmail?: boolean
   defaultSms?: boolean
+  messagingMode?: boolean
   bookingConfirmationEmailTemplate?: boolean
   reminderEmailTemplate?: boolean
+  reminderSmsTemplate?: boolean
   dunningEmailTemplate?: boolean
+  messagingLastTestAt?: boolean
+  messagingLastTestStatus?: boolean
+  messagingLastTestError?: boolean
+  messagingLastTestChannel?: boolean
   updatedAt?: boolean
   createdAt?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
@@ -877,9 +1045,15 @@ export type NotificationSettingsSelectUpdateManyAndReturn<ExtArgs extends runtim
   reorderCheckEnabled?: boolean
   defaultEmail?: boolean
   defaultSms?: boolean
+  messagingMode?: boolean
   bookingConfirmationEmailTemplate?: boolean
   reminderEmailTemplate?: boolean
+  reminderSmsTemplate?: boolean
   dunningEmailTemplate?: boolean
+  messagingLastTestAt?: boolean
+  messagingLastTestStatus?: boolean
+  messagingLastTestError?: boolean
+  messagingLastTestChannel?: boolean
   updatedAt?: boolean
   createdAt?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
@@ -900,14 +1074,20 @@ export type NotificationSettingsSelectScalar = {
   reorderCheckEnabled?: boolean
   defaultEmail?: boolean
   defaultSms?: boolean
+  messagingMode?: boolean
   bookingConfirmationEmailTemplate?: boolean
   reminderEmailTemplate?: boolean
+  reminderSmsTemplate?: boolean
   dunningEmailTemplate?: boolean
+  messagingLastTestAt?: boolean
+  messagingLastTestStatus?: boolean
+  messagingLastTestError?: boolean
+  messagingLastTestChannel?: boolean
   updatedAt?: boolean
   createdAt?: boolean
 }
 
-export type NotificationSettingsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "bookingConfirmationEnabled" | "appointmentReminderEnabled" | "appointmentReminderHoursBefore" | "remindCustomer" | "remindEmployee" | "dunningAutoEnabled" | "dunningLevel1Days" | "dunningLevel2Days" | "dunningLevel3Days" | "reorderCheckEnabled" | "defaultEmail" | "defaultSms" | "bookingConfirmationEmailTemplate" | "reminderEmailTemplate" | "dunningEmailTemplate" | "updatedAt" | "createdAt", ExtArgs["result"]["notificationSettings"]>
+export type NotificationSettingsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "bookingConfirmationEnabled" | "appointmentReminderEnabled" | "appointmentReminderHoursBefore" | "remindCustomer" | "remindEmployee" | "dunningAutoEnabled" | "dunningLevel1Days" | "dunningLevel2Days" | "dunningLevel3Days" | "reorderCheckEnabled" | "defaultEmail" | "defaultSms" | "messagingMode" | "bookingConfirmationEmailTemplate" | "reminderEmailTemplate" | "reminderSmsTemplate" | "dunningEmailTemplate" | "messagingLastTestAt" | "messagingLastTestStatus" | "messagingLastTestError" | "messagingLastTestChannel" | "updatedAt" | "createdAt", ExtArgs["result"]["notificationSettings"]>
 export type NotificationSettingsInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
 }
@@ -938,9 +1118,18 @@ export type $NotificationSettingsPayload<ExtArgs extends runtime.Types.Extension
     reorderCheckEnabled: boolean
     defaultEmail: boolean
     defaultSms: boolean
+    /**
+     * SMS oder WHATSAPP — konkreter Anbieter bleibt serverseitig (Twilio).
+     */
+    messagingMode: string
     bookingConfirmationEmailTemplate: string | null
     reminderEmailTemplate: string | null
+    reminderSmsTemplate: string | null
     dunningEmailTemplate: string | null
+    messagingLastTestAt: Date | null
+    messagingLastTestStatus: string | null
+    messagingLastTestError: string | null
+    messagingLastTestChannel: string | null
     updatedAt: Date
     createdAt: Date
   }, ExtArgs["result"]["notificationSettings"]>
@@ -1381,9 +1570,15 @@ export interface NotificationSettingsFieldRefs {
   readonly reorderCheckEnabled: Prisma.FieldRef<"NotificationSettings", 'Boolean'>
   readonly defaultEmail: Prisma.FieldRef<"NotificationSettings", 'Boolean'>
   readonly defaultSms: Prisma.FieldRef<"NotificationSettings", 'Boolean'>
+  readonly messagingMode: Prisma.FieldRef<"NotificationSettings", 'String'>
   readonly bookingConfirmationEmailTemplate: Prisma.FieldRef<"NotificationSettings", 'String'>
   readonly reminderEmailTemplate: Prisma.FieldRef<"NotificationSettings", 'String'>
+  readonly reminderSmsTemplate: Prisma.FieldRef<"NotificationSettings", 'String'>
   readonly dunningEmailTemplate: Prisma.FieldRef<"NotificationSettings", 'String'>
+  readonly messagingLastTestAt: Prisma.FieldRef<"NotificationSettings", 'DateTime'>
+  readonly messagingLastTestStatus: Prisma.FieldRef<"NotificationSettings", 'String'>
+  readonly messagingLastTestError: Prisma.FieldRef<"NotificationSettings", 'String'>
+  readonly messagingLastTestChannel: Prisma.FieldRef<"NotificationSettings", 'String'>
   readonly updatedAt: Prisma.FieldRef<"NotificationSettings", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"NotificationSettings", 'DateTime'>
 }

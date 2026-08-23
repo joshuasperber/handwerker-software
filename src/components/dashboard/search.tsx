@@ -17,6 +17,7 @@ import {
   type SearchResult,
 } from "@/lib/search/types";
 import { cn } from "@/lib/utils";
+import { fetchJson } from "@/lib/fetch-json";
 
 const DEBOUNCE_MS = 280;
 const MIN_CHARS = 1;
@@ -63,20 +64,19 @@ export function DashboardSearch({ className }: { className?: string }) {
     setError("");
 
     try {
-      const res = await fetch(`/api/search?q=${encodeURIComponent(q)}`, {
+      const data = await fetchJson<SearchResult>(`/api/search?q=${encodeURIComponent(q)}`, {
         signal: controller.signal,
         cache: "no-store",
         headers: { Accept: "application/json" },
       });
-      const data = await res.json();
       if (seq !== requestSeq.current) return;
-      if (!data.success) {
+      if (!data.success || !data.data) {
         setError(data.error ?? "Suche fehlgeschlagen");
         setResult(null);
         setActiveCategory(null);
         return;
       }
-      const next = data.data as SearchResult;
+      const next = data.data;
       setResult(next);
       const preferred =
         next.topCategories[0] ??

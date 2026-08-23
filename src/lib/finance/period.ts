@@ -33,10 +33,10 @@ export const FINANCE_PERIOD_PRESETS: FinancePeriodPreset[] = [
 export const FINANCE_PERIOD_LABELS: Record<FinancePeriodPreset, string> = {
   current_month: "Aktueller Monat",
   last_month: "Letzter Monat",
-  current_quarter: "Aktuelles Quartal",
+  current_quarter: "Quartal",
   last_quarter: "Letztes Quartal",
-  current_year: "Aktuelles Jahr",
-  custom: "Freier Zeitraum",
+  current_year: "Jahr",
+  custom: "Frei wählbarer Zeitraum",
 };
 
 function monthLabel(date: Date) {

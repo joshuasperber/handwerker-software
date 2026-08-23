@@ -52,6 +52,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { EInvoiceExportDialog } from "@/components/documents/einvoice-export-dialog";
+import { DocumentViewerDialog, useDocumentViewer } from "@/components/documents/document-viewer-dialog";
 import { formatIssueDateInput } from "@/lib/documents/issue-date";
 import {
   ISSUE_DATE_CHANGE_WARNING,
@@ -144,6 +145,7 @@ export default function RechnungenPage() {
   const [issueDateValue, setIssueDateValue] = useState("");
   const [issueDateConfirmOpen, setIssueDateConfirmOpen] = useState(false);
   const [cancelReason, setCancelReason] = useState("");
+  const documentViewer = useDocumentViewer();
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -568,10 +570,21 @@ export default function RechnungenPage() {
                   </div>
                 )}
                 <div className="flex gap-2 pt-1">
-                  <Button asChild variant="outline" size="sm" className="min-h-10 flex-1">
-                    <a href={`/api/documents/${doc.id}?format=html`} target="_blank" rel="noreferrer">
-                      Ansehen
-                    </a>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="min-h-10 flex-1"
+                    onClick={() =>
+                      documentViewer.openDocument({
+                        id: doc.id,
+                        documentNumber: doc.documentNumber,
+                        orderId: doc.orderId,
+                        calculationId: doc.calculationId,
+                        title: `${TYPE_LABEL[doc.documentType]} ${doc.documentNumber}`,
+                      })
+                    }
+                  >
+                    Ansehen
                   </Button>
                   <CanAccess permission="invoices.payments">
                     {open && (
@@ -597,10 +610,18 @@ export default function RechnungenPage() {
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="w-56">
-                      <DropdownMenuItem asChild>
-                        <a href={`/api/documents/${doc.id}/pdf`} target="_blank" rel="noreferrer">
-                          <Download className="h-4 w-4 mr-2" /> PDF herunterladen
-                        </a>
+                      <DropdownMenuItem
+                        onClick={() =>
+                          documentViewer.openDocument({
+                            id: doc.id,
+                            documentNumber: doc.documentNumber,
+                            orderId: doc.orderId,
+                            calculationId: doc.calculationId,
+                            title: `${TYPE_LABEL[doc.documentType]} ${doc.documentNumber}`,
+                          })
+                        }
+                      >
+                        <Download className="h-4 w-4 mr-2" /> PDF / Export
                       </DropdownMenuItem>
                       {isInvoice && (
                         <DropdownMenuItem onClick={() => setEinvoiceDoc(doc)}>
@@ -753,16 +774,24 @@ export default function RechnungenPage() {
                     </td>
                     <td className="px-3 py-2">
                       <div className="flex items-center justify-end gap-1">
-                        <a
-                          href={`/api/documents/${doc.id}?format=html`}
-                          target="_blank"
-                          rel="noreferrer"
-                          title="Ansehen / Drucken"
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8"
+                          title="Ansehen / PDF"
+                          onClick={() =>
+                            documentViewer.openDocument({
+                              id: doc.id,
+                              documentNumber: doc.documentNumber,
+                              orderId: doc.orderId,
+                              calculationId: doc.calculationId,
+                              title: `${TYPE_LABEL[doc.documentType]} ${doc.documentNumber}`,
+                            })
+                          }
                         >
-                          <Button variant="ghost" size="icon" className="h-8 w-8">
-                            <FileText className="h-4 w-4" />
-                          </Button>
-                        </a>
+                          <FileText className="h-4 w-4" />
+                        </Button>
                         <CanAccess permission="invoices.payments">
                           {open && (
                             <Button
@@ -788,14 +817,18 @@ export default function RechnungenPage() {
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end" className="w-56">
-                            <DropdownMenuItem asChild>
-                              <a
-                                href={`/api/documents/${doc.id}/pdf`}
-                                target="_blank"
-                                rel="noreferrer"
-                              >
-                                <Download className="h-4 w-4 mr-2" /> PDF herunterladen
-                              </a>
+                            <DropdownMenuItem
+                              onClick={() =>
+                                documentViewer.openDocument({
+                                  id: doc.id,
+                                  documentNumber: doc.documentNumber,
+                                  orderId: doc.orderId,
+                                  calculationId: doc.calculationId,
+                                  title: `${TYPE_LABEL[doc.documentType]} ${doc.documentNumber}`,
+                                })
+                              }
+                            >
+                              <Download className="h-4 w-4 mr-2" /> PDF / Export
                             </DropdownMenuItem>
                             {isInvoice && (
                               <DropdownMenuItem onClick={() => setEinvoiceDoc(doc)}>
@@ -1011,6 +1044,13 @@ export default function RechnungenPage() {
         }}
         onExported={() => {
           void load();
+        }}
+      />
+
+      <DocumentViewerDialog
+        state={documentViewer.state}
+        onOpenChange={(open) => {
+          if (!open) documentViewer.close();
         }}
       />
     </div>

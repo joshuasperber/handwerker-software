@@ -359,6 +359,7 @@ export type ArticleWhereInput = {
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionListRelationFilter
   materialItems?: Prisma.MaterialItemListRelationFilter
   projectCosts?: Prisma.ProjectCostListRelationFilter
+  plannedInvestments?: Prisma.PlannedInvestmentListRelationFilter
 }
 
 export type ArticleOrderByWithRelationInput = {
@@ -392,6 +393,7 @@ export type ArticleOrderByWithRelationInput = {
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionOrderByRelationAggregateInput
   materialItems?: Prisma.MaterialItemOrderByRelationAggregateInput
   projectCosts?: Prisma.ProjectCostOrderByRelationAggregateInput
+  plannedInvestments?: Prisma.PlannedInvestmentOrderByRelationAggregateInput
 }
 
 export type ArticleWhereUniqueInput = Prisma.AtLeast<{
@@ -428,6 +430,7 @@ export type ArticleWhereUniqueInput = Prisma.AtLeast<{
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionListRelationFilter
   materialItems?: Prisma.MaterialItemListRelationFilter
   projectCosts?: Prisma.ProjectCostListRelationFilter
+  plannedInvestments?: Prisma.PlannedInvestmentListRelationFilter
 }, "id">
 
 export type ArticleOrderByWithAggregationInput = {
@@ -512,6 +515,7 @@ export type ArticleCreateInput = {
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionCreateNestedManyWithoutArticleInput
   materialItems?: Prisma.MaterialItemCreateNestedManyWithoutArticleInput
   projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutArticleInput
+  plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutArticleInput
 }
 
 export type ArticleUncheckedCreateInput = {
@@ -544,6 +548,7 @@ export type ArticleUncheckedCreateInput = {
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionUncheckedCreateNestedManyWithoutArticleInput
   materialItems?: Prisma.MaterialItemUncheckedCreateNestedManyWithoutArticleInput
   projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutArticleInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutArticleInput
 }
 
 export type ArticleUpdateInput = {
@@ -576,6 +581,7 @@ export type ArticleUpdateInput = {
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionUpdateManyWithoutArticleNestedInput
   materialItems?: Prisma.MaterialItemUpdateManyWithoutArticleNestedInput
   projectCosts?: Prisma.ProjectCostUpdateManyWithoutArticleNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutArticleNestedInput
 }
 
 export type ArticleUncheckedUpdateInput = {
@@ -608,6 +614,7 @@ export type ArticleUncheckedUpdateInput = {
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionUncheckedUpdateManyWithoutArticleNestedInput
   materialItems?: Prisma.MaterialItemUncheckedUpdateManyWithoutArticleNestedInput
   projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutArticleNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutArticleNestedInput
 }
 
 export type ArticleCreateManyInput = {
@@ -963,6 +970,22 @@ export type ArticleUpdateOneWithoutPlanMarkersNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ArticleUpdateToOneWithWhereWithoutPlanMarkersInput, Prisma.ArticleUpdateWithoutPlanMarkersInput>, Prisma.ArticleUncheckedUpdateWithoutPlanMarkersInput>
 }
 
+export type ArticleCreateNestedOneWithoutPlannedInvestmentsInput = {
+  create?: Prisma.XOR<Prisma.ArticleCreateWithoutPlannedInvestmentsInput, Prisma.ArticleUncheckedCreateWithoutPlannedInvestmentsInput>
+  connectOrCreate?: Prisma.ArticleCreateOrConnectWithoutPlannedInvestmentsInput
+  connect?: Prisma.ArticleWhereUniqueInput
+}
+
+export type ArticleUpdateOneWithoutPlannedInvestmentsNestedInput = {
+  create?: Prisma.XOR<Prisma.ArticleCreateWithoutPlannedInvestmentsInput, Prisma.ArticleUncheckedCreateWithoutPlannedInvestmentsInput>
+  connectOrCreate?: Prisma.ArticleCreateOrConnectWithoutPlannedInvestmentsInput
+  upsert?: Prisma.ArticleUpsertWithoutPlannedInvestmentsInput
+  disconnect?: Prisma.ArticleWhereInput | boolean
+  delete?: Prisma.ArticleWhereInput | boolean
+  connect?: Prisma.ArticleWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ArticleUpdateToOneWithWhereWithoutPlannedInvestmentsInput, Prisma.ArticleUpdateWithoutPlannedInvestmentsInput>, Prisma.ArticleUncheckedUpdateWithoutPlannedInvestmentsInput>
+}
+
 export type ArticleCreateNestedOneWithoutProjectCostsInput = {
   create?: Prisma.XOR<Prisma.ArticleCreateWithoutProjectCostsInput, Prisma.ArticleUncheckedCreateWithoutProjectCostsInput>
   connectOrCreate?: Prisma.ArticleCreateOrConnectWithoutProjectCostsInput
@@ -1008,6 +1031,7 @@ export type ArticleCreateWithoutTenantInput = {
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionCreateNestedManyWithoutArticleInput
   materialItems?: Prisma.MaterialItemCreateNestedManyWithoutArticleInput
   projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutArticleInput
+  plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutArticleInput
 }
 
 export type ArticleUncheckedCreateWithoutTenantInput = {
@@ -1039,6 +1063,7 @@ export type ArticleUncheckedCreateWithoutTenantInput = {
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionUncheckedCreateNestedManyWithoutArticleInput
   materialItems?: Prisma.MaterialItemUncheckedCreateNestedManyWithoutArticleInput
   projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutArticleInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutArticleInput
 }
 
 export type ArticleCreateOrConnectWithoutTenantInput = {
@@ -1121,6 +1146,7 @@ export type ArticleCreateWithoutMaterialItemsInput = {
   planMarkers?: Prisma.PlanMarkerCreateNestedManyWithoutArticleInput
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionCreateNestedManyWithoutArticleInput
   projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutArticleInput
+  plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutArticleInput
 }
 
 export type ArticleUncheckedCreateWithoutMaterialItemsInput = {
@@ -1152,6 +1178,7 @@ export type ArticleUncheckedCreateWithoutMaterialItemsInput = {
   planMarkers?: Prisma.PlanMarkerUncheckedCreateNestedManyWithoutArticleInput
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionUncheckedCreateNestedManyWithoutArticleInput
   projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutArticleInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutArticleInput
 }
 
 export type ArticleCreateOrConnectWithoutMaterialItemsInput = {
@@ -1199,6 +1226,7 @@ export type ArticleUpdateWithoutMaterialItemsInput = {
   planMarkers?: Prisma.PlanMarkerUpdateManyWithoutArticleNestedInput
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionUpdateManyWithoutArticleNestedInput
   projectCosts?: Prisma.ProjectCostUpdateManyWithoutArticleNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutArticleNestedInput
 }
 
 export type ArticleUncheckedUpdateWithoutMaterialItemsInput = {
@@ -1230,6 +1258,7 @@ export type ArticleUncheckedUpdateWithoutMaterialItemsInput = {
   planMarkers?: Prisma.PlanMarkerUncheckedUpdateManyWithoutArticleNestedInput
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionUncheckedUpdateManyWithoutArticleNestedInput
   projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutArticleNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutArticleNestedInput
 }
 
 export type ArticleCreateWithoutStockBalancesInput = {
@@ -1261,6 +1290,7 @@ export type ArticleCreateWithoutStockBalancesInput = {
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionCreateNestedManyWithoutArticleInput
   materialItems?: Prisma.MaterialItemCreateNestedManyWithoutArticleInput
   projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutArticleInput
+  plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutArticleInput
 }
 
 export type ArticleUncheckedCreateWithoutStockBalancesInput = {
@@ -1292,6 +1322,7 @@ export type ArticleUncheckedCreateWithoutStockBalancesInput = {
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionUncheckedCreateNestedManyWithoutArticleInput
   materialItems?: Prisma.MaterialItemUncheckedCreateNestedManyWithoutArticleInput
   projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutArticleInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutArticleInput
 }
 
 export type ArticleCreateOrConnectWithoutStockBalancesInput = {
@@ -1339,6 +1370,7 @@ export type ArticleUpdateWithoutStockBalancesInput = {
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionUpdateManyWithoutArticleNestedInput
   materialItems?: Prisma.MaterialItemUpdateManyWithoutArticleNestedInput
   projectCosts?: Prisma.ProjectCostUpdateManyWithoutArticleNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutArticleNestedInput
 }
 
 export type ArticleUncheckedUpdateWithoutStockBalancesInput = {
@@ -1370,6 +1402,7 @@ export type ArticleUncheckedUpdateWithoutStockBalancesInput = {
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionUncheckedUpdateManyWithoutArticleNestedInput
   materialItems?: Prisma.MaterialItemUncheckedUpdateManyWithoutArticleNestedInput
   projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutArticleNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutArticleNestedInput
 }
 
 export type ArticleCreateWithoutMovementsInput = {
@@ -1401,6 +1434,7 @@ export type ArticleCreateWithoutMovementsInput = {
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionCreateNestedManyWithoutArticleInput
   materialItems?: Prisma.MaterialItemCreateNestedManyWithoutArticleInput
   projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutArticleInput
+  plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutArticleInput
 }
 
 export type ArticleUncheckedCreateWithoutMovementsInput = {
@@ -1432,6 +1466,7 @@ export type ArticleUncheckedCreateWithoutMovementsInput = {
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionUncheckedCreateNestedManyWithoutArticleInput
   materialItems?: Prisma.MaterialItemUncheckedCreateNestedManyWithoutArticleInput
   projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutArticleInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutArticleInput
 }
 
 export type ArticleCreateOrConnectWithoutMovementsInput = {
@@ -1479,6 +1514,7 @@ export type ArticleUpdateWithoutMovementsInput = {
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionUpdateManyWithoutArticleNestedInput
   materialItems?: Prisma.MaterialItemUpdateManyWithoutArticleNestedInput
   projectCosts?: Prisma.ProjectCostUpdateManyWithoutArticleNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutArticleNestedInput
 }
 
 export type ArticleUncheckedUpdateWithoutMovementsInput = {
@@ -1510,6 +1546,7 @@ export type ArticleUncheckedUpdateWithoutMovementsInput = {
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionUncheckedUpdateManyWithoutArticleNestedInput
   materialItems?: Prisma.MaterialItemUncheckedUpdateManyWithoutArticleNestedInput
   projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutArticleNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutArticleNestedInput
 }
 
 export type ArticleCreateWithoutReservationsInput = {
@@ -1541,6 +1578,7 @@ export type ArticleCreateWithoutReservationsInput = {
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionCreateNestedManyWithoutArticleInput
   materialItems?: Prisma.MaterialItemCreateNestedManyWithoutArticleInput
   projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutArticleInput
+  plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutArticleInput
 }
 
 export type ArticleUncheckedCreateWithoutReservationsInput = {
@@ -1572,6 +1610,7 @@ export type ArticleUncheckedCreateWithoutReservationsInput = {
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionUncheckedCreateNestedManyWithoutArticleInput
   materialItems?: Prisma.MaterialItemUncheckedCreateNestedManyWithoutArticleInput
   projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutArticleInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutArticleInput
 }
 
 export type ArticleCreateOrConnectWithoutReservationsInput = {
@@ -1619,6 +1658,7 @@ export type ArticleUpdateWithoutReservationsInput = {
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionUpdateManyWithoutArticleNestedInput
   materialItems?: Prisma.MaterialItemUpdateManyWithoutArticleNestedInput
   projectCosts?: Prisma.ProjectCostUpdateManyWithoutArticleNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutArticleNestedInput
 }
 
 export type ArticleUncheckedUpdateWithoutReservationsInput = {
@@ -1650,6 +1690,7 @@ export type ArticleUncheckedUpdateWithoutReservationsInput = {
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionUncheckedUpdateManyWithoutArticleNestedInput
   materialItems?: Prisma.MaterialItemUncheckedUpdateManyWithoutArticleNestedInput
   projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutArticleNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutArticleNestedInput
 }
 
 export type ArticleCreateWithoutServiceTemplatesInput = {
@@ -1681,6 +1722,7 @@ export type ArticleCreateWithoutServiceTemplatesInput = {
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionCreateNestedManyWithoutArticleInput
   materialItems?: Prisma.MaterialItemCreateNestedManyWithoutArticleInput
   projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutArticleInput
+  plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutArticleInput
 }
 
 export type ArticleUncheckedCreateWithoutServiceTemplatesInput = {
@@ -1712,6 +1754,7 @@ export type ArticleUncheckedCreateWithoutServiceTemplatesInput = {
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionUncheckedCreateNestedManyWithoutArticleInput
   materialItems?: Prisma.MaterialItemUncheckedCreateNestedManyWithoutArticleInput
   projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutArticleInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutArticleInput
 }
 
 export type ArticleCreateOrConnectWithoutServiceTemplatesInput = {
@@ -1759,6 +1802,7 @@ export type ArticleUpdateWithoutServiceTemplatesInput = {
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionUpdateManyWithoutArticleNestedInput
   materialItems?: Prisma.MaterialItemUpdateManyWithoutArticleNestedInput
   projectCosts?: Prisma.ProjectCostUpdateManyWithoutArticleNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutArticleNestedInput
 }
 
 export type ArticleUncheckedUpdateWithoutServiceTemplatesInput = {
@@ -1790,6 +1834,7 @@ export type ArticleUncheckedUpdateWithoutServiceTemplatesInput = {
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionUncheckedUpdateManyWithoutArticleNestedInput
   materialItems?: Prisma.MaterialItemUncheckedUpdateManyWithoutArticleNestedInput
   projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutArticleNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutArticleNestedInput
 }
 
 export type ArticleCreateWithoutOrderMaterialLinesInput = {
@@ -1821,6 +1866,7 @@ export type ArticleCreateWithoutOrderMaterialLinesInput = {
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionCreateNestedManyWithoutArticleInput
   materialItems?: Prisma.MaterialItemCreateNestedManyWithoutArticleInput
   projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutArticleInput
+  plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutArticleInput
 }
 
 export type ArticleUncheckedCreateWithoutOrderMaterialLinesInput = {
@@ -1852,6 +1898,7 @@ export type ArticleUncheckedCreateWithoutOrderMaterialLinesInput = {
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionUncheckedCreateNestedManyWithoutArticleInput
   materialItems?: Prisma.MaterialItemUncheckedCreateNestedManyWithoutArticleInput
   projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutArticleInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutArticleInput
 }
 
 export type ArticleCreateOrConnectWithoutOrderMaterialLinesInput = {
@@ -1899,6 +1946,7 @@ export type ArticleUpdateWithoutOrderMaterialLinesInput = {
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionUpdateManyWithoutArticleNestedInput
   materialItems?: Prisma.MaterialItemUpdateManyWithoutArticleNestedInput
   projectCosts?: Prisma.ProjectCostUpdateManyWithoutArticleNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutArticleNestedInput
 }
 
 export type ArticleUncheckedUpdateWithoutOrderMaterialLinesInput = {
@@ -1930,6 +1978,7 @@ export type ArticleUncheckedUpdateWithoutOrderMaterialLinesInput = {
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionUncheckedUpdateManyWithoutArticleNestedInput
   materialItems?: Prisma.MaterialItemUncheckedUpdateManyWithoutArticleNestedInput
   projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutArticleNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutArticleNestedInput
 }
 
 export type ArticleCreateWithoutPurchaseOrderLinesInput = {
@@ -1961,6 +2010,7 @@ export type ArticleCreateWithoutPurchaseOrderLinesInput = {
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionCreateNestedManyWithoutArticleInput
   materialItems?: Prisma.MaterialItemCreateNestedManyWithoutArticleInput
   projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutArticleInput
+  plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutArticleInput
 }
 
 export type ArticleUncheckedCreateWithoutPurchaseOrderLinesInput = {
@@ -1992,6 +2042,7 @@ export type ArticleUncheckedCreateWithoutPurchaseOrderLinesInput = {
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionUncheckedCreateNestedManyWithoutArticleInput
   materialItems?: Prisma.MaterialItemUncheckedCreateNestedManyWithoutArticleInput
   projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutArticleInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutArticleInput
 }
 
 export type ArticleCreateOrConnectWithoutPurchaseOrderLinesInput = {
@@ -2039,6 +2090,7 @@ export type ArticleUpdateWithoutPurchaseOrderLinesInput = {
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionUpdateManyWithoutArticleNestedInput
   materialItems?: Prisma.MaterialItemUpdateManyWithoutArticleNestedInput
   projectCosts?: Prisma.ProjectCostUpdateManyWithoutArticleNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutArticleNestedInput
 }
 
 export type ArticleUncheckedUpdateWithoutPurchaseOrderLinesInput = {
@@ -2070,6 +2122,7 @@ export type ArticleUncheckedUpdateWithoutPurchaseOrderLinesInput = {
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionUncheckedUpdateManyWithoutArticleNestedInput
   materialItems?: Prisma.MaterialItemUncheckedUpdateManyWithoutArticleNestedInput
   projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutArticleNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutArticleNestedInput
 }
 
 export type ArticleCreateWithoutManualReorderSuggestionsInput = {
@@ -2101,6 +2154,7 @@ export type ArticleCreateWithoutManualReorderSuggestionsInput = {
   planMarkers?: Prisma.PlanMarkerCreateNestedManyWithoutArticleInput
   materialItems?: Prisma.MaterialItemCreateNestedManyWithoutArticleInput
   projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutArticleInput
+  plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutArticleInput
 }
 
 export type ArticleUncheckedCreateWithoutManualReorderSuggestionsInput = {
@@ -2132,6 +2186,7 @@ export type ArticleUncheckedCreateWithoutManualReorderSuggestionsInput = {
   planMarkers?: Prisma.PlanMarkerUncheckedCreateNestedManyWithoutArticleInput
   materialItems?: Prisma.MaterialItemUncheckedCreateNestedManyWithoutArticleInput
   projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutArticleInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutArticleInput
 }
 
 export type ArticleCreateOrConnectWithoutManualReorderSuggestionsInput = {
@@ -2179,6 +2234,7 @@ export type ArticleUpdateWithoutManualReorderSuggestionsInput = {
   planMarkers?: Prisma.PlanMarkerUpdateManyWithoutArticleNestedInput
   materialItems?: Prisma.MaterialItemUpdateManyWithoutArticleNestedInput
   projectCosts?: Prisma.ProjectCostUpdateManyWithoutArticleNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutArticleNestedInput
 }
 
 export type ArticleUncheckedUpdateWithoutManualReorderSuggestionsInput = {
@@ -2210,6 +2266,7 @@ export type ArticleUncheckedUpdateWithoutManualReorderSuggestionsInput = {
   planMarkers?: Prisma.PlanMarkerUncheckedUpdateManyWithoutArticleNestedInput
   materialItems?: Prisma.MaterialItemUncheckedUpdateManyWithoutArticleNestedInput
   projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutArticleNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutArticleNestedInput
 }
 
 export type ArticleCreateWithoutPlanMarkersInput = {
@@ -2241,6 +2298,7 @@ export type ArticleCreateWithoutPlanMarkersInput = {
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionCreateNestedManyWithoutArticleInput
   materialItems?: Prisma.MaterialItemCreateNestedManyWithoutArticleInput
   projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutArticleInput
+  plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutArticleInput
 }
 
 export type ArticleUncheckedCreateWithoutPlanMarkersInput = {
@@ -2272,6 +2330,7 @@ export type ArticleUncheckedCreateWithoutPlanMarkersInput = {
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionUncheckedCreateNestedManyWithoutArticleInput
   materialItems?: Prisma.MaterialItemUncheckedCreateNestedManyWithoutArticleInput
   projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutArticleInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutArticleInput
 }
 
 export type ArticleCreateOrConnectWithoutPlanMarkersInput = {
@@ -2319,6 +2378,7 @@ export type ArticleUpdateWithoutPlanMarkersInput = {
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionUpdateManyWithoutArticleNestedInput
   materialItems?: Prisma.MaterialItemUpdateManyWithoutArticleNestedInput
   projectCosts?: Prisma.ProjectCostUpdateManyWithoutArticleNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutArticleNestedInput
 }
 
 export type ArticleUncheckedUpdateWithoutPlanMarkersInput = {
@@ -2347,6 +2407,151 @@ export type ArticleUncheckedUpdateWithoutPlanMarkersInput = {
   serviceTemplates?: Prisma.ServiceMaterialTemplateUncheckedUpdateManyWithoutArticleNestedInput
   orderMaterialLines?: Prisma.OrderMaterialLineUncheckedUpdateManyWithoutArticleNestedInput
   purchaseOrderLines?: Prisma.PurchaseOrderLineUncheckedUpdateManyWithoutArticleNestedInput
+  manualReorderSuggestions?: Prisma.ManualReorderSuggestionUncheckedUpdateManyWithoutArticleNestedInput
+  materialItems?: Prisma.MaterialItemUncheckedUpdateManyWithoutArticleNestedInput
+  projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutArticleNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutArticleNestedInput
+}
+
+export type ArticleCreateWithoutPlannedInvestmentsInput = {
+  id?: string
+  name: string
+  sku?: string | null
+  unit?: string
+  category?: string | null
+  description?: string | null
+  articleType?: $Enums.ArticleType
+  minimumStock?: number
+  targetStock?: number
+  reorderQuantity?: number
+  packageSize?: number
+  reorderStrategy?: $Enums.ReorderStrategy
+  supplierName?: string | null
+  purchasePriceNet?: number | null
+  salesPriceNet?: number | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tenant: Prisma.TenantCreateNestedOneWithoutArticlesInput
+  stockBalances?: Prisma.StockBalanceCreateNestedManyWithoutArticleInput
+  movements?: Prisma.StockMovementCreateNestedManyWithoutArticleInput
+  reservations?: Prisma.ReservationCreateNestedManyWithoutArticleInput
+  serviceTemplates?: Prisma.ServiceMaterialTemplateCreateNestedManyWithoutArticleInput
+  orderMaterialLines?: Prisma.OrderMaterialLineCreateNestedManyWithoutArticleInput
+  purchaseOrderLines?: Prisma.PurchaseOrderLineCreateNestedManyWithoutArticleInput
+  planMarkers?: Prisma.PlanMarkerCreateNestedManyWithoutArticleInput
+  manualReorderSuggestions?: Prisma.ManualReorderSuggestionCreateNestedManyWithoutArticleInput
+  materialItems?: Prisma.MaterialItemCreateNestedManyWithoutArticleInput
+  projectCosts?: Prisma.ProjectCostCreateNestedManyWithoutArticleInput
+}
+
+export type ArticleUncheckedCreateWithoutPlannedInvestmentsInput = {
+  id?: string
+  tenantId: string
+  name: string
+  sku?: string | null
+  unit?: string
+  category?: string | null
+  description?: string | null
+  articleType?: $Enums.ArticleType
+  minimumStock?: number
+  targetStock?: number
+  reorderQuantity?: number
+  packageSize?: number
+  reorderStrategy?: $Enums.ReorderStrategy
+  supplierName?: string | null
+  purchasePriceNet?: number | null
+  salesPriceNet?: number | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  stockBalances?: Prisma.StockBalanceUncheckedCreateNestedManyWithoutArticleInput
+  movements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutArticleInput
+  reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutArticleInput
+  serviceTemplates?: Prisma.ServiceMaterialTemplateUncheckedCreateNestedManyWithoutArticleInput
+  orderMaterialLines?: Prisma.OrderMaterialLineUncheckedCreateNestedManyWithoutArticleInput
+  purchaseOrderLines?: Prisma.PurchaseOrderLineUncheckedCreateNestedManyWithoutArticleInput
+  planMarkers?: Prisma.PlanMarkerUncheckedCreateNestedManyWithoutArticleInput
+  manualReorderSuggestions?: Prisma.ManualReorderSuggestionUncheckedCreateNestedManyWithoutArticleInput
+  materialItems?: Prisma.MaterialItemUncheckedCreateNestedManyWithoutArticleInput
+  projectCosts?: Prisma.ProjectCostUncheckedCreateNestedManyWithoutArticleInput
+}
+
+export type ArticleCreateOrConnectWithoutPlannedInvestmentsInput = {
+  where: Prisma.ArticleWhereUniqueInput
+  create: Prisma.XOR<Prisma.ArticleCreateWithoutPlannedInvestmentsInput, Prisma.ArticleUncheckedCreateWithoutPlannedInvestmentsInput>
+}
+
+export type ArticleUpsertWithoutPlannedInvestmentsInput = {
+  update: Prisma.XOR<Prisma.ArticleUpdateWithoutPlannedInvestmentsInput, Prisma.ArticleUncheckedUpdateWithoutPlannedInvestmentsInput>
+  create: Prisma.XOR<Prisma.ArticleCreateWithoutPlannedInvestmentsInput, Prisma.ArticleUncheckedCreateWithoutPlannedInvestmentsInput>
+  where?: Prisma.ArticleWhereInput
+}
+
+export type ArticleUpdateToOneWithWhereWithoutPlannedInvestmentsInput = {
+  where?: Prisma.ArticleWhereInput
+  data: Prisma.XOR<Prisma.ArticleUpdateWithoutPlannedInvestmentsInput, Prisma.ArticleUncheckedUpdateWithoutPlannedInvestmentsInput>
+}
+
+export type ArticleUpdateWithoutPlannedInvestmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  sku?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unit?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  articleType?: Prisma.EnumArticleTypeFieldUpdateOperationsInput | $Enums.ArticleType
+  minimumStock?: Prisma.FloatFieldUpdateOperationsInput | number
+  targetStock?: Prisma.FloatFieldUpdateOperationsInput | number
+  reorderQuantity?: Prisma.FloatFieldUpdateOperationsInput | number
+  packageSize?: Prisma.FloatFieldUpdateOperationsInput | number
+  reorderStrategy?: Prisma.EnumReorderStrategyFieldUpdateOperationsInput | $Enums.ReorderStrategy
+  supplierName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  purchasePriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  salesPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutArticlesNestedInput
+  stockBalances?: Prisma.StockBalanceUpdateManyWithoutArticleNestedInput
+  movements?: Prisma.StockMovementUpdateManyWithoutArticleNestedInput
+  reservations?: Prisma.ReservationUpdateManyWithoutArticleNestedInput
+  serviceTemplates?: Prisma.ServiceMaterialTemplateUpdateManyWithoutArticleNestedInput
+  orderMaterialLines?: Prisma.OrderMaterialLineUpdateManyWithoutArticleNestedInput
+  purchaseOrderLines?: Prisma.PurchaseOrderLineUpdateManyWithoutArticleNestedInput
+  planMarkers?: Prisma.PlanMarkerUpdateManyWithoutArticleNestedInput
+  manualReorderSuggestions?: Prisma.ManualReorderSuggestionUpdateManyWithoutArticleNestedInput
+  materialItems?: Prisma.MaterialItemUpdateManyWithoutArticleNestedInput
+  projectCosts?: Prisma.ProjectCostUpdateManyWithoutArticleNestedInput
+}
+
+export type ArticleUncheckedUpdateWithoutPlannedInvestmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  sku?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unit?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  articleType?: Prisma.EnumArticleTypeFieldUpdateOperationsInput | $Enums.ArticleType
+  minimumStock?: Prisma.FloatFieldUpdateOperationsInput | number
+  targetStock?: Prisma.FloatFieldUpdateOperationsInput | number
+  reorderQuantity?: Prisma.FloatFieldUpdateOperationsInput | number
+  packageSize?: Prisma.FloatFieldUpdateOperationsInput | number
+  reorderStrategy?: Prisma.EnumReorderStrategyFieldUpdateOperationsInput | $Enums.ReorderStrategy
+  supplierName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  purchasePriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  salesPriceNet?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  stockBalances?: Prisma.StockBalanceUncheckedUpdateManyWithoutArticleNestedInput
+  movements?: Prisma.StockMovementUncheckedUpdateManyWithoutArticleNestedInput
+  reservations?: Prisma.ReservationUncheckedUpdateManyWithoutArticleNestedInput
+  serviceTemplates?: Prisma.ServiceMaterialTemplateUncheckedUpdateManyWithoutArticleNestedInput
+  orderMaterialLines?: Prisma.OrderMaterialLineUncheckedUpdateManyWithoutArticleNestedInput
+  purchaseOrderLines?: Prisma.PurchaseOrderLineUncheckedUpdateManyWithoutArticleNestedInput
+  planMarkers?: Prisma.PlanMarkerUncheckedUpdateManyWithoutArticleNestedInput
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionUncheckedUpdateManyWithoutArticleNestedInput
   materialItems?: Prisma.MaterialItemUncheckedUpdateManyWithoutArticleNestedInput
   projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutArticleNestedInput
@@ -2381,6 +2586,7 @@ export type ArticleCreateWithoutProjectCostsInput = {
   planMarkers?: Prisma.PlanMarkerCreateNestedManyWithoutArticleInput
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionCreateNestedManyWithoutArticleInput
   materialItems?: Prisma.MaterialItemCreateNestedManyWithoutArticleInput
+  plannedInvestments?: Prisma.PlannedInvestmentCreateNestedManyWithoutArticleInput
 }
 
 export type ArticleUncheckedCreateWithoutProjectCostsInput = {
@@ -2412,6 +2618,7 @@ export type ArticleUncheckedCreateWithoutProjectCostsInput = {
   planMarkers?: Prisma.PlanMarkerUncheckedCreateNestedManyWithoutArticleInput
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionUncheckedCreateNestedManyWithoutArticleInput
   materialItems?: Prisma.MaterialItemUncheckedCreateNestedManyWithoutArticleInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedCreateNestedManyWithoutArticleInput
 }
 
 export type ArticleCreateOrConnectWithoutProjectCostsInput = {
@@ -2459,6 +2666,7 @@ export type ArticleUpdateWithoutProjectCostsInput = {
   planMarkers?: Prisma.PlanMarkerUpdateManyWithoutArticleNestedInput
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionUpdateManyWithoutArticleNestedInput
   materialItems?: Prisma.MaterialItemUpdateManyWithoutArticleNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutArticleNestedInput
 }
 
 export type ArticleUncheckedUpdateWithoutProjectCostsInput = {
@@ -2490,6 +2698,7 @@ export type ArticleUncheckedUpdateWithoutProjectCostsInput = {
   planMarkers?: Prisma.PlanMarkerUncheckedUpdateManyWithoutArticleNestedInput
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionUncheckedUpdateManyWithoutArticleNestedInput
   materialItems?: Prisma.MaterialItemUncheckedUpdateManyWithoutArticleNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutArticleNestedInput
 }
 
 export type ArticleCreateManyTenantInput = {
@@ -2542,6 +2751,7 @@ export type ArticleUpdateWithoutTenantInput = {
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionUpdateManyWithoutArticleNestedInput
   materialItems?: Prisma.MaterialItemUpdateManyWithoutArticleNestedInput
   projectCosts?: Prisma.ProjectCostUpdateManyWithoutArticleNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUpdateManyWithoutArticleNestedInput
 }
 
 export type ArticleUncheckedUpdateWithoutTenantInput = {
@@ -2573,6 +2783,7 @@ export type ArticleUncheckedUpdateWithoutTenantInput = {
   manualReorderSuggestions?: Prisma.ManualReorderSuggestionUncheckedUpdateManyWithoutArticleNestedInput
   materialItems?: Prisma.MaterialItemUncheckedUpdateManyWithoutArticleNestedInput
   projectCosts?: Prisma.ProjectCostUncheckedUpdateManyWithoutArticleNestedInput
+  plannedInvestments?: Prisma.PlannedInvestmentUncheckedUpdateManyWithoutArticleNestedInput
 }
 
 export type ArticleUncheckedUpdateManyWithoutTenantInput = {
@@ -2612,6 +2823,7 @@ export type ArticleCountOutputType = {
   manualReorderSuggestions: number
   materialItems: number
   projectCosts: number
+  plannedInvestments: number
 }
 
 export type ArticleCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2625,6 +2837,7 @@ export type ArticleCountOutputTypeSelect<ExtArgs extends runtime.Types.Extension
   manualReorderSuggestions?: boolean | ArticleCountOutputTypeCountManualReorderSuggestionsArgs
   materialItems?: boolean | ArticleCountOutputTypeCountMaterialItemsArgs
   projectCosts?: boolean | ArticleCountOutputTypeCountProjectCostsArgs
+  plannedInvestments?: boolean | ArticleCountOutputTypeCountPlannedInvestmentsArgs
 }
 
 /**
@@ -2707,6 +2920,13 @@ export type ArticleCountOutputTypeCountProjectCostsArgs<ExtArgs extends runtime.
   where?: Prisma.ProjectCostWhereInput
 }
 
+/**
+ * ArticleCountOutputType without action
+ */
+export type ArticleCountOutputTypeCountPlannedInvestmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PlannedInvestmentWhereInput
+}
+
 
 export type ArticleSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -2739,6 +2959,7 @@ export type ArticleSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   manualReorderSuggestions?: boolean | Prisma.Article$manualReorderSuggestionsArgs<ExtArgs>
   materialItems?: boolean | Prisma.Article$materialItemsArgs<ExtArgs>
   projectCosts?: boolean | Prisma.Article$projectCostsArgs<ExtArgs>
+  plannedInvestments?: boolean | Prisma.Article$plannedInvestmentsArgs<ExtArgs>
   _count?: boolean | Prisma.ArticleCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["article"]>
 
@@ -2823,6 +3044,7 @@ export type ArticleInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   manualReorderSuggestions?: boolean | Prisma.Article$manualReorderSuggestionsArgs<ExtArgs>
   materialItems?: boolean | Prisma.Article$materialItemsArgs<ExtArgs>
   projectCosts?: boolean | Prisma.Article$projectCostsArgs<ExtArgs>
+  plannedInvestments?: boolean | Prisma.Article$plannedInvestmentsArgs<ExtArgs>
   _count?: boolean | Prisma.ArticleCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ArticleIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2846,6 +3068,7 @@ export type $ArticlePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     manualReorderSuggestions: Prisma.$ManualReorderSuggestionPayload<ExtArgs>[]
     materialItems: Prisma.$MaterialItemPayload<ExtArgs>[]
     projectCosts: Prisma.$ProjectCostPayload<ExtArgs>[]
+    plannedInvestments: Prisma.$PlannedInvestmentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -3272,6 +3495,7 @@ export interface Prisma__ArticleClient<T, Null = never, ExtArgs extends runtime.
   manualReorderSuggestions<T extends Prisma.Article$manualReorderSuggestionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Article$manualReorderSuggestionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ManualReorderSuggestionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   materialItems<T extends Prisma.Article$materialItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Article$materialItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MaterialItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   projectCosts<T extends Prisma.Article$projectCostsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Article$projectCostsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectCostPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  plannedInvestments<T extends Prisma.Article$plannedInvestmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Article$plannedInvestmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PlannedInvestmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3958,6 +4182,30 @@ export type Article$projectCostsArgs<ExtArgs extends runtime.Types.Extensions.In
   take?: number
   skip?: number
   distinct?: Prisma.ProjectCostScalarFieldEnum | Prisma.ProjectCostScalarFieldEnum[]
+}
+
+/**
+ * Article.plannedInvestments
+ */
+export type Article$plannedInvestmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PlannedInvestment
+   */
+  select?: Prisma.PlannedInvestmentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PlannedInvestment
+   */
+  omit?: Prisma.PlannedInvestmentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PlannedInvestmentInclude<ExtArgs> | null
+  where?: Prisma.PlannedInvestmentWhereInput
+  orderBy?: Prisma.PlannedInvestmentOrderByWithRelationInput | Prisma.PlannedInvestmentOrderByWithRelationInput[]
+  cursor?: Prisma.PlannedInvestmentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PlannedInvestmentScalarFieldEnum | Prisma.PlannedInvestmentScalarFieldEnum[]
 }
 
 /**

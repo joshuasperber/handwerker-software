@@ -58,19 +58,23 @@ export const INVESTMENT_STATUS_LABELS: Record<PlannedInvestmentStatus, string> =
 
 export const FINANCE_DISCLAIMERS = {
   overview:
-    "Diese Auswertung basiert auf den erfassten Daten und dient nur der Orientierung. Sie ersetzt keine steuerliche Beratung. Bitte steuerliche Entscheidungen mit dem Steuerberater prüfen.",
+    "Diese Auswertung ist eine unverbindliche Orientierung auf Basis der erfassten Daten und ersetzt keine steuerliche Beratung.",
   taxEstimate:
     "Die geschätzte Steuerbelastung ist unverbindlich und ersetzt keine steuerliche Beratung.",
   advisor:
     "Bitte prüfe steuerliche Entscheidungen mit deinem Steuerberater.",
   investment:
-    "Investitionen sollten nur aus betrieblichem Bedarf erfolgen und nicht ausschließlich zur Steuerreduzierung.",
+    "Investitionen sollten nur aus betrieblichem Bedarf erfolgen — nicht allein, um Steuern zu reduzieren. Die App gibt keine Kaufempfehlung.",
   depreciation:
     "Größere Anschaffungen können steuerlich über mehrere Jahre abgeschrieben werden. Bitte prüfe die Behandlung mit deinem Steuerberater.",
   plannedInvestments:
     "Du hast geplante Investitionen hinterlegt. Bitte prüfe mit deinem Steuerberater, ob Zeitpunkt, Abschreibung oder Investitionsplanung relevant sind.",
   estimatesOnly:
-    "Alle Werte sind Schätzungen auf Basis der erfassten Daten — keine verbindliche Steuer- oder Finanzberatung.",
+    "Diese Auswertung ist eine unverbindliche Orientierung auf Basis der erfassten Daten und ersetzt keine steuerliche Beratung.",
+  highProfit:
+    "Dein geschätzter Gewinn ist aktuell hoch. Bitte prüfe, ob alle Ausgaben und Belege vollständig erfasst wurden. Falls ohnehin betriebliche Investitionen geplant sind, kann es sinnvoll sein, Zeitpunkt und steuerliche Behandlung mit dem Steuerberater abzustimmen.",
+  whenToInvest:
+    "Geplante oder umgesetzte Investitionen sollten zum betrieblichen Bedarf passen (Ersatz, Wartung, Wachstum). Die App sagt nicht, dass jetzt etwas gekauft werden soll, um Steuern zu sparen.",
 } as const;
 
 export interface FinanceWarningThresholds {
@@ -133,6 +137,12 @@ export interface PlannedInvestmentDTO {
   note: string | null;
   status: PlannedInvestmentStatus;
   statusLabel: string;
+  machineId: string | null;
+  machineName: string | null;
+  articleId: string | null;
+  articleName: string | null;
+  projectId: string | null;
+  projectName: string | null;
   createdAt: string;
 }
 
@@ -211,4 +221,5 @@ export interface FinanceOverview {
   warnings: FinanceWarning[];
   recentExpenses: ExpenseDTO[];
   plannedInvestments: PlannedInvestmentDTO[];
+  machineCount: number;
 }

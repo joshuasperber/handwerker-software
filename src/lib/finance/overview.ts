@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
-import { subMonths, startOfMonth, endOfMonth } from "date-fns";
+import { subMonths, startOfMonth, endOfMonth, format } from "date-fns";
+import { de } from "date-fns/locale";
 import { toDocumentListItem } from "@/lib/documents/document-view";
 import { getOrCreateFinanceSettings } from "./settings";
 import { resolveFinancePeriod } from "./period";
@@ -7,13 +8,11 @@ import { buildFinanceWarnings } from "./warnings";
 import {
   EXPENSE_CATEGORY_LABELS,
   EXPENSE_PAYMENT_STATUS_LABELS,
-  INVESTMENT_CATEGORY_LABELS,
-  INVESTMENT_STATUS_LABELS,
   type ExpenseDTO,
   type FinanceOverview,
   type FinancePeriodPreset,
-  type PlannedInvestmentDTO,
 } from "./types";
+import { INVESTMENT_INCLUDE, toInvestmentDTO } from "./investment-dto";
 import type { ExpenseCategory } from "@/generated/prisma/client";
 
 const INVOICE_INCLUDE = {
@@ -163,6 +162,7 @@ export async function getFinanceOverview(
     plannedInvestments,
     prevMonthInvoices,
     ordersWithMaterial,
+    machineCount,
   ] = await Promise.all([
     prisma.calculationDocument.findMany({
       where: {
@@ -188,6 +188,7 @@ export async function getFinanceOverview(
     }),
     prisma.plannedInvestment.findMany({
       where: { tenantId, status: { in: ["PLANNED", "POSTPONED"] } },
+      include: INVESTMENT_INCLUDE,
       orderBy: { plannedDate: "asc" },
     }),
     prisma.calculationDocument.findMany({
@@ -209,6 +210,9 @@ export async function getFinanceOverview(
         createdAt: { gte: period.from, lte: period.to },
       },
       select: { id: true },
+    }),
+    prisma.machine.count({
+      where: { tenantId, isActive: true },
     }),
   ]);
 
@@ -345,18 +349,7 @@ export async function getFinanceOverview(
     return s + m.salePriceNet * m.quantity;
   }, 0);
 
-  const investmentDtos: PlannedInvestmentDTO[] = plannedInvestments.map((inv) => ({
-    id: inv.id,
-    title: inv.title,
-    plannedAmount: inv.plannedAmount,
-    plannedDate: inv.plannedDate?.toISOString() ?? null,
-    category: inv.category,
-    categoryLabel: INVESTMENT_CATEGORY_LABELS[inv.category],
-    note: inv.note,
-    status: inv.status,
-    statusLabel: INVESTMENT_STATUS_LABELS[inv.status],
-    createdAt: inv.createdAt.toISOString(),
-  }));
+  const investmentDtos = plannedInvestments.map(toInvestmentDTO);
 
   const targetNet = settings.monthlyProfitTargetNet;
   const targetDelta =
@@ -375,7 +368,14 @@ export async function getFinanceOverview(
     hasMontageOrders: montageOrders.length > 0,
     fuelExpenseCount: expenses.filter((e) => e.category === "FUEL").length,
     investmentExpenses: expenses.filter((e) => e.isInvestment).length,
-    plannedInvestmentsCount: plannedInvestments.length,
+    plannedInvestments: investmentDtos.map((inv) => ({
+      title: inv.title,
+      plannedDateLabel: inv.plannedDate
+        ? format(new Date(inv.plannedDate), "dd.MM.yyyy", { locale: de })
+        : null,
+      status: inv.status,
+    })),
+    machineCount,
     inventorySaleCount: inventorySales.length,
     thresholds: {
       highRevenueThreshold: settings.highRevenueThreshold,
@@ -442,6 +442,7 @@ export async function getFinanceOverview(
     warnings,
     recentExpenses: expenses.slice(0, 10).map(toExpenseDTO),
     plannedInvestments: investmentDtos,
+    machineCount,
   };
 }
 

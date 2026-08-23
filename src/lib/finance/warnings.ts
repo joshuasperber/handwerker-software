@@ -1,5 +1,11 @@
 import { FINANCE_DISCLAIMERS, type FinanceWarning, type FinanceWarningThresholds } from "./types";
 
+export interface PlannedInvestmentHint {
+  title: string;
+  plannedDateLabel: string | null;
+  status: string;
+}
+
 interface WarningInput {
   revenueNet: number;
   expenseNet: number;
@@ -13,7 +19,8 @@ interface WarningInput {
   hasMontageOrders: boolean;
   fuelExpenseCount: number;
   investmentExpenses: number;
-  plannedInvestmentsCount: number;
+  plannedInvestments: PlannedInvestmentHint[];
+  machineCount: number;
   inventorySaleCount: number;
   thresholds: FinanceWarningThresholds;
 }
@@ -25,6 +32,8 @@ export function buildFinanceWarnings(input: WarningInput): FinanceWarning[] {
   const highRevenue = t.highRevenueThreshold > 0 ? t.highRevenueThreshold : 3000;
   const spikeFactor = t.profitSpikeFactor > 1 ? t.profitSpikeFactor : 1.5;
   const highProfit = t.highProfitWarningThreshold ?? 5000;
+  const planned = input.plannedInvestments ?? [];
+  const plannedCount = planned.length;
 
   if (input.revenueNet > highRevenue && input.expenseNet < input.revenueNet * lowRatio) {
     warnings.push({
@@ -32,7 +41,7 @@ export function buildFinanceWarnings(input: WarningInput): FinanceWarning[] {
       severity: "warning",
       title: "Wenige erfasste Ausgaben",
       message:
-        "Es wurden hohe Einnahmen erfasst, aber nur wenige Material- oder Betriebsausgaben. Prüfe, ob Belege fehlen.",
+        "Die Einnahmen sind im Zeitraum vergleichsweise hoch, die erfassten Ausgaben aber niedrig. Bitte prüfe, ob Ausgaben oder Belege fehlen — das verändert die Gewinnschätzung.",
     });
   }
 
@@ -75,7 +84,7 @@ export function buildFinanceWarnings(input: WarningInput): FinanceWarning[] {
       severity: "info",
       title: "Gewinn höher als üblich",
       message:
-        "Dein geschätzter Gewinn ist diesen Monat höher als üblich. Bitte prüfe, ob alle Ausgaben und Belege vollständig erfasst wurden.",
+        "Dein geschätzter Gewinn ist in diesem Zeitraum höher als üblich. Bitte prüfe, ob alle Ausgaben und Belege vollständig erfasst wurden.",
     });
   }
 
@@ -89,7 +98,7 @@ export function buildFinanceWarnings(input: WarningInput): FinanceWarning[] {
       severity: "info",
       title: "Über dem Orientierungsziel",
       message:
-        "Der geschätzte Gewinn liegt deutlich über deinem hinterlegten Zielwert für den geplanten Monatsgewinn. Das ist nur eine Orientierung — bitte Belege prüfen und steuerliche Fragen mit dem Steuerberater besprechen.",
+        "Der geschätzte Gewinn liegt deutlich über deinem hinterlegten Zielwert. Das ist nur eine Orientierung — bitte Belege prüfen und steuerliche Fragen mit dem Steuerberater besprechen.",
     });
   }
 
@@ -98,8 +107,7 @@ export function buildFinanceWarnings(input: WarningInput): FinanceWarning[] {
       id: "high-profit-threshold",
       severity: "info",
       title: "Hoher geschätzter Gewinn",
-      message:
-        "Der geschätzte Gewinn liegt über deiner hinterlegten Warnschwelle. Bitte prüfe die Vollständigkeit der Ausgaben und besprich steuerliche Aspekte bei Bedarf mit dem Steuerberater.",
+      message: FINANCE_DISCLAIMERS.highProfit,
     });
   }
 
@@ -121,27 +129,30 @@ export function buildFinanceWarnings(input: WarningInput): FinanceWarning[] {
     warnings.push({
       id: "investment-depreciation",
       severity: "info",
-      title: "Größere Anschaffung",
+      title: "Größere Anschaffung erfasst",
       message: FINANCE_DISCLAIMERS.depreciation,
     });
   }
 
-  if (input.plannedInvestmentsCount > 0) {
+  if (plannedCount > 0) {
+    const nextDated = planned.find((p) => p.plannedDateLabel);
+    const datePart = nextDated?.plannedDateLabel
+      ? ` Nächster hinterlegter Zeitpunkt: ${nextDated.plannedDateLabel} (${nextDated.title}).`
+      : " Für einige Einträge ist noch kein Zeitpunkt hinterlegt.";
     warnings.push({
       id: "planned-investments",
       severity: "info",
       title: "Geplante Investitionen",
-      message: FINANCE_DISCLAIMERS.plannedInvestments,
+      message: `Es sind ${plannedCount} Investition${plannedCount === 1 ? "" : "en"} mit Status geplant oder verschoben hinterlegt.${datePart} Bitte prüfe mit deinem Steuerberater, ob Zeitpunkt und Behandlung relevant sind. Die App empfiehlt keinen Kauf.`,
     });
   }
 
-  if (input.estimatedProfit > highProfit && input.plannedInvestmentsCount === 0) {
+  if (input.machineCount > 0) {
     warnings.push({
-      id: "investment-timing",
+      id: "machines-review",
       severity: "info",
-      title: "Investitionsplanung",
-      message:
-        "Falls ohnehin betriebliche Investitionen geplant sind, kann es sinnvoll sein, Zeitpunkt und steuerliche Behandlung mit dem Steuerberater zu besprechen.",
+      title: "Maschinenpark prüfen",
+      message: `${input.machineCount === 1 ? "Es ist eine Maschine" : `Es sind ${input.machineCount} Maschinen`} im Betrieb hinterlegt. Bitte prüfe bei Bedarf Wartung, Ersatz oder eine Neuanschaffung — nur wenn betrieblich sinnvoll, nicht zur Steueroptimierung.`,
     });
   }
 

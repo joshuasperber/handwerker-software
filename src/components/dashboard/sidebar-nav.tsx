@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
@@ -28,9 +28,12 @@ import {
   ChevronDown,
   Building2,
   Shield,
+  ShieldCheck,
+  Activity,
   type LucideIcon,
 } from "lucide-react";
 import { DashboardNavLink } from "@/components/dashboard/nav-link";
+import { navSectionContainsPath } from "@/lib/dashboard-nav";
 import {
   NAV_SECTION_LABELS,
   type NavSection,
@@ -55,8 +58,10 @@ const NAV_ICONS: Record<string, LucideIcon> = {
   "/dashboard/einstellungen/betrieb": Building2,
   "/dashboard/einstellungen/rechnung": Settings,
   "/dashboard/einstellungen/benachrichtigungen": Bell,
+  "/dashboard/einstellungen/rollen": ShieldCheck,
   "/dashboard/einstellungen/sicherheit": Shield,
-  "/dashboard/einstellungen/system": Settings,
+  "/dashboard/einstellungen/system": Activity,
+  "/dashboard/einstellungen/assistent": Sparkles,
   "/dashboard/profil": User,
   "/dashboard/kunden": Users,
   "/dashboard/mitarbeiter": UserCircle,
@@ -75,12 +80,6 @@ const SECTION_ORDER: Exclude<NavSection, null>[] = [
   "stammdaten",
   "einstellungen",
 ];
-
-function sectionContainsPath(items: NavItem[], pathname: string) {
-  return items.some(
-    (item) => pathname === item.href || pathname.startsWith(`${item.href}/`)
-  );
-}
 
 export function DashboardSidebarNav({
   items,
@@ -117,24 +116,16 @@ export function DashboardSidebarNav({
     };
   }, [items]);
 
-  const [openSections, setOpenSections] = useState<Record<string, boolean>>({});
+  const [userOpen, setUserOpen] = useState<Record<string, boolean>>({});
 
-  useEffect(() => {
-    setOpenSections((prev) => {
-      const next = { ...prev };
-      for (const section of sections) {
-        if (sectionContainsPath(section.items, pathname)) {
-          next[section.id] = true;
-        } else if (next[section.id] === undefined && section.id === "betrieb") {
-          next[section.id] = true;
-        }
-      }
-      return next;
-    });
-  }, [pathname, sections]);
+  function isSectionOpen(id: string, sectionItems: NavItem[]) {
+    if (Object.prototype.hasOwnProperty.call(userOpen, id)) return userOpen[id];
+    return navSectionContainsPath(sectionItems, pathname);
+  }
 
-  function toggleSection(id: string) {
-    setOpenSections((prev) => ({ ...prev, [id]: !prev[id] }));
+  function toggleSection(id: string, sectionItems: NavItem[]) {
+    const currentlyOpen = isSectionOpen(id, sectionItems);
+    setUserOpen((prev) => ({ ...prev, [id]: !currentlyOpen }));
   }
 
   function renderLink(item: NavItem) {
@@ -156,13 +147,18 @@ export function DashboardSidebarNav({
   return (
     <>
       {sections.map((section) => {
-        const open = openSections[section.id] ?? false;
+        const containsCurrent = navSectionContainsPath(section.items, pathname);
+        const open = isSectionOpen(section.id, section.items);
         return (
           <div key={section.id} className="mb-1">
             <button
               type="button"
-              onClick={() => toggleSection(section.id)}
-              className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-xs font-semibold uppercase tracking-wide text-slate-500 hover:bg-slate-50"
+              onClick={() => toggleSection(section.id, section.items)}
+              aria-expanded={open}
+              className={cn(
+                "flex w-full items-center justify-between rounded-lg px-3 py-2 text-xs font-semibold uppercase tracking-wide hover:bg-slate-50",
+                containsCurrent ? "bg-slate-50 text-slate-900" : "text-slate-500"
+              )}
             >
               {section.label}
               <ChevronDown

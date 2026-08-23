@@ -7,19 +7,22 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
-  ChevronLeft,
   Download,
   Loader2,
-  Shield,
   AlertTriangle,
   Database,
   HardDrive,
   Bot,
   Users,
+  FileText,
+  Scale,
+  KeyRound,
 } from "lucide-react";
 import { formatDateTime } from "@/lib/utils";
 import { toast } from "sonner";
 import { fetchJson } from "@/lib/fetch-json";
+import { SettingsPageHeader } from "@/components/dashboard/settings-page-header";
+import { saveJson } from "@/lib/save-toast";
 
 type SecurityOverview = {
   generatedAt: string;
@@ -67,6 +70,12 @@ export default function SicherheitPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [customerId, setCustomerId] = useState("");
+  const [legalForm, setLegalForm] = useState({
+    privacyPolicyUrl: "",
+    imprintUrl: "",
+  });
+  const [legalSaving, setLegalSaving] = useState(false);
+  const [legalLoaded, setLegalLoaded] = useState(false);
   const [erasure, setErasure] = useState<{
     blockers: string[];
     canHardDelete: boolean;
@@ -89,7 +98,38 @@ export default function SicherheitPage() {
 
   useEffect(() => {
     void load();
+    fetchJson<{ privacyPolicyUrl: string | null; imprintUrl: string | null }>("/api/tenant/settings").then(
+      (res) => {
+        if (res.success && res.data) {
+          setLegalForm({
+            privacyPolicyUrl: res.data.privacyPolicyUrl ?? "",
+            imprintUrl: res.data.imprintUrl ?? "",
+          });
+          setLegalLoaded(true);
+        }
+      }
+    );
   }, [load]);
+
+  async function saveLegalUrls() {
+    setLegalSaving(true);
+    await saveJson(
+      "/api/tenant/settings",
+      {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          privacyPolicyUrl: legalForm.privacyPolicyUrl,
+          imprintUrl: legalForm.imprintUrl,
+        }),
+      },
+      {
+        loading: "Rechtliche Links werden gespeichert …",
+        success: "Impressum- und Datenschutz-Links gespeichert",
+      }
+    );
+    setLegalSaving(false);
+  }
 
   async function downloadOwnExport() {
     const toastId = toast.loading("Datenexport wird erstellt …");
@@ -134,27 +174,88 @@ export default function SicherheitPage() {
 
   return (
     <div className="mx-auto max-w-5xl space-y-6">
-      <Link
-        href="/dashboard/einstellungen/system"
-        className="inline-flex items-center gap-1 text-sm text-[#0d5c63]"
-      >
-        <ChevronLeft className="h-4 w-4" /> Einstellungen
-      </Link>
-
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-        <div>
-          <h1 className="flex items-center gap-2 text-2xl font-bold text-slate-900">
-            <Shield className="h-7 w-7 text-[#0d5c63]" />
-            Sicherheit & Datenschutz
-          </h1>
-          <p className="mt-1 text-sm text-slate-500">
-            Technische Übersicht — ersetzt keine Rechts- oder Datenschutzberatung.
-          </p>
-        </div>
-        <Button type="button" variant="outline" size="sm" onClick={() => void load()} className="gap-2">
+        <SettingsPageHeader href="/dashboard/einstellungen/sicherheit" className="mb-0" />
+        <Button type="button" variant="outline" size="sm" onClick={() => void load()} className="shrink-0 gap-2">
           <Loader2 className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
           Aktualisieren
         </Button>
+      </div>
+
+      <p className="text-xs text-slate-500">
+        Technische Übersicht — ersetzt keine Rechts- oder Datenschutzberatung.
+      </p>
+
+      <Card className="!p-4 space-y-4">
+        <h2 className="flex items-center gap-2 text-sm font-semibold text-slate-800">
+          <Scale className="h-4 w-4" /> Rechtliche Pflichtangaben
+        </h2>
+        <p className="text-sm text-slate-600">
+          Die JoMaster-Seiten sind Platzhalter und müssen vor dem Produktivbetrieb rechtlich geprüft
+          werden. Betriebsspezifische Links gelten zusätzlich für Ihre Buchungsseite.
+        </p>
+        <div className="grid gap-2 sm:grid-cols-3">
+          <Button asChild variant="outline" size="sm">
+            <Link href="/impressum">
+              <FileText className="mr-1.5 h-4 w-4" /> Impressum
+            </Link>
+          </Button>
+          <Button asChild variant="outline" size="sm">
+            <Link href="/datenschutz">
+              <FileText className="mr-1.5 h-4 w-4" /> Datenschutzerklärung
+            </Link>
+          </Button>
+          <Button asChild variant="outline" size="sm">
+            <Link href="/agb">
+              <FileText className="mr-1.5 h-4 w-4" /> AGB
+            </Link>
+          </Button>
+        </div>
+        <div className="grid gap-3 sm:grid-cols-2">
+          <Input
+            label="Impressum-URL (Betrieb)"
+            value={legalForm.imprintUrl}
+            onChange={(e) => setLegalForm((f) => ({ ...f, imprintUrl: e.target.value }))}
+            placeholder="https://…/impressum"
+            disabled={!legalLoaded}
+          />
+          <Input
+            label="Datenschutz-URL (Betrieb)"
+            value={legalForm.privacyPolicyUrl}
+            onChange={(e) => setLegalForm((f) => ({ ...f, privacyPolicyUrl: e.target.value }))}
+            placeholder="https://…/datenschutz"
+            disabled={!legalLoaded}
+          />
+        </div>
+        <Button type="button" variant="action" size="sm" disabled={legalSaving || !legalLoaded} onClick={() => void saveLegalUrls()}>
+          {legalSaving ? "Speichern…" : "Links speichern"}
+        </Button>
+      </Card>
+
+      <div className="grid gap-4 sm:grid-cols-2">
+        <Card className="!p-4">
+          <h2 className="mb-2 flex items-center gap-2 text-sm font-semibold">
+            <KeyRound className="h-4 w-4" /> Zugriffsrechte
+          </h2>
+          <p className="mb-3 text-sm text-slate-600">
+            Wer welche Bereiche sehen und bearbeiten darf, steuern Sie über Rollen.
+          </p>
+          <Button asChild variant="outline" size="sm">
+            <Link href="/dashboard/einstellungen/rollen">Rollen & Rechte öffnen</Link>
+          </Button>
+        </Card>
+        <Card className="!p-4">
+          <h2 className="mb-2 flex items-center gap-2 text-sm font-semibold">
+            <Bot className="h-4 w-4" /> KI-Datenschutz
+          </h2>
+          <p className="mb-3 text-sm text-slate-600">
+            Der Assistent sieht nur Daten, die Ihre Rolle bereits sehen darf. Weitere Hinweise stehen
+            weiter unten und in den Assistenten-Einstellungen.
+          </p>
+          <Button asChild variant="outline" size="sm">
+            <Link href="/dashboard/einstellungen/assistent">Assistenten-Einstellungen</Link>
+          </Button>
+        </Card>
       </div>
 
       {error && (
@@ -193,7 +294,7 @@ export default function SicherheitPage() {
 
           <Card className="!p-4 space-y-3">
             <h2 className="flex items-center gap-2 text-sm font-semibold text-slate-800">
-              <Download className="h-4 w-4" /> Betroffenenauskunft (Export)
+              <Download className="h-4 w-4" /> Export und Löschung personenbezogener Daten
             </h2>
             <p className="text-sm text-slate-600">
               Lädt einen technischen JSON-Export der eigenen Nutzerdaten (Art. 15 Vorbereitung).
@@ -348,7 +449,7 @@ export default function SicherheitPage() {
             </Card>
             <Card className="!p-4 space-y-2">
               <h2 className="flex items-center gap-2 text-sm font-semibold">
-                <HardDrive className="h-4 w-4" /> Datei-Uploads
+                <HardDrive className="h-4 w-4" /> Datei-Upload-Sicherheit
               </h2>
               <p className="text-sm text-slate-600">
                 Storage: {data.storage.configured ? "konfiguriert" : "nicht konfiguriert"}

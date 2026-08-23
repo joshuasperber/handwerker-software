@@ -17,6 +17,7 @@ import {
   InvoiceConflictDialog,
   type ExistingInvoiceInfo,
 } from "@/components/documents/invoice-conflict-dialog";
+import { DocumentViewerDialog, useDocumentViewer } from "@/components/documents/document-viewer-dialog";
 import { compareFixedPrice } from "@/lib/calculation/fixed-price";
 import { convertCalculationToInvoice } from "@/lib/documents/convert-invoice-client";
 import type { InvoiceActionMode } from "@/lib/documents/invoice-lifecycle";
@@ -27,6 +28,7 @@ import { formatEuro } from "@/lib/utils";
 import { usePermission } from "@/components/auth/can-access";
 import { ChevronLeft, ChevronRight, Save, FileText, Trash2, Package } from "lucide-react";
 import { toast } from "sonner";
+import { fetchJson } from "@/lib/fetch-json";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import {
   TAX_TREATMENT_LABELS,
@@ -98,11 +100,20 @@ export default function KalkulationWizardPage() {
   const [invoiceConflict, setInvoiceConflict] = useState<ExistingInvoiceInfo | null>(null);
   const [invoiceSaving, setInvoiceSaving] = useState(false);
   const [invoiceIssueDate, setInvoiceIssueDate] = useState(() => formatIssueDateInput(new Date()));
+  const documentViewer = useDocumentViewer();
+  const [loadError, setLoadError] = useState("");
 
   const load = useCallback(() => {
-    fetch(`/api/calculations/${id}`)
-      .then((r) => r.json())
-      .then((d) => { if (d.success) setCalc(d.data); });
+    if (!id || typeof id !== "string") return;
+    setLoadError("");
+    fetchJson<CalcData>(`/api/calculations/${id}`).then((d) => {
+      if (d.success && d.data) {
+        setCalc(d.data);
+        return;
+      }
+      setCalc(null);
+      setLoadError(d.error ?? "Kalkulation konnte nicht geladen werden");
+    });
   }, [id]);
 
   useEffect(() => {
@@ -197,9 +208,15 @@ export default function KalkulationWizardPage() {
     });
     const data = await res.json();
     if (data.success && data.data.html) {
-      const w = window.open("", "_blank");
-      w?.document.write(data.data.html);
-      w?.document.close();
+      documentViewer.openHtml(data.data.html, {
+        title: `Angebot ${data.data.document?.documentNumber ?? ""}`.trim(),
+        documentId: data.data.document?.id,
+        documentNumber: data.data.document?.documentNumber,
+        calculationId: typeof id === "string" ? id : undefined,
+        orderId: calc?.orderId,
+      });
+    } else {
+      toast.error(data.error ?? "Angebot konnte nicht erzeugt werden");
     }
   }
 
@@ -211,9 +228,7 @@ export default function KalkulationWizardPage() {
     });
     const data = await res.json();
     if (data.success && data.data.html) {
-      const w = window.open("", "_blank");
-      w?.document.write(data.data.html);
-      w?.document.close();
+      documentViewer.openHtml(data.data.html, { title: "Interne Aufschlüsselung" });
     }
   }
 
@@ -246,10 +261,34 @@ export default function KalkulationWizardPage() {
           ? `Korrekturrechnung ${number} angelegt`
           : `Rechnung ${number} angelegt`;
     toast.success(label);
+    if (result.html) {
+      documentViewer.openHtml(result.html, {
+        title: `Rechnung ${number}`.trim(),
+        documentId: result.document?.id,
+        documentNumber: result.document?.documentNumber,
+        calculationId: typeof id === "string" ? id : undefined,
+        orderId: calc?.orderId,
+      });
+    }
     load();
   }
 
-  if (!calc) return <p className="text-slate-500 p-6">Laden...</p>;
+  if (!calc) {
+    if (loadError) {
+      return (
+        <div className="space-y-3 p-6">
+          <Link href="/dashboard/kalkulation" className="flex items-center gap-1 text-sm text-[#0d5c63] hover:underline">
+            <ChevronLeft className="h-4 w-4" /> Zurück zu Kalkulationen
+          </Link>
+          <p className="text-sm text-red-600">{loadError}</p>
+          <Button type="button" variant="outline" size="sm" onClick={load}>
+            Erneut versuchen
+          </Button>
+        </div>
+      );
+    }
+    return <p className="text-slate-500 p-6">Wird geladen …</p>;
+  }
 
   const fixedComparison = compareFixedPrice({
     useFixedPrice: calc.useFixedPrice,
@@ -717,7 +756,7 @@ export default function KalkulationWizardPage() {
               </p>
               <div className="flex flex-wrap gap-2">
                 <Button variant="action" onClick={generateOffer}>
-                  <FileText className="h-4 w-4 mr-1" /> Angebot als HTML erzeugen
+                  <FileText className="h-4 w-4 mr-1" /> Angebot erzeugen
                 </Button>
                 <Button
                   variant="outline"
@@ -929,9 +968,11 @@ export default function KalkulationWizardPage() {
             if (!id || typeof id !== "string") return;
             const result = await convertCalculationToInvoice(id, { preview: true });
             if (result.ok && result.html) {
-              const w = window.open("", "_blank");
-              w?.document.write(result.html);
-              w?.document.close();
+              documentViewer.openHtml(result.html, {
+                title: "Rechnungsvorschau",
+                calculationId: id,
+                orderId: calc.orderId,
+              });
             }
           }}
         />
@@ -945,6 +986,12 @@ export default function KalkulationWizardPage() {
         onChoose={(mode) =>
           saveInvoice(mode, mode === "update" ? invoiceConflict?.id : undefined)
         }
+      />
+      <DocumentViewerDialog
+        state={documentViewer.state}
+        onOpenChange={(open) => {
+          if (!open) documentViewer.close();
+        }}
       />
     </div>
   );

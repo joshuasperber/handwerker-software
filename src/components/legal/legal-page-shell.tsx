@@ -1,9 +1,8 @@
 import type { ReactNode } from "react";
-import Link from "next/link";
-import Image from "next/image";
 import { LegalFooter } from "@/components/legal/legal-footer";
+import { PublicSiteHeader } from "@/components/auth/public-site-header";
 
-export function LegalPageShell({
+export async function LegalPageShell({
   title,
   subtitle,
   children,
@@ -14,23 +13,7 @@ export function LegalPageShell({
 }) {
   return (
     <div className="flex min-h-screen flex-col bg-slate-50">
-      <header className="border-b border-slate-200 bg-white">
-        <div className="mx-auto flex max-w-3xl items-center justify-between px-4 py-4">
-          <Link href="/" className="flex items-center gap-2">
-            <Image
-              src="/icons/icon-192.png"
-              alt="JoMaster Logo"
-              width={32}
-              height={32}
-              className="h-8 w-8 rounded-lg"
-            />
-            <span className="font-bold text-slate-900">JoMaster</span>
-          </Link>
-          <Link href="/login" className="text-sm text-[#0d5c63] hover:underline">
-            Anmelden
-          </Link>
-        </div>
-      </header>
+      <PublicSiteHeader narrow />
 
       <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-10">
         <p className="mb-3 text-xs font-medium uppercase tracking-wide text-amber-700">

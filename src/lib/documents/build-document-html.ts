@@ -13,6 +13,7 @@ import {
   type FixedPriceDisplayMode,
 } from "@/lib/calculation/fixed-price";
 import { buildLaborCustomerLines, resolveLaborInvoiceMode } from "@/lib/calculation/labor-costs";
+import { fontScaleFactor, lightenHex, resolveInvoiceDesign } from "./invoice-design";
 
 export interface DocumentCalcInput {
   title: string | null;
@@ -95,6 +96,11 @@ export interface DocumentCompanyInput {
   invoiceIntroText?: string | null;
   invoiceFooterText?: string | null;
   invoiceNotes?: string | null;
+  invoiceLegalText?: string | null;
+  invoiceAccentColor?: string | null;
+  invoiceLayout?: string | null;
+  invoiceFontScale?: string | null;
+  invoiceTemplate?: string | null;
 }
 
 /** Ersetzt Platzhalter wie {{kundenname}} im personalisierten Text. */
@@ -165,9 +171,17 @@ export function buildCustomerDocumentHtml(
   calc: DocumentCalcInput,
   company: DocumentCompanyInput,
   documentNumber: string,
-  issueDate: Date = new Date()
+  issueDate: Date = new Date(),
+  options?: { includePrintChrome?: boolean }
 ) {
   const title = type === "INVOICE" ? "Rechnung" : "Angebot";
+  const design = resolveInvoiceDesign(company);
+  const accent = design.invoiceAccentColor;
+  const accentSoft = lightenHex(accent, 0.32);
+  const scale = fontScaleFactor(design.invoiceFontScale);
+  const compact = design.invoiceTemplate === "KOMPAKT";
+  const sheetPad = compact ? "28px 32px" : "44px 48px";
+  const baseFont = Math.round(14 * scale);
   const visibleSum = calcVisibleLinesSum(calc);
   const hiddenAmount = calcHiddenAmount(calc);
   const customerName = customerDisplayName(calc);
@@ -345,6 +359,10 @@ export function buildCustomerDocumentHtml(
        Wagnis und Gewinn. Diese Posten werden dem Kunden nicht einzeln ausgewiesen, sind aber in der
        Kalkulation berücksichtigt und fließen in die Netto-Summe ein.`;
 
+  const legalText = design.invoiceLegalText
+    ? escapeHtml(applyVariables(design.invoiceLegalText, variables)).replace(/\n/g, "<br/>")
+    : "";
+
   const billingHtml = customerBillingAddressHtml(calc);
   const siteHtml = siteAddressHtml(calc);
   const siteDiffers = siteDiffersFromBilling(calc.customer, calc.order?.property);
@@ -369,53 +387,72 @@ export function buildCustomerDocumentHtml(
     type === "INVOICE" && dueDate ? ["Zahlbar bis", formatDate(dueDate)] : null,
   ].filter((r): r is [string, string] => Boolean(r));
 
+  const printChrome = options?.includePrintChrome
+    ? `<div class="print-bar no-print">
+      <button class="ghost" onclick="if(history.length>1){history.back()}else{window.close()}" type="button">Zurück zur App</button>
+      <button onclick="window.print()" type="button">Drucken</button>
+    </div>`
+    : "";
+
+  const headClass =
+    design.invoiceLayout === "LOGO_RIGHT"
+      ? "head logo-right"
+      : design.invoiceLayout === "LOGO_CENTER"
+        ? "head logo-center"
+        : "head";
+
   return `<!DOCTYPE html><html lang="de"><head><meta charset="utf-8"/><style>
     *{box-sizing:border-box}
-    body{font-family:Inter,system-ui,-apple-system,sans-serif;color:#0f172a;margin:0;background:#f1f5f9;line-height:1.55;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    :root{--accent:${accent};--accent-soft:${accentSoft}}
+    body{font-family:Inter,system-ui,-apple-system,sans-serif;color:#0f172a;margin:0;background:#f1f5f9;line-height:1.55;font-size:${baseFont}px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
     .sheet{max-width:800px;margin:24px auto;background:#fff;border-radius:12px;box-shadow:0 1px 3px rgba(15,23,42,.1);overflow:hidden}
-    .accent-bar{height:6px;background:linear-gradient(90deg,#0d5c63,#14929c)}
-    .inner{padding:44px 48px}
+    .accent-bar{height:6px;background:linear-gradient(90deg,var(--accent),var(--accent-soft))}
+    .inner{padding:${sheetPad}}
     .logo{max-height:56px;max-width:200px;object-fit:contain}
-    .logo-fallback{font-size:20px;font-weight:700;color:#0d5c63}
-    .head{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;margin-bottom:36px}
-    .doc-type{margin:0;font-size:28px;font-weight:800;letter-spacing:-.02em;color:#0d5c63;text-align:right}
+    .logo-fallback{font-size:${Math.round(20 * scale)}px;font-weight:700;color:var(--accent)}
+    .head{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;margin-bottom:${compact ? "24px" : "36px"}}
+    .head.logo-right{flex-direction:row-reverse}
+    .head.logo-center{flex-direction:column;align-items:center;text-align:center}
+    .doc-type{margin:0;font-size:${Math.round(28 * scale)}px;font-weight:800;letter-spacing:-.02em;color:var(--accent);text-align:right}
     .doc-number{margin:2px 0 0;font-size:13px;color:#64748b;text-align:right}
-    .address-block{display:flex;justify-content:space-between;gap:32px;margin-bottom:36px}
+    .head.logo-center .doc-type,.head.logo-center .doc-number{text-align:center}
+    .address-block{display:flex;justify-content:space-between;gap:32px;margin-bottom:${compact ? "24px" : "36px"}}
     .sender-line{font-size:10px;color:#94a3b8;border-bottom:1px solid #e2e8f0;padding-bottom:3px;margin-bottom:10px}
-    .recipient{font-size:14px}
+    .recipient{font-size:${baseFont}px}
     .recipient .name{font-weight:600}
     .meta-card{min-width:240px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:14px 16px;font-size:13px;align-self:flex-start}
     .meta-card .row{display:flex;justify-content:space-between;gap:16px;padding:3px 0}
     .meta-card .row span:first-child{color:#64748b}
     .meta-card .row span:last-child{font-weight:600;text-align:right}
-    .subject{font-size:16px;font-weight:700;margin:0 0 4px}
-    .intro{font-size:14px;color:#334155;margin:12px 0 0}
-    table{width:100%;border-collapse:collapse;margin:24px 0 8px}
-    th{text-align:left;padding:10px 10px;background:#0d5c63;color:#fff;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+    .subject{font-size:${Math.round(16 * scale)}px;font-weight:700;margin:0 0 4px}
+    .intro{font-size:${baseFont}px;color:#334155;margin:12px 0 0}
+    table{width:100%;border-collapse:collapse;margin:${compact ? "16px" : "24px"} 0 8px}
+    th{text-align:left;padding:10px 10px;background:var(--accent);color:#fff;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.04em}
     th:first-child{border-radius:8px 0 0 8px;width:44px}
     th:last-child{border-radius:0 8px 8px 0;text-align:right}
-    td{padding:11px 10px;border-bottom:1px solid #eef2f7;font-size:14px;vertical-align:top}
+    td{padding:${compact ? "8px" : "11px"} 10px;border-bottom:1px solid #eef2f7;font-size:${baseFont}px;vertical-align:top}
     tr:nth-child(even) td{background:#fafcfd}
     .pos-nr{color:#94a3b8;font-size:13px}
     .amount{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
     tr.emphasis td{font-weight:600}
-    .totals{margin-left:auto;max-width:340px;font-size:14px}
+    .totals{margin-left:auto;max-width:340px;font-size:${baseFont}px}
     .totals-row{display:flex;justify-content:space-between;gap:24px;padding:5px 10px}
     .totals-row.muted{color:#64748b;font-size:13px}
     .totals-row span:last-child{font-variant-numeric:tabular-nums}
-    .totals-grand{display:flex;justify-content:space-between;gap:24px;margin-top:6px;padding:12px 14px;background:#0d5c63;color:#fff;border-radius:10px;font-weight:700;font-size:16px}
+    .totals-grand{display:flex;justify-content:space-between;gap:24px;margin-top:6px;padding:12px 14px;background:var(--accent);color:#fff;border-radius:10px;font-weight:700;font-size:${Math.round(16 * scale)}px}
     .totals-grand span:last-child{font-variant-numeric:tabular-nums}
     .totals-hint{font-size:12px;color:#64748b;padding:6px 10px 0;margin:0}
     .tax-notice{margin-top:20px;padding:14px 16px;background:#f0f9ff;border:1px solid #bae6fd;border-radius:10px;font-size:13px}
     .vat-note{font-size:13px;color:#475569;margin-top:14px}
-    .payment{margin-top:28px;padding:16px 18px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;font-size:13px;max-width:380px}
-    .payment-title{margin:0 0 8px;font-weight:700;color:#0d5c63;font-size:12px;text-transform:uppercase;letter-spacing:.05em}
+    .payment{margin-top:${compact ? "18px" : "28px"};padding:16px 18px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;font-size:13px;max-width:380px}
+    .payment-title{margin:0 0 8px;font-weight:700;color:var(--accent);font-size:12px;text-transform:uppercase;letter-spacing:.05em}
     .payment-row{display:flex;justify-content:space-between;gap:16px;padding:2px 0}
     .payment-row span{color:#64748b}
     .notes{font-size:13px;color:#475569;margin-top:24px}
+    .legal{font-size:11px;color:#64748b;margin-top:16px}
     .small{font-size:12px}
     .muted-text{color:#64748b}
-    .footer{margin-top:44px;border-top:2px solid #0d5c63;padding-top:16px}
+    .footer{margin-top:${compact ? "28px" : "44px"};border-top:2px solid var(--accent);padding-top:16px}
     .footer-note{font-size:11px;color:#94a3b8;margin:0 0 14px}
     .footer-cols{display:flex;justify-content:space-between;gap:24px;font-size:11px;color:#64748b}
     .footer-cols strong{display:block;color:#334155;margin-bottom:2px;font-size:11px}
@@ -425,19 +462,21 @@ export function buildCustomerDocumentHtml(
       .inner{padding:24px 28px}
       .no-print{display:none}
     }
-    .print-bar{position:sticky;top:0;z-index:10;display:flex;justify-content:flex-end;gap:8px;padding:10px 16px;background:rgba(241,245,249,.92);backdrop-filter:blur(4px)}
-    .print-bar button{background:#0d5c63;color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:14px;font-weight:600;cursor:pointer}
-    .print-bar button:hover{background:#0a4a50}
+    ${
+      options?.includePrintChrome
+        ? `.print-bar{position:sticky;top:0;z-index:10;display:flex;justify-content:flex-end;gap:8px;padding:10px 16px;background:rgba(241,245,249,.92);backdrop-filter:blur(4px)}
+    .print-bar button{background:var(--accent);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:14px;font-weight:600;cursor:pointer}
+    .print-bar button.ghost{background:#fff;color:#334155;border:1px solid #cbd5e1}`
+        : ""
+    }
   </style></head><body>
-    <div class="print-bar no-print">
-      <button onclick="window.print()" type="button">Als PDF speichern / drucken</button>
-    </div>
+    ${printChrome}
 
     <div class="sheet">
       <div class="accent-bar"></div>
       <div class="inner">
 
-        <div class="head">
+        <div class="${headClass}">
           <div>${logoBlock}</div>
           <div>
             <h1 class="doc-type">${title}</h1>
@@ -476,6 +515,7 @@ export function buildCustomerDocumentHtml(
 
         <div class="footer">
           <p class="footer-note">${footerText}</p>
+          ${legalText ? `<p class="legal">${legalText}</p>` : ""}
           <div class="footer-cols">
             <div>
               <strong>${escapeHtml(company.companyName)}</strong>

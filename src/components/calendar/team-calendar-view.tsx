@@ -18,6 +18,7 @@ import { appointmentDisplayTitle } from "@/lib/calendar/appointment-colors";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { usePermission, useSession } from "@/components/auth/can-access";
 import { toast } from "sonner";
+import { fetchJson } from "@/lib/fetch-json";
 
 export function TeamCalendarView({
   title = "Termine",
@@ -33,6 +34,7 @@ export function TeamCalendarView({
   const session = useSession();
   const [anchorDate, setAnchorDate] = useState(new Date());
   const [view, setView] = useState<CalendarViewMode>("week");
+  const [mobileDefaultApplied, setMobileDefaultApplied] = useState(false);
   const [appointments, setAppointments] = useState<CalendarAppointment[]>([]);
   const [employees, setEmployees] = useState<
     { id: string; user: { id?: string; firstName: string; lastName: string }; color: string }[]
@@ -62,17 +64,25 @@ export function TeamCalendarView({
       from = startOfWeek(anchorDate, { weekStartsOn: 1 });
       to = addDays(from, 7);
     }
-    fetch(`/api/appointments?from=${from.toISOString()}&to=${to.toISOString()}`)
-      .then((r) => r.json())
-      .then((d) => {
-        if (d.success) {
-          setAppointments(d.data);
-        } else {
-          toast.error(d.error ?? "Termine konnten nicht geladen werden");
-        }
-      })
-      .catch(() => toast.error("Termine konnten nicht geladen werden"));
+    fetchJson<CalendarAppointment[]>(
+      `/api/appointments?from=${from.toISOString()}&to=${to.toISOString()}`
+    ).then((d) => {
+      if (d.success && d.data) {
+        setAppointments(d.data);
+      } else {
+        toast.error(d.error ?? "Termine konnten nicht geladen werden");
+      }
+    });
   }, [anchorDate, view]);
+
+  useEffect(() => {
+    if (mobileDefaultApplied) return;
+    const compact = window.matchMedia("(max-width: 1024px)").matches;
+    if (compact) {
+      setView("day");
+    }
+    setMobileDefaultApplied(true);
+  }, [mobileDefaultApplied]);
 
   useEffect(() => {
     function applyEmployeeList(

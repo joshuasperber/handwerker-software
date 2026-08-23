@@ -43,6 +43,9 @@ export type PlannedInvestmentMinAggregateOutputType = {
   category: $Enums.PlannedInvestmentCategory | null
   note: string | null
   status: $Enums.PlannedInvestmentStatus | null
+  machineId: string | null
+  articleId: string | null
+  projectId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -56,6 +59,9 @@ export type PlannedInvestmentMaxAggregateOutputType = {
   category: $Enums.PlannedInvestmentCategory | null
   note: string | null
   status: $Enums.PlannedInvestmentStatus | null
+  machineId: string | null
+  articleId: string | null
+  projectId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -69,6 +75,9 @@ export type PlannedInvestmentCountAggregateOutputType = {
   category: number
   note: number
   status: number
+  machineId: number
+  articleId: number
+  projectId: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -92,6 +101,9 @@ export type PlannedInvestmentMinAggregateInputType = {
   category?: true
   note?: true
   status?: true
+  machineId?: true
+  articleId?: true
+  projectId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -105,6 +117,9 @@ export type PlannedInvestmentMaxAggregateInputType = {
   category?: true
   note?: true
   status?: true
+  machineId?: true
+  articleId?: true
+  projectId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -118,6 +133,9 @@ export type PlannedInvestmentCountAggregateInputType = {
   category?: true
   note?: true
   status?: true
+  machineId?: true
+  articleId?: true
+  projectId?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -218,6 +236,9 @@ export type PlannedInvestmentGroupByOutputType = {
   category: $Enums.PlannedInvestmentCategory
   note: string | null
   status: $Enums.PlannedInvestmentStatus
+  machineId: string | null
+  articleId: string | null
+  projectId: string | null
   createdAt: Date
   updatedAt: Date
   _count: PlannedInvestmentCountAggregateOutputType | null
@@ -254,9 +275,15 @@ export type PlannedInvestmentWhereInput = {
   category?: Prisma.EnumPlannedInvestmentCategoryFilter<"PlannedInvestment"> | $Enums.PlannedInvestmentCategory
   note?: Prisma.StringNullableFilter<"PlannedInvestment"> | string | null
   status?: Prisma.EnumPlannedInvestmentStatusFilter<"PlannedInvestment"> | $Enums.PlannedInvestmentStatus
+  machineId?: Prisma.StringNullableFilter<"PlannedInvestment"> | string | null
+  articleId?: Prisma.StringNullableFilter<"PlannedInvestment"> | string | null
+  projectId?: Prisma.StringNullableFilter<"PlannedInvestment"> | string | null
   createdAt?: Prisma.DateTimeFilter<"PlannedInvestment"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"PlannedInvestment"> | Date | string
   tenant?: Prisma.XOR<Prisma.TenantScalarRelationFilter, Prisma.TenantWhereInput>
+  machine?: Prisma.XOR<Prisma.MachineNullableScalarRelationFilter, Prisma.MachineWhereInput> | null
+  article?: Prisma.XOR<Prisma.ArticleNullableScalarRelationFilter, Prisma.ArticleWhereInput> | null
+  project?: Prisma.XOR<Prisma.ProjectNullableScalarRelationFilter, Prisma.ProjectWhereInput> | null
 }
 
 export type PlannedInvestmentOrderByWithRelationInput = {
@@ -268,9 +295,15 @@ export type PlannedInvestmentOrderByWithRelationInput = {
   category?: Prisma.SortOrder
   note?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
+  machineId?: Prisma.SortOrderInput | Prisma.SortOrder
+  articleId?: Prisma.SortOrderInput | Prisma.SortOrder
+  projectId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   tenant?: Prisma.TenantOrderByWithRelationInput
+  machine?: Prisma.MachineOrderByWithRelationInput
+  article?: Prisma.ArticleOrderByWithRelationInput
+  project?: Prisma.ProjectOrderByWithRelationInput
 }
 
 export type PlannedInvestmentWhereUniqueInput = Prisma.AtLeast<{
@@ -285,9 +318,15 @@ export type PlannedInvestmentWhereUniqueInput = Prisma.AtLeast<{
   category?: Prisma.EnumPlannedInvestmentCategoryFilter<"PlannedInvestment"> | $Enums.PlannedInvestmentCategory
   note?: Prisma.StringNullableFilter<"PlannedInvestment"> | string | null
   status?: Prisma.EnumPlannedInvestmentStatusFilter<"PlannedInvestment"> | $Enums.PlannedInvestmentStatus
+  machineId?: Prisma.StringNullableFilter<"PlannedInvestment"> | string | null
+  articleId?: Prisma.StringNullableFilter<"PlannedInvestment"> | string | null
+  projectId?: Prisma.StringNullableFilter<"PlannedInvestment"> | string | null
   createdAt?: Prisma.DateTimeFilter<"PlannedInvestment"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"PlannedInvestment"> | Date | string
   tenant?: Prisma.XOR<Prisma.TenantScalarRelationFilter, Prisma.TenantWhereInput>
+  machine?: Prisma.XOR<Prisma.MachineNullableScalarRelationFilter, Prisma.MachineWhereInput> | null
+  article?: Prisma.XOR<Prisma.ArticleNullableScalarRelationFilter, Prisma.ArticleWhereInput> | null
+  project?: Prisma.XOR<Prisma.ProjectNullableScalarRelationFilter, Prisma.ProjectWhereInput> | null
 }, "id">
 
 export type PlannedInvestmentOrderByWithAggregationInput = {
@@ -299,6 +338,9 @@ export type PlannedInvestmentOrderByWithAggregationInput = {
   category?: Prisma.SortOrder
   note?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
+  machineId?: Prisma.SortOrderInput | Prisma.SortOrder
+  articleId?: Prisma.SortOrderInput | Prisma.SortOrder
+  projectId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.PlannedInvestmentCountOrderByAggregateInput
@@ -320,6 +362,9 @@ export type PlannedInvestmentScalarWhereWithAggregatesInput = {
   category?: Prisma.EnumPlannedInvestmentCategoryWithAggregatesFilter<"PlannedInvestment"> | $Enums.PlannedInvestmentCategory
   note?: Prisma.StringNullableWithAggregatesFilter<"PlannedInvestment"> | string | null
   status?: Prisma.EnumPlannedInvestmentStatusWithAggregatesFilter<"PlannedInvestment"> | $Enums.PlannedInvestmentStatus
+  machineId?: Prisma.StringNullableWithAggregatesFilter<"PlannedInvestment"> | string | null
+  articleId?: Prisma.StringNullableWithAggregatesFilter<"PlannedInvestment"> | string | null
+  projectId?: Prisma.StringNullableWithAggregatesFilter<"PlannedInvestment"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"PlannedInvestment"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"PlannedInvestment"> | Date | string
 }
@@ -335,6 +380,9 @@ export type PlannedInvestmentCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutPlannedInvestmentsInput
+  machine?: Prisma.MachineCreateNestedOneWithoutPlannedInvestmentsInput
+  article?: Prisma.ArticleCreateNestedOneWithoutPlannedInvestmentsInput
+  project?: Prisma.ProjectCreateNestedOneWithoutPlannedInvestmentsInput
 }
 
 export type PlannedInvestmentUncheckedCreateInput = {
@@ -346,6 +394,9 @@ export type PlannedInvestmentUncheckedCreateInput = {
   category: $Enums.PlannedInvestmentCategory
   note?: string | null
   status?: $Enums.PlannedInvestmentStatus
+  machineId?: string | null
+  articleId?: string | null
+  projectId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -361,6 +412,9 @@ export type PlannedInvestmentUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutPlannedInvestmentsNestedInput
+  machine?: Prisma.MachineUpdateOneWithoutPlannedInvestmentsNestedInput
+  article?: Prisma.ArticleUpdateOneWithoutPlannedInvestmentsNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutPlannedInvestmentsNestedInput
 }
 
 export type PlannedInvestmentUncheckedUpdateInput = {
@@ -372,6 +426,9 @@ export type PlannedInvestmentUncheckedUpdateInput = {
   category?: Prisma.EnumPlannedInvestmentCategoryFieldUpdateOperationsInput | $Enums.PlannedInvestmentCategory
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlannedInvestmentStatusFieldUpdateOperationsInput | $Enums.PlannedInvestmentStatus
+  machineId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  articleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -385,6 +442,9 @@ export type PlannedInvestmentCreateManyInput = {
   category: $Enums.PlannedInvestmentCategory
   note?: string | null
   status?: $Enums.PlannedInvestmentStatus
+  machineId?: string | null
+  articleId?: string | null
+  projectId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -410,6 +470,9 @@ export type PlannedInvestmentUncheckedUpdateManyInput = {
   category?: Prisma.EnumPlannedInvestmentCategoryFieldUpdateOperationsInput | $Enums.PlannedInvestmentCategory
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlannedInvestmentStatusFieldUpdateOperationsInput | $Enums.PlannedInvestmentStatus
+  machineId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  articleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -433,6 +496,9 @@ export type PlannedInvestmentCountOrderByAggregateInput = {
   category?: Prisma.SortOrder
   note?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  machineId?: Prisma.SortOrder
+  articleId?: Prisma.SortOrder
+  projectId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -450,6 +516,9 @@ export type PlannedInvestmentMaxOrderByAggregateInput = {
   category?: Prisma.SortOrder
   note?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  machineId?: Prisma.SortOrder
+  articleId?: Prisma.SortOrder
+  projectId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -463,6 +532,9 @@ export type PlannedInvestmentMinOrderByAggregateInput = {
   category?: Prisma.SortOrder
   note?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  machineId?: Prisma.SortOrder
+  articleId?: Prisma.SortOrder
+  projectId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -513,12 +585,138 @@ export type PlannedInvestmentUncheckedUpdateManyWithoutTenantNestedInput = {
   deleteMany?: Prisma.PlannedInvestmentScalarWhereInput | Prisma.PlannedInvestmentScalarWhereInput[]
 }
 
+export type PlannedInvestmentCreateNestedManyWithoutMachineInput = {
+  create?: Prisma.XOR<Prisma.PlannedInvestmentCreateWithoutMachineInput, Prisma.PlannedInvestmentUncheckedCreateWithoutMachineInput> | Prisma.PlannedInvestmentCreateWithoutMachineInput[] | Prisma.PlannedInvestmentUncheckedCreateWithoutMachineInput[]
+  connectOrCreate?: Prisma.PlannedInvestmentCreateOrConnectWithoutMachineInput | Prisma.PlannedInvestmentCreateOrConnectWithoutMachineInput[]
+  createMany?: Prisma.PlannedInvestmentCreateManyMachineInputEnvelope
+  connect?: Prisma.PlannedInvestmentWhereUniqueInput | Prisma.PlannedInvestmentWhereUniqueInput[]
+}
+
+export type PlannedInvestmentUncheckedCreateNestedManyWithoutMachineInput = {
+  create?: Prisma.XOR<Prisma.PlannedInvestmentCreateWithoutMachineInput, Prisma.PlannedInvestmentUncheckedCreateWithoutMachineInput> | Prisma.PlannedInvestmentCreateWithoutMachineInput[] | Prisma.PlannedInvestmentUncheckedCreateWithoutMachineInput[]
+  connectOrCreate?: Prisma.PlannedInvestmentCreateOrConnectWithoutMachineInput | Prisma.PlannedInvestmentCreateOrConnectWithoutMachineInput[]
+  createMany?: Prisma.PlannedInvestmentCreateManyMachineInputEnvelope
+  connect?: Prisma.PlannedInvestmentWhereUniqueInput | Prisma.PlannedInvestmentWhereUniqueInput[]
+}
+
+export type PlannedInvestmentUpdateManyWithoutMachineNestedInput = {
+  create?: Prisma.XOR<Prisma.PlannedInvestmentCreateWithoutMachineInput, Prisma.PlannedInvestmentUncheckedCreateWithoutMachineInput> | Prisma.PlannedInvestmentCreateWithoutMachineInput[] | Prisma.PlannedInvestmentUncheckedCreateWithoutMachineInput[]
+  connectOrCreate?: Prisma.PlannedInvestmentCreateOrConnectWithoutMachineInput | Prisma.PlannedInvestmentCreateOrConnectWithoutMachineInput[]
+  upsert?: Prisma.PlannedInvestmentUpsertWithWhereUniqueWithoutMachineInput | Prisma.PlannedInvestmentUpsertWithWhereUniqueWithoutMachineInput[]
+  createMany?: Prisma.PlannedInvestmentCreateManyMachineInputEnvelope
+  set?: Prisma.PlannedInvestmentWhereUniqueInput | Prisma.PlannedInvestmentWhereUniqueInput[]
+  disconnect?: Prisma.PlannedInvestmentWhereUniqueInput | Prisma.PlannedInvestmentWhereUniqueInput[]
+  delete?: Prisma.PlannedInvestmentWhereUniqueInput | Prisma.PlannedInvestmentWhereUniqueInput[]
+  connect?: Prisma.PlannedInvestmentWhereUniqueInput | Prisma.PlannedInvestmentWhereUniqueInput[]
+  update?: Prisma.PlannedInvestmentUpdateWithWhereUniqueWithoutMachineInput | Prisma.PlannedInvestmentUpdateWithWhereUniqueWithoutMachineInput[]
+  updateMany?: Prisma.PlannedInvestmentUpdateManyWithWhereWithoutMachineInput | Prisma.PlannedInvestmentUpdateManyWithWhereWithoutMachineInput[]
+  deleteMany?: Prisma.PlannedInvestmentScalarWhereInput | Prisma.PlannedInvestmentScalarWhereInput[]
+}
+
+export type PlannedInvestmentUncheckedUpdateManyWithoutMachineNestedInput = {
+  create?: Prisma.XOR<Prisma.PlannedInvestmentCreateWithoutMachineInput, Prisma.PlannedInvestmentUncheckedCreateWithoutMachineInput> | Prisma.PlannedInvestmentCreateWithoutMachineInput[] | Prisma.PlannedInvestmentUncheckedCreateWithoutMachineInput[]
+  connectOrCreate?: Prisma.PlannedInvestmentCreateOrConnectWithoutMachineInput | Prisma.PlannedInvestmentCreateOrConnectWithoutMachineInput[]
+  upsert?: Prisma.PlannedInvestmentUpsertWithWhereUniqueWithoutMachineInput | Prisma.PlannedInvestmentUpsertWithWhereUniqueWithoutMachineInput[]
+  createMany?: Prisma.PlannedInvestmentCreateManyMachineInputEnvelope
+  set?: Prisma.PlannedInvestmentWhereUniqueInput | Prisma.PlannedInvestmentWhereUniqueInput[]
+  disconnect?: Prisma.PlannedInvestmentWhereUniqueInput | Prisma.PlannedInvestmentWhereUniqueInput[]
+  delete?: Prisma.PlannedInvestmentWhereUniqueInput | Prisma.PlannedInvestmentWhereUniqueInput[]
+  connect?: Prisma.PlannedInvestmentWhereUniqueInput | Prisma.PlannedInvestmentWhereUniqueInput[]
+  update?: Prisma.PlannedInvestmentUpdateWithWhereUniqueWithoutMachineInput | Prisma.PlannedInvestmentUpdateWithWhereUniqueWithoutMachineInput[]
+  updateMany?: Prisma.PlannedInvestmentUpdateManyWithWhereWithoutMachineInput | Prisma.PlannedInvestmentUpdateManyWithWhereWithoutMachineInput[]
+  deleteMany?: Prisma.PlannedInvestmentScalarWhereInput | Prisma.PlannedInvestmentScalarWhereInput[]
+}
+
+export type PlannedInvestmentCreateNestedManyWithoutArticleInput = {
+  create?: Prisma.XOR<Prisma.PlannedInvestmentCreateWithoutArticleInput, Prisma.PlannedInvestmentUncheckedCreateWithoutArticleInput> | Prisma.PlannedInvestmentCreateWithoutArticleInput[] | Prisma.PlannedInvestmentUncheckedCreateWithoutArticleInput[]
+  connectOrCreate?: Prisma.PlannedInvestmentCreateOrConnectWithoutArticleInput | Prisma.PlannedInvestmentCreateOrConnectWithoutArticleInput[]
+  createMany?: Prisma.PlannedInvestmentCreateManyArticleInputEnvelope
+  connect?: Prisma.PlannedInvestmentWhereUniqueInput | Prisma.PlannedInvestmentWhereUniqueInput[]
+}
+
+export type PlannedInvestmentUncheckedCreateNestedManyWithoutArticleInput = {
+  create?: Prisma.XOR<Prisma.PlannedInvestmentCreateWithoutArticleInput, Prisma.PlannedInvestmentUncheckedCreateWithoutArticleInput> | Prisma.PlannedInvestmentCreateWithoutArticleInput[] | Prisma.PlannedInvestmentUncheckedCreateWithoutArticleInput[]
+  connectOrCreate?: Prisma.PlannedInvestmentCreateOrConnectWithoutArticleInput | Prisma.PlannedInvestmentCreateOrConnectWithoutArticleInput[]
+  createMany?: Prisma.PlannedInvestmentCreateManyArticleInputEnvelope
+  connect?: Prisma.PlannedInvestmentWhereUniqueInput | Prisma.PlannedInvestmentWhereUniqueInput[]
+}
+
+export type PlannedInvestmentUpdateManyWithoutArticleNestedInput = {
+  create?: Prisma.XOR<Prisma.PlannedInvestmentCreateWithoutArticleInput, Prisma.PlannedInvestmentUncheckedCreateWithoutArticleInput> | Prisma.PlannedInvestmentCreateWithoutArticleInput[] | Prisma.PlannedInvestmentUncheckedCreateWithoutArticleInput[]
+  connectOrCreate?: Prisma.PlannedInvestmentCreateOrConnectWithoutArticleInput | Prisma.PlannedInvestmentCreateOrConnectWithoutArticleInput[]
+  upsert?: Prisma.PlannedInvestmentUpsertWithWhereUniqueWithoutArticleInput | Prisma.PlannedInvestmentUpsertWithWhereUniqueWithoutArticleInput[]
+  createMany?: Prisma.PlannedInvestmentCreateManyArticleInputEnvelope
+  set?: Prisma.PlannedInvestmentWhereUniqueInput | Prisma.PlannedInvestmentWhereUniqueInput[]
+  disconnect?: Prisma.PlannedInvestmentWhereUniqueInput | Prisma.PlannedInvestmentWhereUniqueInput[]
+  delete?: Prisma.PlannedInvestmentWhereUniqueInput | Prisma.PlannedInvestmentWhereUniqueInput[]
+  connect?: Prisma.PlannedInvestmentWhereUniqueInput | Prisma.PlannedInvestmentWhereUniqueInput[]
+  update?: Prisma.PlannedInvestmentUpdateWithWhereUniqueWithoutArticleInput | Prisma.PlannedInvestmentUpdateWithWhereUniqueWithoutArticleInput[]
+  updateMany?: Prisma.PlannedInvestmentUpdateManyWithWhereWithoutArticleInput | Prisma.PlannedInvestmentUpdateManyWithWhereWithoutArticleInput[]
+  deleteMany?: Prisma.PlannedInvestmentScalarWhereInput | Prisma.PlannedInvestmentScalarWhereInput[]
+}
+
+export type PlannedInvestmentUncheckedUpdateManyWithoutArticleNestedInput = {
+  create?: Prisma.XOR<Prisma.PlannedInvestmentCreateWithoutArticleInput, Prisma.PlannedInvestmentUncheckedCreateWithoutArticleInput> | Prisma.PlannedInvestmentCreateWithoutArticleInput[] | Prisma.PlannedInvestmentUncheckedCreateWithoutArticleInput[]
+  connectOrCreate?: Prisma.PlannedInvestmentCreateOrConnectWithoutArticleInput | Prisma.PlannedInvestmentCreateOrConnectWithoutArticleInput[]
+  upsert?: Prisma.PlannedInvestmentUpsertWithWhereUniqueWithoutArticleInput | Prisma.PlannedInvestmentUpsertWithWhereUniqueWithoutArticleInput[]
+  createMany?: Prisma.PlannedInvestmentCreateManyArticleInputEnvelope
+  set?: Prisma.PlannedInvestmentWhereUniqueInput | Prisma.PlannedInvestmentWhereUniqueInput[]
+  disconnect?: Prisma.PlannedInvestmentWhereUniqueInput | Prisma.PlannedInvestmentWhereUniqueInput[]
+  delete?: Prisma.PlannedInvestmentWhereUniqueInput | Prisma.PlannedInvestmentWhereUniqueInput[]
+  connect?: Prisma.PlannedInvestmentWhereUniqueInput | Prisma.PlannedInvestmentWhereUniqueInput[]
+  update?: Prisma.PlannedInvestmentUpdateWithWhereUniqueWithoutArticleInput | Prisma.PlannedInvestmentUpdateWithWhereUniqueWithoutArticleInput[]
+  updateMany?: Prisma.PlannedInvestmentUpdateManyWithWhereWithoutArticleInput | Prisma.PlannedInvestmentUpdateManyWithWhereWithoutArticleInput[]
+  deleteMany?: Prisma.PlannedInvestmentScalarWhereInput | Prisma.PlannedInvestmentScalarWhereInput[]
+}
+
 export type EnumPlannedInvestmentCategoryFieldUpdateOperationsInput = {
   set?: $Enums.PlannedInvestmentCategory
 }
 
 export type EnumPlannedInvestmentStatusFieldUpdateOperationsInput = {
   set?: $Enums.PlannedInvestmentStatus
+}
+
+export type PlannedInvestmentCreateNestedManyWithoutProjectInput = {
+  create?: Prisma.XOR<Prisma.PlannedInvestmentCreateWithoutProjectInput, Prisma.PlannedInvestmentUncheckedCreateWithoutProjectInput> | Prisma.PlannedInvestmentCreateWithoutProjectInput[] | Prisma.PlannedInvestmentUncheckedCreateWithoutProjectInput[]
+  connectOrCreate?: Prisma.PlannedInvestmentCreateOrConnectWithoutProjectInput | Prisma.PlannedInvestmentCreateOrConnectWithoutProjectInput[]
+  createMany?: Prisma.PlannedInvestmentCreateManyProjectInputEnvelope
+  connect?: Prisma.PlannedInvestmentWhereUniqueInput | Prisma.PlannedInvestmentWhereUniqueInput[]
+}
+
+export type PlannedInvestmentUncheckedCreateNestedManyWithoutProjectInput = {
+  create?: Prisma.XOR<Prisma.PlannedInvestmentCreateWithoutProjectInput, Prisma.PlannedInvestmentUncheckedCreateWithoutProjectInput> | Prisma.PlannedInvestmentCreateWithoutProjectInput[] | Prisma.PlannedInvestmentUncheckedCreateWithoutProjectInput[]
+  connectOrCreate?: Prisma.PlannedInvestmentCreateOrConnectWithoutProjectInput | Prisma.PlannedInvestmentCreateOrConnectWithoutProjectInput[]
+  createMany?: Prisma.PlannedInvestmentCreateManyProjectInputEnvelope
+  connect?: Prisma.PlannedInvestmentWhereUniqueInput | Prisma.PlannedInvestmentWhereUniqueInput[]
+}
+
+export type PlannedInvestmentUpdateManyWithoutProjectNestedInput = {
+  create?: Prisma.XOR<Prisma.PlannedInvestmentCreateWithoutProjectInput, Prisma.PlannedInvestmentUncheckedCreateWithoutProjectInput> | Prisma.PlannedInvestmentCreateWithoutProjectInput[] | Prisma.PlannedInvestmentUncheckedCreateWithoutProjectInput[]
+  connectOrCreate?: Prisma.PlannedInvestmentCreateOrConnectWithoutProjectInput | Prisma.PlannedInvestmentCreateOrConnectWithoutProjectInput[]
+  upsert?: Prisma.PlannedInvestmentUpsertWithWhereUniqueWithoutProjectInput | Prisma.PlannedInvestmentUpsertWithWhereUniqueWithoutProjectInput[]
+  createMany?: Prisma.PlannedInvestmentCreateManyProjectInputEnvelope
+  set?: Prisma.PlannedInvestmentWhereUniqueInput | Prisma.PlannedInvestmentWhereUniqueInput[]
+  disconnect?: Prisma.PlannedInvestmentWhereUniqueInput | Prisma.PlannedInvestmentWhereUniqueInput[]
+  delete?: Prisma.PlannedInvestmentWhereUniqueInput | Prisma.PlannedInvestmentWhereUniqueInput[]
+  connect?: Prisma.PlannedInvestmentWhereUniqueInput | Prisma.PlannedInvestmentWhereUniqueInput[]
+  update?: Prisma.PlannedInvestmentUpdateWithWhereUniqueWithoutProjectInput | Prisma.PlannedInvestmentUpdateWithWhereUniqueWithoutProjectInput[]
+  updateMany?: Prisma.PlannedInvestmentUpdateManyWithWhereWithoutProjectInput | Prisma.PlannedInvestmentUpdateManyWithWhereWithoutProjectInput[]
+  deleteMany?: Prisma.PlannedInvestmentScalarWhereInput | Prisma.PlannedInvestmentScalarWhereInput[]
+}
+
+export type PlannedInvestmentUncheckedUpdateManyWithoutProjectNestedInput = {
+  create?: Prisma.XOR<Prisma.PlannedInvestmentCreateWithoutProjectInput, Prisma.PlannedInvestmentUncheckedCreateWithoutProjectInput> | Prisma.PlannedInvestmentCreateWithoutProjectInput[] | Prisma.PlannedInvestmentUncheckedCreateWithoutProjectInput[]
+  connectOrCreate?: Prisma.PlannedInvestmentCreateOrConnectWithoutProjectInput | Prisma.PlannedInvestmentCreateOrConnectWithoutProjectInput[]
+  upsert?: Prisma.PlannedInvestmentUpsertWithWhereUniqueWithoutProjectInput | Prisma.PlannedInvestmentUpsertWithWhereUniqueWithoutProjectInput[]
+  createMany?: Prisma.PlannedInvestmentCreateManyProjectInputEnvelope
+  set?: Prisma.PlannedInvestmentWhereUniqueInput | Prisma.PlannedInvestmentWhereUniqueInput[]
+  disconnect?: Prisma.PlannedInvestmentWhereUniqueInput | Prisma.PlannedInvestmentWhereUniqueInput[]
+  delete?: Prisma.PlannedInvestmentWhereUniqueInput | Prisma.PlannedInvestmentWhereUniqueInput[]
+  connect?: Prisma.PlannedInvestmentWhereUniqueInput | Prisma.PlannedInvestmentWhereUniqueInput[]
+  update?: Prisma.PlannedInvestmentUpdateWithWhereUniqueWithoutProjectInput | Prisma.PlannedInvestmentUpdateWithWhereUniqueWithoutProjectInput[]
+  updateMany?: Prisma.PlannedInvestmentUpdateManyWithWhereWithoutProjectInput | Prisma.PlannedInvestmentUpdateManyWithWhereWithoutProjectInput[]
+  deleteMany?: Prisma.PlannedInvestmentScalarWhereInput | Prisma.PlannedInvestmentScalarWhereInput[]
 }
 
 export type PlannedInvestmentCreateWithoutTenantInput = {
@@ -531,6 +729,9 @@ export type PlannedInvestmentCreateWithoutTenantInput = {
   status?: $Enums.PlannedInvestmentStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  machine?: Prisma.MachineCreateNestedOneWithoutPlannedInvestmentsInput
+  article?: Prisma.ArticleCreateNestedOneWithoutPlannedInvestmentsInput
+  project?: Prisma.ProjectCreateNestedOneWithoutPlannedInvestmentsInput
 }
 
 export type PlannedInvestmentUncheckedCreateWithoutTenantInput = {
@@ -541,6 +742,9 @@ export type PlannedInvestmentUncheckedCreateWithoutTenantInput = {
   category: $Enums.PlannedInvestmentCategory
   note?: string | null
   status?: $Enums.PlannedInvestmentStatus
+  machineId?: string | null
+  articleId?: string | null
+  projectId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -583,8 +787,179 @@ export type PlannedInvestmentScalarWhereInput = {
   category?: Prisma.EnumPlannedInvestmentCategoryFilter<"PlannedInvestment"> | $Enums.PlannedInvestmentCategory
   note?: Prisma.StringNullableFilter<"PlannedInvestment"> | string | null
   status?: Prisma.EnumPlannedInvestmentStatusFilter<"PlannedInvestment"> | $Enums.PlannedInvestmentStatus
+  machineId?: Prisma.StringNullableFilter<"PlannedInvestment"> | string | null
+  articleId?: Prisma.StringNullableFilter<"PlannedInvestment"> | string | null
+  projectId?: Prisma.StringNullableFilter<"PlannedInvestment"> | string | null
   createdAt?: Prisma.DateTimeFilter<"PlannedInvestment"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"PlannedInvestment"> | Date | string
+}
+
+export type PlannedInvestmentCreateWithoutMachineInput = {
+  id?: string
+  title: string
+  plannedAmount: number
+  plannedDate?: Date | string | null
+  category: $Enums.PlannedInvestmentCategory
+  note?: string | null
+  status?: $Enums.PlannedInvestmentStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tenant: Prisma.TenantCreateNestedOneWithoutPlannedInvestmentsInput
+  article?: Prisma.ArticleCreateNestedOneWithoutPlannedInvestmentsInput
+  project?: Prisma.ProjectCreateNestedOneWithoutPlannedInvestmentsInput
+}
+
+export type PlannedInvestmentUncheckedCreateWithoutMachineInput = {
+  id?: string
+  tenantId: string
+  title: string
+  plannedAmount: number
+  plannedDate?: Date | string | null
+  category: $Enums.PlannedInvestmentCategory
+  note?: string | null
+  status?: $Enums.PlannedInvestmentStatus
+  articleId?: string | null
+  projectId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type PlannedInvestmentCreateOrConnectWithoutMachineInput = {
+  where: Prisma.PlannedInvestmentWhereUniqueInput
+  create: Prisma.XOR<Prisma.PlannedInvestmentCreateWithoutMachineInput, Prisma.PlannedInvestmentUncheckedCreateWithoutMachineInput>
+}
+
+export type PlannedInvestmentCreateManyMachineInputEnvelope = {
+  data: Prisma.PlannedInvestmentCreateManyMachineInput | Prisma.PlannedInvestmentCreateManyMachineInput[]
+  skipDuplicates?: boolean
+}
+
+export type PlannedInvestmentUpsertWithWhereUniqueWithoutMachineInput = {
+  where: Prisma.PlannedInvestmentWhereUniqueInput
+  update: Prisma.XOR<Prisma.PlannedInvestmentUpdateWithoutMachineInput, Prisma.PlannedInvestmentUncheckedUpdateWithoutMachineInput>
+  create: Prisma.XOR<Prisma.PlannedInvestmentCreateWithoutMachineInput, Prisma.PlannedInvestmentUncheckedCreateWithoutMachineInput>
+}
+
+export type PlannedInvestmentUpdateWithWhereUniqueWithoutMachineInput = {
+  where: Prisma.PlannedInvestmentWhereUniqueInput
+  data: Prisma.XOR<Prisma.PlannedInvestmentUpdateWithoutMachineInput, Prisma.PlannedInvestmentUncheckedUpdateWithoutMachineInput>
+}
+
+export type PlannedInvestmentUpdateManyWithWhereWithoutMachineInput = {
+  where: Prisma.PlannedInvestmentScalarWhereInput
+  data: Prisma.XOR<Prisma.PlannedInvestmentUpdateManyMutationInput, Prisma.PlannedInvestmentUncheckedUpdateManyWithoutMachineInput>
+}
+
+export type PlannedInvestmentCreateWithoutArticleInput = {
+  id?: string
+  title: string
+  plannedAmount: number
+  plannedDate?: Date | string | null
+  category: $Enums.PlannedInvestmentCategory
+  note?: string | null
+  status?: $Enums.PlannedInvestmentStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tenant: Prisma.TenantCreateNestedOneWithoutPlannedInvestmentsInput
+  machine?: Prisma.MachineCreateNestedOneWithoutPlannedInvestmentsInput
+  project?: Prisma.ProjectCreateNestedOneWithoutPlannedInvestmentsInput
+}
+
+export type PlannedInvestmentUncheckedCreateWithoutArticleInput = {
+  id?: string
+  tenantId: string
+  title: string
+  plannedAmount: number
+  plannedDate?: Date | string | null
+  category: $Enums.PlannedInvestmentCategory
+  note?: string | null
+  status?: $Enums.PlannedInvestmentStatus
+  machineId?: string | null
+  projectId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type PlannedInvestmentCreateOrConnectWithoutArticleInput = {
+  where: Prisma.PlannedInvestmentWhereUniqueInput
+  create: Prisma.XOR<Prisma.PlannedInvestmentCreateWithoutArticleInput, Prisma.PlannedInvestmentUncheckedCreateWithoutArticleInput>
+}
+
+export type PlannedInvestmentCreateManyArticleInputEnvelope = {
+  data: Prisma.PlannedInvestmentCreateManyArticleInput | Prisma.PlannedInvestmentCreateManyArticleInput[]
+  skipDuplicates?: boolean
+}
+
+export type PlannedInvestmentUpsertWithWhereUniqueWithoutArticleInput = {
+  where: Prisma.PlannedInvestmentWhereUniqueInput
+  update: Prisma.XOR<Prisma.PlannedInvestmentUpdateWithoutArticleInput, Prisma.PlannedInvestmentUncheckedUpdateWithoutArticleInput>
+  create: Prisma.XOR<Prisma.PlannedInvestmentCreateWithoutArticleInput, Prisma.PlannedInvestmentUncheckedCreateWithoutArticleInput>
+}
+
+export type PlannedInvestmentUpdateWithWhereUniqueWithoutArticleInput = {
+  where: Prisma.PlannedInvestmentWhereUniqueInput
+  data: Prisma.XOR<Prisma.PlannedInvestmentUpdateWithoutArticleInput, Prisma.PlannedInvestmentUncheckedUpdateWithoutArticleInput>
+}
+
+export type PlannedInvestmentUpdateManyWithWhereWithoutArticleInput = {
+  where: Prisma.PlannedInvestmentScalarWhereInput
+  data: Prisma.XOR<Prisma.PlannedInvestmentUpdateManyMutationInput, Prisma.PlannedInvestmentUncheckedUpdateManyWithoutArticleInput>
+}
+
+export type PlannedInvestmentCreateWithoutProjectInput = {
+  id?: string
+  title: string
+  plannedAmount: number
+  plannedDate?: Date | string | null
+  category: $Enums.PlannedInvestmentCategory
+  note?: string | null
+  status?: $Enums.PlannedInvestmentStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tenant: Prisma.TenantCreateNestedOneWithoutPlannedInvestmentsInput
+  machine?: Prisma.MachineCreateNestedOneWithoutPlannedInvestmentsInput
+  article?: Prisma.ArticleCreateNestedOneWithoutPlannedInvestmentsInput
+}
+
+export type PlannedInvestmentUncheckedCreateWithoutProjectInput = {
+  id?: string
+  tenantId: string
+  title: string
+  plannedAmount: number
+  plannedDate?: Date | string | null
+  category: $Enums.PlannedInvestmentCategory
+  note?: string | null
+  status?: $Enums.PlannedInvestmentStatus
+  machineId?: string | null
+  articleId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type PlannedInvestmentCreateOrConnectWithoutProjectInput = {
+  where: Prisma.PlannedInvestmentWhereUniqueInput
+  create: Prisma.XOR<Prisma.PlannedInvestmentCreateWithoutProjectInput, Prisma.PlannedInvestmentUncheckedCreateWithoutProjectInput>
+}
+
+export type PlannedInvestmentCreateManyProjectInputEnvelope = {
+  data: Prisma.PlannedInvestmentCreateManyProjectInput | Prisma.PlannedInvestmentCreateManyProjectInput[]
+  skipDuplicates?: boolean
+}
+
+export type PlannedInvestmentUpsertWithWhereUniqueWithoutProjectInput = {
+  where: Prisma.PlannedInvestmentWhereUniqueInput
+  update: Prisma.XOR<Prisma.PlannedInvestmentUpdateWithoutProjectInput, Prisma.PlannedInvestmentUncheckedUpdateWithoutProjectInput>
+  create: Prisma.XOR<Prisma.PlannedInvestmentCreateWithoutProjectInput, Prisma.PlannedInvestmentUncheckedCreateWithoutProjectInput>
+}
+
+export type PlannedInvestmentUpdateWithWhereUniqueWithoutProjectInput = {
+  where: Prisma.PlannedInvestmentWhereUniqueInput
+  data: Prisma.XOR<Prisma.PlannedInvestmentUpdateWithoutProjectInput, Prisma.PlannedInvestmentUncheckedUpdateWithoutProjectInput>
+}
+
+export type PlannedInvestmentUpdateManyWithWhereWithoutProjectInput = {
+  where: Prisma.PlannedInvestmentScalarWhereInput
+  data: Prisma.XOR<Prisma.PlannedInvestmentUpdateManyMutationInput, Prisma.PlannedInvestmentUncheckedUpdateManyWithoutProjectInput>
 }
 
 export type PlannedInvestmentCreateManyTenantInput = {
@@ -595,6 +970,9 @@ export type PlannedInvestmentCreateManyTenantInput = {
   category: $Enums.PlannedInvestmentCategory
   note?: string | null
   status?: $Enums.PlannedInvestmentStatus
+  machineId?: string | null
+  articleId?: string | null
+  projectId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -609,6 +987,9 @@ export type PlannedInvestmentUpdateWithoutTenantInput = {
   status?: Prisma.EnumPlannedInvestmentStatusFieldUpdateOperationsInput | $Enums.PlannedInvestmentStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  machine?: Prisma.MachineUpdateOneWithoutPlannedInvestmentsNestedInput
+  article?: Prisma.ArticleUpdateOneWithoutPlannedInvestmentsNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutPlannedInvestmentsNestedInput
 }
 
 export type PlannedInvestmentUncheckedUpdateWithoutTenantInput = {
@@ -619,6 +1000,9 @@ export type PlannedInvestmentUncheckedUpdateWithoutTenantInput = {
   category?: Prisma.EnumPlannedInvestmentCategoryFieldUpdateOperationsInput | $Enums.PlannedInvestmentCategory
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlannedInvestmentStatusFieldUpdateOperationsInput | $Enums.PlannedInvestmentStatus
+  machineId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  articleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -631,6 +1015,189 @@ export type PlannedInvestmentUncheckedUpdateManyWithoutTenantInput = {
   category?: Prisma.EnumPlannedInvestmentCategoryFieldUpdateOperationsInput | $Enums.PlannedInvestmentCategory
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlannedInvestmentStatusFieldUpdateOperationsInput | $Enums.PlannedInvestmentStatus
+  machineId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  articleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type PlannedInvestmentCreateManyMachineInput = {
+  id?: string
+  tenantId: string
+  title: string
+  plannedAmount: number
+  plannedDate?: Date | string | null
+  category: $Enums.PlannedInvestmentCategory
+  note?: string | null
+  status?: $Enums.PlannedInvestmentStatus
+  articleId?: string | null
+  projectId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type PlannedInvestmentUpdateWithoutMachineInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  plannedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  plannedDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  category?: Prisma.EnumPlannedInvestmentCategoryFieldUpdateOperationsInput | $Enums.PlannedInvestmentCategory
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumPlannedInvestmentStatusFieldUpdateOperationsInput | $Enums.PlannedInvestmentStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutPlannedInvestmentsNestedInput
+  article?: Prisma.ArticleUpdateOneWithoutPlannedInvestmentsNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutPlannedInvestmentsNestedInput
+}
+
+export type PlannedInvestmentUncheckedUpdateWithoutMachineInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  plannedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  plannedDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  category?: Prisma.EnumPlannedInvestmentCategoryFieldUpdateOperationsInput | $Enums.PlannedInvestmentCategory
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumPlannedInvestmentStatusFieldUpdateOperationsInput | $Enums.PlannedInvestmentStatus
+  articleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type PlannedInvestmentUncheckedUpdateManyWithoutMachineInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  plannedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  plannedDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  category?: Prisma.EnumPlannedInvestmentCategoryFieldUpdateOperationsInput | $Enums.PlannedInvestmentCategory
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumPlannedInvestmentStatusFieldUpdateOperationsInput | $Enums.PlannedInvestmentStatus
+  articleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type PlannedInvestmentCreateManyArticleInput = {
+  id?: string
+  tenantId: string
+  title: string
+  plannedAmount: number
+  plannedDate?: Date | string | null
+  category: $Enums.PlannedInvestmentCategory
+  note?: string | null
+  status?: $Enums.PlannedInvestmentStatus
+  machineId?: string | null
+  projectId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type PlannedInvestmentUpdateWithoutArticleInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  plannedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  plannedDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  category?: Prisma.EnumPlannedInvestmentCategoryFieldUpdateOperationsInput | $Enums.PlannedInvestmentCategory
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumPlannedInvestmentStatusFieldUpdateOperationsInput | $Enums.PlannedInvestmentStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutPlannedInvestmentsNestedInput
+  machine?: Prisma.MachineUpdateOneWithoutPlannedInvestmentsNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutPlannedInvestmentsNestedInput
+}
+
+export type PlannedInvestmentUncheckedUpdateWithoutArticleInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  plannedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  plannedDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  category?: Prisma.EnumPlannedInvestmentCategoryFieldUpdateOperationsInput | $Enums.PlannedInvestmentCategory
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumPlannedInvestmentStatusFieldUpdateOperationsInput | $Enums.PlannedInvestmentStatus
+  machineId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type PlannedInvestmentUncheckedUpdateManyWithoutArticleInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  plannedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  plannedDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  category?: Prisma.EnumPlannedInvestmentCategoryFieldUpdateOperationsInput | $Enums.PlannedInvestmentCategory
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumPlannedInvestmentStatusFieldUpdateOperationsInput | $Enums.PlannedInvestmentStatus
+  machineId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type PlannedInvestmentCreateManyProjectInput = {
+  id?: string
+  tenantId: string
+  title: string
+  plannedAmount: number
+  plannedDate?: Date | string | null
+  category: $Enums.PlannedInvestmentCategory
+  note?: string | null
+  status?: $Enums.PlannedInvestmentStatus
+  machineId?: string | null
+  articleId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type PlannedInvestmentUpdateWithoutProjectInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  plannedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  plannedDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  category?: Prisma.EnumPlannedInvestmentCategoryFieldUpdateOperationsInput | $Enums.PlannedInvestmentCategory
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumPlannedInvestmentStatusFieldUpdateOperationsInput | $Enums.PlannedInvestmentStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutPlannedInvestmentsNestedInput
+  machine?: Prisma.MachineUpdateOneWithoutPlannedInvestmentsNestedInput
+  article?: Prisma.ArticleUpdateOneWithoutPlannedInvestmentsNestedInput
+}
+
+export type PlannedInvestmentUncheckedUpdateWithoutProjectInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  plannedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  plannedDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  category?: Prisma.EnumPlannedInvestmentCategoryFieldUpdateOperationsInput | $Enums.PlannedInvestmentCategory
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumPlannedInvestmentStatusFieldUpdateOperationsInput | $Enums.PlannedInvestmentStatus
+  machineId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  articleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type PlannedInvestmentUncheckedUpdateManyWithoutProjectInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  plannedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  plannedDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  category?: Prisma.EnumPlannedInvestmentCategoryFieldUpdateOperationsInput | $Enums.PlannedInvestmentCategory
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumPlannedInvestmentStatusFieldUpdateOperationsInput | $Enums.PlannedInvestmentStatus
+  machineId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  articleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -646,9 +1213,15 @@ export type PlannedInvestmentSelect<ExtArgs extends runtime.Types.Extensions.Int
   category?: boolean
   note?: boolean
   status?: boolean
+  machineId?: boolean
+  articleId?: boolean
+  projectId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
+  machine?: boolean | Prisma.PlannedInvestment$machineArgs<ExtArgs>
+  article?: boolean | Prisma.PlannedInvestment$articleArgs<ExtArgs>
+  project?: boolean | Prisma.PlannedInvestment$projectArgs<ExtArgs>
 }, ExtArgs["result"]["plannedInvestment"]>
 
 export type PlannedInvestmentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -660,9 +1233,15 @@ export type PlannedInvestmentSelectCreateManyAndReturn<ExtArgs extends runtime.T
   category?: boolean
   note?: boolean
   status?: boolean
+  machineId?: boolean
+  articleId?: boolean
+  projectId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
+  machine?: boolean | Prisma.PlannedInvestment$machineArgs<ExtArgs>
+  article?: boolean | Prisma.PlannedInvestment$articleArgs<ExtArgs>
+  project?: boolean | Prisma.PlannedInvestment$projectArgs<ExtArgs>
 }, ExtArgs["result"]["plannedInvestment"]>
 
 export type PlannedInvestmentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -674,9 +1253,15 @@ export type PlannedInvestmentSelectUpdateManyAndReturn<ExtArgs extends runtime.T
   category?: boolean
   note?: boolean
   status?: boolean
+  machineId?: boolean
+  articleId?: boolean
+  projectId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
+  machine?: boolean | Prisma.PlannedInvestment$machineArgs<ExtArgs>
+  article?: boolean | Prisma.PlannedInvestment$articleArgs<ExtArgs>
+  project?: boolean | Prisma.PlannedInvestment$projectArgs<ExtArgs>
 }, ExtArgs["result"]["plannedInvestment"]>
 
 export type PlannedInvestmentSelectScalar = {
@@ -688,25 +1273,40 @@ export type PlannedInvestmentSelectScalar = {
   category?: boolean
   note?: boolean
   status?: boolean
+  machineId?: boolean
+  articleId?: boolean
+  projectId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type PlannedInvestmentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "title" | "plannedAmount" | "plannedDate" | "category" | "note" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["plannedInvestment"]>
+export type PlannedInvestmentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "title" | "plannedAmount" | "plannedDate" | "category" | "note" | "status" | "machineId" | "articleId" | "projectId" | "createdAt" | "updatedAt", ExtArgs["result"]["plannedInvestment"]>
 export type PlannedInvestmentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
+  machine?: boolean | Prisma.PlannedInvestment$machineArgs<ExtArgs>
+  article?: boolean | Prisma.PlannedInvestment$articleArgs<ExtArgs>
+  project?: boolean | Prisma.PlannedInvestment$projectArgs<ExtArgs>
 }
 export type PlannedInvestmentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
+  machine?: boolean | Prisma.PlannedInvestment$machineArgs<ExtArgs>
+  article?: boolean | Prisma.PlannedInvestment$articleArgs<ExtArgs>
+  project?: boolean | Prisma.PlannedInvestment$projectArgs<ExtArgs>
 }
 export type PlannedInvestmentIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
+  machine?: boolean | Prisma.PlannedInvestment$machineArgs<ExtArgs>
+  article?: boolean | Prisma.PlannedInvestment$articleArgs<ExtArgs>
+  project?: boolean | Prisma.PlannedInvestment$projectArgs<ExtArgs>
 }
 
 export type $PlannedInvestmentPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "PlannedInvestment"
   objects: {
     tenant: Prisma.$TenantPayload<ExtArgs>
+    machine: Prisma.$MachinePayload<ExtArgs> | null
+    article: Prisma.$ArticlePayload<ExtArgs> | null
+    project: Prisma.$ProjectPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -717,6 +1317,9 @@ export type $PlannedInvestmentPayload<ExtArgs extends runtime.Types.Extensions.I
     category: $Enums.PlannedInvestmentCategory
     note: string | null
     status: $Enums.PlannedInvestmentStatus
+    machineId: string | null
+    articleId: string | null
+    projectId: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["plannedInvestment"]>
@@ -1114,6 +1717,9 @@ readonly fields: PlannedInvestmentFieldRefs;
 export interface Prisma__PlannedInvestmentClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   tenant<T extends Prisma.TenantDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TenantDefaultArgs<ExtArgs>>): Prisma.Prisma__TenantClient<runtime.Types.Result.GetResult<Prisma.$TenantPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  machine<T extends Prisma.PlannedInvestment$machineArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PlannedInvestment$machineArgs<ExtArgs>>): Prisma.Prisma__MachineClient<runtime.Types.Result.GetResult<Prisma.$MachinePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  article<T extends Prisma.PlannedInvestment$articleArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PlannedInvestment$articleArgs<ExtArgs>>): Prisma.Prisma__ArticleClient<runtime.Types.Result.GetResult<Prisma.$ArticlePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  project<T extends Prisma.PlannedInvestment$projectArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PlannedInvestment$projectArgs<ExtArgs>>): Prisma.Prisma__ProjectClient<runtime.Types.Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1151,6 +1757,9 @@ export interface PlannedInvestmentFieldRefs {
   readonly category: Prisma.FieldRef<"PlannedInvestment", 'PlannedInvestmentCategory'>
   readonly note: Prisma.FieldRef<"PlannedInvestment", 'String'>
   readonly status: Prisma.FieldRef<"PlannedInvestment", 'PlannedInvestmentStatus'>
+  readonly machineId: Prisma.FieldRef<"PlannedInvestment", 'String'>
+  readonly articleId: Prisma.FieldRef<"PlannedInvestment", 'String'>
+  readonly projectId: Prisma.FieldRef<"PlannedInvestment", 'String'>
   readonly createdAt: Prisma.FieldRef<"PlannedInvestment", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"PlannedInvestment", 'DateTime'>
 }
@@ -1551,6 +2160,63 @@ export type PlannedInvestmentDeleteManyArgs<ExtArgs extends runtime.Types.Extens
    * Limit how many PlannedInvestments to delete.
    */
   limit?: number
+}
+
+/**
+ * PlannedInvestment.machine
+ */
+export type PlannedInvestment$machineArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Machine
+   */
+  select?: Prisma.MachineSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Machine
+   */
+  omit?: Prisma.MachineOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MachineInclude<ExtArgs> | null
+  where?: Prisma.MachineWhereInput
+}
+
+/**
+ * PlannedInvestment.article
+ */
+export type PlannedInvestment$articleArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Article
+   */
+  select?: Prisma.ArticleSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Article
+   */
+  omit?: Prisma.ArticleOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ArticleInclude<ExtArgs> | null
+  where?: Prisma.ArticleWhereInput
+}
+
+/**
+ * PlannedInvestment.project
+ */
+export type PlannedInvestment$projectArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Project
+   */
+  select?: Prisma.ProjectSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Project
+   */
+  omit?: Prisma.ProjectOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ProjectInclude<ExtArgs> | null
+  where?: Prisma.ProjectWhereInput
 }
 
 /**

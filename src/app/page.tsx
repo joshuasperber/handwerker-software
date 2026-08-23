@@ -1,34 +1,16 @@
 import Link from "next/link";
-import Image from "next/image";
 import { Wrench, Calendar, Users, Smartphone, Shield, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LegalFooter } from "@/components/legal/legal-footer";
+import { PublicSiteHeader } from "@/components/auth/public-site-header";
+import { redirectIfAuthenticated } from "@/lib/auth/redirect-if-authenticated";
 
-export default function HomePage() {
+export default async function HomePage() {
+  await redirectIfAuthenticated();
+
   return (
     <div className="min-h-screen bg-white">
-      <header className="border-b border-slate-200">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
-          <div className="flex items-center gap-2">
-            <Image
-              src="/icons/icon-192.png"
-              alt="JoMaster Logo"
-              width={36}
-              height={36}
-              className="h-9 w-9 rounded-lg"
-            />
-            <span className="text-lg font-bold text-slate-900">JoMaster</span>
-          </div>
-          <div className="flex items-center gap-3">
-            <Link href="/registrieren">
-              <Button variant="outline" size="sm">Betrieb anlegen</Button>
-            </Link>
-            <Link href="/login">
-              <Button size="sm">Anmelden</Button>
-            </Link>
-          </div>
-        </div>
-      </header>
+      <PublicSiteHeader showRegister />
 
       <section className="mx-auto max-w-6xl px-4 py-20 text-center">
         <h1 className="text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl">

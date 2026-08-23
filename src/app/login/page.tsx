@@ -2,6 +2,7 @@ import { Card } from "@/components/ui/card";
 import Image from "next/image";
 import { LoginForm } from "./login-form";
 import { LegalInlineLinks } from "@/components/legal/legal-footer";
+import { redirectIfAuthenticated } from "@/lib/auth/redirect-if-authenticated";
 
 export default async function LoginPage({
   searchParams,
@@ -9,6 +10,7 @@ export default async function LoginPage({
   searchParams: Promise<{ error?: string }>;
 }) {
   const { error } = await searchParams;
+  await redirectIfAuthenticated();
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50 px-4 py-8">

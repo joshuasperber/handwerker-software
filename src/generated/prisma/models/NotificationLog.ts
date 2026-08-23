@@ -33,6 +33,9 @@ export type NotificationLogMinAggregateOutputType = {
   subject: string | null
   body: string | null
   sentAt: Date | null
+  status: $Enums.NotificationDeliveryStatus | null
+  errorMessage: string | null
+  retryable: boolean | null
 }
 
 export type NotificationLogMaxAggregateOutputType = {
@@ -44,6 +47,9 @@ export type NotificationLogMaxAggregateOutputType = {
   subject: string | null
   body: string | null
   sentAt: Date | null
+  status: $Enums.NotificationDeliveryStatus | null
+  errorMessage: string | null
+  retryable: boolean | null
 }
 
 export type NotificationLogCountAggregateOutputType = {
@@ -55,6 +61,9 @@ export type NotificationLogCountAggregateOutputType = {
   subject: number
   body: number
   sentAt: number
+  status: number
+  errorMessage: number
+  retryable: number
   metadata: number
   _all: number
 }
@@ -69,6 +78,9 @@ export type NotificationLogMinAggregateInputType = {
   subject?: true
   body?: true
   sentAt?: true
+  status?: true
+  errorMessage?: true
+  retryable?: true
 }
 
 export type NotificationLogMaxAggregateInputType = {
@@ -80,6 +92,9 @@ export type NotificationLogMaxAggregateInputType = {
   subject?: true
   body?: true
   sentAt?: true
+  status?: true
+  errorMessage?: true
+  retryable?: true
 }
 
 export type NotificationLogCountAggregateInputType = {
@@ -91,6 +106,9 @@ export type NotificationLogCountAggregateInputType = {
   subject?: true
   body?: true
   sentAt?: true
+  status?: true
+  errorMessage?: true
+  retryable?: true
   metadata?: true
   _all?: true
 }
@@ -176,6 +194,9 @@ export type NotificationLogGroupByOutputType = {
   subject: string | null
   body: string
   sentAt: Date
+  status: $Enums.NotificationDeliveryStatus
+  errorMessage: string | null
+  retryable: boolean
   metadata: runtime.JsonValue | null
   _count: NotificationLogCountAggregateOutputType | null
   _min: NotificationLogMinAggregateOutputType | null
@@ -209,6 +230,9 @@ export type NotificationLogWhereInput = {
   subject?: Prisma.StringNullableFilter<"NotificationLog"> | string | null
   body?: Prisma.StringFilter<"NotificationLog"> | string
   sentAt?: Prisma.DateTimeFilter<"NotificationLog"> | Date | string
+  status?: Prisma.EnumNotificationDeliveryStatusFilter<"NotificationLog"> | $Enums.NotificationDeliveryStatus
+  errorMessage?: Prisma.StringNullableFilter<"NotificationLog"> | string | null
+  retryable?: Prisma.BoolFilter<"NotificationLog"> | boolean
   metadata?: Prisma.JsonNullableFilter<"NotificationLog">
   tenant?: Prisma.XOR<Prisma.TenantScalarRelationFilter, Prisma.TenantWhereInput>
 }
@@ -222,6 +246,9 @@ export type NotificationLogOrderByWithRelationInput = {
   subject?: Prisma.SortOrderInput | Prisma.SortOrder
   body?: Prisma.SortOrder
   sentAt?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  errorMessage?: Prisma.SortOrderInput | Prisma.SortOrder
+  retryable?: Prisma.SortOrder
   metadata?: Prisma.SortOrderInput | Prisma.SortOrder
   tenant?: Prisma.TenantOrderByWithRelationInput
 }
@@ -238,6 +265,9 @@ export type NotificationLogWhereUniqueInput = Prisma.AtLeast<{
   subject?: Prisma.StringNullableFilter<"NotificationLog"> | string | null
   body?: Prisma.StringFilter<"NotificationLog"> | string
   sentAt?: Prisma.DateTimeFilter<"NotificationLog"> | Date | string
+  status?: Prisma.EnumNotificationDeliveryStatusFilter<"NotificationLog"> | $Enums.NotificationDeliveryStatus
+  errorMessage?: Prisma.StringNullableFilter<"NotificationLog"> | string | null
+  retryable?: Prisma.BoolFilter<"NotificationLog"> | boolean
   metadata?: Prisma.JsonNullableFilter<"NotificationLog">
   tenant?: Prisma.XOR<Prisma.TenantScalarRelationFilter, Prisma.TenantWhereInput>
 }, "id">
@@ -251,6 +281,9 @@ export type NotificationLogOrderByWithAggregationInput = {
   subject?: Prisma.SortOrderInput | Prisma.SortOrder
   body?: Prisma.SortOrder
   sentAt?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  errorMessage?: Prisma.SortOrderInput | Prisma.SortOrder
+  retryable?: Prisma.SortOrder
   metadata?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.NotificationLogCountOrderByAggregateInput
   _max?: Prisma.NotificationLogMaxOrderByAggregateInput
@@ -269,6 +302,9 @@ export type NotificationLogScalarWhereWithAggregatesInput = {
   subject?: Prisma.StringNullableWithAggregatesFilter<"NotificationLog"> | string | null
   body?: Prisma.StringWithAggregatesFilter<"NotificationLog"> | string
   sentAt?: Prisma.DateTimeWithAggregatesFilter<"NotificationLog"> | Date | string
+  status?: Prisma.EnumNotificationDeliveryStatusWithAggregatesFilter<"NotificationLog"> | $Enums.NotificationDeliveryStatus
+  errorMessage?: Prisma.StringNullableWithAggregatesFilter<"NotificationLog"> | string | null
+  retryable?: Prisma.BoolWithAggregatesFilter<"NotificationLog"> | boolean
   metadata?: Prisma.JsonNullableWithAggregatesFilter<"NotificationLog">
 }
 
@@ -280,6 +316,9 @@ export type NotificationLogCreateInput = {
   subject?: string | null
   body: string
   sentAt?: Date | string
+  status?: $Enums.NotificationDeliveryStatus
+  errorMessage?: string | null
+  retryable?: boolean
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   tenant: Prisma.TenantCreateNestedOneWithoutNotificationsInput
 }
@@ -293,6 +332,9 @@ export type NotificationLogUncheckedCreateInput = {
   subject?: string | null
   body: string
   sentAt?: Date | string
+  status?: $Enums.NotificationDeliveryStatus
+  errorMessage?: string | null
+  retryable?: boolean
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
@@ -304,6 +346,9 @@ export type NotificationLogUpdateInput = {
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   body?: Prisma.StringFieldUpdateOperationsInput | string
   sentAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumNotificationDeliveryStatusFieldUpdateOperationsInput | $Enums.NotificationDeliveryStatus
+  errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  retryable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   tenant?: Prisma.TenantUpdateOneRequiredWithoutNotificationsNestedInput
 }
@@ -317,6 +362,9 @@ export type NotificationLogUncheckedUpdateInput = {
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   body?: Prisma.StringFieldUpdateOperationsInput | string
   sentAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumNotificationDeliveryStatusFieldUpdateOperationsInput | $Enums.NotificationDeliveryStatus
+  errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  retryable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
@@ -329,6 +377,9 @@ export type NotificationLogCreateManyInput = {
   subject?: string | null
   body: string
   sentAt?: Date | string
+  status?: $Enums.NotificationDeliveryStatus
+  errorMessage?: string | null
+  retryable?: boolean
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
@@ -340,6 +391,9 @@ export type NotificationLogUpdateManyMutationInput = {
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   body?: Prisma.StringFieldUpdateOperationsInput | string
   sentAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumNotificationDeliveryStatusFieldUpdateOperationsInput | $Enums.NotificationDeliveryStatus
+  errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  retryable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
@@ -352,6 +406,9 @@ export type NotificationLogUncheckedUpdateManyInput = {
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   body?: Prisma.StringFieldUpdateOperationsInput | string
   sentAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumNotificationDeliveryStatusFieldUpdateOperationsInput | $Enums.NotificationDeliveryStatus
+  errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  retryable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
@@ -374,6 +431,9 @@ export type NotificationLogCountOrderByAggregateInput = {
   subject?: Prisma.SortOrder
   body?: Prisma.SortOrder
   sentAt?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  errorMessage?: Prisma.SortOrder
+  retryable?: Prisma.SortOrder
   metadata?: Prisma.SortOrder
 }
 
@@ -386,6 +446,9 @@ export type NotificationLogMaxOrderByAggregateInput = {
   subject?: Prisma.SortOrder
   body?: Prisma.SortOrder
   sentAt?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  errorMessage?: Prisma.SortOrder
+  retryable?: Prisma.SortOrder
 }
 
 export type NotificationLogMinOrderByAggregateInput = {
@@ -397,6 +460,9 @@ export type NotificationLogMinOrderByAggregateInput = {
   subject?: Prisma.SortOrder
   body?: Prisma.SortOrder
   sentAt?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  errorMessage?: Prisma.SortOrder
+  retryable?: Prisma.SortOrder
 }
 
 export type NotificationLogCreateNestedManyWithoutTenantInput = {
@@ -449,6 +515,10 @@ export type EnumNotificationChannelFieldUpdateOperationsInput = {
   set?: $Enums.NotificationChannel
 }
 
+export type EnumNotificationDeliveryStatusFieldUpdateOperationsInput = {
+  set?: $Enums.NotificationDeliveryStatus
+}
+
 export type NotificationLogCreateWithoutTenantInput = {
   id?: string
   type: $Enums.NotificationType
@@ -457,6 +527,9 @@ export type NotificationLogCreateWithoutTenantInput = {
   subject?: string | null
   body: string
   sentAt?: Date | string
+  status?: $Enums.NotificationDeliveryStatus
+  errorMessage?: string | null
+  retryable?: boolean
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
@@ -468,6 +541,9 @@ export type NotificationLogUncheckedCreateWithoutTenantInput = {
   subject?: string | null
   body: string
   sentAt?: Date | string
+  status?: $Enums.NotificationDeliveryStatus
+  errorMessage?: string | null
+  retryable?: boolean
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
@@ -509,6 +585,9 @@ export type NotificationLogScalarWhereInput = {
   subject?: Prisma.StringNullableFilter<"NotificationLog"> | string | null
   body?: Prisma.StringFilter<"NotificationLog"> | string
   sentAt?: Prisma.DateTimeFilter<"NotificationLog"> | Date | string
+  status?: Prisma.EnumNotificationDeliveryStatusFilter<"NotificationLog"> | $Enums.NotificationDeliveryStatus
+  errorMessage?: Prisma.StringNullableFilter<"NotificationLog"> | string | null
+  retryable?: Prisma.BoolFilter<"NotificationLog"> | boolean
   metadata?: Prisma.JsonNullableFilter<"NotificationLog">
 }
 
@@ -520,6 +599,9 @@ export type NotificationLogCreateManyTenantInput = {
   subject?: string | null
   body: string
   sentAt?: Date | string
+  status?: $Enums.NotificationDeliveryStatus
+  errorMessage?: string | null
+  retryable?: boolean
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
@@ -531,6 +613,9 @@ export type NotificationLogUpdateWithoutTenantInput = {
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   body?: Prisma.StringFieldUpdateOperationsInput | string
   sentAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumNotificationDeliveryStatusFieldUpdateOperationsInput | $Enums.NotificationDeliveryStatus
+  errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  retryable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
@@ -542,6 +627,9 @@ export type NotificationLogUncheckedUpdateWithoutTenantInput = {
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   body?: Prisma.StringFieldUpdateOperationsInput | string
   sentAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumNotificationDeliveryStatusFieldUpdateOperationsInput | $Enums.NotificationDeliveryStatus
+  errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  retryable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
@@ -553,6 +641,9 @@ export type NotificationLogUncheckedUpdateManyWithoutTenantInput = {
   subject?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   body?: Prisma.StringFieldUpdateOperationsInput | string
   sentAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumNotificationDeliveryStatusFieldUpdateOperationsInput | $Enums.NotificationDeliveryStatus
+  errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  retryable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
@@ -567,6 +658,9 @@ export type NotificationLogSelect<ExtArgs extends runtime.Types.Extensions.Inter
   subject?: boolean
   body?: boolean
   sentAt?: boolean
+  status?: boolean
+  errorMessage?: boolean
+  retryable?: boolean
   metadata?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["notificationLog"]>
@@ -580,6 +674,9 @@ export type NotificationLogSelectCreateManyAndReturn<ExtArgs extends runtime.Typ
   subject?: boolean
   body?: boolean
   sentAt?: boolean
+  status?: boolean
+  errorMessage?: boolean
+  retryable?: boolean
   metadata?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["notificationLog"]>
@@ -593,6 +690,9 @@ export type NotificationLogSelectUpdateManyAndReturn<ExtArgs extends runtime.Typ
   subject?: boolean
   body?: boolean
   sentAt?: boolean
+  status?: boolean
+  errorMessage?: boolean
+  retryable?: boolean
   metadata?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["notificationLog"]>
@@ -606,10 +706,13 @@ export type NotificationLogSelectScalar = {
   subject?: boolean
   body?: boolean
   sentAt?: boolean
+  status?: boolean
+  errorMessage?: boolean
+  retryable?: boolean
   metadata?: boolean
 }
 
-export type NotificationLogOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "type" | "channel" | "recipient" | "subject" | "body" | "sentAt" | "metadata", ExtArgs["result"]["notificationLog"]>
+export type NotificationLogOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "type" | "channel" | "recipient" | "subject" | "body" | "sentAt" | "status" | "errorMessage" | "retryable" | "metadata", ExtArgs["result"]["notificationLog"]>
 export type NotificationLogInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
 }
@@ -634,6 +737,9 @@ export type $NotificationLogPayload<ExtArgs extends runtime.Types.Extensions.Int
     subject: string | null
     body: string
     sentAt: Date
+    status: $Enums.NotificationDeliveryStatus
+    errorMessage: string | null
+    retryable: boolean
     metadata: runtime.JsonValue | null
   }, ExtArgs["result"]["notificationLog"]>
   composites: {}
@@ -1067,6 +1173,9 @@ export interface NotificationLogFieldRefs {
   readonly subject: Prisma.FieldRef<"NotificationLog", 'String'>
   readonly body: Prisma.FieldRef<"NotificationLog", 'String'>
   readonly sentAt: Prisma.FieldRef<"NotificationLog", 'DateTime'>
+  readonly status: Prisma.FieldRef<"NotificationLog", 'NotificationDeliveryStatus'>
+  readonly errorMessage: Prisma.FieldRef<"NotificationLog", 'String'>
+  readonly retryable: Prisma.FieldRef<"NotificationLog", 'Boolean'>
   readonly metadata: Prisma.FieldRef<"NotificationLog", 'Json'>
 }
     

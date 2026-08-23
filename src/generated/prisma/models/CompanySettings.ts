@@ -98,6 +98,11 @@ export type CompanySettingsMinAggregateOutputType = {
   invoiceIntroText: string | null
   invoiceFooterText: string | null
   invoiceNotes: string | null
+  invoiceLegalText: string | null
+  invoiceAccentColor: string | null
+  invoiceLayout: string | null
+  invoiceFontScale: string | null
+  invoiceTemplate: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -138,6 +143,11 @@ export type CompanySettingsMaxAggregateOutputType = {
   invoiceIntroText: string | null
   invoiceFooterText: string | null
   invoiceNotes: string | null
+  invoiceLegalText: string | null
+  invoiceAccentColor: string | null
+  invoiceLayout: string | null
+  invoiceFontScale: string | null
+  invoiceTemplate: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -178,6 +188,11 @@ export type CompanySettingsCountAggregateOutputType = {
   invoiceIntroText: number
   invoiceFooterText: number
   invoiceNotes: number
+  invoiceLegalText: number
+  invoiceAccentColor: number
+  invoiceLayout: number
+  invoiceFontScale: number
+  invoiceTemplate: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -256,6 +271,11 @@ export type CompanySettingsMinAggregateInputType = {
   invoiceIntroText?: true
   invoiceFooterText?: true
   invoiceNotes?: true
+  invoiceLegalText?: true
+  invoiceAccentColor?: true
+  invoiceLayout?: true
+  invoiceFontScale?: true
+  invoiceTemplate?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -296,6 +316,11 @@ export type CompanySettingsMaxAggregateInputType = {
   invoiceIntroText?: true
   invoiceFooterText?: true
   invoiceNotes?: true
+  invoiceLegalText?: true
+  invoiceAccentColor?: true
+  invoiceLayout?: true
+  invoiceFontScale?: true
+  invoiceTemplate?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -336,6 +361,11 @@ export type CompanySettingsCountAggregateInputType = {
   invoiceIntroText?: true
   invoiceFooterText?: true
   invoiceNotes?: true
+  invoiceLegalText?: true
+  invoiceAccentColor?: true
+  invoiceLayout?: true
+  invoiceFontScale?: true
+  invoiceTemplate?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -463,6 +493,11 @@ export type CompanySettingsGroupByOutputType = {
   invoiceIntroText: string | null
   invoiceFooterText: string | null
   invoiceNotes: string | null
+  invoiceLegalText: string | null
+  invoiceAccentColor: string
+  invoiceLayout: string
+  invoiceFontScale: string
+  invoiceTemplate: string
   createdAt: Date
   updatedAt: Date
   _count: CompanySettingsCountAggregateOutputType | null
@@ -526,6 +561,11 @@ export type CompanySettingsWhereInput = {
   invoiceIntroText?: Prisma.StringNullableFilter<"CompanySettings"> | string | null
   invoiceFooterText?: Prisma.StringNullableFilter<"CompanySettings"> | string | null
   invoiceNotes?: Prisma.StringNullableFilter<"CompanySettings"> | string | null
+  invoiceLegalText?: Prisma.StringNullableFilter<"CompanySettings"> | string | null
+  invoiceAccentColor?: Prisma.StringFilter<"CompanySettings"> | string
+  invoiceLayout?: Prisma.StringFilter<"CompanySettings"> | string
+  invoiceFontScale?: Prisma.StringFilter<"CompanySettings"> | string
+  invoiceTemplate?: Prisma.StringFilter<"CompanySettings"> | string
   createdAt?: Prisma.DateTimeFilter<"CompanySettings"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CompanySettings"> | Date | string
   tenant?: Prisma.XOR<Prisma.TenantScalarRelationFilter, Prisma.TenantWhereInput>
@@ -567,6 +607,11 @@ export type CompanySettingsOrderByWithRelationInput = {
   invoiceIntroText?: Prisma.SortOrderInput | Prisma.SortOrder
   invoiceFooterText?: Prisma.SortOrderInput | Prisma.SortOrder
   invoiceNotes?: Prisma.SortOrderInput | Prisma.SortOrder
+  invoiceLegalText?: Prisma.SortOrderInput | Prisma.SortOrder
+  invoiceAccentColor?: Prisma.SortOrder
+  invoiceLayout?: Prisma.SortOrder
+  invoiceFontScale?: Prisma.SortOrder
+  invoiceTemplate?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   tenant?: Prisma.TenantOrderByWithRelationInput
@@ -611,6 +656,11 @@ export type CompanySettingsWhereUniqueInput = Prisma.AtLeast<{
   invoiceIntroText?: Prisma.StringNullableFilter<"CompanySettings"> | string | null
   invoiceFooterText?: Prisma.StringNullableFilter<"CompanySettings"> | string | null
   invoiceNotes?: Prisma.StringNullableFilter<"CompanySettings"> | string | null
+  invoiceLegalText?: Prisma.StringNullableFilter<"CompanySettings"> | string | null
+  invoiceAccentColor?: Prisma.StringFilter<"CompanySettings"> | string
+  invoiceLayout?: Prisma.StringFilter<"CompanySettings"> | string
+  invoiceFontScale?: Prisma.StringFilter<"CompanySettings"> | string
+  invoiceTemplate?: Prisma.StringFilter<"CompanySettings"> | string
   createdAt?: Prisma.DateTimeFilter<"CompanySettings"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CompanySettings"> | Date | string
   tenant?: Prisma.XOR<Prisma.TenantScalarRelationFilter, Prisma.TenantWhereInput>
@@ -652,6 +702,11 @@ export type CompanySettingsOrderByWithAggregationInput = {
   invoiceIntroText?: Prisma.SortOrderInput | Prisma.SortOrder
   invoiceFooterText?: Prisma.SortOrderInput | Prisma.SortOrder
   invoiceNotes?: Prisma.SortOrderInput | Prisma.SortOrder
+  invoiceLegalText?: Prisma.SortOrderInput | Prisma.SortOrder
+  invoiceAccentColor?: Prisma.SortOrder
+  invoiceLayout?: Prisma.SortOrder
+  invoiceFontScale?: Prisma.SortOrder
+  invoiceTemplate?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.CompanySettingsCountOrderByAggregateInput
@@ -700,6 +755,11 @@ export type CompanySettingsScalarWhereWithAggregatesInput = {
   invoiceIntroText?: Prisma.StringNullableWithAggregatesFilter<"CompanySettings"> | string | null
   invoiceFooterText?: Prisma.StringNullableWithAggregatesFilter<"CompanySettings"> | string | null
   invoiceNotes?: Prisma.StringNullableWithAggregatesFilter<"CompanySettings"> | string | null
+  invoiceLegalText?: Prisma.StringNullableWithAggregatesFilter<"CompanySettings"> | string | null
+  invoiceAccentColor?: Prisma.StringWithAggregatesFilter<"CompanySettings"> | string
+  invoiceLayout?: Prisma.StringWithAggregatesFilter<"CompanySettings"> | string
+  invoiceFontScale?: Prisma.StringWithAggregatesFilter<"CompanySettings"> | string
+  invoiceTemplate?: Prisma.StringWithAggregatesFilter<"CompanySettings"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"CompanySettings"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"CompanySettings"> | Date | string
 }
@@ -739,6 +799,11 @@ export type CompanySettingsCreateInput = {
   invoiceIntroText?: string | null
   invoiceFooterText?: string | null
   invoiceNotes?: string | null
+  invoiceLegalText?: string | null
+  invoiceAccentColor?: string
+  invoiceLayout?: string
+  invoiceFontScale?: string
+  invoiceTemplate?: string
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutCompanySettingsInput
@@ -780,6 +845,11 @@ export type CompanySettingsUncheckedCreateInput = {
   invoiceIntroText?: string | null
   invoiceFooterText?: string | null
   invoiceNotes?: string | null
+  invoiceLegalText?: string | null
+  invoiceAccentColor?: string
+  invoiceLayout?: string
+  invoiceFontScale?: string
+  invoiceTemplate?: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -819,6 +889,11 @@ export type CompanySettingsUpdateInput = {
   invoiceIntroText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   invoiceFooterText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   invoiceNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invoiceLegalText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invoiceAccentColor?: Prisma.StringFieldUpdateOperationsInput | string
+  invoiceLayout?: Prisma.StringFieldUpdateOperationsInput | string
+  invoiceFontScale?: Prisma.StringFieldUpdateOperationsInput | string
+  invoiceTemplate?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutCompanySettingsNestedInput
@@ -860,6 +935,11 @@ export type CompanySettingsUncheckedUpdateInput = {
   invoiceIntroText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   invoiceFooterText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   invoiceNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invoiceLegalText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invoiceAccentColor?: Prisma.StringFieldUpdateOperationsInput | string
+  invoiceLayout?: Prisma.StringFieldUpdateOperationsInput | string
+  invoiceFontScale?: Prisma.StringFieldUpdateOperationsInput | string
+  invoiceTemplate?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -900,6 +980,11 @@ export type CompanySettingsCreateManyInput = {
   invoiceIntroText?: string | null
   invoiceFooterText?: string | null
   invoiceNotes?: string | null
+  invoiceLegalText?: string | null
+  invoiceAccentColor?: string
+  invoiceLayout?: string
+  invoiceFontScale?: string
+  invoiceTemplate?: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -939,6 +1024,11 @@ export type CompanySettingsUpdateManyMutationInput = {
   invoiceIntroText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   invoiceFooterText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   invoiceNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invoiceLegalText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invoiceAccentColor?: Prisma.StringFieldUpdateOperationsInput | string
+  invoiceLayout?: Prisma.StringFieldUpdateOperationsInput | string
+  invoiceFontScale?: Prisma.StringFieldUpdateOperationsInput | string
+  invoiceTemplate?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -979,6 +1069,11 @@ export type CompanySettingsUncheckedUpdateManyInput = {
   invoiceIntroText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   invoiceFooterText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   invoiceNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invoiceLegalText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invoiceAccentColor?: Prisma.StringFieldUpdateOperationsInput | string
+  invoiceLayout?: Prisma.StringFieldUpdateOperationsInput | string
+  invoiceFontScale?: Prisma.StringFieldUpdateOperationsInput | string
+  invoiceTemplate?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1024,6 +1119,11 @@ export type CompanySettingsCountOrderByAggregateInput = {
   invoiceIntroText?: Prisma.SortOrder
   invoiceFooterText?: Prisma.SortOrder
   invoiceNotes?: Prisma.SortOrder
+  invoiceLegalText?: Prisma.SortOrder
+  invoiceAccentColor?: Prisma.SortOrder
+  invoiceLayout?: Prisma.SortOrder
+  invoiceFontScale?: Prisma.SortOrder
+  invoiceTemplate?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -1082,6 +1182,11 @@ export type CompanySettingsMaxOrderByAggregateInput = {
   invoiceIntroText?: Prisma.SortOrder
   invoiceFooterText?: Prisma.SortOrder
   invoiceNotes?: Prisma.SortOrder
+  invoiceLegalText?: Prisma.SortOrder
+  invoiceAccentColor?: Prisma.SortOrder
+  invoiceLayout?: Prisma.SortOrder
+  invoiceFontScale?: Prisma.SortOrder
+  invoiceTemplate?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -1122,6 +1227,11 @@ export type CompanySettingsMinOrderByAggregateInput = {
   invoiceIntroText?: Prisma.SortOrder
   invoiceFooterText?: Prisma.SortOrder
   invoiceNotes?: Prisma.SortOrder
+  invoiceLegalText?: Prisma.SortOrder
+  invoiceAccentColor?: Prisma.SortOrder
+  invoiceLayout?: Prisma.SortOrder
+  invoiceFontScale?: Prisma.SortOrder
+  invoiceTemplate?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -1211,6 +1321,11 @@ export type CompanySettingsCreateWithoutTenantInput = {
   invoiceIntroText?: string | null
   invoiceFooterText?: string | null
   invoiceNotes?: string | null
+  invoiceLegalText?: string | null
+  invoiceAccentColor?: string
+  invoiceLayout?: string
+  invoiceFontScale?: string
+  invoiceTemplate?: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1250,6 +1365,11 @@ export type CompanySettingsUncheckedCreateWithoutTenantInput = {
   invoiceIntroText?: string | null
   invoiceFooterText?: string | null
   invoiceNotes?: string | null
+  invoiceLegalText?: string | null
+  invoiceAccentColor?: string
+  invoiceLayout?: string
+  invoiceFontScale?: string
+  invoiceTemplate?: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1305,6 +1425,11 @@ export type CompanySettingsUpdateWithoutTenantInput = {
   invoiceIntroText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   invoiceFooterText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   invoiceNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invoiceLegalText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invoiceAccentColor?: Prisma.StringFieldUpdateOperationsInput | string
+  invoiceLayout?: Prisma.StringFieldUpdateOperationsInput | string
+  invoiceFontScale?: Prisma.StringFieldUpdateOperationsInput | string
+  invoiceTemplate?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1344,6 +1469,11 @@ export type CompanySettingsUncheckedUpdateWithoutTenantInput = {
   invoiceIntroText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   invoiceFooterText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   invoiceNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invoiceLegalText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invoiceAccentColor?: Prisma.StringFieldUpdateOperationsInput | string
+  invoiceLayout?: Prisma.StringFieldUpdateOperationsInput | string
+  invoiceFontScale?: Prisma.StringFieldUpdateOperationsInput | string
+  invoiceTemplate?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1386,6 +1516,11 @@ export type CompanySettingsSelect<ExtArgs extends runtime.Types.Extensions.Inter
   invoiceIntroText?: boolean
   invoiceFooterText?: boolean
   invoiceNotes?: boolean
+  invoiceLegalText?: boolean
+  invoiceAccentColor?: boolean
+  invoiceLayout?: boolean
+  invoiceFontScale?: boolean
+  invoiceTemplate?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
@@ -1427,6 +1562,11 @@ export type CompanySettingsSelectCreateManyAndReturn<ExtArgs extends runtime.Typ
   invoiceIntroText?: boolean
   invoiceFooterText?: boolean
   invoiceNotes?: boolean
+  invoiceLegalText?: boolean
+  invoiceAccentColor?: boolean
+  invoiceLayout?: boolean
+  invoiceFontScale?: boolean
+  invoiceTemplate?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
@@ -1468,6 +1608,11 @@ export type CompanySettingsSelectUpdateManyAndReturn<ExtArgs extends runtime.Typ
   invoiceIntroText?: boolean
   invoiceFooterText?: boolean
   invoiceNotes?: boolean
+  invoiceLegalText?: boolean
+  invoiceAccentColor?: boolean
+  invoiceLayout?: boolean
+  invoiceFontScale?: boolean
+  invoiceTemplate?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
@@ -1509,11 +1654,16 @@ export type CompanySettingsSelectScalar = {
   invoiceIntroText?: boolean
   invoiceFooterText?: boolean
   invoiceNotes?: boolean
+  invoiceLegalText?: boolean
+  invoiceAccentColor?: boolean
+  invoiceLayout?: boolean
+  invoiceFontScale?: boolean
+  invoiceTemplate?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type CompanySettingsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "companyName" | "street" | "houseNumber" | "postalCode" | "city" | "country" | "latitude" | "longitude" | "defaultVatRate" | "defaultHourlyRate" | "defaultWorkshopHourlyRate" | "defaultMaterialMarkupPercent" | "defaultProcurementHourlyRate" | "defaultOverheadPercent" | "defaultRiskPercent" | "defaultProfitPercent" | "defaultIncomeTaxPercent" | "defaultKilometerRate" | "defaultTravelHourlyRate" | "additionalOverheadPercent" | "phone" | "email" | "website" | "invoiceLogoUrl" | "bankName" | "iban" | "bic" | "taxNumber" | "vatId" | "paymentTermsDays" | "invoiceIntroText" | "invoiceFooterText" | "invoiceNotes" | "createdAt" | "updatedAt", ExtArgs["result"]["companySettings"]>
+export type CompanySettingsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "companyName" | "street" | "houseNumber" | "postalCode" | "city" | "country" | "latitude" | "longitude" | "defaultVatRate" | "defaultHourlyRate" | "defaultWorkshopHourlyRate" | "defaultMaterialMarkupPercent" | "defaultProcurementHourlyRate" | "defaultOverheadPercent" | "defaultRiskPercent" | "defaultProfitPercent" | "defaultIncomeTaxPercent" | "defaultKilometerRate" | "defaultTravelHourlyRate" | "additionalOverheadPercent" | "phone" | "email" | "website" | "invoiceLogoUrl" | "bankName" | "iban" | "bic" | "taxNumber" | "vatId" | "paymentTermsDays" | "invoiceIntroText" | "invoiceFooterText" | "invoiceNotes" | "invoiceLegalText" | "invoiceAccentColor" | "invoiceLayout" | "invoiceFontScale" | "invoiceTemplate" | "createdAt" | "updatedAt", ExtArgs["result"]["companySettings"]>
 export type CompanySettingsInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
 }
@@ -1565,6 +1715,11 @@ export type $CompanySettingsPayload<ExtArgs extends runtime.Types.Extensions.Int
     invoiceIntroText: string | null
     invoiceFooterText: string | null
     invoiceNotes: string | null
+    invoiceLegalText: string | null
+    invoiceAccentColor: string
+    invoiceLayout: string
+    invoiceFontScale: string
+    invoiceTemplate: string
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["companySettings"]>
@@ -2026,6 +2181,11 @@ export interface CompanySettingsFieldRefs {
   readonly invoiceIntroText: Prisma.FieldRef<"CompanySettings", 'String'>
   readonly invoiceFooterText: Prisma.FieldRef<"CompanySettings", 'String'>
   readonly invoiceNotes: Prisma.FieldRef<"CompanySettings", 'String'>
+  readonly invoiceLegalText: Prisma.FieldRef<"CompanySettings", 'String'>
+  readonly invoiceAccentColor: Prisma.FieldRef<"CompanySettings", 'String'>
+  readonly invoiceLayout: Prisma.FieldRef<"CompanySettings", 'String'>
+  readonly invoiceFontScale: Prisma.FieldRef<"CompanySettings", 'String'>
+  readonly invoiceTemplate: Prisma.FieldRef<"CompanySettings", 'String'>
   readonly createdAt: Prisma.FieldRef<"CompanySettings", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"CompanySettings", 'DateTime'>
 }

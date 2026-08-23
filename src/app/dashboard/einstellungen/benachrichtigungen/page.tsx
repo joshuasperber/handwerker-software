@@ -11,7 +11,8 @@ import { InfoButton } from "@/components/ui/info-button";
 import { fetchJson } from "@/lib/fetch-json";
 import { saveJson } from "@/lib/save-toast";
 import { formatDateTime } from "@/lib/utils";
-import { Bell, Clock, Receipt, PackageSearch, Play, ScrollText, Mail } from "lucide-react";
+import { Clock, Receipt, PackageSearch, Play, ScrollText, Mail, Smartphone } from "lucide-react";
+import { SettingsPageHeader } from "@/components/dashboard/settings-page-header";
 
 interface Settings {
   bookingConfirmationEnabled: boolean;
@@ -27,9 +28,31 @@ interface Settings {
   reorderCheckEnabled: boolean;
   defaultEmail: boolean;
   defaultSms: boolean;
+  messagingMode: "SMS" | "WHATSAPP";
   reminderEmailTemplate: string;
+  reminderSmsTemplate: string;
   dunningEmailTemplate: string;
+  messagingLastTestAt: string | null;
+  messagingLastTestStatus: string | null;
+  messagingLastTestError: string | null;
+  messagingLastTestChannel: string | null;
 }
+
+type ChannelRuntime = {
+  configured: boolean;
+  missing: string[];
+  fromMasked?: string | null;
+  messagingServiceMasked?: string | null;
+  whatsappFromMasked?: string | null;
+  provider?: string;
+  dryRun?: boolean;
+  emptyDeclared?: boolean;
+};
+
+type RuntimeStatus = {
+  email: ChannelRuntime;
+  messaging: ChannelRuntime;
+};
 
 function hoursToDaysLabel(hours: number): string {
   if (hours % 24 === 0 && hours >= 24) {
@@ -46,6 +69,9 @@ interface LogEntry {
   recipient: string;
   subject: string | null;
   sentAt: string;
+  status?: string;
+  errorMessage?: string | null;
+  retryable?: boolean;
 }
 
 const EMPTY: Settings = {
@@ -62,8 +88,32 @@ const EMPTY: Settings = {
   reorderCheckEnabled: true,
   defaultEmail: true,
   defaultSms: false,
+  messagingMode: "SMS",
   reminderEmailTemplate: "",
+  reminderSmsTemplate: "",
   dunningEmailTemplate: "",
+  messagingLastTestAt: null,
+  messagingLastTestStatus: null,
+  messagingLastTestError: null,
+  messagingLastTestChannel: null,
+};
+
+const TEST_PHONE_KEY = "jomaster.messagingTestPhone";
+const DEFAULT_TEST_PHONE = "+4915259655035";
+const LEGACY_TEST_PHONES = new Set([
+  "+491525965035",
+  "+49152596503",
+  "491525965035",
+  "+4915888623971",
+]);
+
+const STATUS_LABELS: Record<string, string> = {
+  SENT: "Gesendet",
+  FAILED: "Fehlgeschlagen",
+  NO_CONTACT: "Keine Kontaktdaten",
+  INVALID_PHONE: "Ungültige Telefonnummer",
+  DISABLED: "Deaktiviert",
+  ALREADY_SENT: "Bereits gesendet",
 };
 
 function Row({
@@ -88,10 +138,16 @@ function Row({
 
 export default function BenachrichtigungenPage() {
   const [form, setForm] = useState<Settings>(EMPTY);
+  const [runtime, setRuntime] = useState<RuntimeStatus | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [running, setRunning] = useState<string | null>(null);
   const [logs, setLogs] = useState<LogEntry[]>([]);
+  const [testChannel, setTestChannel] = useState<"EMAIL" | "SMS" | "WHATSAPP">("SMS");
+  const [testPhone, setTestPhone] = useState(DEFAULT_TEST_PHONE);
+  const [testEmail, setTestEmail] = useState("");
+  const [testing, setTesting] = useState(false);
+  const [testResult, setTestResult] = useState<string | null>(null);
 
   function loadLogs() {
     fetchJson<LogEntry[]>("/api/notification-log").then((r) => {
@@ -100,20 +156,41 @@ export default function BenachrichtigungenPage() {
   }
 
   useEffect(() => {
-    fetchJson<Partial<Settings>>("/api/notification-settings")
-      .then((r) => {
-        if (r.success && r.data) {
-          const d = r.data;
+    Promise.all([
+      fetchJson<RuntimeStatus>("/api/notification-settings/runtime"),
+      fetchJson<Partial<Settings> & { runtime?: RuntimeStatus }>("/api/notification-settings"),
+    ])
+      .then(([runtimeRes, settingsRes]) => {
+        if (runtimeRes.success && runtimeRes.data) {
+          setRuntime(runtimeRes.data);
+        } else if (settingsRes.success && settingsRes.data?.runtime) {
+          setRuntime(settingsRes.data.runtime);
+        }
+        if (settingsRes.success && settingsRes.data) {
+          const d = settingsRes.data;
           setForm({
             ...EMPTY,
             ...d,
             bookingConfirmationEmailTemplate: d.bookingConfirmationEmailTemplate ?? "",
             reminderEmailTemplate: d.reminderEmailTemplate ?? "",
+            reminderSmsTemplate: d.reminderSmsTemplate ?? "",
             dunningEmailTemplate: d.dunningEmailTemplate ?? "",
+            messagingMode: d.messagingMode === "WHATSAPP" ? "WHATSAPP" : "SMS",
+            messagingLastTestAt: d.messagingLastTestAt ?? null,
+            messagingLastTestStatus: d.messagingLastTestStatus ?? null,
+            messagingLastTestError: d.messagingLastTestError ?? null,
+            messagingLastTestChannel: d.messagingLastTestChannel ?? null,
           });
         }
       })
       .finally(() => setLoading(false));
+    const stored = window.localStorage.getItem(TEST_PHONE_KEY);
+    if (stored && !LEGACY_TEST_PHONES.has(stored.trim())) {
+      setTestPhone(stored);
+    } else {
+      setTestPhone(DEFAULT_TEST_PHONE);
+      window.localStorage.setItem(TEST_PHONE_KEY, DEFAULT_TEST_PHONE);
+    }
     loadLogs();
   }, []);
 
@@ -126,8 +203,29 @@ export default function BenachrichtigungenPage() {
     await saveJson("/api/notification-settings", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
+      body: JSON.stringify({
+        bookingConfirmationEnabled: form.bookingConfirmationEnabled,
+        bookingConfirmationEmailTemplate: form.bookingConfirmationEmailTemplate,
+        appointmentReminderEnabled: form.appointmentReminderEnabled,
+        appointmentReminderHoursBefore: form.appointmentReminderHoursBefore,
+        remindCustomer: form.remindCustomer,
+        remindEmployee: form.remindEmployee,
+        dunningAutoEnabled: form.dunningAutoEnabled,
+        dunningLevel1Days: form.dunningLevel1Days,
+        dunningLevel2Days: form.dunningLevel2Days,
+        dunningLevel3Days: form.dunningLevel3Days,
+        reorderCheckEnabled: form.reorderCheckEnabled,
+        defaultEmail: form.defaultEmail,
+        defaultSms: form.defaultSms,
+        messagingMode: form.messagingMode,
+        reminderEmailTemplate: form.reminderEmailTemplate,
+        reminderSmsTemplate: form.reminderSmsTemplate,
+        dunningEmailTemplate: form.dunningEmailTemplate,
+      }),
     });
+    if (testPhone.trim()) {
+      window.localStorage.setItem(TEST_PHONE_KEY, testPhone.trim());
+    }
     setSaving(false);
   }
 
@@ -147,24 +245,63 @@ export default function BenachrichtigungenPage() {
     }
   }
 
+  async function sendTest() {
+    setTesting(true);
+    setTestResult(null);
+    const res = await saveJson<{
+      sent: boolean;
+      status: string;
+      channel: string;
+      error: string | null;
+    }>(
+      "/api/notification-settings/test",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          channel: testChannel,
+          phone: testPhone,
+          email: testEmail,
+          template: "reminder",
+        }),
+      },
+      {
+        loading: "Testnachricht wird gesendet …",
+        success: "Test abgeschlossen",
+        error: "Testversand fehlgeschlagen",
+      }
+    );
+    setTesting(false);
+    if (testPhone.trim()) {
+      window.localStorage.setItem(TEST_PHONE_KEY, testPhone.trim());
+    }
+    if (res.success && res.data) {
+      const status = STATUS_LABELS[res.data.status] ?? res.data.status;
+      setTestResult(
+        res.data.sent
+          ? `Erfolgreich gesendet über ${res.data.channel} (${status}).`
+          : `Fehlgeschlagen über ${res.data.channel}: ${res.data.error ?? status}`
+      );
+      setForm((f) => ({
+        ...f,
+        messagingLastTestAt: new Date().toISOString(),
+        messagingLastTestStatus: res.data!.status,
+        messagingLastTestError: res.data!.error,
+        messagingLastTestChannel: res.data!.channel,
+      }));
+      loadLogs();
+    } else {
+      setTestResult(res.error ?? "Testversand fehlgeschlagen.");
+    }
+  }
+
   if (loading) {
     return <p className="text-slate-400">Wird geladen …</p>;
   }
 
   return (
     <div className="max-w-3xl">
-      <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2 mb-6">
-        <Bell className="h-7 w-7 text-[#0d5c63]" />
-        Benachrichtigungen &amp; Automatisierung
-        <InfoButton title="Wie funktioniert das?">
-          <p>
-            Hier steuern Sie automatische Kunden-E-Mails. Die Empfänger-Adresse wird
-            immer aus dem Kundenprofil gelesen. Geplante Erinnerungen laufen täglich
-            über den Server (Vercel Cron). Pro Kunde kann die Buchungsbestätigung im
-            Kundenprofil individuell überschrieben werden.
-          </p>
-        </InfoButton>
-      </h1>
+      <SettingsPageHeader href="/dashboard/einstellungen/benachrichtigungen" />
 
       <Card className="mb-5">
         <h2 className="font-semibold text-slate-900 flex items-center gap-2 mb-1">
@@ -206,8 +343,9 @@ export default function BenachrichtigungenPage() {
           <Clock className="h-5 w-5 text-[#0d5c63]" /> Terminerinnerung (vor Termin)
         </h2>
         <p className="text-xs text-slate-500 mb-3">
-          Zweite automatische E-Mail an den Kunden — standardmäßig 24 Stunden (= 1 Tag)
-          vor Terminbeginn.
+          Automatische Erinnerung an den Kunden — standardmäßig 24 Stunden vor Terminbeginn.
+          Der Kanal wird anhand der Kontaktdaten gewählt: nur E-Mail → E-Mail, nur Telefon →
+          Nachricht/SMS, beides → bevorzugt Nachricht/SMS.
         </p>
         <div className="divide-y divide-slate-100">
           <Row label="Terminerinnerungen aktiv">
@@ -218,7 +356,7 @@ export default function BenachrichtigungenPage() {
           </Row>
           <Row
             label="Vorlaufzeit"
-            hint={`${hoursToDaysLabel(form.appointmentReminderHoursBefore)} · E-Mail aus Kundenprofil`}
+            hint={`${hoursToDaysLabel(form.appointmentReminderHoursBefore)} · stündlich per Cron, Zeitzone Europe/Berlin`}
           >
             <div className="flex items-center gap-2">
               <Button
@@ -249,7 +387,7 @@ export default function BenachrichtigungenPage() {
               <span className="text-xs text-slate-500">Std.</span>
             </div>
           </Row>
-          <Row label="Kunde erinnern" hint="per E-Mail">
+          <Row label="Kunde erinnern" hint="E-Mail oder SMS, je nach Kontaktdaten">
             <Switch checked={form.remindCustomer} onCheckedChange={(v) => set("remindCustomer", v)} />
           </Row>
           <Row label="Monteur erinnern" hint="In-App">
@@ -260,14 +398,31 @@ export default function BenachrichtigungenPage() {
           <Label className="text-xs flex items-center gap-1">
             E-Mail-Vorlage (optional)
             <InfoButton title="Platzhalter">
-              <p>Verfügbare Platzhalter: {"{{kunde}}"}, {"{{datum}}"}, {"{{auftragsnummer}}"}, {"{{ort}}"}. Leer = Standardtext.</p>
+              <p>
+                Verfügbare Platzhalter: {"{{kundenname}}"}, {"{{betriebsname}}"}, {"{{datum}}"},
+                {" {{uhrzeit}}"}, {"{{adresse}}"}, {"{{auftrag}}"}. Leer = Standardtext.
+              </p>
             </InfoButton>
           </Label>
           <Textarea
             rows={3}
             value={form.reminderEmailTemplate}
             onChange={(e) => set("reminderEmailTemplate", e.target.value)}
-            placeholder="Erinnerung an Ihren Termin am {{datum}} (Auftrag {{auftragsnummer}}) …"
+            placeholder="Guten Tag {{kundenname}}, wir erinnern Sie an Ihren Termin am {{datum}} um {{uhrzeit}}. Ihr Betrieb: {{betriebsname}}."
+          />
+        </div>
+        <div className="mt-3">
+          <Label className="text-xs flex items-center gap-1">
+            SMS-/Nachrichtenvorlage (optional)
+            <InfoButton title="Platzhalter">
+              <p>Dieselbe Platzhalter-Liste wie bei der E-Mail. Leer = Standardtext.</p>
+            </InfoButton>
+          </Label>
+          <Textarea
+            rows={2}
+            value={form.reminderSmsTemplate}
+            onChange={(e) => set("reminderSmsTemplate", e.target.value)}
+            placeholder="Erinnerung: Ihr Termin mit {{betriebsname}} ist am {{datum}} um {{uhrzeit}}."
           />
         </div>
         <Button
@@ -374,13 +529,120 @@ export default function BenachrichtigungenPage() {
       <Card className="mb-5">
         <h2 className="font-semibold text-slate-900 mb-1">Kanäle (Standard)</h2>
         <div className="divide-y divide-slate-100">
-          <Row label="E-Mail-Versand" hint="benötigt SMTP-Konfiguration">
+          <Row
+            label="E-Mail-Versand"
+            hint={
+              runtime?.email.configured
+                ? "SMTP konfiguriert"
+                : `nicht konfiguriert${runtime?.email.missing?.length ? ` · fehlt: ${runtime.email.missing.join(", ")}` : " · SMTP_HOST"}`
+            }
+          >
             <Switch checked={form.defaultEmail} onCheckedChange={(v) => set("defaultEmail", v)} />
           </Row>
-          <Row label="SMS-Versand" hint="benötigt Twilio-Konfiguration">
+          <Row
+            label="SMS-/Nachrichtenversand"
+            hint={
+              runtime?.messaging.dryRun
+                ? "Testmodus (MESSAGING_DRY_RUN)"
+                : runtime?.messaging.configured
+                  ? `Anbieter: ${runtime.messaging.provider === "seven" ? "seven.io" : runtime.messaging.provider}`
+                  : `nicht konfiguriert${runtime?.messaging.missing?.length ? ` · fehlt: ${runtime.messaging.missing.join(", ")}` : ""}`
+            }
+          >
             <Switch checked={form.defaultSms} onCheckedChange={(v) => set("defaultSms", v)} />
           </Row>
+          <Row label="Nachrichtenkanal" hint="SMS über seven.io">
+            <select
+              className="h-9 rounded-lg border border-slate-200 px-2 text-sm"
+              value={form.messagingMode}
+              onChange={(e) => set("messagingMode", e.target.value as "SMS" | "WHATSAPP")}
+            >
+              <option value="SMS">SMS</option>
+              <option value="WHATSAPP">WhatsApp</option>
+            </select>
+          </Row>
         </div>
+      </Card>
+
+      <Card className="mb-5">
+        <h2 className="font-semibold text-slate-900 flex items-center gap-2 mb-1">
+          <Smartphone className="h-5 w-5 text-[#0d5c63]" /> Messaging-Anbieter
+        </h2>
+        <p className="text-xs text-slate-500 mb-3">
+          Schlüssel bleiben auf dem Server (Vercel Environment Variables). Es werden nur
+          Maskierungen und fehlende Namen angezeigt, niemals Auth-Token.
+        </p>
+        <div className="space-y-1.5 text-sm text-slate-700">
+          <p>Anbieter: <strong>{runtime?.messaging.provider === "seven" ? "seven.io" : "nicht gesetzt"}</strong></p>
+          <p>
+            Absendername (SEVEN_SMS_FROM):{" "}
+            <strong>{runtime?.messaging.fromMasked ?? "—"}</strong>
+          </p>
+          {runtime?.messaging.missing?.length ? (
+            <p className="text-amber-700">
+              {runtime.messaging.emptyDeclared
+                ? "SEVEN_API_KEY in handwerker-app/.env ist leer. Key eintragen, speichern und den Dev-Server neu starten."
+                : `Fehlende Umgebungsvariablen: ${runtime.messaging.missing.join(", ")}`}
+            </p>
+          ) : runtime?.messaging.configured ? (
+            <p className="text-emerald-700">Erforderliche Messaging-Variablen sind gesetzt.</p>
+          ) : (
+            <p className="text-amber-700">
+              Messaging-Status konnte nicht geladen werden. Dev-Server neu starten und die Seite neu laden.
+            </p>
+          )}
+          <p className="text-xs text-slate-500">
+            Letzter Test:{" "}
+            {form.messagingLastTestAt
+              ? `${formatDateTime(form.messagingLastTestAt)} · ${STATUS_LABELS[form.messagingLastTestStatus ?? ""] ?? form.messagingLastTestStatus ?? "—"} · ${form.messagingLastTestChannel ?? "—"}`
+              : "noch keiner"}
+          </p>
+          {form.messagingLastTestError ? (
+            <p className="text-sm text-red-600">{form.messagingLastTestError}</p>
+          ) : null}
+        </div>
+        <p className="mt-3 text-xs text-slate-500">
+          Die Testnummer ist der <strong>Empfänger</strong> (Ihre Handynummer mit +49).
+          Der Absendername kommt aus der .env (SEVEN_SMS_FROM).
+        </p>
+        <div className="mt-4 grid gap-3 sm:grid-cols-2">
+          <div>
+            <Label className="text-xs">Kanal</Label>
+            <select
+              className="mt-1 h-10 w-full rounded-lg border border-slate-200 px-3 text-sm"
+              value={testChannel}
+              onChange={(e) => setTestChannel(e.target.value as "EMAIL" | "SMS" | "WHATSAPP")}
+            >
+              <option value="SMS">SMS</option>
+              <option value="EMAIL">E-Mail</option>
+            </select>
+          </div>
+          {testChannel === "EMAIL" ? (
+            <Input
+              label="Test-E-Mail"
+              type="email"
+              value={testEmail}
+              onChange={(e) => setTestEmail(e.target.value)}
+            />
+          ) : (
+            <Input
+              label="Test-Empfänger (Ihre Handynummer)"
+              value={testPhone}
+              onChange={(e) => setTestPhone(e.target.value)}
+              placeholder="+4917612345678"
+            />
+          )}
+        </div>
+        <Button
+          variant="outline"
+          size="sm"
+          className="mt-3"
+          disabled={testing}
+          onClick={() => void sendTest()}
+        >
+          Test senden
+        </Button>
+        {testResult ? <p className="mt-2 text-sm text-slate-700">{testResult}</p> : null}
       </Card>
 
       <div className="flex justify-end mb-8">
@@ -404,8 +666,9 @@ export default function BenachrichtigungenPage() {
                   <th className="py-2 pr-3">Zeitpunkt</th>
                   <th className="py-2 pr-3">Typ</th>
                   <th className="py-2 pr-3">Kanal</th>
+                  <th className="py-2 pr-3">Status</th>
                   <th className="py-2 pr-3">Empfänger</th>
-                  <th className="py-2">Betreff</th>
+                  <th className="py-2">Betreff / Fehler</th>
                 </tr>
               </thead>
               <tbody>
@@ -416,8 +679,14 @@ export default function BenachrichtigungenPage() {
                     </td>
                     <td className="py-1.5 pr-3">{l.type}</td>
                     <td className="py-1.5 pr-3">{l.channel}</td>
+                    <td className="py-1.5 pr-3 whitespace-nowrap">
+                      {STATUS_LABELS[l.status ?? "SENT"] ?? l.status ?? "Gesendet"}
+                      {l.retryable ? " · erneut möglich" : ""}
+                    </td>
                     <td className="py-1.5 pr-3 max-w-[180px] truncate">{l.recipient}</td>
-                    <td className="py-1.5 max-w-[220px] truncate text-slate-600">{l.subject ?? "—"}</td>
+                    <td className="py-1.5 max-w-[220px] truncate text-slate-600">
+                      {l.errorMessage || l.subject || "—"}
+                    </td>
                   </tr>
                 ))}
               </tbody>

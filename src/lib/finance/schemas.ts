@@ -63,6 +63,9 @@ export const investmentInputSchema = z.object({
   category: z.enum(["MACHINE", "TOOL", "VEHICLE", "SOFTWARE", "MATERIAL_BULK", "OTHER"]),
   note: z.string().max(2000).optional().nullable(),
   status: z.enum(["PLANNED", "PURCHASED", "POSTPONED", "CANCELLED"]).default("PLANNED"),
+  machineId: optionalIdField.optional(),
+  articleId: optionalIdField.optional(),
+  projectId: optionalIdField.optional(),
 });
 
 export const financeSettingsSchema = z.object({

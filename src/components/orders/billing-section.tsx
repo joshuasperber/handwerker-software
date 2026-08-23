@@ -7,15 +7,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { PriceCompositionPanel } from "@/components/calculation/price-composition";
-import {
-  InvoiceConflictDialog,
-  type ExistingInvoiceInfo,
-} from "@/components/documents/invoice-conflict-dialog";
+import { InvoiceConflictDialog, type ExistingInvoiceInfo } from "@/components/documents/invoice-conflict-dialog";
+import { DocumentViewerDialog, useDocumentViewer } from "@/components/documents/document-viewer-dialog";
 import { convertCalculationToInvoice } from "@/lib/documents/convert-invoice-client";
 import type { InvoiceActionMode } from "@/lib/documents/invoice-lifecycle";
 import { formatIssueDateInput } from "@/lib/documents/issue-date";
 import { formatEuro } from "@/lib/utils";
-import { FileText, Calculator, CheckCircle, Pencil, Download } from "lucide-react";
+import { FileText, Calculator, CheckCircle, Pencil } from "lucide-react";
 import { toast } from "sonner";
 
 interface OrderBillingSectionProps {
@@ -40,6 +38,7 @@ export function OrderBillingSection({
   const [conflictOpen, setConflictOpen] = useState(false);
   const [conflictInvoice, setConflictInvoice] = useState<ExistingInvoiceInfo | null>(null);
   const [issueDate, setIssueDate] = useState(() => formatIssueDateInput(new Date()));
+  const documentViewer = useDocumentViewer();
 
   const showBilling = ["ABRECHNUNGSBEREIT", "ABGERECHNET"].includes(orderStatus);
 
@@ -59,16 +58,16 @@ export function OrderBillingSection({
     };
   }, [calculationId, showBilling]);
 
-  function openHtml(html: string) {
-    const w = window.open("", "_blank");
-    w?.document.write(html);
-    w?.document.close();
-  }
-
   async function previewInvoice() {
     if (!calculationId) return;
     const result = await convertCalculationToInvoice(calculationId, { preview: true });
-    if (result.ok && result.html) openHtml(result.html);
+    if (result.ok && result.html) {
+      documentViewer.openHtml(result.html, {
+        title: "Rechnungsvorschau",
+        calculationId,
+        orderId,
+      });
+    }
   }
 
   async function previewBreakdown() {
@@ -79,7 +78,9 @@ export function OrderBillingSection({
       body: JSON.stringify({ calculationId, type: "breakdown" }),
     });
     const d = await res.json();
-    if (d.success && d.data.html) openHtml(d.data.html);
+    if (d.success && d.data.html) {
+      documentViewer.openHtml(d.data.html, { title: "Interne Aufschlüsselung", calculationId, orderId });
+    }
   }
 
   const alreadyInvoiced = orderStatus === "ABGERECHNET";
@@ -114,10 +115,18 @@ export function OrderBillingSection({
         : result.action === "correction"
           ? `Korrekturrechnung ${number} erstellt`
           : `Rechnung ${number} erstellt`;
-    toast.success(label, { description: "Die Rechnung wurde in einem neuen Tab geöffnet." });
+    toast.success(label);
     setMsg(label);
     setLastDocId(result.document?.id ?? null);
-    if (result.html) openHtml(result.html);
+    if (result.html) {
+      documentViewer.openHtml(result.html, {
+        title: `Rechnung ${number}`.trim(),
+        documentId: result.document?.id,
+        documentNumber: result.document?.documentNumber,
+        calculationId,
+        orderId,
+      });
+    }
     onInvoiceCreated();
   }
 
@@ -256,14 +265,21 @@ export function OrderBillingSection({
 
         {lastDocId && (
           <div className="flex flex-wrap items-center gap-3 text-sm">
-            <a
-              href={`/api/documents/${lastDocId}/pdf`}
-              target="_blank"
-              rel="noreferrer"
-              className="text-[#0d5c63] hover:underline inline-flex items-center gap-1"
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() =>
+                documentViewer.openDocument({
+                  id: lastDocId,
+                  orderId,
+                  calculationId,
+                  title: "Rechnung",
+                })
+              }
             >
-              <Download className="h-4 w-4" /> PDF herunterladen
-            </a>
+              <FileText className="h-4 w-4 mr-1" /> Rechnung ansehen / PDF
+            </Button>
             <Link href="/dashboard/rechnungen" className="text-[#0d5c63] hover:underline">
               Zur Rechnungsübersicht →
             </Link>
@@ -279,6 +295,12 @@ export function OrderBillingSection({
         onChoose={(mode) =>
           runInvoice(mode, mode === "update" ? conflictInvoice?.id : undefined)
         }
+      />
+      <DocumentViewerDialog
+        state={documentViewer.state}
+        onOpenChange={(open) => {
+          if (!open) documentViewer.close();
+        }}
       />
     </Card>
   );

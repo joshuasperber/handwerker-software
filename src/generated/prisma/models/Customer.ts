@@ -44,6 +44,9 @@ export type CustomerMinAggregateOutputType = {
   notes: string | null
   gdprConsent: boolean | null
   gdprConsentAt: Date | null
+  contactAllowed: boolean | null
+  appointmentRemindersEnabled: boolean | null
+  preferredContactChannel: $Enums.CustomerContactPreference | null
   bookingConfirmationEmailTemplate: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -69,6 +72,9 @@ export type CustomerMaxAggregateOutputType = {
   notes: string | null
   gdprConsent: boolean | null
   gdprConsentAt: Date | null
+  contactAllowed: boolean | null
+  appointmentRemindersEnabled: boolean | null
+  preferredContactChannel: $Enums.CustomerContactPreference | null
   bookingConfirmationEmailTemplate: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -94,6 +100,9 @@ export type CustomerCountAggregateOutputType = {
   notes: number
   gdprConsent: number
   gdprConsentAt: number
+  contactAllowed: number
+  appointmentRemindersEnabled: number
+  preferredContactChannel: number
   bookingConfirmationEmailTemplate: number
   createdAt: number
   updatedAt: number
@@ -121,6 +130,9 @@ export type CustomerMinAggregateInputType = {
   notes?: true
   gdprConsent?: true
   gdprConsentAt?: true
+  contactAllowed?: true
+  appointmentRemindersEnabled?: true
+  preferredContactChannel?: true
   bookingConfirmationEmailTemplate?: true
   createdAt?: true
   updatedAt?: true
@@ -146,6 +158,9 @@ export type CustomerMaxAggregateInputType = {
   notes?: true
   gdprConsent?: true
   gdprConsentAt?: true
+  contactAllowed?: true
+  appointmentRemindersEnabled?: true
+  preferredContactChannel?: true
   bookingConfirmationEmailTemplate?: true
   createdAt?: true
   updatedAt?: true
@@ -171,6 +186,9 @@ export type CustomerCountAggregateInputType = {
   notes?: true
   gdprConsent?: true
   gdprConsentAt?: true
+  contactAllowed?: true
+  appointmentRemindersEnabled?: true
+  preferredContactChannel?: true
   bookingConfirmationEmailTemplate?: true
   createdAt?: true
   updatedAt?: true
@@ -269,6 +287,9 @@ export type CustomerGroupByOutputType = {
   notes: string | null
   gdprConsent: boolean
   gdprConsentAt: Date | null
+  contactAllowed: boolean
+  appointmentRemindersEnabled: boolean
+  preferredContactChannel: $Enums.CustomerContactPreference
   bookingConfirmationEmailTemplate: string | null
   createdAt: Date
   updatedAt: Date
@@ -315,6 +336,9 @@ export type CustomerWhereInput = {
   notes?: Prisma.StringNullableFilter<"Customer"> | string | null
   gdprConsent?: Prisma.BoolFilter<"Customer"> | boolean
   gdprConsentAt?: Prisma.DateTimeNullableFilter<"Customer"> | Date | string | null
+  contactAllowed?: Prisma.BoolFilter<"Customer"> | boolean
+  appointmentRemindersEnabled?: Prisma.BoolFilter<"Customer"> | boolean
+  preferredContactChannel?: Prisma.EnumCustomerContactPreferenceFilter<"Customer"> | $Enums.CustomerContactPreference
   bookingConfirmationEmailTemplate?: Prisma.StringNullableFilter<"Customer"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Customer"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Customer"> | Date | string
@@ -350,6 +374,9 @@ export type CustomerOrderByWithRelationInput = {
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   gdprConsent?: Prisma.SortOrder
   gdprConsentAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  contactAllowed?: Prisma.SortOrder
+  appointmentRemindersEnabled?: Prisma.SortOrder
+  preferredContactChannel?: Prisma.SortOrder
   bookingConfirmationEmailTemplate?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -389,6 +416,9 @@ export type CustomerWhereUniqueInput = Prisma.AtLeast<{
   notes?: Prisma.StringNullableFilter<"Customer"> | string | null
   gdprConsent?: Prisma.BoolFilter<"Customer"> | boolean
   gdprConsentAt?: Prisma.DateTimeNullableFilter<"Customer"> | Date | string | null
+  contactAllowed?: Prisma.BoolFilter<"Customer"> | boolean
+  appointmentRemindersEnabled?: Prisma.BoolFilter<"Customer"> | boolean
+  preferredContactChannel?: Prisma.EnumCustomerContactPreferenceFilter<"Customer"> | $Enums.CustomerContactPreference
   bookingConfirmationEmailTemplate?: Prisma.StringNullableFilter<"Customer"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Customer"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Customer"> | Date | string
@@ -424,6 +454,9 @@ export type CustomerOrderByWithAggregationInput = {
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   gdprConsent?: Prisma.SortOrder
   gdprConsentAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  contactAllowed?: Prisma.SortOrder
+  appointmentRemindersEnabled?: Prisma.SortOrder
+  preferredContactChannel?: Prisma.SortOrder
   bookingConfirmationEmailTemplate?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -455,6 +488,9 @@ export type CustomerScalarWhereWithAggregatesInput = {
   notes?: Prisma.StringNullableWithAggregatesFilter<"Customer"> | string | null
   gdprConsent?: Prisma.BoolWithAggregatesFilter<"Customer"> | boolean
   gdprConsentAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Customer"> | Date | string | null
+  contactAllowed?: Prisma.BoolWithAggregatesFilter<"Customer"> | boolean
+  appointmentRemindersEnabled?: Prisma.BoolWithAggregatesFilter<"Customer"> | boolean
+  preferredContactChannel?: Prisma.EnumCustomerContactPreferenceWithAggregatesFilter<"Customer"> | $Enums.CustomerContactPreference
   bookingConfirmationEmailTemplate?: Prisma.StringNullableWithAggregatesFilter<"Customer"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Customer"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Customer"> | Date | string
@@ -478,6 +514,9 @@ export type CustomerCreateInput = {
   notes?: string | null
   gdprConsent?: boolean
   gdprConsentAt?: Date | string | null
+  contactAllowed?: boolean
+  appointmentRemindersEnabled?: boolean
+  preferredContactChannel?: $Enums.CustomerContactPreference
   bookingConfirmationEmailTemplate?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -513,6 +552,9 @@ export type CustomerUncheckedCreateInput = {
   notes?: string | null
   gdprConsent?: boolean
   gdprConsentAt?: Date | string | null
+  contactAllowed?: boolean
+  appointmentRemindersEnabled?: boolean
+  preferredContactChannel?: $Enums.CustomerContactPreference
   bookingConfirmationEmailTemplate?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -544,6 +586,9 @@ export type CustomerUpdateInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gdprConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gdprConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  contactAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  appointmentRemindersEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  preferredContactChannel?: Prisma.EnumCustomerContactPreferenceFieldUpdateOperationsInput | $Enums.CustomerContactPreference
   bookingConfirmationEmailTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -579,6 +624,9 @@ export type CustomerUncheckedUpdateInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gdprConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gdprConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  contactAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  appointmentRemindersEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  preferredContactChannel?: Prisma.EnumCustomerContactPreferenceFieldUpdateOperationsInput | $Enums.CustomerContactPreference
   bookingConfirmationEmailTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -612,6 +660,9 @@ export type CustomerCreateManyInput = {
   notes?: string | null
   gdprConsent?: boolean
   gdprConsentAt?: Date | string | null
+  contactAllowed?: boolean
+  appointmentRemindersEnabled?: boolean
+  preferredContactChannel?: $Enums.CustomerContactPreference
   bookingConfirmationEmailTemplate?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -635,6 +686,9 @@ export type CustomerUpdateManyMutationInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gdprConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gdprConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  contactAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  appointmentRemindersEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  preferredContactChannel?: Prisma.EnumCustomerContactPreferenceFieldUpdateOperationsInput | $Enums.CustomerContactPreference
   bookingConfirmationEmailTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -660,6 +714,9 @@ export type CustomerUncheckedUpdateManyInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gdprConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gdprConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  contactAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  appointmentRemindersEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  preferredContactChannel?: Prisma.EnumCustomerContactPreferenceFieldUpdateOperationsInput | $Enums.CustomerContactPreference
   bookingConfirmationEmailTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -705,6 +762,9 @@ export type CustomerCountOrderByAggregateInput = {
   notes?: Prisma.SortOrder
   gdprConsent?: Prisma.SortOrder
   gdprConsentAt?: Prisma.SortOrder
+  contactAllowed?: Prisma.SortOrder
+  appointmentRemindersEnabled?: Prisma.SortOrder
+  preferredContactChannel?: Prisma.SortOrder
   bookingConfirmationEmailTemplate?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -730,6 +790,9 @@ export type CustomerMaxOrderByAggregateInput = {
   notes?: Prisma.SortOrder
   gdprConsent?: Prisma.SortOrder
   gdprConsentAt?: Prisma.SortOrder
+  contactAllowed?: Prisma.SortOrder
+  appointmentRemindersEnabled?: Prisma.SortOrder
+  preferredContactChannel?: Prisma.SortOrder
   bookingConfirmationEmailTemplate?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -755,6 +818,9 @@ export type CustomerMinOrderByAggregateInput = {
   notes?: Prisma.SortOrder
   gdprConsent?: Prisma.SortOrder
   gdprConsentAt?: Prisma.SortOrder
+  contactAllowed?: Prisma.SortOrder
+  appointmentRemindersEnabled?: Prisma.SortOrder
+  preferredContactChannel?: Prisma.SortOrder
   bookingConfirmationEmailTemplate?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -857,6 +923,10 @@ export type CustomerUpdateOneWithoutWorkRequestsNestedInput = {
 
 export type EnumCustomerTypeFieldUpdateOperationsInput = {
   set?: $Enums.CustomerType
+}
+
+export type EnumCustomerContactPreferenceFieldUpdateOperationsInput = {
+  set?: $Enums.CustomerContactPreference
 }
 
 export type CustomerCreateNestedOneWithoutTaxExemptionCertificateInput = {
@@ -981,6 +1051,9 @@ export type CustomerCreateWithoutTenantInput = {
   notes?: string | null
   gdprConsent?: boolean
   gdprConsentAt?: Date | string | null
+  contactAllowed?: boolean
+  appointmentRemindersEnabled?: boolean
+  preferredContactChannel?: $Enums.CustomerContactPreference
   bookingConfirmationEmailTemplate?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1014,6 +1087,9 @@ export type CustomerUncheckedCreateWithoutTenantInput = {
   notes?: string | null
   gdprConsent?: boolean
   gdprConsentAt?: Date | string | null
+  contactAllowed?: boolean
+  appointmentRemindersEnabled?: boolean
+  preferredContactChannel?: $Enums.CustomerContactPreference
   bookingConfirmationEmailTemplate?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1076,6 +1152,9 @@ export type CustomerScalarWhereInput = {
   notes?: Prisma.StringNullableFilter<"Customer"> | string | null
   gdprConsent?: Prisma.BoolFilter<"Customer"> | boolean
   gdprConsentAt?: Prisma.DateTimeNullableFilter<"Customer"> | Date | string | null
+  contactAllowed?: Prisma.BoolFilter<"Customer"> | boolean
+  appointmentRemindersEnabled?: Prisma.BoolFilter<"Customer"> | boolean
+  preferredContactChannel?: Prisma.EnumCustomerContactPreferenceFilter<"Customer"> | $Enums.CustomerContactPreference
   bookingConfirmationEmailTemplate?: Prisma.StringNullableFilter<"Customer"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Customer"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Customer"> | Date | string
@@ -1099,6 +1178,9 @@ export type CustomerCreateWithoutUserInput = {
   notes?: string | null
   gdprConsent?: boolean
   gdprConsentAt?: Date | string | null
+  contactAllowed?: boolean
+  appointmentRemindersEnabled?: boolean
+  preferredContactChannel?: $Enums.CustomerContactPreference
   bookingConfirmationEmailTemplate?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1132,6 +1214,9 @@ export type CustomerUncheckedCreateWithoutUserInput = {
   notes?: string | null
   gdprConsent?: boolean
   gdprConsentAt?: Date | string | null
+  contactAllowed?: boolean
+  appointmentRemindersEnabled?: boolean
+  preferredContactChannel?: $Enums.CustomerContactPreference
   bookingConfirmationEmailTemplate?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1179,6 +1264,9 @@ export type CustomerUpdateWithoutUserInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gdprConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gdprConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  contactAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  appointmentRemindersEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  preferredContactChannel?: Prisma.EnumCustomerContactPreferenceFieldUpdateOperationsInput | $Enums.CustomerContactPreference
   bookingConfirmationEmailTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1212,6 +1300,9 @@ export type CustomerUncheckedUpdateWithoutUserInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gdprConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gdprConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  contactAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  appointmentRemindersEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  preferredContactChannel?: Prisma.EnumCustomerContactPreferenceFieldUpdateOperationsInput | $Enums.CustomerContactPreference
   bookingConfirmationEmailTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1243,6 +1334,9 @@ export type CustomerCreateWithoutWorkRequestsInput = {
   notes?: string | null
   gdprConsent?: boolean
   gdprConsentAt?: Date | string | null
+  contactAllowed?: boolean
+  appointmentRemindersEnabled?: boolean
+  preferredContactChannel?: $Enums.CustomerContactPreference
   bookingConfirmationEmailTemplate?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1277,6 +1371,9 @@ export type CustomerUncheckedCreateWithoutWorkRequestsInput = {
   notes?: string | null
   gdprConsent?: boolean
   gdprConsentAt?: Date | string | null
+  contactAllowed?: boolean
+  appointmentRemindersEnabled?: boolean
+  preferredContactChannel?: $Enums.CustomerContactPreference
   bookingConfirmationEmailTemplate?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1323,6 +1420,9 @@ export type CustomerUpdateWithoutWorkRequestsInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gdprConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gdprConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  contactAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  appointmentRemindersEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  preferredContactChannel?: Prisma.EnumCustomerContactPreferenceFieldUpdateOperationsInput | $Enums.CustomerContactPreference
   bookingConfirmationEmailTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1357,6 +1457,9 @@ export type CustomerUncheckedUpdateWithoutWorkRequestsInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gdprConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gdprConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  contactAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  appointmentRemindersEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  preferredContactChannel?: Prisma.EnumCustomerContactPreferenceFieldUpdateOperationsInput | $Enums.CustomerContactPreference
   bookingConfirmationEmailTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1387,6 +1490,9 @@ export type CustomerCreateWithoutTaxExemptionCertificateInput = {
   notes?: string | null
   gdprConsent?: boolean
   gdprConsentAt?: Date | string | null
+  contactAllowed?: boolean
+  appointmentRemindersEnabled?: boolean
+  preferredContactChannel?: $Enums.CustomerContactPreference
   bookingConfirmationEmailTemplate?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1421,6 +1527,9 @@ export type CustomerUncheckedCreateWithoutTaxExemptionCertificateInput = {
   notes?: string | null
   gdprConsent?: boolean
   gdprConsentAt?: Date | string | null
+  contactAllowed?: boolean
+  appointmentRemindersEnabled?: boolean
+  preferredContactChannel?: $Enums.CustomerContactPreference
   bookingConfirmationEmailTemplate?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1467,6 +1576,9 @@ export type CustomerUpdateWithoutTaxExemptionCertificateInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gdprConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gdprConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  contactAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  appointmentRemindersEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  preferredContactChannel?: Prisma.EnumCustomerContactPreferenceFieldUpdateOperationsInput | $Enums.CustomerContactPreference
   bookingConfirmationEmailTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1501,6 +1613,9 @@ export type CustomerUncheckedUpdateWithoutTaxExemptionCertificateInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gdprConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gdprConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  contactAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  appointmentRemindersEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  preferredContactChannel?: Prisma.EnumCustomerContactPreferenceFieldUpdateOperationsInput | $Enums.CustomerContactPreference
   bookingConfirmationEmailTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1531,6 +1646,9 @@ export type CustomerCreateWithoutPropertiesInput = {
   notes?: string | null
   gdprConsent?: boolean
   gdprConsentAt?: Date | string | null
+  contactAllowed?: boolean
+  appointmentRemindersEnabled?: boolean
+  preferredContactChannel?: $Enums.CustomerContactPreference
   bookingConfirmationEmailTemplate?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1565,6 +1683,9 @@ export type CustomerUncheckedCreateWithoutPropertiesInput = {
   notes?: string | null
   gdprConsent?: boolean
   gdprConsentAt?: Date | string | null
+  contactAllowed?: boolean
+  appointmentRemindersEnabled?: boolean
+  preferredContactChannel?: $Enums.CustomerContactPreference
   bookingConfirmationEmailTemplate?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1611,6 +1732,9 @@ export type CustomerUpdateWithoutPropertiesInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gdprConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gdprConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  contactAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  appointmentRemindersEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  preferredContactChannel?: Prisma.EnumCustomerContactPreferenceFieldUpdateOperationsInput | $Enums.CustomerContactPreference
   bookingConfirmationEmailTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1645,6 +1769,9 @@ export type CustomerUncheckedUpdateWithoutPropertiesInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gdprConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gdprConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  contactAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  appointmentRemindersEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  preferredContactChannel?: Prisma.EnumCustomerContactPreferenceFieldUpdateOperationsInput | $Enums.CustomerContactPreference
   bookingConfirmationEmailTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1675,6 +1802,9 @@ export type CustomerCreateWithoutOrdersInput = {
   notes?: string | null
   gdprConsent?: boolean
   gdprConsentAt?: Date | string | null
+  contactAllowed?: boolean
+  appointmentRemindersEnabled?: boolean
+  preferredContactChannel?: $Enums.CustomerContactPreference
   bookingConfirmationEmailTemplate?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1709,6 +1839,9 @@ export type CustomerUncheckedCreateWithoutOrdersInput = {
   notes?: string | null
   gdprConsent?: boolean
   gdprConsentAt?: Date | string | null
+  contactAllowed?: boolean
+  appointmentRemindersEnabled?: boolean
+  preferredContactChannel?: $Enums.CustomerContactPreference
   bookingConfirmationEmailTemplate?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1755,6 +1888,9 @@ export type CustomerUpdateWithoutOrdersInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gdprConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gdprConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  contactAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  appointmentRemindersEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  preferredContactChannel?: Prisma.EnumCustomerContactPreferenceFieldUpdateOperationsInput | $Enums.CustomerContactPreference
   bookingConfirmationEmailTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1789,6 +1925,9 @@ export type CustomerUncheckedUpdateWithoutOrdersInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gdprConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gdprConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  contactAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  appointmentRemindersEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  preferredContactChannel?: Prisma.EnumCustomerContactPreferenceFieldUpdateOperationsInput | $Enums.CustomerContactPreference
   bookingConfirmationEmailTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1819,6 +1958,9 @@ export type CustomerCreateWithoutCalculationsInput = {
   notes?: string | null
   gdprConsent?: boolean
   gdprConsentAt?: Date | string | null
+  contactAllowed?: boolean
+  appointmentRemindersEnabled?: boolean
+  preferredContactChannel?: $Enums.CustomerContactPreference
   bookingConfirmationEmailTemplate?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1853,6 +1995,9 @@ export type CustomerUncheckedCreateWithoutCalculationsInput = {
   notes?: string | null
   gdprConsent?: boolean
   gdprConsentAt?: Date | string | null
+  contactAllowed?: boolean
+  appointmentRemindersEnabled?: boolean
+  preferredContactChannel?: $Enums.CustomerContactPreference
   bookingConfirmationEmailTemplate?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1899,6 +2044,9 @@ export type CustomerUpdateWithoutCalculationsInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gdprConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gdprConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  contactAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  appointmentRemindersEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  preferredContactChannel?: Prisma.EnumCustomerContactPreferenceFieldUpdateOperationsInput | $Enums.CustomerContactPreference
   bookingConfirmationEmailTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1933,6 +2081,9 @@ export type CustomerUncheckedUpdateWithoutCalculationsInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gdprConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gdprConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  contactAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  appointmentRemindersEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  preferredContactChannel?: Prisma.EnumCustomerContactPreferenceFieldUpdateOperationsInput | $Enums.CustomerContactPreference
   bookingConfirmationEmailTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1963,6 +2114,9 @@ export type CustomerCreateWithoutStockMovementsInput = {
   notes?: string | null
   gdprConsent?: boolean
   gdprConsentAt?: Date | string | null
+  contactAllowed?: boolean
+  appointmentRemindersEnabled?: boolean
+  preferredContactChannel?: $Enums.CustomerContactPreference
   bookingConfirmationEmailTemplate?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1997,6 +2151,9 @@ export type CustomerUncheckedCreateWithoutStockMovementsInput = {
   notes?: string | null
   gdprConsent?: boolean
   gdprConsentAt?: Date | string | null
+  contactAllowed?: boolean
+  appointmentRemindersEnabled?: boolean
+  preferredContactChannel?: $Enums.CustomerContactPreference
   bookingConfirmationEmailTemplate?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2043,6 +2200,9 @@ export type CustomerUpdateWithoutStockMovementsInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gdprConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gdprConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  contactAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  appointmentRemindersEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  preferredContactChannel?: Prisma.EnumCustomerContactPreferenceFieldUpdateOperationsInput | $Enums.CustomerContactPreference
   bookingConfirmationEmailTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2077,6 +2237,9 @@ export type CustomerUncheckedUpdateWithoutStockMovementsInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gdprConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gdprConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  contactAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  appointmentRemindersEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  preferredContactChannel?: Prisma.EnumCustomerContactPreferenceFieldUpdateOperationsInput | $Enums.CustomerContactPreference
   bookingConfirmationEmailTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2107,6 +2270,9 @@ export type CustomerCreateWithoutExpensesInput = {
   notes?: string | null
   gdprConsent?: boolean
   gdprConsentAt?: Date | string | null
+  contactAllowed?: boolean
+  appointmentRemindersEnabled?: boolean
+  preferredContactChannel?: $Enums.CustomerContactPreference
   bookingConfirmationEmailTemplate?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2141,6 +2307,9 @@ export type CustomerUncheckedCreateWithoutExpensesInput = {
   notes?: string | null
   gdprConsent?: boolean
   gdprConsentAt?: Date | string | null
+  contactAllowed?: boolean
+  appointmentRemindersEnabled?: boolean
+  preferredContactChannel?: $Enums.CustomerContactPreference
   bookingConfirmationEmailTemplate?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2187,6 +2356,9 @@ export type CustomerUpdateWithoutExpensesInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gdprConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gdprConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  contactAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  appointmentRemindersEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  preferredContactChannel?: Prisma.EnumCustomerContactPreferenceFieldUpdateOperationsInput | $Enums.CustomerContactPreference
   bookingConfirmationEmailTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2221,6 +2393,9 @@ export type CustomerUncheckedUpdateWithoutExpensesInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gdprConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gdprConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  contactAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  appointmentRemindersEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  preferredContactChannel?: Prisma.EnumCustomerContactPreferenceFieldUpdateOperationsInput | $Enums.CustomerContactPreference
   bookingConfirmationEmailTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2251,6 +2426,9 @@ export type CustomerCreateWithoutProjectsInput = {
   notes?: string | null
   gdprConsent?: boolean
   gdprConsentAt?: Date | string | null
+  contactAllowed?: boolean
+  appointmentRemindersEnabled?: boolean
+  preferredContactChannel?: $Enums.CustomerContactPreference
   bookingConfirmationEmailTemplate?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2285,6 +2463,9 @@ export type CustomerUncheckedCreateWithoutProjectsInput = {
   notes?: string | null
   gdprConsent?: boolean
   gdprConsentAt?: Date | string | null
+  contactAllowed?: boolean
+  appointmentRemindersEnabled?: boolean
+  preferredContactChannel?: $Enums.CustomerContactPreference
   bookingConfirmationEmailTemplate?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2331,6 +2512,9 @@ export type CustomerUpdateWithoutProjectsInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gdprConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gdprConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  contactAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  appointmentRemindersEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  preferredContactChannel?: Prisma.EnumCustomerContactPreferenceFieldUpdateOperationsInput | $Enums.CustomerContactPreference
   bookingConfirmationEmailTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2365,6 +2549,9 @@ export type CustomerUncheckedUpdateWithoutProjectsInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gdprConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gdprConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  contactAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  appointmentRemindersEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  preferredContactChannel?: Prisma.EnumCustomerContactPreferenceFieldUpdateOperationsInput | $Enums.CustomerContactPreference
   bookingConfirmationEmailTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2396,6 +2583,9 @@ export type CustomerCreateManyTenantInput = {
   notes?: string | null
   gdprConsent?: boolean
   gdprConsentAt?: Date | string | null
+  contactAllowed?: boolean
+  appointmentRemindersEnabled?: boolean
+  preferredContactChannel?: $Enums.CustomerContactPreference
   bookingConfirmationEmailTemplate?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2419,6 +2609,9 @@ export type CustomerUpdateWithoutTenantInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gdprConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gdprConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  contactAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  appointmentRemindersEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  preferredContactChannel?: Prisma.EnumCustomerContactPreferenceFieldUpdateOperationsInput | $Enums.CustomerContactPreference
   bookingConfirmationEmailTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2452,6 +2645,9 @@ export type CustomerUncheckedUpdateWithoutTenantInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gdprConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gdprConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  contactAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  appointmentRemindersEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  preferredContactChannel?: Prisma.EnumCustomerContactPreferenceFieldUpdateOperationsInput | $Enums.CustomerContactPreference
   bookingConfirmationEmailTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2484,6 +2680,9 @@ export type CustomerUncheckedUpdateManyWithoutTenantInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gdprConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gdprConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  contactAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  appointmentRemindersEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  preferredContactChannel?: Prisma.EnumCustomerContactPreferenceFieldUpdateOperationsInput | $Enums.CustomerContactPreference
   bookingConfirmationEmailTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2594,6 +2793,9 @@ export type CustomerSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   notes?: boolean
   gdprConsent?: boolean
   gdprConsentAt?: boolean
+  contactAllowed?: boolean
+  appointmentRemindersEnabled?: boolean
+  preferredContactChannel?: boolean
   bookingConfirmationEmailTemplate?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -2630,6 +2832,9 @@ export type CustomerSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   notes?: boolean
   gdprConsent?: boolean
   gdprConsentAt?: boolean
+  contactAllowed?: boolean
+  appointmentRemindersEnabled?: boolean
+  preferredContactChannel?: boolean
   bookingConfirmationEmailTemplate?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -2657,6 +2862,9 @@ export type CustomerSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   notes?: boolean
   gdprConsent?: boolean
   gdprConsentAt?: boolean
+  contactAllowed?: boolean
+  appointmentRemindersEnabled?: boolean
+  preferredContactChannel?: boolean
   bookingConfirmationEmailTemplate?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -2684,12 +2892,15 @@ export type CustomerSelectScalar = {
   notes?: boolean
   gdprConsent?: boolean
   gdprConsentAt?: boolean
+  contactAllowed?: boolean
+  appointmentRemindersEnabled?: boolean
+  preferredContactChannel?: boolean
   bookingConfirmationEmailTemplate?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type CustomerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "userId" | "firstName" | "lastName" | "email" | "phone" | "company" | "customerType" | "contactPerson" | "vatId" | "taxNumber" | "billingStreet" | "billingZipCode" | "billingCity" | "taxNotes" | "notes" | "gdprConsent" | "gdprConsentAt" | "bookingConfirmationEmailTemplate" | "createdAt" | "updatedAt", ExtArgs["result"]["customer"]>
+export type CustomerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "userId" | "firstName" | "lastName" | "email" | "phone" | "company" | "customerType" | "contactPerson" | "vatId" | "taxNumber" | "billingStreet" | "billingZipCode" | "billingCity" | "taxNotes" | "notes" | "gdprConsent" | "gdprConsentAt" | "contactAllowed" | "appointmentRemindersEnabled" | "preferredContactChannel" | "bookingConfirmationEmailTemplate" | "createdAt" | "updatedAt", ExtArgs["result"]["customer"]>
 export type CustomerInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   user?: boolean | Prisma.Customer$userArgs<ExtArgs>
@@ -2746,6 +2957,12 @@ export type $CustomerPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     notes: string | null
     gdprConsent: boolean
     gdprConsentAt: Date | null
+    /**
+     * * Operativer Kontakt (Termine, Erinnerungen) — unabhängig von Marketing.
+     */
+    contactAllowed: boolean
+    appointmentRemindersEnabled: boolean
+    preferredContactChannel: $Enums.CustomerContactPreference
     /**
      * * Optionale eigene Buchungsbestätigung; null = Tenant-Standard aus Einstellungen
      */
@@ -3204,6 +3421,9 @@ export interface CustomerFieldRefs {
   readonly notes: Prisma.FieldRef<"Customer", 'String'>
   readonly gdprConsent: Prisma.FieldRef<"Customer", 'Boolean'>
   readonly gdprConsentAt: Prisma.FieldRef<"Customer", 'DateTime'>
+  readonly contactAllowed: Prisma.FieldRef<"Customer", 'Boolean'>
+  readonly appointmentRemindersEnabled: Prisma.FieldRef<"Customer", 'Boolean'>
+  readonly preferredContactChannel: Prisma.FieldRef<"Customer", 'CustomerContactPreference'>
   readonly bookingConfirmationEmailTemplate: Prisma.FieldRef<"Customer", 'String'>
   readonly createdAt: Prisma.FieldRef<"Customer", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Customer", 'DateTime'>

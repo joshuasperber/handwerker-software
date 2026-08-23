@@ -42,6 +42,9 @@ export type AppointmentMinAggregateOutputType = {
   isTentative: boolean | null
   notes: string | null
   reminderSentAt: Date | null
+  reminderStatus: $Enums.NotificationDeliveryStatus | null
+  reminderError: string | null
+  reminderChannel: $Enums.NotificationChannel | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -64,6 +67,9 @@ export type AppointmentMaxAggregateOutputType = {
   isTentative: boolean | null
   notes: string | null
   reminderSentAt: Date | null
+  reminderStatus: $Enums.NotificationDeliveryStatus | null
+  reminderError: string | null
+  reminderChannel: $Enums.NotificationChannel | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -86,6 +92,9 @@ export type AppointmentCountAggregateOutputType = {
   isTentative: number
   notes: number
   reminderSentAt: number
+  reminderStatus: number
+  reminderError: number
+  reminderChannel: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -110,6 +119,9 @@ export type AppointmentMinAggregateInputType = {
   isTentative?: true
   notes?: true
   reminderSentAt?: true
+  reminderStatus?: true
+  reminderError?: true
+  reminderChannel?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -132,6 +144,9 @@ export type AppointmentMaxAggregateInputType = {
   isTentative?: true
   notes?: true
   reminderSentAt?: true
+  reminderStatus?: true
+  reminderError?: true
+  reminderChannel?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -154,6 +169,9 @@ export type AppointmentCountAggregateInputType = {
   isTentative?: true
   notes?: true
   reminderSentAt?: true
+  reminderStatus?: true
+  reminderError?: true
+  reminderChannel?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -249,6 +267,9 @@ export type AppointmentGroupByOutputType = {
   isTentative: boolean
   notes: string | null
   reminderSentAt: Date | null
+  reminderStatus: $Enums.NotificationDeliveryStatus | null
+  reminderError: string | null
+  reminderChannel: $Enums.NotificationChannel | null
   createdAt: Date
   updatedAt: Date
   _count: AppointmentCountAggregateOutputType | null
@@ -292,6 +313,9 @@ export type AppointmentWhereInput = {
   isTentative?: Prisma.BoolFilter<"Appointment"> | boolean
   notes?: Prisma.StringNullableFilter<"Appointment"> | string | null
   reminderSentAt?: Prisma.DateTimeNullableFilter<"Appointment"> | Date | string | null
+  reminderStatus?: Prisma.EnumNotificationDeliveryStatusNullableFilter<"Appointment"> | $Enums.NotificationDeliveryStatus | null
+  reminderError?: Prisma.StringNullableFilter<"Appointment"> | string | null
+  reminderChannel?: Prisma.EnumNotificationChannelNullableFilter<"Appointment"> | $Enums.NotificationChannel | null
   createdAt?: Prisma.DateTimeFilter<"Appointment"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Appointment"> | Date | string
   tenant?: Prisma.XOR<Prisma.TenantScalarRelationFilter, Prisma.TenantWhereInput>
@@ -321,6 +345,9 @@ export type AppointmentOrderByWithRelationInput = {
   isTentative?: Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   reminderSentAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  reminderStatus?: Prisma.SortOrderInput | Prisma.SortOrder
+  reminderError?: Prisma.SortOrderInput | Prisma.SortOrder
+  reminderChannel?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   tenant?: Prisma.TenantOrderByWithRelationInput
@@ -353,6 +380,9 @@ export type AppointmentWhereUniqueInput = Prisma.AtLeast<{
   isTentative?: Prisma.BoolFilter<"Appointment"> | boolean
   notes?: Prisma.StringNullableFilter<"Appointment"> | string | null
   reminderSentAt?: Prisma.DateTimeNullableFilter<"Appointment"> | Date | string | null
+  reminderStatus?: Prisma.EnumNotificationDeliveryStatusNullableFilter<"Appointment"> | $Enums.NotificationDeliveryStatus | null
+  reminderError?: Prisma.StringNullableFilter<"Appointment"> | string | null
+  reminderChannel?: Prisma.EnumNotificationChannelNullableFilter<"Appointment"> | $Enums.NotificationChannel | null
   createdAt?: Prisma.DateTimeFilter<"Appointment"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Appointment"> | Date | string
   tenant?: Prisma.XOR<Prisma.TenantScalarRelationFilter, Prisma.TenantWhereInput>
@@ -382,6 +412,9 @@ export type AppointmentOrderByWithAggregationInput = {
   isTentative?: Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   reminderSentAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  reminderStatus?: Prisma.SortOrderInput | Prisma.SortOrder
+  reminderError?: Prisma.SortOrderInput | Prisma.SortOrder
+  reminderChannel?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.AppointmentCountOrderByAggregateInput
@@ -410,6 +443,9 @@ export type AppointmentScalarWhereWithAggregatesInput = {
   isTentative?: Prisma.BoolWithAggregatesFilter<"Appointment"> | boolean
   notes?: Prisma.StringNullableWithAggregatesFilter<"Appointment"> | string | null
   reminderSentAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Appointment"> | Date | string | null
+  reminderStatus?: Prisma.EnumNotificationDeliveryStatusNullableWithAggregatesFilter<"Appointment"> | $Enums.NotificationDeliveryStatus | null
+  reminderError?: Prisma.StringNullableWithAggregatesFilter<"Appointment"> | string | null
+  reminderChannel?: Prisma.EnumNotificationChannelNullableWithAggregatesFilter<"Appointment"> | $Enums.NotificationChannel | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Appointment"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Appointment"> | Date | string
 }
@@ -425,6 +461,9 @@ export type AppointmentCreateInput = {
   isTentative?: boolean
   notes?: string | null
   reminderSentAt?: Date | string | null
+  reminderStatus?: $Enums.NotificationDeliveryStatus | null
+  reminderError?: string | null
+  reminderChannel?: $Enums.NotificationChannel | null
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutAppointmentsInput
@@ -454,6 +493,9 @@ export type AppointmentUncheckedCreateInput = {
   isTentative?: boolean
   notes?: string | null
   reminderSentAt?: Date | string | null
+  reminderStatus?: $Enums.NotificationDeliveryStatus | null
+  reminderError?: string | null
+  reminderChannel?: $Enums.NotificationChannel | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -469,6 +511,9 @@ export type AppointmentUpdateInput = {
   isTentative?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reminderSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reminderStatus?: Prisma.NullableEnumNotificationDeliveryStatusFieldUpdateOperationsInput | $Enums.NotificationDeliveryStatus | null
+  reminderError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reminderChannel?: Prisma.NullableEnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutAppointmentsNestedInput
@@ -498,6 +543,9 @@ export type AppointmentUncheckedUpdateInput = {
   isTentative?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reminderSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reminderStatus?: Prisma.NullableEnumNotificationDeliveryStatusFieldUpdateOperationsInput | $Enums.NotificationDeliveryStatus | null
+  reminderError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reminderChannel?: Prisma.NullableEnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -520,6 +568,9 @@ export type AppointmentCreateManyInput = {
   isTentative?: boolean
   notes?: string | null
   reminderSentAt?: Date | string | null
+  reminderStatus?: $Enums.NotificationDeliveryStatus | null
+  reminderError?: string | null
+  reminderChannel?: $Enums.NotificationChannel | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -535,6 +586,9 @@ export type AppointmentUpdateManyMutationInput = {
   isTentative?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reminderSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reminderStatus?: Prisma.NullableEnumNotificationDeliveryStatusFieldUpdateOperationsInput | $Enums.NotificationDeliveryStatus | null
+  reminderError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reminderChannel?: Prisma.NullableEnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -557,6 +611,9 @@ export type AppointmentUncheckedUpdateManyInput = {
   isTentative?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reminderSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reminderStatus?: Prisma.NullableEnumNotificationDeliveryStatusFieldUpdateOperationsInput | $Enums.NotificationDeliveryStatus | null
+  reminderError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reminderChannel?: Prisma.NullableEnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -589,6 +646,9 @@ export type AppointmentCountOrderByAggregateInput = {
   isTentative?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   reminderSentAt?: Prisma.SortOrder
+  reminderStatus?: Prisma.SortOrder
+  reminderError?: Prisma.SortOrder
+  reminderChannel?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -611,6 +671,9 @@ export type AppointmentMaxOrderByAggregateInput = {
   isTentative?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   reminderSentAt?: Prisma.SortOrder
+  reminderStatus?: Prisma.SortOrder
+  reminderError?: Prisma.SortOrder
+  reminderChannel?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -633,6 +696,9 @@ export type AppointmentMinOrderByAggregateInput = {
   isTentative?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   reminderSentAt?: Prisma.SortOrder
+  reminderStatus?: Prisma.SortOrder
+  reminderError?: Prisma.SortOrder
+  reminderChannel?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -765,6 +831,14 @@ export type AppointmentUncheckedUpdateManyWithoutOrderNestedInput = {
 
 export type EnumAppointmentStatusFieldUpdateOperationsInput = {
   set?: $Enums.AppointmentStatus
+}
+
+export type NullableEnumNotificationDeliveryStatusFieldUpdateOperationsInput = {
+  set?: $Enums.NotificationDeliveryStatus | null
+}
+
+export type NullableEnumNotificationChannelFieldUpdateOperationsInput = {
+  set?: $Enums.NotificationChannel | null
 }
 
 export type AppointmentCreateNestedManyWithoutOrderPhaseInput = {
@@ -946,6 +1020,9 @@ export type AppointmentCreateWithoutTenantInput = {
   isTentative?: boolean
   notes?: string | null
   reminderSentAt?: Date | string | null
+  reminderStatus?: $Enums.NotificationDeliveryStatus | null
+  reminderError?: string | null
+  reminderChannel?: $Enums.NotificationChannel | null
   createdAt?: Date | string
   updatedAt?: Date | string
   order?: Prisma.OrderCreateNestedOneWithoutAppointmentsInput
@@ -973,6 +1050,9 @@ export type AppointmentUncheckedCreateWithoutTenantInput = {
   isTentative?: boolean
   notes?: string | null
   reminderSentAt?: Date | string | null
+  reminderStatus?: $Enums.NotificationDeliveryStatus | null
+  reminderError?: string | null
+  reminderChannel?: $Enums.NotificationChannel | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1024,6 +1104,9 @@ export type AppointmentScalarWhereInput = {
   isTentative?: Prisma.BoolFilter<"Appointment"> | boolean
   notes?: Prisma.StringNullableFilter<"Appointment"> | string | null
   reminderSentAt?: Prisma.DateTimeNullableFilter<"Appointment"> | Date | string | null
+  reminderStatus?: Prisma.EnumNotificationDeliveryStatusNullableFilter<"Appointment"> | $Enums.NotificationDeliveryStatus | null
+  reminderError?: Prisma.StringNullableFilter<"Appointment"> | string | null
+  reminderChannel?: Prisma.EnumNotificationChannelNullableFilter<"Appointment"> | $Enums.NotificationChannel | null
   createdAt?: Prisma.DateTimeFilter<"Appointment"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Appointment"> | Date | string
 }
@@ -1039,6 +1122,9 @@ export type AppointmentCreateWithoutEmployeeInput = {
   isTentative?: boolean
   notes?: string | null
   reminderSentAt?: Date | string | null
+  reminderStatus?: $Enums.NotificationDeliveryStatus | null
+  reminderError?: string | null
+  reminderChannel?: $Enums.NotificationChannel | null
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutAppointmentsInput
@@ -1066,6 +1152,9 @@ export type AppointmentUncheckedCreateWithoutEmployeeInput = {
   isTentative?: boolean
   notes?: string | null
   reminderSentAt?: Date | string | null
+  reminderStatus?: $Enums.NotificationDeliveryStatus | null
+  reminderError?: string | null
+  reminderChannel?: $Enums.NotificationChannel | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1107,6 +1196,9 @@ export type AppointmentCreateWithoutOrderInput = {
   isTentative?: boolean
   notes?: string | null
   reminderSentAt?: Date | string | null
+  reminderStatus?: $Enums.NotificationDeliveryStatus | null
+  reminderError?: string | null
+  reminderChannel?: $Enums.NotificationChannel | null
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutAppointmentsInput
@@ -1134,6 +1226,9 @@ export type AppointmentUncheckedCreateWithoutOrderInput = {
   isTentative?: boolean
   notes?: string | null
   reminderSentAt?: Date | string | null
+  reminderStatus?: $Enums.NotificationDeliveryStatus | null
+  reminderError?: string | null
+  reminderChannel?: $Enums.NotificationChannel | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1175,6 +1270,9 @@ export type AppointmentCreateWithoutOrderPhaseInput = {
   isTentative?: boolean
   notes?: string | null
   reminderSentAt?: Date | string | null
+  reminderStatus?: $Enums.NotificationDeliveryStatus | null
+  reminderError?: string | null
+  reminderChannel?: $Enums.NotificationChannel | null
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutAppointmentsInput
@@ -1202,6 +1300,9 @@ export type AppointmentUncheckedCreateWithoutOrderPhaseInput = {
   isTentative?: boolean
   notes?: string | null
   reminderSentAt?: Date | string | null
+  reminderStatus?: $Enums.NotificationDeliveryStatus | null
+  reminderError?: string | null
+  reminderChannel?: $Enums.NotificationChannel | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1243,6 +1344,9 @@ export type AppointmentCreateWithoutTeamInput = {
   isTentative?: boolean
   notes?: string | null
   reminderSentAt?: Date | string | null
+  reminderStatus?: $Enums.NotificationDeliveryStatus | null
+  reminderError?: string | null
+  reminderChannel?: $Enums.NotificationChannel | null
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutAppointmentsInput
@@ -1270,6 +1374,9 @@ export type AppointmentUncheckedCreateWithoutTeamInput = {
   isTentative?: boolean
   notes?: string | null
   reminderSentAt?: Date | string | null
+  reminderStatus?: $Enums.NotificationDeliveryStatus | null
+  reminderError?: string | null
+  reminderChannel?: $Enums.NotificationChannel | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1311,6 +1418,9 @@ export type AppointmentCreateWithoutVehicleInput = {
   isTentative?: boolean
   notes?: string | null
   reminderSentAt?: Date | string | null
+  reminderStatus?: $Enums.NotificationDeliveryStatus | null
+  reminderError?: string | null
+  reminderChannel?: $Enums.NotificationChannel | null
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutAppointmentsInput
@@ -1338,6 +1448,9 @@ export type AppointmentUncheckedCreateWithoutVehicleInput = {
   isTentative?: boolean
   notes?: string | null
   reminderSentAt?: Date | string | null
+  reminderStatus?: $Enums.NotificationDeliveryStatus | null
+  reminderError?: string | null
+  reminderChannel?: $Enums.NotificationChannel | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1379,6 +1492,9 @@ export type AppointmentCreateWithoutProjectInput = {
   isTentative?: boolean
   notes?: string | null
   reminderSentAt?: Date | string | null
+  reminderStatus?: $Enums.NotificationDeliveryStatus | null
+  reminderError?: string | null
+  reminderChannel?: $Enums.NotificationChannel | null
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutAppointmentsInput
@@ -1406,6 +1522,9 @@ export type AppointmentUncheckedCreateWithoutProjectInput = {
   isTentative?: boolean
   notes?: string | null
   reminderSentAt?: Date | string | null
+  reminderStatus?: $Enums.NotificationDeliveryStatus | null
+  reminderError?: string | null
+  reminderChannel?: $Enums.NotificationChannel | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1453,6 +1572,9 @@ export type AppointmentCreateManyTenantInput = {
   isTentative?: boolean
   notes?: string | null
   reminderSentAt?: Date | string | null
+  reminderStatus?: $Enums.NotificationDeliveryStatus | null
+  reminderError?: string | null
+  reminderChannel?: $Enums.NotificationChannel | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1468,6 +1590,9 @@ export type AppointmentUpdateWithoutTenantInput = {
   isTentative?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reminderSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reminderStatus?: Prisma.NullableEnumNotificationDeliveryStatusFieldUpdateOperationsInput | $Enums.NotificationDeliveryStatus | null
+  reminderError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reminderChannel?: Prisma.NullableEnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   order?: Prisma.OrderUpdateOneWithoutAppointmentsNestedInput
@@ -1495,6 +1620,9 @@ export type AppointmentUncheckedUpdateWithoutTenantInput = {
   isTentative?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reminderSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reminderStatus?: Prisma.NullableEnumNotificationDeliveryStatusFieldUpdateOperationsInput | $Enums.NotificationDeliveryStatus | null
+  reminderError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reminderChannel?: Prisma.NullableEnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1516,6 +1644,9 @@ export type AppointmentUncheckedUpdateManyWithoutTenantInput = {
   isTentative?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reminderSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reminderStatus?: Prisma.NullableEnumNotificationDeliveryStatusFieldUpdateOperationsInput | $Enums.NotificationDeliveryStatus | null
+  reminderError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reminderChannel?: Prisma.NullableEnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1537,6 +1668,9 @@ export type AppointmentCreateManyEmployeeInput = {
   isTentative?: boolean
   notes?: string | null
   reminderSentAt?: Date | string | null
+  reminderStatus?: $Enums.NotificationDeliveryStatus | null
+  reminderError?: string | null
+  reminderChannel?: $Enums.NotificationChannel | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1552,6 +1686,9 @@ export type AppointmentUpdateWithoutEmployeeInput = {
   isTentative?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reminderSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reminderStatus?: Prisma.NullableEnumNotificationDeliveryStatusFieldUpdateOperationsInput | $Enums.NotificationDeliveryStatus | null
+  reminderError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reminderChannel?: Prisma.NullableEnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutAppointmentsNestedInput
@@ -1579,6 +1716,9 @@ export type AppointmentUncheckedUpdateWithoutEmployeeInput = {
   isTentative?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reminderSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reminderStatus?: Prisma.NullableEnumNotificationDeliveryStatusFieldUpdateOperationsInput | $Enums.NotificationDeliveryStatus | null
+  reminderError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reminderChannel?: Prisma.NullableEnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1600,6 +1740,9 @@ export type AppointmentUncheckedUpdateManyWithoutEmployeeInput = {
   isTentative?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reminderSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reminderStatus?: Prisma.NullableEnumNotificationDeliveryStatusFieldUpdateOperationsInput | $Enums.NotificationDeliveryStatus | null
+  reminderError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reminderChannel?: Prisma.NullableEnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1621,6 +1764,9 @@ export type AppointmentCreateManyOrderInput = {
   isTentative?: boolean
   notes?: string | null
   reminderSentAt?: Date | string | null
+  reminderStatus?: $Enums.NotificationDeliveryStatus | null
+  reminderError?: string | null
+  reminderChannel?: $Enums.NotificationChannel | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1636,6 +1782,9 @@ export type AppointmentUpdateWithoutOrderInput = {
   isTentative?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reminderSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reminderStatus?: Prisma.NullableEnumNotificationDeliveryStatusFieldUpdateOperationsInput | $Enums.NotificationDeliveryStatus | null
+  reminderError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reminderChannel?: Prisma.NullableEnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutAppointmentsNestedInput
@@ -1663,6 +1812,9 @@ export type AppointmentUncheckedUpdateWithoutOrderInput = {
   isTentative?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reminderSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reminderStatus?: Prisma.NullableEnumNotificationDeliveryStatusFieldUpdateOperationsInput | $Enums.NotificationDeliveryStatus | null
+  reminderError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reminderChannel?: Prisma.NullableEnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1684,6 +1836,9 @@ export type AppointmentUncheckedUpdateManyWithoutOrderInput = {
   isTentative?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reminderSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reminderStatus?: Prisma.NullableEnumNotificationDeliveryStatusFieldUpdateOperationsInput | $Enums.NotificationDeliveryStatus | null
+  reminderError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reminderChannel?: Prisma.NullableEnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1705,6 +1860,9 @@ export type AppointmentCreateManyOrderPhaseInput = {
   isTentative?: boolean
   notes?: string | null
   reminderSentAt?: Date | string | null
+  reminderStatus?: $Enums.NotificationDeliveryStatus | null
+  reminderError?: string | null
+  reminderChannel?: $Enums.NotificationChannel | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1720,6 +1878,9 @@ export type AppointmentUpdateWithoutOrderPhaseInput = {
   isTentative?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reminderSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reminderStatus?: Prisma.NullableEnumNotificationDeliveryStatusFieldUpdateOperationsInput | $Enums.NotificationDeliveryStatus | null
+  reminderError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reminderChannel?: Prisma.NullableEnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutAppointmentsNestedInput
@@ -1747,6 +1908,9 @@ export type AppointmentUncheckedUpdateWithoutOrderPhaseInput = {
   isTentative?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reminderSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reminderStatus?: Prisma.NullableEnumNotificationDeliveryStatusFieldUpdateOperationsInput | $Enums.NotificationDeliveryStatus | null
+  reminderError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reminderChannel?: Prisma.NullableEnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1768,6 +1932,9 @@ export type AppointmentUncheckedUpdateManyWithoutOrderPhaseInput = {
   isTentative?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reminderSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reminderStatus?: Prisma.NullableEnumNotificationDeliveryStatusFieldUpdateOperationsInput | $Enums.NotificationDeliveryStatus | null
+  reminderError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reminderChannel?: Prisma.NullableEnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1789,6 +1956,9 @@ export type AppointmentCreateManyTeamInput = {
   isTentative?: boolean
   notes?: string | null
   reminderSentAt?: Date | string | null
+  reminderStatus?: $Enums.NotificationDeliveryStatus | null
+  reminderError?: string | null
+  reminderChannel?: $Enums.NotificationChannel | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1804,6 +1974,9 @@ export type AppointmentUpdateWithoutTeamInput = {
   isTentative?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reminderSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reminderStatus?: Prisma.NullableEnumNotificationDeliveryStatusFieldUpdateOperationsInput | $Enums.NotificationDeliveryStatus | null
+  reminderError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reminderChannel?: Prisma.NullableEnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutAppointmentsNestedInput
@@ -1831,6 +2004,9 @@ export type AppointmentUncheckedUpdateWithoutTeamInput = {
   isTentative?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reminderSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reminderStatus?: Prisma.NullableEnumNotificationDeliveryStatusFieldUpdateOperationsInput | $Enums.NotificationDeliveryStatus | null
+  reminderError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reminderChannel?: Prisma.NullableEnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1852,6 +2028,9 @@ export type AppointmentUncheckedUpdateManyWithoutTeamInput = {
   isTentative?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reminderSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reminderStatus?: Prisma.NullableEnumNotificationDeliveryStatusFieldUpdateOperationsInput | $Enums.NotificationDeliveryStatus | null
+  reminderError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reminderChannel?: Prisma.NullableEnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1873,6 +2052,9 @@ export type AppointmentCreateManyVehicleInput = {
   isTentative?: boolean
   notes?: string | null
   reminderSentAt?: Date | string | null
+  reminderStatus?: $Enums.NotificationDeliveryStatus | null
+  reminderError?: string | null
+  reminderChannel?: $Enums.NotificationChannel | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1888,6 +2070,9 @@ export type AppointmentUpdateWithoutVehicleInput = {
   isTentative?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reminderSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reminderStatus?: Prisma.NullableEnumNotificationDeliveryStatusFieldUpdateOperationsInput | $Enums.NotificationDeliveryStatus | null
+  reminderError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reminderChannel?: Prisma.NullableEnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutAppointmentsNestedInput
@@ -1915,6 +2100,9 @@ export type AppointmentUncheckedUpdateWithoutVehicleInput = {
   isTentative?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reminderSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reminderStatus?: Prisma.NullableEnumNotificationDeliveryStatusFieldUpdateOperationsInput | $Enums.NotificationDeliveryStatus | null
+  reminderError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reminderChannel?: Prisma.NullableEnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1936,6 +2124,9 @@ export type AppointmentUncheckedUpdateManyWithoutVehicleInput = {
   isTentative?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reminderSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reminderStatus?: Prisma.NullableEnumNotificationDeliveryStatusFieldUpdateOperationsInput | $Enums.NotificationDeliveryStatus | null
+  reminderError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reminderChannel?: Prisma.NullableEnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1957,6 +2148,9 @@ export type AppointmentCreateManyProjectInput = {
   isTentative?: boolean
   notes?: string | null
   reminderSentAt?: Date | string | null
+  reminderStatus?: $Enums.NotificationDeliveryStatus | null
+  reminderError?: string | null
+  reminderChannel?: $Enums.NotificationChannel | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1972,6 +2166,9 @@ export type AppointmentUpdateWithoutProjectInput = {
   isTentative?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reminderSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reminderStatus?: Prisma.NullableEnumNotificationDeliveryStatusFieldUpdateOperationsInput | $Enums.NotificationDeliveryStatus | null
+  reminderError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reminderChannel?: Prisma.NullableEnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutAppointmentsNestedInput
@@ -1999,6 +2196,9 @@ export type AppointmentUncheckedUpdateWithoutProjectInput = {
   isTentative?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reminderSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reminderStatus?: Prisma.NullableEnumNotificationDeliveryStatusFieldUpdateOperationsInput | $Enums.NotificationDeliveryStatus | null
+  reminderError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reminderChannel?: Prisma.NullableEnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -2020,6 +2220,9 @@ export type AppointmentUncheckedUpdateManyWithoutProjectInput = {
   isTentative?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reminderSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reminderStatus?: Prisma.NullableEnumNotificationDeliveryStatusFieldUpdateOperationsInput | $Enums.NotificationDeliveryStatus | null
+  reminderError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reminderChannel?: Prisma.NullableEnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -2044,6 +2247,9 @@ export type AppointmentSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   isTentative?: boolean
   notes?: boolean
   reminderSentAt?: boolean
+  reminderStatus?: boolean
+  reminderError?: boolean
+  reminderChannel?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
@@ -2073,6 +2279,9 @@ export type AppointmentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   isTentative?: boolean
   notes?: boolean
   reminderSentAt?: boolean
+  reminderStatus?: boolean
+  reminderError?: boolean
+  reminderChannel?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
@@ -2102,6 +2311,9 @@ export type AppointmentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   isTentative?: boolean
   notes?: boolean
   reminderSentAt?: boolean
+  reminderStatus?: boolean
+  reminderError?: boolean
+  reminderChannel?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
@@ -2131,11 +2343,14 @@ export type AppointmentSelectScalar = {
   isTentative?: boolean
   notes?: boolean
   reminderSentAt?: boolean
+  reminderStatus?: boolean
+  reminderError?: boolean
+  reminderChannel?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type AppointmentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "orderId" | "orderPhaseId" | "employeeId" | "title" | "color" | "projectId" | "teamId" | "vehicleId" | "addressText" | "startTime" | "endTime" | "status" | "isTentative" | "notes" | "reminderSentAt" | "createdAt" | "updatedAt", ExtArgs["result"]["appointment"]>
+export type AppointmentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "orderId" | "orderPhaseId" | "employeeId" | "title" | "color" | "projectId" | "teamId" | "vehicleId" | "addressText" | "startTime" | "endTime" | "status" | "isTentative" | "notes" | "reminderSentAt" | "reminderStatus" | "reminderError" | "reminderChannel" | "createdAt" | "updatedAt", ExtArgs["result"]["appointment"]>
 export type AppointmentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   order?: boolean | Prisma.Appointment$orderArgs<ExtArgs>
@@ -2205,6 +2420,9 @@ export type $AppointmentPayload<ExtArgs extends runtime.Types.Extensions.Interna
     isTentative: boolean
     notes: string | null
     reminderSentAt: Date | null
+    reminderStatus: $Enums.NotificationDeliveryStatus | null
+    reminderError: string | null
+    reminderChannel: $Enums.NotificationChannel | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["appointment"]>
@@ -2654,6 +2872,9 @@ export interface AppointmentFieldRefs {
   readonly isTentative: Prisma.FieldRef<"Appointment", 'Boolean'>
   readonly notes: Prisma.FieldRef<"Appointment", 'String'>
   readonly reminderSentAt: Prisma.FieldRef<"Appointment", 'DateTime'>
+  readonly reminderStatus: Prisma.FieldRef<"Appointment", 'NotificationDeliveryStatus'>
+  readonly reminderError: Prisma.FieldRef<"Appointment", 'String'>
+  readonly reminderChannel: Prisma.FieldRef<"Appointment", 'NotificationChannel'>
   readonly createdAt: Prisma.FieldRef<"Appointment", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Appointment", 'DateTime'>
 }

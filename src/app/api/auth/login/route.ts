@@ -6,7 +6,7 @@ import {
   applySessionCookie,
 } from "@/lib/auth";
 import { apiSuccess, apiError, getClientIp } from "@/lib/api";
-import { canUsePreferredViewCookie, getRoleHomePath } from "@/lib/role-routing";
+import { getRoleHomePath } from "@/lib/role-routing";
 import { WORK_VIEW_COOKIE } from "@/lib/work-view";
 import {
   isLoginRateLimited,
@@ -115,12 +115,8 @@ export async function POST(request: NextRequest) {
 
     const token = await createSession(user);
 
-    const { parseAppViewMode } = await import("@/lib/work-view");
-    const cookieView = parseAppViewMode(request.cookies.get(WORK_VIEW_COOKIE)?.value);
-    const preferredView = canUsePreferredViewCookie(user.role) ? cookieView : null;
     const home = getRoleHomePath(user.role, {
       mustChangePassword: user.mustChangePassword,
-      preferredView,
     });
 
     // Cookie an Startansicht anpassen — verhindert, dass Monteure in „verwaltung“ hängen bleiben.

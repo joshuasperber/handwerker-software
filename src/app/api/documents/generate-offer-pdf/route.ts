@@ -63,6 +63,6 @@ export async function POST(request: Request) {
     document: doc,
     html: renderSnapshotHtml(snapshot),
     breakdownHtml: buildInternalBreakdownHtml(loaded.calc, doc.documentNumber),
-    message: "Angebot erstellt – Drucken über Browser möglich",
+    message: "Angebot erstellt",
   });
 }

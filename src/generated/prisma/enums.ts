@@ -96,10 +96,33 @@ export type AppointmentStatus = (typeof AppointmentStatus)[keyof typeof Appointm
 export const NotificationChannel = {
   EMAIL: 'EMAIL',
   SMS: 'SMS',
+  WHATSAPP: 'WHATSAPP',
   IN_APP: 'IN_APP'
 } as const
 
 export type NotificationChannel = (typeof NotificationChannel)[keyof typeof NotificationChannel]
+
+
+export const NotificationDeliveryStatus = {
+  SENT: 'SENT',
+  FAILED: 'FAILED',
+  NO_CONTACT: 'NO_CONTACT',
+  INVALID_PHONE: 'INVALID_PHONE',
+  DISABLED: 'DISABLED',
+  ALREADY_SENT: 'ALREADY_SENT'
+} as const
+
+export type NotificationDeliveryStatus = (typeof NotificationDeliveryStatus)[keyof typeof NotificationDeliveryStatus]
+
+
+export const CustomerContactPreference = {
+  AUTO: 'AUTO',
+  EMAIL: 'EMAIL',
+  SMS: 'SMS',
+  PHONE: 'PHONE'
+} as const
+
+export type CustomerContactPreference = (typeof CustomerContactPreference)[keyof typeof CustomerContactPreference]
 
 
 export const NotificationType = {

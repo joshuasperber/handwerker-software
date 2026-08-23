@@ -43,5 +43,9 @@ describe("getDashboardNavItems", () => {
     const hrefs = getDashboardNavItems("ADMIN").map((item) => item.href);
     assert.equal(hrefs.includes("/dashboard/auftraege"), true);
     assert.equal(hrefs.includes("/dashboard/nachrichten"), true);
+    assert.equal(hrefs.includes("/dashboard/inventar"), true);
+    assert.equal(hrefs.includes("/dashboard/einkauf"), true);
+    assert.equal(hrefs.includes("/dashboard/finanzuebersicht"), true);
+    assert.equal(hrefs.includes("/dashboard/einstellungen/betrieb"), true);
   });
 });
