@@ -103,6 +103,7 @@ export function ExpenseFormDialog({
 
   useEffect(() => {
     if (!open) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- Geschlossener Dialog verwirft den Formularentwurf.
       resetForm();
       return;
     }

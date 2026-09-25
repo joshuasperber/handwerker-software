@@ -12,7 +12,8 @@ import {
   type FinanceOverview,
   type FinancePeriodPreset,
 } from "./types";
-import { INVESTMENT_INCLUDE, toInvestmentDTO } from "./investment-dto";
+import { INVESTMENT_INCLUDE } from "./investment-dto";
+import { enrichInvestments } from "./investment-planning";
 import type { ExpenseCategory } from "@/generated/prisma/client";
 
 const INVOICE_INCLUDE = {
@@ -187,7 +188,10 @@ export async function getFinanceOverview(
       orderBy: { expenseDate: "desc" },
     }),
     prisma.plannedInvestment.findMany({
-      where: { tenantId, status: { in: ["PLANNED", "POSTPONED"] } },
+      where: {
+        tenantId,
+        status: { in: ["PLANNED", "ACTIVE", "POSTPONED", "GOAL_REACHED"] },
+      },
       include: INVESTMENT_INCLUDE,
       orderBy: { plannedDate: "asc" },
     }),
@@ -349,7 +353,7 @@ export async function getFinanceOverview(
     return s + m.salePriceNet * m.quantity;
   }, 0);
 
-  const investmentDtos = plannedInvestments.map(toInvestmentDTO);
+  const investmentDtos = await enrichInvestments(tenantId, plannedInvestments, now);
 
   const targetNet = settings.monthlyProfitTargetNet;
   const targetDelta =

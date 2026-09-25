@@ -19,13 +19,36 @@ export async function GET(
     select: {
       id: true,
       orderNumber: true,
+      title: true,
       status: true,
       description: true,
+      customer: {
+        select: {
+          firstName: true,
+          lastName: true,
+          company: true,
+          contactPerson: true,
+          phone: true,
+        },
+      },
+      property: {
+        select: {
+          label: true,
+          street: true,
+          zipCode: true,
+          city: true,
+        },
+      },
+      checklists: {
+        orderBy: { sortOrder: "asc" },
+        select: { id: true, label: true, isChecked: true },
+      },
       materialLines: {
         select: {
           id: true,
           name: true,
           quantityRequired: true,
+          quantityConsumed: true,
           unit: true,
           isTool: true,
         },
@@ -34,7 +57,8 @@ export async function GET(
         select: { name: true, quantity: true, unit: true },
       },
       timeEntries: {
-        select: { startTime: true, endTime: true },
+        where: { employeeId: access.employee.id },
+        select: { id: true, startTime: true, endTime: true, breakMinutes: true },
         orderBy: { startTime: "desc" },
         take: 20,
       },

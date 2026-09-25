@@ -389,7 +389,7 @@ export function ScheduleCalendar({
     const start = new Date(apt.startTime);
     setResizingId(apt.id);
 
-    const onMove = (_ev: PointerEvent) => {
+    const onMove = () => {
       /* Speichern erst beim Loslassen – Snap auf 15 Min. */
     };
 

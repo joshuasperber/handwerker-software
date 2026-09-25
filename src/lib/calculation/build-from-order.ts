@@ -77,7 +77,9 @@ export async function createCalculationFromOrder(tenantId: string, orderId: stri
     }
   }
 
-  if (laborCreates.length === 0 && additionalCreates.length === 0) {
+  const fixedOnly = Boolean(order.useFixedPrice);
+  // Festpreis: keine erfundene Grundkalkulation (2 h, Risiko, Gewinn).
+  if (!fixedOnly && laborCreates.length === 0 && additionalCreates.length === 0) {
     laborCreates.push({
       description: order.title ?? order.orderNumber,
       laborType: "ONSITE_WORK",
@@ -121,39 +123,41 @@ export async function createCalculationFromOrder(tenantId: string, orderId: stri
       ...(laborCreates.length ? { laborItems: { create: laborCreates } } : {}),
       ...(materialCreates.length ? { materialItems: { create: materialCreates } } : {}),
       ...(additionalCreates.length ? { additionalItems: { create: additionalCreates } } : {}),
-      travelCost: {
-        create: {
-          startAddress: startAddress || "Betrieb",
-          destinationAddress,
-          distanceKm: 15,
-          estimatedDriveTimeHours: 0.5,
-          kilometerRateNet: kmRate,
-          travelHourlyRateNet: travelRate,
-          // Zone des Kundenstandorts vorbelegen (Kunde → Standort → Zone → Anfahrtskosten).
-          // recalculateCalculationRecord ermittelt daraus den korrekten Preis/Modus.
-          selectedZoneId: order.property.travelZoneId ?? undefined,
-          calculationMode: order.property.travelZoneId ? "ZONE_FLAT_FEE" : "FORMULA",
-        },
-      },
-      riskSettings: {
-        create: {
-          riskLevel: "NORMAL",
-          riskPercent: company?.defaultRiskPercent ?? 7,
-        },
-      },
-      profitSettings: {
-        create: {
-          profitPercent: company?.defaultProfitPercent ?? 12,
-          profitStrategy: "PERCENT",
-        },
-      },
-      incomeTaxSettings: {
-        create: {
-          estimatedIncomeTaxPercent: company?.defaultIncomeTaxPercent ?? 30,
-          productiveHoursPerMonth: overhead?.productiveHoursPerMonth ?? 160,
-          allocationMode: "PROFIT_CHECK_ONLY",
-        },
-      },
+      ...(!fixedOnly
+        ? {
+            travelCost: {
+              create: {
+                startAddress: startAddress || "Betrieb",
+                destinationAddress,
+                distanceKm: 15,
+                estimatedDriveTimeHours: 0.5,
+                kilometerRateNet: kmRate,
+                travelHourlyRateNet: travelRate,
+                selectedZoneId: order.property.travelZoneId ?? undefined,
+                calculationMode: order.property.travelZoneId ? "ZONE_FLAT_FEE" : "FORMULA",
+              },
+            },
+            riskSettings: {
+              create: {
+                riskLevel: "NORMAL" as const,
+                riskPercent: company?.defaultRiskPercent ?? 7,
+              },
+            },
+            profitSettings: {
+              create: {
+                profitPercent: company?.defaultProfitPercent ?? 12,
+                profitStrategy: "PERCENT" as const,
+              },
+            },
+            incomeTaxSettings: {
+              create: {
+                estimatedIncomeTaxPercent: company?.defaultIncomeTaxPercent ?? 30,
+                productiveHoursPerMonth: overhead?.productiveHoursPerMonth ?? 160,
+                allocationMode: "PROFIT_CHECK_ONLY" as const,
+              },
+            },
+          }
+        : {}),
       vatSettings: {
         create: {
           vatRatePercent: company?.defaultVatRate ?? 19,

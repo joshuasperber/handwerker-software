@@ -1,12 +1,14 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 import {
+  applyFixedCustomerTotals,
   compareFixedPrice,
   resolveFixedPriceLabel,
   DEFAULT_FIXED_PRICE_LABEL,
   buildFixedPriceDocumentLines,
   resolveFixedPriceDisplayMode,
 } from "../src/lib/calculation/fixed-price";
+import { decideInvoiceWrite } from "../src/lib/documents/invoice-lifecycle";
 import { getVisibleLineItems } from "../src/lib/documents/line-items";
 import type { DocumentCalcInput } from "../src/lib/documents/build-document-html";
 
@@ -60,6 +62,46 @@ describe("Festpreis – Vergleich", () => {
     assert.equal(c.difference, 100);
     assert.equal(c.estimatedProfit, 150);
     assert.ok(c.marginPercent != null && c.marginPercent > 0);
+  });
+
+  it("setzt den Kundenpreis ausschließlich auf den Festpreis", () => {
+    const totals = applyFixedCustomerTotals({
+      fixedPriceNet: 2500,
+      directCosts: 1500,
+      engineNetSalesPrice: 3200,
+      vatRatePercent: 19,
+    });
+    assert.equal(totals.netSalesPrice, 2500);
+    assert.equal(totals.grossSalesPrice, 2975);
+    assert.equal(totals.profitAmount, 1000);
+    assert.notEqual(totals.netSalesPrice, totals.engineNetSalesPrice);
+  });
+
+  it("beschreibt Leistungen und hält die Summe auf dem Festpreis", () => {
+    const lines = buildFixedPriceDocumentLines({
+      fixedPriceNet: 2500,
+      fixedPriceLabel: "Vereinbarter Festpreis",
+      fixedPriceDisplayMode: "DESCRIPTION_ONLY",
+      source: {
+        ...baseCalc(),
+        fixedPricePositions: [
+          { description: "Demontage bestehender Tür", quantity: 1, unitPriceNet: null },
+          { description: "Montage", quantity: 1, unitPriceNet: null },
+        ],
+      },
+    });
+    assert.ok(lines.some((l) => l.label === "Demontage bestehender Tür" && l.amount == null));
+    const total = lines.find((l) => l.emphasis);
+    assert.equal(total?.amount, 2500);
+  });
+
+  it("aktualisiert einen Rechnungsentwurf und blockiert eine versendete Rechnung", () => {
+    const draft = { id: "1", documentNumber: "RE-1", status: "ENTWURF" };
+    assert.equal(decideInvoiceWrite(draft, undefined), "update");
+    assert.equal(decideInvoiceWrite(draft, "create"), "create");
+    const sent = { id: "2", documentNumber: "RE-2", status: "OFFEN", sentAt: "2026-09-01" };
+    assert.equal(decideInvoiceWrite(sent, undefined), "conflict");
+    assert.equal(decideInvoiceWrite(null, undefined), "create");
   });
 
   it("ohne Festpreis bleibt Kundennetto = Kalkulation", () => {

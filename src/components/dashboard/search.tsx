@@ -96,6 +96,7 @@ export function DashboardSearch({ className }: { className?: string }) {
 
   useEffect(() => {
     if (!open && !debouncedQuery) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Debounce/Öffnen startet den asynchronen Suchlauf.
     void runSearch(debouncedQuery);
   }, [debouncedQuery, open, runSearch]);
 

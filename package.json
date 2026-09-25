@@ -19,7 +19,12 @@
     "docker:up": "docker compose up -d",
     "docker:down": "docker compose down",
     "test": "tsx --test tests/*.test.ts",
+    "test:e2e:staging": "tsx scripts/e2e-staging-core.ts",
     "db:migrate:deploy": "prisma migrate deploy",
+    "db:target": "tsx scripts/show-supabase-target.ts",
+    "db:security:dry-run": "npx supabase db push --dry-run",
+    "db:security:push": "npx supabase db push",
+    "db:verify:hardening": "tsx scripts/verify-database-hardening.ts",
     "db:baseline": "prisma db execute --file prisma/migrations/20250612120000_add_performance_indexes/migration.sql && prisma migrate resolve --applied 20250612120000_add_performance_indexes",
     "auth:migrate": "tsx scripts/migrate-supabase-auth.ts",
     "tenant:create": "tsx scripts/create-tenant.ts"

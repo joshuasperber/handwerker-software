@@ -2,7 +2,8 @@ import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAuth, apiSuccess, apiError, NO_STORE_HEADERS } from "@/lib/api";
 import { investmentInputSchema } from "@/lib/finance/schemas";
-import { INVESTMENT_INCLUDE, toInvestmentDTO } from "@/lib/finance/investment-dto";
+import { INVESTMENT_INCLUDE } from "@/lib/finance/investment-dto";
+import { enrichInvestments } from "@/lib/finance/investment-planning";
 import { resolveInvestmentLinks } from "@/lib/finance/investment-links";
 
 export async function PATCH(
@@ -19,12 +20,13 @@ export async function PATCH(
   if (!existing) return apiError("Investition nicht gefunden", 404);
 
   const body = await request.json();
-  const parsed = investmentInputSchema.partial().safeParse(body);
+  const parsed = investmentInputSchema.safeParse(body);
   if (!parsed.success) {
     return apiError(parsed.error.issues[0]?.message ?? "Ungültige Eingabe");
   }
 
   const data = parsed.data;
+  const keys = new Set(Object.keys(body ?? {}));
   const links =
     data.machineId !== undefined || data.articleId !== undefined || data.projectId !== undefined
       ? await resolveInvestmentLinks(auth.tenantId, {
@@ -45,7 +47,17 @@ export async function PATCH(
       }),
       ...(data.category !== undefined && { category: data.category }),
       ...(data.note !== undefined && { note: data.note }),
-      ...(data.status !== undefined && { status: data.status }),
+      ...(keys.has("status") && data.status !== undefined && { status: data.status }),
+      ...(keys.has("savedAmount") && data.savedAmount !== undefined && { savedAmount: data.savedAmount }),
+      ...(keys.has("startDate") && {
+        startDate: data.startDate ? new Date(data.startDate) : null,
+      }),
+      ...(keys.has("savingsModel") && data.savingsModel !== undefined && { savingsModel: data.savingsModel }),
+      ...(keys.has("percentOfRevenue") && { percentOfRevenue: data.percentOfRevenue ?? null }),
+      ...(keys.has("amountPerOrder") && { amountPerOrder: data.amountPerOrder ?? null }),
+      ...(keys.has("monthlyAmount") && { monthlyAmount: data.monthlyAmount ?? null }),
+      ...(keys.has("calculationBasis") &&
+        data.calculationBasis !== undefined && { calculationBasis: data.calculationBasis }),
       ...(links && {
         machineId: links.machineId,
         articleId: links.articleId,
@@ -55,7 +67,8 @@ export async function PATCH(
     include: INVESTMENT_INCLUDE,
   });
 
-  return apiSuccess(toInvestmentDTO(item), 200, NO_STORE_HEADERS);
+  const [dto] = await enrichInvestments(auth.tenantId, [item]);
+  return apiSuccess(dto, 200, NO_STORE_HEADERS);
 }
 
 export async function DELETE(

@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAuth, apiSuccess, apiError } from "@/lib/api";
-import { validateZonePayload } from "../route";
+import { validateZonePayload } from "@/lib/travel-zone-validation";
 
 export async function PATCH(
   request: NextRequest,

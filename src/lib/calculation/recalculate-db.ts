@@ -10,6 +10,7 @@ import {
   calcTravelTotal,
 } from "./formulas";
 import type { OverheadMode } from "./types";
+import { applyFixedCustomerTotals } from "./fixed-price";
 
 export async function recalculateCalculationRecord(calculationId: string, tenantId: string) {
   const calc = await prisma.calculation.findFirst({
@@ -210,6 +211,21 @@ export async function recalculateCalculationRecord(calculationId: string, tenant
 
   const result = runCalculation(input);
 
+  const fixedActive =
+    Boolean(calc.useFixedPrice) &&
+    calc.fixedPriceNet != null &&
+    Number.isFinite(calc.fixedPriceNet);
+  const customer = fixedActive
+    ? applyFixedCustomerTotals({
+        fixedPriceNet: Number(calc.fixedPriceNet),
+        directCosts: result.directCosts,
+        engineNetSalesPrice: result.netSalesPrice,
+        vatRatePercent: calc.vatSettings?.vatRatePercent ?? 19,
+        reverseCharge: Boolean(calc.vatSettings?.reverseCharge),
+        taxExempt: Boolean(calc.vatSettings?.taxExempt),
+      })
+    : null;
+
   const updated = await prisma.calculation.update({
     where: { id: calculationId },
     data: {
@@ -221,23 +237,36 @@ export async function recalculateCalculationRecord(calculationId: string, tenant
       travelTotal: result.travelTotal,
       additionalTotal: result.additionalTotal,
       directCosts: result.directCosts,
-      overheadAmount: result.overheadAmount,
-      incomeTaxOwnerAmount: result.incomeTaxOwnerAmount,
-      subtotalBeforeRisk: result.subtotalBeforeRisk,
-      riskAmount: result.riskAmount,
-      subtotalAfterRisk: result.subtotalAfterRisk,
-      profitAmount: result.profitAmount,
-      netSalesPrice: result.netSalesPrice,
-      vatAmount: result.vatAmount,
-      grossSalesPrice: result.grossSalesPrice,
-      contributionMargin: result.contributionMargin,
-      contributionMarginRate: result.contributionMarginRate,
-      marginPercent: result.marginPercent,
-      minimumPrice: result.minimumPrice,
-      profitAfterTaxEstimate: result.profitAfterTaxEstimate,
+      overheadAmount: customer ? 0 : result.overheadAmount,
+      incomeTaxOwnerAmount: customer ? 0 : result.incomeTaxOwnerAmount,
+      subtotalBeforeRisk: customer ? result.directCosts : result.subtotalBeforeRisk,
+      riskAmount: customer ? 0 : result.riskAmount,
+      subtotalAfterRisk: customer ? result.directCosts : result.subtotalAfterRisk,
+      profitAmount: customer ? customer.profitAmount : result.profitAmount,
+      netSalesPrice: customer ? customer.netSalesPrice : result.netSalesPrice,
+      vatAmount: customer ? customer.vatAmount : result.vatAmount,
+      grossSalesPrice: customer ? customer.grossSalesPrice : result.grossSalesPrice,
+      engineNetSalesPrice: customer ? customer.engineNetSalesPrice : null,
+      contributionMargin: customer ? customer.contributionMargin : result.contributionMargin,
+      contributionMarginRate: customer
+        ? customer.netSalesPrice > 0
+          ? Math.round((customer.contributionMargin / customer.netSalesPrice) * 10000) / 100
+          : 0
+        : result.contributionMarginRate,
+      marginPercent: customer
+        ? customer.netSalesPrice > 0
+          ? Math.round((customer.profitAmount / customer.netSalesPrice) * 10000) / 100
+          : 0
+        : result.marginPercent,
+      minimumPrice: customer ? customer.directCosts : result.minimumPrice,
+      profitAfterTaxEstimate: customer ? customer.profitAmount : result.profitAfterTaxEstimate,
       totalBillableHours: result.totalBillableHours,
       profitabilityStatus: result.profitabilityStatus,
-      snapshotJson: result as object,
+      snapshotJson: {
+        ...result,
+        customerPriceSource: customer ? "FIXED" : "CALCULATED",
+        engineNetSalesPrice: result.netSalesPrice,
+      } as object,
     },
     include: {
       laborItems: {

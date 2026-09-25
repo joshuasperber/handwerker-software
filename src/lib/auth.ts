@@ -44,6 +44,38 @@ export async function verifyPassword(
   return bcrypt.compare(password, hash);
 }
 
+/**
+ * Session inklusive aktuellem Datenbankstatus laden.
+ *
+ * Layouts dürfen sich nicht allein auf die signierte, bis zu sieben Tage alte
+ * JWT-Rolle verlassen: deaktivierte Konten und geänderte Rollen müssen sofort
+ * aus geschützten Oberflächen ausgesperrt werden.
+ */
+export async function getActiveSession(): Promise<SessionUser | null> {
+  const session = await getSession();
+  if (!session) return null;
+
+  const user = await prisma.user.findFirst({
+    where: { id: session.id, tenantId: session.tenantId, isActive: true },
+    select: {
+      role: true,
+      sessionVersion: true,
+      canManageRoles: true,
+      avatarUrl: true,
+    },
+  });
+  if (!user) return null;
+  if (user.role !== session.role) return null;
+  if (user.sessionVersion !== (session.sessionVersion ?? 0)) return null;
+
+  return {
+    ...session,
+    role: user.role,
+    canManageRoles: user.canManageRoles,
+    avatarUrl: user.avatarUrl,
+  };
+}
+
 function toSessionUser(user: {
   id: string;
   tenantId: string;

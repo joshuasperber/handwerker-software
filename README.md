@@ -11,7 +11,7 @@ Multi-Tenant SaaS-Plattform für kleine und mittlere Handwerksbetriebe mit Onlin
 | Datenbank | PostgreSQL + Prisma ORM |
 | Auth | Supabase Auth + Prisma-User-Profil |
 | Dateispeicher | S3-kompatibel (MinIO lokal / Supabase Storage) |
-| Benachrichtigungen | E-Mail (SMTP) + SMS (Twilio) |
+| Benachrichtigungen | E-Mail (SMTP) + SMS (seven.io) |
 
 ## Module
 
@@ -120,6 +120,19 @@ Vorbereitet für:
 - Materialverwaltung / Lager
 - Kundenportal
 - Multi-Tenant Billing
+
+## Staging-Prüfung vor einem Release
+
+Der schreibende Kernworkflow-Test läuft ausschließlich nach bewusster Freigabe gegen ein
+isoliertes Staging-System. Er prüft Login, Kunde, Auftrag, Disposition, Monteur-Status,
+Zeiterfassung, Rechnung, Zahlung sowie – sofern konfiguriert – einen echten Storage-Upload.
+
+```bash
+E2E_CONFIRM_WRITES=1 npm run test:e2e:staging
+```
+
+Die dafür nötigen `E2E_*`-Variablen sind in `.env.example` dokumentiert. Erzeugte Datensätze
+tragen einen `[E2E-…]`-Marker und bleiben für die Nachvollziehbarkeit im Staging erhalten.
 
 ## DSGVO
 

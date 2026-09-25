@@ -1,4 +1,3 @@
-import { prisma } from "@/lib/prisma";
 import { requireAuth, apiSuccess } from "@/lib/api";
 import { getSystemHealth } from "@/lib/system/health-checks";
 

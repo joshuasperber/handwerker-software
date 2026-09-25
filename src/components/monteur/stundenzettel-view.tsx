@@ -161,6 +161,7 @@ export function StundenzettelView({ title = "Stundenzettel" }: { title?: string 
       const s = splitDateTimeLocal(toLocalDateTimeValue(start));
       workDay.date = s.date;
       workDay.startTime = s.time;
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- Externer Startwert initialisiert bewusst den editierbaren Zeitraum.
       setDayDate(s.date);
       setWeekStart(format(startOfWeek(new Date(s.date), { weekStartsOn: 1 }), "yyyy-MM-dd"));
     }
@@ -199,6 +200,7 @@ export function StundenzettelView({ title = "Stundenzettel" }: { title?: string 
   }, [loadEntries]);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Scope-Wechsel startet den asynchronen Auftragsabruf.
     setOrdersLoading(true);
     fetchJson<{
       orders: OrderOption[];

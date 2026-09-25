@@ -97,6 +97,7 @@ export default function SicherheitPage() {
   }, []);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Initialer, asynchroner Einstellungen-Abruf.
     void load();
     fetchJson<{ privacyPolicyUrl: string | null; imprintUrl: string | null }>("/api/tenant/settings").then(
       (res) => {

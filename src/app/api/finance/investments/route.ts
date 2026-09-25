@@ -2,7 +2,8 @@ import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAuth, apiSuccess, apiError, NO_STORE_HEADERS } from "@/lib/api";
 import { investmentInputSchema } from "@/lib/finance/schemas";
-import { INVESTMENT_INCLUDE, toInvestmentDTO } from "@/lib/finance/investment-dto";
+import { INVESTMENT_INCLUDE } from "@/lib/finance/investment-dto";
+import { enrichInvestments } from "@/lib/finance/investment-planning";
 import { resolveInvestmentLinks } from "@/lib/finance/investment-links";
 
 export async function GET() {
@@ -15,7 +16,8 @@ export async function GET() {
     orderBy: [{ status: "asc" }, { plannedDate: "asc" }],
   });
 
-  return apiSuccess(items.map(toInvestmentDTO), 200, NO_STORE_HEADERS);
+  const enriched = await enrichInvestments(auth.tenantId, items);
+  return apiSuccess(enriched, 200, NO_STORE_HEADERS);
 }
 
 export async function POST(request: NextRequest) {
@@ -41,6 +43,13 @@ export async function POST(request: NextRequest) {
       category: data.category,
       note: data.note ?? null,
       status: data.status,
+      savedAmount: data.savedAmount ?? 0,
+      startDate: data.startDate ? new Date(data.startDate) : null,
+      savingsModel: data.savingsModel,
+      percentOfRevenue: data.percentOfRevenue ?? null,
+      amountPerOrder: data.amountPerOrder ?? null,
+      monthlyAmount: data.monthlyAmount ?? null,
+      calculationBasis: data.calculationBasis,
       machineId: links.machineId,
       articleId: links.articleId,
       projectId: links.projectId,
@@ -48,5 +57,6 @@ export async function POST(request: NextRequest) {
     include: INVESTMENT_INCLUDE,
   });
 
-  return apiSuccess(toInvestmentDTO(item), 201, NO_STORE_HEADERS);
+  const [dto] = await enrichInvestments(auth.tenantId, [item]);
+  return apiSuccess(dto, 201, NO_STORE_HEADERS);
 }

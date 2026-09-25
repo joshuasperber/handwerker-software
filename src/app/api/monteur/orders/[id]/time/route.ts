@@ -15,6 +15,10 @@ export async function POST(
   const access = await requireMonteurOrder(auth, orderId);
   if ("error" in access) return access.error;
 
+  if (["ABRECHNUNGSBEREIT", "ABGERECHNET", "STORNIERT"].includes(access.order.status)) {
+    return apiError("Für diesen abgeschlossenen Auftrag kann keine Arbeitszeit gestartet werden.", 409);
+  }
+
   const body = await request.json();
   const validationError = validateTimeEntryInput({
     startTime: body.startTime,
@@ -28,6 +32,23 @@ export async function POST(
   // Für Pause aus Tagesplan darf Endzeit fehlen — sonst Endzeit verlangen wenn gesetzt
   if (body.endTime && validationError) return apiError(validationError, 400);
   if (!body.startTime) return apiError("Startzeit ist Pflicht.", 400);
+
+  if (!body.endTime) {
+    const openEntry = await prisma.timeEntry.findFirst({
+      where: { employeeId: access.employee.id, endTime: null },
+      select: { id: true, orderId: true },
+      orderBy: { startTime: "desc" },
+    });
+    if (openEntry) {
+      return apiError(
+        openEntry.orderId === orderId
+          ? "Die Arbeitszeit für diesen Auftrag läuft bereits."
+          : "Es läuft bereits eine Arbeitszeit für einen anderen Auftrag.",
+        409,
+        { entryId: openEntry.id, orderId: openEntry.orderId }
+      );
+    }
+  }
 
   if (body.endTime) {
     const start = new Date(body.startTime);

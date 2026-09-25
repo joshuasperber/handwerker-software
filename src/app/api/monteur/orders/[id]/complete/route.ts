@@ -17,16 +17,41 @@ export async function PATCH(
   const access = await requireMonteurOrder(auth, orderId);
   if ("error" in access) return access.error;
 
+  if (access.order.status === "ABRECHNUNGSBEREIT") {
+    return apiSuccess(access.order);
+  }
+  if (["ABGERECHNET", "STORNIERT"].includes(access.order.status)) {
+    return apiError(
+      access.order.status === "ABGERECHNET"
+        ? "Ein bereits abgerechneter Auftrag kann nicht erneut abgeschlossen werden."
+        : "Ein stornierter Auftrag kann nicht abgeschlossen werden.",
+      409
+    );
+  }
+
   const body = await request.json();
   const ip = getClientIp(request);
 
   const checklists = await prisma.orderChecklist.findMany({ where: { orderId } });
   const allDone = areOrderChecklistsComplete(checklists);
 
-  let newStatus: OrderStatus = "ABGESCHLOSSEN";
-  if (allDone) {
-    newStatus = "ABRECHNUNGSBEREIT";
+  if (!allDone) {
+    return apiError("Bitte zuerst alle Punkte der Checkliste erledigen.", 409);
   }
+
+  const openTime = await prisma.timeEntry.findFirst({
+    where: {
+      orderId,
+      employeeId: access.employee.id,
+      endTime: null,
+    },
+    select: { id: true },
+  });
+  if (openTime) {
+    return apiError("Bitte zuerst die laufende Arbeitszeit beenden.", 409);
+  }
+
+  const newStatus: OrderStatus = "ABRECHNUNGSBEREIT";
 
   const order = await prisma.order.update({
     where: { id: orderId },
@@ -43,9 +68,7 @@ export async function PATCH(
     data: { status: "ABGESCHLOSSEN" },
   });
 
-  if (newStatus !== access.order.status) {
-    await auditOrderStatusChange(auth, orderId, access.order.status, newStatus, ip);
-  }
+  await auditOrderStatusChange(auth, orderId, access.order.status, newStatus, ip);
 
   return apiSuccess(order);
 }

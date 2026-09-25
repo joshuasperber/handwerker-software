@@ -12,7 +12,7 @@ import {
   resolveFixedPriceLabel,
   type FixedPriceDisplayMode,
 } from "@/lib/calculation/fixed-price";
-import { buildLaborCustomerLines, resolveLaborInvoiceMode } from "@/lib/calculation/labor-costs";
+import { buildLaborCustomerLines } from "@/lib/calculation/labor-costs";
 import { fontScaleFactor, lightenHex, resolveInvoiceDesign } from "./invoice-design";
 
 export interface DocumentCalcInput {
@@ -56,6 +56,11 @@ export interface DocumentCalcInput {
     description: string;
     totalNet: number;
     isVisibleToCustomer: boolean;
+  }[];
+  fixedPricePositions?: {
+    description: string;
+    quantity: number;
+    unitPriceNet: number | null;
   }[];
   customer: {
     firstName: string;

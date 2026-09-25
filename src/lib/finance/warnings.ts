@@ -143,7 +143,7 @@ export function buildFinanceWarnings(input: WarningInput): FinanceWarning[] {
       id: "planned-investments",
       severity: "info",
       title: "Geplante Investitionen",
-      message: `Es sind ${plannedCount} Investition${plannedCount === 1 ? "" : "en"} mit Status geplant oder verschoben hinterlegt.${datePart} Bitte prüfe mit deinem Steuerberater, ob Zeitpunkt und Behandlung relevant sind. Die App empfiehlt keinen Kauf.`,
+      message: `Es sind ${plannedCount} Investition${plannedCount === 1 ? "" : "en"} mit Status geplant, aktiv oder pausiert hinterlegt.${datePart} Für diese Investition können steuerliche Besonderheiten wie Abschreibung oder Investitionsabzugsbeträge relevant sein. Bitte steuerlich prüfen. Die App empfiehlt keinen Kauf.`,
     });
   }
 

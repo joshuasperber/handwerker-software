@@ -66,5 +66,27 @@ export function issueDateChangeNeedsConfirmation(doc: InvoiceDocLike): boolean {
 export const ISSUE_DATE_CHANGE_WARNING =
   "Diese Rechnung wurde bereits finalisiert, versendet oder bezahlt. Das Ändern des Rechnungsdatums kann Auswirkungen auf Umsatzübersichten und Buchhaltung haben. Möchtest du fortfahren?";
 
+export type InvoiceWriteDecision = "update" | "create" | "correction" | "conflict";
+
+/**
+ * Entwurf oder noch nicht versendete Rechnung wird aktualisiert.
+ * Eine zweite Rechnung entsteht nur bei bewusstem create/correction.
+ * Finalisierte Rechnungen werden nicht still überschrieben.
+ */
+export function decideInvoiceWrite(
+  existing: InvoiceDocLike | null,
+  mode?: InvoiceActionMode | null
+): InvoiceWriteDecision {
+  if (mode === "correction") return existing ? "correction" : "create";
+  if (mode === "create") return "create";
+  if (mode === "update") return existing && isInvoiceEditable(existing) ? "update" : "conflict";
+  if (!existing) return "create";
+  if (isInvoiceEditable(existing)) return "update";
+  return "conflict";
+}
+
+export const INVOICE_FINAL_MESSAGE =
+  "Diese Rechnung wurde bereits versendet, bezahlt oder finalisiert. Sie wird nicht überschrieben. Bitte bewusst eine Korrekturrechnung oder eine neue Rechnung wählen.";
+
 export const INVOICE_EXISTS_MESSAGE =
   "Für diesen Auftrag existiert bereits eine Rechnung. Möchtest du die bestehende Rechnung bearbeiten oder bewusst eine neue Rechnung/Korrekturrechnung erstellen?";

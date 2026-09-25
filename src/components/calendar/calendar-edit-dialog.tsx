@@ -80,6 +80,7 @@ export function CalendarEditDialog({
     if (!open || !appointment) return;
     const start = new Date(appointment.startTime);
     const end = new Date(appointment.endTime);
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Ein neu geöffneter Termin initialisiert bewusst den Dialogentwurf.
     setDateStr(toDateInput(start));
     setStartTime(toTimeInput(start));
     setEndTime(toTimeInput(end));

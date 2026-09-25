@@ -22,6 +22,7 @@ import { saveJson } from "@/lib/save-toast";
 import { formatDate, formatDateTime, formatEuro, ORDER_STATUS_LABELS } from "@/lib/utils";
 import { PHOTO_CATEGORIES } from "@/lib/files";
 import { PROJECT_COST_SOURCE_LABELS, PROJECT_STATUS_LABELS } from "@/lib/projects/types";
+import { ProjectFinancePanel, ProjectFinanceSummary } from "@/components/projects/project-finance-panel";
 import {
   Dialog,
   DialogContent,
@@ -221,7 +222,7 @@ interface OrderOption {
   projectId?: string | null;
 }
 
-type Tab = "uebersicht" | "auftraege" | "medien" | "kosten" | "abschluss";
+type Tab = "uebersicht" | "auftraege" | "medien" | "kosten" | "finanzen" | "abschluss";
 
 export default function ProjektDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -296,11 +297,13 @@ export default function ProjektDetailPage() {
   }, [id]);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Initialer, asynchroner Projektabruf.
     void loadProject();
   }, [loadProject]);
 
   useEffect(() => {
     if (tab === "medien" || tab === "uebersicht") {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- Tabwechsel startet den zugehörigen asynchronen Datenabruf.
       void loadNotes();
       void loadFiles();
     }
@@ -321,6 +324,7 @@ export default function ProjektDetailPage() {
       { id: "auftraege", label: "Aufträge" },
       { id: "medien", label: "Fotos & Notizen" },
       { id: "kosten", label: "Kosten" },
+      { id: "finanzen", label: "Finanzen" },
       { id: "abschluss", label: "Abschluss" },
     ],
     []
@@ -668,6 +672,9 @@ export default function ProjektDetailPage() {
 
       {tab === "uebersicht" && (
         <div className="grid gap-4 lg:grid-cols-3">
+          <div className="lg:col-span-3">
+            <ProjectFinanceSummary projectId={String(id)} onOpen={() => setTab("finanzen")} />
+          </div>
           <Card className="!p-4 lg:col-span-2 space-y-3">
             <h2 className="text-sm font-semibold text-slate-800">Projektdaten</h2>
             <dl className="grid gap-2 text-sm sm:grid-cols-2">
@@ -1214,6 +1221,8 @@ export default function ProjektDetailPage() {
           </Card>
         </div>
       )}
+
+      {tab === "finanzen" && <ProjectFinancePanel projectId={String(id)} />}
 
       {tab === "abschluss" && (
         <div className="space-y-4">

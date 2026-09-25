@@ -1,10 +1,16 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAuth, apiSuccess } from "@/lib/api";
-import { format, startOfDay, endOfDay, startOfWeek, endOfWeek, parseISO } from "date-fns";
 import type { ReservationStatus } from "@/generated/prisma/client";
+import {
+  addCalendarDays,
+  businessDateKey,
+  businessDayRange,
+  startOfIsoWeekDate,
+} from "@/lib/calendar-day";
 
 const OPEN_RESERVATION: ReservationStatus[] = ["VORGESCHLAGEN", "RESERVIERT"];
+const TERMINAL_ORDER_STATUSES = ["ABRECHNUNGSBEREIT", "ABGERECHNET", "STORNIERT"] as const;
 
 const orderInclude = {
   customer: true,
@@ -35,17 +41,13 @@ type ScheduleEntry = Awaited<
   ReturnType<typeof prisma.appointment.findMany<{ include: { order: { include: typeof orderInclude } } }>>
 >[number];
 
-function parseDateParam(dateStr: string): Date {
-  return parseISO(dateStr);
-}
-
 export async function GET(request: NextRequest) {
   const auth = await requireAuth("monteur.own");
   if (auth instanceof Response) return auth;
 
   const { searchParams } = new URL(request.url);
   const weekStartStr = searchParams.get("weekStart");
-  const dateStr = searchParams.get("date") ?? format(new Date(), "yyyy-MM-dd");
+  const dateStr = searchParams.get("date") ?? businessDateKey(new Date());
 
   const employee = await prisma.employee.findFirst({
     where: { userId: auth.id, tenantId: auth.tenantId },
@@ -56,14 +58,18 @@ export async function GET(request: NextRequest) {
   let rangeStart: Date;
   let rangeEnd: Date;
 
-  if (weekStartStr) {
-    const ws = startOfWeek(parseDateParam(weekStartStr), { weekStartsOn: 1 });
-    rangeStart = startOfDay(ws);
-    rangeEnd = endOfWeek(ws, { weekStartsOn: 1 });
-  } else {
-    const date = parseDateParam(dateStr);
-    rangeStart = startOfDay(date);
-    rangeEnd = endOfDay(date);
+  try {
+    if (weekStartStr) {
+      const monday = startOfIsoWeekDate(weekStartStr);
+      rangeStart = businessDayRange(monday).start;
+      rangeEnd = businessDayRange(addCalendarDays(monday, 6)).end;
+    } else {
+      const range = businessDayRange(dateStr);
+      rangeStart = range.start;
+      rangeEnd = range.end;
+    }
+  } catch {
+    return apiSuccess(weekStartStr ? { week: [], days: {}, total: 0 } : []);
   }
 
   const teamMemberships = await prisma.teamMember.findMany({
@@ -77,6 +83,7 @@ export async function GET(request: NextRequest) {
       tenantId: auth.tenantId,
       status: { not: "STORNIERT" },
       orderId: { not: null },
+      order: { status: { notIn: [...TERMINAL_ORDER_STATUSES] } },
       startTime: { gte: rangeStart, lte: rangeEnd },
       OR: [
         { employeeId: employee.id },
@@ -90,14 +97,15 @@ export async function GET(request: NextRequest) {
     orderBy: { startTime: "asc" },
   });
 
-  const seenIds = new Set(appointments.map((a) => a.id));
-
   const phaseOnly = await prisma.orderPhase.findMany({
     where: {
       isEnabled: true,
       status: { notIn: ["ABGESCHLOSSEN", "STORNIERT", "UEBERSPRUNGEN"] },
       plannedStart: { gte: rangeStart, lte: rangeEnd },
-      order: { tenantId: auth.tenantId },
+      order: {
+        tenantId: auth.tenantId,
+        status: { notIn: [...TERMINAL_ORDER_STATUSES] },
+      },
       OR: [
         { assignedEmployeeId: employee.id },
         ...(teamIds.length > 0 ? [{ assignedTeamId: { in: teamIds } }] : []),
@@ -147,7 +155,7 @@ export async function GET(request: NextRequest) {
   const assigneeOrders = await prisma.order.findMany({
     where: {
       tenantId: auth.tenantId,
-      status: { not: "STORNIERT" },
+      status: { notIn: [...TERMINAL_ORDER_STATUSES] },
       scheduledStart: { gte: rangeStart, lte: rangeEnd },
       assignees: { some: { employeeId: employee.id } },
       id: { notIn: coveredOrderIds },
@@ -189,13 +197,13 @@ export async function GET(request: NextRequest) {
   if (weekStartStr) {
     const days: Record<string, typeof merged> = {};
     for (const apt of merged) {
-      const key = format(new Date(apt.startTime), "yyyy-MM-dd");
+      const key = businessDateKey(new Date(apt.startTime));
       if (!days[key]) days[key] = [];
       days[key].push(apt);
     }
     return apiSuccess({
-      weekStart: format(rangeStart, "yyyy-MM-dd"),
-      weekEnd: format(rangeEnd, "yyyy-MM-dd"),
+      weekStart: businessDateKey(rangeStart),
+      weekEnd: businessDateKey(rangeEnd),
       days,
       total: merged.length,
     });

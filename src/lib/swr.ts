@@ -25,6 +25,7 @@ export const swrKeys = {
   financeOverview: (qs: string) => `/api/finance/overview?${qs}`,
   financeExpenses: (qs = "") => `/api/finance/expenses${qs ? `?${qs}` : ""}`,
   financeInvestments: () => "/api/finance/investments",
+  financeInvestmentReserve: () => "/api/finance/investments/reserve",
   projects: (qs = "") => `/api/projects${qs ? `?${qs}` : ""}`,
 } as const;
 

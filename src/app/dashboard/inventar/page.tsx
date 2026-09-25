@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -132,7 +132,7 @@ export default function InventarPage() {
   } = useApiSWR<StorageLocation[]>(swrKeys.storageLocations());
 
   const articles = articlesData ?? [];
-  const locations = locationsData ?? [];
+  const locations = useMemo(() => locationsData ?? [], [locationsData]);
   const loading = articlesLoading && !articlesData;
   const loadError = articlesError
     ? "Artikel konnten nicht geladen werden."
@@ -229,6 +229,7 @@ export default function InventarPage() {
 
   useEffect(() => {
     if (!locationDetailRaw) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- Lokale Ansicht spiegelt den optionalen SWR-Datensatz.
       setLocationDetail(null);
       return;
     }
@@ -244,6 +245,7 @@ export default function InventarPage() {
 
   useEffect(() => {
     if (!locations.length) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Erstes verfügbares Lager initialisiert ein noch leeres Formularfeld.
     setForm((f) => {
       if (f.initialLocationId) return f;
       const haupt = locations.find((loc) => loc.locationType === "HAUPTLAGER");

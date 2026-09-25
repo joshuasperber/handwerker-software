@@ -58,15 +58,21 @@ export function PriceCompositionPanel({ calc, onPreviewInvoice, onPreviewBreakdo
       ? Math.round((fixedNet + customerVat) * 100) / 100
       : (calc.grossSalesPrice ?? 0);
 
-  const steps = [
+  const internalCosts = calc.directCosts ?? 0;
+  const steps = useFixedPrice && fixedNet != null
+    ? [
+        { label: "Interne Kosten", value: internalCosts, hint: "Ändern den Festpreis nicht" },
+        { label: "Marge", value: Math.round((fixedNet - internalCosts) * 100) / 100 },
+        { label: `Kundenpreis (${fixedLabel})`, value: fixedNet, bold: true, accent: true },
+        { label: "+ USt", value: customerVat },
+        { label: "= Brutto", value: customerGross, bold: true, accent: true },
+      ]
+    : [
     { label: "Direkte Kosten", value: calc.directCosts ?? 0, hint: "Arbeit + Material + Maschinen + Beschaffung + Fahrt + Zusatz" },
     { label: "+ Gemeinkosten", value: calc.overheadAmount ?? 0 },
     { label: "+ Wagnis", value: calc.riskAmount ?? 0 },
     { label: "+ Gewinn", value: calc.profitAmount ?? 0, bold: true },
-    { label: "= Netto kalkuliert", value: calc.netSalesPrice ?? 0, bold: true, accent: !useFixedPrice },
-    ...(useFixedPrice && fixedNet != null
-      ? [{ label: `= ${fixedLabel} (Kunde)`, value: fixedNet, bold: true, accent: true }]
-      : []),
+    { label: "= Netto kalkuliert", value: calc.netSalesPrice ?? 0, bold: true, accent: true },
     { label: "+ USt", value: useFixedPrice ? customerVat : (calc.vatAmount ?? 0) },
     {
       label: "= Brutto",
@@ -82,7 +88,7 @@ export function PriceCompositionPanel({ calc, onPreviewInvoice, onPreviewBreakdo
         <h3 className="font-semibold text-slate-900">Wie entsteht die Summe?</h3>
         <p className="text-xs text-slate-500 mt-1 leading-relaxed">
           {useFixedPrice
-            ? "Die interne Kalkulation bleibt gespeichert. Am Kunden erscheint nur der gewählte Festpreis."
+            ? "Interne Kosten sind optional und ändern den Festpreis nicht. Gemeinkosten, Risiko und Gewinn werden nicht auf den Kundenpreis addiert."
             : "Maschinen, Beschaffung, Gemeinkosten, Wagnis und Gewinn erscheinen nicht einzeln auf der Kundenrechnung, fließen aber in den Nettopreis ein."}
         </p>
       </div>

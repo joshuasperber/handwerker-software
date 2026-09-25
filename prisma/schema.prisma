@@ -204,9 +204,11 @@ model Tenant {
   financeSettings      FinanceSettings?
   expenses             Expense[]
   plannedInvestments   PlannedInvestment[]
+  investmentReserves   InvestmentReserveMonth[]
   aiChatSessions       AiChatSession[]
   projects             Project[]
   workRequests         WorkRequest[]
+  orderAddenda         OrderAddendum[]
 }
 
 model User {
@@ -586,6 +588,7 @@ model Order {
   staffRequests StaffAssignmentRequest[]
   shares        OrderShare[]
   expenses      Expense[]
+  addenda       OrderAddendum[]
   projectNotes  ProjectNote[]
   projectFiles  ProjectFile[]
   projectCosts  ProjectCost[]
@@ -1205,6 +1208,8 @@ model Calculation {
   profitAfterTaxEstimate  Float @default(0)
   totalBillableHours      Float @default(0)
   profitabilityStatus     String @default("unknown")
+  /// Nur intern, wenn Festpreis aktiv ist. Beeinflusst den Kundenpreis nicht.
+  engineNetSalesPrice     Float?
 
   /// Kundenausgabe: Festpreis statt Einzelpositionen (interne Kalkulation bleibt erhalten)
   useFixedPrice           Boolean @default(false)
@@ -1237,10 +1242,46 @@ model Calculation {
   incomeTaxSettings IncomeTaxSettings?
   vatSettings      VATSettings?
   documents        CalculationDocument[]
+  fixedPricePositions FixedPricePosition[]
 
   @@index([tenantId, status])
   @@index([tenantId, createdAt])
   @@index([projectId])
+}
+
+model FixedPricePosition {
+  id            String  @id @default(cuid())
+  calculationId String
+  description   String
+  quantity      Float   @default(1)
+  /// null = ohne Einzelpreis (nur Leistungsbeschreibung)
+  unitPriceNet  Float?
+  sortOrder     Int     @default(0)
+
+  calculation Calculation @relation(fields: [calculationId], references: [id], onDelete: Cascade)
+
+  @@index([calculationId])
+}
+
+model OrderAddendum {
+  id            String   @id @default(cuid())
+  tenantId      String
+  orderId       String
+  description   String
+  occurredOn    DateTime @default(now())
+  materialNote  String?
+  extraHours    Float?
+  extraPriceNet Float?
+  note          String?
+  employeeName  String?
+  createdById   String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  order  Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, orderId])
 }
 
 model LaborItem {
@@ -2144,14 +2185,37 @@ enum PlannedInvestmentCategory {
   VEHICLE
   SOFTWARE
   MATERIAL_BULK
+  SMARTPHONE
   OTHER
 }
 
 enum PlannedInvestmentStatus {
   PLANNED
+  ACTIVE
+  GOAL_REACHED
   PURCHASED
   POSTPONED
   CANCELLED
+}
+
+enum InvestmentSavingsModel {
+  PERCENT_REVENUE
+  FIXED_PER_ORDER
+  FIXED_MONTHLY
+  TARGET_SCHEDULE
+}
+
+enum InvestmentCalculationBasis {
+  NET
+  GROSS
+  CONTRIBUTION
+}
+
+enum InvestmentReserveStatus {
+  CONFIRMED
+  ADJUSTED
+  DEFERRED
+  IGNORED
 }
 
 model FinanceSettings {
@@ -2229,29 +2293,65 @@ model Expense {
 }
 
 model PlannedInvestment {
-  id            String                    @id @default(cuid())
-  tenantId      String
-  title         String
-  plannedAmount Float
-  plannedDate   DateTime?
-  category      PlannedInvestmentCategory
-  note          String?
-  status        PlannedInvestmentStatus   @default(PLANNED)
-  machineId     String?
-  articleId     String?
-  projectId     String?
-  createdAt     DateTime                  @default(now())
-  updatedAt     DateTime                  @updatedAt
+  id                 String                      @id @default(cuid())
+  tenantId           String
+  title              String
+  plannedAmount      Float
+  plannedDate        DateTime?
+  category           PlannedInvestmentCategory
+  note               String?
+  status             PlannedInvestmentStatus     @default(PLANNED)
+  machineId          String?
+  articleId          String?
+  projectId          String?
+  /** Virtuell zurückgelegt — keine Bankbewegung */
+  savedAmount        Float                       @default(0)
+  startDate          DateTime?
+  savingsModel       InvestmentSavingsModel      @default(TARGET_SCHEDULE)
+  /** Nur bei PERCENT_REVENUE, in Prozent */
+  percentOfRevenue   Float?
+  /** Nur bei FIXED_PER_ORDER */
+  amountPerOrder     Float?
+  /** Nur bei FIXED_MONTHLY */
+  monthlyAmount      Float?
+  calculationBasis   InvestmentCalculationBasis  @default(NET)
+  createdAt          DateTime                    @default(now())
+  updatedAt          DateTime                    @updatedAt
 
-  tenant  Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  machine Machine? @relation(fields: [machineId], references: [id], onDelete: SetNull)
-  article Article? @relation(fields: [articleId], references: [id], onDelete: SetNull)
-  project Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  tenant   Tenant                   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  machine  Machine?                 @relation(fields: [machineId], references: [id], onDelete: SetNull)
+  article  Article?                 @relation(fields: [articleId], references: [id], onDelete: SetNull)
+  project  Project?                 @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  reserves InvestmentReserveMonth[]
 
   @@index([tenantId, status])
   @@index([machineId])
   @@index([articleId])
   @@index([projectId])
+}
+
+model InvestmentReserveMonth {
+  id               String                  @id @default(cuid())
+  tenantId         String
+  investmentId     String
+  year             Int
+  month            Int
+  suggestedAmount  Float
+  appliedAmount    Float?
+  status           InvestmentReserveStatus
+  orderCount       Int                     @default(0)
+  basisAmount      Float?
+  carryIn          Float                   @default(0)
+  explanation      String?
+  decidedAt        DateTime                @default(now())
+  createdAt        DateTime                @default(now())
+  updatedAt        DateTime                @updatedAt
+
+  tenant     Tenant            @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  investment PlannedInvestment @relation(fields: [investmentId], references: [id], onDelete: Cascade)
+
+  @@unique([investmentId, year, month])
+  @@index([tenantId, year, month])
 }
 
 // ─── Betrieb: Jobs & Auth-Sicherheit ───

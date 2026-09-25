@@ -5,7 +5,7 @@ import { resolveFixedPriceLabel } from "@/lib/calculation/fixed-price";
 import { suggestTaxTreatmentForCustomer } from "@/lib/tax/treatment";
 import { roundMoney } from "@/lib/calculation/formulas";
 
-export async function GET(_request: NextRequest) {
+export async function GET() {
   const auth = await requireAuth("calculations.read");
   if (auth instanceof Response) return auth;
 

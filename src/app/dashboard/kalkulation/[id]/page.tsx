@@ -12,6 +12,7 @@ import { InfoButton } from "@/components/ui/info-button";
 import { SummaryPanel } from "@/components/calculation/summary-panel";
 import { PriceCompositionPanel } from "@/components/calculation/price-composition";
 import { FixedPriceEditor } from "@/components/calculation/fixed-price-editor";
+import { FixedPricePositionsEditor } from "@/components/calculation/fixed-price-positions-editor";
 import { LaborEditor } from "@/components/calculation/labor-editor";
 import {
   InvoiceConflictDialog,
@@ -118,6 +119,7 @@ export default function KalkulationWizardPage() {
   }, [id]);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Initialer, asynchroner Kalkulationsabruf nach ID-Wechsel.
     load();
     fetch("/api/customers").then((r) => r.json()).then((d) => { if (d.success) setCustomers(d.data); });
     fetch("/api/machines").then((r) => r.json()).then((d) => { if (d.success) setMachines(d.data); });
@@ -477,7 +479,6 @@ export default function KalkulationWizardPage() {
             <Card title="Fahrtkosten">
               <TravelEditor
                 travel={calc.travelCost}
-                calcId={id as string}
                 onChange={(travel) => setCalc({ ...calc, travelCost: travel })}
               />
               <Button
@@ -699,7 +700,11 @@ export default function KalkulationWizardPage() {
                 fixedPriceNet={calc.fixedPriceNet}
                 fixedPriceLabel={calc.fixedPriceLabel}
                 fixedPriceDisplayMode={calc.fixedPriceDisplayMode}
-                calculatedNet={calc.netSalesPrice ?? 0}
+                calculatedNet={
+                  calc.useFixedPrice
+                    ? (calc.engineNetSalesPrice ?? calc.directCosts ?? 0)
+                    : (calc.netSalesPrice ?? 0)
+                }
                 profitAmount={calc.profitAmount ?? 0}
                 directCosts={calc.directCosts ?? 0}
                 onChange={(next) =>
@@ -712,6 +717,9 @@ export default function KalkulationWizardPage() {
                   })
                 }
               />
+              {calc.useFixedPrice && calc.id && (
+                <FixedPricePositionsEditor calculationId={calc.id} />
+              )}
               <Button
                 className="mt-4"
                 variant="action"
@@ -1555,11 +1563,9 @@ function ProcurementEditor({ items, onChange }: { items: CalcData[]; onChange: (
 
 function TravelEditor({
   travel,
-  calcId: _calcId,
   onChange,
 }: {
   travel: CalcData | null;
-  calcId: string;
   onChange: (t: CalcData) => void;
 }) {
   const [zoneError, setZoneError] = useState("");

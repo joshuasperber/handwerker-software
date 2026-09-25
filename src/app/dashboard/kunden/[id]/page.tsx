@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
@@ -127,7 +127,7 @@ export default function KundeDetailPage() {
   const [removing, setRemoving] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
 
-  function load() {
+  const load = useCallback(() => {
     fetchJson<CustomerDetail>(`/api/customers/${id}`).then((r) => {
       if (!r.success || !r.data) {
         setLoadError(r.error ?? "Kunde nicht gefunden");
@@ -167,12 +167,12 @@ export default function KundeDetailPage() {
         notes: cert?.notes ?? "",
       });
     });
-  }
+  }, [id]);
 
   useEffect(() => {
     load();
     fetch("/api/travel-zones").then((r) => r.json()).then((d) => { if (d.success) setZones(d.data); });
-  }, [id]);
+  }, [id, load]);
 
   const activeZones = zones.filter((z) => z.isActive);
 

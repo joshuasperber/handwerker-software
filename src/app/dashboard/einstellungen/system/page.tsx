@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -65,7 +65,7 @@ export default function SystemStatusPage() {
   const [runs, setRuns] = useState<JobRunRow[]>([]);
   const [loadError, setLoadError] = useState("");
 
-  function applySystemData(d: { success?: boolean; error?: string; data?: { health: typeof health; recentRuns: JobRunRow[] } }) {
+  const applySystemData = useCallback((d: { success?: boolean; error?: string; data?: { health: typeof health; recentRuns: JobRunRow[] } }) => {
     if (d.success && d.data) {
       setHealth(d.data.health);
       setRuns(d.data.recentRuns);
@@ -73,7 +73,7 @@ export default function SystemStatusPage() {
     } else {
       setLoadError(d.error ?? "Systemstatus konnte nicht geladen werden.");
     }
-  }
+  }, []);
 
   function load() {
     setLoading(true);
@@ -97,7 +97,7 @@ export default function SystemStatusPage() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [applySystemData]);
 
   async function triggerCron() {
     const res = await fetch("/api/cron/daily", { method: "POST" });

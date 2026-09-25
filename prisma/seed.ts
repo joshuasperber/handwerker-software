@@ -233,7 +233,7 @@ async function main() {
     },
   });
 
-  const buero = await prisma.user.upsert({
+  await prisma.user.upsert({
     where: { tenantId_email: { tenantId: tenant.id, email: "buero@demo.de" } },
     update: {},
     create: {
@@ -373,7 +373,7 @@ async function main() {
   const { ensureOrderTypeDefinitions } = await import("../src/lib/orders/order-types");
   await ensureOrderTypeDefinitions(tenant.id);
 
-  const service2 = await prisma.service.create({
+  await prisma.service.create({
     data: {
       tenantId: tenant.id,
       name: "Heizungswartung",

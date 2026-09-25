@@ -56,6 +56,7 @@ export function StreetAutocomplete({
     }
     const q = value.trim();
     if (disabled || q.length < 3) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- Ungültige Suchlänge leert die flüchtigen Vorschläge sofort.
       setSuggestions([]);
       setLoading(false);
       setError("");

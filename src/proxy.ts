@@ -82,7 +82,7 @@ function rewriteWorkAlias(pathname: string): string | null {
   return `/monteur${pathname.slice("/work".length)}` || "/monteur/heute";
 }
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const token =
     request.cookies.get("jomaster-session")?.value ??
@@ -92,7 +92,7 @@ export async function middleware(request: NextRequest) {
     try {
       session = await verifySession(token);
     } catch (error) {
-      console.error("[middleware] session verify failed:", error);
+      console.error("[proxy] session verify failed:", error);
     }
   }
 

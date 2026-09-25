@@ -1,11 +1,12 @@
 import { prisma } from "@/lib/prisma";
 
-type RateLimitKind = "ai_chat" | "upload" | "privacy_export";
+type RateLimitKind = "ai_chat" | "upload" | "privacy_export" | "public_booking";
 
 const LIMITS: Record<RateLimitKind, { windowMs: number; max: number }> = {
   ai_chat: { windowMs: 15 * 60 * 1000, max: 60 },
   upload: { windowMs: 15 * 60 * 1000, max: 40 },
   privacy_export: { windowMs: 60 * 60 * 1000, max: 10 },
+  public_booking: { windowMs: 15 * 60 * 1000, max: 10 },
 };
 
 /**

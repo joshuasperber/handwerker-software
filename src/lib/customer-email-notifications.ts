@@ -70,10 +70,12 @@ export async function sendBookingConfirmationForOrder(params: {
     metadata: { orderNumber: params.orderNumber, orderId: params.orderId },
   });
 
-  await prisma.order.update({
-    where: { id: params.orderId },
-    data: { bookingConfirmationSentAt: new Date() },
-  });
+  if (sent) {
+    await prisma.order.update({
+      where: { id: params.orderId },
+      data: { bookingConfirmationSentAt: new Date() },
+    });
+  }
 
   return sent;
 }

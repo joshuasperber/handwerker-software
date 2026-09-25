@@ -56,16 +56,80 @@ export const expensePatchSchema = z.object({
   isInvestment: z.coerce.boolean().optional(),
 });
 
-export const investmentInputSchema = z.object({
-  title: z.string().min(1).max(200),
-  plannedAmount: z.coerce.number().min(0),
-  plannedDate: z.string().optional().nullable(),
-  category: z.enum(["MACHINE", "TOOL", "VEHICLE", "SOFTWARE", "MATERIAL_BULK", "OTHER"]),
-  note: z.string().max(2000).optional().nullable(),
-  status: z.enum(["PLANNED", "PURCHASED", "POSTPONED", "CANCELLED"]).default("PLANNED"),
-  machineId: optionalIdField.optional(),
-  articleId: optionalIdField.optional(),
-  projectId: optionalIdField.optional(),
+export const investmentInputSchema = z
+  .object({
+    title: z.string().min(1).max(200),
+    plannedAmount: z.coerce.number().min(0),
+    plannedDate: z.string().optional().nullable(),
+    category: z.enum([
+      "MACHINE",
+      "TOOL",
+      "VEHICLE",
+      "SOFTWARE",
+      "MATERIAL_BULK",
+      "SMARTPHONE",
+      "OTHER",
+    ]),
+    note: z.string().max(2000).optional().nullable(),
+    status: z
+      .enum(["PLANNED", "ACTIVE", "GOAL_REACHED", "PURCHASED", "POSTPONED", "CANCELLED"])
+      .default("PLANNED"),
+    machineId: optionalIdField.optional(),
+    articleId: optionalIdField.optional(),
+    projectId: optionalIdField.optional(),
+    savedAmount: z.coerce.number().min(0).optional(),
+    startDate: z.string().optional().nullable(),
+    savingsModel: z
+      .enum(["PERCENT_REVENUE", "FIXED_PER_ORDER", "FIXED_MONTHLY", "TARGET_SCHEDULE"])
+      .default("TARGET_SCHEDULE"),
+    percentOfRevenue: z.coerce.number().min(0).max(100).optional().nullable(),
+    amountPerOrder: z.coerce.number().min(0).optional().nullable(),
+    monthlyAmount: z.coerce.number().min(0).optional().nullable(),
+    calculationBasis: z.enum(["NET", "GROSS", "CONTRIBUTION"]).default("NET"),
+  })
+  .superRefine((data, ctx) => {
+    if (data.savingsModel === "PERCENT_REVENUE" && (data.percentOfRevenue == null || data.percentOfRevenue <= 0)) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["percentOfRevenue"],
+        message: "Bitte einen Prozentsatz größer 0 angeben.",
+      });
+    }
+    if (data.savingsModel === "FIXED_PER_ORDER" && (data.amountPerOrder == null || data.amountPerOrder <= 0)) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["amountPerOrder"],
+        message: "Bitte einen Betrag pro Auftrag angeben.",
+      });
+    }
+    if (data.savingsModel === "FIXED_MONTHLY" && (data.monthlyAmount == null || data.monthlyAmount <= 0)) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["monthlyAmount"],
+        message: "Bitte einen monatlichen Betrag angeben.",
+      });
+    }
+    if (data.savingsModel === "TARGET_SCHEDULE" && !data.plannedDate) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["plannedDate"],
+        message: "Für die automatische Berechnung ist ein Zieltermin nötig.",
+      });
+    }
+  });
+
+export const reserveDecisionSchema = z.object({
+  year: z.coerce.number().int().min(2000).max(2100),
+  month: z.coerce.number().int().min(1).max(12),
+  decisions: z
+    .array(
+      z.object({
+        investmentId: z.string().min(1),
+        action: z.enum(["confirm", "adjust", "defer", "ignore"]),
+        amount: z.coerce.number().min(0).optional(),
+      })
+    )
+    .min(1),
 });
 
 export const financeSettingsSchema = z.object({

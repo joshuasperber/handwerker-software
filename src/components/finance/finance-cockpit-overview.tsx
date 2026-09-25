@@ -15,6 +15,7 @@ import {
   type FinanceOverview,
   type PlannedInvestmentDTO,
 } from "@/lib/finance/types";
+import { InvestmentProgress } from "@/components/finance/investment-progress";
 import { cn, formatDate, formatEuro } from "@/lib/utils";
 import {
   AlertTriangle,
@@ -96,11 +97,14 @@ export function FinanceCockpitOverview({
     name: c.label.length > 18 ? `${c.label.slice(0, 16)}…` : c.label,
     amount: c.amount,
   }));
-  const investmentTotal = overview.plannedInvestments.reduce(
-    (sum, inv) => sum + inv.plannedAmount,
+  const investmentSaved = overview.plannedInvestments.reduce(
+    (sum, inv) => sum + inv.savedAmount,
     0
   );
-
+  const investmentSuggestion = overview.plannedInvestments.reduce(
+    (sum, inv) => sum + (inv.monthSuggestion ?? 0),
+    0
+  );
   return (
     <div className="space-y-6">
       <div>
@@ -135,7 +139,6 @@ export function FinanceCockpitOverview({
       <FinanceSection
         id="umsatz"
         title="Umsatz"
-        defaultOpen
         preview={
           <span>
             Netto {formatEuro(overview.revenue.net)} · Brutto{" "}
@@ -209,7 +212,6 @@ export function FinanceCockpitOverview({
       <FinanceSection
         id="gewinn"
         title="Gewinn"
-        defaultOpen
         preview={<span>Schätzung {formatEuro(overview.profit.estimatedNet)}</span>}
       >
         <div className="grid gap-2 text-sm sm:grid-cols-3">
@@ -429,11 +431,10 @@ export function FinanceCockpitOverview({
       <FinanceSection
         id="investitionen"
         title="Investitionen"
-        defaultOpen
         preview={
           <span>
-            {overview.plannedInvestments.length} geplant / verschoben ·{" "}
-            {formatEuro(investmentTotal)}
+            {overview.plannedInvestments.length} aktiv · zurückgelegt {formatEuro(investmentSaved)} · Vorschlag{" "}
+            {formatEuro(investmentSuggestion)}
           </span>
         }
       >
@@ -453,23 +454,20 @@ export function FinanceCockpitOverview({
                   onClick={() => onOpenInvestment(inv)}
                   className="w-full rounded-lg border border-slate-100 p-3 text-left hover:bg-slate-50"
                 >
-                  <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
-                    <div>
-                      <p className="font-medium text-slate-800">{inv.title}</p>
-                      <p className="text-xs text-slate-500">
-                        {inv.categoryLabel}
-                        {inv.plannedDate ? ` · ${formatDate(inv.plannedDate)}` : " · kein Zeitpunkt"}
-                        {inv.machineName ? ` · Maschine: ${inv.machineName}` : ""}
-                        {inv.articleName ? ` · Material: ${inv.articleName}` : ""}
-                        {inv.projectName ? ` · Projekt: ${inv.projectName}` : ""}
-                      </p>
-                      {inv.note && <p className="mt-1 text-xs text-slate-500">{inv.note}</p>}
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="font-semibold">{formatEuro(inv.plannedAmount)}</span>
-                      <Badge variant="outline">{inv.statusLabel}</Badge>
-                    </div>
+                  <div className="flex items-start justify-between gap-3">
+                    <p className="font-medium text-slate-800">{inv.title}</p>
+                    <Badge variant="outline">{inv.statusLabel}</Badge>
                   </div>
+                  <div className="mt-2">
+                    <InvestmentProgress percent={inv.progressPercent} />
+                  </div>
+                  <p className="mt-2 text-xs text-slate-500">
+                    Ziel {formatEuro(inv.plannedAmount)} · Rücklage {formatEuro(inv.savedAmount)}
+                    {inv.monthSuggestion != null
+                      ? ` · Vorschlag ${formatEuro(inv.monthSuggestion)}`
+                      : ""}
+                    {inv.plannedDate ? ` · ${formatDate(inv.plannedDate)}` : ""}
+                  </p>
                 </button>
               </li>
             ))}

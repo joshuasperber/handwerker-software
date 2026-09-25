@@ -54,6 +54,53 @@ export function resolveFixedPriceDisplayMode(
   return "SINGLE_LINE";
 }
 
+export interface FixedCustomerTotals {
+  netSalesPrice: number;
+  vatAmount: number;
+  grossSalesPrice: number;
+  /** Festpreis minus interne direkte Kosten. Gemeinkosten ändern den Kundenpreis nicht. */
+  profitAmount: number;
+  contributionMargin: number;
+  directCosts: number;
+  engineNetSalesPrice: number;
+}
+
+/**
+ * Kundenpreis kommt nur aus dem Festpreis.
+ * Die Engine darf Netto, USt und Brutto nicht überschreiben.
+ */
+export function applyFixedCustomerTotals(input: {
+  fixedPriceNet: number;
+  directCosts: number;
+  engineNetSalesPrice: number;
+  vatRatePercent: number;
+  reverseCharge?: boolean;
+  taxExempt?: boolean;
+}): FixedCustomerTotals {
+  const netSalesPrice = roundMoney(Math.max(0, Number(input.fixedPriceNet) || 0));
+  const directCosts = roundMoney(Math.max(0, Number(input.directCosts) || 0));
+  const margin = roundMoney(netSalesPrice - directCosts);
+  let vatAmount = 0;
+  let grossSalesPrice = netSalesPrice;
+  if (!input.reverseCharge && !input.taxExempt) {
+    vatAmount = roundMoney(netSalesPrice * ((Number(input.vatRatePercent) || 0) / 100));
+    grossSalesPrice = roundMoney(netSalesPrice + vatAmount);
+  }
+  return {
+    netSalesPrice,
+    vatAmount,
+    grossSalesPrice,
+    profitAmount: margin,
+    contributionMargin: margin,
+    directCosts,
+    engineNetSalesPrice: roundMoney(Number(input.engineNetSalesPrice) || 0),
+  };
+}
+
+function roundMoney(value: number): number {
+  return Math.round(value * 100) / 100;
+}
+
 export function suggestFixedPriceLabel(title?: string | null): string {
   const t = title?.trim();
   if (!t) return DEFAULT_FIXED_PRICE_LABEL;
@@ -172,6 +219,12 @@ export interface ItemizedSource {
     totalNet: number;
     isVisibleToCustomer: boolean;
   }[];
+  /** Frei beschriebene Leistungspositionen. Haben Vorrang vor Kalkulationszeilen. */
+  fixedPricePositions?: {
+    description: string;
+    quantity: number;
+    unitPriceNet: number | null;
+  }[];
   title?: string | null;
 }
 
@@ -205,7 +258,17 @@ export function buildFixedPriceDocumentLines(input: {
   const label = resolveFixedPriceLabel(input.fixedPriceLabel);
   const mode = resolveFixedPriceDisplayMode(input.fixedPriceDisplayMode);
   const amount = Number(input.fixedPriceNet) || 0;
-  const positions = collectVisiblePositionLines(input.source);
+  const custom = input.source.fixedPricePositions ?? [];
+  const positions =
+    custom.length > 0
+      ? custom.map((p) => ({
+          label: p.quantity && p.quantity !== 1 ? `${p.description} (${p.quantity})` : p.description,
+          amount:
+            p.unitPriceNet == null
+              ? null
+              : Math.round(p.unitPriceNet * (p.quantity || 1) * 100) / 100,
+        }))
+      : collectVisiblePositionLines(input.source);
 
   if (mode === "SINGLE_LINE" || positions.length === 0) {
     return [{ label, amount, emphasis: true }];

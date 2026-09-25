@@ -245,6 +245,7 @@ export default function UmsatzuebersichtPage() {
   }, [queryString]);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Initialer, asynchroner Umsatzabruf.
     void load();
   }, [load]);
 

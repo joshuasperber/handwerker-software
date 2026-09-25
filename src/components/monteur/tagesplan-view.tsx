@@ -10,7 +10,7 @@ import { isAppointmentOverdue } from "@/lib/scheduling/overdue";
 import { getCurrentPhase, phaseAssigneeLabel, type PhaseSummary } from "@/lib/phase-status";
 import { calcPickupWithReserve } from "@/lib/monteur/pickup-list";
 import {
-  MapPin, Phone, Navigation, CheckCircle, Camera, Package,
+  MapPin, Phone, Navigation, CheckCircle, Camera,
   Car, MapPinned, Play, Pause, Layers, Users, Plus, CalendarDays,
 } from "lucide-react";
 import { format } from "date-fns";

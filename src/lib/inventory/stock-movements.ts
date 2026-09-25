@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import type { StockMovementType } from "@/generated/prisma/client";
+import type { Prisma, StockMovementType } from "@/generated/prisma/client";
 
 export type StockMovementExtras = {
   reason?: string | null;
@@ -26,8 +26,25 @@ export async function applyStockMovement(params: {
   createdById?: string;
   /** Nur Admin darf negativen Bestand bewusst erlauben */
   allowNegative?: boolean;
+  /** Reservierte Menge, die durch diesen Verbrauch gleichzeitig freigegeben wird. */
+  reservedRelease?: number;
+  /** Vorhandene Transaktion, wenn die Bestandsbewegung Teil eines größeren Vorgangs ist. */
+  transaction?: Prisma.TransactionClient;
 } & StockMovementExtras) {
-  const balance = await prisma.stockBalance.findUnique({
+  if (params.transaction) {
+    return applyStockMovementWithClient(params.transaction, params);
+  }
+  return prisma.$transaction(
+    (transaction) => applyStockMovementWithClient(transaction, params),
+    { isolationLevel: "Serializable" }
+  );
+}
+
+async function applyStockMovementWithClient(
+  db: Prisma.TransactionClient,
+  params: Parameters<typeof applyStockMovement>[0]
+) {
+  const balance = await db.stockBalance.findUnique({
     where: {
       articleId_storageLocationId: {
         articleId: params.articleId,
@@ -38,6 +55,11 @@ export async function applyStockMovement(params: {
 
   const currentOnHand = balance?.onHandQuantity ?? 0;
   const reserved = balance?.reservedQuantity ?? 0;
+  const reservedRelease = Math.min(
+    reserved,
+    Math.max(0, Number(params.reservedRelease) || 0)
+  );
+  const newReserved = reserved - reservedRelease;
 
   let delta = 0;
   let movementQty = 0;
@@ -70,49 +92,51 @@ export async function applyStockMovement(params: {
       `Zu wenig Bestand: verfügbar ${currentOnHand}, angefragt ${movementQty}. Bestand darf nicht negativ werden.`
     );
   }
-  if (newOnHand < reserved && !params.allowNegative) {
-    throw new Error(`Bestand darf nicht unter reservierte Menge (${reserved}) fallen`);
+  if (newOnHand < newReserved && !params.allowNegative) {
+    throw new Error(`Bestand darf nicht unter reservierte Menge (${newReserved}) fallen`);
   }
 
-  const [movement] = await prisma.$transaction([
-    prisma.stockMovement.create({
-      data: {
-        tenantId: params.tenantId,
+  const movement = await db.stockMovement.create({
+    data: {
+      tenantId: params.tenantId,
+      articleId: params.articleId,
+      storageLocationId: params.storageLocationId,
+      orderId: params.orderId ?? undefined,
+      customerId: params.customerId ?? undefined,
+      employeeId: params.employeeId ?? undefined,
+      movementType: params.movementType,
+      reason: params.reason ?? undefined,
+      quantity: movementQty,
+      purchasePriceNet: params.purchasePriceNet ?? undefined,
+      salePriceNet: params.salePriceNet ?? undefined,
+      supplierName: params.supplierName ?? undefined,
+      notes: params.notes ?? undefined,
+      receiptFileName: params.receiptFileName ?? undefined,
+      receiptMimeType: params.receiptMimeType ?? undefined,
+      receiptStorageKey: params.receiptStorageKey ?? undefined,
+      receiptSizeBytes: params.receiptSizeBytes ?? undefined,
+      occurredAt: params.occurredAt ?? new Date(),
+      createdById: params.createdById,
+    },
+  });
+  await db.stockBalance.upsert({
+    where: {
+      articleId_storageLocationId: {
         articleId: params.articleId,
         storageLocationId: params.storageLocationId,
-        orderId: params.orderId ?? undefined,
-        customerId: params.customerId ?? undefined,
-        employeeId: params.employeeId ?? undefined,
-        movementType: params.movementType,
-        reason: params.reason ?? undefined,
-        quantity: movementQty,
-        purchasePriceNet: params.purchasePriceNet ?? undefined,
-        salePriceNet: params.salePriceNet ?? undefined,
-        supplierName: params.supplierName ?? undefined,
-        notes: params.notes ?? undefined,
-        receiptFileName: params.receiptFileName ?? undefined,
-        receiptMimeType: params.receiptMimeType ?? undefined,
-        receiptStorageKey: params.receiptStorageKey ?? undefined,
-        receiptSizeBytes: params.receiptSizeBytes ?? undefined,
-        occurredAt: params.occurredAt ?? new Date(),
-        createdById: params.createdById,
       },
-    }),
-    prisma.stockBalance.upsert({
-      where: {
-        articleId_storageLocationId: {
-          articleId: params.articleId,
-          storageLocationId: params.storageLocationId,
-        },
-      },
-      create: {
-        articleId: params.articleId,
-        storageLocationId: params.storageLocationId,
-        onHandQuantity: newOnHand,
-      },
-      update: { onHandQuantity: newOnHand },
-    }),
-  ]);
+    },
+    create: {
+      articleId: params.articleId,
+      storageLocationId: params.storageLocationId,
+      onHandQuantity: newOnHand,
+      reservedQuantity: newReserved,
+    },
+    update: {
+      onHandQuantity: newOnHand,
+      ...(reservedRelease > 0 ? { reservedQuantity: newReserved } : {}),
+    },
+  });
 
   return { onHandQuantity: newOnHand, movementId: movement.id };
 }

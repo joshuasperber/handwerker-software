@@ -48,6 +48,7 @@ export function EInvoiceExportDialog({
 
   useEffect(() => {
     if (!open || !documentId) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- Geschlossener Dialog verwirft seinen flüchtigen Prüfzstand.
       setCheck(null);
       setError("");
       return;

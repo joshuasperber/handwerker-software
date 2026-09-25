@@ -1,8 +1,7 @@
-import { getSession } from "@/lib/auth";
-import { apiSuccess, apiError } from "@/lib/api";
+import { apiSuccess, requireAuth } from "@/lib/api";
 
 export async function GET() {
-  const session = await getSession();
-  if (!session) return apiError("Nicht authentifiziert", 401);
-  return apiSuccess({ user: session });
+  const auth = await requireAuth();
+  if (auth instanceof Response) return auth;
+  return apiSuccess({ user: auth });
 }

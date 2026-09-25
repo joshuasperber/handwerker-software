@@ -119,6 +119,7 @@ export function CalendarCreateDialog({
 
   useEffect(() => {
     if (!open || !slot) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Ein neu geöffneter Slot initialisiert bewusst den Dialogentwurf.
     setMode("standalone");
     setDateStr(toDateInput(slot.start));
     setStartTime(toTimeInput(slot.start));

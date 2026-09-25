@@ -6,10 +6,12 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CanAccess } from "@/components/auth/can-access";
 import { InvestmentFormDialog } from "@/components/finance/investment-form-dialog";
-import { FinanceDisclaimer } from "@/components/finance/finance-disclaimer";
+import { InvestmentProgress } from "@/components/finance/investment-progress";
+import { InvestmentReserveCard } from "@/components/finance/investment-reserve-card";
 import { FINANCE_DISCLAIMERS, type PlannedInvestmentDTO } from "@/lib/finance/types";
 import { swrKeys, useApiSWR } from "@/lib/swr";
 import { formatDate, formatEuro } from "@/lib/utils";
+import { InfoButton } from "@/components/ui/info-button";
 import { ArrowLeft, Loader2, PiggyBank, Plus } from "lucide-react";
 
 function investmentMeta(inv: PlannedInvestmentDTO) {
@@ -89,9 +91,12 @@ export function InvestmentsPanel({
           <div className="flex items-center gap-2">
             <PiggyBank className="h-7 w-7 text-[#0d5c63]" />
             <h1 className="text-2xl font-bold text-slate-900">Investitionen</h1>
+            <InfoButton title="Investitionsplanung" ariaLabel="Info zur Investitionsplanung">
+              <p>{FINANCE_DISCLAIMERS.whenToInvest}</p>
+              <p>{FINANCE_DISCLAIMERS.reserveVirtual}</p>
+            </InfoButton>
           </div>
-          <p className="mt-1 max-w-2xl text-sm text-slate-500">
-            {FINANCE_DISCLAIMERS.whenToInvest}
+          <p className="mt-1 text-sm text-slate-500">
             {isValidating && investments && (
               <span className="ml-2 inline-flex items-center gap-1 text-slate-400">
                 <Loader2 className="h-3 w-3 animate-spin" />
@@ -108,7 +113,7 @@ export function InvestmentsPanel({
         </CanAccess>
       </div>
 
-      <FinanceDisclaimer compact />
+      <InvestmentReserveCard onChanged={refresh} />
 
       {loading && (
         <div className="flex items-center justify-center gap-2 py-16 text-slate-500">
@@ -144,7 +149,8 @@ export function InvestmentsPanel({
                     <tr className="border-b border-slate-100 text-left text-xs text-slate-500">
                       <th className="px-4 py-2 font-medium">Investition</th>
                       <th className="px-4 py-2 font-medium">Kategorie</th>
-                      <th className="px-4 py-2 font-medium text-right">Betrag</th>
+                      <th className="px-4 py-2 font-medium text-right">Ziel</th>
+                      <th className="px-4 py-2 font-medium">Topf</th>
                       <th className="px-4 py-2 font-medium">Zeitpunkt</th>
                       <th className="px-4 py-2 font-medium">Status</th>
                       <th className="px-4 py-2 font-medium">Bezug</th>
@@ -166,6 +172,15 @@ export function InvestmentsPanel({
                         <td className="px-4 py-2">{inv.categoryLabel}</td>
                         <td className="px-4 py-2 text-right font-semibold">
                           {formatEuro(inv.plannedAmount)}
+                        </td>
+                        <td className="px-4 py-2 min-w-[140px]">
+                          <InvestmentProgress percent={inv.progressPercent} />
+                          <p className="mt-1 text-xs text-slate-500">
+                            {formatEuro(inv.savedAmount)} · {inv.progressPercent} %
+                            {inv.monthSuggestion != null
+                              ? ` · Vorschlag ${formatEuro(inv.monthSuggestion)}`
+                              : ""}
+                          </p>
                         </td>
                         <td className="px-4 py-2 whitespace-nowrap">
                           {inv.plannedDate ? formatDate(inv.plannedDate) : "—"}
@@ -198,6 +213,12 @@ export function InvestmentsPanel({
                       </span>
                     </div>
                     <p className="mt-1 text-xs text-slate-500">{investmentMeta(inv)}</p>
+                    <div className="mt-2">
+                      <InvestmentProgress percent={inv.progressPercent} />
+                      <p className="mt-1 text-xs text-slate-500">
+                        Zurückgelegt {formatEuro(inv.savedAmount)} · offen {formatEuro(inv.remainingAmount)}
+                      </p>
+                    </div>
                     <div className="mt-2 flex flex-wrap items-center gap-2">
                       <Badge variant="outline">{inv.statusLabel}</Badge>
                       {inv.note && (
@@ -210,7 +231,7 @@ export function InvestmentsPanel({
             </>
           )}
           <p className="border-t border-slate-100 px-4 py-3 text-[11px] text-slate-400">
-            {FINANCE_DISCLAIMERS.plannedInvestments} {FINANCE_DISCLAIMERS.overview}
+            Virtuelle Rücklage, keine Überweisung. Details über das Info-Icon.
           </p>
         </Card>
       )}

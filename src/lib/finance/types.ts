@@ -2,6 +2,8 @@ import type {
   ExpenseCategory,
   ExpensePaymentStatus,
   FinanceRevenueBasis,
+  InvestmentCalculationBasis,
+  InvestmentSavingsModel,
   PlannedInvestmentCategory,
   PlannedInvestmentStatus,
 } from "@/generated/prisma/client";
@@ -46,13 +48,16 @@ export const INVESTMENT_CATEGORY_LABELS: Record<PlannedInvestmentCategory, strin
   VEHICLE: "Fahrzeug",
   SOFTWARE: "Software",
   MATERIAL_BULK: "Materialgroßeinkauf",
+  SMARTPHONE: "Smartphone",
   OTHER: "Sonstige Investition",
 };
 
 export const INVESTMENT_STATUS_LABELS: Record<PlannedInvestmentStatus, string> = {
   PLANNED: "Geplant",
+  ACTIVE: "Aktiv",
+  GOAL_REACHED: "Ziel erreicht",
   PURCHASED: "Gekauft",
-  POSTPONED: "Verschoben",
+  POSTPONED: "Pausiert",
   CANCELLED: "Verworfen",
 };
 
@@ -68,7 +73,9 @@ export const FINANCE_DISCLAIMERS = {
   depreciation:
     "Größere Anschaffungen können steuerlich über mehrere Jahre abgeschrieben werden. Bitte prüfe die Behandlung mit deinem Steuerberater.",
   plannedInvestments:
-    "Du hast geplante Investitionen hinterlegt. Bitte prüfe mit deinem Steuerberater, ob Zeitpunkt, Abschreibung oder Investitionsplanung relevant sind.",
+    "Du hast geplante Investitionen hinterlegt. Für diese Investition können steuerliche Besonderheiten wie Abschreibung oder Investitionsabzugsbeträge relevant sein. Bitte steuerlich prüfen. Die Rücklage ist nur eine Planung und keine Überweisung.",
+  reserveVirtual:
+    "Der Investitionstopf ist virtuell. Bestätigen legt den Betrag nur in der App als zurückgelegt fest. Es findet keine Banküberweisung statt.",
   estimatesOnly:
     "Diese Auswertung ist eine unverbindliche Orientierung auf Basis der erfassten Daten und ersetzt keine steuerliche Beratung.",
   highProfit:
@@ -144,6 +151,47 @@ export interface PlannedInvestmentDTO {
   projectId: string | null;
   projectName: string | null;
   createdAt: string;
+  savedAmount: number;
+  remainingAmount: number;
+  progressPercent: number;
+  startDate: string | null;
+  savingsModel: InvestmentSavingsModel;
+  savingsModelLabel: string;
+  percentOfRevenue: number | null;
+  amountPerOrder: number | null;
+  monthlyAmount: number | null;
+  calculationBasis: InvestmentCalculationBasis;
+  calculationBasisLabel: string;
+  /** Vorschlag für den offenen Monatsabschluss. Keine Buchung. */
+  monthSuggestion: number | null;
+  monthSuggestionLabel: string | null;
+  suggestionExplanation: string | null;
+  hints: string[];
+}
+
+export interface InvestmentReserveLineDTO {
+  investmentId: string;
+  title: string;
+  suggestedAmount: number;
+  explanation: string;
+  calculationBasisLabel: string | null;
+  orderCount: number;
+  status: "OPEN" | "CONFIRMED" | "ADJUSTED" | "DEFERRED" | "IGNORED";
+  appliedAmount: number | null;
+}
+
+export interface InvestmentReserveProposalDTO {
+  year: number;
+  month: number;
+  label: string;
+  lines: InvestmentReserveLineDTO[];
+  totalSuggested: number;
+  openCount: number;
+  warning: string | null;
+  percentWarning: string | null;
+  revenueHint: string | null;
+  /** Immer wahr: die App bewegt kein Geld. */
+  virtualOnly: true;
 }
 
 export interface FinanceWarning {

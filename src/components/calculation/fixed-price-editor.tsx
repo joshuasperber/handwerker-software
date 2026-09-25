@@ -77,9 +77,9 @@ export function FixedPriceEditor({
       <div>
         <h3 className="font-medium text-slate-900">Kundenabrechnung</h3>
         <p className="text-xs text-slate-500 mt-1">
-          Entscheiden Sie, ob Angebot/Rechnung mit Einzelpositionen oder einem verbindlichen
-          Festpreis abgerechnet wird. Die interne Kalkulation bleibt in beiden Fällen erhalten und
-          bearbeitbar.
+          Kalkulation berechnet den Preis aus Kosten, Gemeinkosten, Risiko und Gewinn.
+          Festpreis ist der von Ihnen eingegebene Endpreis. Interne Kosten können zusätzlich
+          erfasst werden und ändern diesen Betrag nicht.
         </p>
       </div>
 

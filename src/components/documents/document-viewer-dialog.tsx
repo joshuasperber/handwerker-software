@@ -100,6 +100,7 @@ export function DocumentViewerDialog({ state, onOpenChange }: DocumentViewerDial
   const [loadedCalcId, setLoadedCalcId] = useState<string | null>(state.calculationId);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Neuer Dialogzustand initialisiert die lokale Vorschau.
     setHtml(state.html);
     setMode("html");
     setLoadedNumber(state.documentNumber);
@@ -116,6 +117,7 @@ export function DocumentViewerDialog({ state, onOpenChange }: DocumentViewerDial
   useEffect(() => {
     if (!state.open || !state.documentId || state.html) return;
     let cancelled = false;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Ladeindikator gehört zum durch das Öffnen gestarteten Request.
     setBusy("load");
     fetchJson<{ html: string | null; document: { documentNumber: string; orderId: string | null; calculationId: string } }>(
       `/api/documents/${state.documentId}`

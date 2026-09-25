@@ -275,11 +275,11 @@ export type NavSection =
   | null;
 
 export const NAV_SECTION_LABELS: Record<Exclude<NavSection, null>, string> = {
-  betrieb: "Büro",
+  betrieb: "Tagesgeschäft",
   material: "Material",
   finanzen: "Finanzen",
-  stammdaten: "Stammdaten",
-  einstellungen: "Einstellungen",
+  stammdaten: "Kunden & Betrieb",
+  einstellungen: "Verwaltung",
 };
 
 export const DASHBOARD_NAV_CONFIG: {
@@ -344,8 +344,6 @@ export const FIELD_EXCLUDED_DASHBOARD_PREFIXES = [
 
 /** @deprecated use FIELD_EXCLUDED_DASHBOARD_PREFIXES */
 export const MONTEUR_EXCLUDED_DASHBOARD_PREFIXES = FIELD_EXCLUDED_DASHBOARD_PREFIXES;
-
-const FIELD_EXCLUDED_NAV = new Set<string>(FIELD_EXCLUDED_DASHBOARD_PREFIXES);
 
 export function isMonteurExcludedDashboardPath(pathname: string): boolean {
   return FIELD_EXCLUDED_DASHBOARD_PREFIXES.some(

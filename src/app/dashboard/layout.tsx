@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { SessionProvider } from "@/components/auth/can-access";
 import { DashboardShell } from "@/components/dashboard/dashboard-shell";
-import { getSession } from "@/lib/auth";
+import { getActiveSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { toAvatarSrc } from "@/lib/avatar";
 import {
@@ -16,7 +16,7 @@ export default async function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await getSession();
+  const session = await getActiveSession();
   if (!session) redirect("/login");
   if (session.role === "GAST") redirect("/portal");
   if (session.role === "KUNDE") redirect("/kunde");

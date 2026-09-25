@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { getSession } from "@/lib/auth";
+import { getActiveSession } from "@/lib/auth";
 import {
   canAccessWorkView,
   canSwitchAppViews,
@@ -23,7 +23,7 @@ export default async function MonteurLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await getSession();
+  const session = await getActiveSession();
   if (!session) redirect("/login");
   if (session.role === "KUNDE") redirect("/kunde");
   if (session.role === "GAST") redirect("/portal");
@@ -97,6 +97,7 @@ export default async function MonteurLayout({
             </span>
             <LogoutButton
               label=""
+              ariaLabel="Abmelden"
               icon
               className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-slate-400 hover:bg-slate-50 hover:text-red-600 disabled:opacity-60"
             />

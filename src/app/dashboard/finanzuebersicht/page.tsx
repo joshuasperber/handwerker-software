@@ -153,6 +153,7 @@ function FinanzuebersichtContent() {
 
   useEffect(() => {
     if (!overview || presetInitialized) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Einmalige Übernahme serverseitiger Einstellungen in den editierbaren Formularzustand.
     syncSettingsFromOverview(overview.settings);
     setPreset(
       overview.settings.defaultPeriodPreset === "custom"

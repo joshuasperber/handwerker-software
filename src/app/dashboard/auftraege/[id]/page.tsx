@@ -18,6 +18,7 @@ import { PlanViewer } from "@/components/orders/plan-viewer";
 import { PhotoGallery } from "@/components/orders/photo-gallery";
 import { OrderBillingSection } from "@/components/orders/billing-section";
 import { OrderFixedPriceCard } from "@/components/orders/order-fixed-price-card";
+import { OrderAddendaCard } from "@/components/orders/order-addenda-card";
 import { OrderDetailHeader } from "@/components/orders/order-detail-header";
 import { ProjectAssignField } from "@/components/orders/project-assign-field";
 import { OrderCustomerSection } from "@/components/orders/order-customer-section";
@@ -226,6 +227,7 @@ export default function AuftragDetailPage() {
   }, [id]);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Initialer, asynchroner Seitenabruf nach Routenwechsel.
     loadOrder();
     fetchJson("/api/teams").then((d) => { if (d.success && d.data) setTeams(d.data as typeof teams); });
     fetchJson("/api/vehicles").then((d) => { if (d.success && d.data) setVehicles(d.data as typeof vehicles); });
@@ -676,7 +678,31 @@ export default function AuftragDetailPage() {
         />
       </CanAccess>
 
+      <nav className="sticky top-0 z-10 -mx-1 flex gap-2 overflow-x-auto bg-slate-50/95 px-1 py-2 text-sm backdrop-blur">
+        {[
+          ["#auftrag-uebersicht", "Übersicht"],
+          ["#auftrag-material", "Material"],
+          ["#auftrag-durchfuehrung", "Durchführung"],
+          ["#auftrag-finanzen", "Finanzen"],
+        ].map(([href, label]) => (
+          <a
+            key={href}
+            href={href}
+            className="shrink-0 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-slate-700 active:bg-slate-100"
+          >
+            {label}
+          </a>
+        ))}
+      </nav>
+
+      <OrderAddendaCard
+        orderId={order.id}
+        useFixedPrice={Boolean(order.useFixedPrice)}
+        onChanged={loadOrder}
+      />
+
       <CanAccess permission="calculations.read">
+        <div id="auftrag-finanzen">
         <OrderBillingSection
           orderId={order.id}
           orderStatus={order.status}
@@ -684,9 +710,10 @@ export default function AuftragDetailPage() {
           onCreateCalculation={createCalculation}
           onInvoiceCreated={loadOrder}
         />
+        </div>
       </CanAccess>
 
-      <div className="grid gap-6 lg:grid-cols-3">
+      <div id="auftrag-uebersicht" className="grid gap-6 lg:grid-cols-3">
         <div className="lg:col-span-2 space-y-6">
           <OrderCustomerSection
             customer={order.customer}
@@ -760,7 +787,7 @@ export default function AuftragDetailPage() {
             />
           </Card>
 
-          <Card title="Packliste / Material">
+          <Card id="auftrag-material" title="Packliste / Material">
               <p className="text-xs text-slate-400 mb-2">
                 Materialstatus: {MATERIAL_STATUS_LABELS[order.materialStatus ?? "NOT_CHECKED"] ?? order.materialStatus}
               </p>
@@ -1120,7 +1147,7 @@ export default function AuftragDetailPage() {
             )}
           </Card>
 
-          <Card title="Arbeitszeit">
+          <Card id="auftrag-durchfuehrung" title="Arbeitszeit">
             <div className="grid grid-cols-2 gap-3 text-sm mb-3">
               <div>
                 <p className="text-xs text-slate-500">Geplant</p>

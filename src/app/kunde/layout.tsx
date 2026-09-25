@@ -1,12 +1,12 @@
 import { redirect } from "next/navigation";
-import { getSession } from "@/lib/auth";
+import { getActiveSession } from "@/lib/auth";
 import { canAccessCustomerPortal, getRoleHomePath } from "@/lib/permissions";
 import { SessionProvider } from "@/components/auth/can-access";
 import { LogoutButton } from "@/components/auth/logout-button";
 import { User } from "lucide-react";
 
 export default async function KundeLayout({ children }: { children: React.ReactNode }) {
-  const session = await getSession();
+  const session = await getActiveSession();
   if (!session) redirect("/login");
   if (!canAccessCustomerPortal(session.role)) redirect(getRoleHomePath(session.role));
 

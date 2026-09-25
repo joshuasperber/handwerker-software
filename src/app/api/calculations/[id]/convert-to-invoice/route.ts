@@ -11,6 +11,8 @@ import { buildDocumentSnapshot, renderSnapshotHtml } from "@/lib/documents/snaps
 import { createAuditLog } from "@/lib/audit";
 import {
   INVOICE_EXISTS_MESSAGE,
+  INVOICE_FINAL_MESSAGE,
+  decideInvoiceWrite,
   invoiceEditBlockReason,
   isActiveInvoice,
   isInvoiceEditable,
@@ -136,12 +138,12 @@ export async function POST(
 
   const activeInvoices = await findActiveInvoices(auth.tenantId, id, loaded.orderId);
   const primary = activeInvoices[0] ?? null;
+  const decision = decideInvoiceWrite(primary, mode);
 
-  // Ohne bewusste Wahl: bei bestehender Rechnung abbrechen und Optionen anbieten.
-  if (!mode && primary) {
-    return apiError(INVOICE_EXISTS_MESSAGE, 409, {
+  if (decision === "conflict") {
+    return apiError(primary && !isInvoiceEditable(primary) ? INVOICE_FINAL_MESSAGE : INVOICE_EXISTS_MESSAGE, 409, {
       code: "INVOICE_EXISTS",
-      invoice: serializeInvoiceConflict(primary),
+      invoice: primary ? serializeInvoiceConflict(primary) : null,
       invoices: activeInvoices.map(serializeInvoiceConflict),
     });
   }
@@ -151,7 +153,7 @@ export async function POST(
   const dueDate =
     terms != null ? new Date(issueDate.getTime() + terms * 24 * 60 * 60 * 1000) : null;
 
-  if (mode === "update") {
+  if (decision === "update") {
     const target =
       (documentId
         ? activeInvoices.find((d) => d.id === documentId)
@@ -247,7 +249,7 @@ export async function POST(
   }
 
   // create | correction | erste Rechnung ohne mode (bereits oben abgefangen wenn vorhanden)
-  if (mode === "create" || mode === "correction" || (!mode && !primary)) {
+  if (decision === "create" || decision === "correction") {
     const { doc, snapshot } = await prisma.$transaction(async (tx) => {
       const docNumber = await nextDocumentNumberTx(tx, auth.tenantId, "INVOICE", issueDate);
       const snapshot = buildDocumentSnapshot(

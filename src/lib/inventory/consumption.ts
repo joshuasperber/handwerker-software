@@ -1,102 +1,152 @@
 import { prisma } from "@/lib/prisma";
 import { applyStockMovement } from "./stock-movements";
 import { checkOrderMaterialStatus } from "./orders";
+import {
+  validateConsumptionLines,
+  type ConsumptionLineInput,
+} from "./consumption-validation";
+import { releaseOrderedQuantity } from "./purchase-order-stock";
 
 export async function bookOrderConsumption(params: {
   tenantId: string;
   orderId: string;
-  lines: { lineId: string; quantityConsumed: number; returned?: number }[];
-  employeeId?: string;
+  lines: ConsumptionLineInput[];
+  employeeId: string;
 }) {
-  const mainLocation = await prisma.storageLocation.findFirst({
-    where: { tenantId: params.tenantId, locationType: "HAUPTLAGER" },
-  });
+  const parsed = validateConsumptionLines(params.lines);
+  if ("error" in parsed) throw new Error(parsed.error);
 
-  for (const item of params.lines) {
-    const line = await prisma.orderMaterialLine.findFirst({
-      where: { id: item.lineId, orderId: params.orderId },
-      include: { reservations: { where: { status: "RESERVIERT" } } },
-    });
-    if (!line || line.isTool || !line.articleId) continue;
+  let fullyConsumed: boolean;
+  try {
+    fullyConsumed = await prisma.$transaction(async (transaction) => {
+      const employee = await transaction.employee.findFirst({
+        where: { id: params.employeeId, tenantId: params.tenantId },
+        select: { id: true },
+      });
+      if (!employee) throw new Error("Mitarbeiter nicht gefunden");
 
-    const consumeQty = item.quantityConsumed;
-    const returnQty = item.returned ?? 0;
-
-    const reservation = line.reservations[0];
-    const locationId = reservation?.storageLocationId ?? mainLocation?.id;
-    if (!locationId) continue;
-
-    if (consumeQty > 0) {
-      await applyStockMovement({
-        tenantId: params.tenantId,
-        articleId: line.articleId,
-        storageLocationId: locationId,
-        movementType: "VERBRAUCH",
-        quantity: consumeQty,
-        orderId: params.orderId,
-        notes: `Verbrauch Auftrag ${params.orderId}`,
+      const mainLocation = await transaction.storageLocation.findFirst({
+        where: { tenantId: params.tenantId, locationType: "HAUPTLAGER" },
       });
 
-      if (reservation) {
-        const releaseQty = Math.min(reservation.quantity, consumeQty);
-        await prisma.stockBalance.update({
+      for (const item of parsed.lines) {
+        const line = await transaction.orderMaterialLine.findFirst({
           where: {
-            articleId_storageLocationId: {
-              articleId: line.articleId,
-              storageLocationId: locationId,
-            },
+            id: item.lineId,
+            orderId: params.orderId,
+            order: { tenantId: params.tenantId },
           },
-          data: { reservedQuantity: { decrement: releaseQty } },
+          include: { reservations: { where: { status: "RESERVIERT" } } },
         });
-        await prisma.reservation.update({
-          where: { id: reservation.id },
-          data: { status: "VERBRAUCHT" },
+        if (!line) throw new Error("Materialposition nicht gefunden");
+        if (line.isTool || !line.articleId) {
+          throw new Error(`„${line.name}“ kann nicht als Verbrauch gebucht werden`);
+        }
+
+        const consumeQty = item.quantityConsumed;
+        const returnQty = item.returned ?? 0;
+        if (returnQty > line.quantityConsumed + consumeQty) {
+          throw new Error(
+            `Rückgabe für „${line.name}“ ist größer als der bisherige Verbrauch.`
+          );
+        }
+
+        const reservation = line.reservations[0];
+        const locationId = reservation?.storageLocationId ?? mainLocation?.id;
+        if (!locationId) throw new Error("Kein Lagerort für die Materialbuchung vorhanden");
+
+        if (consumeQty > 0) {
+          const releaseQty = reservation
+            ? Math.min(reservation.quantity, consumeQty)
+            : 0;
+          await applyStockMovement({
+            tenantId: params.tenantId,
+            articleId: line.articleId,
+            storageLocationId: locationId,
+            movementType: "VERBRAUCH",
+            quantity: consumeQty,
+            orderId: params.orderId,
+            employeeId: params.employeeId,
+            reservedRelease: releaseQty,
+            notes: `Verbrauch Auftrag ${params.orderId}`,
+            transaction,
+          });
+
+          if (reservation) {
+            await transaction.reservation.update({
+              where: { id: reservation.id },
+              data:
+                releaseQty >= reservation.quantity
+                  ? { status: "VERBRAUCHT" }
+                  : { quantity: { decrement: releaseQty } },
+            });
+          }
+        }
+
+        if (returnQty > 0) {
+          await applyStockMovement({
+            tenantId: params.tenantId,
+            articleId: line.articleId,
+            storageLocationId: locationId,
+            movementType: "RUECKGABE",
+            quantity: returnQty,
+            orderId: params.orderId,
+            employeeId: params.employeeId,
+            transaction,
+          });
+        }
+
+        const nextConsumed = line.quantityConsumed + consumeQty - returnQty;
+        await transaction.orderMaterialLine.update({
+          where: { id: line.id },
+          data: {
+            quantityConsumed: nextConsumed,
+            ...(nextConsumed >= line.quantityRequired
+              ? { lineStatus: "CONSUMED" }
+              : {}),
+          },
+        });
+
+        const netUsage = consumeQty - returnQty;
+        if (netUsage !== 0) {
+          await transaction.materialUsage.create({
+            data: {
+              orderId: params.orderId,
+              employeeId: params.employeeId,
+              name: line.name,
+              quantity: netUsage,
+              unit: line.unit,
+              notes: netUsage < 0 ? "Materialrückgabe" : null,
+            },
+          });
+        }
+      }
+
+      const materialLines = await transaction.orderMaterialLine.findMany({
+        where: { orderId: params.orderId, isTool: false },
+        select: { quantityRequired: true, quantityConsumed: true },
+      });
+      const complete =
+        materialLines.length > 0 &&
+        materialLines.every((line) => line.quantityConsumed >= line.quantityRequired);
+      if (complete) {
+        await transaction.order.update({
+          where: { id: params.orderId },
+          data: { materialStatus: "CONSUMED" },
         });
       }
+      return complete;
+    }, { isolationLevel: "Serializable" });
+  } catch (error) {
+    if ((error as { code?: string }).code === "P2034") {
+      throw new Error("Der Bestand wurde parallel geändert. Bitte erneut versuchen.");
     }
-
-    if (returnQty > 0) {
-      await applyStockMovement({
-        tenantId: params.tenantId,
-        articleId: line.articleId,
-        storageLocationId: locationId,
-        movementType: "RUECKGABE",
-        quantity: returnQty,
-        orderId: params.orderId,
-      });
-    }
-
-    await prisma.orderMaterialLine.update({
-      where: { id: line.id },
-      data: {
-        quantityConsumed: { increment: consumeQty - returnQty },
-        lineStatus: "CONSUMED",
-      },
-    });
-
-    await prisma.materialUsage.create({
-      data: {
-        orderId: params.orderId,
-        employeeId: params.employeeId ?? (await getAnyEmployeeId(params.tenantId)),
-        name: line.name,
-        quantity: consumeQty,
-        unit: line.unit,
-      },
-    });
+    throw error;
   }
 
-  await prisma.order.update({
-    where: { id: params.orderId },
-    data: { materialStatus: "CONSUMED" },
-  });
+  if (fullyConsumed) return "CONSUMED" as const;
 
   return checkOrderMaterialStatus(params.orderId, params.tenantId);
-}
-
-async function getAnyEmployeeId(tenantId: string): Promise<string> {
-  const emp = await prisma.employee.findFirst({ where: { tenantId } });
-  if (!emp) throw new Error("Kein Mitarbeiter gefunden");
-  return emp.id;
 }
 
 export async function receivePurchaseOrder(
@@ -105,74 +155,104 @@ export async function receivePurchaseOrder(
   lines: { lineId: string; quantityReceived: number }[],
   storageLocationId?: string
 ) {
-  const po = await prisma.purchaseOrder.findFirst({
-    where: { id: purchaseOrderId, tenantId },
-    include: { lines: true },
-  });
-  if (!po) throw new Error("Bestellung nicht gefunden");
-
-  let targetLocationId = storageLocationId;
-  if (!targetLocationId) {
-    const mainLocation = await prisma.storageLocation.findFirst({
-      where: { tenantId, locationType: "HAUPTLAGER" },
-    });
-    if (!mainLocation) throw new Error("Kein Hauptlager – bitte Lagerort wählen");
-    targetLocationId = mainLocation.id;
+  if (!lines.length) throw new Error("Mindestens eine Wareneingangsposition erforderlich");
+  if (new Set(lines.map((line) => line.lineId)).size !== lines.length) {
+    throw new Error("Eine Bestellposition darf pro Wareneingang nur einmal vorkommen");
+  }
+  if (lines.some((line) => !Number.isFinite(line.quantityReceived) || line.quantityReceived <= 0)) {
+    throw new Error("Wareneingangsmengen müssen größer als 0 sein");
   }
 
-  const location = await prisma.storageLocation.findFirst({
-    where: { id: targetLocationId, tenantId },
-  });
-  if (!location) throw new Error("Lagerort nicht gefunden");
+  try {
+    return await prisma.$transaction(async (transaction) => {
+      const po = await transaction.purchaseOrder.findFirst({
+        where: { id: purchaseOrderId, tenantId },
+        include: { lines: true },
+      });
+      if (!po) throw new Error("Bestellung nicht gefunden");
 
-  for (const item of lines) {
-    const line = po.lines.find((l) => l.id === item.lineId);
-    if (!line || item.quantityReceived <= 0) continue;
+      let targetLocationId = storageLocationId;
+      if (!targetLocationId) {
+        const mainLocation = await transaction.storageLocation.findFirst({
+          where: { tenantId, locationType: "HAUPTLAGER", isActive: true },
+          select: { id: true },
+        });
+        if (!mainLocation) throw new Error("Kein Hauptlager – bitte Lagerort wählen");
+        targetLocationId = mainLocation.id;
+      }
 
-    await applyStockMovement({
-      tenantId,
-      articleId: line.articleId,
-      storageLocationId: targetLocationId,
-      movementType: "ZUGANG",
-      quantity: item.quantityReceived,
-      notes: `Wareneingang ${po.poNumber} → ${location.name}`,
-    });
+      const location = await transaction.storageLocation.findFirst({
+        where: { id: targetLocationId, tenantId, isActive: true },
+        select: { id: true, name: true },
+      });
+      if (!location) throw new Error("Lagerort nicht gefunden");
 
-    await prisma.purchaseOrderLine.update({
-      where: { id: line.id },
-      data: { quantityReceived: { increment: item.quantityReceived } },
-    });
+      for (const item of lines) {
+        const line = po.lines.find((candidate) => candidate.id === item.lineId);
+        if (!line) throw new Error("Bestellposition nicht gefunden");
+        const outstanding = line.quantityOrdered - line.quantityReceived;
+        if (item.quantityReceived > outstanding) {
+          throw new Error(
+            `Wareneingang überschreitet die offene Menge (${outstanding})`
+          );
+        }
 
-    await prisma.stockBalance.updateMany({
-      where: { articleId: line.articleId },
-      data: { orderedQuantity: { decrement: Math.min(item.quantityReceived, line.quantityOrdered) } },
-    });
+        await applyStockMovement({
+          tenantId,
+          articleId: line.articleId,
+          storageLocationId: location.id,
+          movementType: "ZUGANG",
+          quantity: item.quantityReceived,
+          notes: `Wareneingang ${po.poNumber} → ${location.name}`,
+          transaction,
+        });
+        await transaction.purchaseOrderLine.update({
+          where: { id: line.id },
+          data: { quantityReceived: { increment: item.quantityReceived } },
+        });
+        await releaseOrderedQuantity(
+          transaction,
+          tenantId,
+          line.articleId,
+          item.quantityReceived,
+          location.id
+        );
+      }
+
+      const updated = await transaction.purchaseOrder.findUniqueOrThrow({
+        where: { id: purchaseOrderId },
+        include: { lines: true },
+      });
+      const allReceived = updated.lines.every(
+        (line) => line.quantityReceived >= line.quantityOrdered
+      );
+      const anyReceived = updated.lines.some((line) => line.quantityReceived > 0);
+      const status = allReceived
+        ? "DELIVERED"
+        : anyReceived
+          ? "PARTLY_DELIVERED"
+          : po.status;
+
+      const result = await transaction.purchaseOrder.update({
+        where: { id: purchaseOrderId },
+        data: { status },
+        include: { lines: true },
+      });
+      await transaction.delivery.create({
+        data: {
+          tenantId,
+          purchaseOrderId,
+          status,
+          deliveredAt: new Date(),
+          notes: `Eingelagert in: ${location.name}`,
+        },
+      });
+      return result;
+    }, { isolationLevel: "Serializable" });
+  } catch (error) {
+    if ((error as { code?: string }).code === "P2034") {
+      throw new Error("Der Wareneingang wurde parallel geändert. Bitte erneut versuchen.");
+    }
+    throw error;
   }
-
-  const updated = await prisma.purchaseOrder.findUnique({
-    where: { id: purchaseOrderId },
-    include: { lines: true },
-  });
-
-  const allReceived = updated!.lines.every((l) => l.quantityReceived >= l.quantityOrdered);
-  const anyReceived = updated!.lines.some((l) => l.quantityReceived > 0);
-
-  const status = allReceived ? "DELIVERED" : anyReceived ? "PARTLY_DELIVERED" : po.status;
-
-  await prisma.purchaseOrder.update({
-    where: { id: purchaseOrderId },
-    data: { status },
-  });
-
-  await prisma.delivery.create({
-    data: {
-      tenantId,
-      purchaseOrderId,
-      status,
-      deliveredAt: new Date(),
-      notes: `Eingelagert in: ${location.name}`,
-    },
-  });
-
-  return updated;
 }

@@ -25,6 +25,14 @@ import {
   FINANCE_DISCLAIMERS,
   type PlannedInvestmentDTO,
 } from "@/lib/finance/types";
+import {
+  CALCULATION_BASIS_LABELS,
+  SAVINGS_MODEL_LABELS,
+  type InvestmentCalculationBasis,
+  type InvestmentSavingsModel,
+} from "@/lib/finance/investment-reserve";
+import { InvestmentProgress } from "@/components/finance/investment-progress";
+import { formatEuro } from "@/lib/utils";
 import { saveJson } from "@/lib/save-toast";
 import { fetchJson } from "@/lib/fetch-json";
 
@@ -52,6 +60,13 @@ export function InvestmentFormDialog({
   const [category, setCategory] = useState("MACHINE");
   const [status, setStatus] = useState("PLANNED");
   const [note, setNote] = useState("");
+  const [savedAmount, setSavedAmount] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [savingsModel, setSavingsModel] = useState<InvestmentSavingsModel>("TARGET_SCHEDULE");
+  const [percentOfRevenue, setPercentOfRevenue] = useState("");
+  const [amountPerOrder, setAmountPerOrder] = useState("");
+  const [monthlyAmount, setMonthlyAmount] = useState("");
+  const [calculationBasis, setCalculationBasis] = useState<InvestmentCalculationBasis>("NET");
   const [machineId, setMachineId] = useState(NONE);
   const [articleId, setArticleId] = useState(NONE);
   const [projectId, setProjectId] = useState(NONE);
@@ -67,6 +82,13 @@ export function InvestmentFormDialog({
     setCategory("MACHINE");
     setStatus("PLANNED");
     setNote("");
+    setSavedAmount("");
+    setStartDate("");
+    setSavingsModel("TARGET_SCHEDULE");
+    setPercentOfRevenue("");
+    setAmountPerOrder("");
+    setMonthlyAmount("");
+    setCalculationBasis("NET");
     setMachineId(NONE);
     setArticleId(NONE);
     setProjectId(NONE);
@@ -74,6 +96,7 @@ export function InvestmentFormDialog({
 
   useEffect(() => {
     if (!open) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- Geschlossener Dialog verwirft den Formularentwurf.
       resetForm();
       return;
     }
@@ -84,6 +107,15 @@ export function InvestmentFormDialog({
       setCategory(investment.category);
       setStatus(investment.status);
       setNote(investment.note ?? "");
+      setSavedAmount(String(investment.savedAmount ?? 0));
+      setStartDate(investment.startDate ? investment.startDate.slice(0, 10) : "");
+      setSavingsModel(investment.savingsModel ?? "TARGET_SCHEDULE");
+      setPercentOfRevenue(
+        investment.percentOfRevenue != null ? String(investment.percentOfRevenue) : ""
+      );
+      setAmountPerOrder(investment.amountPerOrder != null ? String(investment.amountPerOrder) : "");
+      setMonthlyAmount(investment.monthlyAmount != null ? String(investment.monthlyAmount) : "");
+      setCalculationBasis(investment.calculationBasis ?? "NET");
       setMachineId(investment.machineId ?? NONE);
       setArticleId(investment.articleId ?? NONE);
       setProjectId(investment.projectId ?? NONE);
@@ -119,7 +151,8 @@ export function InvestmentFormDialog({
 
   const handleSubmit = async () => {
     const amount = parseFloat(plannedAmount.replace(",", "."));
-    if (!title.trim() || Number.isNaN(amount) || amount < 0) return;
+    const saved = parseFloat((savedAmount || "0").replace(",", "."));
+    if (!title.trim() || Number.isNaN(amount) || amount < 0 || Number.isNaN(saved) || saved < 0) return;
 
     setSaving(true);
     const payload = {
@@ -129,6 +162,16 @@ export function InvestmentFormDialog({
       category,
       status,
       note: note.trim() || null,
+      savedAmount: saved,
+      startDate: startDate ? new Date(startDate).toISOString() : null,
+      savingsModel,
+      percentOfRevenue:
+        savingsModel === "PERCENT_REVENUE" ? parseFloat(percentOfRevenue.replace(",", ".")) : null,
+      amountPerOrder:
+        savingsModel === "FIXED_PER_ORDER" ? parseFloat(amountPerOrder.replace(",", ".")) : null,
+      monthlyAmount:
+        savingsModel === "FIXED_MONTHLY" ? parseFloat(monthlyAmount.replace(",", ".")) : null,
+      calculationBasis,
       machineId: machineId === NONE ? null : machineId,
       articleId: articleId === NONE ? null : articleId,
       projectId: projectId === NONE ? null : projectId,
@@ -183,9 +226,23 @@ export function InvestmentFormDialog({
             />
           </div>
 
+          {investment && (
+            <div className="rounded-lg border border-slate-100 p-3">
+              <div className="mb-2 flex justify-between text-sm">
+                <span>Zurückgelegt {formatEuro(investment.savedAmount)}</span>
+                <span>Offen {formatEuro(investment.remainingAmount)}</span>
+              </div>
+              <InvestmentProgress percent={investment.progressPercent} />
+              <p className="mt-1 text-xs text-slate-500">{investment.progressPercent} % von {formatEuro(investment.plannedAmount)}</p>
+              {investment.hints.map((hint) => (
+                <p key={hint} className="mt-2 text-xs text-slate-600">{hint}</p>
+              ))}
+            </div>
+          )}
+
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <div className="grid gap-2">
-              <Label htmlFor="inv-amount">Geplanter Betrag (€)</Label>
+              <Label htmlFor="inv-amount">Gewünschter Kaufpreis (€)</Label>
               <Input
                 id="inv-amount"
                 inputMode="decimal"
@@ -194,7 +251,16 @@ export function InvestmentFormDialog({
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="inv-date">Geplantes Kaufdatum</Label>
+              <Label htmlFor="inv-saved">Bereits zurückgelegt (€)</Label>
+              <Input
+                id="inv-saved"
+                inputMode="decimal"
+                value={savedAmount}
+                onChange={(e) => setSavedAmount(e.target.value)}
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="inv-date">Zieltermin</Label>
               <Input
                 id="inv-date"
                 type="date"
@@ -202,7 +268,100 @@ export function InvestmentFormDialog({
                 onChange={(e) => setPlannedDate(e.target.value)}
               />
             </div>
+            <div className="grid gap-2">
+              <Label htmlFor="inv-start">Startdatum</Label>
+              <Input
+                id="inv-start"
+                type="date"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+              />
+            </div>
           </div>
+
+          <div className="grid gap-2">
+            <Label>Wie möchtest du für diese Investition zurücklegen?</Label>
+            <Select
+              value={savingsModel}
+              onValueChange={(value) => setSavingsModel(value as InvestmentSavingsModel)}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {Object.entries(SAVINGS_MODEL_LABELS).map(([value, label]) => (
+                  <SelectItem key={value} value={value}>
+                    {label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {savingsModel === "PERCENT_REVENUE" && (
+            <div className="grid gap-2">
+              <Label htmlFor="inv-percent">Prozent vom Auftragsumsatz</Label>
+              <Input
+                id="inv-percent"
+                inputMode="decimal"
+                value={percentOfRevenue}
+                onChange={(e) => setPercentOfRevenue(e.target.value)}
+                placeholder="z. B. 5"
+              />
+            </div>
+          )}
+          {savingsModel === "FIXED_PER_ORDER" && (
+            <div className="grid gap-2">
+              <Label htmlFor="inv-per-order">Betrag pro abgeschlossenem Auftrag (€)</Label>
+              <Input
+                id="inv-per-order"
+                inputMode="decimal"
+                value={amountPerOrder}
+                onChange={(e) => setAmountPerOrder(e.target.value)}
+                placeholder="z. B. 50"
+              />
+            </div>
+          )}
+          {savingsModel === "FIXED_MONTHLY" && (
+            <div className="grid gap-2">
+              <Label htmlFor="inv-monthly">Fester Betrag pro Monat (€)</Label>
+              <Input
+                id="inv-monthly"
+                inputMode="decimal"
+                value={monthlyAmount}
+                onChange={(e) => setMonthlyAmount(e.target.value)}
+                placeholder="z. B. 500"
+              />
+            </div>
+          )}
+          {savingsModel === "TARGET_SCHEDULE" && (
+            <p className="text-xs text-slate-500">
+              Die App teilt den noch fehlenden Betrag auf die Monate bis zum Zieltermin auf.
+            </p>
+          )}
+          {(savingsModel === "PERCENT_REVENUE" || savingsModel === "FIXED_PER_ORDER") && (
+            <div className="grid gap-2">
+              <Label>Berechnungsbasis</Label>
+              <Select
+                value={calculationBasis}
+                onValueChange={(value) => setCalculationBasis(value as InvestmentCalculationBasis)}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {Object.entries(CALCULATION_BASIS_LABELS).map(([value, label]) => (
+                    <SelectItem key={value} value={value}>
+                      {label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <p className="text-xs text-slate-500">
+                Standard ist der Netto-Auftragsumsatz abgeschlossener Aufträge. Die Basis steht später am Vorschlag.
+              </p>
+            </div>
+          )}
 
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <div className="grid gap-2">

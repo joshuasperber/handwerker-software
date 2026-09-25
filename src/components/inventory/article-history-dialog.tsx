@@ -48,6 +48,7 @@ export function ArticleHistoryDialog({
 
   useEffect(() => {
     if (!articleId) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Ladeindikator gehört zum durch die Artikelauswahl gestarteten Request.
     setLoading(true);
     setError("");
     fetch(`/api/stock/movements?articleId=${articleId}&limit=100`)

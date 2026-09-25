@@ -1,6 +1,5 @@
 import { NextRequest } from "next/server";
-import { prisma } from "@/lib/prisma";
-import { requireAuth, apiSuccess, apiError } from "@/lib/api";
+import { requireAuth, apiSuccess } from "@/lib/api";
 import { requireMonteurOrder } from "@/lib/monteur-access";
 import { isValidPhotoCategory } from "@/lib/files";
 import { uploadOrderFiles, listOrderPhotoFiles } from "@/lib/orders/order-files";

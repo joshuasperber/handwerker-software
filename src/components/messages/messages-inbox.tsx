@@ -54,7 +54,7 @@ export function MessagesInbox({
   const [msg, setMsg] = useState("");
   const [loadError, setLoadError] = useState("");
 
-  function load() {
+  const load = useCallback(() => {
     const params = filter === "all" ? "" : `?category=${filter}`;
     fetchJson<Message[]>(`/api/messages${params}`).then((d) => {
       if (d.success && d.data) {
@@ -64,9 +64,9 @@ export function MessagesInbox({
         setLoadError(d.error ?? "Nachrichten konnten nicht geladen werden");
       }
     });
-  }
+  }, [filter]);
 
-  useEffect(() => { load(); }, [filter]);
+  useEffect(() => { load(); }, [load]);
 
   useEffect(() => {
     type OrderLite = { id: string; orderNumber: string; customer: { lastName: string } };

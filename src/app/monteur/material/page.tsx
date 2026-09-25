@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { format } from "date-fns";
 import { de } from "date-fns/locale";
-import { Card } from "@/components/ui/card";
 import { MonteurMaterialView } from "@/components/monteur/material-view";
 import { fetchJson } from "@/lib/fetch-json";
 

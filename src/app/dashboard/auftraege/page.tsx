@@ -48,6 +48,7 @@ export default function AuftraegePage() {
   useEffect(() => {
     const urlStatus = searchParams.get("status");
     if (urlStatus && urlStatus !== statusFilter) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- URL-Filter ist die externe Quelle für den initialen UI-Zustand.
       setStatusFilter(urlStatus);
     }
     const urlTab = searchParams.get("tab");

@@ -186,6 +186,7 @@ export default function BenachrichtigungenPage() {
       .finally(() => setLoading(false));
     const stored = window.localStorage.getItem(TEST_PHONE_KEY);
     if (stored && !LEGACY_TEST_PHONES.has(stored.trim())) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- Browserpersistenz wird einmalig nach dem Mount synchronisiert.
       setTestPhone(stored);
     } else {
       setTestPhone(DEFAULT_TEST_PHONE);

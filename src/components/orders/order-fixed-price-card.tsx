@@ -43,6 +43,7 @@ export function OrderFixedPriceCard({
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Aktualisierte Serverwerte initialisieren den editierbaren Kartenentwurf.
     setUseFixedPrice(Boolean(initial.useFixedPrice));
     setFixedPriceNet(initial.fixedPriceNet);
     setFixedPriceLabel(initial.fixedPriceLabel);

@@ -16,6 +16,7 @@ export function CookieNotice() {
   useEffect(() => {
     try {
       if (localStorage.getItem(STORAGE_KEY) !== "1") {
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- Zustimmung kann erst clientseitig aus localStorage gelesen werden.
         setVisible(true);
       }
     } catch {

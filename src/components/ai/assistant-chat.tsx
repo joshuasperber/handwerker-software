@@ -107,6 +107,7 @@ export function AssistantChat({
   }, []);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Initialer, asynchroner Sitzungsabruf.
     void loadSessions();
   }, [loadSessions]);
 

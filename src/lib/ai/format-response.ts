@@ -293,7 +293,7 @@ export function formatEmployeeMaterials(data: {
   from: Date;
   to: Date;
 }): AiChatResult {
-  const { employee, appointments, materialLines, serviceMaterials, stockInfo, from, to } = data;
+  const { employee, appointments, materialLines, serviceMaterials, stockInfo, from } = data;
 
   if (appointments.length === 0) {
     return {

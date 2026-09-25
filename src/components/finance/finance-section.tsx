@@ -30,7 +30,7 @@ export function FinanceSection({
         </div>
         <button
           type="button"
-          className="shrink-0 rounded-lg p-1.5 text-slate-500 hover:bg-slate-50 lg:hidden"
+          className="shrink-0 rounded-lg p-1.5 text-slate-500 hover:bg-slate-50 active:bg-slate-100"
           aria-expanded={open}
           aria-label={open ? "Details zuklappen" : "Details anzeigen"}
           onClick={() => setOpen((v) => !v)}
@@ -38,7 +38,7 @@ export function FinanceSection({
           <ChevronDown className={cn("h-4 w-4 transition-transform", open && "rotate-180")} />
         </button>
       </div>
-      <div className={cn("mt-3", open ? "block" : "hidden", "lg:block")}>{children}</div>
+      <div className={cn("mt-3", open ? "block" : "hidden")}>{children}</div>
     </Card>
   );
 }

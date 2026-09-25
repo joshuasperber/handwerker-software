@@ -1,7 +1,6 @@
 import { endOfDay, startOfDay, subMonths, startOfMonth, endOfMonth } from "date-fns";
 import { prisma } from "@/lib/prisma";
 import type { SessionUser } from "@/lib/auth";
-import { orderServiceLabel, formatDate, formatDateTime, formatSlotLabel, ORDER_STATUS_LABELS } from "@/lib/utils";
 import { getFinanceOverview } from "@/lib/finance/overview";
 import type { AiIntent, PersonMatch } from "./types";
 import { hasPermission } from "@/lib/permissions";

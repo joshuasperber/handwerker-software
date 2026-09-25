@@ -194,6 +194,7 @@ export default function NeuerAuftragPage() {
 
   useEffect(() => {
     if (step === 3) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- Vorschläge werden nur beim Eintritt in den Materialschritt geladen.
       void loadMaterialSuggestions(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

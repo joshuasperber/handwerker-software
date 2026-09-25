@@ -50,7 +50,7 @@ describe("toDocumentListItem overdue", () => {
   });
 
   it("builds a list item without loading the document snapshot", () => {
-    const { dataSnapshotJson: _omit, ...withoutSnap } = baseDoc;
+    const withoutSnap = { ...baseDoc, dataSnapshotJson: undefined };
     const item = toDocumentListItem(withoutSnap, now);
     assert.equal(item.customerName, "Max Mustermann");
     assert.equal(item.taxTreatmentLabel, null);

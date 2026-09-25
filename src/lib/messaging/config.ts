@@ -47,7 +47,8 @@ export function getSevenApiKey(): string {
 }
 
 /** Serverseitige seven.io-Konfiguration. Secrets werden nicht zurückgegeben. */
-export function getMessagingStatus(_kind: MessagingKind = "SMS"): ChannelStatus {
+export function getMessagingStatus(kind: MessagingKind = "SMS"): ChannelStatus {
+  void kind;
   const apiKey = getSevenApiKey();
   const from = getSevenFrom();
   const dryRun = isMessagingDryRun();

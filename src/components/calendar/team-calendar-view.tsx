@@ -80,6 +80,7 @@ export function TeamCalendarView({
     if (mobileDefaultApplied) return;
     const compact = window.matchMedia("(max-width: 1024px)").matches;
     if (compact) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- Clientseitige Media Query bestimmt einmalig die mobile Standardansicht.
       setView("day");
     }
     setMobileDefaultApplied(true);

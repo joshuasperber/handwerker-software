@@ -95,6 +95,7 @@ export default function MonteurMitarbeiterPage() {
 
   useEffect(() => {
     if (tab !== "auftraege") return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Ladeindikator gehört zum durch den Tabwechsel gestarteten Request.
     setOrdersLoading(true);
     const qs = employeeFilter ? `?employeeId=${encodeURIComponent(employeeFilter)}` : "";
     fetch(`/api/monteur/team-orders${qs}`)

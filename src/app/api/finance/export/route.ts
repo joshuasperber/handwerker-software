@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { requireAuth, apiError } from "@/lib/api";
+import { requireAuth } from "@/lib/api";
 import { resolveFinancePeriod } from "@/lib/finance/period";
 import type { FinancePeriodPreset } from "@/lib/finance/types";
 import {
@@ -106,10 +106,12 @@ export async function GET(request: NextRequest) {
       toCsv([
         [
           "Titel",
-          "Betrag",
+          "Zielbetrag",
+          "Zurückgelegt",
           "Datum",
           "Kategorie",
           "Status",
+          "Sparmodell",
           "Notiz",
           "Maschine",
           "Material",
@@ -118,9 +120,11 @@ export async function GET(request: NextRequest) {
         ...investments.map((i) => [
           i.title,
           i.plannedAmount.toFixed(2),
+          (i.savedAmount ?? 0).toFixed(2),
           i.plannedDate ? i.plannedDate.toISOString().slice(0, 10) : "",
           INVESTMENT_CATEGORY_LABELS[i.category],
           INVESTMENT_STATUS_LABELS[i.status],
+          i.savingsModel,
           i.note,
           i.machine?.name ?? "",
           i.article?.name ?? "",

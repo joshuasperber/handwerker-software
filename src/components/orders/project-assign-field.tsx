@@ -56,6 +56,7 @@ export function ProjectAssignField({
   }, [customerId]);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Kundenwechsel startet den asynchronen Projektabruf.
     void loadProjects();
   }, [loadProjects]);
 

@@ -9,6 +9,8 @@ export default defineConfig({
     path: "prisma/migrations",
   },
   datasource: {
-    url: process.env["DATABASE_URL"],
+    // Migrationen brauchen eine Session-/Direktverbindung. Die Anwendung kann
+    // weiterhin den Supavisor Transaction Pooler aus DATABASE_URL verwenden.
+    url: process.env["DIRECT_URL"] ?? process.env["DATABASE_URL"],
   },
 });

@@ -20,11 +20,34 @@ export async function PATCH(
   const access = await requireMonteurAppointment(auth, id);
   if ("error" in access && access.error) return access.error;
 
-  const { appointment, employee: _employee } = access;
+  const { appointment, employee } = access;
   const { status } = body;
   if (!status) return apiError("status fehlt", 400);
   if (!isMonteurAppointmentStatus(status)) {
     return apiError("Ungültiger Status für Monteur", 400);
+  }
+  if (
+    appointment.order &&
+    ["ABRECHNUNGSBEREIT", "ABGERECHNET", "STORNIERT"].includes(
+      appointment.order.status
+    )
+  ) {
+    return apiError("Der Status eines abgeschlossenen Auftrags kann nicht geändert werden.", 409);
+  }
+
+  let completionOrderStatus: "ABRECHNUNGSBEREIT" | null = null;
+  if (status === "ABGESCHLOSSEN" && appointment.order) {
+    if (!areOrderChecklistsComplete(appointment.order.checklists)) {
+      return apiError("Bitte zuerst alle Punkte der Checkliste erledigen.", 409);
+    }
+    const openTime = await prisma.timeEntry.findFirst({
+      where: { orderId: appointment.orderId, employeeId: employee.id, endTime: null },
+      select: { id: true },
+    });
+    if (openTime) {
+      return apiError("Bitte zuerst die laufende Arbeitszeit beenden.", 409);
+    }
+    completionOrderStatus = "ABRECHNUNGSBEREIT";
   }
 
   const updated = await prisma.appointment.update({
@@ -43,11 +66,7 @@ export async function PATCH(
   };
 
   if (orderStatusMap[status] && appointment.orderId && appointment.order) {
-    let newOrderStatus = orderStatusMap[status];
-    if (status === "ABGESCHLOSSEN") {
-      const allDone = areOrderChecklistsComplete(appointment.order.checklists);
-      if (allDone) newOrderStatus = "ABRECHNUNGSBEREIT";
-    }
+    const newOrderStatus = completionOrderStatus ?? orderStatusMap[status];
     await auditOrderStatusChange(auth, appointment.orderId, appointment.order.status, newOrderStatus, ip);
     await prisma.order.update({
       where: { id: appointment.orderId },
