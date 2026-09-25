@@ -19,7 +19,7 @@ import {
   type DocumentCalcInput,
   type DocumentCompanyInput,
 } from "@/lib/documents/build-document-html";
-import { Save, Upload, X, Eye } from "lucide-react";
+import { Save, Upload, X, Eye, RefreshCw } from "lucide-react";
 import { SettingsPageHeader } from "@/components/dashboard/settings-page-header";
 import { selectFieldClasses } from "@/components/ui/date-input";
 import { Label } from "@/components/ui/label";
@@ -62,6 +62,20 @@ interface InvoiceForm {
   invoiceFontScale: InvoiceFontScale;
   invoiceTemplate: InvoiceTemplate;
 }
+
+type TenantDefaults = Pick<
+  InvoiceForm,
+  | "companyName"
+  | "street"
+  | "houseNumber"
+  | "postalCode"
+  | "city"
+  | "phone"
+  | "email"
+  | "invoiceAccentColor"
+> & {
+  logoUrl: string;
+};
 
 const EMPTY_FORM: InvoiceForm = {
   companyName: "",
@@ -119,6 +133,7 @@ const SAMPLE_CALC: DocumentCalcInput = {
 
 export default function RechnungseinstellungenPage() {
   const [form, setForm] = useState<InvoiceForm>(EMPTY_FORM);
+  const [tenantDefaults, setTenantDefaults] = useState<TenantDefaults | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [logoBusy, setLogoBusy] = useState(false);
@@ -126,14 +141,22 @@ export default function RechnungseinstellungenPage() {
   const deferredForm = useDeferredValue(form);
 
   useEffect(() => {
-    fetchJson<{ company: Partial<InvoiceForm> | null }>("/api/company-settings").then((res) => {
-      if (res.success && res.data?.company) {
-        const c = res.data.company;
+    fetchJson<{
+      company: Partial<InvoiceForm> | null;
+      tenantDefaults: TenantDefaults | null;
+    }>("/api/company-settings").then((res) => {
+      if (res.success && res.data) {
+        const source = res.data.company ?? res.data.tenantDefaults;
+        setTenantDefaults(res.data.tenantDefaults);
+        if (!source) {
+          setLoading(false);
+          return;
+        }
         setForm((prev) => ({
           ...prev,
           ...Object.fromEntries(
             Object.keys(EMPTY_FORM).map((key) => {
-              const value = (c as Record<string, unknown>)[key];
+              const value = (source as Record<string, unknown>)[key];
               if (key === "paymentTermsDays") return [key, value != null ? Number(value) : 14];
               if (key === "invoiceAccentColor") return [key, normalizeHexColor(value as string | null)];
               if (key === "invoiceLayout") return [key, value || "LOGO_LEFT"];
@@ -150,6 +173,22 @@ export default function RechnungseinstellungenPage() {
 
   function update<K extends keyof InvoiceForm>(key: K, value: InvoiceForm[K]) {
     setForm((f) => ({ ...f, [key]: value }));
+  }
+
+  function applyTenantDefaults() {
+    if (!tenantDefaults) return;
+    setForm((current) => ({
+      ...current,
+      companyName: tenantDefaults.companyName,
+      street: tenantDefaults.street,
+      houseNumber: tenantDefaults.houseNumber,
+      postalCode: tenantDefaults.postalCode,
+      city: tenantDefaults.city,
+      phone: tenantDefaults.phone,
+      email: tenantDefaults.email,
+      invoiceAccentColor: normalizeHexColor(tenantDefaults.invoiceAccentColor),
+    }));
+    toast.success("Betriebsdaten übernommen – bitte noch speichern");
   }
 
   async function handleLogoChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -197,7 +236,10 @@ export default function RechnungseinstellungenPage() {
         return;
       }
       update("invoiceLogoUrl", "");
-      toast.success("Logo entfernt", { id: toastId });
+      toast.success(
+        tenantDefaults?.logoUrl ? "Eigenes Rechnungslogo entfernt – Betriebslogo wird verwendet" : "Logo entfernt",
+        { id: toastId }
+      );
     } finally {
       setLogoBusy(false);
     }
@@ -232,7 +274,10 @@ export default function RechnungseinstellungenPage() {
       phone: deferredForm.phone,
       email: deferredForm.email,
       website: deferredForm.website,
-      invoiceLogoUrl: toAbsoluteLogoSrc(deferredForm.invoiceLogoUrl, origin),
+      invoiceLogoUrl: toAbsoluteLogoSrc(
+        deferredForm.invoiceLogoUrl || tenantDefaults?.logoUrl,
+        origin
+      ),
       bankName: deferredForm.bankName,
       iban: deferredForm.iban,
       bic: deferredForm.bic,
@@ -249,7 +294,9 @@ export default function RechnungseinstellungenPage() {
       invoiceTemplate: deferredForm.invoiceTemplate,
     };
     return buildCustomerDocumentHtml("INVOICE", SAMPLE_CALC, company, "RE-2026-0001");
-  }, [deferredForm]);
+  }, [deferredForm, tenantDefaults?.logoUrl]);
+
+  const effectiveLogoUrl = form.invoiceLogoUrl || tenantDefaults?.logoUrl || "";
 
   const logoUrlFieldValue =
     form.invoiceLogoUrl.startsWith("data:") || form.invoiceLogoUrl.startsWith("/api/")
@@ -281,7 +328,25 @@ export default function RechnungseinstellungenPage() {
         <div className="grid gap-6 lg:grid-cols-2">
           {/* Linke Spalte: Formular */}
           <div className="space-y-6">
-            <Card title="Firmendaten">
+            <Card
+              title="Firmendaten"
+              action={
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  disabled={!tenantDefaults}
+                  onClick={applyTenantDefaults}
+                >
+                  <RefreshCw className="mr-1.5 h-3.5 w-3.5" />
+                  Betriebsdaten übernehmen
+                </Button>
+              }
+            >
+              <p className="mb-3 text-xs text-slate-500">
+                Beim ersten Einrichten werden die Betriebsdaten vorbelegt. Hier können Sie sie für
+                Rechnungen unabhängig ändern und speichern.
+              </p>
               <div className="grid gap-3 sm:grid-cols-2">
                 <Input label="Firmenname" value={form.companyName} onChange={(e) => update("companyName", e.target.value)} className="sm:col-span-2" />
                 <Input label="Straße" value={form.street} onChange={(e) => update("street", e.target.value)} />
@@ -304,9 +369,9 @@ export default function RechnungseinstellungenPage() {
             >
               <div className="flex flex-wrap items-center gap-4">
                 <div className="flex h-20 w-40 items-center justify-center rounded-lg border border-dashed border-slate-300 bg-slate-50 p-2">
-                  {form.invoiceLogoUrl ? (
+                  {effectiveLogoUrl ? (
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img src={form.invoiceLogoUrl} alt="Logo-Vorschau" className="max-h-full max-w-full object-contain" />
+                    <img src={effectiveLogoUrl} alt="Logo-Vorschau" className="max-h-full max-w-full object-contain" />
                   ) : (
                     <span className="text-xs text-slate-400">Kein Logo</span>
                   )}
@@ -335,6 +400,12 @@ export default function RechnungseinstellungenPage() {
                   )}
                 </div>
               </div>
+              {!form.invoiceLogoUrl && tenantDefaults?.logoUrl && (
+                <p className="mt-3 text-xs text-slate-500">
+                  Aktuell wird das Logo aus den Betriebseinstellungen verwendet. Ein Upload hier
+                  legt nur für Angebote und Rechnungen ein eigenes Logo fest.
+                </p>
+              )}
               <Input
                 label="Alternativ: Logo-URL"
                 value={logoUrlFieldValue}

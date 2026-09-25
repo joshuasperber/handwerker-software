@@ -73,6 +73,7 @@ export default function SicherheitPage() {
   const [legalForm, setLegalForm] = useState({
     privacyPolicyUrl: "",
     imprintUrl: "",
+    termsUrl: "",
   });
   const [legalSaving, setLegalSaving] = useState(false);
   const [legalLoaded, setLegalLoaded] = useState(false);
@@ -99,12 +100,17 @@ export default function SicherheitPage() {
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect -- Initialer, asynchroner Einstellungen-Abruf.
     void load();
-    fetchJson<{ privacyPolicyUrl: string | null; imprintUrl: string | null }>("/api/tenant/settings").then(
+    fetchJson<{
+      privacyPolicyUrl: string | null;
+      imprintUrl: string | null;
+      termsUrl: string | null;
+    }>("/api/tenant/settings").then(
       (res) => {
         if (res.success && res.data) {
           setLegalForm({
             privacyPolicyUrl: res.data.privacyPolicyUrl ?? "",
             imprintUrl: res.data.imprintUrl ?? "",
+            termsUrl: res.data.termsUrl ?? "",
           });
           setLegalLoaded(true);
         }
@@ -122,11 +128,12 @@ export default function SicherheitPage() {
         body: JSON.stringify({
           privacyPolicyUrl: legalForm.privacyPolicyUrl,
           imprintUrl: legalForm.imprintUrl,
+          termsUrl: legalForm.termsUrl,
         }),
       },
       {
         loading: "Rechtliche Links werden gespeichert …",
-        success: "Impressum- und Datenschutz-Links gespeichert",
+        success: "Rechtliche Links gespeichert",
       }
     );
     setLegalSaving(false);
@@ -184,9 +191,16 @@ export default function SicherheitPage() {
       </div>
 
       <Card className="!p-4 space-y-4">
-        <h2 className="flex items-center gap-2 text-sm font-semibold text-slate-800">
-          <Scale className="h-4 w-4" /> Rechtliche Pflichtangaben
-        </h2>
+        <div>
+          <h2 className="flex items-center gap-2 text-sm font-semibold text-slate-800">
+            <Scale className="h-4 w-4" /> Rechtstexte der Plattform und Ihres Betriebs
+          </h2>
+          <p className="mt-1 text-sm text-slate-600">
+            Die drei Dokumente unten betreffen JoMaster als Softwareanbieter. Für die öffentliche
+            Buchungsseite hinterlegen Sie darunter die eigenen, rechtlich geprüften Texte Ihres
+            Handwerksbetriebs.
+          </p>
+        </div>
         <div className="grid gap-2 sm:grid-cols-3">
           <Button asChild variant="outline" size="sm">
             <Link href="/impressum">
@@ -204,7 +218,12 @@ export default function SicherheitPage() {
             </Link>
           </Button>
         </div>
-        <div className="grid gap-3 sm:grid-cols-2">
+        <div className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900">
+          JoMaster erstellt keine automatisch passenden Rechtstexte für Ihren Betrieb. Impressum
+          und Datenschutzhinweise sind regelmäßig erforderlich; eigene AGB sind optional. Lassen
+          Sie Inhalt und Einbindung vor Veröffentlichung fachkundig prüfen.
+        </div>
+        <div className="grid gap-3 lg:grid-cols-3">
           <Input
             label="Impressum-URL (Betrieb)"
             value={legalForm.imprintUrl}
@@ -219,6 +238,13 @@ export default function SicherheitPage() {
             placeholder="https://…/datenschutz"
             disabled={!legalLoaded}
           />
+          <Input
+            label="AGB-URL (Betrieb, optional)"
+            value={legalForm.termsUrl}
+            onChange={(e) => setLegalForm((f) => ({ ...f, termsUrl: e.target.value }))}
+            placeholder="https://…/agb"
+            disabled={!legalLoaded}
+          />
         </div>
         <Button type="button" variant="action" size="sm" disabled={legalSaving || !legalLoaded} onClick={() => void saveLegalUrls()}>
           {legalSaving ? "Speichern…" : "Links speichern"}
@@ -231,7 +257,8 @@ export default function SicherheitPage() {
             <KeyRound className="h-4 w-4" /> Zugriffsrechte
           </h2>
           <p className="mb-3 text-sm text-slate-600">
-            Wer welche Bereiche sehen und bearbeiten darf, steuern Sie über Rollen.
+            Für kleine Betriebe reichen meist Inhaber, Büro und Monteur. Die festen Rollen schützen
+            sensible Lohn-, Finanz- und Kundendaten, ohne dass Sie Einzelrechte pflegen müssen.
           </p>
           <Button asChild variant="outline" size="sm">
             <Link href="/dashboard/einstellungen/rollen">Rollen & Rechte öffnen</Link>

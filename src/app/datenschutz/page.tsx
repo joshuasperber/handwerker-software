@@ -4,89 +4,145 @@ export default function DatenschutzPage() {
   return (
     <LegalPageShell
       title="Datenschutzerklärung"
-      subtitle="Technischer Platzhalter zur Vorbereitung der Informationspflichten nach Art. 13/14 DSGVO. Keine Rechtsberatung — vor Go-Live von Fachperson prüfen lassen."
+      subtitle="Informationsentwurf für die JoMaster-Plattform nach Art. 13 und 14 DSGVO. Vor dem Produktivbetrieb vervollständigen und rechtlich prüfen lassen."
     >
-      <section>
-        <h2 className="text-lg font-semibold text-slate-900">1. Verantwortlicher</h2>
-        <p>[JoMaster / Joshua Sperber], [Pufendorfstraße 6a], [10249 Berlin], [joshua.sperber@web.de], [+49 15259655035]</p>
+      <section className="rounded-lg border border-amber-200 bg-amber-50 p-4 text-amber-950">
+        <h2 className="font-semibold">Entwurf – Verantwortlichkeiten zuerst klären</h2>
+        <p>
+          Dieser Text beschreibt JoMaster als Plattform. Bei Kundendaten eines Handwerksbetriebs ist
+          regelmäßig der Betrieb Verantwortlicher und der Plattformanbieter Auftragsverarbeiter.
+          Dafür werden zusätzlich ein Vertrag zur Auftragsverarbeitung und die eigenen
+          Datenschutzhinweise des Betriebs benötigt. Stand: 25. September 2026.
+        </p>
       </section>
 
       <section>
-        <h2 className="text-lg font-semibold text-slate-900">2. Zwecke der Verarbeitung</h2>
+        <h2 className="text-lg font-semibold text-slate-900">1. Verantwortlicher und Datenschutzkontakt</h2>
+        <p>[Vollständige Firma / Name, Rechtsform, Anschrift, E-Mail, Telefon]</p>
+        <p>[Datenschutzbeauftragte Person und Kontaktdaten – falls bestellt]</p>
+      </section>
+
+      <section>
+        <h2 className="text-lg font-semibold text-slate-900">2. Aufruf von Website und App</h2>
+        <p>
+          Beim Aufruf können IP-Adresse, Zeitpunkt, aufgerufene Adresse, Referrer, Browser- und
+          Geräteinformationen sowie technische Fehler- und Sicherheitsdaten verarbeitet werden.
+          Zweck ist die sichere, stabile Auslieferung und Fehleranalyse. Rechtsgrundlage und
+          konkrete Löschfrist sind anhand der eingesetzten Hosting- und Monitoringdienste
+          einzutragen.
+        </p>
+      </section>
+
+      <section>
+        <h2 className="text-lg font-semibold text-slate-900">3. Konto, Vertrag und Support</h2>
+        <p>
+          Für Registrierung, Anmeldung, Vertragsverwaltung, Abrechnung und Support werden
+          Stamm-, Kontakt-, Vertrags-, Zahlungs- und Kommunikationsdaten verarbeitet. Anzugeben
+          sind je Vorgang Zweck, Rechtsgrundlage, Pflicht zur Bereitstellung und Speicherdauer.
+        </p>
+      </section>
+
+      <section>
+        <h2 className="text-lg font-semibold text-slate-900">4. Daten innerhalb eines Betriebsmandanten</h2>
         <ul className="list-disc space-y-1 pl-5">
-          <li>Bereitstellung der Handwerkssoftware (Kunden, Aufträge, Termine, Rechnungen)</li>
-          <li>Authentifizierung und Rechteverwaltung</li>
-          <li>Dokumentation von Baustellen (Fotos, Belege, Stundenzettel)</li>
-          <li>optional: KI-Assistent zur Auswertung eigener Betriebsdaten</li>
-          <li>Sicherheit (Login-Protokolle, Audit-Logs)</li>
+          <li>Kunden-, Interessenten-, Mitarbeiter- und Kontaktdaten</li>
+          <li>Aufträge, Projekte, Termine, Einsatzorte und Leistungsangaben</li>
+          <li>Rechnungs-, Zahlungs-, Kalkulations- und Buchhaltungsdaten</li>
+          <li>Arbeitszeiten, Checklisten, Nachrichten, Fotos und Dateien</li>
+          <li>Login-, Rollen-, Sicherheits- und Auditdaten</li>
         </ul>
-      </section>
-
-      <section>
-        <h2 className="text-lg font-semibold text-slate-900">3. Kategorien personenbezogener Daten</h2>
-        <ul className="list-disc space-y-1 pl-5">
-          <li>Stammdaten von Kunden und Mitarbeitenden (Name, E-Mail, Telefon, Adresse)</li>
-          <li>Auftrags-, Termin- und Projektdaten</li>
-          <li>Rechnungs- und Zahlungsdaten</li>
-          <li>Arbeitszeiten / Stundenzettel</li>
-          <li>Fotos und Dateien zu Aufträgen/Projekten</li>
-          <li>KI-Chatverläufe und zugehörige Audit-Einträge</li>
-          <li>Technische Protokolldaten (IP bei Loginversuchen)</li>
-        </ul>
-      </section>
-
-      <section>
-        <h2 className="text-lg font-semibold text-slate-900">4. Rechtsgrundlagen (Platzhalter)</h2>
         <p>
-          Typischerweise Art. 6 Abs. 1 lit. b DSGVO (Vertrag), lit. c (rechtliche Pflichten, z. B.
-          Aufbewahrung), lit. f (berechtigte Interessen, z. B. IT-Sicherheit) sowie ggf. Einwilligung
-          (Art. 6 Abs. 1 lit. a) — konkret durch Rechtsberatung festzulegen.
+          Der Handwerksbetrieb legt Zwecke und zulässige Nutzung dieser Daten fest. JoMaster
+          verarbeitet sie nach dokumentierter Weisung im Rahmen des Vertrags zur
+          Auftragsverarbeitung, soweit keine eigene Verantwortlichkeit besteht.
         </p>
       </section>
 
       <section>
-        <h2 className="text-lg font-semibold text-slate-900">5. Speicherdauer</h2>
+        <h2 className="text-lg font-semibold text-slate-900">5. Öffentliche Buchungsanfragen</h2>
         <p>
-          Loginversuche werden technisch nach ca. 7 Tagen gelöscht. KI-Chats werden pro Nutzer auf
-          eine kleine Anzahl begrenzt und sind löschbar. Für Rechnungen, Belege und Buchungsdaten
-          gelten voraussichtlich gesetzliche Aufbewahrungsfristen — bitte fachlich festlegen.
+          Bei einer Anfrage können Leistung, Beschreibung, Adresse, Terminwunsch, Kontaktdaten und
+          hochgeladene Bilder erfasst werden. Verantwortlicher ist der jeweils bezeichnete
+          Handwerksbetrieb. Die Verarbeitung kann insbesondere zur Durchführung vorvertraglicher
+          Maßnahmen erforderlich sein; eine bloße Kenntnisnahme der Datenschutzhinweise ist keine
+          Einwilligung in eine ansonsten unzulässige Verarbeitung.
         </p>
       </section>
 
       <section>
-        <h2 className="text-lg font-semibold text-slate-900">6. Empfänger / Auftragsverarbeiter</h2>
-        <ul className="list-disc space-y-1 pl-5">
-          <li>Hosting / Datenbank (z. B. Vercel, PostgreSQL/Supabase)</li>
-          <li>Objekt-Speicher für Dateien (S3-kompatibel)</li>
-          <li>optional KI-Anbieter (Groq / OpenAI), sofern konfiguriert</li>
-          <li>optional E-Mail-/SMS-Dienste für Benachrichtigungen</li>
-        </ul>
-        <p>AV-Verträge und Drittlandtransfers müssen juristisch geprüft werden.</p>
-      </section>
-
-      <section>
-        <h2 className="text-lg font-semibold text-slate-900">7. Cookies</h2>
+        <h2 className="text-lg font-semibold text-slate-900">6. KI-Funktionen</h2>
         <p>
-          Es werden technisch notwendige Session-Cookies (`jomaster-session`) für die Anmeldung
-          gesetzt. Marketing-Tracking-Cookies sind in dieser App derzeit nicht vorgesehen.
+          Bei aktivierter KI können Eingaben und die für die Antwort erforderlichen Betriebsdaten
+          an den konkret benannten KI-Dienst übermittelt werden. Vor Veröffentlichung sind Anbieter,
+          Zweck, Rechtsgrundlage, Datenkategorien, Speicher- beziehungsweise Trainingsnutzung und
+          mögliche Drittlandübermittlungen exakt zu dokumentieren. KI-Ausgaben können fehlerhaft
+          sein und ersetzen keine Rechts- oder Steuerberatung.
         </p>
       </section>
 
       <section>
-        <h2 className="text-lg font-semibold text-slate-900">8. Betroffenenrechte</h2>
+        <h2 className="text-lg font-semibold text-slate-900">7. Empfänger und Dienstleister</h2>
         <p>
-          Auskunft, Berichtigung, Löschung, Einschränkung, Widerspruch, Datenübertragbarkeit und
-          Beschwerde bei einer Aufsichtsbehörde. Technisch vorbereitet: Admin-Bereich Sicherheit mit
-          Export-/Lösch-Check sowie Chat-Löschung im Betriebsassistenten.
+          [Tatsächliche Anbieter für Hosting, Datenbank, Dateispeicher, E-Mail, SMS, Monitoring,
+          Support, Zahlung und KI jeweils mit Sitz und Aufgabe aufführen.] Auftragsverarbeiter sind
+          vertraglich nach Art. 28 DSGVO zu binden.
         </p>
       </section>
 
       <section>
-        <h2 className="text-lg font-semibold text-slate-900">9. KI-Funktionen</h2>
+        <h2 className="text-lg font-semibold text-slate-900">8. Übermittlungen in Drittländer</h2>
         <p>
-          Bei Nutzung des Betriebsassistenten können Anfragetext und ausgewählte Betriebsdaten an
-          den konfigurierten KI-Anbieter übermittelt werden. Antworten können Fehler enthalten und
-          ersetzen keine Steuer- oder Rechtsberatung.
+          [Für jeden Dienst außerhalb EU/EWR: Empfängerland, Angemessenheitsbeschluss oder andere
+          Garantie, etwa Standardvertragsklauseln, und Möglichkeit zum Erhalt einer Kopie nennen.]
+        </p>
+      </section>
+
+      <section>
+        <h2 className="text-lg font-semibold text-slate-900">9. Cookies und lokaler Speicher</h2>
+        <p>
+          Technisch erforderliche Sitzungs- und Sicherheitsspeicher dürfen nur im notwendigen Umfang
+          eingesetzt werden. Nicht erforderliche Analyse- oder Marketingtechnologien benötigen vor
+          dem Zugriff grundsätzlich eine wirksame Einwilligung. Die tatsächlich verwendeten Namen,
+          Zwecke und Laufzeiten sind zu ergänzen.
+        </p>
+      </section>
+
+      <section>
+        <h2 className="text-lg font-semibold text-slate-900">10. Speicherdauer</h2>
+        <p>
+          Für jede Verarbeitung ist eine konkrete Frist oder ein nachvollziehbares Kriterium zu
+          nennen. Vertrags- und Rechnungsdaten können gesetzlichen Aufbewahrungspflichten
+          unterliegen; Sicherheitsprotokolle, Supportdaten, Dateien und gelöschte Konten benötigen
+          eigene Löschregeln einschließlich Backups.
+        </p>
+      </section>
+
+      <section>
+        <h2 className="text-lg font-semibold text-slate-900">11. Rechte betroffener Personen</h2>
+        <p>
+          Betroffene können – je nach Voraussetzungen – Auskunft, Berichtigung, Löschung,
+          Einschränkung, Datenübertragbarkeit und Widerspruch verlangen sowie Einwilligungen mit
+          Wirkung für die Zukunft widerrufen. Außerdem besteht ein Beschwerderecht bei einer
+          Datenschutzaufsichtsbehörde. [Zuständige Aufsicht und Kontaktweg ergänzen.]
+        </p>
+      </section>
+
+      <section>
+        <h2 className="text-lg font-semibold text-slate-900">12. Automatisierte Entscheidungen und Sicherheit</h2>
+        <p>
+          [Angeben, ob Entscheidungen mit rechtlicher oder ähnlich erheblicher Wirkung ausschließlich
+          automatisiert erfolgen.] Technische und organisatorische Maßnahmen umfassen unter anderem
+          Rollen, Mandantentrennung, Transportverschlüsselung, Protokollierung und Wiederherstellung;
+          die tatsächlichen Maßnahmen sind im Sicherheitskonzept und AV-Vertrag zu konkretisieren.
+        </p>
+      </section>
+
+      <section>
+        <h2 className="text-lg font-semibold text-slate-900">13. Änderungen</h2>
+        <p>
+          Diese Erklärung ist bei Änderungen von Funktionen, Dienstleistern oder Rechtslage zu
+          aktualisieren. Wesentliche Änderungen sollten registrierten Kunden nachvollziehbar
+          mitgeteilt werden.
         </p>
       </section>
     </LegalPageShell>

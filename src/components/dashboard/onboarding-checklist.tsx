@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { swrKeys, useApiSWR } from "@/lib/swr";
 import { CheckCircle2, Circle, Copy, ExternalLink, X } from "lucide-react";
 import { toast } from "sonner";
+import { fetchJson } from "@/lib/fetch-json";
 
 type OnboardingStatus = {
   showChecklist: boolean;
@@ -50,17 +51,26 @@ const CORE_STEPS: {
 ];
 
 export function OnboardingChecklist() {
-  const { data, isLoading } = useApiSWR<OnboardingStatus>(
+  const { data, isLoading, mutate } = useApiSWR<OnboardingStatus>(
     swrKeys.onboardingStatus()
   );
   const [dismissed, setDismissed] = useState(false);
 
   if (isLoading || !data?.showChecklist || dismissed) return null;
 
+  async function completeBookingLinkStep() {
+    if (data?.steps.hasBookingLink) return;
+    const res = await fetchJson<{ completedAt: string }>("/api/onboarding/status", {
+      method: "POST",
+    });
+    if (res.success) await mutate();
+  }
+
   async function copyBookingLink() {
     if (!data?.bookingUrl) return;
     try {
       await navigator.clipboard.writeText(data.bookingUrl);
+      await completeBookingLinkStep();
       toast.success("Buchungslink kopiert");
     } catch {
       toast.error("Kopieren fehlgeschlagen");
@@ -132,7 +142,12 @@ export function OnboardingChecklist() {
             Buchungslink kopieren
           </Button>
           <Button type="button" variant="primary" size="sm" className="flex-1" asChild>
-            <a href={data.bookingUrl} target="_blank" rel="noreferrer">
+            <a
+              href={data.bookingUrl}
+              target="_blank"
+              rel="noreferrer"
+              onClick={() => void completeBookingLinkStep()}
+            >
               <ExternalLink className="mr-1.5 h-3.5 w-3.5" />
               Vorschau öffnen
             </a>

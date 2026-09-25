@@ -167,6 +167,8 @@ export const TenantScalarFieldEnum = {
   primaryColor: 'primaryColor',
   privacyPolicyUrl: 'privacyPolicyUrl',
   imprintUrl: 'imprintUrl',
+  termsUrl: 'termsUrl',
+  onboardingBookingCompletedAt: 'onboardingBookingCompletedAt',
   bufferMinutes: 'bufferMinutes',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -1749,4 +1751,3 @@ export const JsonNullValueFilter = {
 } as const
 
 export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
-

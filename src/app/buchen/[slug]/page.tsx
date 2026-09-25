@@ -2,7 +2,6 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { useParams } from "next/navigation";
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -54,6 +53,7 @@ interface Tenant {
   primaryColor: string;
   privacyPolicyUrl: string | null;
   imprintUrl: string | null;
+  termsUrl: string | null;
 }
 
 interface TimeSlot {
@@ -184,7 +184,7 @@ export default function BookingPage() {
 
   async function submitBooking() {
     if (!gdprConsent) {
-      setErrors({ gdpr: "Bitte bestätigen Sie die Datenschutzerklärung." });
+      setErrors({ gdpr: "Bitte bestätigen Sie, dass Sie die Datenschutzhinweise gelesen haben." });
       return;
     }
     setLoading(true);
@@ -513,10 +513,11 @@ export default function BookingPage() {
               <label className="flex items-start gap-2">
                 <input type="checkbox" checked={gdprConsent} onChange={(e) => setGdprConsent(e.target.checked)} className="mt-1" />
                 <span className="text-sm text-slate-600">
-                  Ich willige in die Verarbeitung meiner Daten gemäß DSGVO ein.
+                  Ich habe die
                   {tenant.privacyPolicyUrl && (
-                    <> <a href={tenant.privacyPolicyUrl} className="text-[#0d5c63] underline" target="_blank" rel="noreferrer">Datenschutzerklärung</a></>
+                    <> <a href={tenant.privacyPolicyUrl} className="text-[#0d5c63] underline" target="_blank" rel="noreferrer">Datenschutzhinweise des Betriebs</a></>
                   )}
+                  {!tenant.privacyPolicyUrl && " Datenschutzhinweise des Betriebs"} zur Kenntnis genommen.
                 </span>
               </label>
               {(errors.gdpr || errors.submit) && (
@@ -548,11 +549,16 @@ export default function BookingPage() {
           )}
           <span className="flex gap-3">
             {tenant.privacyPolicyUrl && (
-              <Link href={tenant.privacyPolicyUrl} className="hover:text-slate-600">Datenschutz</Link>
+              <a href={tenant.privacyPolicyUrl} className="hover:text-slate-600" target="_blank" rel="noreferrer">Datenschutz</a>
             )}
             {tenant.imprintUrl && (
               <a href={tenant.imprintUrl} className="hover:text-slate-600" target="_blank" rel="noreferrer">
                 Impressum
+              </a>
+            )}
+            {tenant.termsUrl && (
+              <a href={tenant.termsUrl} className="hover:text-slate-600" target="_blank" rel="noreferrer">
+                AGB
               </a>
             )}
           </span>

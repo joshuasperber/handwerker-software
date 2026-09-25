@@ -81,8 +81,8 @@ export default function RollenRechtePage() {
       <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <Card title="Rollen verwalten" className="!p-4">
           <p className="text-sm text-slate-600">
-            Jede Rolle hat feste Rechte im System. Die Übersicht unten zeigt, was Admin, Büro,
-            Meister und Monteure dürfen.
+            Für die meisten Betriebe reichen Inhaber/Admin, Büro und Monteur. Meister oder
+            Teamleiter brauchen Sie nur, wenn diese Personen zusätzliche Verantwortung haben.
           </p>
         </Card>
         <Card title="Nutzer Rollen zuweisen" className="!p-4">
@@ -99,8 +99,8 @@ export default function RollenRechtePage() {
         </Card>
         <Card title="Berechtigungen prüfen" className="!p-4">
           <p className="text-sm text-slate-600">
-            Vergleichen Sie unten die wichtigsten Rechte je Rolle. Einzelrechte sind an die Rolle
-            gebunden und werden nicht frei kombiniert.
+            Einzelrechte sind bereits sinnvoll an Rollen gebunden. Sie müssen keine komplizierte
+            Rechte-Matrix konfigurieren.
           </p>
         </Card>
       </div>

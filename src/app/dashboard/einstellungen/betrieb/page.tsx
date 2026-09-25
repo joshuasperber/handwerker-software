@@ -28,6 +28,7 @@ type TenantSettings = {
   primaryColor: string;
   privacyPolicyUrl: string | null;
   imprintUrl: string | null;
+  termsUrl: string | null;
   bufferMinutes: number;
   bookingUrl: string;
 };
@@ -71,6 +72,7 @@ export default function BetriebEinstellungenPage() {
           primaryColor: form.primaryColor,
           privacyPolicyUrl: form.privacyPolicyUrl,
           imprintUrl: form.imprintUrl,
+          termsUrl: form.termsUrl,
           bufferMinutes: form.bufferMinutes,
         }),
       },
@@ -141,6 +143,7 @@ export default function BetriebEinstellungenPage() {
     if (!url) return;
     try {
       await navigator.clipboard.writeText(url);
+      await fetchJson("/api/onboarding/status", { method: "POST" });
       toast.success("Buchungslink kopiert");
     } catch {
       toast.error("Kopieren fehlgeschlagen");

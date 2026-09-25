@@ -15,6 +15,7 @@ export async function GET() {
         address: true,
         logoUrl: true,
         imprintUrl: true,
+        onboardingBookingCompletedAt: true,
       },
     }),
     prisma.service.count({ where: { tenantId: auth.tenantId, isActive: true } }),
@@ -33,7 +34,7 @@ export async function GET() {
   const steps = {
     hasService: serviceCount > 0,
     hasTeamMember: teamUserCount > 0,
-    hasBookingLink: Boolean(tenant?.slug),
+    hasBookingLink: Boolean(tenant?.onboardingBookingCompletedAt),
     hasAddress: Boolean(tenant?.address?.trim()),
     hasLogo: Boolean(tenant?.logoUrl),
     hasImprint: Boolean(tenant?.imprintUrl?.trim()),
@@ -52,4 +53,18 @@ export async function GET() {
     complete: coreComplete,
     showChecklist: auth.role === "ADMIN" && !coreComplete,
   });
+}
+
+/** Mark the booking-link step only after the user actually copies or opens it. */
+export async function POST() {
+  const auth = await requireAuth("tenant.manage");
+  if (auth instanceof Response) return auth;
+
+  const tenant = await prisma.tenant.update({
+    where: { id: auth.tenantId },
+    data: { onboardingBookingCompletedAt: new Date() },
+    select: { onboardingBookingCompletedAt: true },
+  });
+
+  return apiSuccess({ completedAt: tenant.onboardingBookingCompletedAt });
 }

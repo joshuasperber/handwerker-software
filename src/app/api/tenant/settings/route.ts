@@ -3,6 +3,8 @@ import { prisma } from "@/lib/prisma";
 import { requireAuth, apiSuccess, apiError } from "@/lib/api";
 import { toTenantLogoSrc } from "@/lib/logo";
 import { hasStoredImage, persistableImageUrl } from "@/lib/stored-image";
+import { tenantToCompanyDefaults } from "@/lib/company-settings-defaults";
+import { normalizeOptionalHttpUrl } from "@/lib/external-url";
 
 function toTenantDTO<
   T extends { logoUrl: string | null; updatedAt?: Date; slug: string },
@@ -39,6 +41,7 @@ export async function GET() {
       primaryColor: true,
       privacyPolicyUrl: true,
       imprintUrl: true,
+      termsUrl: true,
       bufferMinutes: true,
       updatedAt: true,
     },
@@ -55,6 +58,17 @@ export async function PUT(request: NextRequest) {
 
   const body = await request.json();
 
+  let privacyPolicyUrl: string | null | undefined;
+  let imprintUrl: string | null | undefined;
+  let termsUrl: string | null | undefined;
+  try {
+    privacyPolicyUrl = normalizeOptionalHttpUrl(body.privacyPolicyUrl, "Datenschutz-URL");
+    imprintUrl = normalizeOptionalHttpUrl(body.imprintUrl, "Impressum-URL");
+    termsUrl = normalizeOptionalHttpUrl(body.termsUrl, "AGB-URL");
+  } catch (error) {
+    return apiError(error instanceof Error ? error.message : "Rechtliche URL ist ungültig");
+  }
+
   const data = {
     name: typeof body.name === "string" ? body.name.trim() : undefined,
     email: typeof body.email === "string" ? body.email.trim() : undefined,
@@ -65,12 +79,9 @@ export async function PUT(request: NextRequest) {
     logoUrl: persistableImageUrl(body.logoUrl),
     primaryColor:
       typeof body.primaryColor === "string" ? body.primaryColor : undefined,
-    privacyPolicyUrl:
-      body.privacyPolicyUrl !== undefined
-        ? body.privacyPolicyUrl || null
-        : undefined,
-    imprintUrl:
-      body.imprintUrl !== undefined ? body.imprintUrl || null : undefined,
+    privacyPolicyUrl,
+    imprintUrl,
+    termsUrl,
     bufferMinutes:
       body.bufferMinutes != null ? Number(body.bufferMinutes) : undefined,
   };
@@ -89,41 +100,24 @@ export async function PUT(request: NextRequest) {
     data: clean,
   });
 
-  // Sync core fields into CompanySettings if present
+  // Create invoice defaults once. Existing invoice settings remain independent
+  // and can be refreshed explicitly from the invoice-settings screen.
   const company = await prisma.companySettings.findUnique({
     where: { tenantId: auth.tenantId },
   });
-  if (company) {
-    await prisma.companySettings.update({
-      where: { tenantId: auth.tenantId },
-      data: {
-        ...(data.name ? { companyName: data.name as string } : {}),
-        ...(data.email !== undefined
-          ? { email: (data.email as string | null) ?? undefined }
-          : {}),
-        ...(data.phone !== undefined
-          ? { phone: data.phone as string | null }
-          : {}),
-        ...(data.address !== undefined
-          ? { street: data.address as string | null }
-          : {}),
-        ...(data.city !== undefined ? { city: data.city as string | null } : {}),
-        ...(data.zipCode !== undefined
-          ? { postalCode: data.zipCode as string | null }
-          : {}),
-      },
-    });
-  } else if (data.name) {
+  if (!company) {
+    const defaults = tenantToCompanyDefaults({ ...tenant, logoUrl: null });
     await prisma.companySettings.create({
       data: {
         tenantId: auth.tenantId,
-        companyName: data.name as string,
-        email: (data.email as string | undefined) ?? tenant.email,
-        phone: (data.phone as string | null | undefined) ?? tenant.phone,
-        street: (data.address as string | null | undefined) ?? tenant.address,
-        city: (data.city as string | null | undefined) ?? tenant.city,
-        postalCode:
-          (data.zipCode as string | null | undefined) ?? tenant.zipCode,
+        companyName: defaults.companyName,
+        email: defaults.email,
+        phone: defaults.phone || null,
+        street: defaults.street || null,
+        houseNumber: defaults.houseNumber || null,
+        city: defaults.city || null,
+        postalCode: defaults.postalCode || null,
+        invoiceAccentColor: defaults.invoiceAccentColor,
       },
     });
   }

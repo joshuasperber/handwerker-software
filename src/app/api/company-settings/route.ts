@@ -6,8 +6,9 @@ import {
   parseInvoiceLayout,
   parseInvoiceTemplate,
 } from "@/lib/documents/invoice-design";
-import { toInvoiceLogoSrc } from "@/lib/logo";
+import { toInvoiceLogoSrc, toTenantLogoSrc } from "@/lib/logo";
 import { hasStoredImage, persistableImageUrl } from "@/lib/stored-image";
+import { tenantToCompanyDefaults } from "@/lib/company-settings-defaults";
 
 function toCompanyDTO<T extends { invoiceLogoUrl: string | null; updatedAt: Date }>(
   company: T | null
@@ -24,12 +25,33 @@ export async function GET() {
   const auth = await requireAuth("calculations.read");
   if (auth instanceof Response) return auth;
 
-  const [company, overhead] = await Promise.all([
+  const [company, overhead, tenant] = await Promise.all([
     prisma.companySettings.findUnique({ where: { tenantId: auth.tenantId } }),
     prisma.overheadSettings.findUnique({ where: { tenantId: auth.tenantId } }),
+    prisma.tenant.findUnique({
+      where: { id: auth.tenantId },
+      select: {
+        name: true,
+        email: true,
+        phone: true,
+        address: true,
+        city: true,
+        zipCode: true,
+        primaryColor: true,
+        logoUrl: true,
+        updatedAt: true,
+      },
+    }),
   ]);
 
-  return apiSuccess({ company: toCompanyDTO(company), overhead });
+  const tenantDefaults = tenant
+    ? tenantToCompanyDefaults({
+        ...tenant,
+        logoUrl: toTenantLogoSrc(tenant.logoUrl, tenant.updatedAt),
+      })
+    : null;
+
+  return apiSuccess({ company: toCompanyDTO(company), overhead, tenantDefaults });
 }
 
 export async function PUT(request: Request) {

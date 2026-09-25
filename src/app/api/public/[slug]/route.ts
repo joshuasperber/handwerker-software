@@ -19,6 +19,7 @@ export async function GET(
       primaryColor: true,
       privacyPolicyUrl: true,
       imprintUrl: true,
+      termsUrl: true,
     },
   });
 

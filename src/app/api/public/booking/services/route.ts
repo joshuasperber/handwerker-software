@@ -21,6 +21,7 @@ export async function GET(request: NextRequest) {
       primaryColor: true,
       privacyPolicyUrl: true,
       imprintUrl: true,
+      termsUrl: true,
     },
   });
 

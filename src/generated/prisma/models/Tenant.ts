@@ -47,6 +47,8 @@ export type TenantMinAggregateOutputType = {
   primaryColor: string | null
   privacyPolicyUrl: string | null
   imprintUrl: string | null
+  termsUrl: string | null
+  onboardingBookingCompletedAt: Date | null
   bufferMinutes: number | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -65,6 +67,8 @@ export type TenantMaxAggregateOutputType = {
   primaryColor: string | null
   privacyPolicyUrl: string | null
   imprintUrl: string | null
+  termsUrl: string | null
+  onboardingBookingCompletedAt: Date | null
   bufferMinutes: number | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -83,6 +87,8 @@ export type TenantCountAggregateOutputType = {
   primaryColor: number
   privacyPolicyUrl: number
   imprintUrl: number
+  termsUrl: number
+  onboardingBookingCompletedAt: number
   bufferMinutes: number
   createdAt: number
   updatedAt: number
@@ -111,6 +117,8 @@ export type TenantMinAggregateInputType = {
   primaryColor?: true
   privacyPolicyUrl?: true
   imprintUrl?: true
+  termsUrl?: true
+  onboardingBookingCompletedAt?: true
   bufferMinutes?: true
   createdAt?: true
   updatedAt?: true
@@ -129,6 +137,8 @@ export type TenantMaxAggregateInputType = {
   primaryColor?: true
   privacyPolicyUrl?: true
   imprintUrl?: true
+  termsUrl?: true
+  onboardingBookingCompletedAt?: true
   bufferMinutes?: true
   createdAt?: true
   updatedAt?: true
@@ -147,6 +157,8 @@ export type TenantCountAggregateInputType = {
   primaryColor?: true
   privacyPolicyUrl?: true
   imprintUrl?: true
+  termsUrl?: true
+  onboardingBookingCompletedAt?: true
   bufferMinutes?: true
   createdAt?: true
   updatedAt?: true
@@ -252,6 +264,8 @@ export type TenantGroupByOutputType = {
   primaryColor: string
   privacyPolicyUrl: string | null
   imprintUrl: string | null
+  termsUrl: string | null
+  onboardingBookingCompletedAt: Date | null
   bufferMinutes: number
   createdAt: Date
   updatedAt: Date
@@ -293,6 +307,8 @@ export type TenantWhereInput = {
   primaryColor?: Prisma.StringFilter<"Tenant"> | string
   privacyPolicyUrl?: Prisma.StringNullableFilter<"Tenant"> | string | null
   imprintUrl?: Prisma.StringNullableFilter<"Tenant"> | string | null
+  termsUrl?: Prisma.StringNullableFilter<"Tenant"> | string | null
+  onboardingBookingCompletedAt?: Prisma.DateTimeNullableFilter<"Tenant"> | Date | string | null
   bufferMinutes?: Prisma.IntFilter<"Tenant"> | number
   createdAt?: Prisma.DateTimeFilter<"Tenant"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Tenant"> | Date | string
@@ -355,6 +371,8 @@ export type TenantOrderByWithRelationInput = {
   primaryColor?: Prisma.SortOrder
   privacyPolicyUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   imprintUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  termsUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  onboardingBookingCompletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   bufferMinutes?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -420,6 +438,8 @@ export type TenantWhereUniqueInput = Prisma.AtLeast<{
   primaryColor?: Prisma.StringFilter<"Tenant"> | string
   privacyPolicyUrl?: Prisma.StringNullableFilter<"Tenant"> | string | null
   imprintUrl?: Prisma.StringNullableFilter<"Tenant"> | string | null
+  termsUrl?: Prisma.StringNullableFilter<"Tenant"> | string | null
+  onboardingBookingCompletedAt?: Prisma.DateTimeNullableFilter<"Tenant"> | Date | string | null
   bufferMinutes?: Prisma.IntFilter<"Tenant"> | number
   createdAt?: Prisma.DateTimeFilter<"Tenant"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Tenant"> | Date | string
@@ -482,6 +502,8 @@ export type TenantOrderByWithAggregationInput = {
   primaryColor?: Prisma.SortOrder
   privacyPolicyUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   imprintUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  termsUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  onboardingBookingCompletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   bufferMinutes?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -508,6 +530,8 @@ export type TenantScalarWhereWithAggregatesInput = {
   primaryColor?: Prisma.StringWithAggregatesFilter<"Tenant"> | string
   privacyPolicyUrl?: Prisma.StringNullableWithAggregatesFilter<"Tenant"> | string | null
   imprintUrl?: Prisma.StringNullableWithAggregatesFilter<"Tenant"> | string | null
+  termsUrl?: Prisma.StringNullableWithAggregatesFilter<"Tenant"> | string | null
+  onboardingBookingCompletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Tenant"> | Date | string | null
   bufferMinutes?: Prisma.IntWithAggregatesFilter<"Tenant"> | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Tenant"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Tenant"> | Date | string
@@ -526,6 +550,8 @@ export type TenantCreateInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -588,6 +614,8 @@ export type TenantUncheckedCreateInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -650,6 +678,8 @@ export type TenantUpdateInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -712,6 +742,8 @@ export type TenantUncheckedUpdateInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -774,6 +806,8 @@ export type TenantCreateManyInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -792,6 +826,8 @@ export type TenantUpdateManyMutationInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -810,6 +846,8 @@ export type TenantUncheckedUpdateManyInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -828,6 +866,8 @@ export type TenantCountOrderByAggregateInput = {
   primaryColor?: Prisma.SortOrder
   privacyPolicyUrl?: Prisma.SortOrder
   imprintUrl?: Prisma.SortOrder
+  termsUrl?: Prisma.SortOrder
+  onboardingBookingCompletedAt?: Prisma.SortOrder
   bufferMinutes?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -850,6 +890,8 @@ export type TenantMaxOrderByAggregateInput = {
   primaryColor?: Prisma.SortOrder
   privacyPolicyUrl?: Prisma.SortOrder
   imprintUrl?: Prisma.SortOrder
+  termsUrl?: Prisma.SortOrder
+  onboardingBookingCompletedAt?: Prisma.SortOrder
   bufferMinutes?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -868,6 +910,8 @@ export type TenantMinOrderByAggregateInput = {
   primaryColor?: Prisma.SortOrder
   privacyPolicyUrl?: Prisma.SortOrder
   imprintUrl?: Prisma.SortOrder
+  termsUrl?: Prisma.SortOrder
+  onboardingBookingCompletedAt?: Prisma.SortOrder
   bufferMinutes?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -893,6 +937,10 @@ export type StringFieldUpdateOperationsInput = {
 
 export type NullableStringFieldUpdateOperationsInput = {
   set?: string | null
+}
+
+export type NullableDateTimeFieldUpdateOperationsInput = {
+  set?: Date | string | null
 }
 
 export type IntFieldUpdateOperationsInput = {
@@ -1538,6 +1586,8 @@ export type TenantCreateWithoutUsersInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1599,6 +1649,8 @@ export type TenantUncheckedCreateWithoutUsersInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1676,6 +1728,8 @@ export type TenantUpdateWithoutUsersInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1737,6 +1791,8 @@ export type TenantUncheckedUpdateWithoutUsersInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1798,6 +1854,8 @@ export type TenantCreateWithoutWorkRequestsInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1859,6 +1917,8 @@ export type TenantUncheckedCreateWithoutWorkRequestsInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1936,6 +1996,8 @@ export type TenantUpdateWithoutWorkRequestsInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1997,6 +2059,8 @@ export type TenantUncheckedUpdateWithoutWorkRequestsInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2058,6 +2122,8 @@ export type TenantCreateWithoutCustomersInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2119,6 +2185,8 @@ export type TenantUncheckedCreateWithoutCustomersInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2196,6 +2264,8 @@ export type TenantUpdateWithoutCustomersInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2257,6 +2327,8 @@ export type TenantUncheckedUpdateWithoutCustomersInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2318,6 +2390,8 @@ export type TenantCreateWithoutPropertiesInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2379,6 +2453,8 @@ export type TenantUncheckedCreateWithoutPropertiesInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2456,6 +2532,8 @@ export type TenantUpdateWithoutPropertiesInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2517,6 +2595,8 @@ export type TenantUncheckedUpdateWithoutPropertiesInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2578,6 +2658,8 @@ export type TenantCreateWithoutServicesInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2639,6 +2721,8 @@ export type TenantUncheckedCreateWithoutServicesInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2716,6 +2800,8 @@ export type TenantUpdateWithoutServicesInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2777,6 +2863,8 @@ export type TenantUncheckedUpdateWithoutServicesInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2838,6 +2926,8 @@ export type TenantCreateWithoutEmployeesInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2899,6 +2989,8 @@ export type TenantUncheckedCreateWithoutEmployeesInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2976,6 +3068,8 @@ export type TenantUpdateWithoutEmployeesInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3037,6 +3131,8 @@ export type TenantUncheckedUpdateWithoutEmployeesInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3098,6 +3194,8 @@ export type TenantCreateWithoutWorkingHoursInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -3159,6 +3257,8 @@ export type TenantUncheckedCreateWithoutWorkingHoursInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -3236,6 +3336,8 @@ export type TenantUpdateWithoutWorkingHoursInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3297,6 +3399,8 @@ export type TenantUncheckedUpdateWithoutWorkingHoursInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3358,6 +3462,8 @@ export type TenantCreateWithoutServiceAreasInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -3419,6 +3525,8 @@ export type TenantUncheckedCreateWithoutServiceAreasInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -3496,6 +3604,8 @@ export type TenantUpdateWithoutServiceAreasInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3557,6 +3667,8 @@ export type TenantUncheckedUpdateWithoutServiceAreasInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3618,6 +3730,8 @@ export type TenantCreateWithoutOrderTypeDefinitionsInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -3679,6 +3793,8 @@ export type TenantUncheckedCreateWithoutOrderTypeDefinitionsInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -3756,6 +3872,8 @@ export type TenantUpdateWithoutOrderTypeDefinitionsInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3817,6 +3935,8 @@ export type TenantUncheckedUpdateWithoutOrderTypeDefinitionsInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3878,6 +3998,8 @@ export type TenantCreateWithoutOrdersInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -3939,6 +4061,8 @@ export type TenantUncheckedCreateWithoutOrdersInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -4016,6 +4140,8 @@ export type TenantUpdateWithoutOrdersInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4077,6 +4203,8 @@ export type TenantUncheckedUpdateWithoutOrdersInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4138,6 +4266,8 @@ export type TenantCreateWithoutAppointmentsInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -4199,6 +4329,8 @@ export type TenantUncheckedCreateWithoutAppointmentsInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -4276,6 +4408,8 @@ export type TenantUpdateWithoutAppointmentsInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4337,6 +4471,8 @@ export type TenantUncheckedUpdateWithoutAppointmentsInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4398,6 +4534,8 @@ export type TenantCreateWithoutChecklistTemplatesInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -4459,6 +4597,8 @@ export type TenantUncheckedCreateWithoutChecklistTemplatesInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -4536,6 +4676,8 @@ export type TenantUpdateWithoutChecklistTemplatesInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4597,6 +4739,8 @@ export type TenantUncheckedUpdateWithoutChecklistTemplatesInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4658,6 +4802,8 @@ export type TenantCreateWithoutMessagesInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -4719,6 +4865,8 @@ export type TenantUncheckedCreateWithoutMessagesInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -4796,6 +4944,8 @@ export type TenantUpdateWithoutMessagesInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4857,6 +5007,8 @@ export type TenantUncheckedUpdateWithoutMessagesInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4918,6 +5070,8 @@ export type TenantCreateWithoutAuditLogsInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -4979,6 +5133,8 @@ export type TenantUncheckedCreateWithoutAuditLogsInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -5056,6 +5212,8 @@ export type TenantUpdateWithoutAuditLogsInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -5117,6 +5275,8 @@ export type TenantUncheckedUpdateWithoutAuditLogsInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -5178,6 +5338,8 @@ export type TenantCreateWithoutNotificationsInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -5239,6 +5401,8 @@ export type TenantUncheckedCreateWithoutNotificationsInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -5316,6 +5480,8 @@ export type TenantUpdateWithoutNotificationsInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -5377,6 +5543,8 @@ export type TenantUncheckedUpdateWithoutNotificationsInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -5438,6 +5606,8 @@ export type TenantCreateWithoutInAppNotificationsInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -5499,6 +5669,8 @@ export type TenantUncheckedCreateWithoutInAppNotificationsInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -5576,6 +5748,8 @@ export type TenantUpdateWithoutInAppNotificationsInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -5637,6 +5811,8 @@ export type TenantUncheckedUpdateWithoutInAppNotificationsInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -5698,6 +5874,8 @@ export type TenantCreateWithoutNotificationSettingsInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -5759,6 +5937,8 @@ export type TenantUncheckedCreateWithoutNotificationSettingsInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -5836,6 +6016,8 @@ export type TenantUpdateWithoutNotificationSettingsInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -5897,6 +6079,8 @@ export type TenantUncheckedUpdateWithoutNotificationSettingsInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -5958,6 +6142,8 @@ export type TenantCreateWithoutCompanySettingsInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -6019,6 +6205,8 @@ export type TenantUncheckedCreateWithoutCompanySettingsInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -6096,6 +6284,8 @@ export type TenantUpdateWithoutCompanySettingsInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -6157,6 +6347,8 @@ export type TenantUncheckedUpdateWithoutCompanySettingsInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -6218,6 +6410,8 @@ export type TenantCreateWithoutMonthlyFixedCostsInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -6279,6 +6473,8 @@ export type TenantUncheckedCreateWithoutMonthlyFixedCostsInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -6356,6 +6552,8 @@ export type TenantUpdateWithoutMonthlyFixedCostsInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -6417,6 +6615,8 @@ export type TenantUncheckedUpdateWithoutMonthlyFixedCostsInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -6478,6 +6678,8 @@ export type TenantCreateWithoutOverheadSettingsInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -6539,6 +6741,8 @@ export type TenantUncheckedCreateWithoutOverheadSettingsInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -6616,6 +6820,8 @@ export type TenantUpdateWithoutOverheadSettingsInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -6677,6 +6883,8 @@ export type TenantUncheckedUpdateWithoutOverheadSettingsInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -6738,6 +6946,8 @@ export type TenantCreateWithoutMachinesInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -6799,6 +7009,8 @@ export type TenantUncheckedCreateWithoutMachinesInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -6876,6 +7088,8 @@ export type TenantUpdateWithoutMachinesInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -6937,6 +7151,8 @@ export type TenantUncheckedUpdateWithoutMachinesInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -6998,6 +7214,8 @@ export type TenantCreateWithoutTravelZonesInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -7059,6 +7277,8 @@ export type TenantUncheckedCreateWithoutTravelZonesInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -7136,6 +7356,8 @@ export type TenantUpdateWithoutTravelZonesInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -7197,6 +7419,8 @@ export type TenantUncheckedUpdateWithoutTravelZonesInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -7258,6 +7482,8 @@ export type TenantCreateWithoutCalculationsInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -7319,6 +7545,8 @@ export type TenantUncheckedCreateWithoutCalculationsInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -7396,6 +7624,8 @@ export type TenantUpdateWithoutCalculationsInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -7457,6 +7687,8 @@ export type TenantUncheckedUpdateWithoutCalculationsInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -7518,6 +7750,8 @@ export type TenantCreateWithoutOrderAddendaInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -7579,6 +7813,8 @@ export type TenantUncheckedCreateWithoutOrderAddendaInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -7656,6 +7892,8 @@ export type TenantUpdateWithoutOrderAddendaInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -7717,6 +7955,8 @@ export type TenantUncheckedUpdateWithoutOrderAddendaInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -7778,6 +8018,8 @@ export type TenantCreateWithoutDocumentSequencesInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -7839,6 +8081,8 @@ export type TenantUncheckedCreateWithoutDocumentSequencesInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -7916,6 +8160,8 @@ export type TenantUpdateWithoutDocumentSequencesInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -7977,6 +8223,8 @@ export type TenantUncheckedUpdateWithoutDocumentSequencesInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -8038,6 +8286,8 @@ export type TenantCreateWithoutPaymentsInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -8099,6 +8349,8 @@ export type TenantUncheckedCreateWithoutPaymentsInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -8176,6 +8428,8 @@ export type TenantUpdateWithoutPaymentsInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -8237,6 +8491,8 @@ export type TenantUncheckedUpdateWithoutPaymentsInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -8298,6 +8554,8 @@ export type TenantCreateWithoutDunningNoticesInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -8359,6 +8617,8 @@ export type TenantUncheckedCreateWithoutDunningNoticesInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -8436,6 +8696,8 @@ export type TenantUpdateWithoutDunningNoticesInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -8497,6 +8759,8 @@ export type TenantUncheckedUpdateWithoutDunningNoticesInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -8558,6 +8822,8 @@ export type TenantCreateWithoutArticlesInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -8619,6 +8885,8 @@ export type TenantUncheckedCreateWithoutArticlesInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -8696,6 +8964,8 @@ export type TenantUpdateWithoutArticlesInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -8757,6 +9027,8 @@ export type TenantUncheckedUpdateWithoutArticlesInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -8818,6 +9090,8 @@ export type TenantCreateWithoutStorageLocationsInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -8879,6 +9153,8 @@ export type TenantUncheckedCreateWithoutStorageLocationsInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -8956,6 +9232,8 @@ export type TenantUpdateWithoutStorageLocationsInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -9017,6 +9295,8 @@ export type TenantUncheckedUpdateWithoutStorageLocationsInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -9078,6 +9358,8 @@ export type TenantCreateWithoutPurchaseOrdersInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -9139,6 +9421,8 @@ export type TenantUncheckedCreateWithoutPurchaseOrdersInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -9216,6 +9500,8 @@ export type TenantUpdateWithoutPurchaseOrdersInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -9277,6 +9563,8 @@ export type TenantUncheckedUpdateWithoutPurchaseOrdersInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -9338,6 +9626,8 @@ export type TenantCreateWithoutDeliveriesInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -9399,6 +9689,8 @@ export type TenantUncheckedCreateWithoutDeliveriesInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -9476,6 +9768,8 @@ export type TenantUpdateWithoutDeliveriesInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -9537,6 +9831,8 @@ export type TenantUncheckedUpdateWithoutDeliveriesInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -9598,6 +9894,8 @@ export type TenantCreateWithoutManualReorderSuggestionsInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -9659,6 +9957,8 @@ export type TenantUncheckedCreateWithoutManualReorderSuggestionsInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -9736,6 +10036,8 @@ export type TenantUpdateWithoutManualReorderSuggestionsInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -9797,6 +10099,8 @@ export type TenantUncheckedUpdateWithoutManualReorderSuggestionsInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -9858,6 +10162,8 @@ export type TenantCreateWithoutTeamsInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -9919,6 +10225,8 @@ export type TenantUncheckedCreateWithoutTeamsInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -9996,6 +10304,8 @@ export type TenantUpdateWithoutTeamsInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -10057,6 +10367,8 @@ export type TenantUncheckedUpdateWithoutTeamsInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -10118,6 +10430,8 @@ export type TenantCreateWithoutVehiclesInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -10179,6 +10493,8 @@ export type TenantUncheckedCreateWithoutVehiclesInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -10256,6 +10572,8 @@ export type TenantUpdateWithoutVehiclesInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -10317,6 +10635,8 @@ export type TenantUncheckedUpdateWithoutVehiclesInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -10378,6 +10698,8 @@ export type TenantCreateWithoutStaffAssignmentRequestsInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -10439,6 +10761,8 @@ export type TenantUncheckedCreateWithoutStaffAssignmentRequestsInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -10516,6 +10840,8 @@ export type TenantUpdateWithoutStaffAssignmentRequestsInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -10577,6 +10903,8 @@ export type TenantUncheckedUpdateWithoutStaffAssignmentRequestsInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -10638,6 +10966,8 @@ export type TenantCreateWithoutInvitationsInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -10699,6 +11029,8 @@ export type TenantUncheckedCreateWithoutInvitationsInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -10776,6 +11108,8 @@ export type TenantUpdateWithoutInvitationsInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -10837,6 +11171,8 @@ export type TenantUncheckedUpdateWithoutInvitationsInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -10898,6 +11234,8 @@ export type TenantCreateWithoutOrderSharesInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -10959,6 +11297,8 @@ export type TenantUncheckedCreateWithoutOrderSharesInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -11036,6 +11376,8 @@ export type TenantUpdateWithoutOrderSharesInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -11097,6 +11439,8 @@ export type TenantUncheckedUpdateWithoutOrderSharesInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -11158,6 +11502,8 @@ export type TenantCreateWithoutFinanceSettingsInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -11219,6 +11565,8 @@ export type TenantUncheckedCreateWithoutFinanceSettingsInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -11296,6 +11644,8 @@ export type TenantUpdateWithoutFinanceSettingsInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -11357,6 +11707,8 @@ export type TenantUncheckedUpdateWithoutFinanceSettingsInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -11418,6 +11770,8 @@ export type TenantCreateWithoutExpensesInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -11479,6 +11833,8 @@ export type TenantUncheckedCreateWithoutExpensesInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -11556,6 +11912,8 @@ export type TenantUpdateWithoutExpensesInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -11617,6 +11975,8 @@ export type TenantUncheckedUpdateWithoutExpensesInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -11678,6 +12038,8 @@ export type TenantCreateWithoutPlannedInvestmentsInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -11739,6 +12101,8 @@ export type TenantUncheckedCreateWithoutPlannedInvestmentsInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -11816,6 +12180,8 @@ export type TenantUpdateWithoutPlannedInvestmentsInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -11877,6 +12243,8 @@ export type TenantUncheckedUpdateWithoutPlannedInvestmentsInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -11938,6 +12306,8 @@ export type TenantCreateWithoutInvestmentReservesInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -11999,6 +12369,8 @@ export type TenantUncheckedCreateWithoutInvestmentReservesInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -12076,6 +12448,8 @@ export type TenantUpdateWithoutInvestmentReservesInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -12137,6 +12511,8 @@ export type TenantUncheckedUpdateWithoutInvestmentReservesInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -12198,6 +12574,8 @@ export type TenantCreateWithoutJobRunsInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -12259,6 +12637,8 @@ export type TenantUncheckedCreateWithoutJobRunsInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -12336,6 +12716,8 @@ export type TenantUpdateWithoutJobRunsInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -12397,6 +12779,8 @@ export type TenantUncheckedUpdateWithoutJobRunsInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -12458,6 +12842,8 @@ export type TenantCreateWithoutAiChatSessionsInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -12519,6 +12905,8 @@ export type TenantUncheckedCreateWithoutAiChatSessionsInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -12596,6 +12984,8 @@ export type TenantUpdateWithoutAiChatSessionsInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -12657,6 +13047,8 @@ export type TenantUncheckedUpdateWithoutAiChatSessionsInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -12718,6 +13110,8 @@ export type TenantCreateWithoutProjectsInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -12779,6 +13173,8 @@ export type TenantUncheckedCreateWithoutProjectsInput = {
   primaryColor?: string
   privacyPolicyUrl?: string | null
   imprintUrl?: string | null
+  termsUrl?: string | null
+  onboardingBookingCompletedAt?: Date | string | null
   bufferMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -12856,6 +13252,8 @@ export type TenantUpdateWithoutProjectsInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -12917,6 +13315,8 @@ export type TenantUncheckedUpdateWithoutProjectsInput = {
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   privacyPolicyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imprintUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  termsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingBookingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bufferMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -13360,6 +13760,8 @@ export type TenantSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   primaryColor?: boolean
   privacyPolicyUrl?: boolean
   imprintUrl?: boolean
+  termsUrl?: boolean
+  onboardingBookingCompletedAt?: boolean
   bufferMinutes?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -13423,6 +13825,8 @@ export type TenantSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   primaryColor?: boolean
   privacyPolicyUrl?: boolean
   imprintUrl?: boolean
+  termsUrl?: boolean
+  onboardingBookingCompletedAt?: boolean
   bufferMinutes?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -13441,6 +13845,8 @@ export type TenantSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   primaryColor?: boolean
   privacyPolicyUrl?: boolean
   imprintUrl?: boolean
+  termsUrl?: boolean
+  onboardingBookingCompletedAt?: boolean
   bufferMinutes?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -13459,12 +13865,14 @@ export type TenantSelectScalar = {
   primaryColor?: boolean
   privacyPolicyUrl?: boolean
   imprintUrl?: boolean
+  termsUrl?: boolean
+  onboardingBookingCompletedAt?: boolean
   bufferMinutes?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type TenantOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "slug" | "name" | "email" | "phone" | "address" | "city" | "zipCode" | "logoUrl" | "primaryColor" | "privacyPolicyUrl" | "imprintUrl" | "bufferMinutes" | "createdAt" | "updatedAt", ExtArgs["result"]["tenant"]>
+export type TenantOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "slug" | "name" | "email" | "phone" | "address" | "city" | "zipCode" | "logoUrl" | "primaryColor" | "privacyPolicyUrl" | "imprintUrl" | "termsUrl" | "onboardingBookingCompletedAt" | "bufferMinutes" | "createdAt" | "updatedAt", ExtArgs["result"]["tenant"]>
 export type TenantInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   users?: boolean | Prisma.Tenant$usersArgs<ExtArgs>
   customers?: boolean | Prisma.Tenant$customersArgs<ExtArgs>
@@ -13576,6 +13984,8 @@ export type $TenantPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     primaryColor: string
     privacyPolicyUrl: string | null
     imprintUrl: string | null
+    termsUrl: string | null
+    onboardingBookingCompletedAt: Date | null
     bufferMinutes: number
     createdAt: Date
     updatedAt: Date
@@ -14058,6 +14468,8 @@ export interface TenantFieldRefs {
   readonly primaryColor: Prisma.FieldRef<"Tenant", 'String'>
   readonly privacyPolicyUrl: Prisma.FieldRef<"Tenant", 'String'>
   readonly imprintUrl: Prisma.FieldRef<"Tenant", 'String'>
+  readonly termsUrl: Prisma.FieldRef<"Tenant", 'String'>
+  readonly onboardingBookingCompletedAt: Prisma.FieldRef<"Tenant", 'DateTime'>
   readonly bufferMinutes: Prisma.FieldRef<"Tenant", 'Int'>
   readonly createdAt: Prisma.FieldRef<"Tenant", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Tenant", 'DateTime'>
