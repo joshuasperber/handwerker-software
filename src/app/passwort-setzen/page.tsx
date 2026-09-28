@@ -68,12 +68,29 @@ export default function PasswortSetzenPage() {
     setError("");
     try {
       const supabase = createSupabaseBrowserClient();
-      const { error: updateError } = await supabase.auth.updateUser({ password });
-      if (updateError) {
-        setError(updateError.message);
+      const { data: sessionData } = await supabase.auth.getSession();
+      const accessToken = sessionData.session?.access_token;
+      if (!accessToken) {
+        setError("Reset-Sitzung ist abgelaufen. Bitte einen neuen Link anfordern.");
         setLoading(false);
         return;
       }
+
+      const response = await fetch("/api/auth/complete-password-reset", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({ password }),
+      });
+      const result = await response.json();
+      if (!response.ok || !result.success) {
+        setError(result.error ?? "Passwort konnte nicht gespeichert werden");
+        setLoading(false);
+        return;
+      }
+
       await supabase.auth.signOut();
       setDone(true);
       setTimeout(() => router.push("/login"), 1500);

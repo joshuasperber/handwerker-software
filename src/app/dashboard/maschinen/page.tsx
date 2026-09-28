@@ -289,7 +289,12 @@ export default function MaschinenPage() {
                   </p>
                 </div>
                 <CanAccess permission="calculations.settings">
-                  <button onClick={() => setDeactivateId(m.id)} className="text-red-500 hover:text-red-700">
+                  <button
+                    type="button"
+                    aria-label={`${m.name} deaktivieren`}
+                    onClick={() => setDeactivateId(m.id)}
+                    className="inline-flex size-10 items-center justify-center rounded-xl text-red-500 transition-colors hover:bg-red-50 hover:text-red-700"
+                  >
                     <Trash2 className="h-4 w-4" />
                   </button>
                 </CanAccess>

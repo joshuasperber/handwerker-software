@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -65,7 +65,7 @@ function fileToAvatarBlob(file: File): Promise<Blob> {
 
 export default function ProfilPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
+  const pathname = usePathname();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
   const [avatarBusy, setAvatarBusy] = useState(false);
@@ -82,8 +82,6 @@ export default function ProfilPage() {
   const [pw, setPw] = useState({ oldPassword: "", newPassword: "", confirmPassword: "" });
   const [pwError, setPwError] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const forcedChange = searchParams.get("changePassword") === "1";
 
   useEffect(() => {
     fetchJson<Profile>("/api/profile").then((res) => {
@@ -224,7 +222,7 @@ export default function ProfilPage() {
     if (data.success) {
       setPw({ oldPassword: "", newPassword: "", confirmPassword: "" });
       setProfile((p) => (p ? { ...p, mustChangePassword: false } : p));
-      router.refresh();
+      router.replace(pathname);
     } else {
       setPwError(data.error ?? "Passwort konnte nicht geändert werden");
     }
@@ -239,7 +237,7 @@ export default function ProfilPage() {
 
   const initials =
     (form.firstName.charAt(0) + form.lastName.charAt(0)).toUpperCase() || "?";
-  const mustChange = profile.mustChangePassword || forcedChange;
+  const mustChange = profile.mustChangePassword;
 
   return (
     <div className="mx-auto max-w-3xl space-y-6">

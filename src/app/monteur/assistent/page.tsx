@@ -14,7 +14,7 @@ export default function MonteurAssistentPage() {
       }
     >
       {/* Volle Breite unter Bottom-Nav — ohne doppelte Titel */}
-      <div className="-mx-4 -mt-2 -mb-24 sm:mx-0 sm:mt-0 sm:mb-0">
+      <div className="-mx-3 -mt-2 -mb-24 sm:mx-0 sm:mt-0 sm:mb-0">
         <AssistantChat variant="work" />
       </div>
     </CanAccess>

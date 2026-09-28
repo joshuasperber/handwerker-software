@@ -1,4 +1,4 @@
-import { NextRequest } from "next/server";
+import { after, NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAuth, apiSuccess, apiError } from "@/lib/api";
 import { hashPassword } from "@/lib/auth";
@@ -7,6 +7,8 @@ import type { UserRole } from "@/generated/prisma/client";
 import { ASSIGNABLE_STAFF_ROLES, hasPermission } from "@/lib/permissions";
 import { createAuditLog } from "@/lib/audit";
 import { employeeListInclude } from "@/lib/employees/list-select";
+import { mustArchiveEmployee } from "@/lib/employees/removal";
+import { Prisma } from "@/generated/prisma/client";
 
 export async function GET(
   _request: NextRequest,
@@ -230,4 +232,143 @@ export async function PATCH(
   });
 
   return apiSuccess(updated);
+}
+
+export async function DELETE(
+  _request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const auth = await requireAuth("users.manage");
+  if (auth instanceof Response) return auth;
+
+  const { id } = await params;
+  const employee = await prisma.employee.findFirst({
+    where: { id, tenantId: auth.tenantId },
+    select: {
+      id: true,
+      userId: true,
+      _count: {
+        select: {
+          qualifications: true,
+          workingHours: true,
+          appointments: true,
+          timeEntries: true,
+          materialUsages: true,
+          absences: true,
+          teamMemberships: true,
+          staffRequests: true,
+          orderPhases: true,
+          assignedVehicles: true,
+          stockMovements: true,
+          projectMemberships: true,
+          orderAssignments: true,
+          laborItems: true,
+        },
+      },
+      user: {
+        select: {
+          firstName: true,
+          lastName: true,
+          email: true,
+          isActive: true,
+          supabaseUserId: true,
+          _count: {
+            select: {
+              auditLogs: true,
+              sentMessages: true,
+              receivedMessages: true,
+              staffRequestsSent: true,
+              fileUploads: true,
+              invitationsSent: true,
+              invitationsAccepted: true,
+              orderSharesReceived: true,
+              orderSharesCreated: true,
+              notifications: true,
+              expensesCreated: true,
+              aiChatSessions: true,
+              stockMovementsCreated: true,
+              projectNotesCreated: true,
+              projectFilesUploaded: true,
+              projectCostsCreated: true,
+              workRequestsCreated: true,
+              workRequestsReviewed: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  if (!employee) return apiError("Mitarbeiter nicht gefunden", 404);
+  if (employee.userId === auth.id) {
+    return apiError("Das eigene Konto kann nicht gelöscht werden", 403);
+  }
+
+  const tenantId = auth.tenantId;
+  const actorUserId = auth.id;
+  const employeeId = employee.id;
+  const employeeUserId = employee.userId;
+  const wasActive = employee.user.isActive;
+  const employeeLabel = `${employee.user.firstName} ${employee.user.lastName}`.trim();
+
+  async function deactivateEmployee() {
+    await prisma.user.update({
+      where: { id: employeeUserId },
+      data: { isActive: false, sessionVersion: { increment: 1 } },
+    });
+    await createAuditLog({
+      tenantId,
+      userId: actorUserId,
+      entityType: "Employee",
+      entityId: employeeId,
+      action: "EMPLOYEE_DEACTIVATE",
+      oldValues: { isActive: wasActive },
+      newValues: { isActive: false, reason: "historical_data" },
+    });
+    return apiSuccess({
+      action: "deactivated" as const,
+      message: `${employeeLabel} wurde deaktiviert. Vorhandene Vorgänge bleiben erhalten.`,
+    });
+  }
+
+  if (mustArchiveEmployee(employee._count, employee.user._count)) {
+    return deactivateEmployee();
+  }
+
+  try {
+    await prisma.user.delete({ where: { id: employeeUserId } });
+  } catch (error) {
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === "P2003"
+    ) {
+      return deactivateEmployee();
+    }
+    throw error;
+  }
+
+  await createAuditLog({
+    tenantId,
+    userId: actorUserId,
+    entityType: "Employee",
+    entityId: employeeId,
+    action: "EMPLOYEE_DELETE",
+    oldValues: { email: employee.user.email, name: employeeLabel },
+  });
+
+  if (employee.user.supabaseUserId) {
+    const supabaseUserId = employee.user.supabaseUserId;
+    after(async () => {
+      const { deleteSupabaseAuthUser } = await import("@/lib/supabase/auth-users");
+      const authDelete = await deleteSupabaseAuthUser(supabaseUserId);
+      if (!authDelete.ok) {
+        console.warn("Supabase Auth user could not be deleted", authDelete.error);
+      }
+    });
+  }
+
+  return apiSuccess({
+    action: "deleted" as const,
+    message: `${employeeLabel} wurde gelöscht.`,
+  });
 }

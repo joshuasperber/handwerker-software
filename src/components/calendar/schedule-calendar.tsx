@@ -17,7 +17,19 @@ import {
   startOfWeek,
 } from "date-fns";
 import { de } from "date-fns/locale";
-import { ChevronLeft, ChevronRight, Users, Truck, X, SlidersHorizontal, Plus } from "lucide-react";
+import {
+  CalendarDays,
+  Check,
+  ChevronLeft,
+  ChevronRight,
+  LoaderCircle,
+  Plus,
+  Search,
+  SlidersHorizontal,
+  Truck,
+  Users,
+  X,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   appointmentDisplayTitle,
@@ -63,12 +75,13 @@ export interface CalendarAppointment {
   employee: { color: string; user: { firstName: string; lastName: string } } | null;
 }
 
-export type CalendarViewMode = "day" | "week" | "workweek" | "month";
+export type CalendarViewMode = "day" | "week" | "month";
 
 interface ScheduleCalendarProps {
   view: CalendarViewMode;
   anchorDate: Date;
   appointments: CalendarAppointment[];
+  loading?: boolean;
   employees: { id: string; user: { firstName: string; lastName: string }; color: string }[];
   selectedEmployeeIds: string[];
   onSelectedEmployeeIdsChange: (ids: string[]) => void;
@@ -224,6 +237,7 @@ export function ScheduleCalendar({
   view,
   anchorDate,
   appointments,
+  loading = false,
   employees,
   selectedEmployeeIds,
   onSelectedEmployeeIdsChange,
@@ -243,11 +257,21 @@ export function ScheduleCalendar({
   const [draggingId, setDraggingId] = useState<string | null>(null);
   const [resizingId, setResizingId] = useState<string | null>(null);
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
+  const [employeeQuery, setEmployeeQuery] = useState("");
+  const [now, setNow] = useState<Date | null>(null);
 
-  // Tag = 1, Mo–Fr = 5, Woche = immer Mo–So (auch mobil), Monat separat
+  useEffect(() => {
+    // Browserzeit erst nach der Hydrierung setzen, damit die laufende Minutenanzeige
+    // nicht zwischen Server-HTML und erstem Client-Render abweicht.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setNow(new Date());
+    const timer = window.setInterval(() => setNow(new Date()), 60_000);
+    return () => window.clearInterval(timer);
+  }, []);
+
+  // Tag = 1, Woche = immer Mo–So (auch mobil), Monat separat
   const isCompact = useMediaQuery("(max-width: 1024px)");
-  const dayCount =
-    view === "day" ? 1 : view === "workweek" ? 5 : 7;
+  const dayCount = view === "day" ? 1 : 7;
   const hourHeight = isCompact || view === "day" ? 40 : 48;
   const timeColW = isCompact ? 40 : 64;
   const gridHeight = HOURS.length * hourHeight;
@@ -265,7 +289,9 @@ export function ScheduleCalendar({
 
   const teamFilterActive = teams.length > 0 && selectedTeamIds.length > 0;
   const vehicleFilterActive = vehicles.length > 0 && selectedVehicleIds.length > 0;
-  const showFilters = (teams.length > 0 && !!onSelectedTeamIdsChange) || (vehicles.length > 0 && !!onSelectedVehicleIdsChange);
+  const showFilters =
+    (teams.length > 0 && !!onSelectedTeamIdsChange) ||
+    (vehicles.length > 0 && !!onSelectedVehicleIdsChange);
 
   function navigate(dir: -1 | 1) {
     if (view === "day") onAnchorChange(addDays(anchorDate, dir));
@@ -420,42 +446,80 @@ export function ScheduleCalendar({
         : `${format(weekStart, "d. MMM", { locale: de })} – ${format(addDays(weekStart, dayCount - 1), "d. MMM yyyy", { locale: de })}`;
 
   const visibleCount = selectedEmployeeIds.length;
+  const visibleAppointmentCount = appointments.filter(isVisible).length;
+  const normalizedEmployeeQuery = employeeQuery.trim().toLocaleLowerCase("de");
+  const filteredEmployees = normalizedEmployeeQuery
+    ? employees.filter((employee) =>
+        `${employee.user.firstName} ${employee.user.lastName}`
+          .toLocaleLowerCase("de")
+          .includes(normalizedEmployeeQuery)
+      )
+    : employees;
+  const activeFilterCount = selectedTeamIds.length + selectedVehicleIds.length;
 
   const filterPanel = (
     <>
-      <div className="p-4 border-b border-slate-200 flex items-start justify-between gap-2">
-        <div>
-          <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide flex items-center gap-1.5">
-            <Users className="h-4 w-4" /> Mitarbeiter
-          </p>
-          <p className="text-xs text-slate-400 mt-1">{visibleCount} von {employees.length} angezeigt</p>
+      <div className="border-b border-slate-200/80 p-4">
+        <div className="flex items-start justify-between gap-2">
+          <div>
+            <p className="flex items-center gap-2 text-sm font-semibold text-slate-900">
+              <CalendarDays className="h-4 w-4 text-[#0d5c63]" /> Kalender
+            </p>
+            <p className="mt-1 text-xs text-slate-500">
+              {visibleCount} von {employees.length} Personen sichtbar
+            </p>
+          </div>
+          <button
+            type="button"
+            aria-label="Filter schließen"
+            className="rounded-full p-1 text-slate-400 hover:bg-slate-200/70 hover:text-slate-700 lg:hidden"
+            onClick={() => setMobileFilterOpen(false)}
+          >
+            <X className="h-5 w-5" />
+          </button>
         </div>
-        <button type="button" className="lg:hidden text-slate-400 hover:text-slate-600" onClick={() => setMobileFilterOpen(false)}>
-          <X className="h-5 w-5" />
-        </button>
+        {employees.length > 5 && (
+          <label className="relative mt-3 block">
+            <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400" />
+            <span className="sr-only">Mitarbeiter suchen</span>
+            <input
+              value={employeeQuery}
+              onChange={(event) => setEmployeeQuery(event.target.value)}
+              placeholder="Mitarbeiter suchen"
+              className="h-9 w-full rounded-lg border border-slate-200 bg-white pl-9 pr-3 text-sm text-slate-800 outline-none transition focus:border-[#0d5c63]/40 focus:ring-2 focus:ring-[#0d5c63]/10"
+            />
+          </label>
+        )}
       </div>
       <div className="flex-1 overflow-y-auto p-2 space-y-0.5">
-        {employees.map((emp) => {
+        {filteredEmployees.map((emp) => {
           const active = selectedEmployeeIds.includes(emp.id);
           return (
             <button
               key={emp.id}
               type="button"
               onClick={() => toggleEmployee(emp.id)}
-              className={`w-full flex items-center gap-2.5 py-2 px-3 rounded-lg text-left text-sm transition-colors ${
-                active ? "bg-white shadow-sm ring-1 ring-slate-200" : "opacity-50 hover:opacity-80 hover:bg-white/60"
+              className={`group w-full flex items-center gap-2.5 py-2 px-2.5 rounded-lg text-left text-sm transition ${
+                active ? "bg-white shadow-sm ring-1 ring-slate-200/80" : "text-slate-500 hover:bg-white/70"
               }`}
             >
               <span
-                className="w-3.5 h-3.5 rounded-full shrink-0 ring-2 ring-white shadow-sm"
-                style={{ backgroundColor: emp.color }}
-              />
-              <span className="truncate font-medium text-slate-800">
+                className="flex h-4 w-4 shrink-0 items-center justify-center rounded-[5px] text-white shadow-sm"
+                style={{ backgroundColor: active ? emp.color : "#cbd5e1" }}
+              >
+                {active && <Check className="h-3 w-3" strokeWidth={3} />}
+              </span>
+              <span className={`truncate font-medium ${active ? "text-slate-800" : "text-slate-500"}`}>
                 {emp.user.firstName} {emp.user.lastName}
               </span>
             </button>
           );
         })}
+        {filteredEmployees.length === 0 && (
+          <p className="px-3 py-6 text-center text-xs text-slate-500">
+            Keine passende Person gefunden.
+          </p>
+        )}
 
         {showFilters && teams.length > 0 && onSelectedTeamIdsChange && (
           <div className="pt-3 mt-2 border-t border-slate-200">
@@ -528,22 +592,22 @@ export function ScheduleCalendar({
   );
 
   return (
-    <div className="flex h-full min-h-0 gap-0 border border-slate-200 rounded-xl overflow-hidden bg-white shadow-sm relative">
+    <div className="relative flex h-full min-h-0 overflow-hidden rounded-[20px] border border-slate-200/80 bg-white shadow-[0_10px_35px_rgba(15,23,42,0.07)]">
       {mobileFilterOpen && (
         <button
           type="button"
-          className="lg:hidden fixed inset-0 bg-black/40 z-40"
+          className="fixed inset-0 z-40 bg-slate-950/30 backdrop-blur-[1px] lg:hidden"
           aria-label="Filter schließen"
           onClick={() => setMobileFilterOpen(false)}
         />
       )}
 
-      <aside className="hidden lg:flex w-56 shrink-0 border-r border-slate-200 bg-slate-50 flex-col sticky top-0 self-start h-full max-h-full overflow-hidden">
+      <aside className="sticky top-0 hidden h-full max-h-full w-64 shrink-0 self-start flex-col overflow-hidden border-r border-slate-200/80 bg-[#f6f6f8] lg:flex">
         {filterPanel}
       </aside>
 
       <aside
-        className={`lg:hidden fixed inset-y-0 left-0 w-72 z-50 border-r border-slate-200 bg-slate-50 flex flex-col shadow-xl transition-transform ${
+        className={`fixed inset-y-0 left-0 z-50 flex w-72 flex-col border-r border-slate-200 bg-[#f6f6f8] shadow-2xl transition-transform lg:hidden ${
           mobileFilterOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -551,24 +615,48 @@ export function ScheduleCalendar({
       </aside>
 
       <div className="flex-1 min-w-0 min-h-0 flex flex-col">
-        <div className="flex flex-wrap items-center justify-between gap-2 px-2 sm:px-4 py-2.5 border-b border-slate-100 bg-white">
-          <div className="flex items-center gap-1.5">
-            <Button variant="outline" size="sm" onClick={() => navigate(-1)}>
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
-            <span className="text-sm sm:text-base font-semibold min-w-[110px] sm:min-w-[220px] text-center capitalize">{headerLabel}</span>
-            <Button variant="outline" size="sm" onClick={() => navigate(1)}>
-              <ChevronRight className="h-4 w-4" />
-            </Button>
-            <Button variant="outline" size="sm" onClick={() => onAnchorChange(new Date())}>
-              Heute
-            </Button>
-          </div>
-          <div className="flex items-center gap-2">
+        <div className="border-b border-slate-200/80 bg-white/95 px-3 py-3 backdrop-blur sm:px-5">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="flex min-w-0 items-center gap-1.5">
+              <Button
+                variant="outline"
+                size="sm"
+                className="hidden sm:inline-flex"
+                onClick={() => onAnchorChange(new Date())}
+              >
+                Heute
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                aria-label="Vorheriger Zeitraum"
+                onClick={() => navigate(-1)}
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                aria-label="Nächster Zeitraum"
+                onClick={() => navigate(1)}
+              >
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+              <h2 className="ml-1 truncate text-base font-semibold capitalize tracking-tight text-slate-950 sm:ml-2 sm:text-lg">
+                {headerLabel}
+              </h2>
+              {loading && (
+                <LoaderCircle
+                  className="ml-1 h-4 w-4 shrink-0 animate-spin text-[#0d5c63]"
+                  aria-label="Termine werden geladen"
+                />
+              )}
+            </div>
+            <div className="flex items-center gap-2">
             {!readOnly && onSlotSelect && (
               <Button
                 size="sm"
-                className="bg-[#0d5c63] hover:bg-[#0a4a50] gap-1"
+                className="gap-1 bg-[#0d5c63] shadow-sm hover:bg-[#0a4a50]"
                 onClick={() => openDayDefaultSlot(anchorDate)}
               >
                 <Plus className="h-4 w-4" />
@@ -578,12 +666,12 @@ export function ScheduleCalendar({
             <button
               type="button"
               onClick={() => setMobileFilterOpen(true)}
-              className="lg:hidden h-9 px-3 rounded-lg border border-slate-200 text-sm font-medium bg-white text-slate-600 flex items-center gap-1"
+              className="flex h-9 items-center gap-1 rounded-lg border border-slate-200 bg-white px-3 text-sm font-medium text-slate-600 lg:hidden"
               aria-label="Filter öffnen"
             >
-              <SlidersHorizontal className="h-4 w-4" /> {visibleCount}
+              <SlidersHorizontal className="h-4 w-4" /> {activeFilterCount > 0 ? activeFilterCount : visibleCount}
             </button>
-            {/* Mobil: kompakte Auswahl statt 4 Buttons */}
+            {/* Mobil: kompakte Auswahl statt Segmentsteuerung */}
             <select
               value={view}
               onChange={(e) => onViewChange(e.target.value as CalendarViewMode)}
@@ -591,15 +679,13 @@ export function ScheduleCalendar({
               aria-label="Ansicht wählen"
             >
               <option value="day">Tag</option>
-              <option value="workweek">Mo–Fr</option>
               <option value="week">Woche Mo–So</option>
               <option value="month">Monat</option>
             </select>
-            <div className="hidden sm:flex rounded-lg border border-slate-200 overflow-hidden">
+            <div className="hidden overflow-hidden rounded-lg bg-slate-100 p-0.5 sm:flex">
               {(
                 [
                   ["day", "Tag"],
-                  ["workweek", "Mo–Fr"],
                   ["week", "Mo–So"],
                   ["month", "Monat"],
                 ] as const
@@ -608,14 +694,46 @@ export function ScheduleCalendar({
                   key={id}
                   type="button"
                   onClick={() => onViewChange(id)}
-                  className={`px-2 sm:px-3 py-2 text-xs sm:text-sm font-medium border-l border-slate-200 first:border-l-0 ${
-                    view === id ? "bg-[#0d5c63] text-white" : "bg-white text-slate-600 hover:bg-slate-50"
+                  className={`rounded-[7px] px-2 py-1.5 text-xs font-medium transition sm:px-3 sm:text-sm ${
+                    view === id ? "bg-white text-slate-950 shadow-sm" : "text-slate-500 hover:text-slate-800"
                   }`}
                 >
                   {label}
                 </button>
               ))}
             </div>
+            </div>
+          </div>
+          <div className="mt-2 flex items-center gap-2 text-xs text-slate-500 sm:mt-2.5">
+            <span>
+              {visibleAppointmentCount} {visibleAppointmentCount === 1 ? "Termin" : "Termine"}
+            </span>
+            <span aria-hidden="true" className="h-1 w-1 rounded-full bg-slate-300" />
+            <span>
+              {visibleCount} {visibleCount === 1 ? "Person" : "Personen"}
+            </span>
+            {activeFilterCount > 0 && (
+              <>
+                <span aria-hidden="true" className="h-1 w-1 rounded-full bg-slate-300" />
+                <button
+                  type="button"
+                  onClick={() => {
+                    onSelectedTeamIdsChange?.([]);
+                    onSelectedVehicleIdsChange?.([]);
+                  }}
+                  className="font-medium text-[#0d5c63] hover:underline"
+                >
+                  Filter zurücksetzen
+                </button>
+              </>
+            )}
+            <button
+              type="button"
+              onClick={() => onAnchorChange(new Date())}
+              className="ml-auto font-medium text-[#0d5c63] sm:hidden"
+            >
+              Heute
+            </button>
           </div>
         </div>
 
@@ -627,21 +745,21 @@ export function ScheduleCalendar({
                   ? "min-w-[720px]"
                   : isCompact
                     ? "min-w-0"
-                    : "min-w-[800px]"
+                    : "min-w-[640px]"
               }
             >
               {/* Kopfzeile: Wochentage */}
-              <div className="grid border-b border-slate-100 bg-slate-50 sticky top-0 z-20" style={{ gridTemplateColumns: gridTemplate }}>
+              <div className="sticky top-0 z-20 grid border-b border-slate-200/80 bg-white/95 backdrop-blur" style={{ gridTemplateColumns: gridTemplate }}>
                 <div className="border-r border-slate-100" />
                 {weekDays.map((day) => (
                   <div
                     key={day.toISOString()}
-                    className={`py-2 text-center border-l border-slate-100 ${isSameDay(day, new Date()) ? "bg-[#0d5c63]/8" : ""}`}
+                    className="border-l border-slate-100 py-2 text-center"
                   >
-                    <p className="text-[10px] sm:text-xs text-slate-500 uppercase font-medium">{format(day, "EEE", { locale: de })}</p>
-                    <p className={`text-base sm:text-xl font-bold mt-0.5 ${isSameDay(day, new Date()) ? "text-[#0d5c63]" : "text-slate-800"}`}>
-                      {format(day, "d.")}
-                    </p>
+                    <p className={`text-[10px] font-medium uppercase sm:text-xs ${now && isSameDay(day, now) ? "text-red-500" : "text-slate-500"}`}>{format(day, "EEE", { locale: de })}</p>
+                    <span className={`mt-0.5 inline-flex h-7 min-w-7 items-center justify-center rounded-full px-1 text-base font-semibold sm:h-8 sm:min-w-8 sm:text-lg ${now && isSameDay(day, now) ? "bg-red-500 text-white" : "text-slate-800"}`}>
+                      {format(day, "d")}
+                    </span>
                   </div>
                 ))}
               </div>
@@ -674,12 +792,14 @@ export function ScheduleCalendar({
                           key={apt.id}
                           onClick={() => onAppointmentClick?.(apt)}
                           title={`${empName} · ${label} (mehrtägig)`}
-                          className="absolute flex items-center gap-1 rounded-md px-2 h-[18px] text-[11px] font-medium leading-[18px] text-white truncate shadow-sm border border-white/20 hover:opacity-90 text-left"
+                          className="absolute flex h-[19px] items-center gap-1 truncate rounded-md border px-2 text-left text-[11px] font-semibold leading-[19px] shadow-sm transition hover:brightness-95"
                           style={{
                             left: `calc(${(startCol / dayCount) * 100}% + 3px)`,
                             width: `calc(${(span / dayCount) * 100}% - 6px)`,
                             top: lane * 22 + 4,
-                            backgroundColor: color,
+                            backgroundColor: `color-mix(in srgb, ${color} 16%, white)`,
+                            borderColor: `color-mix(in srgb, ${color} 38%, white)`,
+                            color,
                           }}
                         >
                           <span className="truncate">
@@ -735,6 +855,23 @@ export function ScheduleCalendar({
                       />
                     ))}
 
+                    {now &&
+                      isSameDay(day, now) &&
+                      now.getHours() >= HOUR_START &&
+                      now.getHours() <= HOUR_END && (
+                        <div
+                          className="pointer-events-none absolute left-0 right-0 z-20 border-t border-red-500"
+                          style={{
+                            top:
+                              ((now.getHours() * 60 + now.getMinutes() - HOUR_START * 60) / 60) *
+                              hourHeight,
+                          }}
+                          aria-hidden="true"
+                        >
+                          <span className="absolute -left-1 -top-1 h-2 w-2 rounded-full bg-red-500" />
+                        </div>
+                      )}
+
                     {layoutOverlapping(timedAptsForDay(day)).map(({ apt, col, totalCols }) => {
                       const start = new Date(apt.startTime);
                       const end = new Date(apt.endTime);
@@ -764,24 +901,26 @@ export function ScheduleCalendar({
                           onDragEnd={readOnly || isCompact ? undefined : () => setDraggingId(null)}
                           onClick={() => onAppointmentClick?.(apt)}
                           title={`${empName} · ${eventLabel(apt)}`}
-                          className={`absolute rounded-md px-1 sm:px-1.5 py-0.5 text-white overflow-hidden z-10 shadow-md border border-white/20 cursor-pointer ${!readOnly && !isCompact ? "active:cursor-grabbing" : ""} ${draggingId === apt.id || resizingId === apt.id ? "opacity-40 ring-2 ring-[#0d5c63]" : ""}`}
+                          className={`absolute z-10 cursor-pointer overflow-hidden rounded-md border border-l-[3px] px-1.5 py-1 text-left shadow-sm transition hover:brightness-95 sm:px-2 ${!readOnly && !isCompact ? "active:cursor-grabbing" : ""} ${draggingId === apt.id || resizingId === apt.id ? "opacity-40 ring-2 ring-[#0d5c63]" : ""}`}
                           style={{
                             top,
                             height,
                             left: `calc(${leftPct}% + 2px)`,
                             width: `calc(${widthPct}% - 4px)`,
-                            backgroundColor: color,
+                            backgroundColor: `color-mix(in srgb, ${color} 14%, white)`,
+                            borderColor: `color-mix(in srgb, ${color} 35%, white)`,
+                            borderLeftColor: color,
                           }}
                         >
                           <div className="block h-full min-h-0 pointer-events-none">
-                            <p className="text-[10px] sm:text-[11px] font-bold leading-tight truncate">
+                            <p className="truncate text-[10px] font-bold leading-tight text-slate-900 sm:text-[11px]">
                               {format(start, "HH:mm")} {eventLabel(apt)}
                             </p>
                             {height > 34 && empName && (
-                              <p className="text-[9px] sm:text-[10px] opacity-90 truncate">{empName}</p>
+                              <p className="truncate text-[9px] text-slate-600 sm:text-[10px]">{empName}</p>
                             )}
                             {height > 50 && apt.order?.orderNumber && (
-                              <p className="text-[9px] sm:text-[10px] opacity-75 truncate">{apt.order.orderNumber}</p>
+                              <p className="truncate text-[9px] text-slate-500 sm:text-[10px]">{apt.order.orderNumber}</p>
                             )}
                           </div>
                           {!readOnly && !isCompact && (
@@ -804,13 +943,11 @@ export function ScheduleCalendar({
                 ))}
               </div>
             </div>
-            <p className="text-[10px] sm:text-xs text-slate-400 px-3 sm:px-4 py-2 border-t border-slate-100">
+            <p className="border-t border-slate-100 px-3 py-2 text-[10px] text-slate-400 sm:px-4 sm:text-xs">
               {view === "day"
                 ? "Tagesansicht · "
-                : view === "workweek"
-                  ? "Mo–Fr · "
-                  : "Mo–So · "}
-              Farbe wählbar · Gelb = 17–19 Uhr
+                : "Mo–So · "}
+              Farben nach Mitarbeiter · Gelb = 17–19 Uhr
               {readOnly
                 ? ""
                 : isCompact
@@ -819,8 +956,8 @@ export function ScheduleCalendar({
             </p>
           </div>
         ) : (
-          <div className="flex-1 overflow-auto p-2">
-            <div className="grid grid-cols-7 border border-slate-100 rounded-lg overflow-hidden min-h-[500px]">
+          <div className="flex-1 overflow-auto p-2 sm:p-3">
+            <div className="grid min-h-[500px] grid-cols-7 overflow-hidden rounded-xl border border-slate-200/80">
               {["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"].map((d) => (
                 <div key={d} className="py-2 text-center text-xs font-semibold text-slate-500 bg-slate-50 border-b border-slate-100">
                   {d}
@@ -852,11 +989,11 @@ export function ScheduleCalendar({
                             }
                           }
                     }
-                    className={`min-h-[90px] sm:min-h-[120px] border-b border-r border-slate-50 p-1.5 sm:p-2 ${!inMonth ? "bg-slate-50/60" : "bg-white"} ${isSameDay(day, new Date()) ? "ring-2 ring-inset ring-[#0d5c63]/30 bg-[#0d5c63]/5" : ""} ${!readOnly && onSlotSelect ? "cursor-pointer hover:bg-slate-50/80" : ""}`}
+                    className={`min-h-[90px] border-b border-r border-slate-100 p-1.5 sm:min-h-[120px] sm:p-2 ${!inMonth ? "bg-slate-50/70" : "bg-white"} ${!readOnly && onSlotSelect ? "cursor-pointer hover:bg-slate-50/70" : ""}`}
                   >
-                    <p className={`text-xs sm:text-sm font-semibold mb-1 ${isSameDay(day, new Date()) ? "text-[#0d5c63]" : inMonth ? "text-slate-800" : "text-slate-300"}`}>
-                      {format(day, "d.")}
-                    </p>
+                    <span className={`mb-1 inline-flex h-6 min-w-6 items-center justify-center rounded-full px-1 text-xs font-semibold sm:text-sm ${now && isSameDay(day, now) ? "bg-red-500 text-white" : inMonth ? "text-slate-800" : "text-slate-300"}`}>
+                      {format(day, "d")}
+                    </span>
                     <div className="space-y-1">
                       {dayApts.slice(0, 4).map((apt) => {
                         const color = getEmployeeColor(apt, employees);
@@ -870,8 +1007,11 @@ export function ScheduleCalendar({
                               e.stopPropagation();
                               onAppointmentClick?.(apt);
                             }}
-                            className="flex w-full items-center gap-1 rounded px-1.5 py-0.5 text-[10px] text-white truncate shadow-sm text-left"
-                            style={{ backgroundColor: color }}
+                            className="flex w-full items-center gap-1 truncate rounded border-l-2 px-1.5 py-0.5 text-left text-[10px] font-medium text-slate-800 shadow-sm transition hover:brightness-95"
+                            style={{
+                              backgroundColor: `color-mix(in srgb, ${color} 14%, white)`,
+                              borderLeftColor: color,
+                            }}
                             title={
                               apt.employee?.user
                                 ? `${apt.employee.user.firstName} ${apt.employee.user.lastName}`

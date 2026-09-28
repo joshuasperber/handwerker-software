@@ -23,7 +23,8 @@ export function SwrProvider({ children }: { children: ReactNode }) {
       value={{
         fetcher: swrFetcher,
         revalidateOnFocus: true,
-        dedupingInterval: 5_000,
+        dedupingInterval: 30_000,
+        focusThrottleInterval: 30_000,
         keepPreviousData: true,
         errorRetryCount: 2,
       }}

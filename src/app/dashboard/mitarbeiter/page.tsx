@@ -10,7 +10,8 @@ import { AddButton } from "@/components/ui/add-button";
 import { saveJson } from "@/lib/save-toast";
 import { swrKeys, useApiSWR } from "@/lib/swr";
 import { ASSIGNABLE_STAFF_ROLES } from "@/lib/permissions";
-import { Pencil, Search } from "lucide-react";
+import { Pencil, Search, Trash2 } from "lucide-react";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 
 interface Employee {
   id: string;
@@ -20,6 +21,7 @@ interface Employee {
   defaultActivity?: string | null;
   operationalStatus: string;
   user: {
+    id: string;
     firstName: string;
     lastName: string;
     email: string;
@@ -54,6 +56,7 @@ const EMPTY_FORM = {
 export default function MitarbeiterPage() {
   const session = useSession();
   const canManageRoles = usePermission("roles.manage");
+  const canDeleteEmployees = usePermission("users.manage");
   const { data: employees = [], mutate } = useApiSWR<Employee[]>(swrKeys.employees());
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -62,6 +65,8 @@ export default function MitarbeiterPage() {
   const [search, setSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState("");
   const [activeFilter, setActiveFilter] = useState<"all" | "active" | "inactive">("active");
+  const [deleteTarget, setDeleteTarget] = useState<Employee | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   const roleOptions = canManageRoles
     ? ROLES.filter((r) => r !== "ADMIN" || session.role === "ADMIN")
@@ -158,6 +163,39 @@ export default function MitarbeiterPage() {
     } else {
       setError(data.error ?? "Fehler beim Speichern");
     }
+  }
+
+  async function removeEmployee() {
+    if (!deleteTarget || deleting) return;
+    setDeleting(true);
+
+    const result = await saveJson<{
+      action: "deleted" | "deactivated";
+      message: string;
+    }>(
+      `/api/employees/${deleteTarget.id}`,
+      { method: "DELETE" },
+      {
+        loading: "Mitarbeiter wird entfernt …",
+        success: "Mitarbeiter wurde entfernt",
+        error: "Mitarbeiter konnte nicht entfernt werden",
+      }
+    );
+
+    if (result.success && result.data) {
+      const nextEmployees =
+        result.data.action === "deleted"
+          ? employees.filter((employee) => employee.id !== deleteTarget.id)
+          : employees.map((employee) =>
+              employee.id === deleteTarget.id
+                ? { ...employee, user: { ...employee.user, isActive: false } }
+                : employee
+            );
+      await mutate(nextEmployees, { revalidate: false });
+      setDeleteTarget(null);
+      void mutate();
+    }
+    setDeleting(false);
   }
 
   const filtered = employees.filter((emp) => {
@@ -340,11 +378,30 @@ export default function MitarbeiterPage() {
                   )}
                 </div>
               </div>
-              <CanAccess permission="employees.write">
-                <Button size="sm" variant="outline" className="min-h-10 min-w-10" onClick={() => startEdit(emp)}>
-                  <Pencil className="h-4 w-4" />
-                </Button>
-              </CanAccess>
+              <div className="flex shrink-0 gap-1">
+                <CanAccess permission="employees.write">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="min-h-10 min-w-10"
+                    onClick={() => startEdit(emp)}
+                    aria-label={`${emp.user.firstName} ${emp.user.lastName} bearbeiten`}
+                  >
+                    <Pencil className="h-4 w-4" />
+                  </Button>
+                </CanAccess>
+                {canDeleteEmployees && emp.user.id !== session.id && (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="min-h-10 min-w-10 text-red-600 hover:border-red-200 hover:bg-red-50 hover:text-red-700"
+                    onClick={() => setDeleteTarget(emp)}
+                    aria-label={`${emp.user.firstName} ${emp.user.lastName} entfernen`}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                )}
+              </div>
             </div>
             <p className="mt-3 text-sm text-slate-400">{emp.user.email}</p>
             {emp.hourlyWageNet != null && (
@@ -370,6 +427,29 @@ export default function MitarbeiterPage() {
           <p className="text-sm text-slate-500 col-span-full text-center py-8">Keine Mitarbeiter gefunden.</p>
         )}
       </div>
+
+      <ConfirmDialog
+        open={Boolean(deleteTarget)}
+        onOpenChange={(open) => {
+          if (!open && !deleting) setDeleteTarget(null);
+        }}
+        title="Mitarbeiter entfernen?"
+        description={
+          deleteTarget ? (
+            <>
+              <strong>{deleteTarget.user.firstName} {deleteTarget.user.lastName}</strong> wird
+              entfernt. Ein unbenutztes Konto wird vollständig gelöscht. Sobald bereits
+              Aufträge, Zeiten oder andere Vorgänge vorhanden sind, wird das Konto stattdessen
+              sicher deaktiviert und die Historie bleibt erhalten.
+            </>
+          ) : undefined
+        }
+        confirmLabel="Mitarbeiter entfernen"
+        variant="destructive"
+        loading={deleting}
+        onConfirm={removeEmployee}
+        icon={<Trash2 className="h-5 w-5" />}
+      />
     </div>
   );
 }

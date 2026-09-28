@@ -7,6 +7,7 @@ import {
   ExternalLink,
   Flag,
   MoreHorizontal,
+  Pencil,
   PhoneCall,
   RefreshCw,
   Users,
@@ -67,6 +68,7 @@ export interface OrderDetailHeaderProps {
   onUpdatePriority: (priority: string) => void;
   onUpdateStatus: (status: string) => void;
   onUpdateConfirmation: (status: string) => void;
+  onEdit: () => void;
 }
 
 export function OrderDetailHeader({
@@ -79,6 +81,7 @@ export function OrderDetailHeader({
   onUpdatePriority,
   onUpdateStatus,
   onUpdateConfirmation,
+  onEdit,
 }: OrderDetailHeaderProps) {
   const confirmation = order.customerConfirmationStatus ?? "OFFEN";
   const canComplete = !["ABRECHNUNGSBEREIT", "ABGERECHNET", "STORNIERT"].includes(
@@ -126,6 +129,10 @@ export function OrderDetailHeader({
 
       <CanAccess permission="orders.write">
         <div className="flex shrink-0 items-center gap-2">
+          <Button size="sm" variant="outline" onClick={onEdit}>
+            <Pencil className="h-4 w-4 sm:mr-1" />
+            <span className="hidden sm:inline">Bearbeiten</span>
+          </Button>
           {canComplete && (
             <Button size="sm" variant="action" onClick={onComplete}>
               <CheckCircle className="h-4 w-4 mr-1" /> Abschließen

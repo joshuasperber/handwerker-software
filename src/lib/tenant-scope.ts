@@ -25,35 +25,40 @@ export async function validateOrderCreateRefs(
     employeeIds?: string[];
   }
 ): Promise<string | null> {
-  const customer = await prisma.customer.findFirst({
-    where: { id: refs.customerId, tenantId },
-    select: { id: true },
-  });
-  if (!customer) return "Kunde nicht gefunden";
-
-  const property = await prisma.property.findFirst({
-    where: { id: refs.propertyId, tenantId, customerId: refs.customerId },
-    select: { id: true },
-  });
-  if (!property) return "Objekt nicht gefunden";
-
-  if (refs.serviceIds?.length) {
-    const count = await prisma.service.count({
-      where: { id: { in: refs.serviceIds }, tenantId },
-    });
-    if (count !== refs.serviceIds.length) return "Leistung nicht gefunden";
-  }
-
   const employeeIds = [
     ...new Set(
       [...(refs.employeeIds ?? []), ...(refs.employeeId ? [refs.employeeId] : [])].filter(Boolean)
     ),
   ];
-  if (employeeIds.length) {
-    const count = await prisma.employee.count({
-      where: { id: { in: employeeIds }, tenantId },
-    });
-    if (count !== employeeIds.length) return "Mitarbeiter nicht gefunden";
+
+  const [customer, property, serviceCount, employeeCount] = await Promise.all([
+    prisma.customer.findFirst({
+      where: { id: refs.customerId, tenantId },
+      select: { id: true },
+    }),
+    prisma.property.findFirst({
+      where: { id: refs.propertyId, tenantId, customerId: refs.customerId },
+      select: { id: true },
+    }),
+    refs.serviceIds?.length
+      ? prisma.service.count({
+          where: { id: { in: refs.serviceIds }, tenantId },
+        })
+      : Promise.resolve(0),
+    employeeIds.length
+      ? prisma.employee.count({
+          where: { id: { in: employeeIds }, tenantId },
+        })
+      : Promise.resolve(0),
+  ]);
+
+  if (!customer) return "Kunde nicht gefunden";
+  if (!property) return "Objekt nicht gefunden";
+  if (refs.serviceIds?.length && serviceCount !== refs.serviceIds.length) {
+    return "Leistung nicht gefunden";
+  }
+  if (employeeIds.length && employeeCount !== employeeIds.length) {
+    return "Mitarbeiter nicht gefunden";
   }
 
   return null;

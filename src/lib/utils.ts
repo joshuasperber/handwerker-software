@@ -206,7 +206,7 @@ export const ROLE_LABELS: Record<string, string> = {
   TEAMLEITER: "Teamleiter",
   BUERO: "Büro",
   MONTEUR: "Monteur",
-  AUSHILFE: "Aushilfe / Subunternehmer",
+  AUSHILFE: "Ausbildung / Aushilfe",
   KUNDE: "Kunde",
   GAST: "Gast (eingeladen)",
 };

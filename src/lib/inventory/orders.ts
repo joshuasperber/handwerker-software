@@ -5,6 +5,7 @@ import { standardPhaseCreateData } from "@/lib/orders/phases";
 import type { MaterialOrderStatus, OrderType, ReservationStatus } from "@/generated/prisma/client";
 import type { OrderMaterialLineInput } from "@/lib/orders/material-lines";
 import { resolveOrderTypeAssignment } from "@/lib/orders/order-types";
+import { determineMaterialOrderStatus } from "./order-material-status";
 
 export async function getArticleAvailability(tenantId: string, articleId: string) {
   const balances = await prisma.stockBalance.findMany({
@@ -74,104 +75,135 @@ export async function generateMaterialLinesFromServices(orderId: string, service
 export async function checkOrderMaterialStatus(orderId: string, tenantId: string): Promise<MaterialOrderStatus> {
   const lines = await prisma.orderMaterialLine.findMany({
     where: { orderId, isTool: false },
-    include: { article: true },
+    select: { articleId: true, quantityRequired: true },
   });
 
   if (!lines.length) return "NOT_CHECKED";
 
-  let allComplete = true;
-  let anyMissing = false;
-  let anyPartial = false;
-
-  for (const line of lines) {
-    if (!line.articleId) {
-      anyPartial = true;
-      allComplete = false;
-      continue;
-    }
-    const avail = await getArticleAvailability(tenantId, line.articleId);
-    if (avail.available >= line.quantityRequired) continue;
-    if (avail.available > 0) {
-      anyPartial = true;
-      allComplete = false;
-    } else {
-      anyMissing = true;
-      allComplete = false;
-    }
+  const articleIds = [
+    ...new Set(lines.flatMap((line) => (line.articleId ? [line.articleId] : []))),
+  ];
+  const balances = articleIds.length
+    ? await prisma.stockBalance.findMany({
+        where: {
+          articleId: { in: articleIds },
+          article: { tenantId },
+        },
+        select: {
+          articleId: true,
+          onHandQuantity: true,
+          reservedQuantity: true,
+        },
+      })
+    : [];
+  const totals = new Map<string, { onHand: number; reserved: number }>();
+  for (const balance of balances) {
+    const current = totals.get(balance.articleId) ?? { onHand: 0, reserved: 0 };
+    current.onHand += balance.onHandQuantity;
+    current.reserved += balance.reservedQuantity;
+    totals.set(balance.articleId, current);
   }
+  const availableByArticle = new Map(
+    [...totals].map(([articleId, total]) => [
+      articleId,
+      calcAvailableQuantity(total.onHand, total.reserved),
+    ])
+  );
+  const status = determineMaterialOrderStatus(lines, availableByArticle);
 
-  let status: MaterialOrderStatus = "COMPLETE";
-  if (anyMissing) status = "MISSING";
-  else if (anyPartial) status = "PARTLY_AVAILABLE";
-  else if (!allComplete) status = "PARTLY_AVAILABLE";
-
-  await prisma.order.update({
-    where: { id: orderId },
-    data: { materialStatus: status },
-  });
-
-  await prisma.orderMaterialLine.updateMany({
-    where: { orderId, isTool: false },
-    data: { lineStatus: status === "COMPLETE" ? "COMPLETE" : status },
-  });
+  await Promise.all([
+    prisma.order.update({
+      where: { id: orderId },
+      data: { materialStatus: status },
+    }),
+    prisma.orderMaterialLine.updateMany({
+      where: { orderId, isTool: false },
+      data: { lineStatus: status === "COMPLETE" ? "COMPLETE" : status },
+    }),
+  ]);
 
   return status;
 }
 
 export async function confirmReservationsForOrder(orderId: string, tenantId: string) {
-  const mainLocation = await prisma.storageLocation.findFirst({
-    where: { tenantId, locationType: "HAUPTLAGER", isActive: true },
-  });
+  const [mainLocation, lines] = await Promise.all([
+    prisma.storageLocation.findFirst({
+      where: { tenantId, locationType: "HAUPTLAGER", isActive: true },
+    }),
+    prisma.orderMaterialLine.findMany({
+      where: { orderId, isTool: false, articleId: { not: null } },
+    }),
+  ]);
   if (!mainLocation) throw new Error("Kein Hauptlager angelegt");
 
-  const lines = await prisma.orderMaterialLine.findMany({
-    where: { orderId, isTool: false, articleId: { not: null } },
+  const articleIds = [
+    ...new Set(lines.flatMap((line) => (line.articleId ? [line.articleId] : []))),
+  ];
+  const balances = await prisma.stockBalance.findMany({
+    where: {
+      storageLocationId: mainLocation.id,
+      articleId: { in: articleIds },
+    },
   });
+  const balanceByArticle = new Map(balances.map((balance) => [balance.articleId, balance]));
+  const remainingByArticle = new Map(
+    balances.map((balance) => [
+      balance.articleId,
+      calcAvailableQuantity(balance.onHandQuantity, balance.reservedQuantity),
+    ])
+  );
+  const reservations: {
+    tenantId: string;
+    orderId: string;
+    orderMaterialLineId: string;
+    articleId: string;
+    storageLocationId: string;
+    quantity: number;
+    status: ReservationStatus;
+  }[] = [];
+  const reservedByArticle = new Map<string, number>();
 
   for (const line of lines) {
     if (!line.articleId) continue;
-
-    const balance = await prisma.stockBalance.findUnique({
-      where: {
-        articleId_storageLocationId: {
-          articleId: line.articleId,
-          storageLocationId: mainLocation.id,
-        },
-      },
-    });
-
-    const onHand = balance?.onHandQuantity ?? 0;
-    const reserved = balance?.reservedQuantity ?? 0;
-    const available = calcAvailableQuantity(onHand, reserved);
+    const available = remainingByArticle.get(line.articleId) ?? 0;
     const qty = Math.min(line.quantityRequired, available);
     if (qty <= 0) continue;
+    remainingByArticle.set(line.articleId, available - qty);
+    reservedByArticle.set(
+      line.articleId,
+      (reservedByArticle.get(line.articleId) ?? 0) + qty
+    );
+    reservations.push({
+      tenantId,
+      orderId,
+      orderMaterialLineId: line.id,
+      articleId: line.articleId,
+      storageLocationId: mainLocation.id,
+      quantity: qty,
+      status: "RESERVIERT" as ReservationStatus,
+    });
+  }
 
+  if (reservations.length) {
     await prisma.$transaction([
-      prisma.reservation.create({
-        data: {
-          tenantId,
-          orderId,
-          orderMaterialLineId: line.id,
-          articleId: line.articleId,
-          storageLocationId: mainLocation.id,
-          quantity: qty,
-          status: "RESERVIERT" as ReservationStatus,
-        },
-      }),
-      prisma.stockBalance.upsert({
-        where: {
-          articleId_storageLocationId: {
-            articleId: line.articleId,
-            storageLocationId: mainLocation.id,
+      prisma.reservation.createMany({ data: reservations }),
+      ...[...reservedByArticle].map(([articleId, quantity]) => {
+        const balance = balanceByArticle.get(articleId);
+        return prisma.stockBalance.upsert({
+          where: {
+            articleId_storageLocationId: {
+              articleId,
+              storageLocationId: mainLocation.id,
+            },
           },
-        },
-        create: {
-          articleId: line.articleId,
-          storageLocationId: mainLocation.id,
-          onHandQuantity: onHand,
-          reservedQuantity: qty,
-        },
-        update: { reservedQuantity: { increment: qty } },
+          create: {
+            articleId,
+            storageLocationId: mainLocation.id,
+            onHandQuantity: balance?.onHandQuantity ?? 0,
+            reservedQuantity: quantity,
+          },
+          update: { reservedQuantity: { increment: quantity } },
+        });
       }),
     ]);
   }
@@ -243,21 +275,25 @@ export async function createOrderWithWizardData(
   }
   const { generateOrderNumber } = await import("@/lib/utils");
 
-  const typeAssignment = await resolveOrderTypeAssignment(tenantId, {
-    orderTypeId: data.orderTypeId,
-    orderTypeCustom: data.orderTypeCustom,
-    orderType: data.orderType,
-  });
+  const projectId: string | null = data.projectId?.trim() || null;
+  const [typeAssignment, project] = await Promise.all([
+    resolveOrderTypeAssignment(tenantId, {
+      orderTypeId: data.orderTypeId,
+      orderTypeCustom: data.orderTypeCustom,
+      orderType: data.orderType,
+    }),
+    projectId
+      ? prisma.project.findFirst({
+          where: { id: projectId, tenantId },
+          select: { id: true, customerId: true, status: true },
+        })
+      : Promise.resolve(null),
+  ]);
   if ("error" in typeAssignment) {
     throw new Error(typeAssignment.error);
   }
 
-  const projectId: string | null = data.projectId?.trim() || null;
   if (projectId) {
-    const project = await prisma.project.findFirst({
-      where: { id: projectId, tenantId },
-      select: { id: true, customerId: true, status: true },
-    });
     if (!project) throw new Error("Projekt nicht gefunden");
     if (project.customerId !== data.customerId) {
       throw new Error("Projekt gehört zu einem anderen Kunden");
@@ -280,95 +316,95 @@ export async function createOrderWithWizardData(
       notes: c.notes?.trim() || null,
     }));
 
-  const order = await prisma.order.create({
-    data: {
-      tenantId,
-      customerId: data.customerId,
-      propertyId: data.propertyId,
-      projectId,
-      orderNumber: generateOrderNumber(),
-      title: data.title,
-      orderType: typeAssignment.orderType,
-      orderTypeId: typeAssignment.orderTypeId,
-      orderTypeLabel: typeAssignment.orderTypeLabel,
-      orderTypeCustom: typeAssignment.orderTypeCustom,
-      description: data.description,
-      internalNotes: data.internalNotes,
-      priority: (data.priority as never) ?? "NORMAL",
-      status: data.scheduledStart ? "EINGEPLANT" : "NEUE_ANFRAGE",
-      scheduledStart: data.scheduledStart ? new Date(data.scheduledStart) : undefined,
-      scheduledEnd: data.scheduledEnd ? new Date(data.scheduledEnd) : undefined,
-      useFixedPrice: fixedPrice.useFixedPrice,
-      fixedPriceNet: fixedPrice.fixedPriceNet,
-      fixedPriceLabel: fixedPrice.fixedPriceLabel,
-      fixedPriceDisplayMode: fixedPrice.fixedPriceDisplayMode,
-      services: {
-        create: [
-          ...data.serviceIds.map((serviceId) => ({ serviceId })),
-          ...customServiceCreates,
-        ],
-      },
-      phases: {
-        create: defaultPhasesForOrderType(typeAssignment.orderType),
-      },
-    },
-    include: {
-      customer: true,
-      property: true,
-      project: { select: { id: true, name: true } },
-      phases: true,
-      services: { include: { service: true } },
-      orderTypeDefinition: true,
-    },
-  });
+  const toolTemplatesPromise = data.materialLines
+    ? prisma.serviceMaterialTemplate.findMany({
+        where: { serviceId: { in: data.serviceIds }, isTool: true },
+        select: {
+          serviceId: true,
+          articleId: true,
+          name: true,
+          defaultQuantity: true,
+          unit: true,
+          article: { select: { name: true } },
+        },
+      })
+    : null;
 
-  if (data.materialLines) {
-    const creates = data.materialLines
-      .filter((l) => l.name?.trim() && l.quantityRequired > 0)
-      .map((l) => ({
-        orderId: order.id,
-        articleId: l.articleId || null,
-        sourceServiceId: l.sourceServiceId || null,
-        name: l.name.trim(),
-        quantityRequired: l.quantityRequired,
-        unit: l.unit?.trim() || "Stück",
-        unitPriceNet: l.unitPriceNet ?? null,
-        notes: l.notes ?? null,
-        isTool: l.isTool === true,
-        lineStatus: "NOT_CHECKED" as MaterialOrderStatus,
-      }));
-    if (creates.length) {
-      await prisma.orderMaterialLine.createMany({ data: creates });
-    }
-    // Werkzeuge aus Leistungsverzeichnis weiterhin automatisch übernehmen
-    const toolTemplates = await prisma.serviceMaterialTemplate.findMany({
-      where: { serviceId: { in: data.serviceIds }, isTool: true },
-      include: { article: true },
-    });
-    if (toolTemplates.length) {
-      await prisma.orderMaterialLine.createMany({
-        data: toolTemplates.map((t) => ({
+  const [order, toolTemplates] = await Promise.all([
+    prisma.order.create({
+      data: {
+        tenantId,
+        customerId: data.customerId,
+        propertyId: data.propertyId,
+        projectId,
+        orderNumber: generateOrderNumber(),
+        title: data.title,
+        orderType: typeAssignment.orderType,
+        orderTypeId: typeAssignment.orderTypeId,
+        orderTypeLabel: typeAssignment.orderTypeLabel,
+        orderTypeCustom: typeAssignment.orderTypeCustom,
+        description: data.description,
+        internalNotes: data.internalNotes,
+        priority: (data.priority as never) ?? "NORMAL",
+        status: data.scheduledStart ? "EINGEPLANT" : "NEUE_ANFRAGE",
+        scheduledStart: data.scheduledStart ? new Date(data.scheduledStart) : undefined,
+        scheduledEnd: data.scheduledEnd ? new Date(data.scheduledEnd) : undefined,
+        useFixedPrice: fixedPrice.useFixedPrice,
+        fixedPriceNet: fixedPrice.fixedPriceNet,
+        fixedPriceLabel: fixedPrice.fixedPriceLabel,
+        fixedPriceDisplayMode: fixedPrice.fixedPriceDisplayMode,
+        services: {
+          create: [
+            ...data.serviceIds.map((serviceId) => ({ serviceId })),
+            ...customServiceCreates,
+          ],
+        },
+        phases: {
+          create: defaultPhasesForOrderType(typeAssignment.orderType),
+        },
+      },
+      select: { id: true },
+    }),
+    toolTemplatesPromise ?? Promise.resolve([]),
+  ]);
+
+  const materialSetupPromise = (async () => {
+    if (data.materialLines) {
+      const creates = [
+        ...data.materialLines
+          .filter((line) => line.name?.trim() && line.quantityRequired > 0)
+          .map((line) => ({
+            orderId: order.id,
+            articleId: line.articleId || null,
+            sourceServiceId: line.sourceServiceId || null,
+            name: line.name.trim(),
+            quantityRequired: line.quantityRequired,
+            unit: line.unit?.trim() || "Stück",
+            unitPriceNet: line.unitPriceNet ?? null,
+            notes: line.notes ?? null,
+            isTool: line.isTool === true,
+            lineStatus: "NOT_CHECKED" as MaterialOrderStatus,
+          })),
+        ...toolTemplates.map((template) => ({
           orderId: order.id,
-          articleId: t.articleId,
-          sourceServiceId: t.serviceId,
-          name: t.article?.name ?? t.name,
-          quantityRequired: t.defaultQuantity,
-          unit: t.unit,
+          articleId: template.articleId,
+          sourceServiceId: template.serviceId,
+          name: template.article?.name ?? template.name,
+          quantityRequired: template.defaultQuantity,
+          unit: template.unit,
           unitPriceNet: null,
+          notes: null,
           isTool: true,
           lineStatus: "NOT_CHECKED" as MaterialOrderStatus,
         })),
-      });
+      ];
+      if (creates.length) {
+        await prisma.orderMaterialLine.createMany({ data: creates });
+      }
+      return;
     }
-  } else {
     await generateMaterialLinesFromServices(order.id, data.serviceIds);
-  }
-
-  await checkOrderMaterialStatus(order.id, tenantId);
-
-  if (data.confirmMaterial) {
-    await confirmReservationsForOrder(order.id, tenantId);
-  }
+  })();
 
   // Sobald ein Termin gesetzt ist, wird ein Kalendereintrag erzeugt – auch ohne
   // zugewiesenen Monteur. So erscheint der Auftrag direkt im Team-Kalender und
@@ -380,38 +416,49 @@ export async function createOrderWithWizardData(
         ...(data.employeeId ? [data.employeeId] : []),
       ].filter(Boolean)
     ),
-  ];
+  ] as string[];
 
+  const start = data.scheduledStart ? new Date(data.scheduledStart) : null;
+  const end = data.scheduledEnd
+    ? new Date(data.scheduledEnd)
+    : start
+      ? new Date(start.getTime() + 2 * 60 * 60 * 1000)
+      : null;
+
+  let assignmentPromise: Promise<unknown>;
   if (employeeIds.length) {
-    const { setOrderAssignees } = await import("@/lib/orders/assignees");
-    await setOrderAssignees({
-      tenantId,
-      orderId: order.id,
-      employeeIds,
-      syncAppointments: Boolean(data.scheduledStart),
-      startTime: data.scheduledStart ? new Date(data.scheduledStart) : null,
-      endTime: data.scheduledEnd
-        ? new Date(data.scheduledEnd)
-        : data.scheduledStart
-          ? new Date(new Date(data.scheduledStart).getTime() + 2 * 60 * 60 * 1000)
-          : null,
+    assignmentPromise = Promise.all([
+      prisma.orderAssignee.createMany({
+        data: employeeIds.map((employeeId) => ({ orderId: order.id, employeeId })),
+      }),
+      start && end
+        ? prisma.appointment.createMany({
+            data: employeeIds.map((employeeId) => ({
+              tenantId,
+              orderId: order.id,
+              employeeId,
+              startTime: start,
+              endTime: end,
+              status: "GEPLANT" as const,
+            })),
+          })
+        : Promise.resolve(),
+    ]);
+  } else if (start && end) {
+    assignmentPromise = prisma.appointment.create({
+      data: { tenantId, orderId: order.id, employeeId: null, startTime: start, endTime: end, status: "GEPLANT" },
     });
-  } else if (data.scheduledStart) {
-    const start = new Date(data.scheduledStart);
-    const end = data.scheduledEnd
-      ? new Date(data.scheduledEnd)
-      : new Date(start.getTime() + 2 * 60 * 60 * 1000);
-    await prisma.appointment.create({
-      data: {
-        tenantId,
-        orderId: order.id,
-        employeeId: null,
-        startTime: start,
-        endTime: end,
-        status: "GEPLANT",
-      },
-    });
+  } else {
+    assignmentPromise = Promise.resolve();
   }
+
+  await materialSetupPromise;
+  await Promise.all([
+    data.confirmMaterial
+      ? confirmReservationsForOrder(order.id, tenantId)
+      : checkOrderMaterialStatus(order.id, tenantId),
+    assignmentPromise,
+  ]);
 
   // Bei Festpreis sofort Kalkulation anlegen (Positionen bleiben intern erhalten).
   if (fixedPrice.useFixedPrice) {
@@ -419,20 +466,5 @@ export async function createOrderWithWizardData(
     await createCalculationFromOrder(tenantId, order.id);
   }
 
-  return prisma.order.findUnique({
-    where: { id: order.id },
-    include: {
-      customer: true,
-      property: true,
-      project: { select: { id: true, name: true } },
-      phases: { orderBy: { sortOrder: "asc" } },
-      services: { include: { service: true } },
-      materialLines: { include: { article: true, reservations: true } },
-      appointments: { include: { employee: { include: { user: true } } } },
-      assignees: {
-        include: { employee: { include: { user: true } } },
-      },
-      orderTypeDefinition: true,
-    },
-  });
+  return { id: order.id };
 }

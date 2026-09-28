@@ -19,7 +19,7 @@ export function SettingsPageHeader({
 
   return (
     <header className={cn("mb-6 max-w-3xl", className)}>
-      <h1 className="flex items-center gap-2 text-2xl font-bold text-slate-900">
+      <h1 className="flex items-center gap-2 text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">
         {heading}
         {text ? (
           <InfoButton title={heading} ariaLabel={`Info zu ${heading}`}>
@@ -27,6 +27,7 @@ export function SettingsPageHeader({
           </InfoButton>
         ) : null}
       </h1>
+      {text ? <p className="mt-1.5 text-sm leading-6 text-slate-500">{text}</p> : null}
     </header>
   );
 }

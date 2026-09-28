@@ -144,7 +144,7 @@ export function DashboardSearch({ className }: { className?: string }) {
       <label htmlFor={inputId} className="sr-only">
         Globale Suche
       </label>
-      <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+      <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
       <input
         id={inputId}
         type="search"
@@ -164,7 +164,7 @@ export function DashboardSearch({ className }: { className?: string }) {
         }}
         onFocus={() => setOpen(true)}
         onKeyDown={onKeyDown}
-        className="h-9 w-full rounded-lg border border-slate-300 bg-white pl-9 pr-9 text-sm focus:outline-none focus:ring-2 focus:ring-[#0d5c63]"
+        className="h-10 w-full rounded-xl border border-slate-200 bg-slate-50/80 pl-10 pr-9 text-sm text-slate-800 shadow-inner shadow-slate-950/[0.02] outline-none transition placeholder:text-slate-400 focus:border-[#0b6268]/30 focus:bg-white focus:ring-3 focus:ring-[#0b6268]/10"
       />
       {query && (
         <button
@@ -187,7 +187,7 @@ export function DashboardSearch({ className }: { className?: string }) {
       )}
 
       {showPanel && (
-        <div className="absolute left-0 right-0 z-50 mt-1.5 max-h-[min(70vh,28rem)] overflow-hidden rounded-xl border border-slate-200 bg-white shadow-lg">
+        <div className="absolute left-0 right-0 z-50 mt-2 max-h-[min(70vh,28rem)] overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-[0_18px_55px_rgba(15,23,42,0.16)]">
           <div className="flex items-center gap-1 overflow-x-auto border-b border-slate-100 px-2 py-1.5">
             {result?.topCategories.map((cat) => {
               const meta = SEARCH_CATEGORY_META[cat];

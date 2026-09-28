@@ -67,6 +67,19 @@ export async function updateSupabaseAuthPassword(
   return { ok: true };
 }
 
+export async function deleteSupabaseAuthUser(
+  supabaseUserId: string
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  if (!isSupabaseAuthConfigured()) return { ok: true };
+
+  const admin = createSupabaseAdmin();
+  const { error } = await admin.auth.admin.deleteUser(supabaseUserId);
+  if (error && !/not found|does not exist/i.test(error.message)) {
+    return { ok: false, error: error.message };
+  }
+  return { ok: true };
+}
+
 export async function signInWithSupabasePassword(
   email: string,
   password: string

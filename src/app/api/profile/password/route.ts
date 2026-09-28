@@ -6,7 +6,7 @@ import {
   verifyPassword,
   hashPassword,
   createSession,
-  setSessionCookie,
+  applySessionCookie,
 } from "@/lib/auth";
 import { bumpSessionVersion } from "@/lib/auth/session-version";
 import { updateSupabaseAuthPassword } from "@/lib/supabase/auth-users";
@@ -93,7 +93,7 @@ export async function POST(request: NextRequest) {
     mustChangePassword: updated.mustChangePassword,
     sessionVersion: updated.sessionVersion,
   });
-  await setSessionCookie(token);
-
-  return apiSuccess({ success: true });
+  const response = apiSuccess({ success: true });
+  applySessionCookie(response, token);
+  return response;
 }

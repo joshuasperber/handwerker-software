@@ -16,6 +16,7 @@ import {
 } from "./auth-session";
 import { isSupabaseAuthConfigured } from "./supabase/env";
 import { signInWithSupabasePassword } from "./supabase/auth-users";
+import { initialPasswordFlagAfterSupabaseFallback } from "./auth/password-reset";
 
 export type { SessionUser };
 export {
@@ -62,6 +63,7 @@ export async function getActiveSession(): Promise<SessionUser | null> {
       sessionVersion: true,
       canManageRoles: true,
       avatarUrl: true,
+      mustChangePassword: true,
     },
   });
   if (!user) return null;
@@ -73,6 +75,7 @@ export async function getActiveSession(): Promise<SessionUser | null> {
     role: user.role,
     canManageRoles: user.canManageRoles,
     avatarUrl: user.avatarUrl,
+    mustChangePassword: user.mustChangePassword,
   };
 }
 
@@ -148,21 +151,24 @@ export async function login(
           },
         });
         if (user) {
-          if (!user.supabaseUserId) {
-            await prisma.user.update({
-              where: { id: user.id },
-              data: {
-                supabaseUserId: auth.supabaseUserId,
-                lastLoginAt: new Date(),
-              },
-            });
-          } else {
-            await prisma.user.update({
-              where: { id: user.id },
-              data: { lastLoginAt: new Date() },
-            });
-          }
-          return toSessionUser(user);
+          const updated = await prisma.user.update({
+            where: { id: user.id },
+            data: {
+              ...(!user.supabaseUserId
+                ? { supabaseUserId: auth.supabaseUserId }
+                : {}),
+              // Ein erfolgreicher Supabase-Login nach fehlgeschlagener lokaler
+              // Prüfung bedeutet, dass der lokale Hash veraltet ist (z. B. nach
+              // einem älteren Passwort-Reset). Beide Anmeldungswege angleichen.
+              passwordHash: await hashPassword(password),
+              mustChangePassword: initialPasswordFlagAfterSupabaseFallback(
+                user.mustChangePassword,
+                user.passwordHash
+              ),
+              lastLoginAt: new Date(),
+            },
+          });
+          return toSessionUser(updated);
         }
       }
     } catch (err) {

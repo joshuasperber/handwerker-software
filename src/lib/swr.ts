@@ -20,6 +20,8 @@ export const swrKeys = {
   timeEntries: (qs = "") => `/api/time-entries${qs ? `?${qs}` : ""}`,
   messagesUnreadCount: () => "/api/messages/unread-count",
   onboardingStatus: () => "/api/onboarding/status",
+  appointments: (from: string, to: string) =>
+    `/api/appointments?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`,
   tenantSettings: () => "/api/tenant/settings",
   /** Sensible Finanzdaten — nur In-Memory-SWR, Server setzt no-store */
   financeOverview: (qs: string) => `/api/finance/overview?${qs}`,

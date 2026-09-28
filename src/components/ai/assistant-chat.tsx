@@ -308,6 +308,7 @@ export function AssistantChat({
             type="button"
             variant="outline"
             size="sm"
+            aria-label="Chat-Verlauf öffnen"
             className="gap-1.5 min-h-10"
             onClick={() => setHistoryOpen(true)}
           >
@@ -323,6 +324,7 @@ export function AssistantChat({
             type="button"
             variant="outline"
             size="sm"
+            aria-label="Neuen Chat starten"
             onClick={startNewChat}
             className="gap-1 min-h-10"
           >

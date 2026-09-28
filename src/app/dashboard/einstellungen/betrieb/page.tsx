@@ -276,7 +276,12 @@ export default function BetriebEinstellungenPage() {
                   className="h-10 flex-1 rounded-lg border border-slate-300 bg-slate-50 px-3 text-sm text-slate-700"
                   value={form.bookingUrl || data?.bookingUrl || ""}
                 />
-                <Button type="button" variant="outline" onClick={copyBooking}>
+                <Button
+                  type="button"
+                  variant="outline"
+                  aria-label="Buchungslink kopieren"
+                  onClick={copyBooking}
+                >
                   <Copy className="h-4 w-4" />
                 </Button>
               </div>

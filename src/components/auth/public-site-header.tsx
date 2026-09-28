@@ -18,17 +18,17 @@ export async function PublicSiteHeader({
   const returnLabel = session ? getAppReturnLabel(session.role) : null;
 
   return (
-    <header className="border-b border-slate-200 bg-white">
-        <div className={`mx-auto flex items-center justify-between px-4 py-4 ${narrow ? "max-w-3xl" : "max-w-6xl"}`}>
+    <header className="border-b border-slate-200/80 bg-white/92 backdrop-blur-xl">
+        <div className={`mx-auto flex items-center justify-between px-4 py-3.5 ${narrow ? "max-w-3xl" : "max-w-6xl"}`}>
         <Link href={homeHref} className="flex items-center gap-2">
           <Image
             src="/icons/icon-192.png"
             alt="JoMaster Logo"
             width={36}
             height={36}
-            className="h-9 w-9 rounded-lg"
+            className="h-9 w-9 rounded-[11px] shadow-sm ring-1 ring-slate-200/70"
           />
-          <span className="text-lg font-bold text-slate-900">JoMaster</span>
+          <span className="text-lg font-semibold tracking-[-0.025em] text-slate-950">JoMaster</span>
         </Link>
         <div className="flex items-center gap-3">
           {session ? (

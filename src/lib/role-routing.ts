@@ -1,7 +1,7 @@
 import type { UserRole } from "@/generated/prisma/enums";
 
-const FIELD_HOME_ROLES: UserRole[] = ["MONTEUR", "TEAMLEITER", "AUSHILFE"];
-const OFFICE_HOME_ROLES: UserRole[] = ["ADMIN", "BUERO", "MEISTER"];
+const FIELD_HOME_ROLES: UserRole[] = ["MONTEUR", "AUSHILFE"];
+const OFFICE_HOME_ROLES: UserRole[] = ["ADMIN", "BUERO", "MEISTER", "TEAMLEITER"];
 
 /** Ob preferredView-Cookie für den bewussten Ansichtswechsel genutzt werden darf (nur Office). */
 export function canUsePreferredViewCookie(role: UserRole): boolean {
@@ -18,7 +18,7 @@ function isOfficeHomeRole(role: UserRole): boolean {
 
 /**
  * Startseite nach Login, App-Start und „Zurück zur App“.
- * Admin/Büro/Meister → Verwaltung. Monteur/Teamleiter/Aushilfe → Arbeit.
+ * Admin/Büro/Meister/Teamleitung → Verwaltung. Monteur/Ausbildung/Aushilfe → Arbeit.
  * Der letzte Ansichtswechsel (Cookie) ändert die Startansicht nicht.
  */
 export function getRoleHomePath(

@@ -1,6 +1,7 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 import {
+  canSwitchAppViews,
   hasPermission,
   isMonteurExcludedDashboardPath,
   getDashboardNavItems,
@@ -35,8 +36,14 @@ describe("isMonteurExcludedDashboardPath", () => {
 describe("getDashboardNavItems", () => {
   it("returns no dashboard nav for field roles", () => {
     assert.deepEqual(getDashboardNavItems("MONTEUR"), []);
-    assert.deepEqual(getDashboardNavItems("TEAMLEITER"), []);
     assert.deepEqual(getDashboardNavItems("AUSHILFE"), []);
+  });
+
+  it("gives Teamleitung a management start view and a work-view switch", () => {
+    const hrefs = getDashboardNavItems("TEAMLEITER").map((item) => item.href);
+    assert.equal(hrefs.includes("/dashboard"), true);
+    assert.equal(hrefs.includes("/dashboard/auftraege"), true);
+    assert.equal(canSwitchAppViews("TEAMLEITER"), true);
   });
 
   it("includes core office items for ADMIN", () => {

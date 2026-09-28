@@ -4,8 +4,8 @@ import { requireAuth, apiSuccess, apiError, getClientIp } from "@/lib/api";
 import { auditOrderStatusChange, auditEntityChange } from "@/lib/audit";
 import { notifyStatusChange } from "@/lib/notifications";
 import { syncTeamAppointmentsForOrder } from "@/lib/team-appointments";
-import { ensureOrderPhases } from "@/lib/orders/phases";
 import { ORDER_DETAIL_INCLUDE } from "@/lib/orders/includes";
+import { validateOrderCreateRefs } from "@/lib/tenant-scope";
 
 export async function GET(
   _request: NextRequest,
@@ -17,12 +17,6 @@ export async function GET(
   const { id } = await params;
 
   try {
-    const existing = await prisma.order.findFirst({
-      where: { id, tenantId: auth.tenantId },
-      select: { id: true },
-    });
-    if (!existing) return apiError("Auftrag nicht gefunden", 404);
-
     const order = await prisma.order.findFirst({
       where: { id, tenantId: auth.tenantId },
       include: ORDER_DETAIL_INCLUDE,
@@ -65,12 +59,40 @@ export async function PATCH(
 
   const existing = await prisma.order.findFirst({
     where: { id, tenantId: auth.tenantId },
-    include: { customer: true },
+    select: {
+      id: true,
+      orderNumber: true,
+      customerId: true,
+      propertyId: true,
+      projectId: true,
+      title: true,
+      status: true,
+      teamId: true,
+      scheduledStart: true,
+      scheduledEnd: true,
+      orderType: true,
+      orderTypeId: true,
+      orderTypeLabel: true,
+      orderTypeCustom: true,
+      useFixedPrice: true,
+      fixedPriceNet: true,
+      fixedPriceLabel: true,
+      fixedPriceDisplayMode: true,
+      customer: { select: { email: true } },
+      services: {
+        select: {
+          serviceId: true,
+          customName: true,
+          description: true,
+          quantity: true,
+          unitPriceCents: true,
+          notes: true,
+        },
+      },
+    },
   });
 
   if (!existing) return apiError("Auftrag nicht gefunden", 404);
-
-  await ensureOrderPhases(id);
 
   const {
     status,
@@ -92,7 +114,154 @@ export async function PATCH(
     fixedPriceLabel,
     fixedPriceDisplayMode,
     ensureCalculation,
+    customerId,
+    propertyId,
+    serviceIds: rawServiceIds,
+    customServices: rawCustomServices,
   } = body;
+
+  if (title !== undefined && (typeof title !== "string" || !title.trim())) {
+    return apiError("Auftragstitel ist erforderlich", 400);
+  }
+  if (customerId !== undefined && (typeof customerId !== "string" || !customerId)) {
+    return apiError("Kunde ist erforderlich", 400);
+  }
+  if (propertyId !== undefined && (typeof propertyId !== "string" || !propertyId)) {
+    return apiError("Ausführungsadresse ist erforderlich", 400);
+  }
+
+  const serviceIdsProvided = rawServiceIds !== undefined;
+  if (serviceIdsProvided && !Array.isArray(rawServiceIds)) {
+    return apiError("Leistungen müssen als Liste übermittelt werden", 400);
+  }
+  const serviceIds: string[] = serviceIdsProvided
+    ? [
+        ...new Set<string>(
+          (rawServiceIds as unknown[]).filter(
+            (serviceId: unknown): serviceId is string =>
+              typeof serviceId === "string" && serviceId.length > 0
+          )
+        ),
+      ]
+    : existing.services.flatMap((entry) => entry.serviceId ? [entry.serviceId] : []);
+  const customServicesProvided = rawCustomServices !== undefined;
+  if (customServicesProvided && !Array.isArray(rawCustomServices)) {
+    return apiError("Zusätzliche Leistungen müssen als Liste übermittelt werden", 400);
+  }
+  const customServices = customServicesProvided
+    ? rawCustomServices.flatMap((entry: unknown) => {
+        if (!entry || typeof entry !== "object") return [];
+        const value = entry as Record<string, unknown>;
+        const name = typeof value.name === "string" ? value.name.trim() : "";
+        if (!name) return [];
+        const quantity = Number(value.quantity ?? 1);
+        const price = value.unitPriceCents == null || value.unitPriceCents === ""
+          ? null
+          : Number(value.unitPriceCents);
+        if (!Number.isInteger(quantity) || quantity <= 0) return [];
+        if (price !== null && (!Number.isFinite(price) || price < 0)) return [];
+        return [{
+          customName: name,
+          description:
+            typeof value.description === "string" && value.description.trim()
+              ? value.description.trim()
+              : null,
+          quantity,
+          unitPriceCents: price === null ? null : Math.round(price),
+          notes:
+            typeof value.notes === "string" && value.notes.trim()
+              ? value.notes.trim()
+              : null,
+        }];
+      })
+    : existing.services.flatMap((entry) => entry.serviceId ? [] : [{
+        customName: entry.customName ?? "",
+        description: entry.description,
+        quantity: entry.quantity,
+        unitPriceCents: entry.unitPriceCents,
+        notes: entry.notes,
+      }]);
+  const submittedCustomServiceCount = customServicesProvided
+    ? (rawCustomServices as unknown[]).filter((entry) => {
+        if (!entry || typeof entry !== "object") return false;
+        const name = (entry as Record<string, unknown>).name;
+        return typeof name === "string" && name.trim().length > 0;
+      }).length
+    : customServices.length;
+  if (customServicesProvided && submittedCustomServiceCount !== customServices.length) {
+    return apiError("Menge oder Preis einer zusätzlichen Leistung ist ungültig", 400);
+  }
+
+  const nextCustomerId =
+    typeof customerId === "string" && customerId ? customerId : existing.customerId;
+  const nextPropertyId =
+    typeof propertyId === "string" && propertyId ? propertyId : existing.propertyId;
+
+  if (
+    customerId !== undefined ||
+    propertyId !== undefined ||
+    serviceIdsProvided ||
+    customServicesProvided
+  ) {
+    if (!nextCustomerId || !nextPropertyId) {
+      return apiError("Kunde und Ausführungsadresse sind erforderlich", 400);
+    }
+    const refError = await validateOrderCreateRefs(auth.tenantId, {
+      customerId: nextCustomerId,
+      propertyId: nextPropertyId,
+      serviceIds,
+    });
+    if (refError) return apiError(refError, 404);
+  }
+
+  if (
+    (serviceIdsProvided || customServicesProvided) &&
+    serviceIds.length === 0 &&
+    customServices.length === 0
+  ) {
+    return apiError("Mindestens eine Leistung ist erforderlich", 400);
+  }
+
+  function parseOptionalDate(value: unknown, current: Date | null) {
+    if (value === undefined) return current;
+    if (value === null || value === "") return null;
+    const parsed = new Date(String(value));
+    return Number.isNaN(parsed.getTime()) ? undefined : parsed;
+  }
+
+  const nextScheduledStart = parseOptionalDate(scheduledStart, existing.scheduledStart);
+  const nextScheduledEnd = parseOptionalDate(scheduledEnd, existing.scheduledEnd);
+  if (scheduledStart !== undefined && nextScheduledStart === undefined) {
+    return apiError("Ungültiger Terminbeginn", 400);
+  }
+  if (scheduledEnd !== undefined && nextScheduledEnd === undefined) {
+    return apiError("Ungültiges Terminende", 400);
+  }
+  if (nextScheduledStart && nextScheduledEnd && nextScheduledEnd <= nextScheduledStart) {
+    return apiError("Das Terminende muss nach dem Beginn liegen", 400);
+  }
+
+  const currentServices = [
+    ...existing.services.flatMap((entry) => entry.serviceId ? [`catalog:${entry.serviceId}`] : []),
+    ...existing.services.flatMap((entry) => entry.serviceId ? [] : [
+      `custom:${entry.customName ?? ""}:${entry.description ?? ""}:${entry.quantity}:${entry.unitPriceCents ?? ""}:${entry.notes ?? ""}`,
+    ]),
+  ].toSorted();
+  const nextServices = [
+    ...serviceIds.map((serviceId) => `catalog:${serviceId}`),
+    ...customServices.map((entry: {
+      customName: string;
+      description: string | null;
+      quantity: number;
+      unitPriceCents: number | null;
+      notes: string | null;
+    }) =>
+      `custom:${entry.customName}:${entry.description ?? ""}:${entry.quantity}:${entry.unitPriceCents ?? ""}:${entry.notes ?? ""}`
+    ),
+  ].toSorted();
+  const servicesChanged = (serviceIdsProvided || customServicesProvided) &&
+    (currentServices.length !== nextServices.length ||
+      currentServices.some((service, index) => service !== nextServices[index]));
 
   let typePatch: {
     orderType?: typeof existing.orderType;
@@ -135,7 +304,7 @@ export async function PATCH(
         select: { id: true, customerId: true, status: true },
       });
       if (!project) return apiError("Projekt nicht gefunden", 404);
-      if (project.customerId !== existing.customerId) {
+      if (project.customerId !== nextCustomerId) {
         return apiError("Projekt gehört zu einem anderen Kunden", 400);
       }
       if (project.status === "STORNIERT") {
@@ -190,11 +359,27 @@ export async function PATCH(
     data: {
       ...(status ? { status } : {}),
       ...(priority ? { priority } : {}),
-      ...(title !== undefined ? { title } : {}),
+      ...(title !== undefined ? { title: title.trim() } : {}),
       ...(description !== undefined ? { description } : {}),
       ...(internalNotes !== undefined ? { internalNotes } : {}),
-      ...(scheduledStart ? { scheduledStart: new Date(scheduledStart) } : {}),
-      ...(scheduledEnd ? { scheduledEnd: new Date(scheduledEnd) } : {}),
+      ...(scheduledStart !== undefined ? { scheduledStart: nextScheduledStart } : {}),
+      ...(scheduledEnd !== undefined ? { scheduledEnd: nextScheduledEnd } : {}),
+      ...(customerId !== undefined ? { customerId: nextCustomerId } : {}),
+      ...(propertyId !== undefined ? { propertyId: nextPropertyId } : {}),
+      ...(customerId !== undefined && nextCustomerId !== existing.customerId && projectId === undefined
+        ? { projectId: null }
+        : {}),
+      ...(servicesChanged
+        ? {
+            services: {
+              deleteMany: {},
+              create: [
+                ...serviceIds.map((serviceId) => ({ serviceId })),
+                ...customServices,
+              ],
+            },
+          }
+        : {}),
       ...(teamId !== undefined ? { teamId: teamId || null } : {}),
       ...(vehicleId !== undefined ? { vehicleId: vehicleId || null } : {}),
       ...(completionResult !== undefined ? { completionResult } : {}),
@@ -205,7 +390,6 @@ export async function PATCH(
       ...typePatch,
       ...fixedPricePatch,
     },
-    include: ORDER_DETAIL_INCLUDE,
   });
 
   if (Object.keys(fixedPricePatch).length > 0) {

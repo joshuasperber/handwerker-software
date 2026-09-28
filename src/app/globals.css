@@ -5,45 +5,42 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
-    "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif,
-    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  --primary: oklch(0.205 0 0);
-  --primary-hover: #0a4a50;
+  --primary: #0b6268;
+  --primary-hover: #084e53;
   --action: #e87722;
   --action-hover: #d06818;
   --surface: #ffffff;
-  --muted: oklch(0.97 0 0);
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
+  --muted: #f1f4f5;
+  --background: #f5f7f8;
+  --foreground: #122126;
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
+  --card-foreground: #122126;
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
+  --primary-foreground: #ffffff;
+  --secondary: #e9eff0;
+  --secondary-foreground: #17383d;
+  --muted-foreground: #64757b;
+  --accent: #e8f2f2;
+  --accent-foreground: #0b6268;
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+  --border: #dde5e7;
+  --input: #d7e0e2;
+  --ring: #0b6268;
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);
   --chart-4: oklch(0.371 0 0);
   --chart-5: oklch(0.269 0 0);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
+  --radius: 0.875rem;
+  --sidebar: #0a2328;
+  --sidebar-foreground: #ecf5f5;
+  --sidebar-primary: #ffffff;
   --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --sidebar-accent: rgb(255 255 255 / 9%);
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: rgb(255 255 255 / 10%);
+  --sidebar-ring: #7bc8cd;
 }
 
 @theme inline {
@@ -52,8 +49,9 @@
   --color-primary: var(--primary);
   --color-action: var(--action);
   --color-surface: var(--surface);
-  --font-sans: var(--font-sans);
-  --font-heading: var(--font-sans);
+  --font-sans: "Geist", "Geist Fallback", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono", "Geist Mono Fallback", ui-monospace, monospace;
+  --font-heading: "Geist", "Geist Fallback", ui-sans-serif, system-ui, sans-serif;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -131,10 +129,102 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    text-rendering: optimizeLegibility;
   }
   html {
     @apply font-sans;
+    scroll-behavior: smooth;
   }
+  ::selection {
+    background: rgb(11 98 104 / 18%);
+    color: #0b3438;
+  }
+  h1,
+  h2,
+  h3 {
+    letter-spacing: -0.025em;
+  }
+  button,
+  a,
+  input,
+  textarea,
+  select {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+@layer utilities {
+  .app-surface {
+    @apply rounded-2xl border border-border/80 bg-card shadow-[0_1px_2px_rgba(15,23,42,0.03),0_12px_36px_rgba(15,23,42,0.05)];
+  }
+
+  .app-page-enter {
+    animation: app-page-enter 240ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .app-route-transition {
+    animation: app-route-transition 220ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    transform-origin: top center;
+  }
+
+  .app-loading-reveal {
+    animation: app-loading-reveal 260ms 120ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .font-numeric {
+    font-family: var(--font-geist-mono), ui-monospace, monospace;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@keyframes app-page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes app-route-transition {
+  from {
+    opacity: 0;
+    transform: translateY(4px) scale(0.998);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes app-loading-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(3px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .app-page-enter,
+  .app-route-transition,
+  .app-loading-reveal {
+    animation: none;
+  }
+}
+
+* {
+  scrollbar-color: #c9d5d7 transparent;
+  scrollbar-width: thin;
 }
 
 /* iOS/Android safe area for fixed Monteur bottom nav */
@@ -148,5 +238,24 @@
   [data-slot="button"]:not(:disabled),
   a {
     -webkit-tap-highlight-color: transparent;
+  }
+}
+
+/* Großzügige Bedienflächen auf Touch-Geräten, ohne die Desktop-Dichte zu erhöhen. */
+@media (hover: none) and (pointer: coarse) {
+  button:not([role="switch"]),
+  [data-slot="button"] {
+    min-height: 44px;
+  }
+
+  button[aria-label],
+  [data-slot="button"][data-size^="icon"] {
+    min-width: 44px;
+  }
+
+  input,
+  select,
+  textarea {
+    font-size: 16px;
   }
 }

@@ -175,6 +175,7 @@ export default function TeamStundenPage() {
               type="button"
               variant="outline"
               size="icon-sm"
+              aria-label="Vorherige Woche"
               onClick={() =>
                 setWeekStart(format(subWeeks(new Date(weekStart), 1), "yyyy-MM-dd"))
               }
@@ -189,6 +190,7 @@ export default function TeamStundenPage() {
               type="button"
               variant="outline"
               size="icon-sm"
+              aria-label="Nächste Woche"
               onClick={() =>
                 setWeekStart(format(addWeeks(new Date(weekStart), 1), "yyyy-MM-dd"))
               }

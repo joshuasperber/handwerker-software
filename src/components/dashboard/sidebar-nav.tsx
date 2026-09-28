@@ -150,14 +150,14 @@ export function DashboardSidebarNav({
         const containsCurrent = navSectionContainsPath(section.items, pathname);
         const open = isSectionOpen(section.id, section.items);
         return (
-          <div key={section.id} className="mb-1">
+          <div key={section.id} className="mb-1.5">
             <button
               type="button"
               onClick={() => toggleSection(section.id, section.items)}
               aria-expanded={open}
               className={cn(
-                "flex w-full items-center justify-between rounded-lg px-3 py-2 text-xs font-semibold uppercase tracking-wide hover:bg-slate-50",
-                containsCurrent ? "bg-slate-50 text-slate-900" : "text-slate-500"
+                "flex w-full items-center justify-between rounded-lg px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.14em] transition-colors hover:bg-white/5 hover:text-white/70",
+                containsCurrent ? "text-white/78" : "text-white/38"
               )}
             >
               {section.label}
@@ -173,7 +173,7 @@ export function DashboardSidebarNav({
         );
       })}
       {ungrouped.length > 0 && (
-        <div className="mt-2 space-y-0.5 border-t border-slate-100 pt-2">
+        <div className="mt-3 space-y-0.5 border-t border-white/10 pt-3">
           {ungrouped.map(renderLink)}
         </div>
       )}

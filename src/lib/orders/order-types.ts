@@ -112,8 +112,6 @@ export async function resolveOrderTypeAssignment(
   orderType: OrderType;
   isOther: boolean;
 } | { error: string }> {
-  await ensureOrderTypeDefinitions(tenantId);
-
   let def =
     input.orderTypeId
       ? await prisma.orderTypeDefinition.findFirst({
@@ -128,6 +126,10 @@ export async function resolveOrderTypeAssignment(
   }
 
   if (!def) {
+    // Der normale Assistent liefert eine gültige ID und benötigt dadurch nur
+    // eine einzelne Abfrage. Initialisierung/Legacy-Backfill ist nur als
+    // Fallback für ältere Clients nötig.
+    await ensureOrderTypeDefinitions(tenantId);
     def = await prisma.orderTypeDefinition.findFirst({
       where: { tenantId, isActive: true },
       orderBy: [{ sortOrder: "asc" }, { name: "asc" }],

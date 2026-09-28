@@ -1,10 +1,23 @@
 import type { Metadata, Viewport } from "next";
+import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
 import { SwrProvider } from "@/components/providers/swr-provider";
 import { CookieNotice } from "@/components/legal/cookie-notice";
+
+const geistSans = Geist({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-geist-sans",
+});
+
+const geistMono = Geist_Mono({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-geist-mono",
+});
 
 export const metadata: Metadata = {
   title: "JoMaster – Software für Handwerksbetriebe",
@@ -28,7 +41,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0d5c63",
+  themeColor: "#0b6268",
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
@@ -42,9 +55,10 @@ export default function RootLayout({
   return (
     <html
       lang="de"
-      className={cn("h-full", "antialiased", "font-sans")}
+      data-scroll-behavior="smooth"
+      className={cn("h-full", "antialiased", geistSans.variable, geistMono.variable)}
     >
-      <body className="min-h-full flex flex-col font-sans">
+      <body className="flex min-h-full flex-col font-sans">
         <SwrProvider>
           <TooltipProvider>{children}</TooltipProvider>
           <Toaster position="top-right" richColors closeButton />

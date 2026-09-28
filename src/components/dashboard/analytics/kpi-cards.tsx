@@ -42,26 +42,31 @@ function KpiCardButton({ item, index }: { item: KpiItem; index: number }) {
 
   const inner = (
     <Card
-      className={`group relative h-full !p-4 transition-all ${
+      className={`group relative h-full overflow-hidden !p-4 transition-all ${
         allowed
           ? "hover:border-[#0d5c63]/30 hover:shadow-md"
           : "opacity-70 hover:shadow-none"
       }`}
     >
       {allowed ? (
-        <ArrowUpRight className="absolute right-3 top-3 h-4 w-4 text-slate-300 transition-colors group-hover:text-[#0d5c63]" />
+        <ArrowUpRight className="absolute bottom-4 right-4 h-4 w-4 text-slate-300 transition-colors group-hover:text-[#0d5c63]" />
       ) : (
-        <span className="absolute right-3 top-3 text-[10px] font-medium uppercase tracking-wide text-slate-400">
+        <span className="absolute bottom-4 right-4 text-[10px] font-medium uppercase tracking-wide text-slate-400">
           Gesperrt
         </span>
       )}
-      <div className="flex items-start justify-between gap-3 pr-6">
+      <div className="grid grid-cols-[minmax(0,1fr)_2.75rem] items-start gap-3">
         <div className="min-w-0">
           <p className="truncate text-sm text-muted-foreground">{item.label}</p>
-          <p className={`mt-1 text-2xl font-semibold ${item.accent}`}>{item.value}</p>
+          <p
+            className={`font-numeric mt-1 whitespace-nowrap text-xl font-semibold tracking-tight sm:text-2xl ${item.accent}`}
+            title={item.value}
+          >
+            {item.value}
+          </p>
           <p className="mt-0.5 truncate text-xs text-muted-foreground">{item.hint}</p>
           <p
-            className={`mt-2 text-xs font-medium ${
+            className={`mt-2 pr-6 text-xs font-medium ${
               allowed ? "text-[#0d5c63]" : "text-slate-400"
             }`}
           >
@@ -69,7 +74,7 @@ function KpiCardButton({ item, index }: { item: KpiItem; index: number }) {
           </p>
         </div>
         <div
-          className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${item.iconBg}`}
+          className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${item.iconBg}`}
         >
           <item.icon className="h-5 w-5" />
         </div>
@@ -162,7 +167,7 @@ export function KpiCards({ kpis }: { kpis: DashboardAnalytics["kpis"] }) {
   ];
 
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 2xl:grid-cols-4">
       {items.map((item, index) => (
         <KpiCardButton key={item.label} item={item} index={index} />
       ))}
@@ -178,10 +183,10 @@ export function DashboardCalcShortcut() {
   return (
     <Link
       href="/dashboard/kalkulation"
-      className="group flex items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm transition-colors hover:border-[#0d5c63]/30 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0d5c63]/40"
+      className="group flex items-center justify-between gap-3 rounded-2xl border border-slate-200/80 bg-white px-4 py-3.5 shadow-[0_1px_2px_rgba(15,23,42,0.03),0_10px_30px_rgba(15,23,42,0.04)] transition-all hover:-translate-y-0.5 hover:border-[#0b6268]/25 hover:shadow-[0_14px_36px_rgba(15,23,42,0.08)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0b6268]/30"
     >
       <span className="flex min-w-0 items-center gap-3">
-        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#0d5c63]/10 text-[#0d5c63]">
+        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#0b6268]/9 text-[#0b6268]">
           <Calculator className="h-5 w-5" />
         </span>
         <span className="min-w-0">

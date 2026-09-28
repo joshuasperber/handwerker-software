@@ -3,15 +3,15 @@ import assert from "node:assert/strict";
 import { getAppReturnLabel, getRoleHomePath } from "../src/lib/role-routing";
 
 describe("getRoleHomePath", () => {
-  it("sends Admin and Büro to the management dashboard", () => {
+  it("sends office and leadership roles to the management dashboard", () => {
     assert.equal(getRoleHomePath("ADMIN"), "/dashboard");
     assert.equal(getRoleHomePath("BUERO"), "/dashboard");
     assert.equal(getRoleHomePath("MEISTER"), "/dashboard");
+    assert.equal(getRoleHomePath("TEAMLEITER"), "/dashboard");
   });
 
-  it("sends Monteur and Teamleiter to the work view", () => {
+  it("sends Monteur and Ausbildung/Aushilfe to the work view", () => {
     assert.equal(getRoleHomePath("MONTEUR"), "/monteur/heute");
-    assert.equal(getRoleHomePath("TEAMLEITER"), "/monteur/heute");
     assert.equal(getRoleHomePath("AUSHILFE"), "/monteur/heute");
   });
 
@@ -29,6 +29,10 @@ describe("getRoleHomePath", () => {
       getRoleHomePath("MONTEUR", { mustChangePassword: true }),
       "/monteur/profil?changePassword=1"
     );
+    assert.equal(
+      getRoleHomePath("TEAMLEITER", { mustChangePassword: true }),
+      "/dashboard/profil?changePassword=1"
+    );
   });
 });
 
@@ -37,6 +41,6 @@ describe("getAppReturnLabel", () => {
     assert.equal(getAppReturnLabel("ADMIN"), "Zum Dashboard");
     assert.equal(getAppReturnLabel("BUERO"), "Zum Dashboard");
     assert.equal(getAppReturnLabel("MONTEUR"), "Zurück zur App");
-    assert.equal(getAppReturnLabel("TEAMLEITER"), "Zurück zur App");
+    assert.equal(getAppReturnLabel("TEAMLEITER"), "Zum Dashboard");
   });
 });

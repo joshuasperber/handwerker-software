@@ -39,19 +39,22 @@ export function MonteurBottomNav() {
   }
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-20 w-full border-t border-slate-200 bg-white safe-area-pb">
-      <div className="grid w-full grid-cols-5">
+    <nav className="safe-area-pb fixed bottom-2 left-1/2 z-30 w-[calc(100%-1rem)] max-w-2xl -translate-x-1/2 overflow-hidden rounded-2xl border border-white/80 bg-white/94 shadow-[0_14px_45px_rgba(15,23,42,0.18)] backdrop-blur-xl sm:bottom-3 sm:w-[calc(100%-2rem)]">
+      <div className="grid w-full grid-cols-5 px-1 py-1">
         {ITEMS.map(({ href, match, label, icon: Icon }) => {
           const active = isActive(match, href);
           return (
             <Link
               key={match}
               href={href}
-              className={`flex min-h-[56px] flex-col items-center justify-center px-0.5 py-2 text-[10px] font-medium transition-colors active:scale-[0.98] ${
-                active ? "bg-[#0d5c63]/10 text-[#0d5c63]" : "text-slate-500 hover:bg-slate-50"
+              aria-current={active ? "page" : undefined}
+              className={`group flex min-h-[58px] flex-col items-center justify-center rounded-xl px-0.5 py-1.5 text-[10px] font-medium transition-all active:scale-[0.97] ${
+                active ? "text-[#0b6268]" : "text-slate-500 hover:bg-slate-50"
               }`}
             >
-              <Icon className="mb-0.5 h-5 w-5 shrink-0" />
+              <span className={`mb-0.5 flex h-7 min-w-9 items-center justify-center rounded-full transition-colors ${active ? "bg-[#0b6268]/10" : "group-hover:bg-slate-100"}`}>
+                <Icon className="h-[19px] w-[19px] shrink-0" />
+              </span>
               <span className="max-w-full truncate">{label}</span>
             </Link>
           );

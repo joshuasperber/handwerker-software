@@ -54,9 +54,25 @@ export function OnboardingChecklist() {
   const { data, isLoading, mutate } = useApiSWR<OnboardingStatus>(
     swrKeys.onboardingStatus()
   );
-  const [dismissed, setDismissed] = useState(false);
+  const [dismissing, setDismissing] = useState(false);
 
-  if (isLoading || !data?.showChecklist || dismissed) return null;
+  if (isLoading || !data?.showChecklist) return null;
+
+  async function dismissChecklist() {
+    if (!data || dismissing) return;
+
+    setDismissing(true);
+    await mutate({ ...data, showChecklist: false }, { revalidate: false });
+    const res = await fetchJson<{ dismissedAt: string }>("/api/onboarding/status", {
+      method: "DELETE",
+    });
+
+    if (!res.success) {
+      toast.error(res.error ?? "Hinweis konnte nicht ausgeblendet werden");
+      await mutate();
+    }
+    setDismissing(false);
+  }
 
   async function completeBookingLinkStep() {
     if (data?.steps.hasBookingLink) return;
@@ -82,7 +98,8 @@ export function OnboardingChecklist() {
       <button
         type="button"
         className="absolute right-3 top-3 rounded-lg p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-600"
-        onClick={() => setDismissed(true)}
+        onClick={() => void dismissChecklist()}
+        disabled={dismissing}
         aria-label="Ausblenden"
       >
         <X className="h-4 w-4" />

@@ -21,13 +21,15 @@ export function LoadingOverlay({
       aria-live="polite"
       aria-busy="true"
       className={cn(
-        "fixed inset-0 z-[80] flex items-center justify-center bg-slate-900/35 backdrop-blur-[2px] p-6",
+        "fixed inset-0 z-[80] flex items-center justify-center bg-slate-950/30 p-6 backdrop-blur-[4px]",
         className
       )}
     >
-      <div className="flex max-w-sm w-full flex-col items-center gap-3 rounded-2xl bg-white px-6 py-5 shadow-xl border border-slate-100">
-        <Loader2 className="h-8 w-8 animate-spin text-[#0d5c63]" />
-        <p className="text-sm font-medium text-slate-800 text-center">{label}</p>
+      <div className="flex w-full max-w-sm flex-col items-center gap-3 rounded-2xl border border-white/80 bg-white px-6 py-6 shadow-[0_26px_80px_rgba(15,23,42,0.24)]">
+        <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#0b6268]/8">
+          <Loader2 className="h-6 w-6 animate-spin text-[#0b6268]" />
+        </span>
+        <p className="text-center text-sm font-medium text-slate-800">{label}</p>
       </div>
     </div>
   );

@@ -6,7 +6,7 @@ export async function GET() {
   const auth = await requireAuth();
   if (auth instanceof Response) return auth;
 
-  const [tenant, serviceCount, teamUserCount] = await Promise.all([
+  const [tenant, serviceCount, teamUserCount, dismissalRows] = await Promise.all([
     prisma.tenant.findUnique({
       where: { id: auth.tenantId },
       select: {
@@ -26,6 +26,12 @@ export async function GET() {
         role: { in: ["MONTEUR", "MEISTER", "BUERO"] },
       },
     }),
+    prisma.$queryRaw<Array<{ onboardingDismissedAt: Date | null }>>`
+      SELECT "onboardingDismissedAt"
+      FROM "Tenant"
+      WHERE "id" = ${auth.tenantId}
+      LIMIT 1
+    `,
   ]);
 
   const appUrl = process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "") || "";
@@ -42,6 +48,7 @@ export async function GET() {
 
   const coreComplete =
     steps.hasService && steps.hasTeamMember && steps.hasBookingLink;
+  const onboardingDismissedAt = dismissalRows[0]?.onboardingDismissedAt ?? null;
 
   return apiSuccess({
     steps,
@@ -51,7 +58,8 @@ export async function GET() {
     doneCount: Object.values(steps).filter(Boolean).length,
     total: Object.keys(steps).length,
     complete: coreComplete,
-    showChecklist: auth.role === "ADMIN" && !coreComplete,
+    showChecklist:
+      auth.role === "ADMIN" && !coreComplete && !onboardingDismissedAt,
   });
 }
 
@@ -67,4 +75,19 @@ export async function POST() {
   });
 
   return apiSuccess({ completedAt: tenant.onboardingBookingCompletedAt });
+}
+
+/** Blendet die Checkliste für diesen Betrieb dauerhaft aus. */
+export async function DELETE() {
+  const auth = await requireAuth("tenant.manage");
+  if (auth instanceof Response) return auth;
+
+  const dismissedAt = new Date();
+  await prisma.$executeRaw`
+    UPDATE "Tenant"
+    SET "onboardingDismissedAt" = ${dismissedAt}, "updatedAt" = ${dismissedAt}
+    WHERE "id" = ${auth.tenantId}
+  `;
+
+  return apiSuccess({ dismissedAt });
 }

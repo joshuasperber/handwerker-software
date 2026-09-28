@@ -11,9 +11,9 @@ export default async function PortalLayout({ children }: { children: React.React
 
   return (
     <SessionProvider user={session}>
-      <div className="min-h-screen bg-[#f8fafb]">
+      <div className="min-h-screen bg-[#f5f7f8]">
         <PortalNav name={`${session.firstName} ${session.lastName}`} />
-        <main className="mx-auto max-w-3xl px-4 py-6">{children}</main>
+        <main className="mx-auto max-w-3xl px-4 py-6 sm:py-8">{children}</main>
       </div>
     </SessionProvider>
   );

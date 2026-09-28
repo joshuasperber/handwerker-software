@@ -27,14 +27,14 @@ export function DashboardNavLink({
       href={href}
       onClick={onClick}
       aria-current={active ? "page" : undefined}
-      className={`flex min-h-12 items-center gap-4 rounded-lg px-5 py-3 text-sm font-medium transition-colors ${
+      className={`group flex min-h-11 items-center gap-3 rounded-xl px-3 py-2.5 text-[13px] font-medium transition-all duration-150 ${
         active
-          ? "bg-slate-200 text-slate-900"
-          : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+          ? "bg-white/12 text-white shadow-[inset_0_0_0_1px_rgba(255,255,255,0.06)]"
+          : "text-white/62 hover:bg-white/7 hover:text-white"
       }`}
     >
       <span className="relative shrink-0">
-        <Icon className="h-5 w-5" />
+        <Icon className={`h-[18px] w-[18px] transition-colors ${active ? "text-[#8bd3d7]" : "text-white/48 group-hover:text-white/80"}`} />
         {showBadge && (
           <span className="absolute -right-1.5 -top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-action px-1 text-[10px] font-bold text-white">
             {badge > 99 ? "99+" : badge}

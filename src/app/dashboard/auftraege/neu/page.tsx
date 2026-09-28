@@ -27,6 +27,7 @@ import { FixedPriceEditor } from "@/components/calculation/fixed-price-editor";
 import type { FixedPriceDisplayMode } from "@/lib/calculation/fixed-price";
 import { suggestFixedPriceLabel } from "@/lib/calculation/fixed-price";
 import { AddressFields } from "@/components/ui/address-fields";
+import { LoadingOverlay } from "@/components/ui/loading-overlay";
 import { articlePriceForCalculation } from "@/lib/inventory/units";
 
 interface CustomService {
@@ -38,6 +39,7 @@ interface CustomService {
 }
 
 const STEPS = ["Typ", "Kunde", "Leistung", "Material", "Termin", "Freigabe"];
+const ORDER_CREATE_TIMEOUT_MS = 30_000;
 
 interface Customer {
   id: string;
@@ -85,7 +87,9 @@ export default function NeuerAuftragPage() {
   const [articles, setArticles] = useState<InventoryArticleOption[]>([]);
   const [materialLines, setMaterialLines] = useState<EditableMaterialLine[]>([]);
   const [materialTouched, setMaterialTouched] = useState(false);
-  const [saving, setSaving] = useState(false);
+  const [submitStage, setSubmitStage] = useState<
+    "customer" | "order" | "opening" | null
+  >(null);
   const [error, setError] = useState("");
   const [siteMode, setSiteMode] = useState<"existing" | "new" | "billing">("existing");
   const [creatingProperty, setCreatingProperty] = useState(false);
@@ -288,25 +292,28 @@ export default function NeuerAuftragPage() {
     }
 
     setCreatingProperty(true);
-    const res = await fetch("/api/properties", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        customerId: form.customerId,
-        label,
-        street,
-        zipCode,
-        city,
-        travelZoneId,
-      }),
-    });
+    let res: Response;
+    try {
+      res = await fetch("/api/properties", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          customerId: form.customerId,
+          label,
+          street,
+          zipCode,
+          city,
+          travelZoneId,
+        }),
+      });
+    } finally {
+      setCreatingProperty(false);
+    }
     const data = await res.json();
-    setCreatingProperty(false);
     if (!data.success) {
       setError(data.error ?? "Ausführungsadresse konnte nicht angelegt werden");
       return null;
     }
-    await reloadCustomers();
     return { customerId: form.customerId, propertyId: data.data.id };
   }
 
@@ -325,6 +332,7 @@ export default function NeuerAuftragPage() {
   }
 
   async function submit() {
+    if (submitStage) return;
     if (
       form.useFixedPrice &&
       (form.fixedPriceNet == null ||
@@ -334,62 +342,88 @@ export default function NeuerAuftragPage() {
       setError("Bitte einen gültigen Festpreis angeben (0,00 € ist erlaubt).");
       return;
     }
-    setSaving(true);
+    setSubmitStage("customer");
     setError("");
-    const ids = await ensureCustomer();
-    if (!ids) { setSaving(false); return; }
+    try {
+      const ids = await ensureCustomer();
+      if (!ids) {
+        setSubmitStage(null);
+        return;
+      }
 
-    const res = await fetch("/api/orders/wizard", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        ...ids,
-        title: form.title || form.orderTypeCustom || form.orderTypeName || "Neuer Auftrag",
-        orderTypeId: form.orderTypeId,
-        orderTypeCustom: form.orderTypeIsOther ? form.orderTypeCustom : undefined,
-        description: form.description,
-        projectId: form.projectId || undefined,
-        serviceIds: form.serviceIds,
-        customServices: form.customServices
-          .filter((c) => c.name.trim())
-          .map((c) => ({
-            name: c.name,
-            description: c.description || undefined,
-            quantity: c.quantity,
-            unitPriceCents: c.price != null ? Math.round(c.price * 100) : undefined,
-            notes: c.notes || undefined,
-          })),
-        employeeIds: form.employeeIds,
-        scheduledStart: form.scheduledStart || undefined,
-        scheduledEnd: form.scheduledEnd || undefined,
-        confirmMaterial: form.confirmMaterial,
-        useFixedPrice: form.useFixedPrice,
-        fixedPriceNet: form.useFixedPrice ? form.fixedPriceNet : null,
-        fixedPriceLabel: form.useFixedPrice
-          ? form.fixedPriceLabel.trim() ||
-            suggestFixedPriceLabel(form.title || form.orderTypeName)
-          : null,
-        fixedPriceDisplayMode: form.fixedPriceDisplayMode,
-        materialLines: materialLines
-          .filter((l) => l.name.trim())
-          .map((l) => ({
-            articleId: l.articleId,
-            sourceServiceId: l.sourceServiceId,
-            name: l.name,
-            quantityRequired: l.quantityRequired,
-            unit: l.unit,
-            unitPriceNet: l.unitPriceNet,
-            notes: l.notes || undefined,
-            isTool: false,
-          })),
-      }),
-    });
-    const data = await res.json();
-    setSaving(false);
-    if (data.success) {
+      setSubmitStage("order");
+      const controller = new AbortController();
+      const timeout = window.setTimeout(
+        () => controller.abort(),
+        ORDER_CREATE_TIMEOUT_MS
+      );
+      let res: Response;
+      try {
+        res = await fetch("/api/orders/wizard", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          signal: controller.signal,
+          body: JSON.stringify({
+            ...ids,
+            title: form.title || form.orderTypeCustom || form.orderTypeName || "Neuer Auftrag",
+            orderTypeId: form.orderTypeId,
+            orderTypeCustom: form.orderTypeIsOther ? form.orderTypeCustom : undefined,
+            description: form.description,
+            projectId: form.projectId || undefined,
+            serviceIds: form.serviceIds,
+            customServices: form.customServices
+              .filter((c) => c.name.trim())
+              .map((c) => ({
+                name: c.name,
+                description: c.description || undefined,
+                quantity: c.quantity,
+                unitPriceCents: c.price != null ? Math.round(c.price * 100) : undefined,
+                notes: c.notes || undefined,
+              })),
+            employeeIds: form.employeeIds,
+            scheduledStart: form.scheduledStart || undefined,
+            scheduledEnd: form.scheduledEnd || undefined,
+            confirmMaterial: form.confirmMaterial,
+            useFixedPrice: form.useFixedPrice,
+            fixedPriceNet: form.useFixedPrice ? form.fixedPriceNet : null,
+            fixedPriceLabel: form.useFixedPrice
+              ? form.fixedPriceLabel.trim() ||
+                suggestFixedPriceLabel(form.title || form.orderTypeName)
+              : null,
+            fixedPriceDisplayMode: form.fixedPriceDisplayMode,
+            materialLines: materialLines
+              .filter((l) => l.name.trim())
+              .map((l) => ({
+                articleId: l.articleId,
+                sourceServiceId: l.sourceServiceId,
+                name: l.name,
+                quantityRequired: l.quantityRequired,
+                unit: l.unit,
+                unitPriceNet: l.unitPriceNet,
+                notes: l.notes || undefined,
+                isTool: false,
+              })),
+          }),
+        });
+      } finally {
+        window.clearTimeout(timeout);
+      }
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        setError(data.error ?? "Auftrag konnte nicht angelegt werden");
+        setSubmitStage(null);
+        return;
+      }
+
+      setSubmitStage("opening");
       router.push(`/dashboard/auftraege/${data.data.id}`);
-    } else {
-      setError(data.error ?? "Auftrag konnte nicht angelegt werden");
+    } catch (error) {
+      const timedOut = error instanceof DOMException && error.name === "AbortError";
+      setError(timedOut
+        ? "Das Anlegen dauert länger als 30 Sekunden. Bitte prüfen Sie zuerst die Auftragsliste, bevor Sie es erneut versuchen."
+        : "Die Verbindung wurde unterbrochen. Bitte prüfen Sie die Auftragsliste, bevor Sie es erneut versuchen."
+      );
+      setSubmitStage(null);
     }
   }
 
@@ -424,6 +458,16 @@ export default function NeuerAuftragPage() {
 
   return (
     <div className="max-w-3xl mx-auto">
+      <LoadingOverlay
+        open={submitStage !== null}
+        label={
+          submitStage === "customer"
+            ? "Kundendaten werden vorbereitet …"
+            : submitStage === "opening"
+              ? "Auftrag wurde angelegt und wird geöffnet …"
+              : "Auftrag wird angelegt …"
+        }
+      />
       <Link href="/dashboard/auftraege" className="text-sm text-[#0d5c63] flex items-center gap-1 mb-4">
         <ChevronLeft className="h-4 w-4" /> Zurück zu Aufträgen
       </Link>
@@ -977,8 +1021,8 @@ export default function NeuerAuftragPage() {
             <input type="checkbox" className="mt-1" checked={form.confirmMaterial} onChange={(e) => setForm({ ...form, confirmMaterial: e.target.checked })} />
             <span>Material jetzt reservieren (nur wenn Bestand im Hauptlager vorhanden)</span>
           </label>
-          <Button className="mt-6 w-full" variant="action" onClick={submit} disabled={saving || creatingProperty}>
-            {saving || creatingProperty ? "Wird angelegt..." : "Auftrag anlegen"}
+          <Button className="mt-6 w-full" variant="action" onClick={submit} disabled={submitStage !== null || creatingProperty}>
+            {submitStage || creatingProperty ? "Wird angelegt …" : "Auftrag anlegen"}
           </Button>
         </Card>
       )}

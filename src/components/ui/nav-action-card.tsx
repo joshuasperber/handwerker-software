@@ -22,15 +22,15 @@ export function NavActionCard({
     <Link
       href={href}
       className={cn(
-        "group flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3.5",
-        "shadow-sm transition-[transform,background-color,box-shadow] duration-150",
-        "hover:bg-slate-50 hover:border-slate-300 active:scale-[0.98] active:bg-slate-100",
+        "group flex items-center gap-3 rounded-2xl border border-slate-200/80 bg-white px-4 py-3.5",
+        "shadow-[0_1px_2px_rgba(15,23,42,0.03),0_8px_24px_rgba(15,23,42,0.04)] transition-[transform,background-color,box-shadow,border-color] duration-150",
+        "hover:-translate-y-0.5 hover:border-[#0b6268]/25 hover:shadow-[0_12px_30px_rgba(15,23,42,0.08)] active:translate-y-0 active:scale-[0.98] active:bg-slate-50",
         "touch-manipulation min-h-12",
         className
       )}
     >
       {Icon && (
-        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#0d5c63]/10 text-[#0d5c63]">
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#0b6268]/9 text-[#0b6268]">
           <Icon className="h-5 w-5" />
         </span>
       )}
@@ -40,7 +40,7 @@ export function NavActionCard({
           <span className="mt-0.5 block text-xs text-slate-500">{description}</span>
         )}
       </span>
-      <ChevronRight className="h-5 w-5 shrink-0 text-slate-400 group-hover:text-[#0d5c63]" />
+      <ChevronRight className="h-5 w-5 shrink-0 text-slate-300 transition-transform group-hover:translate-x-0.5 group-hover:text-[#0b6268]" />
     </Link>
   );
 }

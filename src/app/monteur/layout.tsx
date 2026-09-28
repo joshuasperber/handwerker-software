@@ -49,8 +49,8 @@ export default async function MonteurLayout({
 
   return (
     <SessionProvider user={sessionWithFlags}>
-      <div className="min-h-screen bg-slate-50 flex flex-col">
-        <header className="sticky top-0 z-30 flex h-14 items-center gap-2 border-b border-slate-200 bg-white px-3 sm:px-4">
+      <div className="flex min-h-screen flex-col bg-[#f5f7f8]">
+        <header className="sticky top-0 z-30 flex h-16 items-center gap-2 border-b border-slate-200/80 bg-white/92 px-3 shadow-[0_1px_14px_rgba(15,23,42,0.05)] backdrop-blur-xl sm:px-5">
           <Link
             href="/monteur/heute"
             className="flex min-w-0 flex-1 items-center gap-2"
@@ -60,13 +60,13 @@ export default async function MonteurLayout({
               alt="JoMaster"
               width={28}
               height={28}
-              className="h-7 w-7 shrink-0 rounded-lg"
+              className="h-8 w-8 shrink-0 rounded-[10px] shadow-sm ring-1 ring-slate-200/70"
             />
             <div className="min-w-0">
-              <p className="truncate text-sm font-bold leading-tight text-slate-900 sm:text-base">
+              <p className="truncate text-sm font-semibold leading-tight tracking-tight text-slate-950 sm:text-base">
                 Arbeit
               </p>
-              <p className="truncate text-[10px] uppercase tracking-wide text-slate-400">
+              <p className="truncate text-[10px] uppercase tracking-[0.12em] text-slate-400">
                 {ROLE_LABELS[session.role] ?? session.role}
               </p>
             </div>
@@ -79,13 +79,13 @@ export default async function MonteurLayout({
                 <ViewSwitchLink
                   target="verwaltung"
                   label="Verwaltung"
-                  className="hidden sm:inline text-sm font-medium text-[#0d5c63] hover:underline"
+                  className="hidden rounded-lg px-2.5 py-2 text-sm font-medium text-[#0b6268] hover:bg-[#0b6268]/7 sm:inline"
                 />
                 <ViewSwitchLink
                   target="verwaltung"
                   label={<PanelLeft className="h-4 w-4" aria-hidden />}
                   ariaLabel="Zur Verwaltung wechseln"
-                  className="inline-flex sm:hidden h-9 w-9 items-center justify-center rounded-lg text-[#0d5c63] hover:bg-slate-100"
+                  className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-[#0b6268] hover:bg-[#0b6268]/7 sm:hidden"
                 />
               </>
             )}
@@ -103,7 +103,7 @@ export default async function MonteurLayout({
             />
           </div>
         </header>
-        <main className="flex-1 p-4 pb-24">
+        <main className="flex-1 px-3 py-4 pb-28 sm:px-5 sm:py-6 sm:pb-28">
           {session.mustChangePassword && (
             <Link
               href="/monteur/profil?changePassword=1"
@@ -132,7 +132,7 @@ export default async function MonteurLayout({
               </span>
             </div>
           )}
-          {children}
+          <div className="mx-auto w-full max-w-5xl">{children}</div>
         </main>
         <Suspense fallback={null}>
           <MonteurBottomNav />

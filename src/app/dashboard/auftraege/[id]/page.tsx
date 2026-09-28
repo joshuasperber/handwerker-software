@@ -36,7 +36,12 @@ import { fetchJson } from "@/lib/fetch-json";
 import { saveJson } from "@/lib/save-toast";
 import { CanAccess } from "@/components/auth/can-access";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { LoadingOverlay } from "@/components/ui/loading-overlay";
 import { toast } from "sonner";
+import {
+  OrderEditDialog,
+  type OrderEditPatch,
+} from "@/components/orders/order-edit-dialog";
 
 interface OrderDetail {
   id: string;
@@ -57,6 +62,7 @@ interface OrderDetail {
   projectId?: string | null;
   project?: { id: string; name: string; status?: string } | null;
   customer: {
+    id: string;
     firstName: string;
     lastName: string;
     email: string;
@@ -66,13 +72,24 @@ interface OrderDetail {
     billingZipCode?: string | null;
     billingCity?: string | null;
   };
-  property: { street: string; zipCode: string; city: string; label?: string | null };
+  property: {
+    id: string;
+    customerId: string;
+    street: string;
+    zipCode: string;
+    city: string;
+    label?: string | null;
+    isActive: boolean;
+  };
   services: {
-    service: { name: string; durationMinutes: number } | null;
+    id?: string;
+    serviceId?: string | null;
+    service: { id: string; name: string; durationMinutes: number } | null;
     customName?: string | null;
     description?: string | null;
     quantity?: number;
     unitPriceCents?: number | null;
+    notes?: string | null;
   }[];
   appointments: {
     id: string;
@@ -139,6 +156,15 @@ interface OrderDetail {
   vehicle?: { id: string; name: string; licensePlate: string | null } | null;
 }
 
+function toDateTimeLocalValue(value: string | null) {
+  if (!value) return "";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+  return new Date(date.getTime() - date.getTimezoneOffset() * 60_000)
+    .toISOString()
+    .slice(0, 16);
+}
+
 export default function AuftragDetailPage() {
   const { id } = useParams();
   const router = useRouter();
@@ -169,6 +195,7 @@ export default function AuftragDetailPage() {
   const [actionMsg, setActionMsg] = useState("");
   const [confirmComplete, setConfirmComplete] = useState(false);
   const [confirmConsume, setConfirmConsume] = useState(false);
+  const [editingOrder, setEditingOrder] = useState(false);
   const [consuming, setConsuming] = useState(false);
   const [editingMaterial, setEditingMaterial] = useState(false);
   const [materialEditLines, setMaterialEditLines] = useState<EditableMaterialLine[]>([]);
@@ -207,10 +234,10 @@ export default function AuftragDetailPage() {
           isOther: Boolean(data.data.orderTypeDefinition?.isOther),
         });
         if (data.data.scheduledStart) {
-          setAssignStart((prev) => prev || data.data!.scheduledStart!.slice(0, 16));
+          setAssignStart((prev) => prev || toDateTimeLocalValue(data.data!.scheduledStart));
         }
         if (data.data.scheduledEnd) {
-          setAssignEnd((prev) => prev || data.data!.scheduledEnd!.slice(0, 16));
+          setAssignEnd((prev) => prev || toDateTimeLocalValue(data.data!.scheduledEnd));
         }
         return;
       }
@@ -264,12 +291,14 @@ export default function AuftragDetailPage() {
   }, [assigneeIds, assignStart, assignEnd, id]);
 
   async function updatePriority(priority: string) {
-    await saveJson(
+    const result = await saveJson(
       `/api/orders/${id}`,
       { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ priority }) },
       { success: "Priorität aktualisiert" }
     );
-    loadOrder();
+    if (result.success) {
+      setOrder((current) => current ? { ...current, priority } : current);
+    }
   }
 
   async function saveOrderType() {
@@ -299,16 +328,18 @@ export default function AuftragDetailPage() {
   }
 
   async function updateStatus(status: string) {
-    await saveJson(
+    const result = await saveJson(
       `/api/orders/${id}`,
       { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ status }) },
       { success: "Status aktualisiert" }
     );
-    loadOrder();
+    if (result.success) {
+      setOrder((current) => current ? { ...current, status } : current);
+    }
   }
 
   async function updateConfirmation(customerConfirmationStatus: string) {
-    await saveJson(
+    const result = await saveJson(
       `/api/orders/${id}`,
       {
         method: "PATCH",
@@ -317,7 +348,20 @@ export default function AuftragDetailPage() {
       },
       { success: "Kundenbestätigung aktualisiert" }
     );
-    loadOrder();
+    if (result.success) {
+      setOrder((current) => current ? { ...current, customerConfirmationStatus } : current);
+    }
+  }
+
+  function applyOrderEdit(patch: OrderEditPatch) {
+    setOrder((current) => current ? {
+      ...current,
+      ...patch,
+      project: patch.projectId === null ? null : current.project,
+    } : current);
+    setAssignStart(toDateTimeLocalValue(patch.scheduledStart));
+    setAssignEnd(toDateTimeLocalValue(patch.scheduledEnd));
+    void loadOrder();
   }
 
   async function saveNotes() {
@@ -608,7 +652,7 @@ export default function AuftragDetailPage() {
         </div>
       );
     }
-    return <div className="text-slate-500">Wird geladen …</div>;
+    return <LoadingOverlay open label="Auftrag wird geladen …" />;
   }
 
   const plannedHours = calcPlannedHours({
@@ -641,6 +685,14 @@ export default function AuftragDetailPage() {
         loading={consuming}
         onConfirm={consumeMaterial}
       />
+      {editingOrder && (
+        <OrderEditDialog
+          open
+          onOpenChange={setEditingOrder}
+          order={order}
+          onSaved={applyOrderEdit}
+        />
+      )}
       <OrderDetailHeader
         order={order}
         calculation={calculation}
@@ -651,6 +703,7 @@ export default function AuftragDetailPage() {
         onUpdatePriority={updatePriority}
         onUpdateStatus={updateStatus}
         onUpdateConfirmation={updateConfirmation}
+        onEdit={() => setEditingOrder(true)}
       />
       {actionMsg && <p className="text-sm text-slate-600 mb-4">{actionMsg}</p>}
 

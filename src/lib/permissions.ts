@@ -46,10 +46,10 @@ export type Permission =
   | "views.work";
 
 /** Rollen, die primär die Arbeitsansicht (/monteur) nutzen — ohne Verwaltungszugriff. */
-export const FIELD_ROLES: UserRole[] = ["MONTEUR", "TEAMLEITER", "AUSHILFE"];
+export const FIELD_ROLES: UserRole[] = ["MONTEUR", "AUSHILFE"];
 
 /** Rollen mit Verwaltungszugriff (/dashboard). */
-export const OFFICE_ROLES: UserRole[] = ["ADMIN", "BUERO", "MEISTER"];
+export const OFFICE_ROLES: UserRole[] = ["ADMIN", "BUERO", "MEISTER", "TEAMLEITER"];
 
 const FIELD_BASE: Permission[] = [
   "views.work",
@@ -146,6 +146,7 @@ const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
   ],
   TEAMLEITER: [
     ...FIELD_BASE,
+    "views.management",
     "orders.read",
     "appointments.read",
     "employees.read",
@@ -224,7 +225,7 @@ export function canAccessDashboard(role: UserRole): boolean {
   return canAccessManagementView(role);
 }
 
-/** Verwaltungsansicht (/dashboard) — Admin, Büro, Meister. */
+/** Verwaltungsansicht (/dashboard) — Admin, Büro, Meister, Teamleitung. */
 export function canAccessManagementView(role: UserRole): boolean {
   return hasPermission(role, "views.management");
 }
@@ -246,7 +247,7 @@ export function prefersFieldHome(role: UserRole): boolean {
 
 /**
  * Bewusster Wechsel zwischen Verwaltung und Arbeit.
- * Nur Nutzer mit beiden Ansichten — nicht Monteur/Teamleiter/Aushilfe.
+ * Nur Nutzer mit beiden Ansichten — nicht Monteur/Aushilfe.
  */
 export function canSwitchAppViews(role: UserRole): boolean {
   return canAccessManagementView(role) && canAccessWorkView(role);

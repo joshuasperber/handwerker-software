@@ -41,7 +41,13 @@ export async function requireAuth(
 
   const active = await prisma.user.findFirst({
     where: { id: session.id, tenantId: session.tenantId, isActive: true },
-    select: { id: true, sessionVersion: true, role: true, canManageRoles: true },
+    select: {
+      id: true,
+      sessionVersion: true,
+      role: true,
+      canManageRoles: true,
+      mustChangePassword: true,
+    },
   });
   if (!active) {
     return apiError("Nicht authentifiziert", 401);
@@ -59,6 +65,7 @@ export async function requireAuth(
   const sessionWithFlags: SessionUser = {
     ...session,
     canManageRoles: active.canManageRoles,
+    mustChangePassword: active.mustChangePassword,
   };
 
   if (

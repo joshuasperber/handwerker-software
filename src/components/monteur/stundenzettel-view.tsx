@@ -558,6 +558,7 @@ export function StundenzettelView({ title = "Stundenzettel" }: { title?: string 
                 type="button"
                 variant="outline"
                 size="icon-sm"
+                aria-label="Vorheriger Tag"
                 onClick={() =>
                   setDayDate(format(subDays(new Date(dayDate + "T12:00:00"), 1), "yyyy-MM-dd"))
                 }
@@ -574,6 +575,7 @@ export function StundenzettelView({ title = "Stundenzettel" }: { title?: string 
                 type="button"
                 variant="outline"
                 size="icon-sm"
+                aria-label="Nächster Tag"
                 onClick={() =>
                   setDayDate(format(addDays(new Date(dayDate + "T12:00:00"), 1), "yyyy-MM-dd"))
                 }

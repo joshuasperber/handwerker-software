@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import {
   ScheduleCalendar,
@@ -19,7 +19,7 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 import { InfoButton } from "@/components/ui/info-button";
 import { usePermission, useSession } from "@/components/auth/can-access";
 import { toast } from "sonner";
-import { fetchJson } from "@/lib/fetch-json";
+import { swrKeys, useApiSWR } from "@/lib/swr";
 
 export function TeamCalendarView({
   title = "Termine",
@@ -36,7 +36,6 @@ export function TeamCalendarView({
   const [anchorDate, setAnchorDate] = useState(new Date());
   const [view, setView] = useState<CalendarViewMode>("week");
   const [mobileDefaultApplied, setMobileDefaultApplied] = useState(false);
-  const [appointments, setAppointments] = useState<CalendarAppointment[]>([]);
   const [employees, setEmployees] = useState<
     { id: string; user: { id?: string; firstName: string; lastName: string }; color: string }[]
   >([]);
@@ -52,7 +51,7 @@ export function TeamCalendarView({
   const [editOpen, setEditOpen] = useState(false);
   const [editApt, setEditApt] = useState<CalendarAppointment | null>(null);
 
-  const loadAppointments = useCallback(() => {
+  const appointmentRange = useMemo(() => {
     let from: Date;
     let to: Date;
     if (view === "day") {
@@ -65,16 +64,24 @@ export function TeamCalendarView({
       from = startOfWeek(anchorDate, { weekStartsOn: 1 });
       to = addDays(from, 7);
     }
-    fetchJson<CalendarAppointment[]>(
-      `/api/appointments?from=${from.toISOString()}&to=${to.toISOString()}`
-    ).then((d) => {
-      if (d.success && d.data) {
-        setAppointments(d.data);
-      } else {
-        toast.error(d.error ?? "Termine konnten nicht geladen werden");
-      }
-    });
+    return { from: from.toISOString(), to: to.toISOString() };
   }, [anchorDate, view]);
+
+  const {
+    data: appointments = [],
+    error: appointmentsError,
+    isValidating: appointmentsLoading,
+    mutate: mutateAppointments,
+  } = useApiSWR<CalendarAppointment[]>(
+    mobileDefaultApplied
+      ? swrKeys.appointments(appointmentRange.from, appointmentRange.to)
+      : null,
+    { keepPreviousData: true }
+  );
+
+  const loadAppointments = useCallback(() => {
+    void mutateAppointments();
+  }, [mutateAppointments]);
 
   useEffect(() => {
     if (mobileDefaultApplied) return;
@@ -176,8 +183,8 @@ export function TeamCalendarView({
   }, [session.id, session.firstName, session.lastName]);
 
   useEffect(() => {
-    loadAppointments();
-  }, [loadAppointments]);
+    if (appointmentsError) toast.error("Termine konnten nicht geladen werden");
+  }, [appointmentsError]);
 
   async function reschedule(
     appointmentId: string,
@@ -240,7 +247,9 @@ export function TeamCalendarView({
       }`}
     >
       <div className="shrink-0 mb-4 px-2 sm:px-0">
-        <h1 className={`flex items-center gap-2 ${compactHeader ? "text-xl" : "text-2xl"} font-bold text-slate-900`}>
+        <h1
+          className={`flex items-center gap-2 ${compactHeader ? "text-xl" : "text-2xl"} font-semibold tracking-tight text-slate-950`}
+        >
           {title}
           <InfoButton title={title} ariaLabel={`Info zu ${title}`}>
             <p>
@@ -249,6 +258,11 @@ export function TeamCalendarView({
             </p>
           </InfoButton>
         </h1>
+        {!compactHeader && (
+          <p className="mt-1 text-sm text-slate-500">
+            Einsätze, Teams und Fahrzeuge auf einen Blick planen.
+          </p>
+        )}
       </div>
 
       <div className="flex-1 min-h-0 px-2 sm:px-0">
@@ -256,6 +270,7 @@ export function TeamCalendarView({
           view={view}
           anchorDate={anchorDate}
           appointments={appointments}
+          loading={appointmentsLoading}
           employees={employees}
           selectedEmployeeIds={selectedEmployeeIds}
           onSelectedEmployeeIdsChange={setSelectedEmployeeIds}
