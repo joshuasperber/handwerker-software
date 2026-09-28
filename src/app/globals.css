@@ -143,7 +143,17 @@
   h1,
   h2,
   h3 {
-    letter-spacing: -0.025em;
+    font-family: var(--font-manrope), "Geist", "Geist Fallback", ui-sans-serif, system-ui, sans-serif;
+    font-optical-sizing: auto;
+    letter-spacing: -0.04em;
+    text-wrap: balance;
+  }
+  h1 {
+    font-weight: 750;
+  }
+  h2,
+  h3 {
+    font-weight: 680;
   }
   button,
   a,
@@ -151,6 +161,22 @@
   textarea,
   select {
     -webkit-tap-highlight-color: transparent;
+  }
+
+  select:not([multiple]) {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%2364757b' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6.5 8 3.5 3.5L13.5 8'/%3E%3C/svg%3E");
+    background-position: right 0.75rem center;
+    background-repeat: no-repeat;
+    background-size: 1.1rem;
+    padding-right: 2.5rem;
+  }
+
+  input[type="checkbox"]:not([data-slot="checkbox"]),
+  input[type="radio"]:not([data-slot="radio-group-item"]) {
+    accent-color: var(--primary);
+    block-size: 1.1rem;
+    inline-size: 1.1rem;
   }
 }
 
@@ -173,8 +199,10 @@
   }
 
   .font-numeric {
-    font-family: var(--font-geist-mono), ui-monospace, monospace;
+    font-family: var(--font-geist-sans), "Geist", "Geist Fallback", ui-sans-serif, system-ui, sans-serif;
     font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum" 1, "kern" 1;
+    letter-spacing: -0.035em;
   }
 }
 

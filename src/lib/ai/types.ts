@@ -10,6 +10,7 @@ export type AiIntentType =
   | "profit_analysis"
   | "material_shortage"
   | "machine_usage"
+  | "appointment_schedule"
   | "team_schedule"
   | "disambiguation"
   | "help"

@@ -9,6 +9,9 @@ WICHTIG: Die strukturierten App-Daten sind bereits die korrekte Antwort. Formuli
 Erfinde keine Rückfragen wie „bitte formuliere um“, wenn bereits eine vollständige Liste oder Auskunft vorliegt.
 Behalte alle Namen, Zahlen und Fakten exakt bei.`;
 
+const GROQ_FALLBACK_MODEL = "openai/gpt-oss-20b";
+const unavailableGroqModels = new Set<string>();
+
 const INTENT_TYPES: AiIntentType[] = [
   "person_lookup",
   "list_employees",
@@ -21,6 +24,7 @@ const INTENT_TYPES: AiIntentType[] = [
   "profit_analysis",
   "material_shortage",
   "machine_usage",
+  "appointment_schedule",
   "team_schedule",
   "help",
   "unknown",
@@ -32,7 +36,7 @@ function resolveLlmConfig() {
     return {
       apiKey: groqKey,
       baseURL: process.env.GROQ_BASE_URL?.trim() || "https://api.groq.com/openai/v1",
-      model: process.env.GROQ_MODEL?.trim() || "llama-3.1-8b-instant",
+      model: process.env.GROQ_MODEL?.trim() || GROQ_FALLBACK_MODEL,
       provider: "groq" as const,
     };
   }
@@ -61,6 +65,43 @@ async function createLlmClient() {
   return { client, config };
 }
 
+type LlmClient = NonNullable<Awaited<ReturnType<typeof createLlmClient>>>;
+
+function isModelUnavailable(error: unknown): boolean {
+  if (!error || typeof error !== "object") return false;
+  const candidate = error as { status?: number; code?: string; error?: { code?: string } };
+  return (
+    candidate.status === 404 ||
+    candidate.code === "model_not_found" ||
+    candidate.error?.code === "model_not_found"
+  );
+}
+
+async function withModelFallback<T>(
+  llm: LlmClient,
+  run: (model: string) => Promise<T>
+): Promise<T> {
+  const configuredModel = llm.config.model;
+  const candidates =
+    llm.config.provider === "groq" && configuredModel !== GROQ_FALLBACK_MODEL
+      ? [configuredModel, GROQ_FALLBACK_MODEL]
+      : [configuredModel];
+  let lastError: unknown;
+
+  for (const model of candidates) {
+    if (unavailableGroqModels.has(model)) continue;
+    try {
+      return await run(model);
+    } catch (error) {
+      lastError = error;
+      if (llm.config.provider !== "groq" || !isModelUnavailable(error)) throw error;
+      unavailableGroqModels.add(model);
+    }
+  }
+
+  throw lastError ?? new Error("Kein verfügbares KI-Modell konfiguriert.");
+}
+
 /**
  * Nutzt die KI, um unklare/umgangssprachliche Anfragen einem Intent zuzuordnen.
  * Die eigentlichen Daten kommen weiterhin nur aus der App-DB.
@@ -73,8 +114,8 @@ export async function classifyIntentWithLlm(
   if (!llm) return null;
 
   try {
-    const response = await llm.client.chat.completions.create({
-      model: llm.config.model,
+    const response = await withModelFallback(llm, (model) => llm.client.chat.completions.create({
+      model,
       temperature: 0,
       max_tokens: 300,
       messages: [
@@ -95,13 +136,14 @@ Beispiele:
 - "wer ist Anton" → {"type":"person_lookup","personName":"Anton",...}
 - "was braucht Max morgen" → {"type":"employee_materials","personName":"Max","dateHint":"morgen",...}
 - "offene Rechnungen" → {"type":"open_invoices",...}
+- "Termine morgen" → {"type":"appointment_schedule","dateHint":"morgen",...}
 - "Aufträge mit Türen" → {"type":"order_search","searchTerm":"Türen",...}
 
 Wenn unklar: type "unknown".`,
         },
         { role: "user", content: message },
       ],
-    });
+    }));
 
     const raw = response.choices[0]?.message?.content?.trim();
     if (!raw) return null;
@@ -158,8 +200,8 @@ export async function enhanceWithLlm(
   if (!llm) return null;
 
   try {
-    const response = await llm.client.chat.completions.create({
-      model: llm.config.model,
+    const response = await withModelFallback(llm, (model) => llm.client.chat.completions.create({
+      model,
       temperature: 0.2,
       max_tokens: 1200,
       messages: [
@@ -178,7 +220,7 @@ Formuliere eine verständliche Antwort. Behalte alle Fakten bei.
 Wenn die App-Daten bereits eine Liste oder klare Auskunft enthalten, gib diese wieder — bitte nicht nach Umformulierung der Nutzerfrage fragen.`,
         },
       ],
-    });
+    }));
 
     return response.choices[0]?.message?.content?.trim() ?? null;
   } catch (err) {

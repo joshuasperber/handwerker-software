@@ -16,6 +16,7 @@ import {
   fetchProfitAnalysis,
   fetchMaterialShortage,
   fetchMachineUsage,
+  fetchAppointmentSchedule,
   fetchTeamSchedule,
 } from "./data-fetchers";
 import {
@@ -32,6 +33,7 @@ import {
   formatProfitAnalysis,
   formatMaterialShortage,
   formatMachineUsage,
+  formatAppointmentSchedule,
   formatTeamSchedule,
   formatUnknown,
   formatError,
@@ -148,6 +150,12 @@ async function executeIntent(auth: SessionUser, intent: AiIntent): Promise<AiCha
       const result = await fetchTeamSchedule(auth, intent);
       if (hasFetchError(result)) return formatError(result.error, "team_schedule");
       return formatTeamSchedule(result as Parameters<typeof formatTeamSchedule>[0]);
+    }
+
+    case "appointment_schedule": {
+      const result = await fetchAppointmentSchedule(auth, intent);
+      if (hasFetchError(result)) return formatError(result.error, "appointment_schedule");
+      return formatAppointmentSchedule(result as Parameters<typeof formatAppointmentSchedule>[0]);
     }
 
     default:

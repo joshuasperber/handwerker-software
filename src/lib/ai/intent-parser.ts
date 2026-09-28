@@ -248,6 +248,19 @@ export function parseIntent(message: string, reference = new Date()): AiIntent {
     };
   }
 
+  if (/\b(?:alle\s+)?termine?\b/.test(t) && !/\btermine?\s+(?:hat|von|f[uü]r)\b/.test(t)) {
+    const range = parseDateRangeFromText(t, reference) ?? {
+      from: startOfDay(reference),
+      to: endOfDay(reference),
+    };
+    return {
+      type: "appointment_schedule",
+      rawMessage: raw,
+      date: range.from,
+      dateEnd: range.to,
+    };
+  }
+
   if (/mitnehmen|material.*mit|mitnahme|werkzeug.*braucht|was braucht/.test(t)) {
     const personName = extractPersonName(raw);
     const range = parseDateRangeFromText(t, reference);
@@ -318,6 +331,7 @@ export function intentLabel(type: AiIntentType): string {
     profit_analysis: "Gewinnanalyse",
     material_shortage: "Materialbedarf",
     machine_usage: "Maschineneinsatz",
+    appointment_schedule: "Betriebstermine",
     team_schedule: "Team-Termine",
     disambiguation: "Auswahl erforderlich",
     help: "Hilfe",

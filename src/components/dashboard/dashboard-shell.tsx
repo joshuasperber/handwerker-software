@@ -87,24 +87,29 @@ function SidebarContent({
       </div>
       <nav className="min-h-0 flex-1 space-y-1.5 overflow-y-auto overscroll-contain px-3.5 py-5">
         <DashboardSidebarNav items={navItems} onNavigate={onNavigate} />
+      </nav>
+      <div className="shrink-0 border-t border-white/10 px-4 pb-4 pt-3">
         {canSwitchToWork && (
-          <div className="mt-4 border-t border-white/10 pt-4">
+          <div className="mb-3 border-b border-white/10 pb-3">
+            <p className="mb-1.5 px-2 text-[9px] font-semibold uppercase tracking-[0.16em] text-white/32">
+              Ansicht
+            </p>
             <ViewSwitchLink
               target="arbeit"
               ariaLabel="Zur Arbeitsansicht wechseln"
               label={
                 <>
-                  <HardHat className="h-4.5 w-4.5 shrink-0" aria-hidden />
+                  <span className="flex size-8 shrink-0 items-center justify-center rounded-[10px] bg-white/8 text-white/70 ring-1 ring-white/8 transition-colors group-hover:bg-[#e87722] group-hover:text-white">
+                    <HardHat className="h-4.5 w-4.5" aria-hidden />
+                  </span>
                   <span className="min-w-0 flex-1 truncate text-left">Arbeitsansicht</span>
                   <ArrowRight className="h-4 w-4 shrink-0 text-white/30 transition-transform group-hover:translate-x-0.5 group-hover:text-white/60" aria-hidden />
                 </>
               }
-              className="group flex min-h-11 w-full items-center gap-3 rounded-xl px-3 text-sm font-medium text-white/65 no-underline transition-all hover:bg-white/7 hover:text-white hover:no-underline"
+              className="group flex min-h-11 w-full items-center gap-2.5 rounded-xl px-2 text-sm font-medium text-white/70 no-underline transition-all duration-200 hover:bg-white/7 hover:text-white hover:no-underline"
             />
           </div>
         )}
-      </nav>
-      <div className="shrink-0 border-t border-white/10 px-4 py-4">
         <Link
           href="/dashboard/profil"
           onClick={onNavigate}

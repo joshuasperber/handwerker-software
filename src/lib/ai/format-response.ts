@@ -15,6 +15,7 @@ export function formatHelpResponse(): AiChatResult {
 • „Welche Kunden haben offene Rechnungen?"
 • „Welche Belege fehlen diesen Monat?"
 • „Warum ist der Gewinn diesen Monat so hoch?"
+• „Zeig mir alle Termine morgen"
 • „Welche Termine hat Team 1 morgen?"
 
 Wenn ich etwas nicht finde, sage ich das klar. Meine Empfehlungen sind Hinweise — keine verbindliche Beratung.`,
@@ -643,6 +644,67 @@ export function formatTeamSchedule(data: {
   };
 }
 
+export function formatAppointmentSchedule(data: {
+  appointments: Array<{
+    title: string | null;
+    addressText: string | null;
+    startTime: Date;
+    endTime: Date;
+    order: {
+      orderNumber: string;
+      title: string | null;
+      customer: { firstName: string; lastName: string };
+      property: { street: string };
+    } | null;
+    employee?: { user?: { firstName: string; lastName: string } | null } | null;
+    team?: { name: string } | null;
+    project?: { name: string } | null;
+    vehicle?: { name: string } | null;
+  }>;
+  from: Date;
+  to: Date;
+}): AiChatResult {
+  const { appointments, from, to } = data;
+  const dateLabel =
+    formatDate(from) === formatDate(to)
+      ? formatDate(from)
+      : `${formatDate(from)} – ${formatDate(to)}`;
+
+  if (appointments.length === 0) {
+    return {
+      content: `Für **${dateLabel}** sind keine Termine eingetragen.`,
+      intent: "appointment_schedule",
+      dataSources: [{ type: "appointments", count: 0, label: "Termine" }],
+      confidence: "high",
+    };
+  }
+
+  let content = `**${appointments.length} ${appointments.length === 1 ? "Termin" : "Termine"} am ${dateLabel}:**\n\n`;
+  for (const appointment of appointments) {
+    const employee = appointment.employee?.user;
+    const title =
+      appointment.title ??
+      appointment.order?.title ??
+      (appointment.order ? `Auftrag ${appointment.order.orderNumber}` : "Termin");
+    content += `• **${formatSlotLabel(appointment.startTime, appointment.endTime)}** — ${title}`;
+    if (appointment.order) {
+      content += ` · ${appointment.order.customer.firstName} ${appointment.order.customer.lastName}`;
+    }
+    const address = appointment.addressText ?? appointment.order?.property.street;
+    if (address) content += ` · ${address}`;
+    if (employee) content += ` · ${employee.firstName} ${employee.lastName}`;
+    if (appointment.team) content += ` · ${appointment.team.name}`;
+    content += "\n";
+  }
+
+  return {
+    content: content.trim(),
+    intent: "appointment_schedule",
+    dataSources: [{ type: "appointments", count: appointments.length, label: "Termine" }],
+    confidence: "high",
+  };
+}
+
 export function formatUnknown(intent: AiIntent): AiChatResult {
   return {
     content: `Ich konnte deine Anfrage „${intent.rawMessage}" nicht eindeutig zuordnen.
@@ -651,6 +713,7 @@ Versuche z. B.:
 • „Zeig mir [Name]"
 • „Aufträge mit [Begriff]"
 • „Was muss [Name] am [Datum] mitnehmen?"
+• „Termine morgen"
 • „Offene Rechnungen"
 
 Tippe **Hilfe** für weitere Beispiele.`,

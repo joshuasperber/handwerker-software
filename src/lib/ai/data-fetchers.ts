@@ -652,3 +652,29 @@ export async function fetchTeamSchedule(auth: SessionUser, intent: AiIntent) {
 
   return { team, appointments, from, to };
 }
+
+export async function fetchAppointmentSchedule(auth: SessionUser, intent: AiIntent) {
+  if (!canReadOrders(auth)) {
+    return { error: "Keine Berechtigung für Kalenderdaten." };
+  }
+
+  const from = intent.date ? startOfDay(intent.date) : startOfDay(new Date());
+  const to = intent.dateEnd ? endOfDay(intent.dateEnd) : endOfDay(from);
+  const appointments = await prisma.appointment.findMany({
+    where: {
+      tenantId: auth.tenantId,
+      startTime: { lte: to },
+      endTime: { gte: from },
+    },
+    orderBy: { startTime: "asc" },
+    include: {
+      order: { include: { customer: true, property: true } },
+      employee: { include: { user: true } },
+      team: true,
+      project: true,
+      vehicle: true,
+    },
+  });
+
+  return { appointments, from, to };
+}

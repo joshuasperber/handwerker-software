@@ -1,8 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { DateInput } from "@/components/ui/date-input";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import type { FinancePeriodPreset } from "@/lib/finance/types";
 import { FINANCE_PERIOD_LABELS } from "@/lib/finance/period";
@@ -58,10 +57,10 @@ export function FinancePeriodFilter({
               type="button"
               onClick={() => onPresetChange(value)}
               className={cn(
-                "shrink-0 rounded-full border px-3 py-1.5 text-sm font-medium transition-colors",
+                "shrink-0 rounded-xl border px-3.5 py-2 text-sm font-semibold transition-[color,background-color,border-color,box-shadow,transform] duration-200 active:scale-[.98]",
                 preset === value
-                  ? "border-[#0d5c63] bg-[#0d5c63] text-white"
-                  : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
+                  ? "border-[#0d5c63] bg-[#0d5c63] text-white shadow-[0_6px_16px_rgba(13,92,99,0.18)]"
+                  : "border-slate-200 bg-white text-slate-600 shadow-sm hover:border-[#0d5c63]/30 hover:bg-[#0d5c63]/[0.04] hover:text-[#0d5c63]"
               )}
             >
               {FINANCE_PERIOD_LABELS[value]}
@@ -71,10 +70,10 @@ export function FinancePeriodFilter({
             type="button"
             onClick={() => onPresetChange("last_quarter")}
             className={cn(
-              "shrink-0 rounded-full border px-3 py-1.5 text-sm font-medium transition-colors",
+              "shrink-0 rounded-xl border px-3.5 py-2 text-sm font-semibold transition-[color,background-color,border-color,box-shadow,transform] duration-200 active:scale-[.98]",
               preset === "last_quarter"
-                ? "border-[#0d5c63] bg-[#0d5c63] text-white"
-                : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
+                ? "border-[#0d5c63] bg-[#0d5c63] text-white shadow-[0_6px_16px_rgba(13,92,99,0.18)]"
+                : "border-slate-200 bg-white text-slate-600 shadow-sm hover:border-[#0d5c63]/30 hover:bg-[#0d5c63]/[0.04] hover:text-[#0d5c63]"
             )}
           >
             {FINANCE_PERIOD_LABELS.last_quarter}
@@ -95,26 +94,18 @@ export function FinancePeriodFilter({
 
       {preset === "custom" && (
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-          <div className="grid min-w-0 gap-1.5">
-            <Label htmlFor="finance-from">Von</Label>
-            <Input
-              id="finance-from"
-              type="date"
-              className="min-w-0 w-full"
-              value={customFrom}
-              onChange={(e) => onCustomFrom(e.target.value)}
-            />
-          </div>
-          <div className="grid min-w-0 gap-1.5">
-            <Label htmlFor="finance-to">Bis</Label>
-            <Input
-              id="finance-to"
-              type="date"
-              className="min-w-0 w-full"
-              value={customTo}
-              onChange={(e) => onCustomTo(e.target.value)}
-            />
-          </div>
+          <DateInput
+            id="finance-from"
+            label="Von"
+            value={customFrom}
+            onValueChange={onCustomFrom}
+          />
+          <DateInput
+            id="finance-to"
+            label="Bis"
+            value={customTo}
+            onValueChange={onCustomTo}
+          />
         </div>
       )}
 

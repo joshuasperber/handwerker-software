@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { DateInput } from "@/components/ui/date-input";
 import { Label } from "@/components/ui/label";
 import { AddressSuggestInput } from "@/components/ui/address-suggest-input";
 import { OrderTypeSelect } from "@/components/orders/order-type-select";
@@ -471,37 +472,37 @@ export function CalendarCreateDialog({
             <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
               <div className="min-w-0 space-y-1.5">
                 <Label htmlFor="cal-date">Datum *</Label>
-                <Input
+                <DateInput
                   id="cal-date"
                   type="date"
                   className="min-w-0 w-full"
                   required
                   value={dateStr}
-                  onChange={(e) => setDateStr(e.target.value)}
+                  onValueChange={setDateStr}
                 />
               </div>
               <div className="min-w-0 space-y-1.5">
                 <Label htmlFor="cal-start">Start *</Label>
-                <Input
+                <DateInput
                   id="cal-start"
                   type="time"
                   className="min-w-0 w-full"
                   required
                   step={900}
                   value={startTime}
-                  onChange={(e) => setStartTime(e.target.value)}
+                  onValueChange={setStartTime}
                 />
               </div>
               <div className="min-w-0 space-y-1.5">
                 <Label htmlFor="cal-end">Ende *</Label>
-                <Input
+                <DateInput
                   id="cal-end"
                   type="time"
                   className="min-w-0 w-full"
                   required
                   step={900}
                   value={endTime}
-                  onChange={(e) => setEndTime(e.target.value)}
+                  onValueChange={setEndTime}
                 />
               </div>
             </div>

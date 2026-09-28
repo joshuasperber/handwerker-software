@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { DateInput } from "@/components/ui/date-input";
 import { Label } from "@/components/ui/label";
 import { AddressSuggestInput } from "@/components/ui/address-suggest-input";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
@@ -213,38 +214,38 @@ export function CalendarEditDialog({
               <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
                 <div className="min-w-0 space-y-1.5">
                   <Label htmlFor="edit-date">Datum</Label>
-                  <Input
+                  <DateInput
                     id="edit-date"
                     type="date"
                     className="min-w-0 w-full"
                     value={dateStr}
-                    onChange={(e) => setDateStr(e.target.value)}
+                    onValueChange={setDateStr}
                     disabled={!canEdit}
                     required
                   />
                 </div>
                 <div className="min-w-0 space-y-1.5">
                   <Label htmlFor="edit-start">Start</Label>
-                  <Input
+                  <DateInput
                     id="edit-start"
                     type="time"
                     step={900}
                     className="min-w-0 w-full"
                     value={startTime}
-                    onChange={(e) => setStartTime(e.target.value)}
+                    onValueChange={setStartTime}
                     disabled={!canEdit}
                     required
                   />
                 </div>
                 <div className="min-w-0 space-y-1.5">
                   <Label htmlFor="edit-end">Ende</Label>
-                  <Input
+                  <DateInput
                     id="edit-end"
                     type="time"
                     step={900}
                     className="min-w-0 w-full"
                     value={endTime}
-                    onChange={(e) => setEndTime(e.target.value)}
+                    onValueChange={setEndTime}
                     disabled={!canEdit}
                     required
                   />

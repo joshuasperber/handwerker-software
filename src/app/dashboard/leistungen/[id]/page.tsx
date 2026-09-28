@@ -7,6 +7,13 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { NumberInput } from "@/components/ui/number-input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { CanAccess } from "@/components/auth/can-access";
 import { ChevronLeft, Plus, Trash2, Wrench } from "lucide-react";
 import { toast } from "sonner";
@@ -215,7 +222,8 @@ export default function LeistungDetailPage() {
               <button
                 type="button"
                 onClick={() => deleteLine(t.id)}
-                className="text-red-500 hover:text-red-700"
+                aria-label={`${t.name} entfernen`}
+                className="grid size-10 place-items-center rounded-xl text-red-500 transition-colors hover:bg-red-50 hover:text-red-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-300"
               >
                 <Trash2 className="h-4 w-4" />
               </button>
@@ -228,19 +236,24 @@ export default function LeistungDetailPage() {
 
         <form onSubmit={addMaterial} className="border-t border-slate-100 pt-4 space-y-3">
           <p className="font-medium text-sm">Material aus Inventar hinzufügen</p>
-          <select
-            className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"
+          <Select
             value={materialForm.articleId}
-            onChange={(e) => setMaterialForm({ ...materialForm, articleId: e.target.value })}
-            required
+            onValueChange={(articleId) => setMaterialForm({ ...materialForm, articleId })}
           >
-            <option value="">— Artikel aus Inventar wählen —</option>
-            {articles.map((a) => (
-              <option key={a.id} value={a.id}>
-                {a.name} ({a.unit})
-              </option>
-            ))}
-          </select>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Artikel aus Inventar wählen" />
+            </SelectTrigger>
+            <SelectContent position="popper" align="start" className="max-h-80">
+              {articles.map((a) => (
+                <SelectItem key={a.id} value={a.id}>
+                  <span className="flex min-w-0 items-center justify-between gap-3">
+                    <span className="truncate font-medium">{a.name}</span>
+                    <span className="text-xs text-slate-400">{a.unit}</span>
+                  </span>
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
           {articles.length === 0 && (
             <p className="text-xs text-amber-700">
               Keine Artikel im Inventar. Bitte zuerst unter{" "}
@@ -275,7 +288,8 @@ export default function LeistungDetailPage() {
               <button
                 type="button"
                 onClick={() => deleteLine(t.id)}
-                className="text-red-500 hover:text-red-700"
+                aria-label={`${t.name} entfernen`}
+                className="grid size-10 place-items-center rounded-xl text-red-500 transition-colors hover:bg-red-50 hover:text-red-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-300"
               >
                 <Trash2 className="h-4 w-4" />
               </button>

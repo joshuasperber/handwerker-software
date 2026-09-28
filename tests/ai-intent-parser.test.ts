@@ -77,6 +77,18 @@ describe("parseIntent", () => {
     assert.equal(intent.teamName, "1");
   });
 
+  it("detects all appointments tomorrow", () => {
+    const intent = parseIntent("Termine morgen.", ref);
+    assert.equal(intent.type, "appointment_schedule");
+    assert.equal(intent.date?.getDate(), 14);
+    assert.equal(intent.dateEnd?.getDate(), 14);
+  });
+
+  it("detects a general appointment question without requiring a team", () => {
+    const intent = parseIntent("Welche Termine habe ich morgen?", ref);
+    assert.equal(intent.type, "appointment_schedule");
+  });
+
   it("detects help", () => {
     const intent = parseIntent("Hilfe", ref);
     assert.equal(intent.type, "help");

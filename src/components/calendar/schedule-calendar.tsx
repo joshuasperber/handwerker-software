@@ -183,12 +183,20 @@ function aptStyle(start: Date, end: Date, hourHeight: number) {
   return { top, height };
 }
 
-function dropTimeFromY(clientY: number, rectTop: number, hourHeight: number): { hour: number; minute: number } {
+function gridMinutesFromY(clientY: number, rectTop: number, hourHeight: number): number {
   const y = Math.max(0, clientY - rectTop);
-  const totalMinutes = (y / hourHeight) * 60 + HOUR_START * 60;
-  const hour = Math.min(HOUR_END, Math.max(HOUR_START, Math.floor(totalMinutes / 60)));
-  const minute = Math.round((totalMinutes % 60) / 15) * 15;
-  return { hour, minute: minute >= 60 ? 0 : minute };
+  const rawMinutes = HOUR_START * 60 + (y / hourHeight) * 60;
+  const snappedMinutes = Math.round(rawMinutes / 15) * 15;
+  return Math.min(HOUR_END * 60, Math.max(HOUR_START * 60, snappedMinutes));
+}
+
+function dropTimeFromY(clientY: number, rectTop: number, hourHeight: number): { hour: number; minute: number } {
+  const totalMinutes = gridMinutesFromY(clientY, rectTop, hourHeight);
+  return { hour: Math.floor(totalMinutes / 60), minute: totalMinutes % 60 };
+}
+
+function formatGridMinutes(minutes: number): string {
+  return `${String(Math.floor(minutes / 60)).padStart(2, "0")}:${String(minutes % 60).padStart(2, "0")}`;
 }
 
 function getEmployeeColor(
@@ -383,6 +391,26 @@ export function ScheduleCalendar({
     const { hour, minute } = dropTimeFromY(clientY, cellTop, hourHeight);
     const start = setMinutes(setHours(day, hour), minute);
     const end = new Date(start.getTime() + DEFAULT_SLOT_DURATION_MS);
+    onSlotSelect({
+      start,
+      end,
+      employeeIdHint: selectedEmployeeIds.length === 1 ? selectedEmployeeIds[0] : undefined,
+    });
+  }
+
+  function openSlotRange(day: Date, startClientY: number, endClientY: number, cellTop: number) {
+    if (readOnly || !onSlotSelect) return;
+    const firstMinutes = gridMinutesFromY(startClientY, cellTop, hourHeight);
+    const secondMinutes = gridMinutesFromY(endClientY, cellTop, hourHeight);
+    const startMinutes = Math.min(firstMinutes, secondMinutes);
+    const endMinutes = Math.max(firstMinutes, secondMinutes);
+    if (endMinutes - startMinutes < 15) {
+      openSlotAt(day, endClientY, cellTop);
+      return;
+    }
+
+    const start = setMinutes(setHours(day, Math.floor(startMinutes / 60)), startMinutes % 60);
+    const end = setMinutes(setHours(day, Math.floor(endMinutes / 60)), endMinutes % 60);
     onSlotSelect({
       start,
       end,
@@ -835,11 +863,18 @@ export function ScheduleCalendar({
                   <DayDropCell
                     key={day.toISOString()}
                     gridHeight={gridHeight}
+                    hourHeight={hourHeight}
                     onDrop={(e, ref) => handleDrop(e, day, ref)}
                     onSlotClick={
                       readOnly || !onSlotSelect
                         ? undefined
                         : (clientY, rectTop) => openSlotAt(day, clientY, rectTop)
+                    }
+                    onSlotRangeSelect={
+                      readOnly || isCompact || !onSlotSelect
+                        ? undefined
+                        : (startClientY, endClientY, rectTop) =>
+                            openSlotRange(day, startClientY, endClientY, rectTop)
                     }
                   >
                     {/* Hervorgehobener Fokus-Zeitraum 17–19 Uhr */}
@@ -952,7 +987,7 @@ export function ScheduleCalendar({
                 ? ""
                 : isCompact
                   ? " · Tippen zum Erstellen/Bearbeiten"
-                  : " · Klick erstellen · Drag-and-drop verschieben · Unterkante = Dauer"}
+                  : " · Ziehen = Zeitraum erstellen · Termin ziehen = verschieben · Unterkante = Dauer"}
             </p>
           </div>
         ) : (
@@ -1042,15 +1077,34 @@ function DayDropCell({
   children,
   onDrop,
   onSlotClick,
+  onSlotRangeSelect,
   gridHeight,
+  hourHeight,
 }: {
   children: React.ReactNode;
   onDrop: (e: React.DragEvent, ref: HTMLDivElement | null) => void;
   onSlotClick?: (clientY: number, rectTop: number) => void;
+  onSlotRangeSelect?: (startClientY: number, endClientY: number, rectTop: number) => void;
   gridHeight: number;
+  hourHeight: number;
 }) {
   const [ref, setRef] = useState<HTMLDivElement | null>(null);
-  const pointerDown = useRef<{ x: number; y: number } | null>(null);
+  const pointerDown = useRef<{ x: number; y: number; pointerId: number } | null>(null);
+  const [selection, setSelection] = useState<{ startY: number; currentY: number } | null>(null);
+
+  const selectionStyle = selection
+    ? (() => {
+        const top = Math.max(0, Math.min(selection.startY, selection.currentY));
+        const bottom = Math.min(gridHeight, Math.max(selection.startY, selection.currentY));
+        const snappedStart = gridMinutesFromY(top, 0, hourHeight);
+        const snappedEnd = gridMinutesFromY(bottom, 0, hourHeight);
+        return {
+          top: ((snappedStart - HOUR_START * 60) / 60) * hourHeight,
+          height: Math.max(((snappedEnd - snappedStart) / 60) * hourHeight, 12),
+          label: `${formatGridMinutes(snappedStart)}–${formatGridMinutes(snappedEnd)}`,
+        };
+      })()
+    : null;
 
   return (
     <div
@@ -1062,26 +1116,61 @@ function DayDropCell({
       onDrop={(e) => onDrop(e, ref)}
       onPointerDown={(e) => {
         if (!onSlotClick) return;
+        if (e.pointerType === "mouse" && e.button !== 0) return;
         if ((e.target as HTMLElement).closest("[data-appointment]")) return;
-        pointerDown.current = { x: e.clientX, y: e.clientY };
+        pointerDown.current = { x: e.clientX, y: e.clientY, pointerId: e.pointerId };
+        if (onSlotRangeSelect && ref) {
+          e.preventDefault();
+          e.currentTarget.setPointerCapture(e.pointerId);
+          const rect = ref.getBoundingClientRect();
+          const y = Math.max(0, Math.min(gridHeight, e.clientY - rect.top));
+          setSelection({ startY: y, currentY: y });
+        }
+      }}
+      onPointerMove={(e) => {
+        if (!selection || !ref || pointerDown.current?.pointerId !== e.pointerId) return;
+        const rect = ref.getBoundingClientRect();
+        setSelection((current) =>
+          current
+            ? { ...current, currentY: Math.max(0, Math.min(gridHeight, e.clientY - rect.top)) }
+            : null
+        );
       }}
       onPointerUp={(e) => {
         if (!onSlotClick || !ref || !pointerDown.current) {
           pointerDown.current = null;
+          setSelection(null);
           return;
         }
-        const dx = Math.abs(e.clientX - pointerDown.current.x);
-        const dy = Math.abs(e.clientY - pointerDown.current.y);
+        const down = pointerDown.current;
+        const dx = Math.abs(e.clientX - down.x);
+        const dy = Math.abs(e.clientY - down.y);
         pointerDown.current = null;
-        if (dx > 8 || dy > 8) return;
         if ((e.target as HTMLElement).closest("[data-appointment]")) return;
         const rect = ref.getBoundingClientRect();
+        setSelection(null);
+        if (onSlotRangeSelect && (dx > 8 || dy > 8)) {
+          onSlotRangeSelect(down.y, e.clientY, rect.top);
+          return;
+        }
         onSlotClick(e.clientY, rect.top);
       }}
       onPointerCancel={() => {
         pointerDown.current = null;
+        setSelection(null);
       }}
     >
+      {selectionStyle && (
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-1 z-30 overflow-hidden rounded-xl border border-[#0b6268]/45 bg-[#0b6268]/15 shadow-[0_10px_28px_rgba(11,98,104,0.16)] backdrop-blur-[2px]"
+          style={{ top: selectionStyle.top, height: selectionStyle.height }}
+        >
+          <span className="inline-flex rounded-br-lg bg-[#0b6268] px-2 py-1 text-[10px] font-semibold text-white shadow-sm">
+            {selectionStyle.label}
+          </span>
+        </div>
+      )}
       {children}
     </div>
   );

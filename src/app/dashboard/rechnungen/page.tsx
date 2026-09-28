@@ -501,12 +501,12 @@ export default function RechnungenPage() {
           <DateInput
             label="Von"
             value={from}
-            onChange={(e) => setFrom(e.target.value)}
+            onValueChange={setFrom}
           />
           <DateInput
             label="Bis"
             value={to}
-            onChange={(e) => setTo(e.target.value)}
+            onValueChange={setTo}
           />
         </div>
         {(from || to) && (
