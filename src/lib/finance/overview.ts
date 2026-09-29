@@ -14,6 +14,10 @@ import {
 } from "./types";
 import { INVESTMENT_INCLUDE } from "./investment-dto";
 import { enrichInvestments } from "./investment-planning";
+import {
+  buildFinanceAssistantInsight,
+  buildReceivablesProjection,
+} from "./assistant";
 import type { ExpenseCategory } from "@/generated/prisma/client";
 
 const INVOICE_INCLUDE = {
@@ -355,6 +359,13 @@ export async function getFinanceOverview(
 
   const investmentDtos = await enrichInvestments(tenantId, plannedInvestments, now);
 
+  const receivablesProjection = buildReceivablesProjection({
+    invoices: allInvoices,
+    period,
+    revenueBasis: settings.revenueBasis,
+    currentRevenueNet: revenue.net,
+  });
+
   const targetNet = settings.monthlyProfitTargetNet;
   const targetDelta =
     targetNet != null && Number.isFinite(targetNet) ? estimatedNetProfit - targetNet : null;
@@ -389,6 +400,16 @@ export async function getFinanceOverview(
       monthlyProfitTargetNet: settings.monthlyProfitTargetNet,
       lowLiquidityWarningThreshold: settings.lowLiquidityWarningThreshold,
     },
+  });
+
+  const assistant = buildFinanceAssistantInsight({
+    currentRevenueNet: revenue.net,
+    projectedRevenueNet: receivablesProjection.projectedRevenueNet,
+    expenseNet,
+    estimatedTaxRate: settings.estimatedTaxRate,
+    reviewThreshold:
+      settings.monthlyProfitTargetNet ?? settings.highProfitWarningThreshold ?? 5000,
+    plannedInvestments: investmentDtos,
   });
 
   return {
@@ -447,6 +468,7 @@ export async function getFinanceOverview(
     recentExpenses: expenses.slice(0, 10).map(toExpenseDTO),
     plannedInvestments: investmentDtos,
     machineCount,
+    assistant,
   };
 }
 

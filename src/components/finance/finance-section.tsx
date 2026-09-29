@@ -38,7 +38,7 @@ export function FinanceSection({
           <ChevronDown className={cn("h-4 w-4 transition-transform", open && "rotate-180")} />
         </button>
       </div>
-      <div className={cn("mt-3", open ? "block" : "hidden")}>{children}</div>
+      {open ? <div className="mt-3 animate-in fade-in-0 slide-in-from-top-1">{children}</div> : null}
     </Card>
   );
 }

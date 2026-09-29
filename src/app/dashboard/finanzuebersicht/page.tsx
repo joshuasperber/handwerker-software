@@ -463,7 +463,7 @@ function FinanzuebersichtContent() {
                 </p>
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="high-profit">Warnschwelle hoher Gewinn (€)</Label>
+                <Label htmlFor="high-profit">Gewinn-Prüfschwelle (€)</Label>
                 <Input
                   id="high-profit"
                   inputMode="decimal"
@@ -471,6 +471,9 @@ function FinanzuebersichtContent() {
                   onChange={(e) => setHighProfitThreshold(e.target.value)}
                   placeholder="z. B. 5000"
                 />
+                <p className="text-[11px] text-slate-400">
+                  Deine betriebliche Orientierung – keine gesetzliche Steuergrenze.
+                </p>
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="liquidity">Warnschwelle offene Forderungen (€)</Label>

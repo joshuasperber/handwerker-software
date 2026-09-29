@@ -7,6 +7,8 @@ import type {
   PlannedInvestmentCategory,
   PlannedInvestmentStatus,
 } from "@/generated/prisma/client";
+import type { FinanceAssistantInsight } from "./assistant";
+export type { FinanceAssistantInsight } from "./assistant";
 
 export type { FinanceRevenueBasis };
 
@@ -270,4 +272,5 @@ export interface FinanceOverview {
   recentExpenses: ExpenseDTO[];
   plannedInvestments: PlannedInvestmentDTO[];
   machineCount: number;
+  assistant: FinanceAssistantInsight;
 }

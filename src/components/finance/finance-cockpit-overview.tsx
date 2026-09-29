@@ -16,6 +16,7 @@ import {
   type PlannedInvestmentDTO,
 } from "@/lib/finance/types";
 import { InvestmentProgress } from "@/components/finance/investment-progress";
+import { FinanceAssistantCard } from "@/components/finance/finance-assistant-card";
 import { cn, formatDate, formatEuro } from "@/lib/utils";
 import {
   AlertTriangle,
@@ -107,6 +108,14 @@ export function FinanceCockpitOverview({
   );
   return (
     <div className="space-y-6">
+      <FinanceAssistantCard
+        insight={overview.assistant}
+        investments={overview.plannedInvestments}
+        revenueBasis={overview.revenue.basis}
+        onOpenInvestment={onOpenInvestment}
+        onViewInvestments={onViewInvestitionen}
+      />
+
       <div>
         <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-400">
           Kennzahlen
