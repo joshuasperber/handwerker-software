@@ -8,6 +8,7 @@ import {
   useState,
   type KeyboardEvent,
 } from "react";
+import { flushSync } from "react-dom";
 import { useRouter } from "next/navigation";
 import { Loader2, MoreHorizontal, Search, X } from "lucide-react";
 import {
@@ -154,9 +155,13 @@ export function DashboardSearch({
   const showPanel = open && (query.trim().length >= MIN_CHARS || loading || result);
 
   function openSearch() {
-    setExpanded(true);
-    setOpen(true);
-    window.requestAnimationFrame(() => inputRef.current?.focus());
+    // Der synchrone Render hält den Fokus innerhalb desselben Touch-Ereignisses.
+    // Mobile Browser öffnen die Tastatur sonst häufig nicht automatisch.
+    flushSync(() => {
+      setExpanded(true);
+      setOpen(true);
+    });
+    inputRef.current?.focus({ preventScroll: true });
   }
 
   function clearSearch() {
