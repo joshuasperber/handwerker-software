@@ -61,6 +61,8 @@ async function createLlmClient() {
   const client = new OpenAI({
     apiKey: config.apiKey,
     baseURL: config.baseURL,
+    timeout: 6_000,
+    maxRetries: 0,
   });
   return { client, config };
 }

@@ -1,4 +1,4 @@
-import { NextRequest } from "next/server";
+import { after, NextRequest } from "next/server";
 import { requireAuth, apiSuccess, apiError, getClientIp } from "@/lib/api";
 import { parseBody } from "@/lib/api-body";
 import { chatMessageSchema } from "@/lib/ai/schemas";
@@ -32,16 +32,21 @@ export async function POST(request: NextRequest) {
   const body = await parseBody(request, chatMessageSchema);
   if (body instanceof Response) return body;
 
-  const session = await getOrCreateSession(auth, body.sessionId);
-
-  const result = await processChatMessage(auth, body.message, {
-    disambiguationChoice: body.disambiguationChoice,
-    disambiguationName: body.disambiguationName,
-  });
+  const [session, result] = await Promise.all([
+    getOrCreateSession(auth, body.sessionId),
+    processChatMessage(auth, body.message, {
+      disambiguationChoice: body.disambiguationChoice,
+      disambiguationName: body.disambiguationName,
+    }),
+  ]);
 
   await saveChatMessages(session.id, body.message, result);
-  await logAiQuery(auth, session.id, body.message, result);
-  await pruneOldSessions(auth, 3);
+  after(async () => {
+    await Promise.allSettled([
+      logAiQuery(auth, session.id, body.message, result),
+      pruneOldSessions(auth, 3),
+    ]);
+  });
 
   return apiSuccess({
     sessionId: session.id,

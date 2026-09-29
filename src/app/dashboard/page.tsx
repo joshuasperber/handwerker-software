@@ -52,10 +52,9 @@ export default async function DashboardPage() {
           <h1 className="flex items-center gap-2 text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">
             Dashboard
             <InfoButton title="Dashboard" ariaLabel="Info zum Dashboard">
-              <p>Überblick über Umsatz, Aufträge, Termine und Rechnungen.</p>
+              <p>Ihr Betrieb heute auf einen Blick: Umsatz, Aufträge, Termine und Rechnungen.</p>
             </InfoButton>
           </h1>
-          <p className="mt-1.5 text-sm text-slate-500">Ihr Betrieb heute auf einen Blick.</p>
         </div>
         {canCreateOrder && (
           <AddButton href="/dashboard/auftraege/neu" className="w-full sm:w-auto">

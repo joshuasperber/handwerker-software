@@ -35,7 +35,7 @@ export async function canViewPersonData(
   if (hasPermission(auth.role, "employees.read") || hasPermission(auth.role, "customers.read")) {
     return true;
   }
-  if (auth.role === "MONTEUR") {
+  if (hasPermission(auth.role, "monteur.own")) {
     return !targetUserId || targetUserId === auth.id;
   }
   return false;
@@ -94,7 +94,7 @@ export async function enforceMonteurSelfQuery(
   requestedName: string | undefined,
   matchedEmployeeUserId?: string
 ): Promise<{ allowed: boolean; reason?: string }> {
-  if (auth.role !== "MONTEUR" || hasPermission(auth.role, "employees.read")) {
+  if (!hasPermission(auth.role, "monteur.own") || hasPermission(auth.role, "employees.read")) {
     return { allowed: true };
   }
 

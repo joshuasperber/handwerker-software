@@ -3,8 +3,9 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Mail, Phone, MapPin, Search } from "lucide-react";
+import { Mail, Phone, MapPin } from "lucide-react";
+import { InfoButton } from "@/components/ui/info-button";
+import { SearchField } from "@/components/ui/list-controls";
 
 interface Customer {
   id: string;
@@ -54,19 +55,20 @@ export default function MonteurKundenPage() {
   return (
     <div className="space-y-4">
       <div>
-        <h1 className="text-xl font-bold text-slate-900">Kunden</h1>
-        <p className="text-sm text-slate-500 mt-1">Aus Ihren eigenen Terminen</p>
+        <h1 className="flex items-center gap-2 text-xl font-bold text-slate-900">
+          Kunden
+          <InfoButton title="Kunden" ariaLabel="Info zu Kunden">
+            <p>Kunden aus Ihren eigenen Terminen mit den benötigten Kontaktdaten.</p>
+          </InfoButton>
+        </h1>
       </div>
 
-      <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-        <Input
-          className="pl-9"
-          placeholder="Name, Firma, E-Mail, Adresse…"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-      </div>
+      <SearchField
+        label="Kunden durchsuchen"
+        placeholder="Name, Firma, E-Mail oder Adresse suchen …"
+        value={search}
+        onValueChange={setSearch}
+      />
 
       {customers.length === 0 ? (
         <Card><p className="text-center text-slate-500 py-8">Noch keine Kunden in Ihren Terminen.</p></Card>

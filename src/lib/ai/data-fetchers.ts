@@ -5,6 +5,7 @@ import { getFinanceOverview } from "@/lib/finance/overview";
 import type { AiIntent, PersonMatch } from "./types";
 import { hasPermission } from "@/lib/permissions";
 import {
+  buildAppointmentAccessFilter,
   buildOrderAccessFilter,
   canReadCustomers,
   canReadEmployees,
@@ -14,6 +15,15 @@ import {
   canReadOrders,
   enforceMonteurSelfQuery,
 } from "./access-control";
+import { businessDateKey, businessDayRange } from "@/lib/calendar-day";
+
+function appointmentRange(intent: AiIntent): { from: Date; to: Date } {
+  const reference = intent.date ?? new Date();
+  const endReference = intent.dateEnd ?? reference;
+  const from = businessDayRange(businessDateKey(reference)).start;
+  const to = businessDayRange(businessDateKey(endReference)).end;
+  return { from, to };
+}
 
 function nameTokens(name: string): string[] {
   return name
@@ -80,7 +90,7 @@ export async function findPersonMatches(
         });
       }
     }
-  } else if (auth.role === "MONTEUR") {
+  } else if (hasPermission(auth.role, "monteur.own")) {
     matches.push({
       type: "employee",
       id: auth.id,
@@ -269,6 +279,17 @@ export async function fetchPersonDetails(
 }
 
 async function resolveEmployeeByName(auth: SessionUser, name?: string) {
+  if (!name && hasPermission(auth.role, "monteur.own")) {
+    return {
+      type: "employee" as const,
+      id: auth.id,
+      firstName: auth.firstName,
+      lastName: auth.lastName,
+      label: `${auth.firstName} ${auth.lastName} (Mitarbeiter)`,
+      role: auth.role,
+      email: auth.email,
+    };
+  }
   if (!name) return null;
   const matches = await findPersonMatches(auth, name);
   const employees = matches.filter((m) => m.type === "employee");
@@ -291,8 +312,7 @@ export async function fetchEmployeeOrders(
     return { error: access.reason };
   }
 
-  const from = intent.date ? startOfDay(intent.date) : startOfDay(new Date());
-  const to = intent.dateEnd ? endOfDay(intent.dateEnd) : endOfDay(from);
+  const { from, to } = appointmentRange(intent);
 
   const emp = await prisma.employee.findFirst({
     where: { userId: employee.id, tenantId: auth.tenantId },
@@ -305,7 +325,8 @@ export async function fetchEmployeeOrders(
     where: {
       tenantId: auth.tenantId,
       employeeId: emp.id,
-      startTime: { gte: from, lte: to },
+      startTime: { lte: to },
+      endTime: { gte: from },
       order: orderFilter,
     },
     orderBy: { startTime: "asc" },
@@ -634,8 +655,7 @@ export async function fetchTeamSchedule(auth: SessionUser, intent: AiIntent) {
   }
 
   const team = teams[0];
-  const from = intent.date ? startOfDay(intent.date) : startOfDay(new Date());
-  const to = intent.dateEnd ? endOfDay(intent.dateEnd) : endOfDay(from);
+  const { from, to } = appointmentRange(intent);
 
   const appointments = await prisma.appointment.findMany({
     where: {
@@ -658,11 +678,11 @@ export async function fetchAppointmentSchedule(auth: SessionUser, intent: AiInte
     return { error: "Keine Berechtigung für Kalenderdaten." };
   }
 
-  const from = intent.date ? startOfDay(intent.date) : startOfDay(new Date());
-  const to = intent.dateEnd ? endOfDay(intent.dateEnd) : endOfDay(from);
+  const { from, to } = appointmentRange(intent);
+  const accessFilter = await buildAppointmentAccessFilter(auth);
   const appointments = await prisma.appointment.findMany({
     where: {
-      tenantId: auth.tenantId,
+      ...accessFilter,
       startTime: { lte: to },
       endTime: { gte: from },
     },
@@ -676,5 +696,10 @@ export async function fetchAppointmentSchedule(auth: SessionUser, intent: AiInte
     },
   });
 
-  return { appointments, from, to };
+  return {
+    appointments,
+    from,
+    to,
+    requestedAsOrders: /auftr[aä]ge?|eins[aä]tze?/i.test(intent.rawMessage),
+  };
 }

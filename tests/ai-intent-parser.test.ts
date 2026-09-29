@@ -89,6 +89,19 @@ describe("parseIntent", () => {
     assert.equal(intent.type, "appointment_schedule");
   });
 
+  it("treats today's orders as the appointment schedule instead of a keyword search", () => {
+    const intent = parseIntent("Alle Aufträge heute.", ref);
+    assert.equal(intent.type, "appointment_schedule");
+    assert.equal(intent.date?.getDate(), 13);
+    assert.equal(intent.searchTerm, undefined);
+  });
+
+  it("defaults 'which orders do I have' to today's schedule", () => {
+    const intent = parseIntent("Welche Aufträge habe ich?", ref);
+    assert.equal(intent.type, "appointment_schedule");
+    assert.equal(intent.date?.getDate(), 13);
+  });
+
   it("detects help", () => {
     const intent = parseIntent("Hilfe", ref);
     assert.equal(intent.type, "help");

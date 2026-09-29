@@ -13,6 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { DateInput } from "@/components/ui/date-input";
+import { SearchField } from "@/components/ui/list-controls";
 import { Label } from "@/components/ui/label";
 import { AddressSuggestInput } from "@/components/ui/address-suggest-input";
 import { OrderTypeSelect } from "@/components/orders/order-type-select";
@@ -339,11 +340,12 @@ export function CalendarCreateDialog({
               <>
                 <div className="space-y-1.5">
                   <Label htmlFor="cal-order-search">Auftrag *</Label>
-                  <Input
+                  <SearchField
                     id="cal-order-search"
+                    label="Auftrag durchsuchen"
                     placeholder="Nr., Kunde oder Titel suchen…"
                     value={orderSearch}
-                    onChange={(e) => setOrderSearch(e.target.value)}
+                    onValueChange={setOrderSearch}
                   />
                   <select
                     required

@@ -5,6 +5,7 @@ import { format } from "date-fns";
 import { de } from "date-fns/locale";
 import { MonteurMaterialView } from "@/components/monteur/material-view";
 import { fetchJson } from "@/lib/fetch-json";
+import { InfoButton } from "@/components/ui/info-button";
 
 export default function MonteurMaterialPage() {
   const [selectedDate, setSelectedDate] = useState(format(new Date(), "yyyy-MM-dd"));
@@ -37,8 +38,12 @@ export default function MonteurMaterialPage() {
   return (
     <div className="space-y-4">
       <div>
-        <h1 className="text-xl font-bold text-slate-900">Material</h1>
-        <p className="text-sm text-slate-500 mt-1">Packliste für den gewählten Tag</p>
+        <h1 className="flex items-center gap-2 text-xl font-bold text-slate-900">
+          Material
+          <InfoButton title="Material" ariaLabel="Info zu Material">
+            <p>Packliste für den gewählten Tag.</p>
+          </InfoButton>
+        </h1>
         <input
           type="date"
           value={selectedDate}

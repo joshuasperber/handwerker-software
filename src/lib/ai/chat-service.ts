@@ -38,7 +38,7 @@ import {
   formatUnknown,
   formatError,
 } from "./format-response";
-import { enhanceWithLlm, classifyIntentWithLlm } from "./llm-client";
+import { classifyIntentWithLlm } from "./llm-client";
 
 function toJson(value: unknown): Prisma.InputJsonValue {
   return JSON.parse(JSON.stringify(value)) as Prisma.InputJsonValue;
@@ -197,18 +197,13 @@ export async function processChatMessage(
   ) {
     const llmIntent = await classifyIntentWithLlm(message);
     if (llmIntent && llmIntent.type !== "unknown" && llmIntent.type !== "person_lookup") {
-      const retry = await executeIntent(auth, llmIntent);
-      const enhancedRetry = await enhanceWithLlm(message, retry);
-      if (enhancedRetry) return { ...retry, content: enhancedRetry };
-      return retry;
+      return executeIntent(auth, llmIntent);
     }
   }
 
-  const enhanced = await enhanceWithLlm(message, structured);
-  if (enhanced) {
-    return { ...structured, content: enhanced };
-  }
-
+  // Unterstützte Fragen werden bewusst direkt aus den verifizierten App-Daten
+  // beantwortet. Das vermeidet einen zweiten LLM-Roundtrip, hält Zahlen exakt
+  // und macht häufige Abfragen wie „Aufträge heute“ deutlich schneller.
   return structured;
 }
 

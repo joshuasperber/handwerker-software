@@ -14,7 +14,7 @@ import {
 import { cn } from "@/lib/utils";
 
 const fieldClasses =
-  "h-11 w-full min-w-0 max-w-full rounded-2xl border border-slate-300 bg-white px-3.5 text-sm text-slate-800 shadow-sm outline-none transition-colors focus-visible:border-[#0d5c63] focus-visible:ring-2 focus-visible:ring-[#0d5c63]/25 disabled:opacity-50 appearance-none [&::-webkit-calendar-picker-indicator]:opacity-60";
+  "h-11 w-full min-w-0 max-w-full rounded-xl border border-slate-200 bg-white px-3.5 text-sm text-slate-800 shadow-sm outline-none transition-[border-color,box-shadow,background-color] focus-visible:border-[#0d5c63]/35 focus-visible:ring-3 focus-visible:ring-[#0d5c63]/10 disabled:opacity-50 appearance-none [&::-webkit-calendar-picker-indicator]:opacity-60";
 
 /**
  * Moderne Datums-/Zeitfelder mit zuverlässigem Mobile-Layout
@@ -317,4 +317,4 @@ function AppDatePicker({
 
 /** Einheitliche Select-Klassen für Filter (rund, mobil-freundlich). */
 export const selectFieldClasses =
-  "h-11 w-full min-w-0 rounded-2xl border border-slate-300 bg-white px-3.5 text-sm text-slate-800 shadow-sm outline-none transition-[border-color,box-shadow] hover:border-slate-400 focus-visible:border-[#0d5c63] focus-visible:ring-3 focus-visible:ring-[#0d5c63]/12";
+  "h-11 w-full min-w-0 rounded-xl border border-slate-200 bg-white px-3.5 text-sm text-slate-800 shadow-sm outline-none transition-[border-color,box-shadow,background-color] hover:border-slate-300 focus-visible:border-[#0d5c63]/35 focus-visible:ring-3 focus-visible:ring-[#0d5c63]/10";

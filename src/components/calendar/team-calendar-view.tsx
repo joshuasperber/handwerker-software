@@ -253,16 +253,11 @@ export function TeamCalendarView({
           {title}
           <InfoButton title={title} ariaLabel={`Info zu ${title}`}>
             <p>
-              Wo sind Ihre Mitarbeiter? Termine, Orte und Einsatzzeiten
+              Einsätze, Teams, Fahrzeuge, Orte und Einsatzzeiten auf einen Blick planen
               {canEdit ? " — tippen oder klicken für einen neuen Termin." : " (nur Ansicht)."}
             </p>
           </InfoButton>
         </h1>
-        {!compactHeader && (
-          <p className="mt-1 text-sm text-slate-500">
-            Einsätze, Teams und Fahrzeuge auf einen Blick planen.
-          </p>
-        )}
       </div>
 
       <div className="flex-1 min-h-0 px-2 sm:px-0">

@@ -27,7 +27,6 @@ export function SettingsPageHeader({
           </InfoButton>
         ) : null}
       </h1>
-      {text ? <p className="mt-1.5 text-sm leading-6 text-slate-500">{text}</p> : null}
     </header>
   );
 }

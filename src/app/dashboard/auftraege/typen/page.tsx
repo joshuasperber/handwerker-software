@@ -11,6 +11,7 @@ import { saveJson } from "@/lib/save-toast";
 import { ArrowDown, ArrowLeft, ArrowUp, Pencil, RotateCcw, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { InfoButton } from "@/components/ui/info-button";
 
 interface OrderTypeRow {
   id: string;
@@ -261,11 +262,12 @@ export default function AuftragstypenPage() {
 
       <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Auftragstypen</h1>
-          <p className="text-sm text-slate-500 mt-1">
-            Eigene Typen pflegen – unbenutzte löschen, genutzte deaktivieren. Bestehende Aufträge
-            behalten ihren gespeicherten Typennamen.
-          </p>
+          <h1 className="flex items-center gap-2 text-2xl font-bold text-slate-900">
+            Auftragstypen
+            <InfoButton title="Auftragstypen" ariaLabel="Info zu Auftragstypen">
+              <p>Eigene Typen pflegen – unbenutzte löschen, genutzte deaktivieren. Bestehende Aufträge behalten ihren gespeicherten Typennamen.</p>
+            </InfoButton>
+          </h1>
         </div>
         <CanAccess permission="orders.write">
           <AddButton onClick={() => setShowForm(!showForm)}>Auftragstyp hinzufügen</AddButton>

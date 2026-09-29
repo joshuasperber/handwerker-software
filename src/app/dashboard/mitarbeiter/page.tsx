@@ -10,8 +10,10 @@ import { AddButton } from "@/components/ui/add-button";
 import { saveJson } from "@/lib/save-toast";
 import { swrKeys, useApiSWR } from "@/lib/swr";
 import { ASSIGNABLE_STAFF_ROLES } from "@/lib/permissions";
-import { Pencil, Search, Trash2 } from "lucide-react";
+import { Pencil, Trash2 } from "lucide-react";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { FilterSelect, SearchField } from "@/components/ui/list-controls";
+import { InfoButton } from "@/components/ui/info-button";
 
 interface Employee {
   id: string;
@@ -216,25 +218,26 @@ export default function MitarbeiterPage() {
   return (
     <div>
       <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
-        <h1 className="text-2xl font-bold text-slate-900">Mitarbeiter</h1>
+        <h1 className="flex items-center gap-2 text-2xl font-bold text-slate-900">
+          Mitarbeiter
+          <InfoButton title="Mitarbeiter" ariaLabel="Info zu Mitarbeiter">
+            <p>Mitarbeiter verwalten, Rollen zuweisen und aktive Zugänge filtern.</p>
+          </InfoButton>
+        </h1>
         <CanAccess permission="employees.write">
           <AddButton onClick={startCreate}>Mitarbeiter anlegen</AddButton>
         </CanAccess>
       </div>
 
-      <div className="flex flex-wrap gap-3 mb-6">
-        <div className="relative flex-1 min-w-[200px]">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-          <input
-            type="text"
-            placeholder="Name oder E-Mail suchen..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="w-full h-10 pl-10 pr-4 rounded-lg border border-slate-300 text-sm"
-          />
-        </div>
-        <select
-          className="h-10 rounded-lg border border-slate-300 px-3 text-sm"
+      <div className="mb-6 flex flex-col gap-3 sm:flex-row">
+        <SearchField
+          label="Mitarbeiter durchsuchen"
+          placeholder="Name oder E-Mail suchen …"
+          value={search}
+          onValueChange={setSearch}
+        />
+        <FilterSelect
+          aria-label="Nach Rolle filtern"
           value={roleFilter}
           onChange={(e) => setRoleFilter(e.target.value)}
         >
@@ -242,16 +245,16 @@ export default function MitarbeiterPage() {
           {ROLES.map((r) => (
             <option key={r} value={r}>{ROLE_LABELS[r] ?? r}</option>
           ))}
-        </select>
-        <select
-          className="h-10 rounded-lg border border-slate-300 px-3 text-sm"
+        </FilterSelect>
+        <FilterSelect
+          aria-label="Nach Aktivstatus filtern"
           value={activeFilter}
           onChange={(e) => setActiveFilter(e.target.value as typeof activeFilter)}
         >
           <option value="active">Nur aktive</option>
           <option value="all">Alle</option>
           <option value="inactive">Nur deaktivierte</option>
-        </select>
+        </FilterSelect>
       </div>
 
       <CanAccess permission="employees.write">

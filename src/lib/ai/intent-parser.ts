@@ -9,6 +9,7 @@ import {
   setDate,
 } from "date-fns";
 import type { AiIntent, AiIntentType } from "./types";
+import { businessDateKey } from "@/lib/calendar-day";
 
 const MONTHS: Record<string, number> = {
   januar: 0,
@@ -30,25 +31,32 @@ function normalize(text: string): string {
   return text.trim().toLowerCase().replace(/\s+/g, " ");
 }
 
+/** Stabile Kalenderbasis für den Betrieb – unabhängig von der Server-Zeitzone. */
+function businessReferenceDate(reference: Date): Date {
+  const [year, month, day] = businessDateKey(reference).split("-").map(Number);
+  return new Date(year, month - 1, day, 12, 0, 0, 0);
+}
+
 export function parseDateFromText(text: string, reference = new Date()): Date | undefined {
   const t = normalize(text);
+  const base = businessReferenceDate(reference);
 
-  if (/\bheute\b/.test(t)) return startOfDay(reference);
-  if (/\bmorgen\b/.test(t)) return startOfDay(addDays(reference, 1));
-  if (/\bübermorgen\b|\buebermorgen\b/.test(t)) return startOfDay(addDays(reference, 2));
+  if (/\bheute\b/.test(t)) return startOfDay(base);
+  if (/\bmorgen\b/.test(t)) return startOfDay(addDays(base, 1));
+  if (/\bübermorgen\b|\buebermorgen\b/.test(t)) return startOfDay(addDays(base, 2));
 
   const dmMatch = t.match(/(\d{1,2})\.\s*(\d{1,2})(?:\.|\s|$)/);
   if (dmMatch) {
     const day = Number(dmMatch[1]);
     const month = Number(dmMatch[2]) - 1;
-    return startOfDay(setDate(setMonth(reference, month), day));
+    return startOfDay(setDate(setMonth(base, month), day));
   }
 
   const dMonthMatch = t.match(/(\d{1,2})\.?\s+(januar|februar|märz|maerz|april|mai|juni|juli|august|september|oktober|november|dezember)/);
   if (dMonthMatch) {
     const day = Number(dMonthMatch[1]);
     const month = MONTHS[dMonthMatch[2]];
-    return startOfDay(setDate(setMonth(reference, month), day));
+    return startOfDay(setDate(setMonth(base, month), day));
   }
 
   return undefined;
@@ -59,14 +67,15 @@ export function parseDateRangeFromText(
   reference = new Date()
 ): { from: Date; to: Date } | undefined {
   const t = normalize(text);
+  const base = businessReferenceDate(reference);
 
   if (/\bnächste woche\b|\bnachste woche\b/.test(t)) {
-    const nextWeekStart = startOfWeek(addWeeks(reference, 1), { weekStartsOn: 1 });
+    const nextWeekStart = startOfWeek(addWeeks(base, 1), { weekStartsOn: 1 });
     return { from: nextWeekStart, to: endOfWeek(nextWeekStart, { weekStartsOn: 1 }) };
   }
 
   if (/\bdiese woche\b|\baktuelle woche\b/.test(t)) {
-    const weekStart = startOfWeek(reference, { weekStartsOn: 1 });
+    const weekStart = startOfWeek(base, { weekStartsOn: 1 });
     return { from: weekStart, to: endOfWeek(weekStart, { weekStartsOn: 1 }) };
   }
 
@@ -76,8 +85,8 @@ export function parseDateRangeFromText(
   }
 
   if (/\bdiesen monat\b|\bdiesem monat\b/.test(t)) {
-    const from = new Date(reference.getFullYear(), reference.getMonth(), 1);
-    const to = endOfDay(new Date(reference.getFullYear(), reference.getMonth() + 1, 0));
+    const from = new Date(base.getFullYear(), base.getMonth(), 1);
+    const to = endOfDay(new Date(base.getFullYear(), base.getMonth() + 1, 0));
     return { from, to };
   }
 
@@ -282,6 +291,23 @@ export function parseIntent(message: string, reference = new Date()): AiIntent {
       rawMessage: raw,
       date: range?.from,
       dateEnd: range?.to,
+    };
+  }
+
+  const orderScheduleRange = parseDateRangeFromText(t, reference);
+  const asksForScheduledOrders =
+    /\b(?:auftr[aä]ge?|eins[aä]tze?)\b/.test(t) &&
+    (Boolean(orderScheduleRange) ||
+      /\b(?:habe ich|stehen (?:heute |morgen )?an|sind (?:heute |morgen )?geplant)\b/.test(t) ||
+      /^(?:welche|alle|meine)\s+auftr[aä]ge?[?.!]*$/.test(t));
+
+  if (asksForScheduledOrders) {
+    const range = orderScheduleRange ?? parseDateRangeFromText("heute", reference)!;
+    return {
+      type: "appointment_schedule",
+      rawMessage: raw,
+      date: range.from,
+      dateEnd: range.to,
     };
   }
 

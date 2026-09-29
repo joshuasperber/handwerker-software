@@ -19,8 +19,10 @@ import { getCurrentPhase } from "@/lib/phase-status";
 import { CanAccess } from "@/components/auth/can-access";
 import { AddButton } from "@/components/ui/add-button";
 import { swrKeys, useApiSWR } from "@/lib/swr";
-import { ChevronRight, ClipboardList, Loader2, Search } from "lucide-react";
+import { ChevronRight, ClipboardList, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { FilterSelect, SearchField } from "@/components/ui/list-controls";
+import { InfoButton } from "@/components/ui/info-button";
 
 interface Order {
   id: string;
@@ -85,8 +87,10 @@ export default function AuftraegePage() {
           <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
             <ClipboardList className="h-7 w-7 text-[#0d5c63]" />
             Aufträge
+            <InfoButton title="Aufträge" ariaLabel="Info zu Aufträgen">
+              <p>Aktive und erledigte Aufträge durchsuchen, filtern und verwalten. Neueste Einträge stehen zuerst.</p>
+            </InfoButton>
           </h1>
-          <p className="mt-1 text-sm text-slate-500">Neueste zuerst</p>
         </div>
         <div className="flex shrink-0 items-center gap-2">
           <CanAccess permission="orders.write">
@@ -109,20 +113,16 @@ export default function AuftraegePage() {
       </CanAccess>
 
       <div className="flex flex-col gap-3 sm:flex-row">
-        <div className="relative flex-1 min-w-0">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-          <input
-            type="search"
-            placeholder="Nr., Kunde suchen…"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="w-full h-11 sm:h-10 pl-10 pr-4 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-[#0d5c63]/30"
-          />
-        </div>
-        <select
+        <SearchField
+          label="Aufträge durchsuchen"
+          placeholder="Nummer oder Kunde suchen …"
+          value={search}
+          onValueChange={setSearch}
+        />
+        <FilterSelect
+          aria-label="Nach Auftragsstatus filtern"
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
-          className="h-11 sm:h-10 rounded-xl border border-slate-300 px-3 text-sm bg-white"
         >
           <option value="">Alle Status</option>
           {Object.entries(ORDER_STATUS_LABELS).map(([key, label]) => (
@@ -130,7 +130,7 @@ export default function AuftraegePage() {
               {label}
             </option>
           ))}
-        </select>
+        </FilterSelect>
       </div>
 
       <div className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1">

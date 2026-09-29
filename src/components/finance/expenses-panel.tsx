@@ -25,6 +25,7 @@ import {
   type ExpenseDTO,
 } from "@/lib/finance/types";
 import { ArrowLeft, Loader2, Plus, Receipt, Trash2 } from "lucide-react";
+import { InfoButton } from "@/components/ui/info-button";
 
 const ALL_CATEGORIES = "__all__";
 
@@ -126,16 +127,16 @@ export function ExpensesPanel({
           <div className="flex items-center gap-2">
             <Receipt className="h-7 w-7 text-[#0d5c63]" />
             <h1 className="text-2xl font-bold text-slate-900">Ausgaben</h1>
+            <InfoButton title="Ausgaben" ariaLabel="Info zu Ausgaben">
+              <p>Alle Ausgaben und Belege erfassen, prüfen und filtern.</p>
+            </InfoButton>
           </div>
-          <p className="mt-1 text-sm text-slate-500">
-            Alle Ausgaben und Belege
-            {isValidating && expenses && (
-              <span className="ml-2 inline-flex items-center gap-1 text-slate-400">
-                <Loader2 className="h-3 w-3 animate-spin" />
-                aktualisiert…
-              </span>
-            )}
-          </p>
+          {isValidating && expenses ? (
+            <span className="mt-1 inline-flex items-center gap-1 text-xs text-slate-400" role="status">
+              <Loader2 className="h-3 w-3 animate-spin" />
+              Aktualisiert…
+            </span>
+          ) : null}
         </div>
         <CanAccess permission="invoices.write">
           <Button onClick={openCreate} className="w-full gap-2 sm:w-auto">

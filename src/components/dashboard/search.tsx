@@ -18,14 +18,24 @@ import {
 } from "@/lib/search/types";
 import { cn } from "@/lib/utils";
 import { fetchJson } from "@/lib/fetch-json";
+import { listControlClasses } from "@/components/ui/list-controls";
 
 const DEBOUNCE_MS = 280;
 const MIN_CHARS = 1;
 
-export function DashboardSearch({ className }: { className?: string }) {
+export function DashboardSearch({
+  className,
+  collapsible = false,
+  mobileOverlay = false,
+}: {
+  className?: string;
+  collapsible?: boolean;
+  mobileOverlay?: boolean;
+}) {
   const router = useRouter();
   const inputId = useId();
   const rootRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const abortRef = useRef<AbortController | null>(null);
   const requestSeq = useRef(0);
 
@@ -37,6 +47,7 @@ export function DashboardSearch({ className }: { className?: string }) {
   const [activeCategory, setActiveCategory] = useState<SearchCategory | null>(null);
   const [moreOpen, setMoreOpen] = useState(false);
   const [error, setError] = useState("");
+  const [expanded, setExpanded] = useState(!collapsible);
 
   // Debounce – neuer Wert setzt immer debouncedQuery, auch bei Wiederholung
   useEffect(() => {
@@ -106,11 +117,12 @@ export function DashboardSearch({ className }: { className?: string }) {
       if (!rootRef.current?.contains(e.target as Node)) {
         setOpen(false);
         setMoreOpen(false);
+        if (collapsible) setExpanded(false);
       }
     }
     document.addEventListener("mousedown", onDoc);
     return () => document.removeEventListener("mousedown", onDoc);
-  }, []);
+  }, [collapsible]);
 
   function navigate(href: string) {
     setOpen(false);
@@ -119,6 +131,7 @@ export function DashboardSearch({ className }: { className?: string }) {
     setDebouncedQuery("");
     setResult(null);
     setActiveCategory(null);
+    if (collapsible) setExpanded(false);
     router.push(href);
   }
 
@@ -126,6 +139,7 @@ export function DashboardSearch({ className }: { className?: string }) {
     if (e.key === "Escape") {
       setOpen(false);
       setMoreOpen(false);
+      if (collapsible) setExpanded(false);
       (e.target as HTMLInputElement).blur();
     }
     if (e.key === "Enter" && activeGroup?.hits[0]) {
@@ -139,13 +153,56 @@ export function DashboardSearch({ className }: { className?: string }) {
   );
   const showPanel = open && (query.trim().length >= MIN_CHARS || loading || result);
 
+  function openSearch() {
+    setExpanded(true);
+    setOpen(true);
+    window.requestAnimationFrame(() => inputRef.current?.focus());
+  }
+
+  function clearSearch() {
+    abortRef.current?.abort();
+    requestSeq.current += 1;
+    setQuery("");
+    setDebouncedQuery("");
+    setResult(null);
+    setActiveCategory(null);
+    setLoading(false);
+    setError("");
+  }
+
   return (
-    <div ref={rootRef} className={cn("relative w-full max-w-md", className)}>
+    <div
+      ref={rootRef}
+      className={cn(
+        "relative shrink-0 transition-[width] duration-200 ease-out",
+        collapsible
+          ? expanded
+            ? mobileOverlay
+              ? "fixed left-3 right-14 top-2.5 z-40 w-auto sm:static sm:w-[min(28rem,48vw)]"
+              : "w-[min(28rem,48vw)]"
+            : "w-10"
+          : "w-full max-w-md",
+        className
+      )}
+    >
+      {collapsible && !expanded ? (
+        <button
+          type="button"
+          aria-label="Suche öffnen"
+          title="Suche öffnen"
+          onClick={openSearch}
+          className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200/80 bg-slate-50 text-slate-500 shadow-sm transition-colors hover:border-[#0b6268]/25 hover:bg-white hover:text-[#0b6268] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0b6268]/25"
+        >
+          <Search className="h-[18px] w-[18px]" />
+        </button>
+      ) : (
+        <>
       <label htmlFor={inputId} className="sr-only">
         Globale Suche
       </label>
       <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
       <input
+        ref={inputRef}
         id={inputId}
         type="search"
         autoComplete="off"
@@ -164,22 +221,21 @@ export function DashboardSearch({ className }: { className?: string }) {
         }}
         onFocus={() => setOpen(true)}
         onKeyDown={onKeyDown}
-        className="h-10 w-full rounded-xl border border-slate-200 bg-slate-50/80 pl-10 pr-9 text-sm text-slate-800 shadow-inner shadow-slate-950/[0.02] outline-none transition placeholder:text-slate-400 focus:border-[#0b6268]/30 focus:bg-white focus:ring-3 focus:ring-[#0b6268]/10"
+        className={cn(listControlClasses, "w-full bg-white pl-10 pr-9 placeholder:text-slate-400")}
       />
-      {query && (
+      {(query || collapsible) && (
         <button
           type="button"
-          aria-label="Suche leeren"
+          aria-label={query ? "Suche leeren" : "Suche schließen"}
           className="absolute right-2 top-1/2 -translate-y-1/2 rounded p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-600"
           onClick={() => {
-            abortRef.current?.abort();
-            requestSeq.current += 1;
-            setQuery("");
-            setDebouncedQuery("");
-            setResult(null);
-            setActiveCategory(null);
-            setLoading(false);
-            setError("");
+            if (query) {
+              clearSearch();
+              inputRef.current?.focus();
+              return;
+            }
+            setOpen(false);
+            setExpanded(false);
           }}
         >
           <X className="h-3.5 w-3.5" />
@@ -294,6 +350,8 @@ export function DashboardSearch({ className }: { className?: string }) {
               ))}
           </div>
         </div>
+      )}
+        </>
       )}
     </div>
   );

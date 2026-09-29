@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { FilterSelect, SearchField } from "@/components/ui/list-controls";
 import { CanAccess } from "@/components/auth/can-access";
 import { InfoButton } from "@/components/ui/info-button";
 import { swrKeys, useApiSWR } from "@/lib/swr";
@@ -201,8 +202,9 @@ export default function TeamStundenPage() {
         </div>
 
         <div className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-          <select
-            className="h-11 w-full min-w-0 rounded-2xl border border-slate-300 bg-white px-3.5 text-sm shadow-sm"
+          <FilterSelect
+            aria-label="Nach Mitarbeiter filtern"
+            className="sm:w-full"
             value={employeeId}
             onChange={(e) => setEmployeeId(e.target.value)}
           >
@@ -212,9 +214,10 @@ export default function TeamStundenPage() {
                 {e.name}
               </option>
             ))}
-          </select>
-          <select
-            className="h-11 w-full min-w-0 rounded-2xl border border-slate-300 bg-white px-3.5 text-sm shadow-sm"
+          </FilterSelect>
+          <FilterSelect
+            aria-label="Nach Stundenstatus filtern"
+            className="sm:w-full"
             value={status}
             onChange={(e) => setStatus(e.target.value)}
           >
@@ -222,9 +225,10 @@ export default function TeamStundenPage() {
             <option value="OPEN">Offen</option>
             <option value="REVIEWED">Geprüft</option>
             <option value="APPROVED">Freigegeben</option>
-          </select>
-          <select
-            className="h-11 w-full min-w-0 rounded-2xl border border-slate-300 bg-white px-3.5 text-sm shadow-sm"
+          </FilterSelect>
+          <FilterSelect
+            aria-label="Nach Auftrag filtern"
+            className="sm:w-full"
             value={orderId}
             onChange={(e) => setOrderId(e.target.value)}
           >
@@ -235,9 +239,10 @@ export default function TeamStundenPage() {
                 {o.title ? ` · ${o.title}` : ""}
               </option>
             ))}
-          </select>
-          <select
-            className="h-11 w-full min-w-0 rounded-2xl border border-slate-300 bg-white px-3.5 text-sm shadow-sm"
+          </FilterSelect>
+          <FilterSelect
+            aria-label="Nach Projekt filtern"
+            className="sm:w-full"
             value={projectId}
             onChange={(e) => setProjectId(e.target.value)}
           >
@@ -247,12 +252,13 @@ export default function TeamStundenPage() {
                 {p.name}
               </option>
             ))}
-          </select>
-          <Input
-            placeholder="Suche Tätigkeit / Notiz…"
+          </FilterSelect>
+          <SearchField
+            label="Stunden durchsuchen"
+            placeholder="Tätigkeit oder Notiz suchen …"
             value={q}
-            onChange={(e) => setQ(e.target.value)}
-            className="h-11"
+            onValueChange={setQ}
+            containerClassName="sm:w-full"
           />
         </div>
 

@@ -1,12 +1,15 @@
 "use client";
 
+import { useDeferredValue, useMemo, useState } from "react";
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CanAccess } from "@/components/auth/can-access";
 import { AddButton } from "@/components/ui/add-button";
-import { Building2, MapPin, Mail, Phone, Plus, User } from "lucide-react";
+import { Building2, MapPin, Mail, Phone, Plus, Search, User } from "lucide-react";
 import { swrKeys, useApiSWR } from "@/lib/swr";
+import { SearchField } from "@/components/ui/list-controls";
+import { InfoButton } from "@/components/ui/info-button";
 
 interface Customer {
   id: string;
@@ -22,11 +25,40 @@ interface Customer {
 
 export default function KundenPage() {
   const { data: customers = [], isLoading } = useApiSWR<Customer[]>(swrKeys.customers());
+  const [query, setQuery] = useState("");
+  const deferredQuery = useDeferredValue(query);
+  const filteredCustomers = useMemo(() => {
+    const needle = deferredQuery.trim().toLocaleLowerCase("de");
+    if (!needle) return customers;
+
+    return customers.filter((customer) => {
+      const address = customer.properties
+        .map((property) => `${property.street} ${property.zipCode} ${property.city}`)
+        .join(" ");
+      return [
+        customer.firstName,
+        customer.lastName,
+        customer.company,
+        customer.email,
+        customer.phone,
+        address,
+      ]
+        .filter(Boolean)
+        .join(" ")
+        .toLocaleLowerCase("de")
+        .includes(needle);
+    });
+  }, [customers, deferredQuery]);
 
   return (
     <div>
       <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
-        <h1 className="text-2xl font-bold text-slate-900">Kunden</h1>
+        <h1 className="flex items-center gap-2 text-2xl font-bold text-slate-900">
+          Kunden
+          <InfoButton title="Kunden" ariaLabel="Info zu Kunden">
+            <p>Private und gewerbliche Kunden mit Kontaktdaten, Adressen und Aufträgen.</p>
+          </InfoButton>
+        </h1>
         <CanAccess permission="customers.write">
           <div className="flex flex-wrap gap-2">
             <AddButton href="/dashboard/kunden/neu">Privatkunde</AddButton>
@@ -39,11 +71,24 @@ export default function KundenPage() {
           </div>
         </CanAccess>
       </div>
+      <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <SearchField
+          label="Kunden durchsuchen"
+          placeholder="Name, Firma, Ort oder Kontakt suchen …"
+          value={query}
+          onValueChange={setQuery}
+          autoComplete="off"
+          containerClassName="max-w-xl"
+        />
+        <p className="shrink-0 text-xs font-medium text-slate-500" aria-live="polite">
+          {filteredCustomers.length} {filteredCustomers.length === 1 ? "Kunde" : "Kunden"}
+        </p>
+      </div>
       {isLoading && customers.length === 0 && (
         <p className="text-sm text-slate-500 mb-4">Kunden werden geladen…</p>
       )}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {customers.map((c) => {
+        {filteredCustomers.map((c) => {
           const isBusiness = c.customerType === "GEWERBLICH";
           const title = isBusiness && c.company?.trim()
             ? c.company
@@ -98,6 +143,15 @@ export default function KundenPage() {
           );
         })}
       </div>
+      {!isLoading && filteredCustomers.length === 0 && (
+        <div className="rounded-2xl border border-dashed border-slate-200 bg-white px-5 py-12 text-center">
+          <Search className="mx-auto h-6 w-6 text-slate-300" />
+          <p className="mt-3 text-sm font-medium text-slate-700">Kein passender Kunde gefunden</p>
+          <p className="mt-1 text-xs text-slate-500">
+            Prüfe den Suchbegriff oder lösche den Filter.
+          </p>
+        </div>
+      )}
     </div>
   );
 }

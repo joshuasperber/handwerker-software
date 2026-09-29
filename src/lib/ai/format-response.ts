@@ -663,8 +663,9 @@ export function formatAppointmentSchedule(data: {
   }>;
   from: Date;
   to: Date;
+  requestedAsOrders?: boolean;
 }): AiChatResult {
-  const { appointments, from, to } = data;
+  const { appointments, from, to, requestedAsOrders = false } = data;
   const dateLabel =
     formatDate(from) === formatDate(to)
       ? formatDate(from)
@@ -672,14 +673,23 @@ export function formatAppointmentSchedule(data: {
 
   if (appointments.length === 0) {
     return {
-      content: `Für **${dateLabel}** sind keine Termine eingetragen.`,
+      content: requestedAsOrders
+        ? `Für **${dateLabel}** sind keine Aufträge im Kalender eingeplant.`
+        : `Für **${dateLabel}** sind keine Termine eingetragen.`,
       intent: "appointment_schedule",
       dataSources: [{ type: "appointments", count: 0, label: "Termine" }],
       confidence: "high",
     };
   }
 
-  let content = `**${appointments.length} ${appointments.length === 1 ? "Termin" : "Termine"} am ${dateLabel}:**\n\n`;
+  const resultLabel = requestedAsOrders
+    ? appointments.length === 1
+      ? "geplanter Auftrag"
+      : "geplante Aufträge"
+    : appointments.length === 1
+      ? "Termin"
+      : "Termine";
+  let content = `**${appointments.length} ${resultLabel} am ${dateLabel}:**\n\n`;
   for (const appointment of appointments) {
     const employee = appointment.employee?.user;
     const title =

@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
+import { InfoButton } from "@/components/ui/info-button";
+import { SearchField } from "@/components/ui/list-controls";
 import { formatDateTime } from "@/lib/utils";
 import { fetchJson } from "@/lib/fetch-json";
 import { toast } from "sonner";
@@ -465,11 +467,12 @@ export function StundenzettelView({ title = "Stundenzettel" }: { title?: string 
         ) : (
           <>
             {orders.length > 8 && (
-              <Input
-                className="mt-1"
-                placeholder="Auftrag suchen…"
+              <SearchField
+                label="Auftrag durchsuchen"
+                containerClassName="mt-1"
+                placeholder="Auftrag suchen …"
                 value={orderSearch}
-                onChange={(e) => setOrderSearch(e.target.value)}
+                onValueChange={setOrderSearch}
               />
             )}
             <select
@@ -497,10 +500,10 @@ export function StundenzettelView({ title = "Stundenzettel" }: { title?: string 
       <div>
         <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
           <Clock className="h-6 w-6 text-[#0d5c63]" /> {title}
+          <InfoButton title={title} ariaLabel={`Info zu ${title}`}>
+            <p>Arbeitszeiten mit oder ohne Auftrag erfassen.</p>
+          </InfoButton>
         </h1>
-        <p className="text-sm text-slate-500 mt-1">
-          Arbeitszeiten mit oder ohne Auftrag erfassen
-        </p>
       </div>
 
       {missingEmployeeProfile && (

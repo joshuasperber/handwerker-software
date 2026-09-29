@@ -23,6 +23,7 @@ import { saveJson } from "@/lib/save-toast";
 import { CanAccess } from "@/components/auth/can-access";
 import { AmountModeToggle } from "@/components/finance/amount-mode-toggle";
 import { LoadingOverlay } from "@/components/ui/loading-overlay";
+import { SearchField } from "@/components/ui/list-controls";
 import {
   amountModeLabel,
   pickAmount,
@@ -41,7 +42,6 @@ import {
   Loader2,
   CalendarDays,
   MoreHorizontal,
-  Search,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -451,15 +451,12 @@ export default function RechnungenPage() {
 
       <Card className="!p-4 mb-4 space-y-3">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-          <div className="relative flex-1 min-w-0">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-            <Input
-              value={q}
-              onChange={(e) => setQ(e.target.value)}
-              placeholder="Belegnummer oder Kunde suchen …"
-              className="h-10 pl-9"
-            />
-          </div>
+          <SearchField
+            label="Rechnungen und Belege durchsuchen"
+            value={q}
+            onValueChange={setQ}
+            placeholder="Belegnummer oder Kunde suchen …"
+          />
           <div className="flex items-center justify-between gap-2 sm:justify-end">
             <AmountModeToggle mode={amountMode} onChange={setAmountMode} />
             <span className="text-[11px] text-slate-400">Nur Anzeige</span>

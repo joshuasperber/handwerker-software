@@ -24,13 +24,13 @@ import {
   ChevronRight,
   LoaderCircle,
   Plus,
-  Search,
   SlidersHorizontal,
   Truck,
   Users,
   X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { SearchField } from "@/components/ui/list-controls";
 import {
   appointmentDisplayTitle,
   resolveAppointmentColor,
@@ -507,16 +507,13 @@ export function ScheduleCalendar({
           </button>
         </div>
         {employees.length > 5 && (
-          <label className="relative mt-3 block">
-            <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400" />
-            <span className="sr-only">Mitarbeiter suchen</span>
-            <input
-              value={employeeQuery}
-              onChange={(event) => setEmployeeQuery(event.target.value)}
-              placeholder="Mitarbeiter suchen"
-              className="h-9 w-full rounded-lg border border-slate-200 bg-white pl-9 pr-3 text-sm text-slate-800 outline-none transition focus:border-[#0d5c63]/40 focus:ring-2 focus:ring-[#0d5c63]/10"
-            />
-          </label>
+          <SearchField
+            label="Mitarbeiter durchsuchen"
+            value={employeeQuery}
+            onValueChange={setEmployeeQuery}
+            placeholder="Mitarbeiter suchen …"
+            containerClassName="mt-3"
+          />
         )}
       </div>
       <div className="flex-1 overflow-y-auto p-2 space-y-0.5">
@@ -634,13 +631,11 @@ export function ScheduleCalendar({
         {filterPanel}
       </aside>
 
-      <aside
-        className={`fixed inset-y-0 left-0 z-50 flex w-72 flex-col border-r border-slate-200 bg-[#f6f6f8] shadow-2xl transition-transform lg:hidden ${
-          mobileFilterOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
-      >
-        {filterPanel}
-      </aside>
+      {mobileFilterOpen && (
+        <aside className="fixed inset-y-0 left-0 z-50 flex w-72 max-w-[86vw] animate-in flex-col border-r border-slate-200 bg-[#f6f6f8] shadow-2xl slide-in-from-left-4 duration-200 lg:hidden">
+          {filterPanel}
+        </aside>
+      )}
 
       <div className="flex-1 min-w-0 min-h-0 flex flex-col">
         <div className="border-b border-slate-200/80 bg-white/95 px-3 py-3 backdrop-blur sm:px-5">
@@ -681,24 +676,31 @@ export function ScheduleCalendar({
               )}
             </div>
             <div className="flex items-center gap-2">
-            {!readOnly && onSlotSelect && (
-              <Button
-                size="sm"
-                className="gap-1 bg-[#0d5c63] shadow-sm hover:bg-[#0a4a50]"
-                onClick={() => openDayDefaultSlot(anchorDate)}
+              {!readOnly && onSlotSelect && (
+                <Button
+                  size="sm"
+                  className="gap-1 bg-[#0d5c63] shadow-sm hover:bg-[#0a4a50]"
+                  onClick={() => openDayDefaultSlot(anchorDate)}
+                >
+                  <Plus className="h-4 w-4" />
+                  <span className="hidden sm:inline">Neuer Termin</span>
+                </Button>
+              )}
+              <button
+                type="button"
+                onClick={() => setMobileFilterOpen(true)}
+                className="flex h-10 items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-2.5 text-sm font-medium text-slate-600 shadow-sm transition hover:border-[#0d5c63]/25 hover:text-[#0d5c63] lg:hidden"
+                aria-label={`${visibleCount} Personen auswählen`}
               >
-                <Plus className="h-4 w-4" />
-                <span className="hidden sm:inline">Neuer Termin</span>
-              </Button>
-            )}
-            <button
-              type="button"
-              onClick={() => setMobileFilterOpen(true)}
-              className="flex h-9 items-center gap-1 rounded-lg border border-slate-200 bg-white px-3 text-sm font-medium text-slate-600 lg:hidden"
-              aria-label="Filter öffnen"
-            >
-              <SlidersHorizontal className="h-4 w-4" /> {activeFilterCount > 0 ? activeFilterCount : visibleCount}
-            </button>
+                <SlidersHorizontal className="h-4 w-4" />
+                <span className="hidden min-[460px]:inline">Personen</span>
+                <span className="inline-flex min-w-5 items-center justify-center rounded-full bg-slate-100 px-1.5 text-xs font-semibold text-slate-600">
+                  {visibleCount}
+                </span>
+                {activeFilterCount > 0 ? (
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#0d5c63]" aria-hidden="true" />
+                ) : null}
+              </button>
             {/* Mobil: kompakte Auswahl statt Segmentsteuerung */}
             <select
               value={view}
@@ -777,7 +779,7 @@ export function ScheduleCalendar({
               }
             >
               {/* Kopfzeile: Wochentage */}
-              <div className="sticky top-0 z-20 grid border-b border-slate-200/80 bg-white/95 backdrop-blur" style={{ gridTemplateColumns: gridTemplate }}>
+              <div className="sticky top-0 z-30 grid border-b border-slate-200/80 bg-white/95 backdrop-blur" style={{ gridTemplateColumns: gridTemplate }}>
                 <div className="border-r border-slate-100" />
                 {weekDays.map((day) => (
                   <div

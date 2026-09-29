@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Bot, History, Loader2, MessageSquare, Plus, Send, Sparkles, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { LoadingOverlay } from "@/components/ui/loading-overlay";
+import { InfoButton } from "@/components/ui/info-button";
 import {
   Sheet,
   SheetContent,
@@ -30,12 +30,39 @@ interface SessionSummary {
   preview: string;
 }
 
-const STARTER_PROMPTS = [
-  "Zeig mir alle Mitarbeiter",
-  "Zeig mir alle Kunden",
+const OFFICE_STARTER_PROMPTS = [
+  "Welche Aufträge stehen heute an?",
+  "Welche Termine gibt es morgen?",
   "Welche Kunden haben offene Rechnungen?",
   "Aufträge mit Tür anbringen",
 ];
+
+const WORK_STARTER_PROMPTS = [
+  "Welche Aufträge habe ich heute?",
+  "Welche Termine habe ich morgen?",
+  "Was muss ich heute mitnehmen?",
+  "Welche Aufträge stehen diese Woche an?",
+];
+
+function AssistantInfoButton({ compact = false }: { compact?: boolean }) {
+  return (
+    <InfoButton
+      title="Hinweis zum Betriebsassistenten"
+      ariaLabel="Info zum Betriebsassistenten"
+      align="start"
+      className={compact ? "h-6 w-6" : undefined}
+    >
+      <p>Antworten basieren nur auf App-Daten. KI-Antworten können Fehler enthalten.</p>
+      <p>Der Assistent ersetzt keine Steuer- oder Rechtsberatung.</p>
+      <a
+        href="/datenschutz"
+        className="mt-2 inline-flex font-medium text-[#0d5c63] underline underline-offset-2"
+      >
+        Datenschutz ansehen
+      </a>
+    </InfoButton>
+  );
+}
 
 function renderMarkdownLite(text: string) {
   const parts = text.split(/(\*\*[^*]+\*\*|_[^_]+_)/g);
@@ -81,6 +108,7 @@ export function AssistantChat({
   variant?: "default" | "work";
 }) {
   const isWork = variant === "work";
+  const starterPrompts = isWork ? WORK_STARTER_PROMPTS : OFFICE_STARTER_PROMPTS;
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [sessions, setSessions] = useState<SessionSummary[]>([]);
@@ -265,8 +293,6 @@ export function AssistantChat({
           : "h-[calc(100dvh-7rem)] sm:h-[calc(100dvh-8rem)] lg:h-[calc(100dvh-6rem)]"
       )}
     >
-      <LoadingOverlay open={loading} label="Assistent antwortet …" />
-
       <div
         className={cn(
           "flex items-center justify-between gap-2 shrink-0",
@@ -281,26 +307,15 @@ export function AssistantChat({
               <p className="flex items-center gap-1.5 text-base font-bold text-slate-900">
                 <Sparkles className="h-4 w-4 text-[#0d5c63] shrink-0" />
                 Assistent
-              </p>
-              <p className="text-[11px] text-slate-500 mt-0.5 line-clamp-1">
-                Nur App-Daten · kann Fehler enthalten
+                <AssistantInfoButton compact />
               </p>
             </>
           ) : (
-            <>
-              <h1 className="text-xl sm:text-2xl font-bold text-slate-900 flex items-center gap-2">
-                <Sparkles className="h-5 w-5 sm:h-6 sm:w-6 text-[#0d5c63] shrink-0" />
-                <span className="truncate">Betriebsassistent</span>
-              </h1>
-              <p className="text-xs sm:text-sm text-slate-500 mt-1">
-                Antworten basieren nur auf App-Daten. KI-Antworten können Fehler enthalten und ersetzen
-                keine Steuer-/Rechtsberatung. Details:{" "}
-                <a href="/datenschutz" className="text-[#0d5c63] underline underline-offset-2">
-                  Datenschutz
-                </a>
-                .
-              </p>
-            </>
+            <h1 className="text-xl sm:text-2xl font-bold text-slate-900 flex items-center gap-2">
+              <Sparkles className="h-5 w-5 sm:h-6 sm:w-6 text-[#0d5c63] shrink-0" />
+              <span className="truncate">Betriebsassistent</span>
+              <AssistantInfoButton />
+            </h1>
           )}
         </div>
         <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
@@ -419,10 +434,12 @@ export function AssistantChat({
             <div className="text-center py-6 px-2 sm:py-8">
               <Bot className="h-10 w-10 sm:h-12 sm:w-12 mx-auto text-slate-300 mb-3" />
               <p className="text-slate-600 mb-5 max-w-md mx-auto text-sm">
-                Stelle Fragen zu Kunden, Mitarbeitern, Aufträgen, Terminen, Material oder Finanzen.
+                {isWork
+                  ? "Frage nach deinen Aufträgen, Terminen und dem benötigten Material."
+                  : "Stelle Fragen zu Kunden, Mitarbeitern, Aufträgen, Terminen, Material oder Finanzen."}
               </p>
               <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2 justify-center">
-                {STARTER_PROMPTS.map((prompt) => (
+                {starterPrompts.map((prompt) => (
                   <button
                     key={prompt}
                     type="button"
@@ -467,12 +484,13 @@ export function AssistantChat({
           ))}
 
           {loading && (
-            <div className="flex gap-3">
+            <div className="flex gap-3" role="status" aria-live="polite">
               <div className="shrink-0 w-8 h-8 rounded-full bg-[#0d5c63]/10 flex items-center justify-center">
                 <Bot className="h-4 w-4 text-[#0d5c63]" />
               </div>
-              <div className="bg-slate-100 rounded-2xl px-4 py-3">
+              <div className="flex items-center gap-2 rounded-2xl bg-slate-100 px-4 py-3 text-sm text-slate-500">
                 <Loader2 className="h-4 w-4 animate-spin text-slate-400" />
+                App-Daten werden geprüft …
               </div>
             </div>
           )}
