@@ -19,6 +19,7 @@ import { ChevronLeft, Plus, Trash2, Wrench } from "lucide-react";
 import { toast } from "sonner";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { fetchJson } from "@/lib/fetch-json";
+import { PageTitleIcon } from "@/components/ui/page-title-icon";
 
 interface TemplateLine {
   id: string;
@@ -191,7 +192,10 @@ export default function LeistungDetailPage() {
       </div>
 
       <div className="flex flex-wrap items-center gap-2 mb-1">
-        <h1 className="text-2xl font-bold text-slate-900">{service.name}</h1>
+        <h1 className="flex items-center gap-2 text-2xl font-bold text-slate-900">
+          <PageTitleIcon icon={Wrench} />
+          {service.name}
+        </h1>
         <span
           className={`text-xs px-2 py-0.5 rounded-full ${
             service.isActive ? "bg-green-100 text-green-700" : "bg-slate-100 text-slate-600"

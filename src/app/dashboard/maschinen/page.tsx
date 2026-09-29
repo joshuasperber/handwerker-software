@@ -12,8 +12,9 @@ import { formatEuro } from "@/lib/utils";
 import { CanAccess } from "@/components/auth/can-access";
 import { AddButton } from "@/components/ui/add-button";
 import { saveJson } from "@/lib/save-toast";
-import { Trash2, ChevronLeft, Calculator } from "lucide-react";
+import { Trash2, ChevronLeft, Calculator, Cog } from "lucide-react";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { PageTitleIcon } from "@/components/ui/page-title-icon";
 
 interface Machine {
   id: string;
@@ -172,6 +173,7 @@ export default function MaschinenPage() {
       <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
         <div>
           <h1 className="flex items-center gap-2 text-2xl font-bold text-slate-900">
+            <PageTitleIcon icon={Cog} />
             Maschinen & Geräte
             <InfoButton title="Wie werden Maschinenkosten berechnet?" ariaLabel="Info zu Maschinen">
               <p>Stundensatz per Amortisation oder einfache Pauschale.</p>

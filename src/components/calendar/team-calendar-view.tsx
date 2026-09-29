@@ -15,8 +15,9 @@ import { CalendarEditDialog } from "@/components/calendar/calendar-edit-dialog";
 import { addDays, startOfDay, startOfMonth, endOfMonth, startOfWeek, endOfWeek } from "date-fns";
 import { formatDateTime } from "@/lib/utils";
 import { appointmentDisplayTitle } from "@/lib/calendar/appointment-colors";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { CalendarDays, ChevronDown, ChevronUp } from "lucide-react";
 import { InfoButton } from "@/components/ui/info-button";
+import { PageTitleIcon } from "@/components/ui/page-title-icon";
 import { usePermission, useSession } from "@/components/auth/can-access";
 import { toast } from "sonner";
 import { swrKeys, useApiSWR } from "@/lib/swr";
@@ -301,6 +302,7 @@ export function TeamCalendarView({
         <h1
           className={`flex items-center gap-2 ${compactHeader ? "text-xl" : "text-2xl"} font-semibold tracking-tight text-slate-950`}
         >
+          <PageTitleIcon icon={CalendarDays} />
           {title}
           <InfoButton title={title} ariaLabel={`Info zu ${title}`}>
             <p>

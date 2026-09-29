@@ -12,9 +12,10 @@ import { CanAccess } from "@/components/auth/can-access";
 import { InfoButton } from "@/components/ui/info-button";
 import { AddButton } from "@/components/ui/add-button";
 import { saveJson } from "@/lib/save-toast";
-import { Clock, Trash2, RotateCcw } from "lucide-react";
+import { Clock, Trash2, RotateCcw, Wrench } from "lucide-react";
 import { toast } from "sonner";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { PageTitleIcon } from "@/components/ui/page-title-icon";
 
 interface Service {
   id: string;
@@ -184,6 +185,7 @@ export default function LeistungenPage() {
       <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
         <div>
           <h1 className="flex items-center gap-2 text-2xl font-bold text-slate-900">
+            <PageTitleIcon icon={Wrench} />
             Leistungskatalog
             <InfoButton title="Leistungskatalog" ariaLabel="Info zum Leistungskatalog">
               <p>Leistungen mit Dauer, Preis und Stückliste für Aufträge.</p>

@@ -12,14 +12,16 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { DateInput } from "@/components/ui/date-input";
+import { DateInput, selectFieldClasses } from "@/components/ui/date-input";
 import { SearchField } from "@/components/ui/list-controls";
+import { SegmentedControl } from "@/components/ui/segmented-control";
 import { Label } from "@/components/ui/label";
 import { AddressSuggestInput } from "@/components/ui/address-suggest-input";
 import { OrderTypeSelect } from "@/components/orders/order-type-select";
 import { saveJson } from "@/lib/save-toast";
 import { usePermission } from "@/components/auth/can-access";
 import { APPOINTMENT_COLORS } from "@/lib/calendar/appointment-colors";
+import { ChevronDown, Settings2 } from "lucide-react";
 
 export type CalendarSlotSelection = {
   start: Date;
@@ -291,31 +293,18 @@ export function CalendarCreateDialog({
             </DialogDescription>
           </DialogHeader>
 
-          <div className="px-4 pb-2 grid grid-cols-3 gap-1.5">
-            {(
-              [
-                ["standalone", "Frei"],
-                ["existing", "Auftrag"],
-                ["new", "Neu"],
-              ] as const
-            ).map(([id, label]) => (
-              <button
-                key={id}
-                type="button"
-                disabled={id === "new" && !canCreateOrder}
-                onClick={() => {
-                  if (id === "new" && !canCreateOrder) return;
-                  setMode(id);
-                }}
-                className={`rounded-lg px-2 py-2 text-xs sm:text-sm font-medium transition-colors disabled:opacity-40 ${
-                  mode === id
-                    ? "bg-[#0d5c63] text-white"
-                    : "bg-slate-100 text-slate-600 hover:bg-slate-200"
-                }`}
-              >
-                {label}
-              </button>
-            ))}
+          <div className="px-4 pb-3">
+            <SegmentedControl
+              value={mode}
+              onValueChange={setMode}
+              ariaLabel="Art des Termins"
+              fullWidth
+              options={[
+                { value: "standalone", label: "Freier Termin" },
+                { value: "existing", label: "Auftrag" },
+                { value: "new", label: "Neu", disabled: !canCreateOrder },
+              ]}
+            />
           </div>
 
           <div className="px-4 py-3 space-y-3 border-t border-slate-100">
@@ -351,7 +340,7 @@ export function CalendarCreateDialog({
                     required
                     value={orderId}
                     onChange={(e) => onSelectOrder(e.target.value)}
-                    className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm"
+                    className={selectFieldClasses}
                   >
                     <option value="">Auftrag wählen…</option>
                     {filteredOrders.map((o) => (
@@ -381,7 +370,7 @@ export function CalendarCreateDialog({
                       const primary = c?.properties[0];
                       if (primary) setPropertyId(primary.id);
                     }}
-                    className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm"
+                    className={selectFieldClasses}
                   >
                     <option value="">Kunde wählen…</option>
                     {customers.map((c) => (
@@ -400,7 +389,7 @@ export function CalendarCreateDialog({
                     value={propertyId}
                     onChange={(e) => setPropertyId(e.target.value)}
                     disabled={!customerId}
-                    className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm disabled:opacity-50"
+                    className={selectFieldClasses}
                   >
                     <option value="">Adresse wählen…</option>
                     {properties.map((p) => (
@@ -435,41 +424,6 @@ export function CalendarCreateDialog({
                 />
               </div>
             )}
-
-            <div className="space-y-1.5">
-              <Label>Farbe</Label>
-              <div className="flex flex-wrap gap-2">
-                {APPOINTMENT_COLORS.map((c) => (
-                  <button
-                    key={c.id}
-                    type="button"
-                    title={c.label}
-                    onClick={() => setColor(c.hex)}
-                    className={`h-8 w-8 rounded-full border-2 ${
-                      color === c.hex ? "border-slate-900 scale-110" : "border-transparent"
-                    }`}
-                    style={{ backgroundColor: c.hex }}
-                  />
-                ))}
-              </div>
-            </div>
-
-            <div className="space-y-1.5">
-              <Label htmlFor="cal-project">Projekt (optional)</Label>
-              <select
-                id="cal-project"
-                value={projectId}
-                onChange={(e) => setProjectId(e.target.value)}
-                className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm"
-              >
-                <option value="">Kein Projekt</option>
-                {projectsForCustomer.map((p) => (
-                  <option key={p.id} value={p.id}>
-                    {p.name}
-                  </option>
-                ))}
-              </select>
-            </div>
 
             <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
               <div className="min-w-0 space-y-1.5">
@@ -516,7 +470,7 @@ export function CalendarCreateDialog({
                   id="cal-employee"
                   value={employeeId}
                   onChange={(e) => setEmployeeId(e.target.value)}
-                  className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm"
+                  className={selectFieldClasses}
                 >
                   <option value="">Ohne Zuweisung</option>
                   {employees.map((emp) => (
@@ -532,7 +486,7 @@ export function CalendarCreateDialog({
                   id="cal-team"
                   value={teamId}
                   onChange={(e) => setTeamId(e.target.value)}
-                  className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm"
+                  className={selectFieldClasses}
                 >
                   <option value="">Kein Team</option>
                   {teams.map((t) => (
@@ -544,50 +498,96 @@ export function CalendarCreateDialog({
               </div>
             </div>
 
-            <div className="space-y-1.5">
-              <Label htmlFor="cal-vehicle">Fahrzeug (optional)</Label>
-              <select
-                id="cal-vehicle"
-                value={vehicleId}
-                onChange={(e) => setVehicleId(e.target.value)}
-                className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm"
-              >
-                <option value="">Kein Fahrzeug</option>
-                {vehicles.map((v) => (
-                  <option key={v.id} value={v.id}>
-                    {v.name}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <details className="group overflow-hidden rounded-2xl border border-slate-200/80 bg-slate-50/70">
+              <summary className="flex min-h-12 cursor-pointer list-none items-center gap-2.5 px-3.5 text-sm font-semibold text-slate-700 outline-none transition hover:bg-white focus-visible:ring-3 focus-visible:ring-[#0b6268]/10 [&::-webkit-details-marker]:hidden">
+                <span className="flex size-8 items-center justify-center rounded-xl bg-white text-[#0b6268] shadow-sm">
+                  <Settings2 className="size-4" />
+                </span>
+                <span className="min-w-0 flex-1">Weitere Angaben</span>
+                <span className="text-xs font-normal text-slate-400">optional</span>
+                <ChevronDown className="size-4 text-slate-400 transition-transform duration-200 group-open:rotate-180" />
+              </summary>
+              <div className="space-y-3 border-t border-slate-200/70 bg-white p-3.5">
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                  <div className="space-y-1.5">
+                    <Label htmlFor="cal-project">Projekt</Label>
+                    <select
+                      id="cal-project"
+                      value={projectId}
+                      onChange={(e) => setProjectId(e.target.value)}
+                      className={selectFieldClasses}
+                    >
+                      <option value="">Kein Projekt</option>
+                      {projectsForCustomer.map((p) => (
+                        <option key={p.id} value={p.id}>{p.name}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label htmlFor="cal-vehicle">Fahrzeug</Label>
+                    <select
+                      id="cal-vehicle"
+                      value={vehicleId}
+                      onChange={(e) => setVehicleId(e.target.value)}
+                      className={selectFieldClasses}
+                    >
+                      <option value="">Kein Fahrzeug</option>
+                      {vehicles.map((v) => (
+                        <option key={v.id} value={v.id}>{v.name}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
 
-            <div className="space-y-1.5">
-              <Label htmlFor="cal-status">Status</Label>
-              <select
-                id="cal-status"
-                value={status}
-                onChange={(e) => setStatus(e.target.value)}
-                className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm"
-              >
-                <option value="GEPLANT">Geplant</option>
-                <option value="UNTERWEGS">Unterwegs</option>
-                <option value="ANGEKOMMEN">Angekommen</option>
-                <option value="IN_ARBEIT">In Arbeit</option>
-                <option value="ABGESCHLOSSEN">Abgeschlossen</option>
-              </select>
-            </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor="cal-status">Status</Label>
+                  <select
+                    id="cal-status"
+                    value={status}
+                    onChange={(e) => setStatus(e.target.value)}
+                    className={selectFieldClasses}
+                  >
+                    <option value="GEPLANT">Geplant</option>
+                    <option value="UNTERWEGS">Unterwegs</option>
+                    <option value="ANGEKOMMEN">Angekommen</option>
+                    <option value="IN_ARBEIT">In Arbeit</option>
+                    <option value="ABGESCHLOSSEN">Abgeschlossen</option>
+                  </select>
+                </div>
 
-            <div className="space-y-1.5">
-              <Label htmlFor="cal-notes">Notiz</Label>
-              <textarea
-                id="cal-notes"
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-                rows={2}
-                className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm resize-y min-h-[64px]"
-                placeholder="Hinweise fürs Team…"
-              />
-            </div>
+                <div className="space-y-1.5">
+                  <Label>Farbe</Label>
+                  <div className="flex flex-wrap gap-2">
+                    {APPOINTMENT_COLORS.map((c) => (
+                      <button
+                        key={c.id}
+                        type="button"
+                        title={c.label}
+                        aria-label={`Farbe ${c.label}`}
+                        aria-pressed={color === c.hex}
+                        onClick={() => setColor(c.hex)}
+                        className={`size-9 rounded-full border-[3px] border-white shadow-sm ring-offset-2 transition-transform hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0b6268]/30 ${
+                          color === c.hex ? "scale-110 ring-2 ring-slate-700" : ""
+                        }`}
+                        style={{ backgroundColor: c.hex }}
+                      />
+                    ))}
+                  </div>
+                </div>
+
+                <div className="space-y-1.5">
+                  <Label htmlFor="cal-notes">Notiz</Label>
+                  <textarea
+                    id="cal-notes"
+                    value={notes}
+                    onChange={(e) => setNotes(e.target.value)}
+                    rows={2}
+                    className="min-h-[72px] w-full resize-y rounded-2xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm outline-none transition focus-visible:border-[#0d5c63]/35 focus-visible:ring-3 focus-visible:ring-[#0d5c63]/10"
+                    placeholder="Hinweise fürs Team…"
+                  />
+                </div>
+              </div>
+            </details>
           </div>
 
           <DialogFooter className="mx-0 mb-0 rounded-b-xl">

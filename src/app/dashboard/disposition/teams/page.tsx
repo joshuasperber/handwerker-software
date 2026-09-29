@@ -12,6 +12,7 @@ import { saveJson } from "@/lib/save-toast";
 import { ChevronLeft, Trash2, Users, Pencil, RotateCcw, X, Truck } from "lucide-react";
 import { toast } from "sonner";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { PageTitleIcon } from "@/components/ui/page-title-icon";
 
 interface Team {
   id: string;
@@ -124,6 +125,7 @@ export default function TeamsPage() {
       <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
         <div>
           <h1 className="flex items-center gap-2 text-2xl font-bold">
+            <PageTitleIcon icon={Users} />
             Teams & Kolonnen
             <InfoButton title="Teams & Kolonnen" ariaLabel="Info zu Teams">
               <p>Feste Arbeitsgruppen für die Einsatzplanung.</p>

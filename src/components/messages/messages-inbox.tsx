@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { CanAccess, usePermission } from "@/components/auth/can-access";
 import { formatDateTime } from "@/lib/utils";
 import { fetchJson } from "@/lib/fetch-json";
-import { Package, MessageSquare, CheckCircle, Send } from "lucide-react";
+import { Package, MessageSquare, CheckCircle, Inbox, Plus, Send } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { ROLE_LABELS } from "@/lib/utils";
 
@@ -53,6 +53,7 @@ export function MessagesInbox({
   const [directSending, setDirectSending] = useState(false);
   const [msg, setMsg] = useState("");
   const [loadError, setLoadError] = useState("");
+  const [compactPanel, setCompactPanel] = useState<"inbox" | "compose" | "material">("inbox");
 
   const load = useCallback(() => {
     const params = filter === "all" ? "" : `?category=${filter}`;
@@ -166,6 +167,38 @@ export function MessagesInbox({
       {!compact && <h1 className="text-2xl font-bold text-slate-900 mb-6">Nachrichten</h1>}
 
       {showDirectCompose && (
+        <div className="grid grid-cols-3 gap-2">
+          {([
+            { id: "inbox", label: "Postfach", icon: Inbox },
+            { id: "compose", label: "Nachricht", icon: Plus },
+            { id: "material", label: "Material", icon: Package },
+          ] as const).map((item) => {
+            const Icon = item.icon;
+            const active = compactPanel === item.id;
+            return (
+              <button
+                key={item.id}
+                type="button"
+                aria-pressed={active}
+                onClick={() => {
+                  setCompactPanel(item.id);
+                  setMsg("");
+                }}
+                className={`flex min-h-14 min-w-0 flex-col items-center justify-center gap-1 rounded-2xl border px-2 py-2 text-xs font-semibold transition-[background-color,border-color,color,box-shadow,transform] active:scale-[.98] ${
+                  active
+                    ? "border-[#0b6268]/20 bg-[#0b6268] text-white shadow-sm"
+                    : "border-slate-200 bg-white text-slate-600"
+                }`}
+              >
+                <Icon className="size-4" />
+                <span className="truncate">{item.label}</span>
+              </button>
+            );
+          })}
+        </div>
+      )}
+
+      {showDirectCompose && compactPanel === "compose" && (
         <Card title="Nachricht an Büro" className="mb-6">
           <p className="text-sm text-slate-600 mb-3">
             Direktnachricht an Admin, Büro oder Meister – erscheint im Posteingang des Empfängers.
@@ -216,10 +249,12 @@ export function MessagesInbox({
               <Send className="h-4 w-4 mr-1" />
               {directSending ? "Senden..." : "Nachricht senden"}
             </Button>
+            {msg && <p className="text-sm font-medium text-green-700">{msg}</p>}
           </form>
         </Card>
       )}
 
+      {(!showDirectCompose || compactPanel === "material") && (
       <Card title="Material melden" className="mb-6">
         <p className="text-sm text-slate-600 mb-3">
           Fehlende Teile oder Material melden – geht als Bestellanfrage an Büro/Chef (erscheint im Posteingang und unter Material).
@@ -253,15 +288,18 @@ export function MessagesInbox({
           {msg && <p className="text-sm text-green-700">{msg}</p>}
         </form>
       </Card>
+      )}
 
-      <div className="flex gap-2 mb-4 overflow-x-auto">
+      {(!showDirectCompose || compactPanel === "inbox") && (
+      <>
+      <div className="mb-4 grid grid-cols-3 gap-2">
         {tabs.map((t) => (
           <button
             key={t.id}
             type="button"
             onClick={() => setFilter(t.id)}
-            className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${
-              filter === t.id ? "bg-slate-200 text-slate-900" : "bg-white border border-slate-200 text-slate-600"
+            className={`min-h-10 rounded-xl border px-2 py-2 text-sm font-medium whitespace-nowrap transition-colors ${
+              filter === t.id ? "border-[#0b6268]/15 bg-[#0b6268]/10 text-[#0b6268]" : "border-slate-200 bg-white text-slate-600"
             }`}
           >
             {t.label}
@@ -329,6 +367,8 @@ export function MessagesInbox({
           )}
         </div>
       </Card>
+      </>
+      )}
     </div>
   );
 }

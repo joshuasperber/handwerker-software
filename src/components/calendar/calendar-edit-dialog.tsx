@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { DateInput } from "@/components/ui/date-input";
+import { DateInput, selectFieldClasses } from "@/components/ui/date-input";
 import { Label } from "@/components/ui/label";
 import { AddressSuggestInput } from "@/components/ui/address-suggest-input";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
@@ -366,7 +366,7 @@ export function CalendarEditDialog({
                     value={employeeId}
                     onChange={(e) => setEmployeeId(e.target.value)}
                     disabled={!canEdit}
-                    className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm disabled:opacity-50"
+                    className={selectFieldClasses}
                   >
                     <option value="">Ohne Zuweisung</option>
                     {employees.map((emp) => (
@@ -382,7 +382,7 @@ export function CalendarEditDialog({
                     value={teamId}
                     onChange={(e) => setTeamId(e.target.value)}
                     disabled={!canEdit}
-                    className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm disabled:opacity-50"
+                    className={selectFieldClasses}
                   >
                     <option value="">Kein Team</option>
                     {teams.map((t) => (
@@ -401,7 +401,7 @@ export function CalendarEditDialog({
                     value={vehicleId}
                     onChange={(e) => setVehicleId(e.target.value)}
                     disabled={!canEdit}
-                    className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm disabled:opacity-50"
+                    className={selectFieldClasses}
                   >
                     <option value="">Kein Fahrzeug</option>
                     {vehicles.map((v) => (
@@ -417,7 +417,7 @@ export function CalendarEditDialog({
                     value={projectId}
                     onChange={(e) => setProjectId(e.target.value)}
                     disabled={!canEdit}
-                    className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm disabled:opacity-50"
+                    className={selectFieldClasses}
                   >
                     <option value="">Kein Projekt</option>
                     {projects.map((p) => (
@@ -435,7 +435,7 @@ export function CalendarEditDialog({
                   value={status}
                   onChange={(e) => setStatus(e.target.value)}
                   disabled={!canEdit}
-                  className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm disabled:opacity-50"
+                  className={selectFieldClasses}
                 >
                   <option value="GEPLANT">Geplant</option>
                   <option value="UNTERWEGS">Unterwegs</option>

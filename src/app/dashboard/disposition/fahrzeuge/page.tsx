@@ -15,6 +15,7 @@ import { VEHICLE_STATUS_LABELS, VEHICLE_STATUS_BADGE } from "@/lib/utils";
 import { ChevronLeft, Trash2, Truck, Pencil, RotateCcw, X } from "lucide-react";
 import { toast } from "sonner";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { PageTitleIcon } from "@/components/ui/page-title-icon";
 
 interface Vehicle {
   id: string;
@@ -134,6 +135,7 @@ export default function FahrzeugePage() {
       <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
         <div>
           <h1 className="flex items-center gap-2 text-2xl font-bold">
+            <PageTitleIcon icon={Truck} />
             Fahrzeuge / Fuhrpark
             <InfoButton title="Fahrzeuge / Fuhrpark" ariaLabel="Info zum Fuhrpark">
               <p>Autos anlegen, zuweisen und Status pflegen.</p>

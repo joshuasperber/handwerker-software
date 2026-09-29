@@ -103,7 +103,7 @@ export default async function MonteurLayout({
             />
           </div>
         </header>
-        <main className="flex-1 px-3 py-4 pb-28 sm:px-5 sm:py-6 sm:pb-28">
+        <main className="app-main flex-1 px-3 py-4 pb-28 sm:px-5 sm:py-6 sm:pb-28">
           {session.mustChangePassword && (
             <Link
               href="/monteur/profil?changePassword=1"

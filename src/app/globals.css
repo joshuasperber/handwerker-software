@@ -185,6 +185,11 @@
     @apply rounded-2xl border border-border/80 bg-card shadow-[0_1px_2px_rgba(15,23,42,0.03),0_12px_36px_rgba(15,23,42,0.05)];
   }
 
+  /* Einheitliche Hauptüberschriften innerhalb der angemeldeten App-Bereiche. */
+  .app-main h1 {
+    @apply text-2xl font-semibold tracking-tight text-slate-950;
+  }
+
   .app-page-enter {
     animation: app-page-enter 240ms cubic-bezier(0.22, 1, 0.36, 1) both;
   }

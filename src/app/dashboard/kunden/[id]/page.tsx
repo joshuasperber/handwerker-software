@@ -10,11 +10,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { AddressFields } from "@/components/ui/address-fields";
 import { InfoButton } from "@/components/ui/info-button";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { PageTitleIcon } from "@/components/ui/page-title-icon";
 import { toast } from "sonner";
 import { saveJson } from "@/lib/save-toast";
 import { fetchJson } from "@/lib/fetch-json";
 import { BUILDING_EXEMPTION_INFO } from "@/lib/tax/treatment";
-import { ChevronLeft, MapPin, Mail, Phone, Trash2, Star, Pencil, Plus, X, Check } from "lucide-react";
+import { ChevronLeft, MapPin, Mail, Phone, Trash2, Star, Pencil, Plus, X, Check, UserRound } from "lucide-react";
 
 interface Zone {
   id: string;
@@ -304,7 +305,10 @@ export default function KundeDetailPage() {
       </Link>
 
       <div className="flex flex-wrap items-center justify-between gap-2 mb-6">
-        <h1 className="text-2xl font-bold text-slate-900 break-words min-w-0">{customer.firstName} {customer.lastName}</h1>
+        <h1 className="flex min-w-0 items-center gap-2 break-words text-2xl font-bold text-slate-900">
+          <PageTitleIcon icon={UserRound} />
+          {customer.firstName} {customer.lastName}
+        </h1>
         <Button variant="outline" size="sm" onClick={() => setConfirmRemove(true)} className="text-red-600 shrink-0">
           <Trash2 className="h-4 w-4 mr-1" /> Löschen
         </Button>

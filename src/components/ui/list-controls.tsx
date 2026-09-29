@@ -3,7 +3,7 @@ import { Search, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export const listControlClasses =
-  "h-11 min-w-0 rounded-xl border border-slate-200 bg-white text-sm text-slate-800 shadow-sm outline-none transition-[border-color,box-shadow,background-color] focus:border-[#0d5c63]/35 focus:ring-3 focus:ring-[#0d5c63]/10 disabled:cursor-not-allowed disabled:bg-slate-100 disabled:text-slate-400";
+  "h-11 min-w-0 rounded-2xl border border-slate-200 bg-white text-sm text-slate-800 shadow-[0_1px_2px_rgba(15,23,42,0.04)] outline-none transition-[border-color,box-shadow,background-color] hover:border-slate-300 focus:border-[#0d5c63]/35 focus:ring-3 focus:ring-[#0d5c63]/10 disabled:cursor-not-allowed disabled:bg-slate-100 disabled:text-slate-400";
 
 export function SearchField({
   value,
@@ -29,7 +29,7 @@ export function SearchField({
         value={value}
         onChange={(event) => onValueChange(event.target.value)}
         placeholder={placeholder}
-        className={cn(listControlClasses, "w-full pl-10 pr-10", className)}
+        className={cn(listControlClasses, "w-full pl-10 pr-10 placeholder:text-slate-400", className)}
       />
       {value ? (
         <button
@@ -53,10 +53,9 @@ export function FilterSelect({
   return (
     <select
       {...props}
-      className={cn(listControlClasses, "w-full px-3.5 sm:w-auto", className)}
+      className={cn(listControlClasses, "w-full px-3.5 pr-10 font-medium sm:w-auto", className)}
     >
       {children}
     </select>
   );
 }
-

@@ -6,10 +6,11 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CanAccess } from "@/components/auth/can-access";
 import { AddButton } from "@/components/ui/add-button";
-import { Building2, MapPin, Mail, Phone, Plus, Search, User } from "lucide-react";
+import { Building2, MapPin, Mail, Phone, Plus, Search, User, Users } from "lucide-react";
 import { swrKeys, useApiSWR } from "@/lib/swr";
 import { SearchField } from "@/components/ui/list-controls";
 import { InfoButton } from "@/components/ui/info-button";
+import { PageTitleIcon } from "@/components/ui/page-title-icon";
 
 interface Customer {
   id: string;
@@ -54,6 +55,7 @@ export default function KundenPage() {
     <div>
       <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
         <h1 className="flex items-center gap-2 text-2xl font-bold text-slate-900">
+          <PageTitleIcon icon={Users} />
           Kunden
           <InfoButton title="Kunden" ariaLabel="Info zu Kunden">
             <p>Private und gewerbliche Kunden mit Kontaktdaten, Adressen und Aufträgen.</p>

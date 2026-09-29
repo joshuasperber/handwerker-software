@@ -231,7 +231,7 @@ export function DashboardShell({
           </div>
         </header>
 
-        <main className="flex-1 overflow-auto px-3 py-4 sm:px-6 sm:py-6 lg:px-8 lg:py-7">
+        <main className="app-main flex-1 overflow-auto px-3 py-4 sm:px-6 sm:py-6 lg:px-8 lg:py-7">
           {session.mustChangePassword && (
             <Link
               href="/dashboard/profil?changePassword=1"

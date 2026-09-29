@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { CanAccess } from "@/components/auth/can-access";
 import { AssignOrderButton } from "@/components/disposition/assign-employees-panel";
 import { swrKeys, useApiSWR } from "@/lib/swr";
+import { PageTitleIcon } from "@/components/ui/page-title-icon";
 
 interface EmployeeAvail {
   id: string;
@@ -116,7 +117,10 @@ export default function DispositionPage() {
     <div>
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-4">
         <div className="flex items-center gap-2">
-          <h1 className="text-2xl font-bold text-slate-900">Disposition</h1>
+          <h1 className="flex items-center gap-2 text-2xl font-bold text-slate-900">
+            <PageTitleIcon icon={Truck} />
+            Disposition
+          </h1>
           <InfoButton title="Disposition">
             <p>
               In der Disposition können Aufträge Mitarbeitern, Teams oder Fahrzeugen zugewiesen

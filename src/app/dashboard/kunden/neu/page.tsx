@@ -11,6 +11,7 @@ import { AddressFields } from "@/components/ui/address-fields";
 import { saveJson } from "@/lib/save-toast";
 import { cn } from "@/lib/utils";
 import { Building2, ChevronLeft, User } from "lucide-react";
+import { PageTitleIcon } from "@/components/ui/page-title-icon";
 
 interface Zone { id: string; name: string; isActive: boolean }
 
@@ -100,7 +101,8 @@ export default function NeuerKundePage() {
       <Link href="/dashboard/kunden" className="text-sm text-[#0d5c63] flex items-center gap-1 mb-4 hover:underline">
         <ChevronLeft className="h-4 w-4" /> Zurück zu Kunden
       </Link>
-      <h1 className="text-2xl font-bold mb-6">
+      <h1 className="mb-6 flex items-center gap-2 text-2xl font-bold">
+        <PageTitleIcon icon={isBusiness ? Building2 : User} />
         {isBusiness ? "Neuer Business-Kunde" : "Neuer Privatkunde"}
       </h1>
       {error && <p className="mb-4 text-sm text-red-600 bg-red-50 rounded-lg px-3 py-2">{error}</p>}

@@ -31,6 +31,14 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SearchField } from "@/components/ui/list-controls";
+import { SegmentedControl } from "@/components/ui/segmented-control";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   appointmentDisplayTitle,
   resolveAppointmentColor,
@@ -766,6 +774,8 @@ export function ScheduleCalendar({
                   size="sm"
                   className="gap-1 bg-[#0d5c63] shadow-sm hover:bg-[#0a4a50]"
                   onClick={() => openDayDefaultSlot(anchorDate)}
+                  aria-label="Neuer Termin"
+                  title="Neuer Termin"
                 >
                   <Plus className="h-4 w-4" />
                   <span className="hidden sm:inline">Neuer Termin</span>
@@ -786,37 +796,29 @@ export function ScheduleCalendar({
                   <span className="h-1.5 w-1.5 rounded-full bg-[#0d5c63]" aria-hidden="true" />
                 ) : null}
               </button>
-            {/* Mobil: kompakte Auswahl statt Segmentsteuerung */}
-            <select
-              value={view}
-              onChange={(e) => onViewChange(e.target.value as CalendarViewMode)}
-              className="sm:hidden h-9 rounded-lg border border-slate-200 bg-white px-2 text-sm font-medium text-slate-700"
-              aria-label="Ansicht wählen"
-            >
-              <option value="day">Tag</option>
-              <option value="week">Woche Mo–So</option>
-              <option value="month">Monat</option>
-            </select>
-            <div className="hidden overflow-hidden rounded-lg bg-slate-100 p-0.5 sm:flex">
-              {(
-                [
-                  ["day", "Tag"],
-                  ["week", "Mo–So"],
-                  ["month", "Monat"],
-                ] as const
-              ).map(([id, label]) => (
-                <button
-                  key={id}
-                  type="button"
-                  onClick={() => onViewChange(id)}
-                  className={`rounded-[7px] px-2 py-1.5 text-xs font-medium transition sm:px-3 sm:text-sm ${
-                    view === id ? "bg-white text-slate-950 shadow-sm" : "text-slate-500 hover:text-slate-800"
-                  }`}
-                >
-                  {label}
-                </button>
-              ))}
-            </div>
+              {/* Mobil bleibt die Auswahl kompakt und öffnet die Details erst bei Bedarf. */}
+              <Select value={view} onValueChange={(next) => onViewChange(next as CalendarViewMode)}>
+                <SelectTrigger className="h-10 w-[106px] rounded-xl sm:hidden" aria-label="Kalenderansicht wählen">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent position="popper" align="end">
+                  <SelectItem value="day">Tag</SelectItem>
+                  <SelectItem value="week">Mo–So</SelectItem>
+                  <SelectItem value="month">Monat</SelectItem>
+                </SelectContent>
+              </Select>
+              <SegmentedControl
+                value={view}
+                onValueChange={onViewChange}
+                ariaLabel="Kalenderansicht"
+                size="sm"
+                className="hidden sm:inline-flex"
+                options={[
+                  { value: "day", label: "Tag" },
+                  { value: "week", label: "Mo–So" },
+                  { value: "month", label: "Monat" },
+                ]}
+              />
             </div>
           </div>
           <div className="mt-2 flex items-center gap-2 text-xs text-slate-500 sm:mt-2.5">

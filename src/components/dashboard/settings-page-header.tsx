@@ -1,6 +1,8 @@
 import { InfoButton } from "@/components/ui/info-button";
 import { SETTINGS_PAGE_INTROS } from "@/lib/settings-nav";
 import { cn } from "@/lib/utils";
+import { Settings2 } from "lucide-react";
+import { PageTitleIcon } from "@/components/ui/page-title-icon";
 
 export function SettingsPageHeader({
   href,
@@ -20,6 +22,7 @@ export function SettingsPageHeader({
   return (
     <header className={cn("mb-6 max-w-3xl", className)}>
       <h1 className="flex items-center gap-2 text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">
+        <PageTitleIcon icon={Settings2} />
         {heading}
         {text ? (
           <InfoButton title={heading} ariaLabel={`Info zu ${heading}`}>

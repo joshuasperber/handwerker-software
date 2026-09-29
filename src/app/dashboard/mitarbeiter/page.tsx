@@ -10,10 +10,11 @@ import { AddButton } from "@/components/ui/add-button";
 import { saveJson } from "@/lib/save-toast";
 import { swrKeys, useApiSWR } from "@/lib/swr";
 import { ASSIGNABLE_STAFF_ROLES } from "@/lib/permissions";
-import { Pencil, Trash2 } from "lucide-react";
+import { Pencil, Trash2, UserCircle } from "lucide-react";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { FilterSelect, SearchField } from "@/components/ui/list-controls";
 import { InfoButton } from "@/components/ui/info-button";
+import { PageTitleIcon } from "@/components/ui/page-title-icon";
 
 interface Employee {
   id: string;
@@ -219,6 +220,7 @@ export default function MitarbeiterPage() {
     <div>
       <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
         <h1 className="flex items-center gap-2 text-2xl font-bold text-slate-900">
+          <PageTitleIcon icon={UserCircle} />
           Mitarbeiter
           <InfoButton title="Mitarbeiter" ariaLabel="Info zu Mitarbeiter">
             <p>Mitarbeiter verwalten, Rollen zuweisen und aktive Zugänge filtern.</p>
