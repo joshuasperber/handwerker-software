@@ -254,7 +254,9 @@ export function TeamCalendarView({
           <InfoButton title={title} ariaLabel={`Info zu ${title}`}>
             <p>
               Einsätze, Teams, Fahrzeuge, Orte und Einsatzzeiten auf einen Blick planen
-              {canEdit ? " — tippen oder klicken für einen neuen Termin." : " (nur Ansicht)."}
+              {canEdit
+                ? " — am Desktop klicken oder ziehen, mobil einen freien Zeitraum gedrückt halten."
+                : " (nur Ansicht)."}
             </p>
           </InfoButton>
         </h1>

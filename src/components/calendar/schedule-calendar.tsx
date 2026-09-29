@@ -37,6 +37,9 @@ import {
 } from "@/lib/calendar/appointment-colors";
 
 const DEFAULT_SLOT_DURATION_MS = 2 * 60 * 60 * 1000;
+const TOUCH_LONG_PRESS_MS = 520;
+const TOUCH_PREVIEW_DELAY_MS = 180;
+const TOUCH_MOVE_TOLERANCE_PX = 12;
 
 export interface CalendarFilterTeam {
   id: string;
@@ -878,6 +881,11 @@ export function ScheduleCalendar({
                         : (startClientY, endClientY, rectTop) =>
                             openSlotRange(day, startClientY, endClientY, rectTop)
                     }
+                    onSlotLongPress={
+                      readOnly || !isCompact || !onSlotSelect
+                        ? undefined
+                        : (clientY, rectTop) => openSlotAt(day, clientY, rectTop)
+                    }
                   >
                     {/* Hervorgehobener Fokus-Zeitraum 17–19 Uhr */}
                     <div
@@ -1080,6 +1088,7 @@ function DayDropCell({
   onDrop,
   onSlotClick,
   onSlotRangeSelect,
+  onSlotLongPress,
   gridHeight,
   hourHeight,
 }: {
@@ -1087,12 +1096,32 @@ function DayDropCell({
   onDrop: (e: React.DragEvent, ref: HTMLDivElement | null) => void;
   onSlotClick?: (clientY: number, rectTop: number) => void;
   onSlotRangeSelect?: (startClientY: number, endClientY: number, rectTop: number) => void;
+  onSlotLongPress?: (clientY: number, rectTop: number) => void;
   gridHeight: number;
   hourHeight: number;
 }) {
   const [ref, setRef] = useState<HTMLDivElement | null>(null);
   const pointerDown = useRef<{ x: number; y: number; pointerId: number } | null>(null);
+  const longPressTimer = useRef<number | null>(null);
+  const previewTimer = useRef<number | null>(null);
+  const longPressTriggered = useRef(false);
   const [selection, setSelection] = useState<{ startY: number; currentY: number } | null>(null);
+  const [longPressY, setLongPressY] = useState<number | null>(null);
+
+  function clearLongPressTimers() {
+    if (longPressTimer.current !== null) window.clearTimeout(longPressTimer.current);
+    if (previewTimer.current !== null) window.clearTimeout(previewTimer.current);
+    longPressTimer.current = null;
+    previewTimer.current = null;
+    setLongPressY(null);
+  }
+
+  useEffect(() => {
+    return () => {
+      if (longPressTimer.current !== null) window.clearTimeout(longPressTimer.current);
+      if (previewTimer.current !== null) window.clearTimeout(previewTimer.current);
+    };
+  }, []);
 
   const selectionStyle = selection
     ? (() => {
@@ -1108,6 +1137,19 @@ function DayDropCell({
       })()
     : null;
 
+  const longPressStyle = longPressY === null
+    ? null
+    : (() => {
+        const startMinutes = gridMinutesFromY(longPressY, 0, hourHeight);
+        const endMinutes = Math.min(HOUR_END * 60, startMinutes + 120);
+        return {
+          top: ((startMinutes - HOUR_START * 60) / 60) * hourHeight,
+          height: Math.max(((endMinutes - startMinutes) / 60) * hourHeight, 12),
+          label: `${formatGridMinutes(startMinutes)}–${formatGridMinutes(endMinutes)}`,
+        };
+      })();
+  const activeSelectionStyle = selectionStyle ?? longPressStyle;
+
   return (
     <div
       ref={setRef}
@@ -1120,7 +1162,25 @@ function DayDropCell({
         if (!onSlotClick) return;
         if (e.pointerType === "mouse" && e.button !== 0) return;
         if ((e.target as HTMLElement).closest("[data-appointment]")) return;
-        pointerDown.current = { x: e.clientX, y: e.clientY, pointerId: e.pointerId };
+        const down = { x: e.clientX, y: e.clientY, pointerId: e.pointerId };
+        pointerDown.current = down;
+        longPressTriggered.current = false;
+        if (onSlotLongPress && e.pointerType !== "mouse" && ref) {
+          const rect = ref.getBoundingClientRect();
+          const relativeY = Math.max(0, Math.min(gridHeight, e.clientY - rect.top));
+          previewTimer.current = window.setTimeout(
+            () => setLongPressY(relativeY),
+            TOUCH_PREVIEW_DELAY_MS
+          );
+          longPressTimer.current = window.setTimeout(() => {
+            if (pointerDown.current?.pointerId !== down.pointerId) return;
+            longPressTriggered.current = true;
+            setLongPressY(null);
+            navigator.vibrate?.(10);
+            onSlotLongPress(down.y, rect.top);
+          }, TOUCH_LONG_PRESS_MS);
+          return;
+        }
         if (onSlotRangeSelect && ref) {
           e.preventDefault();
           e.currentTarget.setPointerCapture(e.pointerId);
@@ -1130,6 +1190,16 @@ function DayDropCell({
         }
       }}
       onPointerMove={(e) => {
+        const down = pointerDown.current;
+        if (onSlotLongPress && e.pointerType !== "mouse" && down?.pointerId === e.pointerId) {
+          const dx = Math.abs(e.clientX - down.x);
+          const dy = Math.abs(e.clientY - down.y);
+          if (dx > TOUCH_MOVE_TOLERANCE_PX || dy > TOUCH_MOVE_TOLERANCE_PX) {
+            clearLongPressTimers();
+            pointerDown.current = null;
+          }
+          return;
+        }
         if (!selection || !ref || pointerDown.current?.pointerId !== e.pointerId) return;
         const rect = ref.getBoundingClientRect();
         setSelection((current) =>
@@ -1139,6 +1209,14 @@ function DayDropCell({
         );
       }}
       onPointerUp={(e) => {
+        const wasLongPress = longPressTriggered.current;
+        clearLongPressTimers();
+        longPressTriggered.current = false;
+        if (wasLongPress) {
+          pointerDown.current = null;
+          e.preventDefault();
+          return;
+        }
         if (!onSlotClick || !ref || !pointerDown.current) {
           pointerDown.current = null;
           setSelection(null);
@@ -1158,18 +1236,23 @@ function DayDropCell({
         onSlotClick(e.clientY, rect.top);
       }}
       onPointerCancel={() => {
+        clearLongPressTimers();
+        longPressTriggered.current = false;
         pointerDown.current = null;
         setSelection(null);
       }}
+      onContextMenu={(e) => {
+        if (onSlotLongPress) e.preventDefault();
+      }}
     >
-      {selectionStyle && (
+      {activeSelectionStyle && (
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-x-1 z-30 overflow-hidden rounded-xl border border-[#0b6268]/45 bg-[#0b6268]/15 shadow-[0_10px_28px_rgba(11,98,104,0.16)] backdrop-blur-[2px]"
-          style={{ top: selectionStyle.top, height: selectionStyle.height }}
+          className={`pointer-events-none absolute inset-x-1 z-30 overflow-hidden rounded-xl border border-[#0b6268]/45 bg-[#0b6268]/15 shadow-[0_10px_28px_rgba(11,98,104,0.16)] backdrop-blur-[2px] ${longPressStyle ? "animate-pulse" : ""}`}
+          style={{ top: activeSelectionStyle.top, height: activeSelectionStyle.height }}
         >
           <span className="inline-flex rounded-br-lg bg-[#0b6268] px-2 py-1 text-[10px] font-semibold text-white shadow-sm">
-            {selectionStyle.label}
+            {activeSelectionStyle.label}
           </span>
         </div>
       )}
