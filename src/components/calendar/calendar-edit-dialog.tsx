@@ -20,7 +20,7 @@ import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { APPOINTMENT_COLORS, appointmentDisplayTitle } from "@/lib/calendar/appointment-colors";
 import { saveJson } from "@/lib/save-toast";
 import type { CalendarAppointment } from "@/components/calendar/schedule-calendar";
-import { Clock, ExternalLink, Trash2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, Clock, ExternalLink, Minus, Plus, Trash2 } from "lucide-react";
 
 function toDateInput(d: Date) {
   return format(d, "yyyy-MM-dd");
@@ -32,6 +32,16 @@ function combineLocal(dateStr: string, timeStr: string): Date {
   const [y, m, d] = dateStr.split("-").map(Number);
   const [h, min] = timeStr.split(":").map(Number);
   return new Date(y, m - 1, d, h, min || 0, 0, 0);
+}
+
+function timeToMinutes(value: string): number {
+  const [hours, minutes] = value.split(":").map(Number);
+  return hours * 60 + minutes;
+}
+
+function minutesToTime(minutes: number): string {
+  const safeMinutes = Math.min(23 * 60 + 45, Math.max(0, minutes));
+  return `${String(Math.floor(safeMinutes / 60)).padStart(2, "0")}:${String(safeMinutes % 60).padStart(2, "0")}`;
 }
 
 type EmployeeOption = { id: string; user: { firstName: string; lastName: string } };
@@ -48,7 +58,7 @@ interface CalendarEditDialogProps {
   vehicles: VehicleOption[];
   projects: ProjectOption[];
   canEdit: boolean;
-  onSaved: () => void;
+  onSaved: (appointment?: CalendarAppointment) => void;
 }
 
 export function CalendarEditDialog({
@@ -109,7 +119,7 @@ export function CalendarEditDialog({
     if (end <= start) return;
 
     setSaving(true);
-    const res = await saveJson(`/api/appointments/${appointment.id}`, {
+    const res = await saveJson<CalendarAppointment>(`/api/appointments/${appointment.id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -132,7 +142,7 @@ export function CalendarEditDialog({
     setSaving(false);
     if (res.success) {
       onOpenChange(false);
-      onSaved();
+      onSaved(res.data);
     }
   }
 
@@ -159,6 +169,29 @@ export function CalendarEditDialog({
     title: title || appointment.title,
     order: appointment.order,
   });
+  const startMinutes = timeToMinutes(startTime);
+  const endMinutes = timeToMinutes(endTime);
+  const durationMinutes = endMinutes - startMinutes;
+  const timeError = durationMinutes < 15 ? "Das Ende muss mindestens 15 Minuten nach dem Start liegen." : "";
+
+  function changeStart(nextStart: string) {
+    const nextStartMinutes = timeToMinutes(nextStart);
+    const preservedDuration = Math.max(15, durationMinutes);
+    setStartTime(nextStart);
+    setEndTime(minutesToTime(nextStartMinutes + preservedDuration));
+  }
+
+  function changeDuration(minutes: number) {
+    setEndTime(minutesToTime(startMinutes + minutes));
+  }
+
+  function shiftAppointment(minutes: number) {
+    const nextStart = startMinutes + minutes;
+    const nextEnd = endMinutes + minutes;
+    if (nextStart < 0 || nextEnd > 23 * 60 + 45) return;
+    setStartTime(minutesToTime(nextStart));
+    setEndTime(minutesToTime(nextEnd));
+  }
 
   const timesheetHref = (() => {
     const params = new URLSearchParams();
@@ -211,7 +244,41 @@ export function CalendarEditDialog({
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+              <section className="rounded-2xl border border-[#0d5c63]/15 bg-[#0d5c63]/[0.035] p-3 sm:p-4">
+                <div className="mb-3 flex items-center justify-between gap-3">
+                  <div>
+                    <p className="flex items-center gap-2 text-sm font-semibold text-slate-900">
+                      <Clock className="h-4 w-4 text-[#0d5c63]" /> Einsatzzeit
+                    </p>
+                    <p className="mt-0.5 text-xs text-slate-500">
+                      {durationMinutes >= 15
+                        ? `${Math.floor(durationMinutes / 60)} Std. ${durationMinutes % 60 ? `${durationMinutes % 60} Min.` : ""}`
+                        : "Bitte gültigen Zeitraum wählen"}
+                    </p>
+                  </div>
+                  {canEdit && (
+                    <div className="flex items-center rounded-xl border border-slate-200 bg-white p-0.5 shadow-sm">
+                      <button
+                        type="button"
+                        onClick={() => shiftAppointment(-15)}
+                        className="inline-flex h-8 items-center gap-1 rounded-[9px] px-2 text-xs font-semibold text-slate-600 transition hover:bg-slate-100"
+                        aria-label="Termin 15 Minuten früher"
+                      >
+                        <ArrowLeft className="h-3.5 w-3.5" /> 15
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => shiftAppointment(15)}
+                        className="inline-flex h-8 items-center gap-1 rounded-[9px] px-2 text-xs font-semibold text-slate-600 transition hover:bg-slate-100"
+                        aria-label="Termin 15 Minuten später"
+                      >
+                        15 <ArrowRight className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
+                  )}
+                </div>
+
+                <div className="grid grid-cols-1 gap-2 sm:grid-cols-[1.35fr_1fr_1fr]">
                 <div className="min-w-0 space-y-1.5">
                   <Label htmlFor="edit-date">Datum</Label>
                   <DateInput
@@ -232,7 +299,7 @@ export function CalendarEditDialog({
                     step={900}
                     className="min-w-0 w-full"
                     value={startTime}
-                    onValueChange={setStartTime}
+                    onValueChange={changeStart}
                     disabled={!canEdit}
                     required
                   />
@@ -250,7 +317,47 @@ export function CalendarEditDialog({
                     required
                   />
                 </div>
-              </div>
+                </div>
+
+                {canEdit && (
+                  <div className="mt-3 flex flex-wrap items-center gap-1.5">
+                    <span className="mr-1 text-[11px] font-semibold uppercase tracking-wide text-slate-400">
+                      Dauer
+                    </span>
+                    {[30, 60, 120, 240].map((minutes) => (
+                      <button
+                        key={minutes}
+                        type="button"
+                        onClick={() => changeDuration(minutes)}
+                        className={`rounded-full border px-2.5 py-1 text-xs font-semibold transition ${
+                          durationMinutes === minutes
+                            ? "border-[#0d5c63] bg-[#0d5c63] text-white shadow-sm"
+                            : "border-slate-200 bg-white text-slate-600 hover:border-[#0d5c63]/30 hover:text-[#0d5c63]"
+                        }`}
+                      >
+                        {minutes < 60 ? `${minutes} Min.` : `${minutes / 60} Std.`}
+                      </button>
+                    ))}
+                    <button
+                      type="button"
+                      onClick={() => changeDuration(Math.max(15, durationMinutes - 15))}
+                      className="ml-auto inline-flex h-7 w-7 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-500 transition hover:text-[#0d5c63]"
+                      aria-label="Dauer um 15 Minuten verkürzen"
+                    >
+                      <Minus className="h-3.5 w-3.5" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => changeDuration(durationMinutes + 15)}
+                      className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-500 transition hover:text-[#0d5c63]"
+                      aria-label="Dauer um 15 Minuten verlängern"
+                    >
+                      <Plus className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
+                )}
+                {timeError && <p className="mt-2 text-xs font-medium text-rose-600">{timeError}</p>}
+              </section>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 <div className="space-y-1.5">
@@ -400,7 +507,7 @@ export function CalendarEditDialog({
                 Schließen
               </Button>
               {canEdit && (
-                <Button type="submit" disabled={saving}>
+                <Button type="submit" disabled={saving || Boolean(timeError)}>
                   {saving ? "Speichern…" : "Speichern"}
                 </Button>
               )}

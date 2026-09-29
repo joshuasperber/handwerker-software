@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   addDays,
   addMonths,
@@ -267,6 +267,12 @@ export function ScheduleCalendar({
 }: ScheduleCalendarProps) {
   const [draggingId, setDraggingId] = useState<string | null>(null);
   const [resizingId, setResizingId] = useState<string | null>(null);
+  const [resizePreview, setResizePreview] = useState<{
+    id: string;
+    startTime: string;
+    endTime: string;
+  } | null>(null);
+  const suppressAppointmentClick = useRef(false);
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
   const [employeeQuery, setEmployeeQuery] = useState("");
   const [now, setNow] = useState<Date | null>(null);
@@ -325,37 +331,61 @@ export function ScheduleCalendar({
     setter(list.includes(id) ? list.filter((x) => x !== id) : [...list, id]);
   }
 
-  function isVisible(a: CalendarAppointment) {
-    if (a.employeeId && !selectedEmployeeIds.includes(a.employeeId)) return false;
-    const teamId = a.teamId ?? a.team?.id ?? a.order?.team?.id;
-    const vehicleId = a.vehicleId ?? a.vehicle?.id ?? a.order?.vehicle?.id;
-    if (teamFilterActive && !(teamId && selectedTeamIds.includes(teamId))) return false;
-    if (vehicleFilterActive && !(vehicleId && selectedVehicleIds.includes(vehicleId))) return false;
-    return true;
-  }
+  const visibleAppointments = useMemo(() => {
+    const employeeIds = new Set(selectedEmployeeIds);
+    const teamIds = new Set(selectedTeamIds);
+    const vehicleIds = new Set(selectedVehicleIds);
+
+    return appointments.filter((appointment) => {
+      if (appointment.employeeId && !employeeIds.has(appointment.employeeId)) return false;
+      const teamId = appointment.teamId ?? appointment.team?.id ?? appointment.order?.team?.id;
+      const vehicleId =
+        appointment.vehicleId ?? appointment.vehicle?.id ?? appointment.order?.vehicle?.id;
+      if (teamFilterActive && !(teamId && teamIds.has(teamId))) return false;
+      if (vehicleFilterActive && !(vehicleId && vehicleIds.has(vehicleId))) return false;
+      return true;
+    });
+  }, [
+    appointments,
+    selectedEmployeeIds,
+    selectedTeamIds,
+    selectedVehicleIds,
+    teamFilterActive,
+    vehicleFilterActive,
+  ]);
+
+  const timedAppointmentsByDay = useMemo(() => {
+    const grouped = new Map<string, CalendarAppointment[]>();
+    for (const appointment of visibleAppointments) {
+      const start = new Date(appointment.startTime);
+      const end = new Date(appointment.endTime);
+      if (isAllDayLike(start, end)) continue;
+      const key = format(start, "yyyy-MM-dd");
+      const entries = grouped.get(key);
+      if (entries) entries.push(appointment);
+      else grouped.set(key, [appointment]);
+    }
+    return grouped;
+  }, [visibleAppointments]);
 
   function aptsForDay(day: Date) {
     const dayStart = new Date(day);
     dayStart.setHours(0, 0, 0, 0);
     const dayEnd = new Date(day);
     dayEnd.setHours(23, 59, 59, 999);
-    return appointments.filter((a) => {
+    return visibleAppointments.filter((a) => {
       const start = new Date(a.startTime);
       const end = new Date(a.endTime);
-      return start <= dayEnd && end >= dayStart && isVisible(a);
+      return start <= dayEnd && end >= dayStart;
     });
   }
 
   function timedAptsForDay(day: Date) {
-    return appointments.filter((a) => {
-      const start = new Date(a.startTime);
-      const end = new Date(a.endTime);
-      return isSameDay(start, day) && !isAllDayLike(start, end) && isVisible(a);
-    });
+    return timedAppointmentsByDay.get(format(day, "yyyy-MM-dd")) ?? [];
   }
 
-  const allDayBars = appointments
-    .filter((a) => isVisible(a) && isAllDayLike(new Date(a.startTime), new Date(a.endTime)))
+  const allDayBars = visibleAppointments
+    .filter((a) => isAllDayLike(new Date(a.startTime), new Date(a.endTime)))
     .map((apt) => {
       const span = weekSpan(apt, weekDays);
       return span ? { apt, ...span } : null;
@@ -435,7 +465,8 @@ export function ScheduleCalendar({
   function startResize(
     e: React.PointerEvent,
     apt: CalendarAppointment,
-    cellEl: HTMLElement | null
+    cellEl: HTMLElement | null,
+    edge: "start" | "end"
   ) {
     if (readOnly || !cellEl) return;
     e.preventDefault();
@@ -443,30 +474,81 @@ export function ScheduleCalendar({
     const employeeId = apt.employeeId ?? selectedEmployeeIds[0] ?? "";
     if (!employeeId) return;
 
-    const start = new Date(apt.startTime);
+    const originalStart = new Date(apt.startTime);
+    const originalEnd = new Date(apt.endTime);
+    const rect = cellEl.getBoundingClientRect();
     setResizingId(apt.id);
+    suppressAppointmentClick.current = false;
+    let animationFrame = 0;
+    let pendingClientY = e.clientY;
 
-    const onMove = () => {
-      /* Speichern erst beim Loslassen – Snap auf 15 Min. */
+    const calculateRange = (clientY: number) => {
+      const { hour, minute } = dropTimeFromY(clientY, rect.top, hourHeight);
+      const pointerTime = setMinutes(setHours(originalStart, hour), minute);
+      const minimumDuration = 15 * 60 * 1000;
+      const start =
+        edge === "start"
+          ? new Date(Math.min(pointerTime.getTime(), originalEnd.getTime() - minimumDuration))
+          : originalStart;
+      const end =
+        edge === "end"
+          ? new Date(Math.max(pointerTime.getTime(), originalStart.getTime() + minimumDuration))
+          : originalEnd;
+      return { start, end };
+    };
+
+    const onMove = (ev: PointerEvent) => {
+      suppressAppointmentClick.current = true;
+      pendingClientY = ev.clientY;
+      if (animationFrame) return;
+      animationFrame = window.requestAnimationFrame(() => {
+        animationFrame = 0;
+        const range = calculateRange(pendingClientY);
+        setResizePreview({
+          id: apt.id,
+          startTime: range.start.toISOString(),
+          endTime: range.end.toISOString(),
+        });
+      });
     };
 
     const onUp = async (ev: PointerEvent) => {
+      if (animationFrame) window.cancelAnimationFrame(animationFrame);
       window.removeEventListener("pointermove", onMove);
       window.removeEventListener("pointerup", onUp);
+      window.removeEventListener("pointercancel", onCancel);
       setResizingId(null);
-      const rect = cellEl.getBoundingClientRect();
-      const { hour, minute } = dropTimeFromY(ev.clientY, rect.top, hourHeight);
-      let newEnd = setMinutes(setHours(start, hour), minute);
-      // Ende bezieht sich auf denselben Tag wie Start (Wochenraster-Spalte)
-      newEnd = setMinutes(setHours(start, hour), minute);
-      const minEnd = new Date(start.getTime() + 15 * 60 * 1000);
-      if (newEnd < minEnd) newEnd = minEnd;
-      if (newEnd.getTime() === new Date(apt.endTime).getTime()) return;
-      await onAppointmentReschedule(apt.id, start, newEnd, employeeId);
+      setResizePreview(null);
+      const range = calculateRange(ev.clientY);
+      if (
+        range.start.getTime() === originalStart.getTime() &&
+        range.end.getTime() === originalEnd.getTime()
+      ) {
+        suppressAppointmentClick.current = false;
+        return;
+      }
+      try {
+        await onAppointmentReschedule(apt.id, range.start, range.end, employeeId);
+      } finally {
+        window.setTimeout(() => {
+          suppressAppointmentClick.current = false;
+        }, 0);
+      }
+    };
+
+    const onCancel = () => {
+      if (animationFrame) window.cancelAnimationFrame(animationFrame);
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerup", onUp);
+      window.removeEventListener("pointercancel", onCancel);
+      setResizingId(null);
+      setResizePreview(null);
+      suppressAppointmentClick.current = false;
     };
 
     window.addEventListener("pointermove", onMove);
     window.addEventListener("pointerup", onUp);
+    window.addEventListener("pointercancel", onCancel);
   }
 
   const headerLabel =
@@ -477,7 +559,7 @@ export function ScheduleCalendar({
         : `${format(weekStart, "d. MMM", { locale: de })} – ${format(addDays(weekStart, dayCount - 1), "d. MMM yyyy", { locale: de })}`;
 
   const visibleCount = selectedEmployeeIds.length;
-  const visibleAppointmentCount = appointments.filter(isVisible).length;
+  const visibleAppointmentCount = visibleAppointments.length;
   const normalizedEmployeeQuery = employeeQuery.trim().toLocaleLowerCase("de");
   const filteredEmployees = normalizedEmployeeQuery
     ? employees.filter((employee) =>
@@ -897,7 +979,9 @@ export function ScheduleCalendar({
                         key={h}
                         className="absolute w-full border-t border-slate-100"
                         style={{ top: (h - HOUR_START) * hourHeight, height: hourHeight }}
-                      />
+                      >
+                        <span className="absolute inset-x-0 top-1/2 border-t border-dashed border-slate-100/90" />
+                      </div>
                     ))}
 
                     {now &&
@@ -918,8 +1002,9 @@ export function ScheduleCalendar({
                       )}
 
                     {layoutOverlapping(timedAptsForDay(day)).map(({ apt, col, totalCols }) => {
-                      const start = new Date(apt.startTime);
-                      const end = new Date(apt.endTime);
+                      const preview = resizePreview?.id === apt.id ? resizePreview : null;
+                      const start = new Date(preview?.startTime ?? apt.startTime);
+                      const end = new Date(preview?.endTime ?? apt.endTime);
                       if (start.getHours() >= HOUR_END || end.getHours() < HOUR_START) return null;
 
                       const { top, height } = aptStyle(start, end, hourHeight);
@@ -944,9 +1029,12 @@ export function ScheduleCalendar({
                                 }
                           }
                           onDragEnd={readOnly || isCompact ? undefined : () => setDraggingId(null)}
-                          onClick={() => onAppointmentClick?.(apt)}
+                          onClick={() => {
+                            if (suppressAppointmentClick.current) return;
+                            onAppointmentClick?.(apt);
+                          }}
                           title={`${empName} · ${eventLabel(apt)}`}
-                          className={`absolute z-10 cursor-pointer overflow-hidden rounded-md border border-l-[3px] px-1.5 py-1 text-left shadow-sm transition hover:brightness-95 sm:px-2 ${!readOnly && !isCompact ? "active:cursor-grabbing" : ""} ${draggingId === apt.id || resizingId === apt.id ? "opacity-40 ring-2 ring-[#0d5c63]" : ""}`}
+                          className={`group absolute z-10 cursor-pointer overflow-hidden rounded-lg border border-l-[3px] px-1.5 py-1 text-left shadow-sm transition-[filter,box-shadow] hover:brightness-95 sm:px-2 ${!readOnly && !isCompact ? "active:cursor-grabbing" : ""} ${draggingId === apt.id ? "opacity-40 ring-2 ring-[#0d5c63]" : ""} ${resizingId === apt.id ? "z-30 ring-2 ring-[#0d5c63] shadow-lg" : ""}`}
                           style={{
                             top,
                             height,
@@ -961,6 +1049,11 @@ export function ScheduleCalendar({
                             <p className="truncate text-[10px] font-bold leading-tight text-slate-900 sm:text-[11px]">
                               {format(start, "HH:mm")} {eventLabel(apt)}
                             </p>
+                            {preview && height > 30 && (
+                              <p className="mt-0.5 truncate text-[9px] font-semibold text-[#0d5c63] sm:text-[10px]">
+                                {format(start, "HH:mm")}–{format(end, "HH:mm")}
+                              </p>
+                            )}
                             {height > 34 && empName && (
                               <p className="truncate text-[9px] text-slate-600 sm:text-[10px]">{empName}</p>
                             )}
@@ -968,18 +1061,35 @@ export function ScheduleCalendar({
                               <p className="truncate text-[9px] text-slate-500 sm:text-[10px]">{apt.order.orderNumber}</p>
                             )}
                           </div>
-                          {!readOnly && !isCompact && (
-                            <div
-                              role="separator"
-                              aria-label="Dauer ändern"
-                              className="absolute bottom-0 left-0 right-0 h-2 cursor-ns-resize touch-none pointer-events-auto"
-                              onPointerDown={(e) => {
-                                e.stopPropagation();
-                                const cell = (e.currentTarget.closest("[data-day-cell]") as HTMLElement | null);
-                                startResize(e, apt, cell);
-                              }}
-                              onClick={(e) => e.stopPropagation()}
-                            />
+                          {!readOnly && height >= 28 && (
+                            <>
+                              <div
+                                role="separator"
+                                aria-label="Startzeit ändern"
+                                className={`absolute left-0 right-0 top-0 cursor-ns-resize touch-none pointer-events-auto ${isCompact ? "h-3" : "h-2"}`}
+                                onPointerDown={(e) => {
+                                  e.stopPropagation();
+                                  const cell = e.currentTarget.closest("[data-day-cell]") as HTMLElement | null;
+                                  startResize(e, apt, cell, "start");
+                                }}
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                <span className={`absolute left-1/2 top-0.5 h-0.5 w-7 -translate-x-1/2 rounded-full bg-slate-700/30 transition-opacity ${isCompact ? "opacity-70" : "opacity-0 group-hover:opacity-70"}`} />
+                              </div>
+                              <div
+                                role="separator"
+                                aria-label="Endzeit ändern"
+                                className={`absolute bottom-0 left-0 right-0 cursor-ns-resize touch-none pointer-events-auto ${isCompact ? "h-3" : "h-2"}`}
+                                onPointerDown={(e) => {
+                                  e.stopPropagation();
+                                  const cell = e.currentTarget.closest("[data-day-cell]") as HTMLElement | null;
+                                  startResize(e, apt, cell, "end");
+                                }}
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                <span className={`absolute bottom-0.5 left-1/2 h-0.5 w-7 -translate-x-1/2 rounded-full bg-slate-700/30 transition-opacity ${isCompact ? "opacity-70" : "opacity-0 group-hover:opacity-70"}`} />
+                              </div>
+                            </>
                           )}
                         </div>
                       );
@@ -996,8 +1106,8 @@ export function ScheduleCalendar({
               {readOnly
                 ? ""
                 : isCompact
-                  ? " · Tippen zum Erstellen/Bearbeiten"
-                  : " · Ziehen = Zeitraum erstellen · Termin ziehen = verschieben · Unterkante = Dauer"}
+                  ? " · Tippen = bearbeiten · Ober-/Unterkante ziehen = Zeit ändern"
+                  : " · Ziehen = erstellen/verschieben · Ober-/Unterkante = Start/Ende"}
             </p>
           </div>
         ) : (

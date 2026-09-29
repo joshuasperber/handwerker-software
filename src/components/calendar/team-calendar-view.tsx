@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import {
   ScheduleCalendar,
@@ -20,6 +20,7 @@ import { InfoButton } from "@/components/ui/info-button";
 import { usePermission, useSession } from "@/components/auth/can-access";
 import { toast } from "sonner";
 import { swrKeys, useApiSWR } from "@/lib/swr";
+import { fetchJson } from "@/lib/fetch-json";
 
 export function TeamCalendarView({
   title = "Termine",
@@ -50,6 +51,7 @@ export function TeamCalendarView({
   const [createSlot, setCreateSlot] = useState<CalendarSlotSelection | null>(null);
   const [editOpen, setEditOpen] = useState(false);
   const [editApt, setEditApt] = useState<CalendarAppointment | null>(null);
+  const rescheduleVersions = useRef(new Map<string, number>());
 
   const appointmentRange = useMemo(() => {
     let from: Date;
@@ -82,6 +84,24 @@ export function TeamCalendarView({
   const loadAppointments = useCallback(() => {
     void mutateAppointments();
   }, [mutateAppointments]);
+
+  const handleAppointmentSaved = useCallback(
+    (updated?: CalendarAppointment) => {
+      if (!updated) {
+        void mutateAppointments();
+        return;
+      }
+      void mutateAppointments(
+        (current) =>
+          current?.map((appointment) =>
+            appointment.id === updated.id ? updated : appointment
+          ),
+        { revalidate: false }
+      );
+      setEditApt(updated);
+    },
+    [mutateAppointments]
+  );
 
   useEffect(() => {
     if (mobileDefaultApplied) return;
@@ -193,9 +213,25 @@ export function TeamCalendarView({
     employeeId: string
   ) {
     if (!canEdit) return;
-    const toastId = toast.loading("Termin wird verschoben …");
-    try {
-      const res = await fetch(`/api/appointments/${appointmentId}`, {
+    const originalAppointment = appointments.find((appointment) => appointment.id === appointmentId);
+    const version = (rescheduleVersions.current.get(appointmentId) ?? 0) + 1;
+    rescheduleVersions.current.set(appointmentId, version);
+    await mutateAppointments(
+      (current) =>
+        current?.map((appointment) =>
+          appointment.id === appointmentId
+            ? {
+                ...appointment,
+                startTime: startTime.toISOString(),
+                endTime: endTime.toISOString(),
+                employeeId,
+              }
+            : appointment
+        ),
+      { revalidate: false }
+    );
+
+    const result = await fetchJson<CalendarAppointment>(`/api/appointments/${appointmentId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -204,16 +240,31 @@ export function TeamCalendarView({
           employeeId,
         }),
       });
-      const data = await res.json();
-      if (!data.success) {
-        toast.error(data.error ?? "Verschieben fehlgeschlagen", { id: toastId });
-        return;
+
+    if (rescheduleVersions.current.get(appointmentId) !== version) return;
+
+    if (!result.success || !result.data) {
+      if (originalAppointment) {
+        await mutateAppointments(
+          (current) =>
+            current?.map((appointment) =>
+              appointment.id === appointmentId ? originalAppointment : appointment
+            ),
+          { revalidate: false }
+        );
       }
-      toast.success("Termin verschoben", { id: toastId });
-      loadAppointments();
-    } catch {
-      toast.error("Verschieben fehlgeschlagen", { id: toastId });
+      toast.error(result.error ?? "Zeitänderung konnte nicht gespeichert werden");
+      return;
     }
+
+    await mutateAppointments(
+      (current) =>
+        current?.map((appointment) =>
+          appointment.id === appointmentId ? result.data! : appointment
+        ),
+      { revalidate: false }
+    );
+    toast.success("Zeit aktualisiert");
   }
 
   function handleSlotSelect(slot: CalendarSlotSelection) {
@@ -305,7 +356,7 @@ export function TeamCalendarView({
         vehicles={vehicles}
         projects={projects}
         canEdit={canEdit}
-        onSaved={loadAppointments}
+        onSaved={handleAppointmentSaved}
       />
 
       <div className="shrink-0 mt-3 px-2 sm:px-0">
